@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations>
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Test</Name>
+    <DataStore>
+      <Name>DataStore</Name>
+    </DataStore>
+    <WeatherFile>
+      <Name>WeatherFile</Name>
+      <FileName>Goondiwindi.met</FileName>
+    </WeatherFile>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1940-01-01T00:00:00</StartDate>
+      <EndDate>1989-12-31T00:00:00</EndDate>
+    </Clock>
+    <Zone>
+      <Name>Field</Name>
+      <Report>
+        <Name>Report</Name>
+        <Variables>
+          <string>Today</string>
+          <string>maxt</string>
+          <string>CurrentPhaseName</string>
+        </Variables>
+        <Events>
+          <string>Clock.EndOfDay</string>
+        </Events>
+      </Report>
+    </Zone>
+    <Graph>
+      <Name>Graph</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>X axis title</Title>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Y axis title</Title>
+      </Axis>
+      <Series>
+        <Title>Series 1</Title>
+        <Type>Line</Type>
+        <TableName>Report</TableName>
+        <X>Today</X>
+        <Y>MaxT</Y>
+      </Series>
+    </Graph>
+  </Simulation>
+</Simulations>

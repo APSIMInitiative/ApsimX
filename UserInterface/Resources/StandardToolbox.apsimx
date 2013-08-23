@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations>
+  <Name>Simulations</Name>
+  <Area>0</Area>
+  <Simulation>
+    <Name>Test</Name>
+    <Area>0</Area>
+    <DataStore>
+      <Name>DataStore</Name>
+    </DataStore>
+    <WeatherFile>
+      <Name>WeatherFile</Name>
+      <FileName>Goondiwindi.met</FileName>
+    </WeatherFile>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1940-01-01T00:00:00</StartDate>
+      <EndDate>1989-12-31T00:00:00</EndDate>
+    </Clock>
+    <Zone>
+      <Name>Field</Name>
+      <Area>0</Area>
+      <Report>
+        <Name>Report</Name>
+        <Variables>
+          <string>Clock.Today</string>
+          <string>WeatherFile.MaxT</string>
+          <string>WeatherFile.MinT</string>
+          <string>WeatherFile.Radn</string>
+          <string>WeatherFile.Rain</string>
+        </Variables>
+        <Events>
+          <string>Clock.EndOfDay</string>
+        </Events>
+      </Report>
+    </Zone>
+    <Graph>
+      <Name>Graph</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>X axis title 2</Title>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Y axis title</Title>
+      </Axis>
+      <Series>
+        <Title>Minimum temperature</Title>
+        <Type>Line</Type>
+        <SimulationName>Test</SimulationName>
+        <TableName>Report</TableName>
+        <X>Clock.Today</X>
+        <Y>WeatherFile.MinT</Y>
+      </Series>
+      <Series>
+        <Title>Series 2</Title>
+        <Type>Line</Type>
+        <SimulationName>Test</SimulationName>
+        <TableName>Report</TableName>
+        <X>Clock.Today</X>
+        <Y>WeatherFile.MaxT</Y>
+      </Series>
+    </Graph>
+  </Simulation>
+</Simulations>

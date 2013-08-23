@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27056DED-A49C-4351-90A8-DFA9C8AC906E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UserInterface</RootNamespace>
+    <AssemblyName>UserInterface</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OxyPlot, Version=2013.1.50.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OxyPlot\oxyplot_a2fa94072d76\Source\OxyPlot.WindowsForms\bin\Debug\NET40\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.WindowsForms, Version=2013.1.50.1, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OxyPlot\oxyplot_a2fa94072d76\Source\OxyPlot.WindowsForms\bin\Debug\NET40\OxyPlot.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Utility\ColumnXYSeries.cs">
+      <Link>Utility\ColumnXYSeries.cs</Link>
+    </Compile>
+    <Compile Include="..\Utility\DateTimeCellType.cs">
+      <Link>Utility\DateTimeCellType.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Commands\ApplicationCommands.cs" />
+    <Compile Include="CommandHistory.cs" />
+    <Compile Include="Commands\ChangePropertyCommand.cs" />
+    <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\ExplorerUICommands.cs" />
+    <Compile Include="Commands\RunCommand.cs" />
+    <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\ExplorerPresenter.cs" />
+    <Compile Include="Presenters\AxisPresenter.cs" />
+    <Compile Include="Presenters\DataStorePresenter.cs" />
+    <Compile Include="Presenters\SeriesPresenter.cs" />
+    <Compile Include="Views\AxisView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\AxisView.Designer.cs">
+      <DependentUpon>AxisView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GeneralView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\GeneralView.Designer.cs">
+      <DependentUpon>GeneralView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SeriesView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SeriesView.Designer.cs">
+      <DependentUpon>SeriesView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presenters\GraphPresenter.cs" />
+    <Compile Include="Views\EditorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditorView.Designer.cs">
+      <DependentUpon>EditorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GraphView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\GraphView.Designer.cs">
+      <DependentUpon>GraphView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExplorerView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ExplorerView.Designer.cs">
+      <DependentUpon>ExplorerView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Plugins\StartPagePlugin.cs" />
+    <Compile Include="Plugins\StartPageView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Plugins\StartPageView.Designer.cs">
+      <DependentUpon>StartPageView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\GridView.Designer.cs">
+      <DependentUpon>GridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presenters\IPresenter.cs" />
+    <Compile Include="Presenters\PropertyPresenter.cs" />
+    <Compile Include="Views\DataStoreView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\DataStoreView.Designer.cs">
+      <DependentUpon>DataStoreView.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Views\EditorView.resx">
+      <DependentUpon>EditorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ExplorerView.resx">
+      <DependentUpon>ExplorerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Plugins\StartPageView.resx">
+      <DependentUpon>StartPageView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AxisView.resx">
+      <DependentUpon>AxisView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SeriesView.resx">
+      <DependentUpon>SeriesView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\GraphView.resx">
+      <DependentUpon>GraphView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\GridView.resx">
+      <DependentUpon>GridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DataStoreView.resx">
+      <DependentUpon>DataStoreView.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\apsim logo32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_document.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GraphToolbox.apsimx" />
+    <None Include="Resources\ManagementToolbox.apsimx" />
+    <None Include="Resources\StandardToolbox.apsimx" />
+    <None Include="Resources\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Simulation16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fertiliser16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_center16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shovel16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SOM16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_selection_column16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\thermometer16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\manager16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\media_play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\data.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folders.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Model.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save_as.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk_blue.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

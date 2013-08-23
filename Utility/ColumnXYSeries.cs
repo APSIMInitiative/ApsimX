@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OxyPlot.Series;
+using OxyPlot;
+
+namespace Utility
+{
+    class ColumnXYSeries : RectangleBarSeries
+    {
+
+        public ColumnXYSeries()
+        {
+            Points = new List<DataPoint>();
+            ColumnWidth = 0.01;
+        }
+
+
+        /// <summary>
+        /// Gets the rectangle bar items.
+        /// </summary>
+        public IList<DataPoint> Points { get; set; }
+
+        /// <summary>
+        /// Gets the width of the column (as fraction of width of axis.)
+        /// </summary>
+        public double ColumnWidth { get; set; }
+
+        /// <summary>
+        /// Updates the data.
+        /// </summary>
+        protected override void UpdateData()
+        {
+            MovePointsToItems();
+        }
+
+         /// <summary>
+        /// Renders the Series on the specified rendering context.
+        /// </summary>
+        /// <param name="rc">
+        /// The rendering context.
+        /// </param>
+        /// <param name="model">
+        /// The model.
+        /// </param>
+        public override void Render(IRenderContext rc, PlotModel model)
+        {
+            if (this.Points.Count == 0)
+            {
+                return;
+            }
+
+            // Let the base class draw the rectanges.
+            base.Render(rc, model);
+        }
+
+        /// <summary>
+        /// Create a series of RectangleBarItem objects in Items based on Points.
+        /// </summary>
+        private void MovePointsToItems()
+        {
+            Items.Clear();
+            foreach (DataPoint P in Points)
+            {
+                double HalfBarWidth = XDataRange * ColumnWidth / 2.0;
+                double x0 = P.X - HalfBarWidth;
+                double x1 = P.X + HalfBarWidth;
+                Items.Add(new RectangleBarItem(x0, 0.0, x1, P.Y));
+            }
+        }
+
+        /// <summary>
+        /// Calculate the range of X data i.e. max - min.
+        /// </summary>
+        private double XDataRange
+        {
+            get
+            {
+                if (Points.Count == 0)
+                    return 0;
+                double Minimum = double.MaxValue;
+                double Maximum = double.MinValue;
+                foreach (DataPoint P in Points)
+                {
+                    Minimum = System.Math.Min(Minimum, P.X);
+                    Maximum = System.Math.Max(Maximum, P.X);
+                }
+                return Maximum - Minimum;
+            }
+        }
+    }
+}

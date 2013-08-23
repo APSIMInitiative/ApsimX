@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Name>Graph toolbox</Name>
+    <Graph>
+      <Name>Graph</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>X axis title 2</Title>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Y axis title</Title>
+      </Axis>
+      <Series>
+        <Title>Minimum temperature</Title>
+        <Type>Line</Type>
+        <SimulationName>Test</SimulationName>
+        <TableName>Report</TableName>
+        <X>Clock.Today</X>
+        <Y>WeatherFile.MinT</Y>
+      </Series>
+      
+    </Graph>
+</Simulations>
