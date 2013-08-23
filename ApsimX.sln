@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{4CAA2610-1955-4629-BDC1-8133FE0B2087}") = "Profiler", "Profiler\Profiler.aqt", "{BF732191-6B42-460D-A43A-A4D6F3F8126B}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ApsimX.vsmdi
