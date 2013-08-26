@@ -9,10 +9,8 @@ namespace Model.Components
     public class Clock
     {
         // Links
-        [Link] 
-        private Simulation Simulation = null;
-        [Link] 
-        private DataStore DataStore = null;
+        [Link] private Simulation Simulation = null;
+        [Link] private DataStore DataStore = null;
 
         // Parameters serialised
         public string Name { get; set; }
