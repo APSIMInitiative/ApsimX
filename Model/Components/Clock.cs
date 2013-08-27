@@ -4,15 +4,15 @@ using Model.Core;
 
 namespace Model.Components
 {
-    
-
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Clock
     {
         // Links
-        [Link] private Simulation Simulation = null;
-        [Link] private DataStore DataStore = null;
+        [Link] 
+        private Simulation Simulation = null;
+        [Link] 
+        private DataStore DataStore = null;
 
         // Parameters serialised
         public string Name { get; set; }
