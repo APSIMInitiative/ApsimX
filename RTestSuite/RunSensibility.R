@@ -9,6 +9,7 @@ args <- commandArgs(TRUE)
 #setwd(args[1])
 
 # read control file
+print(args[1])
 wb <- loadWorkbook(paste(args[1], "Sensibility.xlsx", sep="/"), FALSE)
 sheets <- getSheets(wb)
 
