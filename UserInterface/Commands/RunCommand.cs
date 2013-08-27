@@ -20,7 +20,11 @@ namespace UserInterface.Commands
         /// </summary>
         public object Do()
         {
-            ok = Simulations.Run(Simulation);
+            if (Simulation == null)
+                foreach (ISimulation sim in Simulations.Sims)
+                    ok = Simulations.Run(sim);
+            else
+                ok = Simulations.Run(Simulation);
             return null;
         }
 
