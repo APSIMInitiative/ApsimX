@@ -10,7 +10,7 @@ args <- commandArgs(TRUE)
 
 # read control file
 print(args[1])
-wb <- loadWorkbook(paste(args[1], "Sensibility.xlsx", sep="/"), FALSE)
+wb <- loadWorkbook(paste(args[1], "Sensibility.xlsx", sep="\\"), FALSE)
 sheets <- getSheets(wb)
 
 #run tests on each sheet
