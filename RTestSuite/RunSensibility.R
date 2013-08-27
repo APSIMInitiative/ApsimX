@@ -2,14 +2,14 @@
 options(java.parameters = "-Xmx1024m")
 library(XLConnect)
 library(RSQLite)
-source("..\\RTestSuite\\tests.R")
+source("../RTestSuite/tests.R")
 
 args <- commandArgs(TRUE)
 #args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
-setwd(args[1])
+#setwd(args[1])
 
 # read control file
-wb <- loadWorkbook("Sensibility.xlsx", FALSE)
+wb <- loadWorkbook(paste(args[1], "Sensibility.xlsx", sep="/"), FALSE)
 sheets <- getSheets(wb)
 
 #run tests on each sheet
