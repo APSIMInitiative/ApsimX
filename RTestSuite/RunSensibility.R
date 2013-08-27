@@ -1,11 +1,11 @@
-rm(list=ls()) #remove for production
+#rm(list=ls()) #remove for production
 options(java.parameters = "-Xmx1024m")
 library(XLConnect)
 library(RSQLite)
 source("c:\\apsimx\\apsimx\\RTestSuite\\tests.R")
 
 args <- commandArgs(TRUE)
-args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
+#args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
 setwd(args[1])
 
 # read control file
