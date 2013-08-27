@@ -2,7 +2,7 @@
 options(java.parameters = "-Xmx1024m")
 library(XLConnect)
 library(RSQLite)
-source("c:\\apsimx\\apsimx\\RTestSuite\\tests.R")
+source("RTestSuite\\tests.R")
 
 args <- commandArgs(TRUE)
 #args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
