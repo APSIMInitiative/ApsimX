@@ -5,7 +5,7 @@ library(RSQLite)
 source("../RTestSuite/tests.R")
 
 args <- commandArgs(TRUE)
-args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
+#args <- c("C:\\ApsimX\\ApsimX\\Tests", "C:\\ApsimX\\ApsimX\\Tests")
 
 # needed to cut the trailing '\' off... worked ok on local, but not remote.
 args[1] <- substr(args[1], 1, nchar(args[1]) - 1)
