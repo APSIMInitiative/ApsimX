@@ -39,8 +39,8 @@ for (ind in c(1:length(sheets))){
     junk <- dbDisconnect(db)
     rm(junk)
     
-    #TODO: drop Date column if it exists; either by pattern match or db field type (might not be called Date - field type better (may not use / either)
-    readSimOutput <- subset(readSimOutput, select=-Clock.Today) #temporary
+    # drop Date column if it exists
+    readSimOutput <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
     
     #get tests to run
     tests <- master[master[1] == "test",]
