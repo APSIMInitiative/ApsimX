@@ -1,29 +1,35 @@
-#rm(list=ls()) #remove for production
+rm(list=ls()) #remove for production
 options(java.parameters = "-Xmx1024m")
-library(XLConnect)
-library(RSQLite)
+library("XML")
+library("RSQLite")
 source("../RTestSuite/tests.R")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\", "C:\\ApsimX\\ApsimX\\Tests\\")
+args <- c("C:\\ApsimX\\ApsimX\\Tests\\", "C:\\ApsimX\\ApsimX\\Tests\\")
 
 # needed to cut the trailing '\' off... worked ok on local, but not remote.
 args[1] <- substr(args[1], 1, nchar(args[1]) - 1)
 setwd(args[1])
 
-# read control file
-wb <- loadWorkbook("sensibility.xlsx", FALSE)
-sheets <- getSheets(wb)
+# read control file - this will come from .apsimx in the future
+doc <- xmlTreeParse("C:\\ApsimX\\ApsimX\\Tests\\test.xml", useInternalNodes=TRUE)
+group <- getNodeSet(doc, "/tests/sims")
 
-#run tests on each sheet
-for (ind in c(1:length(sheets))){
+groupdf <- list()
+c=1
+for (n in group){
+  groupdf[[c]] <- xmlToDataFrame(n)
+  c <- c+1
+}
+rm(c)
+
+#run tests on each simulation group
+for (ind in c(1:length(groupdf))){
+  currentSimGroup <- groupdf[[ind]]
   dbName <- list.files(args[1], pattern="^.*\\.(db)$")
-  # get list of sims to test in this suite TODO: handle 'all' - do we want to do this in a db?
-  master <- readWorksheet(wb, sheet = ind, header = FALSE)
-  simsToTest <- master[master[1] == "sim", -1]
-  simsToTest <- simsToTest[sapply(simsToTest, function(x) !any(is.na(x)))] #remove NA columns  
+  simsToTest <- unlist(strsplit(currentSimGroup[1,1], ","))
   
-  for (sim in c(1:ncol(simsToTest)))
+  for (sim in c(1:length(simsToTest)))
   {
     db <- dbConnect(SQLite(), dbname = dbName)
     
@@ -40,29 +46,31 @@ for (ind in c(1:length(sheets))){
     readSimOutput <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
     
     #get tests to run
-    tests <- master[master[1] == "test",]
+    tests <- currentSimGroup[!is.na(currentSimGroup[2]), -1]
     
+    #run the tests
     for (i in c(1:nrow(tests))) {    
       #get columns to run them on
-      if (tests[i, "Col6"] != "all"){
-         cols <- tests[i,c(grep("Col6",colnames(tests)):ncol(tests))]
-         cols <- cols[sapply(cols, function(x) !any(is.na(x)))] #remove NA columns
+      if (tests[i, "col"] != "all"){
+         cols <- unlist(strsplit(tests$col[i], ","))
          if (ncol(readSimOutput) > 1) 
            simOutput <- subset(readSimOutput, select=unlist(cols))
       }
-      else 
+      else {
         simOutput <- readSimOutput
+      }
             
-      # retrieve the test name and run it
-      # test must accept a data frame
-      func <- match.fun(tests$Col2[i])
+      # retrieve the test name
+      func <- match.fun(tests$name[i])
+      #unpack parameters
+      params <- as.numeric(unlist(strsplit(tests$params[i], ",")))
       ifelse(i == 1,      
-      results <- func(simOutput, tests$Col3[i], tests$Col4[i], tests$Col5[i]),
-      results <- c(results, func(simOutput, tests$Col3[i], tests$Col4[i], tests$Col5[i])))
+      results <- func((simOutput), params),
+      results <- c(results, func(simOutput, params)))
     }
   }
 }
+print(tests$name)
 print(results)
-#print(all(results))
 
 if (all(results) == FALSE) stop("One or more tests failed.")

@@ -17,8 +17,8 @@ AllPos <- function(x, ...) {
 # @Param x:multi - list
 # @Param y:double - minimum allowed value (exclusive)
 ##################################
-GreaterThan <- function (x, y, ...) {
-  all(ifelse( x > as.numeric(y), TRUE, FALSE))
+GreaterThan <- function (x, params, ...) {
+  all(ifelse( x > params[1], TRUE, FALSE))
 }
 
 ############# LessThan ############
@@ -26,8 +26,8 @@ GreaterThan <- function (x, y, ...) {
 # @Param x:multi - list
 # @Param y:double - maximum allowed value (exclusive)
 ##################################
-LessThan <- function (x, y, ...) {
-  all(ifelse( x < as.numeric(y), TRUE, FALSE))
+LessThan <- function (x, params, ...) {
+  all(ifelse( x < params[1], TRUE, FALSE))
 }
 
 ############# Between ############
@@ -36,8 +36,8 @@ LessThan <- function (x, y, ...) {
 # @Param y:double - minimum allowed value (inclusive)
 # @Param z:double - maximum allowed value (inclusive)
 ##################################
-Between <- function (x, y, z, ...) {
-  all(ifelse(x >= as.numeric(y) &  x <= as.numeric(z), TRUE, FALSE))
+Between <- function (x, params, ...) {
+  all(ifelse(x >= params[1] &  x <= params[2], TRUE, FALSE))
 }
 
 ############# Mean ############
@@ -46,7 +46,16 @@ Between <- function (x, y, z, ...) {
 # @Param y:double - percentage tolerance
 # @Param z:double - reference value
 ##################################
-Mean <- function (x, y, z, ...) {
+Mean <- function (x, params, ...) {
+  print(params)
   x <- unlist(x)
-  ifelse(mean(x) < z + z * y / 100 &  mean(x) > z - z * y / 100, TRUE, FALSE)
+  ifelse(mean(x) < params[2] + params[2] * params[1] / 100 &
+         mean(x) > params[2] - params[2] * params[1] / 100, TRUE, FALSE)
+}
+
+############# Mean ############
+# STUB
+##################################
+ANOVA <- function (x, params, ...) {
+  return(TRUE)
 }

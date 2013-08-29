@@ -1,0 +1,25 @@
+<tests>
+	<sims>
+		<name>Test</name>
+		<test>
+			<name>AllPos</name>
+			<col>WeatherFile.MaxT,WeatherFile.Radn</col>
+			<params></params>
+		</test>
+		<test>
+			<name>Mean</name>
+			<col>WeatherFile.MaxT</col>
+			<params>5,26.69</params>
+		</test>
+		<test>
+			<name>Mean</name>
+			<col>WeatherFile.MinT</col>
+			<params>5,13.06</params>
+		</test>
+		<test>
+			<name>Between</name>
+			<col>WeatherFile.MinT</col>
+			<params>-5,30</params>
+		</test>
+	</sims>
+</tests>
