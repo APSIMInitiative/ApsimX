@@ -12,7 +12,7 @@ args[1] <- substr(args[1], 1, nchar(args[1]) - 1)
 setwd(args[1])
 
 # read control file - this will come from .apsimx in the future
-doc <- xmlTreeParse("C:\\ApsimX\\ApsimX\\Tests\\test.xml", useInternalNodes=TRUE)
+doc <- xmlTreeParse("test.xml", useInternalNodes=TRUE)
 group <- getNodeSet(doc, "/tests/sims")
 
 groupdf <- list()
