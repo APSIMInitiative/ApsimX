@@ -21,7 +21,7 @@ for (n in group){
   groupdf[[c]] <- xmlToDataFrame(n)
   c <- c+1
 }
-rm(c)
+rm(c) 
 
 #run tests on each simulation group
 for (ind in c(1:length(groupdf))){
