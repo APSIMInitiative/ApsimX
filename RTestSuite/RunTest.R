@@ -69,8 +69,8 @@ for (ind in c(1:length(groupdf))){
       results <- c(results, func(simOutput, params)))
     }
   }
-#}
+}
 print(tests$name)
 print(results)
-
+stop("One or more tests failed.")
 if (all(results) == FALSE) stop("One or more tests failed.")
