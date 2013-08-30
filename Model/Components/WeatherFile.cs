@@ -3,7 +3,6 @@ using System.Data;
 using Model.Core;
 using System.IO;
 
-
 namespace Model.Components
 {
     /// <summary>
