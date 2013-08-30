@@ -41,7 +41,7 @@ namespace ModelTests
         {
             ISimulation Sim = S.Sims[0] as ISimulation;
 
-            Assert.AreEqual(Sim.FullPath, "Tsest");
+            Assert.AreEqual(Sim.FullPath, "Test");
             Assert.AreEqual((Sim.Models[3] as IZone).FullPath, "Test.Field");
         }
     }
