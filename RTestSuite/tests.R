@@ -15,7 +15,7 @@ AllPos <- function(x, ...) {
 ############# GreaterThan ########
 # Return true if all values in x > y
 # @Param x:multi - list
-# @Param y:double - minimum allowed value (exclusive)
+# @Param 1:double - minimum allowed value (exclusive)
 ##################################
 GreaterThan <- function (x, params, ...) {
   all(ifelse( x > params[1], TRUE, FALSE))
@@ -23,8 +23,8 @@ GreaterThan <- function (x, params, ...) {
 
 ############# LessThan ############
 # Return true if all values in x < y
-# @Param x:multi - list
-# @Param y:double - maximum allowed value (exclusive)
+# @Param x:multi  - list
+# @Param 1:double - maximum allowed value (exclusive)
 ##################################
 LessThan <- function (x, params, ...) {
   all(ifelse( x < params[1], TRUE, FALSE))
@@ -32,9 +32,9 @@ LessThan <- function (x, params, ...) {
 
 ############# Between ############
 # Return true if all values in x <= y and >= z
-# @Param x:multi - list
-# @Param y:double - minimum allowed value (inclusive)
-# @Param z:double - maximum allowed value (inclusive)
+# @Param x:multi  - list
+# @Param 1:double - minimum allowed value (inclusive)
+# @Param 2:double - maximum allowed value (inclusive)
 ##################################
 Between <- function (x, params, ...) {
   all(ifelse(x >= params[1] &  x <= params[2], TRUE, FALSE))
@@ -42,9 +42,9 @@ Between <- function (x, params, ...) {
 
 ############# Mean ############
 # Return true if mean of vector x is within +-y% of z
-# @Param x:multi - list
-# @Param y:double - percentage tolerance
-# @Param z:double - reference value
+# @Param x:multi  - list
+# @Param 1:double - percentage tolerance
+# @Param 2:double - reference value
 ##################################
 Mean <- function (x, params, ...) {
   print(params)
@@ -53,9 +53,17 @@ Mean <- function (x, params, ...) {
          mean(x) > params[2] - params[2] * params[1] / 100, TRUE, FALSE)
 }
 
-############# Mean ############
-# STUB
+############# Tolerance ############
+# Return true if each value in x is within +-[1](%) of [2]
+# @Param x: multi  - list
+# @Param 1: bool   - TRUE; use percentage, FALSE; use absolute
+# @Param 2: double - tolerance value (inclusive)
+# @Param 3: vector - reference data
 ##################################
-ANOVA <- function (x, params, ...) {
-  return(TRUE)
+Tolerance <- function (x, params, ...) {
+  if (bool) {
+    result <- x < params[3] + params[3] * params[2] / 100 &
+              x > params[3] - params[3] * params[2] / 100
+    print(paste(x, params[3], result, sep=", "))
+  }
 }
