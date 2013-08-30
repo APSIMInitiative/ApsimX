@@ -64,6 +64,18 @@ Tolerance <- function (x, params, ...) {
   if (bool) {
     result <- x < params[3] + params[3] * params[2] / 100 &
               x > params[3] - params[3] * params[2] / 100
-    print(paste(x, params[3], result, sep=", "))
+  }
+  else {
+    result <- x < params[3] + params[2] / 100 &
+              x > params[3] - params[2] / 100
+  }
+  
+   if(all(result){
+      return true
+   }
+   else{
+     print(paste(x, params[3], result, sep=", "))
+     return false
+   }
   }
 }
