@@ -1,22 +1,21 @@
 rm(list=ls()) #remove for production
-options(java.parameters = "-Xmx1024m")
 library("XML")
 library("RSQLite")
-source("../RTestSuite/tests.R")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\", "C:\\ApsimX\\ApsimX\\Tests\\")
+args <- c("C:\\ApsimX\\ApsimX\\Tests\\", "C:\\ApsimX\\ApsimX\\Tests\\")
 
 # needed to cut the trailing '\' off... worked ok on local, but not remote.
 args[1] <- substr(args[1], 1, nchar(args[1]) - 1)
 setwd(args[1])
+source("../RTestSuite/tests.R")
 
 # read control file - this will come from .apsimx in the future
 doc <- xmlTreeParse("test.xml", useInternalNodes=TRUE)
 group <- getNodeSet(doc, "/tests/sims")
 
 groupdf <- list()
-c=1
+c <- 1
 for (n in group){
   groupdf[[c]] <- xmlToDataFrame(n)
   c <- c+1
@@ -65,8 +64,8 @@ for (ind in c(1:length(groupdf))){
       #unpack parameters
       params <- as.numeric(unlist(strsplit(tests$params[i], ",")))
       ifelse(i == 1,      
-      results <- func((simOutput), params),
-      results <- c(results, func(simOutput, params)))
+      results <- func((simOutput), tests$name[i], params),
+      results <- c(results, func(simOutput, tests$name[i], params)))
     }
   }
 }
