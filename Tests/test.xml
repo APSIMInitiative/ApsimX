@@ -3,33 +3,8 @@
 		<name>Test</name>
 		<test>
 			<name>AllPos</name>
-			<col>WeatherFile.MaxT,WeatherFile.Radn,WeatherFile.MinT</col>
+			<col>WeatherFile.MaxT,WeatherFile.Radn</col>
 			<params></params>
-		</test>
-		<test>
-			<name>GreaterThan</name>
-			<col>WeatherFile.MaxT,WeatherFile.Radn,WeatherFile.MinT</col>
-			<params>5</params>
-		</test>		
-		<test>
-			<name>LessThan</name>
-			<col>WeatherFile.MaxT,WeatherFile.Radn,WeatherFile.MinT</col>
-			<params>1000</params>
-		</test>		
-		<test>
-			<name>Between</name>
-			<col>WeatherFile.MaxT,WeatherFile.Radn,WeatherFile.MinT</col>
-			<params>0,500</params>
 		</test>	
-		<test>
-			<name>Mean</name>
-			<col>WeatherFile.MaxT</col>
-			<params>10,26</params>
-		</test>
-		<test>
-			<name>Tolerance</name>
-			<col>WeatherFile.MaxT</col>
-			<params>1,2,35</params>
-		</test>		
 	</sims>
 </tests>
