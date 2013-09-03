@@ -30,7 +30,7 @@ for (ind in c(1:length(groupdf))){
   
   for (sim in c(1:length(simsToTest)))
   {
-    db <- dbConnect(SQLite(), dbname = dbName)
+    db <- dbConnect(SQLite(), dbname = dbName) 
     
     #get report ID and extract relevant info from table
     simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
