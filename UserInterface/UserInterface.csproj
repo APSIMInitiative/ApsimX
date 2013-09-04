@@ -69,7 +69,14 @@
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
+    <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
+    <Compile Include="Utility\Editor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Utility\Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\AxisView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -81,6 +88,12 @@
     </Compile>
     <Compile Include="Views\GeneralView.Designer.cs">
       <DependentUpon>GeneralView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReportView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ReportView.Designer.cs">
+      <DependentUpon>ReportView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SeriesView.cs">
       <SubType>UserControl</SubType>
@@ -137,6 +150,9 @@
     <Compile Include="Views\DataStoreView.Designer.cs">
       <DependentUpon>DataStoreView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Utility\Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
@@ -161,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AxisView.resx">
       <DependentUpon>AxisView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ReportView.resx">
+      <DependentUpon>ReportView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SeriesView.resx">
       <DependentUpon>SeriesView.cs</DependentUpon>

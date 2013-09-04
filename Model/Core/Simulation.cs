@@ -48,7 +48,13 @@ namespace Model.Core
             }
             catch (Exception err)
             {
-                DataStore.WriteMessage(err.Source, err.Message + "\r\n" + err.StackTrace);
+                string Msg = err.Message;
+                if (err.InnerException != null)
+                    Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
+                else
+                    Msg += "\r\n" + err.StackTrace;
+                Console.WriteLine(Msg);
+                DataStore.WriteMessage(err.Source, Msg);
 
                 if (Completed != null)
                     Completed.Invoke();

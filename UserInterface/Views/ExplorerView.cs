@@ -291,6 +291,8 @@ namespace UserInterface.Views
                 RightHandPanel.Controls.Add(Control);
                 Control.Dock = DockStyle.Fill;
                 Control.BringToFront();
+                RightHandPanel.Focus();
+                Control.Focus();
             }
         }
         #endregion
