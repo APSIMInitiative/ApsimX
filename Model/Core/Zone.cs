@@ -168,7 +168,11 @@ namespace Model.Core
         /// </summary>
         public object Get(string NamePath)
         {
-            object Obj = this;
+            object Obj;
+            if (NamePath.Length > 0 && NamePath[0] == '.')
+                Obj = GetRoot();
+            else
+                Obj = this;
 
             string[] NamePathBits = NamePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string PathBit in NamePathBits)
@@ -189,6 +193,17 @@ namespace Model.Core
                 }
             }
             return Obj;
+        }
+
+        /// <summary>
+        /// Return the root parent (top level zone)
+        /// </summary>
+        private object GetRoot()
+        {
+            Zone Root = this;
+            while (Root.Parent != null)
+                Root = Parent;
+            return Root;
         }
 
         /// <summary>

@@ -16,9 +16,9 @@
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
     <Zone>
-      <Name>Field</Name>
+      <Name>Field1</Name>
       <Report>
-        <Name>Report</Name>
+        <Name>Field1Report</Name>
         <Variables>
           <string>Today</string>
           <string>maxt</string>
@@ -26,26 +26,41 @@
         </Variables>
         <Events>
           <string>Clock.EndOfDay</string>
-        </Events>
+        </Events> 
       </Report>
     </Zone>
-    <Graph>
-      <Name>Graph</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title</Title>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Y axis title</Title>
-      </Axis>
-      <Series>
-        <Title>Series 1</Title>
-        <Type>Line</Type>
-        <TableName>Report</TableName>
-        <X>Today</X>
-        <Y>MaxT</Y>
-      </Series>
-    </Graph>
+    <Zone>
+      <Name>Field2</Name>
+      <Graph>
+        <Name>Graph1</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>X axis title</Title>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Y axis title</Title>
+        </Axis>
+        <Series>
+          <Title>Series 1</Title>
+          <Type>Line</Type>
+          <TableName>Report</TableName>
+          <X>Today</X>
+          <Y>MaxT</Y>
+        </Series>
+      </Graph>
+      <Zone>
+        <Name>Field2SubZone</Name>
+        <Report>
+          <Name>Field2SubZoneReport</Name>
+          <Variables>
+            <string>Today</string>
+          </Variables>
+          <Events>
+          </Events>
+        </Report>
+      </Zone>
+    </Zone>
+
   </Simulation>
 </Simulations>

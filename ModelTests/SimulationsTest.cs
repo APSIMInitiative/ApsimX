@@ -48,12 +48,12 @@ namespace ModelTests
             Assert.AreEqual(Utility.Reflection.Name(Sim.Models[0]), "DataStore");
             Assert.AreEqual(Utility.Reflection.Name(Sim.Models[1]), "WeatherFile");
             Assert.AreEqual(Utility.Reflection.Name(Sim.Models[2]), "Clock");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[3]), "Field");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[4]), "Graph");
+            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[3]), "Field1");
+            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[4]), "Field2");
 
             IZone Z = Sim.Models[3] as IZone;
             Assert.AreEqual(Z.Models.Count, 1);
-            Assert.AreEqual(Utility.Reflection.Name(Z.Models[0]), "Report");
+            Assert.AreEqual(Utility.Reflection.Name(Z.Models[0]), "Field1Report");
         }
 
         /// <summary>
