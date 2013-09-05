@@ -3,7 +3,7 @@
 		<name>Test</name>
 		<test>
 			<name>AllPos</name>
-			<col>WeatherFile.MaxT,WeatherFile.Radn</col>
+			<col>.WeatherFile.MaxT,.WeatherFile.Radn</col>
 			<params></params>
 		</test>	
 	</sims>
