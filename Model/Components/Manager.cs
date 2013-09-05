@@ -19,7 +19,6 @@ namespace Model.Components
     public class Manager : IXmlSerializable
     {
         // Privates
-        private string DllFileName;
         private Assembly CompiledAssembly;
         private string Name;
 

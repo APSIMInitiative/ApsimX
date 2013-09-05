@@ -40,14 +40,14 @@ namespace ModelTests
         [TestMethod]
         public void ModelsTest()
         {
-            Assert.AreEqual(S.Sims.Count, 1);
-            Assert.AreEqual(Utility.Reflection.Name(S.Sims[0]), "Test");
+            Assert.AreEqual(S.Models.Count, 2);
+            Assert.AreEqual(Utility.Reflection.Name(S.Models[0]), "Test");
 
-            ISimulation Sim = S.Sims[0] as ISimulation;
+            ISimulation Sim = S.Models[0] as ISimulation;
             Assert.AreEqual(Sim.Models.Count, 5);
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[0]), "DataStore");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[1]), "WeatherFile");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[2]), "Clock");
+            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[0]), "WeatherFile");
+            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[1]), "Clock");
+            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[2]), "Summary");
             Assert.AreEqual(Utility.Reflection.Name(Sim.Models[3]), "Field1");
             Assert.AreEqual(Utility.Reflection.Name(Sim.Models[4]), "Field2");
 
@@ -67,7 +67,7 @@ namespace ModelTests
                               "   <StartDate>1940-01-01T00:00:00</StartDate>" +
                               "   <EndDate>1989-12-31T00:00:00</EndDate>" +
                               "</Clock>";
-            IZone Sim = S.Sims[0];
+            IZone Sim = S.Models[0] as IZone;
 
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(ChildXml);

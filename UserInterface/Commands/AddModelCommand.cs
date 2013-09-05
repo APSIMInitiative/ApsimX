@@ -34,8 +34,6 @@ namespace UserInterface.Commands
             {
                 if (Parent is Zone)
                     (Parent as Zone).Models.Add(NewlyCreatedObject);
-                else if (Parent is Simulations && NewlyCreatedObject is Simulation)
-                    (Parent as Simulations).Sims.Add(NewlyCreatedObject as Simulation);
                 else
                     NewlyCreatedObject = null;
             }
@@ -54,10 +52,6 @@ namespace UserInterface.Commands
             {
                 if (Parent is Zone)
                     (Parent as IZone).Models.Remove(NewlyCreatedObject);
-                else if (Parent is Simulations && NewlyCreatedObject is Simulation)
-                    (Parent as Simulations).Sims.Remove(NewlyCreatedObject as Simulation);
-
-
             }
             return null;
         }

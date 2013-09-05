@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections;
 using Model.Core;
 using System.Xml.Serialization;
+using Model.Components;
 
 namespace Model.Core
 {
@@ -16,9 +17,15 @@ namespace Model.Core
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
-    public class Simulations
+    public class Simulations : Zone
     {
         private string _FileName;
+
+        /// <summary>
+        /// When all simulations have finished, this event will be invoked
+        /// </summary>
+        public event NullTypeDelegate AllCompleted;
+
         /// <summary>
         /// The name of the file containing the simulations.
         /// </summary>
@@ -32,17 +39,8 @@ namespace Model.Core
             set
             {
                 _FileName = value;
-                foreach (Simulation Simulation in Sims)
-                    Simulation.FileName = _FileName;
             }
         }
-
-        /// <summary>
-        /// Collection of simulations.
-        /// </summary>
-        /// 
-        [XmlElement("Simulation")]
-        public List<Simulation> Sims { get; set; }
 
         /// <summary>
         /// Write the specified simulation set to the specified filename
@@ -56,16 +54,29 @@ namespace Model.Core
         }
 
         /// <summary>
+        /// Read XML from specified reader. Called during Deserialisation.
+        /// </summary>
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            Name = "Simulations";
+            ResolveLinks(this);
+        }
+
+        /// <summary>
         /// Run all simulations. Return true if all ran ok.
         /// </summary>
         public bool Run()
         {
-            bool ok = true;
-            foreach (Simulation Simulation in Sims)
-                ok = Simulation.Run() && ok;
+            InitialiseNonSimulations();
 
-            foreach (Simulation Simulation in Sims)
-                Simulation.OnAllComplete();
+            bool ok = true;
+            foreach (object Model in Models)
+                if (Model is Simulation)
+                    ok = (Model as Simulation).Run() && ok;
+
+            if (AllCompleted != null)
+                AllCompleted();
             return ok;
         }
 
@@ -74,11 +85,26 @@ namespace Model.Core
         /// </summary>
         public bool Run(ISimulation Sim)
         {
+            InitialiseNonSimulations();
+
             Simulation Simulation = Sim as Simulation;
             bool ok = Simulation.Run();
 
-            Simulation.OnAllComplete();
+            if (AllCompleted != null)
+                AllCompleted();
             return ok;
+        }
+
+        /// <summary>
+        /// Initialise all non simulation models.
+        /// </summary>
+        private void InitialiseNonSimulations()
+        {
+            foreach (object Model in Models)
+            {
+                if (!(Model is Simulation))
+                    Initialise(Model);
+            }
         }
 
         /// <summary>
@@ -86,33 +112,16 @@ namespace Model.Core
         /// Simulations.Test.Field.Report        /// 
         /// </summary>
         /// <returns>Returns the found object or null if not found.</returns>
-        public object Get(string FullPath)
+        public override object Get(string FullPath)
         {
             if (FullPath == "Simulations")
                 return this;
+
             int PosFirstPeriod = FullPath.IndexOf('.');
             if (PosFirstPeriod != -1)
             {
-                string FirstWord = FullPath.Substring(0, PosFirstPeriod);
-                string SecondWord;
-                int PosSecondPeriod = FullPath.IndexOf('.', PosFirstPeriod+1);
-                if (PosSecondPeriod != -1)
-                    SecondWord = FullPath.Substring(PosFirstPeriod+1, PosSecondPeriod-PosFirstPeriod-1);
-                else
-                    SecondWord = FullPath.Substring(PosFirstPeriod+1);
-                
-                if (FirstWord == "Simulations")
-                {
-                    foreach (Simulation Simulation in Sims)
-                        if (Simulation.Name == SecondWord)
-                        {
-                            if (PosSecondPeriod == -1)
-                                return Simulation;
-                            else
-                                return Simulation.Get(FullPath.Substring(PosSecondPeriod + 1));
-                        }
-                            
-                }
+                string Remainder = FullPath.Substring(PosFirstPeriod + 1);
+                return base.Get(Remainder);
             }
             return null;
         }

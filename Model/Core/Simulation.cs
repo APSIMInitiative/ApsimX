@@ -9,7 +9,7 @@ namespace Model.Core
     public class Simulation : Zone, ISimulation
     {
         // Private links
-        [Link] private DataStore DataStore = null;
+        [Link] private ISummary Summary = null;
 
         /// <summary>
         /// To commence the simulation, this event will be invoked.
@@ -20,16 +20,6 @@ namespace Model.Core
         /// When the simulation is finished, this event will be invoked
         /// </summary>
         public event NullTypeDelegate Completed;
-
-        /// <summary>
-        /// When all simulations have finished, this event will be invoked
-        /// </summary>
-        public event NullTypeDelegate AllCompleted;
-
-        /// <summary>
-        /// Name of file containing the simulation.
-        /// </summary>
-        public string FileName { get; set; }
 
         /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
@@ -54,7 +44,7 @@ namespace Model.Core
                 else
                     Msg += "\r\n" + err.StackTrace;
                 Console.WriteLine(Msg);
-                DataStore.WriteMessage(err.Source, Msg);
+                Summary.WriteMessage(Msg);
 
                 if (Completed != null)
                     Completed.Invoke();
@@ -64,30 +54,12 @@ namespace Model.Core
         }
 
         /// <summary>
-        /// Read XML from specified reader. Called during Deserialisation.
-        /// </summary>
-        public override void ReadXml(XmlReader reader)
-        {
-            base.ReadXml(reader);
-            ResolveLinks(this);
-        }
-
-        /// <summary>
-        /// All simulations have completed - invoke event.
-        /// </summary>
-        public void OnAllComplete()
-        {
-            if (AllCompleted != null)
-                AllCompleted();
-        }
-
-        /// <summary>
         /// Simulation is being initialised.
         /// </summary>
         private void OnInitialised()
         {
             string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            DataStore.WriteProperty("Version", Version);
+            Summary.WriteProperty("Version", Version);
             string Hierarchy = "";
             foreach (object Child in Models)
             {
@@ -99,7 +71,7 @@ namespace Model.Core
                         Hierarchy += "    |- " + AreaChild.GetType().Name + "\r\n";
                 }
             }
-            DataStore.WriteProperty("Hierarchy", Hierarchy);
+            Summary.WriteProperty("Hierarchy", Hierarchy);
         }
 
 

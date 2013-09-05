@@ -13,15 +13,5 @@ namespace Model.Core
         /// When the simulation is finished, this event will be invoked
         /// </summary>
         event NullTypeDelegate Completed;
-
-        /// <summary>
-        /// When all simulations have finished, this event will be invoked
-        /// </summary>
-        event NullTypeDelegate AllCompleted;
-
-        /// <summary>
-        /// Name of file containing the simulation.
-        /// </summary>
-        string FileName { get; }
     }
 }

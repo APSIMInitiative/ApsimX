@@ -109,15 +109,17 @@ namespace Model.Core
         #endregion
  
         /// <summary>
-        /// Return a full path to this system. Does include the 'Simulations' node.
-        /// Format: Simulations.SimulationName.PaddockName.ChildName
+        /// Return a full path to this system. Does not include the 'Simulation' node.
+        /// Format: .PaddockName.ChildName
         /// </summary>
         public string FullPath
         {
             get
             {
-                if (Parent == null)
-                    return Name;
+                if (this is Simulation)
+                    return ".";
+                else if (Parent is Simulation)
+                    return "." + Name;
                 else
                     return Parent.FullPath + "." + Name;
             }
@@ -132,7 +134,7 @@ namespace Model.Core
                 return this;
             foreach (object Child in Models)
             {
-                if (Child.GetType() == ModelType)
+                if (ModelType.IsAssignableFrom(Child.GetType()))
                     return Child;
             }
 
@@ -166,7 +168,7 @@ namespace Model.Core
         /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public object Get(string NamePath)
+        public virtual object Get(string NamePath)
         {
             object Obj;
             if (NamePath.Length > 0 && NamePath[0] == '.')
@@ -201,8 +203,8 @@ namespace Model.Core
         private object GetRoot()
         {
             Zone Root = this;
-            while (Root.Parent != null)
-                Root = Parent;
+            while (Root.Parent != null && !(Root.Parent is Simulations))
+                Root = Root.Parent;
             return Root;
         }
 

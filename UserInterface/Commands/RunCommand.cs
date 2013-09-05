@@ -21,8 +21,7 @@ namespace UserInterface.Commands
         public object Do()
         {
             if (Simulation == null)
-                foreach (ISimulation sim in Simulations.Sims)
-                    ok = Simulations.Run(sim);
+                Simulations.Run();
             else
                 ok = Simulations.Run(Simulation);
             return null;

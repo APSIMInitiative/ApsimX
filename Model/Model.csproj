@@ -89,6 +89,9 @@
     </Compile>
     <Compile Include="Components\Fertiliser.cs" />
     <Compile Include="Components\Manager.cs" />
+    <Compile Include="Components\Summary.cs" />
+    <Compile Include="Components\Tests.cs" />
+    <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\ISimulation.cs" />
     <Compile Include="Core\IZone.cs" />
     <Compile Include="Core\Zone.cs" />

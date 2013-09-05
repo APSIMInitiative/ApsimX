@@ -3,9 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Test</Name>
-    <DataStore>
-      <Name>DataStore</Name>
-    </DataStore>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>Goondiwindi.met</FileName>
@@ -15,6 +12,7 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
+    <Summary />
     <Zone>
       <Name>Field1</Name>
       <Report>
@@ -61,6 +59,8 @@
         </Report>
       </Zone>
     </Zone>
-
   </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+  </DataStore>
 </Simulations>

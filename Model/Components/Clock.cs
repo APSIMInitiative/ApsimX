@@ -10,7 +10,7 @@ namespace Model.Components
     {
         // Links
         [Link] private Simulation Simulation = null;
-        [Link] private DataStore DataStore = null;
+        [Link] private ISummary Summary = null;
 
         // Parameters serialised
         public string Name { get; set; }
@@ -40,8 +40,8 @@ namespace Model.Components
             Simulation.Commenced += OnCommence;
             Simulation.Completed += OnCompleted;
             Today = StartDate;
-            DataStore.WriteProperty("Start date", StartDate.ToString());
-            DataStore.WriteProperty("End date", EndDate.ToString());
+            Summary.WriteProperty("Start date", StartDate.ToString());
+            Summary.WriteProperty("End date", EndDate.ToString());
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Model.Components
             }
 
             //DataStore.WriteMessage(Simulation.Name, "Clock", "Simulation terminated normally", Today);
-            DataStore.WriteMessage("Simulation terminated normally");
+            Summary.WriteMessage("Simulation terminated normally");
         }
 
         /// <summary>

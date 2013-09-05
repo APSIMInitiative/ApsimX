@@ -28,6 +28,11 @@ namespace UserInterface.Views
         void SetCellEditor(int Col, int Row, Type type);
 
         /// <summary>
+        /// Set the editor for the specified cell to a combo box with the specified possible values.
+        /// </summary>
+        void SetCellEditor(int Col, int Row, string[] PossibleValues);
+
+        /// <summary>
         /// Set the specified column to auto size.
         /// </summary>
         void SetColumnAutoSize(int Col);
@@ -36,6 +41,16 @@ namespace UserInterface.Views
         /// Set the column to readonly.
         /// </summary>
         void SetColumnReadOnly(int Col, bool IsReadOnly);
+
+        /// <summary>
+        /// Add a column to the grid of the specified type.
+        /// </summary>
+        void AddColumn(Type type);
+
+        /// <summary>
+        /// Add a combobox column with the specified possible values.
+        /// </summary>
+        void AddColumn(string[] PossibleValues);
     }
 
     public partial class GridView : UserControl, IGridView
@@ -93,6 +108,59 @@ namespace UserInterface.Views
         {
             if (type == typeof(DateTime))
                 Grid[Col, Row] = new Utility.DataGridViewCalendarCell.CalendarCell();
+            else if (type.IsEnum)
+            {
+                List<string> Items = new List<string>();
+                foreach (object e in type.GetEnumValues())
+                    Items.Add(e.ToString());
+
+                SetCellEditor(Col, Row, Items.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Set the editor for the specified cell to a combo box with the specified possible values.
+        /// </summary>
+        public void SetCellEditor(int Col, int Row, string[] PossibleValues)
+        {
+            DataGridViewComboBoxCell Combo = new DataGridViewComboBoxCell();
+            Combo.Items.AddRange(PossibleValues);
+            Combo.Value = PossibleValues[0];
+            Combo.FlatStyle = FlatStyle.Flat;
+
+            string CurrentValue = Grid[Col, Row].Value.ToString();
+            if (Array.IndexOf(PossibleValues, CurrentValue) == -1)
+                Grid[Col, Row].Value = PossibleValues[0];
+            Grid[Col, Row] = Combo;
+        }
+
+
+        /// <summary>
+        /// Add a column to the grid of the specified type.
+        /// </summary>
+        public void AddColumn(Type type)
+        {
+            if (type == typeof(DateTime))
+                Grid.Columns.Add(new Utility.DataGridViewCalendarCell.CalendarColumn());
+            else if (type.IsEnum)
+            {
+                List<string> Items = new List<string>();
+                foreach (object e in type.GetEnumValues())
+                    Items.Add(e.ToString());
+
+                AddColumn(Items.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Add a combobox column with the specified possible values.
+        /// </summary>
+        public void AddColumn(string[] PossibleValues)
+        {
+            DataGridViewComboBoxColumn Combo = new DataGridViewComboBoxColumn();
+            Combo.Items.AddRange(PossibleValues);
+            Combo.FlatStyle = FlatStyle.Flat;
+            Grid.Columns.Add(Combo);
         }
 
         /// <summary>

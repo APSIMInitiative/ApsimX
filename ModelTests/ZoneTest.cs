@@ -38,10 +38,10 @@ namespace ModelTests
         [TestMethod]
         public void FullPathTest()
         {
-            ISimulation Sim = S.Sims[0] as ISimulation;
+            ISimulation Sim = S.Models[0] as ISimulation;
 
-            Assert.AreEqual(Sim.FullPath, "Test");
-            Assert.AreEqual((Sim.Models[3] as IZone).FullPath, "Test.Field1");
+            Assert.AreEqual(Sim.FullPath, ".");
+            Assert.AreEqual((Sim.Models[3] as IZone).FullPath, ".Field1");
         }
 
 
@@ -51,7 +51,7 @@ namespace ModelTests
         [TestMethod]
         public void ScopingRules()
         {
-            ISimulation Sim = S.Sims[0] as ISimulation;
+            ISimulation Sim = S.Models[0] as ISimulation;
 
             IZone Field1 = Sim.Models[3] as IZone;
 
@@ -62,6 +62,9 @@ namespace ModelTests
             // Make sure we can get a link to a model in top level zone from Field1
             Assert.AreEqual(Utility.Reflection.Name(Field1.Find("WeatherFile")), "WeatherFile");
             Assert.AreEqual(Utility.Reflection.Name(Field1.Find(typeof(Model.Components.WeatherFile))), "WeatherFile");
+
+            // Make sure we can get a link to a model in top level Simulations zone from Field1
+            Assert.AreEqual(Utility.Reflection.Name(Field1.Find(typeof(Model.Components.DataStore))), "DataStore");
 
             // Make sure we can't get a link to a model in Field2 from Field1
             Assert.IsNull(Field1.Find("Graph"));
@@ -84,7 +87,7 @@ namespace ModelTests
         [TestMethod]
         public void Get()
         {
-            ISimulation Sim = S.Sims[0] as ISimulation;
+            ISimulation Sim = S.Models[0] as ISimulation;
 
             IZone Field1 = Sim.Models[3] as IZone;
 

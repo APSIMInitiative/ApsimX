@@ -19,8 +19,9 @@ namespace Model.Components
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
 
-        [Link] private Clock Clock = null;
-        [Link] private ISimulation Simulation = null;
+        // Links
+        [Link]
+        private Simulations Simulations = null;
 
         public string Name { get; set; }
 
@@ -39,7 +40,7 @@ namespace Model.Components
         {
             if (Connection == null)
             {
-                string Filename = System.IO.Path.ChangeExtension(Simulation.FileName, ".db");
+                string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename);
             }
@@ -73,7 +74,7 @@ namespace Model.Components
 
             if (Connection != null)
                 Disconnect();
-            string Filename = System.IO.Path.ChangeExtension(Simulation.FileName, ".db");
+            string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
             if (File.Exists(Filename))
                 File.Delete(Filename);
 
@@ -101,7 +102,7 @@ namespace Model.Components
             Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
             CreateTable("Messages", Names, Types);
 
-            Simulation.Completed += OnCompleted;
+            Simulations.AllCompleted += OnCompleted;
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace Model.Components
         private void OnCompleted()
         {
             Connection.ExecuteNonQuery("COMMIT");
-            Simulation.Completed -= OnCompleted;
+            Simulations.AllCompleted -= OnCompleted;
         }
 
         /// <summary>
@@ -149,35 +150,35 @@ namespace Model.Components
         /// <summary>
         /// Write a property to the DataStore.
         /// </summary>
-        public void WriteProperty(string Name, string Value)
+        public void WriteProperty(string SimulationName, string Name, string Value)
         {
             StackTrace st = new StackTrace(true);
             MethodInfo CallingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
             string ComponentName = CallingMethod.DeclaringType.FullName;
 
-            WriteToTable("Properties", new object[] { GetSimulationID(Simulation.Name), 
+            WriteToTable("Properties", new object[] { GetSimulationID(SimulationName), 
                                                       ComponentName, Name, Value });
         }
 
         /// <summary>
         /// Write a message to the DataStore.
         /// </summary>
-        public void WriteMessage(string Message, CriticalEnum Type = CriticalEnum.Information)
+        public void WriteMessage(string SimulationName, DateTime Date, string Message, CriticalEnum Type = CriticalEnum.Information)
         {
             StackTrace st = new StackTrace(true);
             MethodInfo CallingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
             string ComponentName = CallingMethod.DeclaringType.FullName;
 
-            WriteMessage(ComponentName, Message, Type);
+            WriteMessage(SimulationName, Date, ComponentName, Message, Type);
         }
 
         /// <summary>
         /// Write a message to the DataStore.
         /// </summary>
-        public void WriteMessage(string ComponentName, string Message, CriticalEnum Type = CriticalEnum.Information)
+        public void WriteMessage(string SimulationName, DateTime Date, string ComponentName, string Message, CriticalEnum Type = CriticalEnum.Information)
         {
-            WriteToTable("Messages", new object[] { GetSimulationID(Simulation.Name), 
-                                                      ComponentName, Clock.Today, Message, Convert.ToInt32(Type) });
+            WriteToTable("Messages", new object[] { GetSimulationID(SimulationName), 
+                                                      ComponentName, Date, Message, Convert.ToInt32(Type) });
         }
 
         /// <summary>

@@ -12,8 +12,9 @@ namespace Model.Components
     {
         // Links
         [Link] private Clock Clock = null;
+        [Link] private Simulations Simulations = null;
         [Link] private Simulation Simulation = null;
-        [Link] private DataStore DataStore = null;
+        [Link] private ISummary Summary = null;
 
         // Privates
         private Utility.ApsimTextFile File = null;
@@ -90,8 +91,8 @@ namespace Model.Components
                 Clock.Tick += OnTick;
                 Simulation.Completed += OnCompleted;
                 File = new Utility.ApsimTextFile();
-                string FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
-                DataStore.WriteProperty("Weather file name", FileName);
+                string FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
+                Summary.WriteProperty("Weather file name", FileName);
                 File.Open(FullFileName);
                 MaxTIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Maxt");
                 MinTIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Mint");

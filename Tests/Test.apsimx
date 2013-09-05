@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations>
+  <Name>Simulations</Name>
+  <Area>0</Area>
   <Simulation>
     <Name>Test</Name>
     <Area>0</Area>
-    <DataStore>
-      <Name>DataStore</Name>
-    </DataStore>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>Goondiwindi.met</FileName>
@@ -15,6 +14,7 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
+    <Summary />
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
@@ -83,17 +83,21 @@
         <Type>Line</Type>
         <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
-        <X>Clock.Today</X>
-        <Y>WeatherFile.MinT</Y>
-      </Series>
-      <Series>
-        <Title>Series 2</Title>
-        <Type>Line</Type>
-        <SimulationName>Test</SimulationName>
-        <TableName>Report</TableName>
-        <X>Clock.Today</X>
-        <Y>WeatherFile.MaxT</Y>
+        <X>.Clock.Today</X>
+        <Y>.WeatherFile.MinT</Y>
       </Series>
     </Graph>
   </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+  </DataStore>
+  <Tests>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>AllPos</Type>
+      <ColumnNames>.WeatherFile.MaxT</ColumnNames>
+      <Parameters />
+    </Test>
+  </Tests>
 </Simulations>

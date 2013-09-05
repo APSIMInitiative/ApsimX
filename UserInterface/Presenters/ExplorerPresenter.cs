@@ -119,12 +119,7 @@ namespace UserInterface.Presenters
                 throw new Exception("Node path is null. Cannot populate nodes");
             View.ClearNodes(NodePath);
             object Obj = ApsimXFile.Get(NodePath);
-            if (Obj is Simulations)
-            {
-                foreach (Simulation Simulation in (Obj as Simulations).Sims)
-                    View.AddNode(NodePath, GetNodeDescription(Simulation));
-            }
-            else if (Obj is IZone)
+            if (Obj is IZone)
             {
                 IZone Zone = Obj as IZone;
                 foreach (object ChildModel in Zone.Models)
@@ -138,7 +133,7 @@ namespace UserInterface.Presenters
                 {
                     Name = Utility.Reflection.Name(Model),
                     ResourceNameForImage = Model.GetType().Name + "16",
-                    HasChildren = Model is IZone || Model is Simulations
+                    HasChildren = Model is IZone
                 };
         }
 

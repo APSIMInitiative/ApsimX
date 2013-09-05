@@ -207,6 +207,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Summary16 {
+            get {
+                object obj = ResourceManager.GetObject("Summary16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap SummaryFile16 {
             get {
                 object obj = ResourceManager.GetObject("SummaryFile16", resourceCulture);
@@ -217,6 +224,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap SurfaceOrganicMatter16 {
             get {
                 object obj = ResourceManager.GetObject("SurfaceOrganicMatter16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Tests16 {
+            get {
+                object obj = ResourceManager.GetObject("Tests16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
