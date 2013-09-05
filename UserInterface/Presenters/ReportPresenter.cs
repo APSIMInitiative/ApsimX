@@ -38,12 +38,28 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnNeedVariableNames(object Sender, Utility.Editor.NeedContextItems e)
         {
+            if (e.ObjectName == "")
+                e.ObjectName = ".";
             object o = Report.ParentZone.Get(e.ObjectName);
 
             if (o != null)
             {
                 foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Property.Name);
+                {
+                    if (Property.Name == "Models")
+                    {
+                        List<object> Models = Property.GetValue(o, null) as List<object>;
+                        if (Models != null)
+                        {
+                            foreach (object Model in Models)
+                            {
+                                e.Items.Add(Utility.Reflection.Name(Model));
+                            }
+                        }
+                    }
+                    else
+                        e.Items.Add(Property.Name);
+                }
             }
         }
 

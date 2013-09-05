@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations>
-  <Name>Simulations</Name>
-  <Area>0</Area>
   <Simulation>
     <Name>Test</Name>
     <Area>0</Area>
@@ -23,16 +21,52 @@
       <Report>
         <Name>Report</Name>
         <Variables>
-          <string>Clock.Today</string>
-          <string>WeatherFile.MaxT</string>
-          <string>WeatherFile.MinT</string>
-          <string>WeatherFile.Radn</string>
-          <string>WeatherFile.Rain</string>
+          <string>.Clock.Today</string>
+          <string>.WeatherFile.MaxT</string>
+          <string>.WeatherFile.MinT</string>
+          <string>.WeatherFile.Radn</string>
+          <string>.WeatherFile.Rain</string>
+          <string>Manager.Model.A</string>
         </Variables>
         <Events>
           <string>Clock.EndOfDay</string>
         </Events>
       </Report>
+      <Manager>
+        <Name>Script</Name>
+        <Code>
+        using System;
+        using Model.Core;
+
+        namespace Model.Components
+        {
+            public class Script 
+            {      
+               // Links
+               [Link] Clock Clock;
+
+               // Parameters
+               public double A { get; set; }
+               
+               // Outputs
+               public double B { get { return A * 9; } }
+
+               public void OnInitialised()
+               {
+                  Clock.StartOfDay += OnStartOfDay;
+               }
+
+               private void OnStartOfDay()
+               {
+                  A++;
+               }
+            }
+        }
+        </Code>
+        <Script>
+          <A>30</A>
+        </Script>
+      </Manager>
     </Zone>
     <Graph>
       <Name>Graph</Name>

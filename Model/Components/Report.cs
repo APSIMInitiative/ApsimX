@@ -65,7 +65,7 @@ namespace Model.Components
             List<Type> Types = new List<Type>();
             foreach (string VariableName in Variables)
             {
-                object Value = Simulation.Get(VariableName);
+                object Value = Paddock.Get(VariableName);
                 Values.Add(Value);
                 if (Value == null)
                     Types.Add(typeof(int));

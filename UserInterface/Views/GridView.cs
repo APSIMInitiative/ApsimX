@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace UserInterface.Views
 {
     public delegate void GridCellValueChanged(int Col, int Row, object OldValue, object NewValue);
-    interface IGridView
+    public interface IGridView
     {
         /// <summary>
         /// This event is invoked when the value of a cell is changed.

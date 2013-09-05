@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Utility
 {
     /// <summary>
-    /// This class provides an intellisense editor.
+    /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
     public partial class Editor : UserControl
     {
@@ -23,6 +23,8 @@ namespace Utility
         }
         public event EventHandler<NeedContextItems> ContextItemsNeeded;
         public event EventHandler TextHasChangedByUser;
+
+        public SyntaxHighlighter SyntaxHighlighter { get; set; }
 
         /// <summary>
         /// Constructor
@@ -45,6 +47,11 @@ namespace Utility
             {
                 TextBox.TextChanged -= OnTextHasChanged;
                 TextBox.Text = value;
+                if (SyntaxHighlighter != null)
+                {
+                    SyntaxHighlighter.Update(this);
+                    SyntaxHighlighter.DoSyntaxHightlight_AllLines(this);
+                }
                 TextBox.TextChanged += OnTextHasChanged;
             }
         }
@@ -62,6 +69,11 @@ namespace Utility
             {
                 TextBox.TextChanged -= OnTextHasChanged;
                 TextBox.Lines = value;
+                if (SyntaxHighlighter != null)
+                {
+                    SyntaxHighlighter.Update(this);
+                    SyntaxHighlighter.DoSyntaxHightlight_AllLines(this);
+                }
                 TextBox.TextChanged += OnTextHasChanged;
             }
         }
@@ -124,8 +136,13 @@ namespace Utility
         /// </summary>
         private string GetWordBeforePosition(int Pos)
         {
-            int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n".ToCharArray(), Pos-1);
-            return TextBox.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter-1);
+            if (Pos == 0)
+                return "";
+            else
+            {
+                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n".ToCharArray(), Pos - 1);
+                return TextBox.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter - 1);
+            }
         }
 
         /// <summary>
@@ -141,7 +158,8 @@ namespace Utility
             ContextList.Top = p.Y + 20;  // Would be nice not to use a constant number of pixels.
 
             ContextList.Show();
-            ContextList.SelectedIndex = 0;
+            if (ContextList.Items.Count > 0)
+                ContextList.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -149,10 +167,109 @@ namespace Utility
         /// </summary>
         private void OnTextHasChanged(object sender, EventArgs e)
         {
+            if (SyntaxHighlighter != null)
+                SyntaxHighlighter.DoSyntaxHightlight_CurrentLine(this);
+
             if (TextHasChangedByUser != null)
                 TextHasChangedByUser(sender, e);
         }
 
+        #region Functions needed by the SyntaxHighlighter
+        public string GetLastWord()
+        {
+            int pos = TextBox.SelectionStart;
 
+            while (pos > 1)
+            {
+                string substr = Text.Substring(pos - 1, 1);
+
+                if (Char.IsWhiteSpace(substr, 0))
+                {
+                    return Text.Substring(pos, TextBox.SelectionStart - pos);
+                }
+
+                pos--;
+            }
+
+            return Text.Substring(0, TextBox.SelectionStart);
+        }
+        public string GetLastLine()
+        {
+            int charIndex = TextBox.SelectionStart;
+            int currentLineNumber = TextBox.GetLineFromCharIndex(charIndex);
+
+            // the carriage return hasn't happened yet... 
+            //      so the 'previous' line is the current one.
+            string previousLineText;
+            if (TextBox.Lines.Length <= currentLineNumber)
+                previousLineText = TextBox.Lines[TextBox.Lines.Length - 1];
+            else
+                previousLineText = TextBox.Lines[currentLineNumber];
+
+            return previousLineText;
+        }
+        public string GetCurrentLine()
+        {
+            int charIndex = TextBox.SelectionStart;
+            int currentLineNumber = TextBox.GetLineFromCharIndex(charIndex);
+
+            if (currentLineNumber < TextBox.Lines.Length)
+            {
+                return TextBox.Lines[currentLineNumber];
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        public int GetCurrentLineStartIndex()
+        {
+            return TextBox.GetFirstCharIndexOfCurrentLine();
+        }
+        public int SelectionStart
+        {
+            get
+            {
+                return TextBox.SelectionStart;
+            }
+            set
+            {
+                TextBox.SelectionStart = value;
+            }
+        }
+        public int SelectionLength
+        {
+            get
+            {
+                return TextBox.SelectionLength;
+            }
+            set
+            {
+                TextBox.SelectionLength = value;
+            }
+        }
+        public Color SelectionColor
+        {
+            get
+            {
+                return TextBox.SelectionColor;
+            }
+            set
+            {
+                TextBox.SelectionColor = value;
+            }
+        }
+        public string SelectedText
+        {
+            get
+            {
+                return TextBox.SelectedText;
+            }
+            set
+            {
+                TextBox.SelectedText = value;
+            }
+        }
+        #endregion
     }
 }

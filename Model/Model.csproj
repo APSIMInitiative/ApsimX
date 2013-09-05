@@ -88,6 +88,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="Components\Fertiliser.cs" />
+    <Compile Include="Components\Manager.cs" />
     <Compile Include="Core\ISimulation.cs" />
     <Compile Include="Core\IZone.cs" />
     <Compile Include="Core\Zone.cs" />

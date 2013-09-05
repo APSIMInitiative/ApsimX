@@ -123,9 +123,9 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Manager216 {
+        internal static System.Drawing.Bitmap Manager16 {
             get {
-                object obj = ResourceManager.GetObject("Manager216", resourceCulture);
+                object obj = ResourceManager.GetObject("Manager16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

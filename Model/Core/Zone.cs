@@ -234,7 +234,12 @@ namespace Model.Core
                 FindChildModels(Obj, Children);
 
                 foreach (object Child in Children)
-                    ResolveLinks(Child);
+                {
+                    if (Child is Zone)
+                        (Child as Zone).ResolveLinks(Child);
+                    else
+                        ResolveLinks(Child);
+                }
             }
         }
 
@@ -273,7 +278,8 @@ namespace Model.Core
                                 }
                         }
                     }
-                    else if (!Property.PropertyType.IsEnum && Property.PropertyType.FullName.Contains("Model"))
+                    else if (Property.PropertyType.IsClass && !Property.PropertyType.IsEnum &&
+                             (Property.PropertyType.FullName == "System.Object" || !Property.PropertyType.FullName.Contains("System.")))
                     {
                         object Value = Property.GetValue(Obj, null);
                         if (Value != null)
