@@ -11,22 +11,22 @@ setwd(args[1])
 source("../RTestSuite/tests.R")
 
 # read control file - this will come from .apsimx in the future
-doc <- xmlTreeParse("test.xml", useInternalNodes=TRUE)
-group <- getNodeSet(doc, "/tests/sims")
+doc <- xmlTreeParse(list.files(args[1], pattern="^.*\\.(apsimx)$"), useInternalNodes=TRUE)
+group <- getNodeSet(doc, "/Simulations/Tests/Test")
 
 groupdf <- list()
 c <- 1
 for (n in group){
-  groupdf[[c]] <- xmlToDataFrame(n)
+  groupdf[[c]] <- xmlToDataFrame(n, stringsAsFactors=FALSE)
   c <- c+1
 }
 rm(c)
 
-#run tests on each simulation group
+#run tests on each test group
 for (ind in c(1:length(groupdf))){
   currentSimGroup <- groupdf[[ind]]
   dbName <- list.files(args[1], pattern="^.*\\.(db)$")
-  simsToTest <- unlist(strsplit(currentSimGroup[1,1], ","))
+  simsToTest <- unlist(strsplit(currentSimGroup[1, 1], ","))
   
   for (sim in c(1:length(simsToTest)))
   {
@@ -45,31 +45,25 @@ for (ind in c(1:length(groupdf))){
     readSimOutput <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
     
     #get tests to run
-    tests <- currentSimGroup[!is.na(currentSimGroup[2]), -1]
+    tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
     
     #run the tests
-    for (i in c(1:nrow(tests))) {    
+    for (i in c(1:length(tests))) {    
       #get columns to run them on
-      if (tests[i, "col"] != "all"){
-         cols <- unlist(strsplit(tests$col[i], ","))
-         if (ncol(readSimOutput) > 1) 
+         cols <- unlist(strsplit(currentSimGroup[4, 1], ","))
            simOutput <- subset(readSimOutput, select=unlist(cols))
-      }
-      else {
-        simOutput <- readSimOutput
-      }
             
       # retrieve the test name
-      func <- match.fun(tests$name[i])
+      func <- match.fun(tests[i])
       #unpack parameters
-      params <- as.numeric(unlist(strsplit(tests$params[i], ",")))
+      params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
       ifelse(i == 1,      
       results <- func((simOutput), tests$name[i], params),
       results <- c(results, func(simOutput, tests$name[i], params)))
     }
   }
 }
-print(tests$name)
+print(tests)
 print(results)
 
 if (all(results) == FALSE) stop("One or more tests failed.")
