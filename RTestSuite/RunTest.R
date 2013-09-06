@@ -1,17 +1,15 @@
-#rm(list=ls()) #remove for production
+#rm(list=ls()) # for testing only 
 library("XML")
 library("RSQLite")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\", "C:\\ApsimX\\ApsimX\\Tests\\") # for testing only 
+#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test", "C:\\ApsimX\\ApsimX\\Tests\\") # for testing only 
 
-# needed to cut the trailing '\' off... worked ok on local, but not remote.
-args[1] <- substr(args[1], 1, nchar(args[1]) - 1)
-setwd(args[1])
-source("../RTestSuite/tests.R")
+
+source("RTestSuite/tests.R")
 
 # read control file - this will come from .apsimx in the future
-doc <- xmlTreeParse(list.files(args[1], pattern="^.*\\.(apsimx)$"), useInternalNodes=TRUE)
+doc <- xmlTreeParse(paste(args[1], ".apsimx",sep=""), useInternalNodes=TRUE)
 group <- getNodeSet(doc, "/Simulations/Tests/Test")
 
 groupdf <- list()
@@ -25,7 +23,7 @@ rm(c)
 #run tests on each test group
 for (ind in c(1:length(groupdf))){
   currentSimGroup <- groupdf[[ind]]
-  dbName <- list.files(args[1], pattern="^.*\\.(db)$")
+  dbName <- paste(args[1], ".db",sep="")
   simsToTest <- unlist(strsplit(currentSimGroup[1, 1], ","))
   
   for (sim in c(1:length(simsToTest)))
