@@ -41,6 +41,8 @@ namespace Model.Components
             if (Connection == null)
             {
                 string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
+                if (Filename == null || Filename == "")
+                    throw new Exception("The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename);
             }
@@ -217,8 +219,9 @@ namespace Model.Components
                     DataTable Table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
                     return Utility.DataTable.GetColumnAsStrings(Table, "Name");
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
+                    Console.WriteLine(err.Message);
                     return new string[0];
                 }
             }
@@ -245,8 +248,9 @@ namespace Model.Components
                         Tables.RemoveAt(SimulationsI);
                     return Tables.ToArray();
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
+                    Console.WriteLine(err.Message);
                     return new string[0];
                 }
 

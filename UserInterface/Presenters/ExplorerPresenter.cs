@@ -156,8 +156,9 @@ namespace UserInterface.Presenters
             this.View.AddRightHandView(null);  // clear current view.
 
             object Model = ApsimXFile.Get(View.CurrentNodePath);
-            ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName)) as ViewName;
-            PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName)) as PresenterName;
+
+            ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
+            PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
 
             if (ViewName != null && PresenterName != null)
             {

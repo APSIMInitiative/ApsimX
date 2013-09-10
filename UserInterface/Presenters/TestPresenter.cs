@@ -30,6 +30,54 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateGrid()
         {
+            DataTable Table = TestsToDataTable();
+            Grid.DataSource = Table;
+
+            // Set up cell editors for all cells.
+            Test.TestType Dummy = new Test.TestType();
+            Grid.RowCount = 100;
+            for (int Row = 0; Row < Grid.RowCount; Row++)
+            {
+                PopulateComboItemsInRow(Row);
+                Grid.SetCellEditor(3, Row, Dummy);
+            }
+
+            Grid.SetColumnAutoSize(2);
+        }
+
+        /// <summary>
+        /// Populate the specified row with the correct combo boxes.
+        /// </summary>
+        /// <param name="Row"></param>
+        private void PopulateComboItemsInRow(int Row)
+        {
+            DataTable Table = Grid.DataSource;
+            Grid.SetCellEditor(0, Row, Tests.DataStore.SimulationNames);
+
+            string[] TableNames = new string[0];
+            string[] ColumnNames = new string[0];
+
+            if (Row < Table.Rows.Count)
+            {
+                string SimulationName = Table.Rows[Row][0].ToString();
+                if (SimulationName != "")
+                {
+                    TableNames = Tests.DataStore.TableNames;
+                    string TableName = Table.Rows[Row][1].ToString();
+                    if (TableName != "")
+                        ColumnNames = Utility.DataTable.GetColumnNames(Tests.DataStore.GetData(SimulationName, TableName));
+                }
+            }
+
+            Grid.SetCellEditor(1, Row, TableNames);
+            Grid.SetCellEditor(2, Row, ColumnNames);
+        }
+
+        /// <summary>
+        /// Convert all tests to a datatable.
+        /// </summary>
+        private DataTable TestsToDataTable()
+        {
             DataTable Table = new DataTable();
             Table.Columns.Add("Simulation name", typeof(string));
             Table.Columns.Add("Table name", typeof(string));
@@ -45,30 +93,26 @@ namespace UserInterface.Presenters
                                               Test.Type.ToString(), 
                                               Test.Parameters});
             }
-
-            Grid.DataSource = Table;
-            for (int Row = 0; Row < Table.Rows.Count; Row++)
-                PopulateRow(Row);
-            Grid.SetColumnAutoSize(2);
+            return Table;
         }
 
         /// <summary>
-        /// Populate the specified row with the correct combo boxes.
+        /// Convert the specified datatable to an array of tests.
         /// </summary>
-        /// <param name="Row"></param>
-        private void PopulateRow(int Row)
+        private Test[] DataTableToTests(DataTable Table)
         {
-            DataTable Table = Grid.DataSource as DataTable;
-            Grid.SetCellEditor(0, Row, Tests.DataStore.SimulationNames);
-
-            string SimulationName = Table.Rows[Row][0].ToString();
-
-            string TableName = Table.Rows[Row][1].ToString();
-            string[] ColumnNames = Utility.DataTable.GetColumnNames(Tests.DataStore.GetData(SimulationName, TableName));
-
-            Grid.SetCellEditor(1, Row, Tests.DataStore.TableNames);
-            Grid.SetCellEditor(2, Row, ColumnNames);
-            Grid.SetCellEditor(3, Row, typeof(Test.TestType));
+            Test[] AllTests = new Test[Table.Rows.Count];
+            for (int Row = 0; Row < Table.Rows.Count; Row++)
+            {
+                AllTests[Row] = new Test();
+                AllTests[Row].SimulationName = Table.Rows[Row][0].ToString();
+                AllTests[Row].TableName = Table.Rows[Row][1].ToString();
+                AllTests[Row].ColumnNames = Table.Rows[Row][2].ToString();
+                if (Table.Rows[Row][3].ToString() != "")
+                    AllTests[Row].Type = (Test.TestType)Enum.Parse(typeof(Test.TestType), Table.Rows[Row][3].ToString());
+                AllTests[Row].Parameters = Table.Rows[Row][4].ToString();
+            }
+            return AllTests;
         }
 
         /// <summary>
@@ -76,21 +120,20 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnCellValueChanged(int Col, int Row, object OldValue, object NewValue)
         {
-            PopulateRow(Row);
+            // The ChangePropertyCommand below will trigger a call to OnModelChanged. We don't need to 
+            // repopulate the grid so stop the event temporarily until end of this method.
+            CommandHistory.ModelChanged -= OnModelChanged;
 
-            DataTable Table = Grid.DataSource as DataTable;
+            PopulateComboItemsInRow(Row);
 
-            Test[] AllTests = Tests.AllTests;
-            AllTests[Row].SimulationName = Table.Rows[Row][0].ToString();
-            AllTests[Row].TableName = Table.Rows[Row][1].ToString();
-            AllTests[Row].ColumnNames = Table.Rows[Row][2].ToString();
-            AllTests[Row].Type = (Test.TestType)Enum.Parse(typeof(Test.TestType), Table.Rows[Row][3].ToString());
-            AllTests[Row].Parameters = Table.Rows[Row][4].ToString();
-
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Tests, 
-                                                                                    "AllTests",
-                                                                                    AllTests);
+            // Convert grid datatable back to an array of test objects and store in Tests model
+            // via a command.
+            Test[] AllTests = DataTableToTests(Grid.DataSource);
+            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Tests, "AllTests", AllTests);
             CommandHistory.Add(Cmd, true);
+
+            // Reinstate the model changed event.
+            CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
