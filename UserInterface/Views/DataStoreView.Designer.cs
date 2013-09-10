@@ -48,7 +48,7 @@
             this.TableList.TabIndex = 1;
             this.TableList.UseCompatibleStateImageBehavior = false;
             this.TableList.View = System.Windows.Forms.View.Details;
-            this.TableList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.TableList_ItemSelectionChanged);
+            this.TableList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.OnTableSelectedInGrid);
             // 
             // Grid
             // 

@@ -32,7 +32,6 @@ namespace UserInterface.Views
             InitializeComponent();
         }
 
-
         /// <summary>
         /// populate the tables list in the view.
         /// </summary>
@@ -52,6 +51,7 @@ namespace UserInterface.Views
 
             }
             TableList.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+            Grid.ReadOnly = true;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace UserInterface.Views
         {
             if (Data != null)
             {
-                PopulateGrid(Grid, Data);
+                Grid.DataSource = Data;
                 Grid.Columns[0].Visible = false;
             }
             else
@@ -71,23 +71,14 @@ namespace UserInterface.Views
             }
         }
 
-
         /// <summary>
         /// User has selected a simulation/table pair.
         /// </summary>
-        private void TableList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void OnTableSelectedInGrid(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (e.IsSelected && OnTableSelected != null)
                 OnTableSelected.Invoke(e.Item.Group.Name, e.Item.Text);
         }
 
-
-        /// <summary>
-        /// Fill the grid with data from the DataSourceTable
-        /// </summary>
-        private static void PopulateGrid(DataGridView Grid, DataTable Table)
-        {
-            Grid.DataSource = Table;
-        }
     }
 }

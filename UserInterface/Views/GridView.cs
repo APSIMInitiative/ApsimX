@@ -44,6 +44,12 @@ namespace UserInterface.Views
         /// Set the column to readonly.
         /// </summary>
         void SetColumnReadOnly(int Col, bool IsReadOnly);
+
+        /// <summary>
+        /// Get or set the readonly status of the grid.
+        /// </summary>
+        bool ReadOnly { get; set; }
+
     }
 
     public partial class GridView : UserControl, IGridView
@@ -81,15 +87,8 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Populate the grid from the data in the specified table.
+        /// Populate the grid from the DataSource.
         /// </summary>
-        //private void PopulateGrid()
-        //{
-        //    Grid.DataSource = DataSource;
-        //    foreach (DataGridViewColumn Column in Grid.Columns)
-        //        Column.SortMode = DataGridViewColumnSortMode.NotSortable;
-        //}
-
         private void PopulateGrid()
         {
             if (DataSource != null)
@@ -126,19 +125,18 @@ namespace UserInterface.Views
                 Grid.CellValueChanged += OnCellValueChanged;
 
                 // Reinstate our desired edit mode.
-                Grid.EditMode = DataGridViewEditMode.EditOnEnter;
+                Grid.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             }
             else
                 Grid.Columns.Clear();
         }
-
-
 
         /// <summary>
         /// Set the editor for the specified cell using the specified Obj to determine type
         /// </summary>
         public void SetCellEditor(int Col, int Row, object Obj)
         {
+            object Value = Grid[Col, Row].Value;
 
             if (Obj is DateTime)
                 Grid[Col, Row] = new Utility.DataGridViewCalendarCell.CalendarCell();
@@ -152,7 +150,6 @@ namespace UserInterface.Views
             }
             else if (Obj is string[])
             {
-                object Value = Grid[Col, Row].Value;
                 DataGridViewComboBoxCell Combo;
                 if (Grid[Col, Row] is DataGridViewComboBoxCell)
                     Combo = Grid[Col, Row] as DataGridViewComboBoxCell;
@@ -169,12 +166,18 @@ namespace UserInterface.Views
                     //    Grid[Col, Row] = Combo;
                     // But this doesn't work on MONO OSX. The two lines
                     // below seem to work ok though.
-                    Grid.Rows[Row].Cells.RemoveAt(Col);
-                    Grid.Rows[Row].Cells.Insert(Col, Combo);
-                    
-                    Grid[Col, Row].Value = Value;
+                    if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                        Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                        Grid[Col, Row] = Combo;
+                    else
+                    {
+                        Grid.Rows[Row].Cells.RemoveAt(Col);
+                        Grid.Rows[Row].Cells.Insert(Col, Combo);
+                    }                    
                 }
             }
+
+            Grid[Col, Row].Value = Value;
         }
 
         /// <summary>
@@ -193,15 +196,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Add a combobox column with the specified possible values.
+        /// Get or set the readonly status of the grid.
         /// </summary>
-        public void AddColumn(string[] PossibleValues)
-        {
-            DataGridViewComboBoxColumn Combo = new DataGridViewComboBoxColumn();
-            Combo.Items.AddRange(PossibleValues);
-            Combo.FlatStyle = FlatStyle.Flat;
-            Grid.Columns.Add(Combo);
-        }
+        public bool ReadOnly { get { return Grid.ReadOnly; } set { Grid.ReadOnly = value; } }
 
         /// <summary>
         /// Set the specified column to auto size.
@@ -244,6 +241,10 @@ namespace UserInterface.Views
                 CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);
         }
 
+        /// <summary>
+        /// Trap any grid data errors, usually as a result of cell values not being
+        /// in combo boxes. We'll handle these elsewhere.
+        /// </summary>
         private void Grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;

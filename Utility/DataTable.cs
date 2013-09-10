@@ -210,10 +210,15 @@ namespace Utility
         // ---------------------------------------------------
         static public string[] GetColumnNames(System.Data.DataTable Table)
         {
-            string[] ColumnNames = new string[Table.Columns.Count];
-            for (int Col = 0; Col != Table.Columns.Count; Col++)
-                ColumnNames[Col] = Table.Columns[Col].ColumnName;
-            return ColumnNames;
+            if (Table != null)
+            {
+                string[] ColumnNames = new string[Table.Columns.Count];
+                for (int Col = 0; Col != Table.Columns.Count; Col++)
+                    ColumnNames[Col] = Table.Columns[Col].ColumnName;
+                return ColumnNames;
+            }
+            else
+                return new string[0];
         }
 
 

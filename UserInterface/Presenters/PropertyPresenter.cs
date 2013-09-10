@@ -74,10 +74,7 @@ namespace UserInterface.Presenters
         private void FormatGrid()
         {
             for (int i = 0; i < Properties.Count; i++)
-            {
-                if (Properties[i].PropertyType == typeof(DateTime))
-                    Grid.SetCellEditor(1, i, typeof(DateTime));
-            }
+                Grid.SetCellEditor(1, i, Properties[i].GetValue(Model, null));
             Grid.SetColumnAutoSize(0);
             Grid.SetColumnReadOnly(0, true);
         }
