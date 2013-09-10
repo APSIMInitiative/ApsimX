@@ -99,12 +99,5 @@
       <ColumnNames>.WeatherFile.MaxT</ColumnNames>
       <Parameters />
     </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>.WeatherFile.MinT</ColumnNames>
-      <Parameters />
-    </Test>
   </Tests>
 </Simulations>
