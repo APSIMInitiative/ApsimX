@@ -156,6 +156,20 @@ namespace Utility
         }
 
         /// <summary>
+        /// Gets the specified attribute type.
+        /// </summary>
+        /// <returns>Returns the attribute or null if not found.</returns>
+        public static Attribute GetAttribute(MethodInfo T, Type AttributeTypeToFind, bool LookInBaseClasses)
+        {
+            foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
+            {
+                if (A.GetType() == AttributeTypeToFind)
+                    return A;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Returns the name of the specified object if it has a public name property
         /// or it returns the name of the type if no name property is present.
         /// </summary>

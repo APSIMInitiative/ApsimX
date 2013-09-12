@@ -75,7 +75,7 @@
             this.splitter1.Size = new System.Drawing.Size(6, 563);
             this.splitter1.TabIndex = 9;
             this.splitter1.TabStop = false;
-            this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer_SplitterMoved);
+            this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMoved);
             // 
             // TreeView
             // 
@@ -94,7 +94,8 @@
             this.TreeView.TabIndex = 8;
             this.TreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnBeforeExpand);
             this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.TreeView_ItemDrag);
-            this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeView_BeforeSelect);
+            this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnTreeViewBeforeSelect);
+            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
             this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeView_DragDrop);
             this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeView_DragOver);
             // 
@@ -102,6 +103,7 @@
             // 
             this.PopupMenu.Name = "ContextMenu";
             this.PopupMenu.Size = new System.Drawing.Size(61, 4);
+            this.PopupMenu.Opening += new System.ComponentModel.CancelEventHandler(this.OnPopupMenuOpening);
             // 
             // TreeImageList
             // 
@@ -154,6 +156,7 @@
             this.Controls.Add(this.ToolStrip);
             this.Name = "ExplorerView";
             this.Size = new System.Drawing.Size(600, 600);
+            this.Load += new System.EventHandler(this.ExplorerView_Load);
             this.Panel.ResumeLayout(false);
             this.StatusPanel.ResumeLayout(false);
             this.ResumeLayout(false);

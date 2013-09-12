@@ -63,9 +63,9 @@
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
-    <Compile Include="Commands\ExplorerUICommands.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\ExplorerActions.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Views\GeneralView.Designer.cs">
       <DependentUpon>GeneralView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\IExplorerView.cs" />
     <Compile Include="Views\ManagerView.cs">
       <SubType>UserControl</SubType>
     </Compile>

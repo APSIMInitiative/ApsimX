@@ -158,9 +158,9 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Run {
+        internal static System.Drawing.Bitmap RunAPSIM {
             get {
-                object obj = ResourceManager.GetObject("Run", resourceCulture);
+                object obj = ResourceManager.GetObject("RunAPSIM", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

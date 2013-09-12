@@ -9,15 +9,16 @@ namespace UserInterface.Commands
     class SelectNodeCommand : ICommand
     {
         private IExplorerView ExplorerView;
-        private string SavedSelection;
+        private string OldSelection;
         private string NewSelection;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SelectNodeCommand(IExplorerView ExplorerView, string NewSelection)
+        public SelectNodeCommand(IExplorerView ExplorerView, string OldSelection, string NewSelection)
         {
             this.ExplorerView = ExplorerView;
+            this.OldSelection = OldSelection;
             this.NewSelection = NewSelection;
         }
 
@@ -26,7 +27,6 @@ namespace UserInterface.Commands
         /// </summary>
         public object Do()
         {
-            SavedSelection = ExplorerView.CurrentNodePath;
             ExplorerView.CurrentNodePath = NewSelection;
             return null;
         }
@@ -36,7 +36,7 @@ namespace UserInterface.Commands
         /// </summary>
         public object Undo()
         {
-            ExplorerView.CurrentNodePath = SavedSelection;
+            ExplorerView.CurrentNodePath = OldSelection;
             return null;
         }
 

@@ -56,4 +56,26 @@ namespace Model.Core
         public Description(string Description) { Desc = Description; }
         public override string ToString() { return Desc; }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class MainMenuName : System.Attribute
+    {
+        public string MenuName { get; set; }
+        public MainMenuName(string MenuName) { this.MenuName = MenuName; }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ContextMenuName : System.Attribute
+    {
+        public string MenuName { get; set; }
+        public ContextMenuName(string MenuName) { this.MenuName = MenuName; }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ContextModelType : System.Attribute
+    {
+        public Type ModelType { get; set; }
+        public ContextModelType(Type ModelType) { this.ModelType = ModelType; }
+    }
+    
 }

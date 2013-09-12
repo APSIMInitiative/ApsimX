@@ -39,12 +39,13 @@ namespace UserInterface.Commands
         {
             ExplorerView View = new ExplorerView();
             ExplorerPresenter Presenter = new ExplorerPresenter();
+            Simulations Simulations = Utility.Xml.Deserialise(FileName) as Simulations;
+            Simulations.FileName = FileName;
+
+            Presenter.Attach(Simulations, View, null);
 
             MainForm.ReplaceCurrentTab(FileName, Properties.Resources.apsim_logo32, View);
 
-            Simulations Simulations = Utility.Xml.Deserialise(FileName) as Simulations;
-            Simulations.FileName = FileName;
-            Presenter.Attach(Simulations, View, null);
         }
 
         /// <summary>
@@ -55,11 +56,11 @@ namespace UserInterface.Commands
             ExplorerView View = new ExplorerView();
             ExplorerPresenter Presenter = new ExplorerPresenter();
 
-            MainForm.ReplaceCurrentTab(Name, Properties.Resources.apsim_logo32, View);
-
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(Contents);
             Presenter.Attach(Utility.Xml.Deserialise(Doc.DocumentElement), View, null);
+
+            MainForm.ReplaceCurrentTab(Name, Properties.Resources.apsim_logo32, View);
         }
     }
 }
