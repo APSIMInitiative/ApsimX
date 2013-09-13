@@ -59,13 +59,13 @@
       <Link>Utility\DateTimeCellType.cs</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Presenters\ExplorerActions.cs" />
+    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
@@ -141,13 +141,6 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Plugins\StartPagePlugin.cs" />
-    <Compile Include="Plugins\StartPageView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Plugins\StartPageView.Designer.cs">
-      <DependentUpon>StartPageView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\GridView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -161,6 +154,12 @@
     </Compile>
     <Compile Include="Views\DataStoreView.Designer.cs">
       <DependentUpon>DataStoreView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TabbedExplorerView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TabbedExplorerView.Designer.cs">
+      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
@@ -184,9 +183,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Plugins\StartPageView.resx">
-      <DependentUpon>StartPageView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\AxisView.resx">
       <DependentUpon>AxisView.cs</DependentUpon>
     </EmbeddedResource>
@@ -207,6 +203,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DataStoreView.resx">
       <DependentUpon>DataStoreView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TabbedExplorerView.resx">
+      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -285,9 +284,6 @@
     <None Include="Resources\folders.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Model.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\copy.png" />
   </ItemGroup>
   <ItemGroup>
@@ -303,10 +299,13 @@
     <None Include="Resources\bug_green.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BugWindow.png" />
+    <None Include="Resources\scroll.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\scroll.png" />
+    <None Include="Resources\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window_split_hor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

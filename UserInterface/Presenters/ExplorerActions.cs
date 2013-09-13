@@ -80,6 +80,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// User has clicked on Redo
+        /// </summary>
+        [MainMenuName("Split screen")]
+        public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
+        {
+            ExplorerView.ToggleSecondExplorerViewVisible();
+        }
+
+
+
+        /// <summary>
         /// User has clicked Copy
         /// </summary>
         [ContextMenuName("Copy")]

@@ -1,4 +1,5 @@
-﻿namespace UserInterface
+﻿using UserInterface.Views;
+namespace UserInterface
 {
     partial class MainForm
     {
@@ -30,9 +31,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.TabControl = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.TabImageList = new System.Windows.Forms.ImageList(this.components);
             this.TabMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,47 +38,15 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TabControl.SuspendLayout();
+            this.SplitContainer = new System.Windows.Forms.SplitContainer();
+            this.tabbedExplorerView1 = new TabbedExplorerView();
+            this.tabbedExplorerView2 = new TabbedExplorerView();
             this.TabMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
+            this.SplitContainer.Panel1.SuspendLayout();
+            this.SplitContainer.Panel2.SuspendLayout();
+            this.SplitContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // TabControl
-            // 
-            this.TabControl.Controls.Add(this.tabPage1);
-            this.TabControl.Controls.Add(this.tabPage2);
-            this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabControl.ImageList = this.TabImageList;
-            this.TabControl.ItemSize = new System.Drawing.Size(96, 19);
-            this.TabControl.Location = new System.Drawing.Point(0, 0);
-            this.TabControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.TabControl.Name = "TabControl";
-            this.TabControl.SelectedIndex = 0;
-            this.TabControl.ShowToolTips = true;
-            this.TabControl.Size = new System.Drawing.Size(979, 790);
-            this.TabControl.TabIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.tabPage1.Location = new System.Drawing.Point(4, 23);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPage1.Size = new System.Drawing.Size(971, 763);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPage2.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.tabPage2.Location = new System.Drawing.Point(4, 23);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(754, 546);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // TabImageList
             // 
@@ -129,28 +95,63 @@
             this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.closeTabToolStripMenuItem.Text = "Close";
             // 
+            // SplitContainer
+            // 
+            this.SplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.SplitContainer.Name = "SplitContainer";
+            // 
+            // SplitContainer.Panel1
+            // 
+            this.SplitContainer.Panel1.Controls.Add(this.tabbedExplorerView1);
+            // 
+            // SplitContainer.Panel2
+            // 
+            this.SplitContainer.Panel2.Controls.Add(this.tabbedExplorerView2);
+            this.SplitContainer.Size = new System.Drawing.Size(979, 790);
+            this.SplitContainer.SplitterDistance = 500;
+            this.SplitContainer.TabIndex = 1;
+            // 
+            // tabbedExplorerView1
+            // 
+            this.tabbedExplorerView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabbedExplorerView1.Location = new System.Drawing.Point(0, 0);
+            this.tabbedExplorerView1.Name = "tabbedExplorerView1";
+            this.tabbedExplorerView1.Size = new System.Drawing.Size(500, 790);
+            this.tabbedExplorerView1.TabIndex = 0;
+            // 
+            // tabbedExplorerView2
+            // 
+            this.tabbedExplorerView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabbedExplorerView2.Location = new System.Drawing.Point(0, 0);
+            this.tabbedExplorerView2.Name = "tabbedExplorerView2";
+            this.tabbedExplorerView2.Size = new System.Drawing.Size(475, 790);
+            this.tabbedExplorerView2.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(979, 790);
-            this.Controls.Add(this.TabControl);
+            this.Controls.Add(this.SplitContainer);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "MainForm";
-            this.Load += new System.EventHandler(this.OnLoad);
-            this.TabControl.ResumeLayout(false);
+            this.Text = "ApsimX";
             this.TabMenu.ResumeLayout(false);
+            this.SplitContainer.Panel1.ResumeLayout(false);
+            this.SplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
+            this.SplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl TabControl;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.ContextMenuStrip TabMenu;
         private System.Windows.Forms.ToolStripMenuItem newTabToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openTabToolStripMenuItem;
@@ -158,7 +159,9 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeTabToolStripMenuItem;
         private System.Windows.Forms.ImageList TabImageList;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.SplitContainer SplitContainer;
+        private Views.TabbedExplorerView tabbedExplorerView1;
+        private Views.TabbedExplorerView tabbedExplorerView2;
 
 
 

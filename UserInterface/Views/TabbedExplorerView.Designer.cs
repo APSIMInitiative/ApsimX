@@ -1,0 +1,143 @@
+﻿namespace UserInterface.Views
+{
+    partial class TabbedExplorerView
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabbedExplorerView));
+            this.TabControl = new System.Windows.Forms.TabControl();
+            this.StartPage = new System.Windows.Forms.TabPage();
+            this.ListView = new System.Windows.Forms.ListView();
+            this.ListViewImages = new System.Windows.Forms.ImageList(this.components);
+            this.TabPopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CloseTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TabImageList = new System.Windows.Forms.ImageList(this.components);
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.TabControl.SuspendLayout();
+            this.StartPage.SuspendLayout();
+            this.TabPopupMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // TabControl
+            // 
+            this.TabControl.Controls.Add(this.StartPage);
+            this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabControl.Location = new System.Drawing.Point(0, 0);
+            this.TabControl.Name = "TabControl";
+            this.TabControl.SelectedIndex = 0;
+            this.TabControl.Size = new System.Drawing.Size(610, 523);
+            this.TabControl.TabIndex = 0;
+            this.TabControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseUp);
+            // 
+            // StartPage
+            // 
+            this.StartPage.Controls.Add(this.ListView);
+            this.StartPage.Location = new System.Drawing.Point(4, 22);
+            this.StartPage.Name = "StartPage";
+            this.StartPage.Padding = new System.Windows.Forms.Padding(3);
+            this.StartPage.Size = new System.Drawing.Size(602, 497);
+            this.StartPage.TabIndex = 0;
+            this.StartPage.Text = " ";
+            this.StartPage.UseVisualStyleBackColor = true;
+            // 
+            // ListView
+            // 
+            this.ListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListView.LargeImageList = this.ListViewImages;
+            this.ListView.Location = new System.Drawing.Point(3, 3);
+            this.ListView.MultiSelect = false;
+            this.ListView.Name = "ListView";
+            this.ListView.Size = new System.Drawing.Size(596, 491);
+            this.ListView.TabIndex = 2;
+            this.ListView.TileSize = new System.Drawing.Size(400, 100);
+            this.ListView.UseCompatibleStateImageBehavior = false;
+            this.ListView.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
+            // 
+            // ListViewImages
+            // 
+            this.ListViewImages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ListViewImages.ImageStream")));
+            this.ListViewImages.TransparentColor = System.Drawing.Color.Transparent;
+            this.ListViewImages.Images.SetKeyName(0, "open_file-icon.gif");
+            this.ListViewImages.Images.SetKeyName(1, "chest.png");
+            this.ListViewImages.Images.SetKeyName(2, "chart.png");
+            this.ListViewImages.Images.SetKeyName(3, "user1.png");
+            // 
+            // TabPopupMenu
+            // 
+            this.TabPopupMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CloseTabMenuItem});
+            this.TabPopupMenu.Name = "TabPopupMenu";
+            this.TabPopupMenu.Size = new System.Drawing.Size(124, 26);
+            // 
+            // CloseTabMenuItem
+            // 
+            this.CloseTabMenuItem.Name = "CloseTabMenuItem";
+            this.CloseTabMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.CloseTabMenuItem.Text = "Close tab";
+            this.CloseTabMenuItem.Click += new System.EventHandler(this.OnCloseTabClick);
+            // 
+            // TabImageList
+            // 
+            this.TabImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TabImageList.ImageStream")));
+            this.TabImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.TabImageList.Images.SetKeyName(0, "application.png");
+            // 
+            // OpenFileDialog
+            // 
+            this.OpenFileDialog.DefaultExt = "apsimx";
+            this.OpenFileDialog.Filter = "ApsimX files|*.apsimx";
+            // 
+            // TabbedExplorerView
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TabControl);
+            this.Name = "TabbedExplorerView";
+            this.Size = new System.Drawing.Size(610, 523);
+            this.Load += new System.EventHandler(this.OnLoad);
+            this.TabControl.ResumeLayout(false);
+            this.StartPage.ResumeLayout(false);
+            this.TabPopupMenu.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TabControl TabControl;
+        private System.Windows.Forms.TabPage StartPage;
+        private System.Windows.Forms.ImageList TabImageList;
+        private System.Windows.Forms.ImageList ListViewImages;
+        private System.Windows.Forms.ListView ListView;
+        private System.Windows.Forms.OpenFileDialog OpenFileDialog;
+        private System.Windows.Forms.ContextMenuStrip TabPopupMenu;
+        private System.Windows.Forms.ToolStripMenuItem CloseTabMenuItem;
+    }
+}

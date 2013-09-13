@@ -200,10 +200,24 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static byte[] StandardToolbox {
+        internal static System.Drawing.Bitmap Splitscreen {
             get {
-                object obj = ResourceManager.GetObject("StandardToolbox", resourceCulture);
+                object obj = ResourceManager.GetObject("Splitscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static byte[] StandardToolBox {
+            get {
+                object obj = ResourceManager.GetObject("StandardToolBox", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap StandardToolboxIcon {
+            get {
+                object obj = ResourceManager.GetObject("StandardToolboxIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -43,7 +43,6 @@ namespace UserInterface.Presenters
             this.View.PopulateMainMenu += OnPopulateMainMenu;
             this.View.NodeSelectedByUser += OnNodeSelectedByUser;
             this.View.NodeSelected += OnNodeSelected;
-
         }
 
         #region Events from view

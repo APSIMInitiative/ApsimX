@@ -175,7 +175,7 @@
   <data name="Simulations16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\folders.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="StandardToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="StandardToolBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StandardToolbox.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="GraphToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -201,5 +201,11 @@
   </data>
   <data name="Summary16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\scroll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StandardToolboxIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Splitscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\window_split_hor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

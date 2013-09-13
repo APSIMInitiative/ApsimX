@@ -469,6 +469,15 @@ namespace UserInterface.Views
             PopulateNodes(null);
         }
 
+        /// <summary>
+        /// Toggle the 2nd right hand side explorer view on/off
+        /// </summary>
+        public void ToggleSecondExplorerViewVisible()
+        {
+            MainForm MainForm = Application.OpenForms[0] as MainForm;
+            MainForm.ToggleSecondExplorerViewVisible();
+        }
+
 
 
 

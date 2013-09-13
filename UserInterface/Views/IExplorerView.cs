@@ -116,6 +116,11 @@ namespace UserInterface.Views
         /// Change the name of the tab.
         /// </summary>
         void ChangeTabText(string NewTabName);
+
+        /// <summary>
+        /// Turn on or off the 2nd explorer view.
+        /// </summary>
+        void ToggleSecondExplorerViewVisible();
     }
 
 
