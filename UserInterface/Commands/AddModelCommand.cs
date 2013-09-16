@@ -1,6 +1,7 @@
 ﻿using UserInterface.Views;
 using Model.Core;
 using System.Xml;
+using System;
 
 namespace UserInterface.Commands
 {
@@ -9,51 +10,53 @@ namespace UserInterface.Commands
     /// </summary>
     class AddModelCommand : ICommand
     {
-        private object Parent;
-        private string ChildXml;
-        private object NewlyCreatedObject;
+        private string FromModelXml;
+        private string ToParentPath;
+        private IZone ToParentZone;
+        private object FromModel;
+        private bool ModelAdded;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AddModelCommand(object ParentZone, string ChildXml)
+        public AddModelCommand(string FromModelXml, string ToParentPath, IZone ToParentZone)
         {
-            this.Parent = ParentZone;
-            this.ChildXml = ChildXml;
+            this.FromModelXml = FromModelXml;
+            this.ToParentPath = ToParentPath;
+            this.ToParentZone = ToParentZone;
         }
 
         /// <summary>
         /// Perform the command
         /// </summary>
-        public object Do()
+        public void Do(CommandHistory CommandHistory)
         {
-            XmlDocument Doc = new XmlDocument();
-            Doc.LoadXml(ChildXml);
-            NewlyCreatedObject = Utility.Xml.Deserialise(Doc.DocumentElement);
-            if (NewlyCreatedObject != null)
+            try
             {
-                if (Parent is Zone)
-                    (Parent as Zone).Models.Add(NewlyCreatedObject);
-                else
-                    NewlyCreatedObject = null;
+                XmlDocument Doc = new XmlDocument();
+                Doc.LoadXml(FromModelXml);
+                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement);
+                ToParentZone.AddModel(FromModel);
+                CommandHistory.InvokeModelStructureChanged(ToParentPath);
+                ModelAdded = true;
             }
-            if (NewlyCreatedObject != null)
-                return Parent;
-            else
-                return null;
+            catch (Exception)
+            {
+                ModelAdded = false;
+            }
+
         }
 
         /// <summary>
         /// Undo the command
         /// </summary>
-        public object Undo()
+        public void Undo(CommandHistory CommandHistory)
         {
-            if (NewlyCreatedObject != null)
+            if (ModelAdded && FromModel != null)
             {
-                if (Parent is Zone)
-                    (Parent as IZone).Models.Remove(NewlyCreatedObject);
+                ToParentZone.Models.Remove(FromModel);
+                CommandHistory.InvokeModelStructureChanged(ToParentPath);
             }
-            return null;
         }
 
     }

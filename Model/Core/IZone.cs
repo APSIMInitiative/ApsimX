@@ -26,6 +26,11 @@ namespace Model.Core
         List<object> Models { get; set; }
 
         /// <summary>
+        /// Add a model to the Models collection and ensure the name is unique.
+        /// </summary>
+        void AddModel(object Model);
+
+        /// <summary>
         /// Return a full path to this system. Doesn't include the 'Simulations' node.
         /// Format: SimulationName.PaddockName.ChildName
         /// </summary>

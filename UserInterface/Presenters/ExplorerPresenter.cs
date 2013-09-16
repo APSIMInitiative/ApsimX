@@ -6,9 +6,28 @@ using System.Windows.Forms;
 using UserInterface.Views;
 using Model.Core;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace UserInterface.Presenters
 {
+    /// <summary>
+    /// An object that encompases the data that is dragged during a drag/drop operation.
+    /// </summary>
+    [Serializable]
+    public class DragObject : ISerializable
+    {
+        public string NodePath;
+        public string Xml;
+        public Type ModelType;
+
+        void ISerializable.GetObjectData(SerializationInfo oInfo, StreamingContext oContext)
+        {
+            oInfo.AddValue("NodePath", NodePath);
+            oInfo.AddValue("Xml", Xml);
+        }
+    }
+
 
 
     /// <summary>
@@ -20,6 +39,7 @@ namespace UserInterface.Presenters
     {
         private IExplorerView View;
         private ExplorerActions ExplorerActions;
+        private IPresenter CurrentRightHandPresenter;
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
 
@@ -43,6 +63,29 @@ namespace UserInterface.Presenters
             this.View.PopulateMainMenu += OnPopulateMainMenu;
             this.View.NodeSelectedByUser += OnNodeSelectedByUser;
             this.View.NodeSelected += OnNodeSelected;
+            this.View.DragStart += OnDragStart;
+            this.View.AllowDrop += OnAllowDrop;
+            this.View.Drop += OnDrop;
+            this.View.Rename += OnRename;
+
+            this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            View.PopulateChildNodes -= OnPopulateNodes;
+            View.PopulateContextMenu -= OnPopulateContextMenu;
+            View.PopulateMainMenu -= OnPopulateMainMenu;
+            View.NodeSelectedByUser -= OnNodeSelectedByUser;
+            View.NodeSelected -= OnNodeSelected;
+            View.DragStart -= OnDragStart;
+            View.AllowDrop -= OnAllowDrop;
+            View.Drop -= OnDrop;
+            View.Rename -= OnRename;
+            CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
         }
 
         #region Events from view
@@ -137,29 +180,103 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnNodeSelected(object Sender, NodeSelectedArgs e)
         {
-            // Need to display the appropriate view.
-            // Looks for a view and a presenter.
-            this.View.AddRightHandView(null);  // clear current view.
+            HideRightHandPanel();
+            ShowRightHandPanel();
+        }
 
-            if (View.CurrentNodePath != "")
+        /// <summary>
+        /// A node has begun to be dragged.
+        /// </summary>
+        private void OnDragStart(object sender, DragStartArgs e)
+        {
+            object Obj = ApsimXFile.Get(e.NodePath);
+            if (Obj != null)
             {
-                object Model = ApsimXFile.Get(View.CurrentNodePath);
+                DragObject DragObject = new DragObject();
+                DragObject.NodePath = e.NodePath;
+                DragObject.ModelType = Obj.GetType();
+                DragObject.Xml = Utility.Xml.Serialise(Obj, false);
+                e.DragObject = DragObject;
+            }
+        }
+        
+        /// <summary>
+        /// A node has been dragged over another node. Allow drop?
+        /// </summary>
+        public void OnAllowDrop(object sender, AllowDropArgs e)
+        {
+            e.Allow = false;
 
-                ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
-                PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
-
-                if (ViewName != null && PresenterName != null)
+            object DestinationModel = ApsimXFile.Get(e.NodePath);
+            if (DestinationModel != null)
+            {
+                DragObject DragObject = e.DragObject as DragObject;
+                Attribute[] DropAttributes = Utility.Reflection.GetAttributes(DragObject.ModelType, typeof(AllowDropOn), false);
+                if (DropAttributes.Length == 0)
+                    e.Allow = true;
+                else
                 {
-                    UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
-                    IPresenter NewPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
-                    if (NewView != null && NewPresenter != null)
+                    foreach (AllowDropOn AllowDropOn in DropAttributes)
                     {
-                        View.AddRightHandView(NewView);
-                        NewPresenter.Attach(Model, NewView, CommandHistory);
+                        if (AllowDropOn.ModelTypeName == DestinationModel.GetType().Name)
+                            e.Allow = true;
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// A node has been dropped.
+        /// </summary>
+        private void OnDrop(object sender, DropArgs e)
+        {
+            string ToParentPath = e.NodePath;
+            IZone ToParentZone = ApsimXFile.Get(ToParentPath) as IZone;
+
+            DragObject DragObject = e.DragObject as DragObject;
+            if (DragObject != null && ToParentZone != null)
+            {
+                string FromModelXml = DragObject.Xml;
+                string FromParentPath = Utility.String.ParentName(DragObject.NodePath);
+                IZone FromParentZone = ApsimXFile.Get(FromParentPath) as IZone;
+
+                ICommand Cmd = null;
+                if (e.Copied)
+                    Cmd = new AddModelCommand(FromModelXml, ToParentPath, ToParentZone);
+                else if (e.Moved)
+                {
+                    if (FromParentPath != ToParentPath)
+                    {
+                        object FromModel = ApsimXFile.Get(DragObject.NodePath);
+                        if (FromModel != null)
+                        {
+                            Cmd = new MoveModelCommand(FromParentPath, FromParentZone, FromModel, ToParentPath, ToParentZone);
+                        }
+                    }
+                }
+
+                if (Cmd != null)
+                    CommandHistory.Add(Cmd);
+            }
+        }
+
+        /// <summary>
+        /// User has renamed a node.
+        /// </summary>
+        private void OnRename(object sender, NodeRenameArgs e)
+        {
+            object Model = ApsimXFile.Get(e.NodePath);
+            if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
+            {
+                HideRightHandPanel();
+                string ParentModelPath = Utility.String.ParentName(e.NodePath);
+                RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
+                CommandHistory.Add(Cmd);
+                View.CurrentNodePath = ParentModelPath + "." + e.NewName;
+                ShowRightHandPanel();
+            }            
+        }
+
 
         #endregion
 
@@ -178,18 +295,55 @@ namespace UserInterface.Presenters
             };
         }
 
+        /// <summary>
+        /// Hide the right hand panel.
+        /// </summary>
+        private void HideRightHandPanel()
+        {
+            if (CurrentRightHandPresenter != null)
+            {
+                CurrentRightHandPresenter.Detach();
+                CurrentRightHandPresenter = null;
+            }
+            this.View.AddRightHandView(null);
+        }
+
+        /// <summary>
+        /// Display a view on the right hand panel in view.
+        /// </summary>
+        private void ShowRightHandPanel()
+        {
+            if (View.CurrentNodePath != "")
+            {
+                object Model = ApsimXFile.Get(View.CurrentNodePath);
+
+                ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
+                PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
+
+                if (ViewName != null && PresenterName != null)
+                {
+                    UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
+                    CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
+                    if (NewView != null && CurrentRightHandPresenter != null)
+                    {
+                        View.AddRightHandView(NewView);
+                        CurrentRightHandPresenter.Attach(Model, NewView, CommandHistory);
+                    }
+                }
+            }
+        }
 
         #endregion
 
         #region Events from model
+
         /// <summary>
-        /// A node has been deleted.
+        /// The model structure has changed. Tell the view about it.
         /// </summary>
-        private void OnModelRemoved(string NodePath)
+        void OnModelStructureChanged(string ModelPath)
         {
-            string ParentPath = Utility.String.ParentName(NodePath);
-            object ParentModel = ApsimXFile.Get(ParentPath);
-            View.InvalidateNode(ParentPath, GetNodeDescription(ParentModel));
+            object Model = ApsimXFile.Get(ModelPath);
+            View.InvalidateNode(ModelPath, GetNodeDescription(Model));
         }
 
         #endregion

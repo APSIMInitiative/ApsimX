@@ -23,6 +23,15 @@ namespace UserInterface.Presenters
             PopulateGraph();
         }
 
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            GraphView.OnAxisClick -= OnAxisClick;
+            GraphView.OnPlotClick -= OnPlotClick;
+            CommandHistory.ModelChanged -= OnGraphModelChanged;
+        }
 
 
         private void OnGraphModelChanged(object Model)

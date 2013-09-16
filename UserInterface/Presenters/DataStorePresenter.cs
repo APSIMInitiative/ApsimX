@@ -27,6 +27,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            DataStoreView.OnTableSelected -= OnTableSelected;
+        }
+
+        /// <summary>
         /// The selected table has changed.
         /// </summary>
         private void OnTableSelected(string SimulationName, string TableName)

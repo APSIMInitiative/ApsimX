@@ -62,6 +62,9 @@
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\RenameModelCommand.cs" />
+    <Compile Include="Commands\DeleteModelCommand.cs" />
+    <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Presenters\ExplorerActions.cs" />
@@ -306,6 +309,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\window_split_hor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

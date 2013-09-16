@@ -28,7 +28,16 @@ namespace UserInterface.Presenters
 
             ManagerView.Code = Manager.Code;
             ManagerView.NeedVariableNames += OnNeedVariableNames;
-            ManagerView.CodeChanged += new EventHandler(OnCodeChanged);
+            ManagerView.CodeChanged += OnCodeChanged;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            ManagerView.NeedVariableNames -= OnNeedVariableNames;
+            ManagerView.CodeChanged -= OnCodeChanged;
         }
 
         /// <summary>

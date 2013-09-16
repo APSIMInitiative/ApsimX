@@ -27,10 +27,21 @@ namespace UserInterface.Presenters
             this.View.EventNames = Report.Events;
             this.View.NeedVariableNames += OnNeedVariableNames;
             this.View.NeedEventNames += OnNeedEventNames;
-            this.View.VariableNamesChanged += new EventHandler(OnVariableNamesChanged);
-            this.View.EventNamesChanged += new EventHandler(OnEventNamesChanged);
+            this.View.VariableNamesChanged +=OnVariableNamesChanged;
+            this.View.EventNamesChanged += OnEventNamesChanged;
+            CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+        }
 
-            CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            View.NeedVariableNames -= OnNeedVariableNames;
+            View.NeedEventNames -= OnNeedEventNames;
+            View.VariableNamesChanged -= OnVariableNamesChanged;
+            View.EventNamesChanged -= OnEventNamesChanged;
+            CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
         }
 
         /// <summary>

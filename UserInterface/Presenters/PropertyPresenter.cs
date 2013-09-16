@@ -31,6 +31,15 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            Grid.CellValueChanged -= OnCellValueChanged;
+            CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        /// <summary>
         /// Populate the grid
         /// </summary>
         private void PopulateGrid()

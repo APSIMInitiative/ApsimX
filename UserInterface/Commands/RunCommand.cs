@@ -18,22 +18,19 @@ namespace UserInterface.Commands
         /// <summary>
         /// Perform the command
         /// </summary>
-        public object Do()
+        public void Do(CommandHistory CommandHistory)
         {
             if (Simulation == null)
                 Simulations.Run();
             else
                 ok = Simulations.Run(Simulation);
-            return null;
         }
 
         /// <summary>
         /// Undo the command
         /// </summary>
-        public object Undo()
+        public void Undo(CommandHistory CommandHistory)
         {
-            // Do nothing.
-            return null;
         }
 
     }

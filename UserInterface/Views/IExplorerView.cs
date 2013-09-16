@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace UserInterface.Views
 {
@@ -51,6 +52,46 @@ namespace UserInterface.Views
     }
 
     /// <summary>
+    /// A clas for holding info about a node rename event.
+    /// </summary>
+    public class NodeRenameArgs : EventArgs
+    {
+        public string NodePath;
+        public string NewName;
+    }
+
+    /// <summary>
+    /// A class for holding info about a begin drag event.
+    /// </summary>
+    public class DragStartArgs : EventArgs
+    {
+        public string NodePath;
+        public ISerializable DragObject;
+    }
+
+    /// <summary>
+    /// A class for holding info about a begin drag event.
+    /// </summary>
+    public class AllowDropArgs : EventArgs
+    {
+        public string NodePath;
+        public ISerializable DragObject;
+        public bool Allow;
+    }
+
+    /// <summary>
+    /// A class for holding info about a begin drag event.
+    /// </summary>
+    public class DropArgs : EventArgs
+    {
+        public string NodePath;
+        public bool Copied;
+        public bool Moved;
+        public bool Linked;
+        public ISerializable DragObject;
+    }
+
+    /// <summary>
     /// The interface for an explorer view.
     /// NB: All node paths are compatible with XmlHelper node paths.
     /// e.g.  /simulations/test/clock
@@ -87,6 +128,26 @@ namespace UserInterface.Views
         event EventHandler<MenuDescriptionArgs> PopulateContextMenu;
 
         /// <summary>
+        /// Invoked when a drag operation has commenced. Need to create a DragObject.
+        /// </summary>
+        event EventHandler<DragStartArgs> DragStart;
+
+        /// <summary>
+        /// Invoked when the view wants to know if a drop is allowed on the specified Node.
+        /// </summary>
+        event EventHandler<AllowDropArgs> AllowDrop;
+
+        /// <summary>
+        /// Invoked when a drop has occurred.
+        /// </summary>
+        event EventHandler<DropArgs> Drop;
+
+        /// <summary>
+        /// Invoked then a node is renamed.
+        /// </summary>
+        event EventHandler<NodeRenameArgs> Rename;
+
+        /// <summary>
         /// Return the current node path.
         /// </summary>
         string CurrentNodePath { get; set; }
@@ -121,6 +182,7 @@ namespace UserInterface.Views
         /// Turn on or off the 2nd explorer view.
         /// </summary>
         void ToggleSecondExplorerViewVisible();
+
     }
 
 

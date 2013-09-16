@@ -6,6 +6,7 @@ namespace Model.Components
 {
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [AllowDropOn("Simulation")]
     public class Clock
     {
         // Links

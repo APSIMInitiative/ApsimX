@@ -77,5 +77,13 @@ namespace Model.Core
         public Type ModelType { get; set; }
         public ContextModelType(Type ModelType) { this.ModelType = ModelType; }
     }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class AllowDropOn : System.Attribute
+    {
+        public string ModelTypeName { get; set; }
+        public AllowDropOn(string ModelTypeName) { this.ModelTypeName = ModelTypeName; }
+    }
     
+
 }

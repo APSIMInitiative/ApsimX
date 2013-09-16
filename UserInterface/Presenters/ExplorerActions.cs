@@ -7,6 +7,7 @@ using UserInterface.Commands;
 using UserInterface.Views;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
 
 namespace UserInterface.Presenters
 {
@@ -36,7 +37,7 @@ namespace UserInterface.Presenters
             this.ExplorerView = ExplorerView;
         }
 
-
+        #region Main menu
 
         /// <summary>
         /// User has clicked on Save
@@ -88,7 +89,9 @@ namespace UserInterface.Presenters
             ExplorerView.ToggleSecondExplorerViewVisible();
         }
 
+        #endregion
 
+        #region Context menu
 
         /// <summary>
         /// User has clicked Copy
@@ -110,10 +113,62 @@ namespace UserInterface.Presenters
         [ContextMenuName("Paste")]
         public void OnPasteClick(object Sender, EventArgs e)
         {
-            object ParentModel = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath);
-            AddModelCommand Cmd = new AddModelCommand(ParentModel, Clipboard.GetText());
-            ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            try
+            {
+                XmlDocument Doc = new XmlDocument();
+                Doc.LoadXml(Clipboard.GetText());
+                object NewModel = Utility.Xml.Deserialise(Doc.DocumentElement);
+
+                // See if the presenter is happy with this model being added.
+                IZone ParentModel = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as IZone;
+                AllowDropArgs AllowDropArgs = new Views.AllowDropArgs();
+                AllowDropArgs.NodePath = ExplorerView.CurrentNodePath;
+                AllowDropArgs.DragObject = new DragObject()
+                {
+                    NodePath = null,
+                    ModelType = NewModel.GetType(),
+                    Xml = Clipboard.GetText()
+                };
+                ExplorerPresenter.OnAllowDrop(null, AllowDropArgs);
+
+                // If it is happy then issue an AddModelCommand.
+                if (AllowDropArgs.Allow)
+                {
+                    AddModelCommand Cmd = new AddModelCommand(Clipboard.GetText(), ExplorerView.CurrentNodePath, ParentModel);
+                    ExplorerPresenter.CommandHistory.Add(Cmd, true);
+                }
+            }
+            catch (Exception)
+            {
+                // invalid xml from clipboard.
+            }
         }
+
+        /// <summary>
+        /// User has clicked Delete
+        /// </summary>
+        [ContextMenuName("Delete")]
+        public void OnDeleteClick(object Sender, EventArgs e)
+        {
+            object Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath);
+            string ParentPath = Utility.String.ParentName(ExplorerView.CurrentNodePath);
+            object ParentModel = ExplorerPresenter.ApsimXFile.Get(ParentPath);
+            if (Model.GetType().Name != "Simulations" && Model != null && ParentModel != null && ParentModel is IZone)
+            {
+                DeleteModelCommand Cmd = new DeleteModelCommand(ParentModel as IZone, ParentPath, Model);
+                ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            }
+        }
+
+
+        ///// <summary>
+        ///// User has clicked rename
+        ///// </summary>
+        //[ContextMenuName("Rename")]
+        //public void OnRenameClick(object Sender, EventArgs e)
+        //{
+        //    (ExplorerView as ExplorerView).DoRename();
+        //}
 
         /// <summary>
         /// Event handler for a User interface "Run APSIM" action
@@ -126,15 +181,15 @@ namespace UserInterface.Presenters
 
             ISimulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ISimulation;
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
-            C.Do();
+            C.Do(null);
             if (C.ok)
                 ExplorerView.AddStatusMessage("Simulation complete");
             else
                 ExplorerView.AddStatusMessage("Simulation complete with errors");
-        
+
         }
 
-
+        #endregion
 
 
 

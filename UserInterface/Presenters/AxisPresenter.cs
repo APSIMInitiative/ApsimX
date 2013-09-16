@@ -33,6 +33,18 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            // Trap change event from the model.
+            CommandHistory.ModelChanged -= OnModelChanged;
+
+            // Trap events from the view.
+            View.OnTitleChanged -= OnTitleChanged;
+        }
+        
+        /// <summary>
         /// The 'Model' has changed so we need to update the 'View'. Usually the result of an 'Undo' or 'Redo'
         /// </summary>
         private void OnModelChanged(object Model)

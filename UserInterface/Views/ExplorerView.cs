@@ -38,6 +38,10 @@ namespace UserInterface.Views
     /// </remarks>
     public partial class ExplorerView : UserControl, IExplorerView
     {
+        private string PreviouslySelectedNodePath;
+        private string SourcePathOfItemBeingDragged;
+        private string NodePathBeforeRename;
+
         /// <summary>
         /// ExplorerView will invoke this event when it wants the presenter to populate 
         /// direct children of the specified node.
@@ -66,7 +70,27 @@ namespace UserInterface.Views
         /// the context (popup) menu for the specified node.
         /// </summary>
         public event EventHandler<MenuDescriptionArgs> PopulateContextMenu;
-        private string PreviouslySelectedNodePath;
+
+        /// <summary>
+        /// Invoked when a drag operation has commenced. Need to create a DragObject.
+        /// </summary>
+        public event EventHandler<DragStartArgs> DragStart;
+
+        /// <summary>
+        /// Invoked when the view wants to know if a drop is allowed on the specified Node.
+        /// </summary>
+        public new event EventHandler<AllowDropArgs> AllowDrop;
+
+        /// <summary>
+        /// Invoked when a drop has occurred.
+        /// </summary>
+        public event EventHandler<DropArgs> Drop;
+
+        /// <summary>
+        /// Invoked then a node is renamed.
+        /// </summary>
+        public event EventHandler<NodeRenameArgs> Rename;
+
 
         /// <summary>
         /// Constructor
@@ -77,53 +101,21 @@ namespace UserInterface.Views
             StatusPanel.Visible = false;
         }
 
+        /// <summary>
+        /// Form has loaded.
+        /// </summary>
+        private void OnLoad(object sender, EventArgs e)
+        {
+            PopulateMainToolStrip();
+            PopulateNodes(null);
+        }
+
+
         #region Tree node
-        ///// <summary>
-        ///// Add a child node to the parent node (as specified by ParentPath). If
-        ///// ParentPath is null then the node will be added as the root node.
-        ///// </summary>
-        //public void AddNode(string ParentPath, NodeDescription Description)
-        //{
-        //    TreeNode Node = new TreeNode();
-        //    if (ParentPath == null)
-        //    {
-        //        // Root node.
-        //        TreeView.Nodes.Add(Node);
-        //        PopulateMainToolStrip();
-        //    }
-        //    else
-        //    {
-        //        TreeNode ParentNode = FindNode(ParentPath);
-        //        if (ParentNode == null)
-        //            throw new Exception("Cannot find tree node: " + ParentPath);
-        //        ParentNode.Nodes.Add(Node);
-        //    }
-        //    ConfigureNode(Node, Description);
-        //}
 
-        ///// <summary>
-        ///// Remove the node as specified by NodePath.
-        ///// </summary>
-        //public void RemoveNode(string NodePath)
-        //{
-        //    TreeNode Node = FindNode(NodePath);
-        //    if (Node != null)
-        //        Node.Remove();
-        //}
-
-        ///// <summary>
-        ///// Clear all child nodes under the specified NodePath.
-        ///// </summary>
-        //public void ClearNodes(string NodePath)
-        //{
-        //    TreeNode Node = FindNode(NodePath);
-        //    if (Node != null)
-        //        Node.Nodes.Clear();
-        //}
-        ///// <summary>
-        ///// A property providing access to the currently selected node.
-        ///// </summary>
-        ///// 
+        /// <summary>
+        /// A property providing access to the currently selected node.
+        /// </summary>
         public string CurrentNodePath
         {
             get
@@ -178,6 +170,7 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
+            Node.Nodes.Clear();
             if (Description.HasChildren)
                 Node.Nodes.Add("Loading...");
         }
@@ -243,9 +236,9 @@ namespace UserInterface.Views
                 // a GridView in the right hand window (e.g. clocks gridview) and starts using the cursor 
                 // keys to navigate the grid then the key presses seem to go to the StartPageView in the 
                 // other tab in the top level tab control. Then an exception is throw from StartPageView.
-                if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
-                    Environment.OSVersion.Platform != PlatformID.Win32Windows)
-                    RightHandPanel.Focus();  // On Windows this causes a blicking event on the node focus.
+                //if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
+                //    Environment.OSVersion.Platform != PlatformID.Win32Windows)
+                //    RightHandPanel.Focus();  // On Windows this causes a blicking event on the node focus.
             }
         }
         #endregion
@@ -319,6 +312,20 @@ namespace UserInterface.Views
             PopulateNodes(Node);
         }
 
+        /// <summary>
+        /// Toggle the 2nd right hand side explorer view on/off
+        /// </summary>
+        public void ToggleSecondExplorerViewVisible()
+        {
+            MainForm MainForm = Application.OpenForms[0] as MainForm;
+            MainForm.ToggleSecondExplorerViewVisible();
+        }
+
+        public void DoRename()
+        {
+            TreeView.SelectedNode.BeginEdit();
+        }
+
         #region Events
 
         /// <summary>
@@ -356,7 +363,10 @@ namespace UserInterface.Views
 
             // Remove unwanted nodes if necessary.
             while (Args.Descriptions.Count < Nodes.Count)
+            {
+                Console.WriteLine("Removing ndoes");
                 Nodes.RemoveAt(0);
+            }
 
             // Configure each child node.
             for (int i = 0; i < Args.Descriptions.Count; i++)
@@ -425,67 +435,129 @@ namespace UserInterface.Views
 
         #region Drag and drop
 
-        /// <summary>
-        /// An object that encompases the data that is dragged during a drag/drop operation.
-        /// </summary>
-        [Serializable]
-        public class DragObject : ISerializable
-        {
-            public string NodePath = "asdf";
-
-            void ISerializable.GetObjectData(SerializationInfo oInfo, StreamingContext oContext)
-            {
-                oInfo.AddValue("NodePath", NodePath);
-            }
-        }
-
-
         // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
         // serializable which is ok but it still doesn work. Gives the error:
         //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
         //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
 
-        private void TreeView_ItemDrag(object sender, ItemDragEventArgs e)
+        /// <summary>
+        /// Node has begun to be dragged.
+        /// </summary>
+        private void OnNodeDrag(object sender, ItemDragEventArgs e)
         {
-            DragObject DragObj = new DragObject() {NodePath = FullPath(e.Item as TreeNode)};
-            DoDragDrop(DragObj, DragDropEffects.Copy);
-        }
-
-        private void TreeView_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
-        private void TreeView_DragDrop(object sender, DragEventArgs e)
-        {
-           DragObject DragObject = e.Data.GetData(typeof(DragObject)) as DragObject;
-           MessageBox.Show(DragObject.NodePath);
-        }
-        #endregion
-
-        private void ExplorerView_Load(object sender, EventArgs e)
-        {
-            PopulateMainToolStrip();
-            PopulateNodes(null);
+            DragStartArgs Args = new DragStartArgs();
+            Args.NodePath = FullPath(e.Item as TreeNode);
+            if (DragStart != null)
+            {
+                DragStart(this, Args);
+                if (Args.DragObject != null)
+                {
+                    SourcePathOfItemBeingDragged = Args.NodePath;
+                    DoDragDrop(Args.DragObject, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+                }
+            }
         }
 
         /// <summary>
-        /// Toggle the 2nd right hand side explorer view on/off
+        /// Node has been dragged over another node. Allow a drop here?
         /// </summary>
-        public void ToggleSecondExplorerViewVisible()
+        private void OnDragOver(object sender, DragEventArgs e)
         {
-            MainForm MainForm = Application.OpenForms[0] as MainForm;
-            MainForm.ToggleSecondExplorerViewVisible();
+            e.Effect = DragDropEffects.None;
+
+			// Get the drop location
+			TreeNode DestinationNode = TreeView.GetNodeAt(TreeView.PointToClient(new Point(e.X, e.Y)));
+			if (DestinationNode != null)
+            {
+                AllowDropArgs Args = new AllowDropArgs();
+                Args.NodePath = FullPath(DestinationNode);
+
+                string[] Formats = e.Data.GetFormats();
+                if (Formats.Length > 0)
+                {
+                    Args.DragObject = e.Data.GetData(Formats[0]) as ISerializable;
+                    if (AllowDrop != null)
+                    {
+                        AllowDrop(this, Args);
+                        if (Args.Allow)
+                        {
+                            string SourceParent = Utility.String.ParentName(SourcePathOfItemBeingDragged);
+
+                            // Now determine the effect. If the drag originated from a different view 
+                            // (e.g. a toolbox or another file) then only copy is supported.
+                            if (SourcePathOfItemBeingDragged == null)
+                                e.Effect = DragDropEffects.Copy;  // Dragging from a foreign view.
+                            else if (SourceParent == Args.NodePath)
+                                e.Effect = DragDropEffects.Copy;  // Dragged node's parent is the node we're currently over
+                            else if ((Control.ModifierKeys & Keys.Alt) == Keys.Alt)
+                                e.Effect = DragDropEffects.Link;
+                            else if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                                e.Effect = DragDropEffects.Move;
+                            else
+                                e.Effect = DragDropEffects.Copy;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Node has been dropped. Send to presenter.
+        /// </summary>
+        private void OnDragDrop(object sender, DragEventArgs e)
+        {
+            TreeNode DestinationNode = TreeView.GetNodeAt(TreeView.PointToClient(new Point(e.X, e.Y)));
+            if (DestinationNode != null && Drop != null)
+            {
+                DropArgs Args = new DropArgs();
+                Args.NodePath = FullPath(DestinationNode);
+
+                string[] Formats = e.Data.GetFormats();
+                if (Formats.Length > 0)
+                {
+                    Args.DragObject = e.Data.GetData(Formats[0]) as ISerializable;
+                    if (e.Effect == DragDropEffects.Copy)
+                        Args.Copied = true;
+                    else if (e.Effect == DragDropEffects.Move)
+                        Args.Moved = true;
+                    else
+                        Args.Linked = true;
+                    Drop(this, Args);
+
+                    // Under MONO / LINUX seem to need to deselect and reselect the node otherwise no
+                    // node is selected after the drop and this causes problems later in OnTreeViewBeforeSelect
+                    TreeView.SelectedNode = null;
+                    TreeView.SelectedNode = DestinationNode;
+                }
+            }
+            SourcePathOfItemBeingDragged = null;
+        }
+        #endregion
+
+
+        /// <summary>
+        /// User is about to start renaming a node.
+        /// </summary>
+        private void OnBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            NodePathBeforeRename = CurrentNodePath;
+            e.CancelEdit = false;
+        }
+
+        /// <summary>
+        /// User has finished renamed a node.
+        /// </summary>
+        private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            if (Rename != null)
+                Rename(this, new NodeRenameArgs()
+                {
+                    NodePath = NodePathBeforeRename,
+                    NewName = e.Label
+                }); 
         }
 
 
-
-
-
-
     }
-
-
-
 }
 

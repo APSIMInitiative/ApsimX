@@ -29,71 +29,15 @@ namespace UserInterface
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.TabImageList = new System.Windows.Forms.ImageList(this.components);
-            this.TabMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.newTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
             this.tabbedExplorerView1 = new TabbedExplorerView();
             this.tabbedExplorerView2 = new TabbedExplorerView();
-            this.TabMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.Panel1.SuspendLayout();
             this.SplitContainer.Panel2.SuspendLayout();
             this.SplitContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // TabImageList
-            // 
-            this.TabImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TabImageList.ImageStream")));
-            this.TabImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.TabImageList.Images.SetKeyName(0, "application.png");
-            // 
-            // TabMenu
-            // 
-            this.TabMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newTabToolStripMenuItem,
-            this.openTabToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.closeTabToolStripMenuItem});
-            this.TabMenu.Name = "TabMenu";
-            this.TabMenu.Size = new System.Drawing.Size(115, 114);
-            // 
-            // newTabToolStripMenuItem
-            // 
-            this.newTabToolStripMenuItem.Name = "newTabToolStripMenuItem";
-            this.newTabToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.newTabToolStripMenuItem.Text = "New";
-            // 
-            // openTabToolStripMenuItem
-            // 
-            this.openTabToolStripMenuItem.Name = "openTabToolStripMenuItem";
-            this.openTabToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.openTabToolStripMenuItem.Text = "Open";
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.saveAsToolStripMenuItem.Text = "Save As";
-            // 
-            // closeTabToolStripMenuItem
-            // 
-            this.closeTabToolStripMenuItem.Name = "closeTabToolStripMenuItem";
-            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.closeTabToolStripMenuItem.Text = "Close";
             // 
             // SplitContainer
             // 
@@ -141,7 +85,6 @@ namespace UserInterface
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "MainForm";
             this.Text = "ApsimX";
-            this.TabMenu.ResumeLayout(false);
             this.SplitContainer.Panel1.ResumeLayout(false);
             this.SplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
@@ -152,13 +95,6 @@ namespace UserInterface
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip TabMenu;
-        private System.Windows.Forms.ToolStripMenuItem newTabToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openTabToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeTabToolStripMenuItem;
-        private System.Windows.Forms.ImageList TabImageList;
         private System.Windows.Forms.SplitContainer SplitContainer;
         private Views.TabbedExplorerView tabbedExplorerView1;
         private Views.TabbedExplorerView tabbedExplorerView2;

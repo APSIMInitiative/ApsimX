@@ -37,6 +37,16 @@ namespace Model.Core
         /// </summary>
         public List<object> Models { get; set; }
 
+        /// <summary>
+        /// Add a model to the Models collection and ensure the name is unique.
+        /// </summary>
+        public void AddModel(object Model)
+        {
+            Models.Add(Model);
+            EnsureNameIsUnique(Model);
+        }
+
+
         #region XmlSerializable methods
         /// <summary>
         /// Return our schema - needed for IXmlSerializable.
@@ -323,10 +333,12 @@ namespace Model.Core
             {
                 string NewName = OriginalName;
                 int Counter = 0;
-                while (FindChild(NewName) != null && Counter < 10000)
+                object Child = FindChild(NewName);
+                while (Child != null && Child != Model && Counter < 10000)
                 {
                     Counter++;
                     NewName = OriginalName + Counter.ToString();
+                    Child = FindChild(NewName);
                 }
                 if (Counter == 1000)
                     throw new Exception("Cannot create a unique name for model: " + OriginalName);
