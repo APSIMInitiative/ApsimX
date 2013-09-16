@@ -33,6 +33,15 @@ namespace Model.Core
         }
     }
 
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class Bounds : System.Attribute
+    {
+        public double Lower;
+        public double Upper;
+
+    }
+
+
     [AttributeUsage(AttributeTargets.Class)]
     public class PresenterName : Attribute
     {

@@ -62,20 +62,37 @@ namespace Model.Components
         {
             // Get all variable values.
             List<object> Values = new List<object>();
+            List<string> Names = new List<string>();
             List<Type> Types = new List<Type>();
             foreach (string VariableName in Variables)
             {
                 object Value = Paddock.Get(VariableName);
-                Values.Add(Value);
-                if (Value == null)
-                    Types.Add(typeof(int));
+                // If the value is an array then put each array value into Values individually.
+                if (Value is Array)
+                {
+                    Array Arr = Value as Array;
+                    for (int i = 0; i < Arr.Length; i++)
+                    {
+                        Names.Add(VariableName + "(" + (i+1).ToString() + ")");
+                        Values.Add(Arr.GetValue(i));
+                        Types.Add(Arr.GetValue(i).GetType());
+                    }
+                }
                 else
-                    Types.Add(Value.GetType());
+                {
+                    // Scalar
+                    Values.Add(Value);
+                    Names.Add(VariableName);
+                    if (Value == null)
+                        Types.Add(typeof(int));
+                    else
+                        Types.Add(Value.GetType());
+                }
             }
 
             if (!HaveCreatedTable)
             {
-                DataStore.CreateTable(Name, Variables, Types.ToArray());
+                DataStore.CreateTable(Name, Names.ToArray(), Types.ToArray());
                 HaveCreatedTable = true;
             }
 

@@ -89,6 +89,26 @@
     </Compile>
     <Compile Include="Components\Fertiliser.cs" />
     <Compile Include="Components\Manager.cs" />
+    <Compile Include="Components\Soils\IrrigationApplicationType.cs" />
+    <Compile Include="Components\Soils\NitrogenChangedType.cs" />
+    <Compile Include="Components\Soils\RunoffEventType.cs" />
+    <Compile Include="Components\Soils\Analysis.cs" />
+    <Compile Include="Components\Soils\InitialWater.cs" />
+    <Compile Include="Components\Soils\LayerStructure.cs" />
+    <Compile Include="Components\Soils\Phosphorus.cs" />
+    <Compile Include="Components\Soils\Sample.cs" />
+    <Compile Include="Components\Soils\Soil.cs" />
+    <Compile Include="Components\Soils\SoilCrop.cs" />
+    <Compile Include="Components\Soils\SoilOrganicMatter.cs" />
+    <Compile Include="Components\Soils\SoilTemperature.cs" />
+    <Compile Include="Components\Soils\SoilTemperature2.cs" />
+    <Compile Include="Components\Soils\Swim.cs" />
+    <Compile Include="Components\Soils\SwimSoluteParameters.cs" />
+    <Compile Include="Components\Soils\SwimSubsurfaceDrain.cs" />
+    <Compile Include="Components\Soils\SwimWaterTable.cs" />
+    <Compile Include="Components\Soils\TillageType.cs" />
+    <Compile Include="Components\Soils\Water.cs" />
+    <Compile Include="Components\Soils\SoilWater.cs" />
     <Compile Include="Components\Summary.cs" />
     <Compile Include="Components\Tests.cs" />
     <Compile Include="Core\ISummary.cs" />
@@ -109,6 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
