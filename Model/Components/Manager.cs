@@ -16,20 +16,19 @@ namespace Model.Components
 
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : IXmlSerializable
+    public class Manager : Model.Core.Model, IXmlSerializable
     {
         // Privates
         private Assembly CompiledAssembly;
-        private string Name;
 
         // Links
         [Link]
-        private IZone Zone = null;
+        private Zone Zone = null;
 
         // Publics
         public object Model { get; set; }
         public string Code { get; set; }
-        public IZone ParentZone { get { return Zone; } }
+        public Zone ParentZone { get { return Zone; } }
 
         #region XmlSerializable methods
         /// <summary>

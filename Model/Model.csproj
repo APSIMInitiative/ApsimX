@@ -111,9 +111,9 @@
     <Compile Include="Components\Soils\SoilWater.cs" />
     <Compile Include="Components\Summary.cs" />
     <Compile Include="Components\Tests.cs" />
+    <Compile Include="Core\ModelCollection.cs" />
     <Compile Include="Core\ISummary.cs" />
-    <Compile Include="Core\ISimulation.cs" />
-    <Compile Include="Core\IZone.cs" />
+    <Compile Include="Core\Model.cs" />
     <Compile Include="Core\Zone.cs" />
     <Compile Include="Components\DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />

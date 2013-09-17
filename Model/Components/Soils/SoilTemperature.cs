@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class SoilTemperature
+    public class SoilTemperature : Model.Core.Model
     {
         [Description("Boundary layer conductance")]
         [Units("(W/m2/K)")]

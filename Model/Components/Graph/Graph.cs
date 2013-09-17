@@ -5,11 +5,10 @@ namespace Model.Components.Graph
 {
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
-    public class Graph
+    public class Graph : Model.Core.Model
     {
         [Link] private DataStore _DataStore = null;
 
-        public string Name { get; set; }
         public string Title {get; set;}
 
         [XmlElement("Axis")]

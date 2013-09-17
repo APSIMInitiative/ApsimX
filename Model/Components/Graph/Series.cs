@@ -10,7 +10,7 @@ using Model.Components;
 
 namespace Model.Components.Graph
 {
-    public class Series
+    public class Series : Model.Core.Model
     {
         public enum SeriesType { Line, Bar };
         public string Title { get; set; }

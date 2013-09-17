@@ -12,28 +12,27 @@ namespace Model.Components
 
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    public class Report
+    public class Report : Model.Core.Model
     {
         // Links.
         [Link] private DataStore DataStore = null;
-        [Link] private IZone Paddock = null;
+        [Link] private Zone Paddock = null;
         [Link] private Simulation Simulation = null;
 
         // privates
         bool HaveCreatedTable = false;
 
         // Properties read in.
-        public string Name { get; set; }
         public string[] Variables {get; set;}
         public string[] Events { get; set; }
 
         // The user interface would like to know our paddock
-        public IZone ParentZone { get { return Paddock; } }
+        public Zone ParentZone { get { return Paddock; } }
 
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public void OnInitialised()
+        public override void OnInitialised()
         {
             Simulation.Completed += OnCompleted;
             HaveCreatedTable = false;

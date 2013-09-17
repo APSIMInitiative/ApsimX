@@ -14,7 +14,7 @@ namespace Model.Components.Soils
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
     ///</summary> 
-    public class SoilWater
+    public class SoilWater : Model.Core.Model
     {
         #region Links
         [Link]
@@ -24,7 +24,7 @@ namespace Model.Components.Soils
         private WeatherFile MetFile = null;
 
         [Link]
-        private IZone Paddock = null;
+        private Zone Paddock = null;
 
         //[Link]
         private SoilWatTillageType SoilWatTillageType = null;
@@ -4895,7 +4895,7 @@ namespace Model.Components.Soils
 
 
 
-        public void OnInitialised()
+        public override void OnInitialised()
         {
 
             day = Clock.Today.DayOfYear;

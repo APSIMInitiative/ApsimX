@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Model.Core
 {
-    public class Simulation : Zone, ISimulation
+    public class Simulation : Zone
     {
         // Private links
         [Link] private ISummary Summary = null;
@@ -28,7 +28,7 @@ namespace Model.Core
         {
             try
             {
-                Initialise(this);
+                Initialise();
                 if (Commenced != null)
                     Commenced.Invoke();
 
@@ -56,7 +56,7 @@ namespace Model.Core
         /// <summary>
         /// Simulation is being initialised.
         /// </summary>
-        private void OnInitialised()
+        public override void OnInitialised()
         {
             string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Summary.WriteProperty("Version", Version);

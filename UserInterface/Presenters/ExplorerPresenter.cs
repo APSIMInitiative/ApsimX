@@ -155,11 +155,10 @@ namespace UserInterface.Presenters
             }
             else
             {
-                object Obj = ApsimXFile.Get(e.NodePath);
-                if (Obj is IZone)
+                ModelCollection Model = ApsimXFile.Get(e.NodePath) as ModelCollection;
+                if (Model != null)
                 {
-                    IZone Zone = Obj as IZone;
-                    foreach (object ChildModel in Zone.Models)
+                    foreach (Model.Core.Model ChildModel in Model.Models)
                         e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }
@@ -189,7 +188,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            object Obj = ApsimXFile.Get(e.NodePath);
+            Model.Core.Model Obj = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
             if (Obj != null)
             {
                 DragObject DragObject = new DragObject();
@@ -207,7 +206,7 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            object DestinationModel = ApsimXFile.Get(e.NodePath);
+            Model.Core.Model DestinationModel = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
             if (DestinationModel != null)
             {
                 DragObject DragObject = e.DragObject as DragObject;
@@ -231,26 +230,25 @@ namespace UserInterface.Presenters
         private void OnDrop(object sender, DropArgs e)
         {
             string ToParentPath = e.NodePath;
-            IZone ToParentZone = ApsimXFile.Get(ToParentPath) as IZone;
+            ModelCollection ToParent = ApsimXFile.Get(ToParentPath) as ModelCollection;
 
             DragObject DragObject = e.DragObject as DragObject;
-            if (DragObject != null && ToParentZone != null)
+            if (DragObject != null && ToParent != null)
             {
                 string FromModelXml = DragObject.Xml;
                 string FromParentPath = Utility.String.ParentName(DragObject.NodePath);
-                IZone FromParentZone = ApsimXFile.Get(FromParentPath) as IZone;
 
                 ICommand Cmd = null;
                 if (e.Copied)
-                    Cmd = new AddModelCommand(FromModelXml, ToParentPath, ToParentZone);
+                    Cmd = new AddModelCommand(FromModelXml, ToParent);
                 else if (e.Moved)
                 {
                     if (FromParentPath != ToParentPath)
                     {
-                        object FromModel = ApsimXFile.Get(DragObject.NodePath);
+                        Model.Core.Model FromModel = ApsimXFile.Get(DragObject.NodePath) as Model.Core.Model;
                         if (FromModel != null)
                         {
-                            Cmd = new MoveModelCommand(FromParentPath, FromParentZone, FromModel, ToParentPath, ToParentZone);
+                            Cmd = new MoveModelCommand(FromModel, ToParent);
                         }
                     }
                 }
@@ -265,7 +263,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            object Model = ApsimXFile.Get(e.NodePath);
+            Model.Core.Model Model = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
             if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
             {
                 HideRightHandPanel();
@@ -285,13 +283,13 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A helper function for creating a node description object for the specified model.
         /// </summary>
-        private NodeDescriptionArgs.Description GetNodeDescription(object Model)
+        private NodeDescriptionArgs.Description GetNodeDescription(Model.Core.Model Model)
         {
             return new NodeDescriptionArgs.Description()
             {
-                Name = Utility.Reflection.Name(Model),
+                Name = Model.Name,
                 ResourceNameForImage = Model.GetType().Name + "16",
-                HasChildren = Model is IZone
+                HasChildren = Model is ModelCollection
             };
         }
 
@@ -342,7 +340,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelStructureChanged(string ModelPath)
         {
-            object Model = ApsimXFile.Get(ModelPath);
+            Model.Core.Model Model = ApsimXFile.Get(ModelPath) as Model.Core.Model;
             View.InvalidateNode(ModelPath, GetNodeDescription(Model));
         }
 

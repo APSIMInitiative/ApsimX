@@ -11,19 +11,17 @@ namespace UserInterface.Commands
     class AddModelCommand : ICommand
     {
         private string FromModelXml;
-        private string ToParentPath;
-        private IZone ToParentZone;
-        private object FromModel;
+        private ModelCollection ToParent;
+        private Model.Core.Model FromModel;
         private bool ModelAdded;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AddModelCommand(string FromModelXml, string ToParentPath, IZone ToParentZone)
+        public AddModelCommand(string FromModelXml, ModelCollection ToParent)
         {
             this.FromModelXml = FromModelXml;
-            this.ToParentPath = ToParentPath;
-            this.ToParentZone = ToParentZone;
+            this.ToParent = ToParent;
         }
 
         /// <summary>
@@ -35,9 +33,9 @@ namespace UserInterface.Commands
             {
                 XmlDocument Doc = new XmlDocument();
                 Doc.LoadXml(FromModelXml);
-                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement);
-                ToParentZone.AddModel(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParentPath);
+                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model.Core.Model;
+                ToParent.AddModel(FromModel);
+                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
                 ModelAdded = true;
             }
             catch (Exception)
@@ -54,8 +52,8 @@ namespace UserInterface.Commands
         {
             if (ModelAdded && FromModel != null)
             {
-                ToParentZone.Models.Remove(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParentPath);
+                ToParent.RemoveModel(FromModel);
+                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
         }
 

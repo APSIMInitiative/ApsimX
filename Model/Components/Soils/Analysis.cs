@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class Analysis
+    public class Analysis : Model.Core.Model
     {
         
         public double[] Thickness { get; set; }

@@ -7,11 +7,8 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class Phosphorus
+    public class Phosphorus : Model.Core.Model
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-
         [Description("Root C:P ratio")]
         public double RootCP { get; set; }
         [Description("Rate disolved rock")]

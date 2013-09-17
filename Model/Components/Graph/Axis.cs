@@ -1,7 +1,8 @@
-﻿
+﻿using Model.Core;
+
 namespace Model.Components.Graph
 {
-    public class Axis
+    public class Axis : Model.Core.Model
     {
         public enum AxisType { Left, Top, Right, Bottom };
 

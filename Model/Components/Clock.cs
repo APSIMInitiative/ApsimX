@@ -7,15 +7,12 @@ namespace Model.Components
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [AllowDropOn("Simulation")]
-    public class Clock
+    public class Clock : Model.Core.Model
     {
         // Links
         [Link] private Simulation Simulation = null;
         [Link] private ISummary Summary = null;
 
-        // Parameters serialised
-        public string Name { get; set; }
-        
         [Description("The start date of the simulation")]
         public DateTime StartDate { get; set; }
 
@@ -36,7 +33,7 @@ namespace Model.Components
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public void OnInitialised()
+        public override void OnInitialised()
         {
             Simulation.Commenced += OnCommence;
             Simulation.Completed += OnCompleted;

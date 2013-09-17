@@ -21,7 +21,7 @@ namespace Model.Components
 
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.TestPresenter")]
-    public class Tests
+    public class Tests : Model.Core.Model
     {
         [Link] private DataStore _DataStore = null;
 

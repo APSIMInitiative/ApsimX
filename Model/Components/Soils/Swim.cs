@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class Swim
+    public class Swim : Model.Core.Model
     {
         [Description("Bare soil albedo")]
         public double Salb { get; set; }

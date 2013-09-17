@@ -6,9 +6,8 @@ using System.Xml.Serialization;
 
 namespace Model.Components.Soils
 {
-    public class SoilCrop
+    public class SoilCrop : Model.Core.Model
     {
-        public string Name { get; set; }
         public double[] Thickness { get; set; }
         public double[] LL { get; set; }
         public double[] KL { get; set; }

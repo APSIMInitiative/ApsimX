@@ -38,10 +38,10 @@ namespace ModelTests
         [TestMethod]
         public void FullPathTest()
         {
-            ISimulation Sim = S.Models[0] as ISimulation;
+            Simulation Sim = S.Models[0] as Simulation;
 
             Assert.AreEqual(Sim.FullPath, ".");
-            Assert.AreEqual((Sim.Models[3] as IZone).FullPath, ".Field1");
+            Assert.AreEqual((Sim.Models[3] as Zone).FullPath, ".Field1");
         }
 
 
@@ -51,9 +51,9 @@ namespace ModelTests
         [TestMethod]
         public void ScopingRules()
         {
-            ISimulation Sim = S.Models[0] as ISimulation;
+            Simulation Sim = S.Models[0] as Simulation;
 
-            IZone Field1 = Sim.Models[3] as IZone;
+            Zone Field1 = Sim.Models[3] as Zone;
 
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual(Utility.Reflection.Name(Field1.Find("Field1Report")), "Field1Report");
@@ -71,12 +71,12 @@ namespace ModelTests
             Assert.IsNull(Field1.Find(typeof(Model.Components.Graph.Graph)));
 
             // Make sure we can't get a link to a model in a child field.
-            IZone Field2 = Sim.Models[4] as IZone;
+            Zone Field2 = Sim.Models[4] as Zone;
             Assert.IsNull(Field2.Find("Field2SubZoneReport"));
             Assert.IsNull(Field2.Find(typeof(Model.Components.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
-            IZone Field2SubZone = Field2.Models[1] as IZone;
+            Zone Field2SubZone = Field2.Models[1] as Zone;
             Assert.AreEqual(Utility.Reflection.Name(Field2SubZone.Find("WeatherFile")), "WeatherFile");
             Assert.AreEqual(Utility.Reflection.Name(Field2SubZone.Find(typeof(Model.Components.WeatherFile))), "WeatherFile");
         }
@@ -87,9 +87,9 @@ namespace ModelTests
         [TestMethod]
         public void Get()
         {
-            ISimulation Sim = S.Models[0] as ISimulation;
+            Simulation Sim = S.Models[0] as Simulation;
 
-            IZone Field1 = Sim.Models[3] as IZone;
+            Zone Field1 = Sim.Models[3] as Zone;
 
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual(Utility.Reflection.Name(Field1.Get("Field1Report")), "Field1Report");

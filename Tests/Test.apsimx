@@ -14,7 +14,9 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
-    <Summary />
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
@@ -27,7 +29,7 @@
           <string>.WeatherFile.Radn</string>
           <string>.WeatherFile.Rain</string>
           <string>Manager.Model.A</string>
-          <string>DummySoil.SoilWater.sw_dep</string>
+          <string>Soil.SoilWater.sw_dep</string>
         </Variables>
         <Events>
           <string>Clock.EndOfDay</string>
@@ -69,7 +71,7 @@
         </Script>
       </Manager>
       <Soil>
-        <Name>DummySoil</Name>
+        <Name>Soil</Name>
         <RecordNumber>0</RecordNumber>
         <SoilType>Black Vertosol</SoilType>
         <LocalName>Waco</LocalName>
@@ -80,6 +82,7 @@
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
         <Water>
+          <Name>Water</Name>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -160,6 +163,7 @@
           </SAT>
         </Water>
         <SoilWater>
+          <Name>SoilWater</Name>
           <swcon>
             <double>0.3</double>
             <double>0.3</double>
@@ -370,6 +374,7 @@
           </air_dry_dep>
         </SoilWater>
         <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
           <RootCN>0</RootCN>
           <RootWt>0</RootWt>
           <SoilCN>0</SoilCN>
@@ -378,10 +383,12 @@
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
         <Analysis>
+          <Name>Analysis</Name>
           <PHUnits>Water</PHUnits>
           <BoronUnits>HotWater</BoronUnits>
         </Analysis>
-        <InitialWater name="Initial water">
+        <InitialWater>
+          <Name>Initial water</Name>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
           <PercentMethod>FilledFromTop</PercentMethod>
@@ -412,6 +419,7 @@
     <Name>DataStore</Name>
   </DataStore>
   <Tests>
+    <Name>Tests</Name>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>

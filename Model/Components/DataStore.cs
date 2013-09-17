@@ -11,19 +11,17 @@ namespace Model.Components
 {
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    public class DataStore
+    public class DataStore : Model.Core.Model
     {
-        // make the connection a static so that multiple DataStore models will write
-        // to the same database.
         private Utility.SQLite Connection = null;
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
 
+        public enum CriticalEnum { Information, Warning, Error };
+
         // Links
         [Link]
         private Simulations Simulations = null;
-
-        public string Name { get; set; }
 
         /// <summary>
         /// Destructor. Close our DB connection.
@@ -70,7 +68,7 @@ namespace Model.Components
         /// <summary>
         /// Initialise this data store.
         /// </summary>
-        public void OnInitialised()
+        public override void OnInitialised()
         {
             SimulationIDs.Clear();
 

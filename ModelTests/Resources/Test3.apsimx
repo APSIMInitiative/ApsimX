@@ -12,7 +12,9 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
-    <Summary />
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
     <Zone>
       <Name>Field1</Name>
       <Report>

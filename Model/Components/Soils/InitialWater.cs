@@ -6,11 +6,8 @@ using System.Xml.Serialization;
 
 namespace Model.Components.Soils
 {
-    public class InitialWater
+    public class InitialWater : Model.Core.Model
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-
         public enum PercentMethodEnum { FilledFromTop, EvenlyDistributed };
         public PercentMethodEnum PercentMethod { get; set; }
         public double FractionFull = double.NaN;

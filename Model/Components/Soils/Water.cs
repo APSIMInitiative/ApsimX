@@ -8,7 +8,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class Water
+    public class Water : Model.Core.Model
     {
         private double[] _Thickness;
         public double[] Thickness

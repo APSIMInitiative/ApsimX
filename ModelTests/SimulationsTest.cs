@@ -43,15 +43,15 @@ namespace ModelTests
             Assert.AreEqual(S.Models.Count, 2);
             Assert.AreEqual(Utility.Reflection.Name(S.Models[0]), "Test");
 
-            ISimulation Sim = S.Models[0] as ISimulation;
+            Simulation Sim = S.Models[0] as Simulation;
             Assert.AreEqual(Sim.Models.Count, 5);
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[0]), "WeatherFile");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[1]), "Clock");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[2]), "Summary");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[3]), "Field1");
-            Assert.AreEqual(Utility.Reflection.Name(Sim.Models[4]), "Field2");
+            Assert.AreEqual(Sim.Models[0].Name, "WeatherFile");
+            Assert.AreEqual(Sim.Models[1].Name, "Clock");
+            Assert.AreEqual(Sim.Models[2].Name, "Summary");
+            Assert.AreEqual(Sim.Models[3].Name, "Field1");
+            Assert.AreEqual(Sim.Models[4].Name, "Field2");
 
-            IZone Z = Sim.Models[3] as IZone;
+            Zone Z = Sim.Models[3] as Zone;
             Assert.AreEqual(Z.Models.Count, 1);
             Assert.AreEqual(Utility.Reflection.Name(Z.Models[0]), "Field1Report");
         }
@@ -67,12 +67,12 @@ namespace ModelTests
                               "   <StartDate>1940-01-01T00:00:00</StartDate>" +
                               "   <EndDate>1989-12-31T00:00:00</EndDate>" +
                               "</Clock>";
-            IZone Sim = S.Models[0] as IZone;
+            Zone Sim = S.Models[0] as Zone;
 
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(ChildXml);
             Clock Clock = Utility.Xml.Deserialise(Doc.DocumentElement) as Clock;
-            Sim.Models.Add(Clock);
+            Sim.AddModel(Clock as Model.Core.Model);
         }
     }
 }

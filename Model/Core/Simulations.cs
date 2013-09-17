@@ -61,7 +61,7 @@ namespace Model.Core
         {
             base.ReadXml(reader);
             Name = "Simulations";
-            ResolveLinks(this);
+            ResolveLinks();
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Model.Core
         /// <summary>
         /// Run the specified simulation. Return true if it ran ok.
         /// </summary>
-        public bool Run(ISimulation Sim)
+        public bool Run(Simulation Sim)
         {
             InitialiseNonSimulations();
 
@@ -101,10 +101,10 @@ namespace Model.Core
         /// </summary>
         private void InitialiseNonSimulations()
         {
-            foreach (object Model in Models)
+            foreach (Model Model in Models)
             {
                 if (!(Model is Simulation))
-                    Initialise(Model);
+                    Model.Initialise();
             }
         }
 

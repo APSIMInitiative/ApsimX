@@ -99,7 +99,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Copy")]
         public void OnCopyClick(object Sender, EventArgs e)
         {
-            object Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath);
+            Model.Core.Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model.Core.Model;
             if (Model != null)
             {
                 string St = Utility.Xml.Serialise(Model, false);
@@ -120,7 +120,7 @@ namespace UserInterface.Presenters
                 object NewModel = Utility.Xml.Deserialise(Doc.DocumentElement);
 
                 // See if the presenter is happy with this model being added.
-                IZone ParentModel = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as IZone;
+                ModelCollection ParentModel = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
                 AllowDropArgs AllowDropArgs = new Views.AllowDropArgs();
                 AllowDropArgs.NodePath = ExplorerView.CurrentNodePath;
                 AllowDropArgs.DragObject = new DragObject()
@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
                 // If it is happy then issue an AddModelCommand.
                 if (AllowDropArgs.Allow)
                 {
-                    AddModelCommand Cmd = new AddModelCommand(Clipboard.GetText(), ExplorerView.CurrentNodePath, ParentModel);
+                    AddModelCommand Cmd = new AddModelCommand(Clipboard.GetText(), ParentModel);
                     ExplorerPresenter.CommandHistory.Add(Cmd, true);
                 }
             }
@@ -150,12 +150,10 @@ namespace UserInterface.Presenters
         [ContextMenuName("Delete")]
         public void OnDeleteClick(object Sender, EventArgs e)
         {
-            object Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath);
-            string ParentPath = Utility.String.ParentName(ExplorerView.CurrentNodePath);
-            object ParentModel = ExplorerPresenter.ApsimXFile.Get(ParentPath);
-            if (Model.GetType().Name != "Simulations" && Model != null && ParentModel != null && ParentModel is IZone)
+            Model.Core.Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model.Core.Model;
+            if (Model != null && Model.GetType().Name != "Simulations")
             {
-                DeleteModelCommand Cmd = new DeleteModelCommand(ParentModel as IZone, ParentPath, Model);
+                DeleteModelCommand Cmd = new DeleteModelCommand(Model);
                 ExplorerPresenter.CommandHistory.Add(Cmd, true);
             }
         }
@@ -179,7 +177,7 @@ namespace UserInterface.Presenters
         {
             ExplorerView.AddStatusMessage("Simulation running...");
 
-            ISimulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ISimulation;
+            Simulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Simulation;
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
             C.Do(null);
             if (C.ok)

@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
             foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 // Only consider properties that have a public setter.
-                if (Property.Name != "Name" && Property.GetAccessors().Length == 2 && Property.GetAccessors()[1].IsPublic)
+                if (Property.Name != "Name" && Property.Name != "Parent" && Property.GetAccessors().Length == 2 && Property.GetAccessors()[1].IsPublic)
                 {
                     string PropertyName = Property.Name;
                     if (Property.IsDefined(typeof(Description), false))

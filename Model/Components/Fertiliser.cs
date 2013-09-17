@@ -21,7 +21,7 @@ using System.Xml.XPath;
  *************************************************************/
 namespace Model.Components
 {
-    public class Fertiliser
+    public class Fertiliser : Model.Core.Model
     {
         private XmlNode FertiliserNode = null;
 

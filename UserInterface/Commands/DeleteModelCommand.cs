@@ -10,18 +10,15 @@ namespace UserInterface.Commands
     /// </summary>
     class DeleteModelCommand : ICommand
     {
-        private IZone ParentZone;
-        private string ParentPath;
-        private object Model;
+        private Model.Core.Model Model;
+        private ModelCollection Parent;
         private bool ModelRemoved;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public DeleteModelCommand(IZone ParentZone, string ParentPath, object Model)
+        public DeleteModelCommand(Model.Core.Model Model)
         {
-            this.ParentZone = ParentZone;
-            this.ParentPath = ParentPath;
             this.Model = Model;
         }
 
@@ -30,8 +27,9 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            ModelRemoved = ParentZone.Models.Remove(Model);
-            CommandHistory.InvokeModelStructureChanged(ParentPath);
+            Parent = Model.Parent as ModelCollection;
+            ModelRemoved = Parent.RemoveModel(Model);
+            CommandHistory.InvokeModelStructureChanged(Parent.FullPath);
         }
 
         /// <summary>
@@ -41,8 +39,8 @@ namespace UserInterface.Commands
         {
             if (ModelRemoved)
             {
-                ParentZone.AddModel(Model);
-                CommandHistory.InvokeModelStructureChanged(ParentPath);
+                Parent.AddModel(Model);
+                CommandHistory.InvokeModelStructureChanged(Parent.FullPath);
             }
         }
 

@@ -8,7 +8,7 @@ namespace Model.Components
     /// <summary>
     /// Reads in met data and makes it available for other components.
     /// </summary>
-    public class WeatherFile
+    public class WeatherFile : Model.Core.Model
     {
         // Links
         [Link] private Clock Clock = null;
@@ -27,7 +27,6 @@ namespace Model.Components
         private NewMetType TodaysMetData = new NewMetType();
 
         // Parameters read in
-        public string Name { get; set; }
         public string FileName { get; set; }
 
         // Events
@@ -83,7 +82,7 @@ namespace Model.Components
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
-        public void OnInitialised()
+        public override void OnInitialised()
         {
             if (File == null)
             {

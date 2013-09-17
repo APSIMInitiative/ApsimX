@@ -6,11 +6,11 @@ using Model.Core;
 
 namespace Model.Components
 {
-    public class Summary : ISummary
+    public class Summary : Model.Core.Model, ISummary
     {
         // Links
         [Link] private DataStore DataStore = null;
-        [Link] private ISimulation Simulation = null;
+        [Link] private Simulation Simulation = null;
         [Link] private Clock Clock = null;
 
         /// <summary>

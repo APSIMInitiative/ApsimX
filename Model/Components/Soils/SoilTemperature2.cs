@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class SoilTemperature2
+    public class SoilTemperature2 : Model.Core.Model
     {
         [Units("hours")]
         public double MaxTTimeDefault { get; set; }

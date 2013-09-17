@@ -7,7 +7,7 @@ using Model.Core;
 
 namespace Model
 {
-    public class Model
+    public class Program
     {
         /// <summary>
         /// Main program entry point.

@@ -5,11 +5,11 @@ namespace UserInterface.Commands
 {
     class RunCommand : ICommand
     {
-        private ISimulation Simulation;
+        private Simulation Simulation;
         private Simulations Simulations;
         public bool ok { get; set; }
 
-        public RunCommand(Simulations Simulations, ISimulation Simulation)
+        public RunCommand(Simulations Simulations, Simulation Simulation)
         {
             this.Simulations = Simulations;
             this.Simulation = Simulation;

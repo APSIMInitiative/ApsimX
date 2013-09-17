@@ -7,10 +7,8 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class Sample
+    public class Sample : Model.Core.Model
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
         public string Date { get; set; }
 
         public double[] Thickness { get; set; }

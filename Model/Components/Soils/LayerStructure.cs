@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Model.Components.Soils
 {
-    public class LayerStructure
+    public class LayerStructure : Model.Core.Model
     {
         public double[] Thickness { get; set; }
     }

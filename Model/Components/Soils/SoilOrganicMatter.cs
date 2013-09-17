@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class SoilOrganicMatter
+    public class SoilOrganicMatter : Model.Core.Model
     {
         [Description("Root C:N ratio")]
         public double RootCN { get; set; }

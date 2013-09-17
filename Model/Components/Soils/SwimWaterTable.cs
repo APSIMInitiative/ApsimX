@@ -6,7 +6,7 @@ using Model.Core;
 
 namespace Model.Components.Soils
 {
-    public class SwimWaterTable
+    public class SwimWaterTable : Model.Core.Model
     {
         [Description("Depth of Water Table (mm)")]
         public double WaterTableDepth { get; set; }

@@ -10,25 +10,18 @@ namespace UserInterface.Commands
     /// </summary>
     class MoveModelCommand : ICommand
     {
-        private string FromParentPath;
-        private IZone FromParentZone;
-        private object FromModel;
-        private string ToParentPath;
-        private IZone ToParentZone;
+        Model.Core.Model FromModel;
+        ModelCollection ToParent;
         private bool ModelMoved;
         private string OriginalName;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MoveModelCommand(string FromParentPath, IZone FromParentZone, object FromModel,
-                                string ToParentPath, IZone ToParentZone)
+        public MoveModelCommand(Model.Core.Model FromModel, ModelCollection ToParent)
         {
-            this.FromParentPath = FromParentPath;
-            this.FromParentZone = FromParentZone;
             this.FromModel = FromModel;
-            this.ToParentPath = ToParentPath;
-            this.ToParentZone = ToParentZone;
+            this.ToParent = ToParent;
         }
 
         /// <summary>
@@ -36,19 +29,21 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
+            ModelCollection FromParent = FromModel.Parent as ModelCollection;
+            
             // Remove old model.
-            ModelMoved = FromParentZone.Models.Remove(FromModel);
+            ModelMoved = FromParent.RemoveModel(FromModel);
 
             // Add model to new parent.
             if (ModelMoved)
             {
                 // The AddModel method may rename the FromModel. Go get the original name in case of
                 // Undo later.
-                OriginalName = Utility.Reflection.Name(FromModel);
+                OriginalName = FromModel.Name;
 
-                ToParentZone.AddModel(FromModel);
-                CommandHistory.InvokeModelStructureChanged(FromParentPath);
-                CommandHistory.InvokeModelStructureChanged(ToParentPath);
+                ToParent.AddModel(FromModel);
+                CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
         }
 
@@ -59,12 +54,14 @@ namespace UserInterface.Commands
         {
             if (ModelMoved)
             {
-                ToParentZone.Models.Remove(FromModel);
-                Utility.Reflection.SetName(FromModel, OriginalName);
-                FromParentZone.AddModel(FromModel);
+                ModelCollection FromParent = FromModel.Parent as ModelCollection;
+            
+                ToParent.RemoveModel(FromModel);
+                FromModel.Name = OriginalName;
+                FromParent.AddModel(FromModel);
 
-                CommandHistory.InvokeModelStructureChanged(FromParentPath);
-                CommandHistory.InvokeModelStructureChanged(ToParentPath);
+                CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
         }
 
