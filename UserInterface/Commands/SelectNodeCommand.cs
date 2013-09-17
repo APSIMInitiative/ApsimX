@@ -1,5 +1,5 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Commands
 {

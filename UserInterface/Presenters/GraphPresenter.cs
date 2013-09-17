@@ -1,8 +1,8 @@
 ﻿using System;
 using UserInterface.Views;
-using Model.Components.Graph;
+using Models.Graph;
 using System.Data;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {

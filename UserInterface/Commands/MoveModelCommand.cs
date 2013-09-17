@@ -1,5 +1,5 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 using System.Xml;
 using System;
 
@@ -10,7 +10,7 @@ namespace UserInterface.Commands
     /// </summary>
     class MoveModelCommand : ICommand
     {
-        Model.Core.Model FromModel;
+        Model FromModel;
         ModelCollection ToParent;
         private bool ModelMoved;
         private string OriginalName;
@@ -18,7 +18,7 @@ namespace UserInterface.Commands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MoveModelCommand(Model.Core.Model FromModel, ModelCollection ToParent)
+        public MoveModelCommand(Model FromModel, ModelCollection ToParent)
         {
             this.FromModel = FromModel;
             this.ToParent = ToParent;

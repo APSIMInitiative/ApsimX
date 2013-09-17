@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using UserInterface.Views;
-using Model.Components;
+using Models;
 
 namespace UserInterface.Presenters
 {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using UserInterface.Views;
 using System.Reflection;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {

@@ -272,12 +272,6 @@
     <None Include="Resources\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
-      <Name>Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\media_play.png" />
   </ItemGroup>
   <ItemGroup>
@@ -330,6 +324,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\view.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

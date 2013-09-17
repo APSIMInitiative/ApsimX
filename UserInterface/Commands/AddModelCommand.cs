@@ -1,5 +1,5 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 using System.Xml;
 using System;
 
@@ -12,7 +12,7 @@ namespace UserInterface.Commands
     {
         private string FromModelXml;
         private ModelCollection ToParent;
-        private Model.Core.Model FromModel;
+        private Model FromModel;
         private bool ModelAdded;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace UserInterface.Commands
             {
                 XmlDocument Doc = new XmlDocument();
                 Doc.LoadXml(FromModelXml);
-                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model.Core.Model;
+                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 ToParent.AddModel(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
                 ModelAdded = true;

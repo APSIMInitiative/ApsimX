@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Model.Components.Graph;
+using Models.Graph;
 using UserInterface.Views;
 using System.Data;
 using System.Drawing;
-using Model.Core;
+using Models.Core;
 using System;
 
 namespace UserInterface.Presenters

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UserInterface.Views;
 using System.Reflection;
-using Model.Components;
+using Models;
 
 namespace UserInterface.Presenters
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
                 ModelCollection Model = ApsimXFile.Get(e.NodePath) as ModelCollection;
                 if (Model != null)
                 {
-                    foreach (Model.Core.Model ChildModel in Model.Models)
+                    foreach (Model ChildModel in Model.Models)
                         e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }
@@ -188,7 +188,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model.Core.Model Obj = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
+            Model Obj = ApsimXFile.Get(e.NodePath) as Model;
             if (Obj != null)
             {
                 DragObject DragObject = new DragObject();
@@ -206,7 +206,7 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            Model.Core.Model DestinationModel = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
+            Model DestinationModel = ApsimXFile.Get(e.NodePath) as Model;
             if (DestinationModel != null)
             {
                 DragObject DragObject = e.DragObject as DragObject;
@@ -245,7 +245,7 @@ namespace UserInterface.Presenters
                 {
                     if (FromParentPath != ToParentPath)
                     {
-                        Model.Core.Model FromModel = ApsimXFile.Get(DragObject.NodePath) as Model.Core.Model;
+                        Model FromModel = ApsimXFile.Get(DragObject.NodePath) as Model;
                         if (FromModel != null)
                         {
                             Cmd = new MoveModelCommand(FromModel, ToParent);
@@ -263,7 +263,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            Model.Core.Model Model = ApsimXFile.Get(e.NodePath) as Model.Core.Model;
+            Model Model = ApsimXFile.Get(e.NodePath) as Model;
             if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
             {
                 HideRightHandPanel();
@@ -283,7 +283,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A helper function for creating a node description object for the specified model.
         /// </summary>
-        private NodeDescriptionArgs.Description GetNodeDescription(Model.Core.Model Model)
+        private NodeDescriptionArgs.Description GetNodeDescription(Model Model)
         {
             return new NodeDescriptionArgs.Description()
             {
@@ -340,7 +340,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelStructureChanged(string ModelPath)
         {
-            Model.Core.Model Model = ApsimXFile.Get(ModelPath) as Model.Core.Model;
+            Model Model = ApsimXFile.Get(ModelPath) as Model;
             View.InvalidateNode(ModelPath, GetNodeDescription(Model));
         }
 

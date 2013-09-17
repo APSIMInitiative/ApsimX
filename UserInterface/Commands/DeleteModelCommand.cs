@@ -1,5 +1,5 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 using System.Xml;
 using System;
 
@@ -10,14 +10,14 @@ namespace UserInterface.Commands
     /// </summary>
     class DeleteModelCommand : ICommand
     {
-        private Model.Core.Model Model;
+        private Model Model;
         private ModelCollection Parent;
         private bool ModelRemoved;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public DeleteModelCommand(Model.Core.Model Model)
+        public DeleteModelCommand(Model Model)
         {
             this.Model = Model;
         }

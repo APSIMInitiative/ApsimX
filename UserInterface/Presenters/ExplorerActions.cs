@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Model.Core;
+using Models.Core;
 using UserInterface.Commands;
 using UserInterface.Views;
 using System.Windows.Forms;
@@ -99,7 +99,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Copy")]
         public void OnCopyClick(object Sender, EventArgs e)
         {
-            Model.Core.Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model.Core.Model;
+            Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null)
             {
                 string St = Utility.Xml.Serialise(Model, false);
@@ -150,7 +150,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Delete")]
         public void OnDeleteClick(object Sender, EventArgs e)
         {
-            Model.Core.Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model.Core.Model;
+            Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null && Model.GetType().Name != "Simulations")
             {
                 DeleteModelCommand Cmd = new DeleteModelCommand(Model);
@@ -171,7 +171,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
-        [ContextModelType(typeof(Model.Core.Simulation))]
+        [ContextModelType(typeof(Simulation))]
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {

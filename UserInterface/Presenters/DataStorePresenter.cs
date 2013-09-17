@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Model.Core;
+using Models.Core;
 using UserInterface.Views;
 using System.Data;
-using Model.Components;
+using Models;
 
 namespace UserInterface.Presenters
 {

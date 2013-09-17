@@ -1,4 +1,4 @@
-﻿using Model.Components.Graph;
+﻿using Models.Graph;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters

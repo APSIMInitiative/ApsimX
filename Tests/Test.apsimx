@@ -39,11 +39,11 @@
         <Name>Script</Name>
         <Code>
         using System;
-        using Model.Core;
+        using Models.Core;
 
-        namespace Model.Components
+        namespace Models
         {
-            public class Script 
+            public class Script : Model
             {      
                // Links
                [Link] Clock Clock;
@@ -54,7 +54,7 @@
                // Outputs
                public double B { get { return A * 9; } }
 
-               public void OnInitialised()
+               public override void OnInitialised()
                {
                   Clock.StartOfDay += OnStartOfDay;
                }
