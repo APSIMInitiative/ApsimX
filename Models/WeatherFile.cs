@@ -78,6 +78,17 @@ namespace Models
                     return Convert.ToDouble(File.Constant("amp").Value);
             }
         }
+        /// <summary>
+        /// Return the duration of the day in hours.
+        /// </summary>
+        public double DayLength
+        {
+            get
+            { 
+                //APSIM uses civil twilight
+                return Utility.Math.DayLength(Clock.Today.DayOfYear, -6.0, Latitude); 
+            }
+        }
 
         /// <summary>
         /// An event handler to allow use to initialise ourselves.

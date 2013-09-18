@@ -1671,9 +1671,12 @@ namespace Models.Soils
 
         private void ZeroArray(ref double[] A)
         {
-            for (int i = 0; i < A.Length; i++)
+            if (A != null)
             {
-                A[i] = 0.0;
+                for (int i = 0; i < A.Length; i++)
+                {
+                    A[i] = 0.0;
+                }
             }
         }
 

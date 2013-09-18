@@ -24,6 +24,7 @@
         <Name>Report</Name>
         <Variables>
           <string>.Clock.Today</string>
+          <string>.WeatherFile.DayLength</string>
           <string>.WeatherFile.MaxT</string>
           <string>.WeatherFile.MinT</string>
           <string>.WeatherFile.Radn</string>
