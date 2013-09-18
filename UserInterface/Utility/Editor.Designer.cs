@@ -28,21 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.TextBox = new System.Windows.Forms.RichTextBox();
+            this.TextBox = new ICSharpCode.TextEditor.TextEditorControl();
             this.SuspendLayout();
             // 
             // TextBox
             // 
-            this.TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TextBox.CausesValidation = false;
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextBox.HideSelection = false;
+            this.TextBox.IsReadOnly = false;
             this.TextBox.Location = new System.Drawing.Point(0, 0);
             this.TextBox.Name = "TextBox";
             this.TextBox.Size = new System.Drawing.Size(558, 485);
             this.TextBox.TabIndex = 0;
-            this.TextBox.Text = "";
-            this.TextBox.TextChanged += new System.EventHandler(this.OnTextHasChanged);
+            this.TextBox.Text = "textEditorControl1";
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // Editor
@@ -59,6 +56,7 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox TextBox;
+        private ICSharpCode.TextEditor.TextEditorControl TextBox;
+
     }
 }
