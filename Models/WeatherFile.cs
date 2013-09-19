@@ -63,9 +63,11 @@ namespace Models
             get
             {
                 if (File.Constant("tav") == null)
-                    return 0;
-                else
-                    return Convert.ToDouble(File.Constant("tav").Value);
+                {
+                    //this constant has not been found so do a calculation
+                    CalcTAVAMP();
+                }
+                return Convert.ToDouble(File.Constant("tav").Value);
             }
         }
         public double Amp
@@ -73,9 +75,11 @@ namespace Models
             get
             {
                 if (File.Constant("amp") == null)
-                    return 0;
-                else
-                    return Convert.ToDouble(File.Constant("amp").Value);
+                {
+                    //this constant has not been found so do a calculation
+                    CalcTAVAMP();
+                }
+                return Convert.ToDouble(File.Constant("amp").Value);
             }
         }
         /// <summary>
@@ -157,6 +161,108 @@ namespace Models
             Simulation.Completed -= OnCompleted;
             File.Close();
             File = null;
+        }
+        //=====================================================================
+        /// <summary>
+        /// Calculate the amp and tav 'constant' values for this metfile
+        /// and store the values into the File constants.
+        /// </summary>
+        private void CalcTAVAMP()
+        {
+            double tav = 0;
+            double amp = 0;
+
+            //do the calculations
+            ProcessMonthlyTAVAMP(out tav, out amp);
+
+            if (File.Constant("tav") == null)
+            {
+                File.AddConstant("tav", tav.ToString(), "", ""); //add a new constant
+            }
+            else
+                File.SetConstant("tav", tav.ToString());
+
+            if (File.Constant("amp") == null)
+            {
+                File.AddConstant("amp", amp.ToString(), "", ""); //add a new constant
+            }
+            else
+                File.SetConstant("amp", amp.ToString());
+        }
+        //=====================================================================
+        /// <summary>
+        /// Calculate the amp and tav 'constant' values for this metfile.
+        /// </summary>
+        /// <param name="tav">The calculated tav value</param>
+        /// <param name="amp">The calculated amp value</param>
+        private void ProcessMonthlyTAVAMP(out double tav, out double amp)
+        {
+            //init return values
+            tav = 0;
+            amp = 0;
+            double maxt, mint;
+
+            //get dataset size
+            DateTime start = File.FirstDate;
+            DateTime last = File.LastDate;
+            int nyears = last.Year - start.Year + 1;
+            //temp storage arrays
+            double[,] monthlyMeans = new double[12, nyears];
+            double[,] monthlySums = new double[12, nyears];
+            int[,] monthlyDays  = new int[12, nyears];
+
+            File.SeekToDate(start); //goto start of data set
+
+            //read the daily data from the met file
+            object[] Values;
+            DateTime curDate;
+            int curMonth = 0;
+            Boolean moreData = true;
+            while (moreData)
+            {
+                Values = File.GetNextLineOfData();
+                curDate = File.GetDateFromValues(Values);
+                int yrIdx = curDate.Year - start.Year;
+                maxt = Convert.ToDouble(Values[MaxTIndex]);
+                mint = Convert.ToDouble(Values[MinTIndex]);
+                //accumulate the daily mean for each month
+                if (curMonth != curDate.Month) //if next month then
+                {
+                    curMonth = curDate.Month;
+                    monthlySums[curMonth - 1, yrIdx] = 0;    //initialise the total
+                }
+                monthlySums[curMonth - 1, yrIdx] = monthlySums[curMonth - 1, yrIdx] + ((maxt + mint) * 0.5);
+                monthlyDays[curMonth - 1, yrIdx]++;
+
+                if (curDate >= last)    //if have read last record
+                    moreData = false;
+            }
+
+            //do more summary calculations
+            double sumOfMeans;
+            double maxMean, minMean;
+            double yearlySumMeans = 0;
+            double yearlySumAmp = 0;
+            for (int y = 0; y < nyears; y++)    
+            {
+                maxMean = -999;
+                minMean = 999;
+                sumOfMeans = 0;
+                for (int m = 0; m < 12; m++)    
+                {
+                    monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  //calc monthly mean
+                    sumOfMeans += monthlyMeans[m, y];
+                    maxMean = Math.Max(monthlyMeans[m, y], maxMean);
+                    minMean = Math.Min(monthlyMeans[m, y], minMean);
+                }
+                yearlySumMeans += sumOfMeans / 12.0;        //accum the ave of monthly means
+                yearlySumAmp += maxMean - minMean;          //accum the amp of means
+            }
+
+            tav = yearlySumMeans / nyears;  //calc the ave of the yearly ave means
+            amp = yearlySumAmp / nyears;    //calc the ave of the yearly amps
+
+            HaveReadData = false;           //ensure that OnTick will set the file ptr correctly for next read    
         }
     }
 }
