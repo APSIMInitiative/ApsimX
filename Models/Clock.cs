@@ -36,7 +36,6 @@ namespace Models
         public override void OnInitialised()
         {
             Simulation.Commenced += OnCommence;
-            Simulation.Completed += OnCompleted;
             Today = StartDate;
             Summary.WriteProperty("Start date", StartDate.ToString());
             Summary.WriteProperty("End date", EndDate.ToString());
@@ -68,10 +67,9 @@ namespace Models
         /// <summary>
         /// An event handler to perform model cleanup.
         /// </summary>
-        private void OnCompleted()
+        public override void OnCompleted()
         {
             Simulation.Commenced -= OnCommence;
-            Simulation.Completed -= OnCompleted;
         }
     }
 }

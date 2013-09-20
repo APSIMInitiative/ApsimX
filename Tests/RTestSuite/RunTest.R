@@ -3,7 +3,12 @@ library("XML")
 library("RSQLite")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test", "C:\\ApsimX\\ApsimX\\Tests\\") # for testing only 
+args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "C:\\ApsimX\\ApsimX\\Tests\\") # for testing only 
+
+#if(length(args) == 0)
+#  stop("Usage: rscript RunTest.R <path to .apsimx>")
+
+args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
 
 
 source("RTestSuite/tests.R")

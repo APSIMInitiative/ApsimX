@@ -17,11 +17,6 @@ namespace Models.Core
         public event NullTypeDelegate Commenced;
 
         /// <summary>
-        /// When the simulation is finished, this event will be invoked
-        /// </summary>
-        public event NullTypeDelegate Completed;
-
-        /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
         /// </summary>
         public bool Run()
@@ -32,8 +27,8 @@ namespace Models.Core
                 if (Commenced != null)
                     Commenced.Invoke();
 
-                if (Completed != null)
-                    Completed.Invoke();
+                Completed();
+
                 return true;
             }
             catch (Exception err)
@@ -46,8 +41,7 @@ namespace Models.Core
                 Console.WriteLine(Msg);
                 Summary.WriteMessage(Msg);
 
-                if (Completed != null)
-                    Completed.Invoke();
+                Completed();
 
                 return false;
             }

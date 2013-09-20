@@ -96,7 +96,10 @@ namespace UserInterface.Presenters
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model, 
                                                                                     Properties[Row].Name, 
                                                                                     NewValue);
+            //Stop the recursion, the user entry is the updated value
+            CommandHistory.ModelChanged -= OnModelChanged;
             CommandHistory.Add(Cmd, true);
+            CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
