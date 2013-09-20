@@ -529,7 +529,11 @@ namespace Utility
         ///  from 90 deg in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
         /// <param name="SunAngle">Angle to measure time between such as twilight (deg).
-        ///  angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.</param>
+        ///  angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
+        ///  Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6°. e.g SunAngle = -6
+        ///  Nautical twilight : 12°
+        ///  Astronomical twilight : 18°
+        ///  </param>
         static public double DayLength(double DayOfYear, double SunAngle, double Latitude)
         {
             //+ Constant Values
