@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,12 +94,12 @@ namespace UserInterface.Presenters
         private void OnCellValueChanged(int Col, int Row, object OldValue, object NewValue)
         {
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model, 
-                                                                                    Properties[Row].Name, 
+                                                                                    Properties[Row].Name,
                                                                                     NewValue);
             //Stop the recursion. The users entry is the updated value in the grid.
-            Grid.CellValueChanged -= OnCellValueChanged;
+            CommandHistory.ModelChanged -= OnModelChanged;
             CommandHistory.Add(Cmd, true);
-            Grid.CellValueChanged += OnCellValueChanged;
+            CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
