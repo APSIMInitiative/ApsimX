@@ -8,9 +8,7 @@ namespace Models
     /// <summary>
     /// Reads in met data and makes it available for other components.
     /// </summary>
-    [ViewName("UserInterface.Views.TabbedMetDataView")]
-    [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    public class WeatherFile : Model 
+    public class WeatherFile : Model
     {
         // Links
         [Link] private Clock Clock = null;
@@ -19,53 +17,18 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         // Privates
-        private Utility.ApsimTextFile WtrFile = null;
-        private DataTable WtrData = new DataTable();
+        private Utility.ApsimTextFile File = null;
+        private DataTable Data = new DataTable();
         private bool HaveReadData = false;
         private int MaxTIndex;
         private int MinTIndex;
         private int RadnIndex;
         private int RainIndex;
         private NewMetType TodaysMetData = new NewMetType();
-        private String FFileName = "";
-
-        public WeatherFile()
-        {
-        }
 
         // Parameters read in
-        public string FileName
-        {
-            get 
-            { 
-                return FFileName;
-            }
-            set
-            {
-                FFileName = value;
-            }
-        }
+        public string FileName { get; set; }
 
-        public DateTime StartDate
-        {
-            get
-            {
-                if (WtrFile != null)
-                    return WtrFile.FirstDate;
-                else
-                    return new DateTime(0);
-            }
-        }
-        public DateTime EndDate
-        {
-            get
-            {
-                if (WtrFile != null)
-                    return WtrFile.LastDate;
-                else
-                    return new DateTime(0);
-            }
-        }
         // Events
         public struct NewMetType
         {
@@ -89,37 +52,36 @@ namespace Models
         {
             get
             {
-                if (WtrFile.Constant("Latitude") == null)
+                if (File.Constant("Latitude") == null)
                     return 0;
                 else
-                    return Convert.ToDouble(WtrFile.Constant("Latitude").Value);
+                    return Convert.ToDouble(File.Constant("Latitude").Value);
             }
         }
         public double Tav
         {
             get
             {
-                if (WtrFile.Constant("tav") == null)
+                if (File.Constant("tav") == null)
                 {
                     //this constant has not been found so do a calculation
                     CalcTAVAMP();
                 }
-                return Convert.ToDouble(WtrFile.Constant("tav").Value);
+                return Convert.ToDouble(File.Constant("tav").Value);
             }
         }
         public double Amp
         {
             get
             {
-                if (WtrFile.Constant("amp") == null)
+                if (File.Constant("amp") == null)
                 {
                     //this constant has not been found so do a calculation
                     CalcTAVAMP();
                 }
-                return Convert.ToDouble(WtrFile.Constant("amp").Value);
+                return Convert.ToDouble(File.Constant("amp").Value);
             }
         }
-        //=====================================================================
         /// <summary>
         /// Return the duration of the day in hours.
         /// </summary>
@@ -131,59 +93,34 @@ namespace Models
                 return Utility.Math.DayLength(Clock.Today.DayOfYear, -6.0, Latitude); 
             }
         }
-        //=====================================================================
-        /// <summary>
-        /// Open the specified weather data file.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        private Boolean OpenDataFile(String _filename)
-        {
-            string FullFileName = _filename;
-            if (Path.GetFullPath(_filename) != _filename)
-                FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), _filename);
-            if (System.IO.File.Exists(FullFileName))
-            {
-                if (WtrFile == null)
-                {
-                    HaveReadData = false;
-                    WtrFile = new Utility.ApsimTextFile();
-                }
-                FFileName = FullFileName;
-                WtrFile.Open(FullFileName);
-                MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
-                MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
-                RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
-                RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
-                if (MaxTIndex == -1)
-                    throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
-                if (MinTIndex == -1)
-                    throw new Exception("Cannot find MinT in weather file: " + FullFileName);
-                if (RadnIndex == -1)
-                    throw new Exception("Cannot find Radn in weather file: " + FullFileName);
-                if (RainIndex == -1)
-                    throw new Exception("Cannot find Rain in weather file: " + FullFileName);
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
         public override void OnInitialised()
         {
-            if (WtrFile == null)
+            if (File == null)
             {
                 HaveReadData = false;
                 Clock.Tick += OnTick;
                 Simulation.Completed += OnCompleted;
+                File = new Utility.ApsimTextFile();
+                string FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
                 Summary.WriteProperty("Weather file name", FileName);
+                File.Open(FullFileName);
+                MaxTIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Maxt");
+                MinTIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Mint");
+                RadnIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Radn");
+                RainIndex = Utility.String.IndexOfCaseInsensitive(File.Headings, "Rain");
+                if (MaxTIndex == -1)
+                    throw new Exception("Cannot find MaxT in weather file: " + FileName);
+                if (MinTIndex == -1)
+                    throw new Exception("Cannot find MinT in weather file: " + FileName);
+                if (RadnIndex == -1)
+                    throw new Exception("Cannot find Radn in weather file: " + FileName);
+                if (RainIndex == -1)
+                    throw new Exception("Cannot find Rain in weather file: " + FileName);
             }
-            OpenDataFile(FFileName);
         }
 
         /// <summary>
@@ -193,13 +130,15 @@ namespace Models
         {
             if (!HaveReadData)
             {
-                WtrFile.SeekToDate(Clock.Today);
+                File.SeekToDate(Clock.Today);
                 HaveReadData = true;
             }
 
-            object[] Values = WtrFile.GetNextLineOfData();
 
-            if (Clock.Today != WtrFile.GetDateFromValues(Values))
+            object[] Values = File.GetNextLineOfData();
+
+            int RowIndex = Data.Rows.Count - 1;
+            if (Clock.Today != File.GetDateFromValues(Values))
                 throw new Exception("Non consecutive dates found in file: " + FileName);
 
             TodaysMetData.today = (double)Clock.Today.Ticks;
@@ -209,8 +148,10 @@ namespace Models
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
             if (NewMet != null)
                 NewMet.Invoke(MetData);
+
+            RowIndex++;
         }
-        //=====================================================================
+
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
@@ -218,8 +159,8 @@ namespace Models
         {
             Clock.Tick -= OnTick;
             Simulation.Completed -= OnCompleted;
-            WtrFile.Close();
-            WtrFile = null;
+            File.Close();
+            File = null;
         }
         //=====================================================================
         /// <summary>
@@ -234,19 +175,19 @@ namespace Models
             //do the calculations
             ProcessMonthlyTAVAMP(out tav, out amp);
 
-            if (WtrFile.Constant("tav") == null)
+            if (File.Constant("tav") == null)
             {
-                WtrFile.AddConstant("tav", tav.ToString(), "", ""); //add a new constant
+                File.AddConstant("tav", tav.ToString(), "", ""); //add a new constant
             }
             else
-                WtrFile.SetConstant("tav", tav.ToString());
+                File.SetConstant("tav", tav.ToString());
 
-            if (WtrFile.Constant("amp") == null)
+            if (File.Constant("amp") == null)
             {
-                WtrFile.AddConstant("amp", amp.ToString(), "", ""); //add a new constant
+                File.AddConstant("amp", amp.ToString(), "", ""); //add a new constant
             }
             else
-                WtrFile.SetConstant("amp", amp.ToString());
+                File.SetConstant("amp", amp.ToString());
         }
         //=====================================================================
         /// <summary>
@@ -262,15 +203,15 @@ namespace Models
             double maxt, mint;
 
             //get dataset size
-            DateTime start = WtrFile.FirstDate;
-            DateTime last = WtrFile.LastDate;
+            DateTime start = File.FirstDate;
+            DateTime last = File.LastDate;
             int nyears = last.Year - start.Year + 1;
             //temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
             double[,] monthlySums = new double[12, nyears];
             int[,] monthlyDays  = new int[12, nyears];
 
-            WtrFile.SeekToDate(start); //goto start of data set
+            File.SeekToDate(start); //goto start of data set
 
             //read the daily data from the met file
             object[] Values;
@@ -279,8 +220,8 @@ namespace Models
             Boolean moreData = true;
             while (moreData)
             {
-                Values = WtrFile.GetNextLineOfData();
-                curDate = WtrFile.GetDateFromValues(Values);
+                Values = File.GetNextLineOfData();
+                curDate = File.GetDateFromValues(Values);
                 int yrIdx = curDate.Year - start.Year;
                 maxt = Convert.ToDouble(Values[MaxTIndex]);
                 mint = Convert.ToDouble(Values[MinTIndex]);
@@ -322,21 +263,6 @@ namespace Models
             amp = yearlySumAmp / nyears;    //calc the ave of the yearly amps
 
             HaveReadData = false;           //ensure that OnTick will set the file ptr correctly for next read    
-        }
-        //=====================================================================
-        /// <summary>
-        /// Get the DataTable view of this data
-        /// </summary>
-        /// <returns>The DataTable</returns>
-        public DataTable GetAllData()
-        {
-            if (OpenDataFile(FFileName))
-            {
-                WtrData = WtrFile.ToTable();
-                return WtrData;
-            }
-            else
-                return null;
         }
     }
 }
