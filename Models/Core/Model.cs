@@ -33,12 +33,18 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Allows a model to initialise itself.
+        /// The simulation has completed its initialisation and all [Link] fields have been set.
+        /// Overriding this method allows a model to initialise itself.
         /// </summary>
         public virtual void OnInitialised() { }
 
         /// <summary>
-        /// Return a model of the specified type that is in scope. Returns null if none found.
+        /// Simulation is terminating. Overriding this method allows a model to perform cleanup.
+        /// </summary>
+        public virtual void OnCompleted() { }
+
+        /// <summary>
+        /// Returns a model of the specified type that is in scope. Returns null if none found.
         /// </summary>
         public virtual Model Find(Type ModelType)
         {
@@ -51,7 +57,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Return a model with the specified name is in scope. Returns null if none found.
+        /// Returns a model with the specified name is in scope. Returns null if none found.
         /// </summary>
         public virtual Model Find(string ModelName)
         {
@@ -62,7 +68,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Return a model or variable using the specified NamePath. Returns null if not found.
+        /// Return a model or variable value using the specified NamePath. Returns null if not found.
         /// NB: Can only pass an absolute path to a model.
         /// </summary>
         public virtual object Get(string NamePath)
@@ -76,8 +82,9 @@ namespace Models.Core
 
         /// <summary>
         /// Recursively resolve all [Link] fields. A link must be private. This method will also
-        /// go through any public members that are a class or a list of classes. For each one found
-        /// it will recursively call this method to resolve links in them.
+        /// go through any public members that are a model or a list of models. For each one found
+        /// it will recursively call this method to resolve links in them. This is an internal
+        /// method that won't normally be called by models.
         /// </summary>
         public virtual void ResolveLinks()
         {
@@ -110,7 +117,8 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Initialise all components by calling their OnInitialise methods.
+        /// Initialise all components by calling their OnInitialise methods. This is an internal
+        /// method that won't normally be called by models.
         /// </summary>
         public void Initialise()
         {
@@ -122,6 +130,19 @@ namespace Models.Core
                 Child.Initialise();
         }
 
+        /// <summary>
+        /// Initialise all components by calling their OnInitialise methods. This is an internal
+        /// method that won't normally be called by models.
+        /// </summary>
+        public void Completed()
+        {
+            OnCompleted();
+
+            List<Model> Children = new List<Model>();
+            FindChildModels(this, Children);
+            foreach (Model Child in Children)
+                Child.Completed();
+        }
         /// <summary>
         /// Go looking for public, writtable, class properties that are in the "Model" namespace.
         /// For each one found, recursively call this method so that their [Link]s might be resolved.

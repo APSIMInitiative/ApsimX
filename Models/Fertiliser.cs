@@ -25,8 +25,8 @@ namespace Models
     {
         private XmlNode FertiliserNode = null;
 
-        [Link] private Simulation Simulation = null;
-        [Link] private DataStore DataStore = null;
+       // [Link] private Simulation Simulation = null;
+       // [Link] private DataStore DataStore = null;
 
         public int cropsta { get; set; }
         public float[] dlayer { get; set; }
@@ -41,14 +41,14 @@ namespace Models
 
         int maxLayer = 100;
         string pondActive = "no";
-        int year;
-        int day;
-        int numLayers;
+        //int year;
+        //int day;
+       // int numLayers;
 
         public void ApplyFertiliser(double amount, double depth, string type)
         {
-            string full_name = "";      //full name of fertilizer added
-            int layer;                  //layer number of fertiliser placement
+            //string full_name = "";      //full name of fertilizer added
+            //int layer;                  //layer number of fertiliser placement
             double[] deltaArray;        //holds the changes in fertiliser 
             bool rice_crop_in;          //true or false for whether rice crop in ground or not
          // ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
