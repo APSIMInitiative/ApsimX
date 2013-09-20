@@ -34,7 +34,6 @@ namespace Models
         /// </summary>
         public override void OnInitialised()
         {
-            Simulation.Completed += OnCompleted;
             HaveCreatedTable = false;
             foreach (string Event in Events)
             {
@@ -98,10 +97,8 @@ namespace Models
             DataStore.WriteToTable(Simulation.Name, Name, Values.ToArray());
         }
 
-        private void OnCompleted()
+        public override void OnCompleted()
         {
-            Simulation.Completed -= OnCompleted;
-
             foreach (string Event in Events)
             {
                 string ComponentName = Utility.String.ParentName(Event, '.');

@@ -108,7 +108,7 @@ namespace Models
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        private void OnCompleted()
+        public override void OnCompleted()
         {
             Connection.ExecuteNonQuery("COMMIT");
             Simulations.AllCompleted -= OnCompleted;

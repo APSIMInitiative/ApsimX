@@ -96,6 +96,7 @@ namespace Models.Soils
         /// <summary>
         /// A list of child models.
         /// </summary>
+        [XmlIgnore]
         public override List<Model> Models
         {
             get
@@ -336,7 +337,7 @@ namespace Models.Soils
             get 
             {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.swcon, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
+                return Map(SoilWater.SWCON, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
             } 
         }
 
@@ -348,7 +349,7 @@ namespace Models.Soils
             get 
             {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.mwcon, SoilWater.Thickness, Thickness, MapType.Concentration); 
+                return Map(SoilWater.MWCON, SoilWater.Thickness, Thickness, MapType.Concentration); 
             } 
         }
 
@@ -1767,10 +1768,10 @@ namespace Models.Soils
 
             // Check the summer / winter dates.
             DateTime Temp;
-            if (!DateTime.TryParse(SoilWater.summerdate, out Temp))
-                Msg += "Invalid summer date of: " + SoilWater.summerdate + "\r\n";
-            if (!DateTime.TryParse(SoilWater.winterdate, out Temp))
-                Msg += "Invalid winter date of: " + SoilWater.winterdate + "\r\n";
+            if (!DateTime.TryParse(SoilWater.SummerDate, out Temp))
+                Msg += "Invalid summer date of: " + SoilWater.SummerDate + "\r\n";
+            if (!DateTime.TryParse(SoilWater.WinterDate, out Temp))
+                Msg += "Invalid winter date of: " + SoilWater.WinterDate + "\r\n";
 
             foreach (string Crop in CropNames)
             {

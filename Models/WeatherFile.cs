@@ -13,7 +13,6 @@ namespace Models
         // Links
         [Link] private Clock Clock = null;
         [Link] private Simulations Simulations = null;
-        [Link] private Simulation Simulation = null;
         [Link] private ISummary Summary = null;
 
         // Privates
@@ -88,7 +87,6 @@ namespace Models
             {
                 HaveReadData = false;
                 Clock.Tick += OnTick;
-                Simulation.Completed += OnCompleted;
                 File = new Utility.ApsimTextFile();
                 string FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
                 Summary.WriteProperty("Weather file name", FileName);
@@ -140,10 +138,9 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        private void OnCompleted()
+        public override void OnCompleted()
         {
             Clock.Tick -= OnTick;
-            Simulation.Completed -= OnCompleted;
             File.Close();
             File = null;
         }

@@ -25,6 +25,7 @@ namespace Models.Core
         /// <summary>
         /// A list of child models.
         /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
         public abstract List<Model> Models { get; set; }
 
         /// <summary>

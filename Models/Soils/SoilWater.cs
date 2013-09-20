@@ -23,8 +23,8 @@ namespace Models.Soils
         [Link]
         private WeatherFile MetFile = null;
 
-        [Link]
-        private Zone Paddock = null;
+        //[Link]
+        //private Zone Paddock = null;
 
         //[Link]
         private SoilWatTillageType SoilWatTillageType = null;
@@ -45,9 +45,6 @@ namespace Models.Soils
         #endregion
 
         #region Module Constants (from SIM file but it gets from INI file)
-
-        public static double[] Thickness { get; set; }
-
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("oC")]
@@ -194,215 +191,10 @@ namespace Models.Soils
             }
         }
 
-        //sv- initial sw section (5 different methods to choose from) (see soilwat2_init() and soilwat2_set_default() to see which method is used)
-
-        //insoil is used for two different initial sw methods:
-        //1. User Specified Soil Water Conent method is used when insoil > 1 
-        //2. Fill every layer in the soil to the same specified fraction of esw (specified by insoil)  (0 <= insoil <= 1) 
-
-        private int numvals_insoil = 0;                    //! number of values returned for insoil
-        private double _insoil = Double.NaN;
-
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Switch describing how initial soil water is specified")]
-        public double insoil            //! switch describing initial soil water  //sv-specifies which option you are using.
-        {
-            get { return _insoil; }
-            set
-            {
-                //sv- setting this automatically changes the sw values. Due to the soilwat2_set_default() call.
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_numvals_insoil = 1;
-                    reset_insoil = value;
-                }
-                else
-                {
-                    soilwat2_zero_default_variables();
-                    numvals_insoil = 1;     //used in soilwat2_set_default()
-                    _insoil = value;
-                    soilwat2_set_default();
-                    int num_layers = _dlayer.Length;
-                    for (int layer = 0; layer < num_layers; layer++)
-                    {
-                        soilwat2_check_profile(layer);
-                    }
-                }
-            }
-        }
-
-        //3. Starting from the top, fill the soil until a specified fraction of the entire soils esw is reached. Fill each layer to dul.
-
-        private int numvals_profile_fesw = 0;              //! number of values returned for profile_fesw
-        private double _profile_fesw = Double.NaN;
-
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Initial fraction of esw of profile distributed from top down")]
-        public double profile_fesw     //! initial fraction of esw of profile distributed from top down ()
-        {
-            get { return _profile_fesw; }
-            set
-            {
-                //sv- setting this automatically changes the sw values. Due to the soilwat2_set_default() call.
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_numvals_profile_fesw = 1;
-                    reset_profile_fesw = value;
-                }
-                soilwat2_zero_default_variables();
-                numvals_profile_fesw = 1;  //used in soilwat2_set_default()
-                _profile_fesw = value;
-                soilwat2_set_default();
-                int num_layers = _dlayer.Length;
-                for (int layer = 0; layer < num_layers; layer++)
-                {
-                    soilwat2_check_profile(layer);
-                }
-            }
-        }
-
-
-        //4. Starting from the top, fill the soil until a specified amount of esw for the entire soil is reached. Fill each layer to dul.
-
-        private int numvals_profile_esw_depth = 0;         //! number of values returned for profile_esw_depth
-        private double _profile_esw_depth = Double.NaN;
-
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-        [Units("mm")]
-        [Description("Initial depth of extractable soil water distributed from the top down")]
-        public double profile_esw_depth   //! initial depth of extractable soil water distributed from the top down (mm)
-        {
-            get { return _profile_esw_depth; }
-            set
-            {
-                //sv- setting this automatically changes the sw values. Due to the soilwat2_set_default() call.
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_numvals_profile_esw_depth = 1;
-                    reset_profile_esw_depth = value;
-                }
-                soilwat2_zero_default_variables();
-                numvals_profile_esw_depth = 1;   //used in soilwat2_set_default()
-                _profile_esw_depth = value;
-                soilwat2_set_default();
-                int num_layers = _dlayer.Length;
-                for (int layer = 0; layer < num_layers; layer++)
-                {
-                    soilwat2_check_profile(layer);
-                }
-            }
-        }
-
-
-        //5. Starting from the top fill the soil to a specified soil depth. Fill each layer to dul. 
-
-        private int numvals_wet_soil_depth = 0;            //! number of values returned for wet_soil_depth
-        private double _wet_soil_depth = Double.NaN;
-
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-        [Units("mm")]
-        [Description("Initial depth of soil filled to drained upper limit (field capacity)")]
-        public double wet_soil_depth   //! initial depth of soil filled to drained upper limit (field capacity) (mm)
-        {
-            get { return _wet_soil_depth; }
-            set
-            {
-                //sv- setting this automatically changes the sw values. Due to the soilwat2_set_default() call.
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_wet_soil_depth = value;
-                    reset_numvals_wet_soil_depth = 1;
-                }
-                soilwat2_zero_default_variables();
-                numvals_wet_soil_depth = 1;      //used in soilwat2_set_default()
-                _wet_soil_depth = value;
-                soilwat2_set_default();
-                int num_layers = _dlayer.Length;
-                for (int layer = 0; layer < num_layers; layer++)
-                {
-                    soilwat2_check_profile(layer);
-                }
-            }
-        }
-
         //sv- end of initial sw section
 
 
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [Description("Diffusivity constant for soil testure")]
-        public double diffus_const = 40.0;     //! diffusivity constant for soil testure
-
-
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Description("Slope for diffusivity/soil water content relationship")]
-        public double diffus_slope = 16.0;     //! slope for diffusivity/soil water content relationship
-
-        private double _cn2_bare = 73.0;
-
-        [Bounds(Lower = 1.0, Upper = 100.0)]
-        [Description("Curve number input used to calculate daily runoff")]
-        public double cn2_bare         //! curve number input used to calculate daily runoff
-        {
-            get { return _cn2_bare; }
-            set
-            {
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_cn2_bare = value;
-                }
-                _cn2_bare = value;
-            }
-        }
-
-        private double _cn_red = 20.0;
-
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Description("Maximum reduction in cn2_bare due to cover")]
-        public double cn_red           //! maximum reduction in cn2_bare due to cover
-        {
-            get { return _cn_red; }
-            set
-            {
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_cn_red = value;
-                }
-                _cn_red = value;
-            }
-        }
-
-        private double _cn_cov = 0.8;
-
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Cover at which cn_red occurs")]
-        public double cn_cov           //! cover at which cn_red occurs
-        {
-            get { return _cn_cov; }
-            set
-            {
-                if (!initDone)
-                {
-                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
-                    //therefore store a copy so if there is a Reset event we can set it back to this value.
-                    reset_cn_cov = value;
-                }
-                _cn_cov = value;
-            }
-        }
+ 
 
         private double _max_pond = 0.0;
 
@@ -429,8 +221,6 @@ namespace Models.Soils
         [Bounds(Lower = 0.0001, Upper = 1.0)]
         [Units("0-1")]
 
-        [Description("Bare soil albedo")]
-        public double salb;           //! bare soil albedo (unitless)
 
         //Extra parameters for evaporation models (this module only has Ritchie Evaporation)  
         //(see soilwat2_init() for which u and cona is used)
@@ -441,7 +231,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation")]
-        public double u            //! upper limit of stage 1 soil evaporation (mm)
+        private double u            //! upper limit of stage 1 soil evaporation (mm)
         {
             get { return _u; }
             set { _u = value; }
@@ -451,7 +241,7 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient")]
-        public double cona         //! stage 2 drying coefficient
+        private double cona         //! stage 2 drying coefficient
         {
             get { return _cona; }
             set { _cona = value; }
@@ -460,35 +250,101 @@ namespace Models.Soils
         //different evap for summer and winter
         //summer
 
-        [Description("Date for start of summer evaporation (dd-mmm)")]
-        public string summerdate = "not_read";       //! Date for start of summer evaporation (dd-mmm)
-
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Description("Stage 2 drying coefficient during summer")]
+        public double SummerCona = Double.NaN;
 
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during summer")]
-        public double summeru = Double.NaN;
+        public double SummerU = Double.NaN;
 
-
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Stage 2 drying coefficient during summer")]
-        public double summercona = Double.NaN;
+        [Description("Date for start of summer evaporation (dd-mmm)")]
+        public string SummerDate = "not_read";       //! Date for start of summer evaporation (dd-mmm)
 
         //winter
 
-        [Description("Date for start of winter evaporation (dd-mmm)")]
-        public string winterdate = "not_read";       //! Date for start of winter evaporation (dd-mmm)
-
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Description("Stage 2 drying coefficient during winter")]
+        public double WinterCona = Double.NaN;
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during winter")]
-        public double winteru = Double.NaN;
+        public double WinterU = Double.NaN;
 
+        [Description("Date for start of winter evaporation (dd-mmm)")]
+        public string WinterDate = "not_read";       //! Date for start of winter evaporation (dd-mmm)
 
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Stage 2 drying coefficient during winter")]
-        public double wintercona = Double.NaN;
+        [Bounds(Lower = 0.0, Upper = 1000.0)]
+        [Description("Diffusivity constant for soil testure")]
+        public double DiffusConst = 40.0;     //! diffusivity constant for soil testure
+
+        [Bounds(Lower = 0.0, Upper = 100.0)]
+        [Description("Slope for diffusivity/soil water content relationship")]
+        public double DiffusSlope = 16.0;     //! slope for diffusivity/soil water content relationship
+
+        [Description("Bare soil albedo")]
+        public double Salb;           //! bare soil albedo (unitless)
+
+        private double _cn2_bare = 73.0;
+
+        [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Description("Curve number input used to calculate daily runoff")]
+        public double CN2Bare         //! curve number input used to calculate daily runoff
+        {
+            get { return _cn2_bare; }
+            set
+            {
+                if (!initDone)
+                {
+                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
+                    //therefore store a copy so if there is a Reset event we can set it back to this value.
+                    reset_cn2_bare = value;
+                }
+                _cn2_bare = value;
+            }
+        }
+
+        private double _cn_red = 20.0;
+
+        [Bounds(Lower = 0.0, Upper = 100.0)]
+        [Description("Maximum reduction in cn2_bare due to cover")]
+        public double CNRed           //! maximum reduction in cn2_bare due to cover
+        {
+            get { return _cn_red; }
+            set
+            {
+                if (!initDone)
+                {
+                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
+                    //therefore store a copy so if there is a Reset event we can set it back to this value.
+                    reset_cn_red = value;
+                }
+                _cn_red = value;
+            }
+        }
+
+        private double _cn_cov = 0.8;
+
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("0-1")]
+        [Description("Cover at which cn_red occurs")]
+        public double CNCov           //! cover at which cn_red occurs
+        {
+            get { return _cn_cov; }
+            set
+            {
+                if (!initDone)
+                {
+                    //if we are reading in the [Param], because this variable is "settable" it can be changed from this value, 
+                    //therefore store a copy so if there is a Reset event we can set it back to this value.
+                    reset_cn_cov = value;
+                }
+                _cn_cov = value;
+            }
+        }
+
 
         //end of Extra parameters for evaporation models
 
@@ -639,7 +495,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
         [Description("Thickness of soil layer")]
-        public double[] dlayer    //! thickness of soil layer (mm)
+        private double[] dlayer    //! thickness of soil layer (mm)
         {
             get { return _dlayer; }
             set
@@ -705,7 +561,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Saturated water content for layer")]
-        public double[] sat       //! saturated water content for layer  
+        private double[] sat       //! saturated water content for layer  
         {
             get
             {
@@ -738,7 +594,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Drained upper limit soil water content for each soil layer")]
-        public double[] dul       //! drained upper limit soil water content for each soil layer 
+        private double[] dul       //! drained upper limit soil water content for each soil layer 
         {
             get
             {
@@ -776,6 +632,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
 
+        [XmlIgnore]
         [Description("Soil water content of layer")]
         public double[] sw        //! soil water content of layer
         {
@@ -824,7 +681,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [Description("15 bar lower limit of extractable soil water for each soil layer")]
-        public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
+        private double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
             get
             {
@@ -860,7 +717,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [Description("Air dry soil water content")]
-        public double[] air_dry   //! air dry soil water content
+        private double[] air_dry   //! air dry soil water content
         {
             get
             {
@@ -890,16 +747,29 @@ namespace Models.Soils
             }
         }
 
+        #region User interface variables.
+        // While the user specifies these variables in the user interface, this SoilWater model shouldn't use them
+        // while it is running. Instead it should ask Soil for the value of SWCON, MWCON etc as they will then
+        // be mapped into a standardised layer structure. The 4 variables below (Thickness, SWCON, MWCON and KLAT) 
+        // may be in a different layer structure.
+
+        public double[] Thickness;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
+
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Description("Soil water conductivity constant")]
-        public double[] swcon;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
+        public double[] SWCON;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Impermeable soil layer indicator")]
-        public double[] mwcon = null;     //! impermeable soil layer indicator
+        public double[] MWCON = null;     //! impermeable soil layer indicator
 
+        [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
+        [Units("mm/d")]
+        private double[] KLAT = null;
+
+        #endregion
 
         [Description("Flag to determine if Ks has been chosen for use")]
         private bool using_ks;       //! flag to determine if Ks has been chosen for use. //sv- set in soilwat2_init() by checking if mwcon exists
@@ -907,25 +777,23 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm/d")]
         [Description("Saturated conductivity")]
-        public double[] ks = null;        //! saturated conductivity (mm/d)
+        private double[] ks = null;        //! saturated conductivity (mm/d)
 
         [Bounds(Lower = 0.01, Upper = 3.0)]
         [Units("g/cm^3")]
         [Description("Bulk density of soil")]
-        public double[] bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
+        private double[] bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
 
 
         //sv- Lateral Flow profile   //sv- also from Lateral_read_param()
 
-        [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
-        [Units("mm/d")]
-        public double[] klat = null;
+
 
 
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
-        public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
+        private double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sat_dep; }
             set
@@ -944,7 +812,7 @@ namespace Models.Soils
         private double[] _dul_dep;
         [Units("mm")]
         [Description("dul * dlayer")]
-        public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
+        private double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
             get { return _dul_dep; }
             set
@@ -964,7 +832,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("sw * dlayer")]
-        public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
+        private double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sw_dep; }
             set
@@ -987,7 +855,7 @@ namespace Models.Soils
         private double[] _ll15_dep;
         [Units("mm")]
         [Description("ll15 * dlayer")]
-        public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
+        private double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
             get { return _ll15_dep; }
             set
@@ -1007,7 +875,7 @@ namespace Models.Soils
         private double[] _air_dry_dep;
         [Units("mm")]
         [Description("air_dry * dlayer")]
-        public double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
+        private double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
         {
             get { return _air_dry_dep; }
             set
@@ -1407,7 +1275,7 @@ namespace Models.Soils
         //r double runoff;
         //who put this in? double      eff_rain; 
         private double runoff_pot;       //! potential runoff with no pond(mm)
-        private double obsrunoff;         //! observed runoff (mm)
+        //private double obsrunoff;         //! observed runoff (mm)
 
         //GET CROP VARIABLES
         //private int[]       crop_module = new int[max_crops];             //! list of modules replying 
@@ -1427,7 +1295,7 @@ namespace Models.Soils
         private double sumes1;       //! cumulative soil evaporation in stage 1 (mm)
         private double sumes2;       //! cumulative soil evaporation in stage 2 (mm)
         //r double      t;
-        private double eo_system;         //! eo from somewhere else in the system //sv- see eo_source
+        //private double eo_system;         //! eo from somewhere else in the system //sv- see eo_source
         //r double eo;
         private double real_eo;                  //! potential evapotranspiration (mm) 
         //r double eos;
@@ -1440,22 +1308,22 @@ namespace Models.Soils
 
         //SOLUTES
         //OnNewSolute
-        private struct Solute
+        private class Solute
         {
-            public string name;        // Name of the solute
-            public string ownerName;    // FQN of the component handling this solute
-            public bool mobility;      // Is the solute mobile?
+            public string name = "";        // Name of the solute
+            public string ownerName = "";    // FQN of the component handling this solute
+            public bool mobility = false;      // Is the solute mobile?
             public double[] amount;    // amount of solute in each layer (kg/ha)
             public double[] leach;     // amount leached from each layer (kg/ha)
             public double[] up;        // amount "upped" from each layer (kg/ha)
             public double[] delta;     // change in solute in each layer (kg/ha)
             public double rain_conc;   // concentration entering via rainfall (ppm)
             public double irrigation;  // amount of solute in irrigation water (kg/ha)
-            public int get_flow_id;    // registration ID for getting flow values
-            public int get_leach_id;    // registration ID for getting leach value
+            public int get_flow_id = 0;    // registration ID for getting flow values
+            public int get_leach_id = 0;    // registration ID for getting leach value
         };
 
-        private Solute[] solutes;
+        private Solute[] solutes = null;
         int num_solutes = 0;
 
         //IRRIGATION
@@ -1480,8 +1348,6 @@ namespace Models.Soils
 
         //Soil Property
         //initial starting soil water 
-        int reset_numvals_insoil, reset_numvals_profile_fesw, reset_numvals_profile_esw_depth, reset_numvals_wet_soil_depth;    //used in soilwat2_set_default()
-        double reset_insoil, reset_profile_fesw, reset_profile_esw_depth, reset_wet_soil_depth;
         //runoff
         double reset_cn2_bare, reset_cn_red, reset_cn_cov;
         //ponding 
@@ -1520,16 +1386,7 @@ namespace Models.Soils
 
             _max_pond = 0.0;                         //! maximum allowable surface storage (ponding) mm
 
-            numvals_insoil = 0;                     //! number of values returned for insoil
-            numvals_profile_fesw = 0;               //! number of values returned for profile_fesw
-            numvals_profile_esw_depth = 0;          //! number of values returned for profile_esw_depth
-            numvals_wet_soil_depth = 0;             //! number of values returned for wet_soil_depth
             numvals_sw = 0;                         //! number of values returned for sw
-
-            _insoil = 0.0;                           //! switch describing initial soil water distributed evenly
-            _profile_fesw = 0.0;                     //! initial fraction of profile esw filled top down with soil water (mm)
-            _profile_esw_depth = 0.0;                //! initial depth of esw in profile filled top down with soil water (mm)
-            _wet_soil_depth = 0.0;                   //! initial depth profile filled top down with soil water (mm)
 
             ZeroArray(ref _dlayer);                   //! thickness of soil layer i (mm)
             ZeroArray(ref _sat_dep);                  //! saturated water content for layer l (mm water)
@@ -1585,13 +1442,13 @@ namespace Models.Soils
             runoff_pot = 0.0;                       //! potential runoff with no pond(mm)  
             irrigation = 0.0;                       //! irrigation (mm)
 
-            obsrunoff = 0.0;                        //! observed runoff (mm)
+            //obsrunoff = 0.0;                        //! observed runoff (mm)
             tillage_cn_red = 0.0;                   //! reduction in CN due to tillage ()
             tillage_cn_rain = 0.0;                  //! cumulative rainfall below which tillage reduces CN (mm)
             tillage_rain_sum = 0.0;                 //! cumulative rainfall for tillage CN reduction (mm)
             obsrunoff_name = "";                    //! system name of observed runoff
 
-            eo_system = 0.0;                        //! eo from somewhere else in the system
+            //eo_system = 0.0;                        //! eo from somewhere else in the system
             _eo_source = "";                        //! system variable name of external eo source
 
             real_eo = 0.0;                          //! eo determined before any ponded water is evaporated (mm)
@@ -1610,17 +1467,8 @@ namespace Models.Soils
             //*+  Mission Statement
             //*     zero default soil water initialisation parameters      
 
-            numvals_insoil = 0;
             numvals_sw = 0;
-            numvals_profile_esw_depth = 0;
-            numvals_wet_soil_depth = 0;
-            numvals_profile_fesw = 0;
-
-            _insoil = 0.0;
             ZeroArray(ref _sw_dep);
-            _profile_esw_depth = 0.0;
-            _wet_soil_depth = 0.0;
-            _profile_fesw = 0.0;
         }
 
 
@@ -1645,7 +1493,7 @@ namespace Models.Soils
             runoff = 0.0;
             runoff_pot = 0.0;
             num_crops = 0;
-            obsrunoff = 0.0;
+            //obsrunoff = 0.0;
             pond_evap = 0.0;                    //! evaporation from the pond surface (mm)
             real_eo = 0.0;                      //! eo determined before any ponded water is evaporated (mm)
 
@@ -1783,273 +1631,6 @@ namespace Models.Soils
 
         }
 
-        private void soilwat2_set_default()
-        {
-
-            //*+  Purpose
-            //*       set default soil water values when the user does not specify any starting water values.
-
-            int layer;               //! layer number in loop
-            int num_layers;          //! number of layers used in profile 
-            int last_layer_filled;   //! number of layers filled in profile
-            double esw_remaining;       //! esw left after distribution top down (mm)
-            //double   depth_remaining;     //! depth left after distribution top down (mm)
-            double esw_avail;           //! esw available for distribution (mm)
-            double profile_esw_depth_local;   //! depth of esw in profie to fill (mm)
-            string line;                //! temp output record
-
-
-
-            //sv- initial sw section (5 different methods to choose from) (see soilwat2_init() and soilwat2_set_default() to see which method is used)
-
-            //sv- insoil is used for two different initial sw methods:
-            //sv- 1. User Specified Soil Water Conent method is used when insoil > 1  (user has entered an sw for each layer in the soil)
-            //sv- 2. FASW evenly distributed method is used when  0 <= insoil <= 1    (user has entered a fraction for entire profile and wants each layer to be this fraction) 
-            //! switch describing initial soil water  //sv-specifies which option you are using.
-            // -> insoil
-
-            //sv- 3. FASW filled from top method      (user has entered a fraction for entire profile but wants you to achieve this fraction for the whole profile by completely filling up the top layers before filling the lower layers. So bottom layers are left dry)
-            //! initial fraction of esw of profile distributed from top down ()
-            // -> profile_fesw
-
-            //sv- 4. depth of available sw from top of profile method (same as profile_fesw but the user has entered total amount of water in millimeters for the entire profile instead of as a fraction for the whole profile)
-            // -> profile_esw_depth
-
-            //sv- 5. depth of wet soil (filled to dul) method  (same as profile_esw_depth only don't worry about what is available to the plant(profile_esw_depth =  profile_fesw * (the sum of dlayer))
-            //! initial depth of soil filled to drained upper limit (field capacity) (mm)
-            // -> wet_soil_depth
-
-            //sv- end of initial sw section
-
-
-
-            //*****************
-            //Initial SW   (5 different methods to choose from)
-            //*****************
-
-            //sv- these sw values read in from the sim file gets overriden by soilwat2_set_default() unless the user specified method (ie. insoil > 1) was choosen. 
-            //sv- If the user specified method (ie. insoil > 1) is not selected then soilwat2_set_default() uses one of the 4 "properties" (depending on the method that was choosen)
-            //sv- to create the new initial sw profile that then replaces these read in values for sw.
-
-
-
-            //Must specify one of Profile_esw_depth, wet_soil_depth, Profile_fesw Insoil, or Sw  to specify initial soilwater distribution.
-
-            //! check for exclusiveness
-            if (numvals_profile_esw_depth > 0)
-            {
-                if ((numvals_insoil > 0) || (numvals_sw > 0) || (numvals_profile_fesw > 0) || (numvals_wet_soil_depth > 0))
-                {
-                    //! others present
-                    throw new Exception("Insoil, Sw, profile_fesw or wet_soil_depth cannot be specified with \"profile_esw_depth\".");
-                }
-                else
-                {
-                    //! numvals_profile_esw_depth present only
-                    line = "Initial soilwater distributed from top down using \"profile_esw_depth\" parameter.";
-                    Console.WriteLine(line);
-                }
-            }
-
-            else if (numvals_wet_soil_depth > 0)
-            {
-                //! numvals_profile_esw_depth absent
-                if ((numvals_insoil > 0) || (numvals_profile_fesw > 0) || (numvals_sw > 0))
-                {
-                    //! others present
-                    throw new Exception("Insoil, Profile_fesw or Sw cannot be specified with \"wet_soil_depth\".");
-                }
-                else
-                {
-                    line = "Initial soilwater distributed from top down using \"wet_soil_depth\" parameter.";
-                    Console.WriteLine(line);
-                }
-            }
-
-            else if (numvals_profile_fesw > 0)
-            {
-                //! numvals_profile_esw_depth absent
-                if ((numvals_insoil > 0) || (numvals_sw > 0))
-                {
-                    //! others present
-                    throw new Exception("Insoil or Sw cannot be specified with \"profile_fesw\".");
-                }
-                else
-                {
-                    line = "Initial soilwater distributed from top down using \"profile_fesw\" parameter.";
-                    Console.WriteLine(line);
-                }
-            }
-
-            else if (numvals_insoil > 0)
-            {
-                if (numvals_sw > 0)
-                {
-                    //! note - this never activates because the switches are set previously
-                    //see soilwat2_soil_profile_param() for where the switches are set.
-                    throw new Exception("Sw cannot be specified with \"insoil\".");
-                    //Console.WriteLine(line);
-                }
-                else
-                {
-                    //! only insoil present
-                    line = "Initial soilwater distributed evenly using \"insoil\" parameter.";
-                    Console.WriteLine(line);
-                }
-            }
-
-            else if (numvals_sw > 0)
-            {
-                //! ok - only sw present
-                line = "Initial soilwater distributed using \"sw\" parameter.";
-                Console.WriteLine(line);
-            }
-
-            else
-            {
-                //! all absent - must have one
-                throw new Exception("Must specify one of Insoil, Sw, wet_soil_depth, Profile_fesw or Profile_esw_depth to specify initial soilwater distribution.");
-            }
-
-
-            //! initialize sw
-            //! set up default soil water profile
-
-            //! we want to calculate default
-
-
-            if (numvals_insoil > 0)
-            {
-                //! insoil parameter set - distibute evenly
-                ZeroArray(ref _sw_dep);
-                num_layers = _dlayer.Length;
-
-                for (layer = 0; layer < num_layers; layer++)
-                {
-                    //! set default according to insoil fraction of plant-
-                    //! available water
-                    _sw_dep[layer] = _ll15_dep[layer] + (_dul_dep[layer] - _ll15_dep[layer]) * _insoil;
-
-                    soilwat2_layer_check(layer);
-                    soilwat2_check_profile(layer);
-                }
-            }
-
-
-            else if (numvals_wet_soil_depth > 0)
-            {
-                //! wet_soil_depth parameter set - distribute top down
-                ZeroArray(ref _sw_dep);
-                num_layers = _dlayer.Length;
-                Array.Copy(_ll15_dep, _sw_dep, num_layers);
-
-                last_layer_filled = FindLayerNo(_wet_soil_depth);
-
-                for (layer = 0; layer <= last_layer_filled; layer++)
-                {
-                    //! set default according to wet_soil_depth of plant available water
-                    _sw_dep[layer] = _dul_dep[layer];
-                }
-
-                //! adjust last layer
-                _sw_dep[last_layer_filled] = _ll15_dep[last_layer_filled]
-                                              + (_dul_dep[last_layer_filled] - _ll15_dep[last_layer_filled])
-                                              * root_proportion(last_layer_filled + 1, _wet_soil_depth);
-
-                if ((Utility.Math.Sum(_dlayer) + precision_sw_dep) < _wet_soil_depth)
-                {
-                    line = "Can't fit wet soil depth of " + _wet_soil_depth + " into profile depth of " + Utility.Math.Sum(_dlayer);
-                    throw new Exception(line);
-                }
-                else
-                {
-                    //! depth fits in profile
-                }
-            }
-
-
-            else if (numvals_profile_fesw > 0)
-            {
-                //! profile_fesw parameter set - distribute top down
-                ZeroArray(ref _sw_dep);
-                num_layers = _dlayer.Length;
-                Array.Copy(_ll15_dep, _sw_dep, num_layers);
-                profile_esw_depth_local = 0.0;
-                for (layer = 0; layer < num_layers; layer++)
-                    profile_esw_depth_local += _dul_dep[layer] - _ll15_dep[layer];
-                profile_esw_depth_local *= _profile_fesw;
-                esw_remaining = profile_esw_depth_local;
-
-                for (layer = 0; layer < num_layers; layer++)
-                {
-                    //! set default according to profile_esw_depth of plant available water
-                    esw_avail = bound(esw_remaining, 0.0, (_dul_dep[layer] - _ll15_dep[layer]));
-
-                    _sw_dep[layer] = _ll15_dep[layer] + esw_avail;
-                    esw_remaining = esw_remaining - esw_avail;
-                }
-
-                if (esw_remaining > precision_sw_dep)
-                {
-                    //! we have too much water to distirbute - won't fit in profile
-                    line = "Can't fit profile esw of " + (profile_esw_depth_local + esw_remaining) + " into profile esw depth of " + profile_esw_depth_local;
-                    throw new Exception(line);
-                }
-                else
-                {
-                    //! it fits
-                }
-            }
-
-
-            else if (numvals_profile_esw_depth > 0)
-            {
-                //! profile_esw_depth parameter set - distribute top down
-                ZeroArray(ref _sw_dep);
-                num_layers = _dlayer.Length;
-                Array.Copy(_ll15_dep, _sw_dep, num_layers);
-
-                esw_remaining = _profile_esw_depth;
-
-                for (layer = 0; layer < num_layers; layer++)
-                {
-                    //! set default according to profile_esw_depth of plant available water
-                    esw_avail = bound(esw_remaining, 0.0, (_dul_dep[layer] - _ll15_dep[layer]));
-
-                    _sw_dep[layer] = _ll15_dep[layer] + esw_avail;
-                    esw_remaining = esw_remaining - esw_avail;
-                }
-
-                if (esw_remaining > precision_sw_dep)
-                {
-                    //! we have too much water to distirbute - won't fit in profile
-                    profile_esw_depth_local = 0.0;
-                    for (layer = 0; layer < num_layers; layer++)
-                        profile_esw_depth_local += _dul_dep[layer] - _ll15_dep[layer];
-                    line = "Can't fit profile esw of " + _profile_esw_depth + " into profile esw depth of " + profile_esw_depth_local;
-                    throw new Exception(line);
-                }
-                else
-                {
-                    //! it fits
-                }
-            }
-
-
-            else if (numvals_sw > 0)
-            {
-                //! do nothing
-            }
-
-
-            else
-            {
-                throw new Exception("Initial soilwater distribution method not defined.");
-            }
-
-
-        }
-
 
         //All the following function are used ONLY in soilwat2_init() no where else.
 
@@ -2120,58 +1701,12 @@ namespace Models.Soils
             //Soil Properties  --> soilwat2_soil_property_param()
             //##################
 
-
-
-
-            //*****************
-            //Initial SW   (5 different methods to choose from) (these 4 "properties" are needed to create the initial sw "profile")
-            //*****************
-
-            //sv- the following test is removed from soilwat2_soil_property_param()
-            //sv- used to initialise the sw profile [used in soilwat2_set_default()] -> flags indicating if anything was read in from the sim file.
-
-            //sv- insoil is used for two different initialisation of sw methods:
-            //sv- User Specified Soil Water Conent method is used when insoil > 1 
-            //sv- FASW evenly distributed method is used when  0 <= insoil <= 1 
-            if (Double.IsNaN(_insoil))
-                numvals_insoil = 0;
-
-            //sv- FASW filled from top method method
-            if (Double.IsNaN(_profile_fesw))
-                numvals_profile_fesw = 0;
-
-            //sv- depth of available sw from top of profile method
-            if (Double.IsNaN(_profile_esw_depth))
-                numvals_profile_esw_depth = 0;
-
-            //sv- depth of wet soil (filled to dul) method
-            if (Double.IsNaN(_wet_soil_depth))
-                numvals_wet_soil_depth = 0;
-
-
-            //*****************
-            //End of Initial SW
-            //*****************
-
             //If this function has been called by a Reset Event
             //then reset (all the variables that are "Settable" by the user) back to the original values read in by [Param]  
             if (initDone)
             {
                 //Soil Property
 
-                //initial starting soil water 
-
-                numvals_insoil = reset_numvals_insoil;
-                _insoil = reset_insoil;
-
-                numvals_profile_fesw = reset_numvals_profile_fesw;
-                _profile_fesw = reset_profile_fesw;
-
-                numvals_profile_esw_depth = reset_numvals_profile_esw_depth;
-                _profile_esw_depth = reset_profile_esw_depth;
-
-                numvals_wet_soil_depth = reset_numvals_wet_soil_depth;
-                _wet_soil_depth = reset_wet_soil_depth;
 
                 //runoff
                 _cn2_bare = reset_cn2_bare;
@@ -2202,65 +1737,65 @@ namespace Models.Soils
             {
                 if (Double.IsNaN(_u))
                 {
-                    if ((Double.IsNaN(summeru) || (Double.IsNaN(winteru))))
+                    if ((Double.IsNaN(SummerU) || (Double.IsNaN(WinterU))))
                     {
                         throw new Exception("A single value for u OR BOTH values for summeru and winteru must be specified");
                     }
                     //if they entered two values but they made them the same
-                    if (summeru == winteru)
+                    if (SummerU == WinterU)
                     {
-                        _u = summeru;      //u is now no longer null. As if the user had entered a value for u.
+                        _u = SummerU;      //u is now no longer null. As if the user had entered a value for u.
                     }
                 }
                 else
                 {
-                    summeru = _u;
-                    winteru = _u;
+                    SummerU = _u;
+                    WinterU = _u;
                 }
 
                 //cona - can either use (one value for summer and winter) or two different values.
                 //       (must also take into consideration where they enter two values [one for summer and one for winter] but they make them both the same)
                 if (Double.IsNaN(_cona))
                 {
-                    if ((Double.IsNaN(summercona)) || (Double.IsNaN(wintercona)))
+                    if ((Double.IsNaN(SummerCona)) || (Double.IsNaN(WinterCona)))
                     {
                         throw new Exception("A single value for cona OR BOTH values for summercona and wintercona must be specified");
                     }
                     //if they entered two values but they made them the same.
-                    if (summercona == wintercona)
+                    if (SummerCona == WinterCona)
                     {
-                        _cona = summercona;   //cona is now no longer null. As if the user had entered a value for cona.
+                        _cona = SummerCona;   //cona is now no longer null. As if the user had entered a value for cona.
                     }
                 }
                 else
                 {
-                    summercona = _cona;
-                    wintercona = _cona;
+                    SummerCona = _cona;
+                    WinterCona = _cona;
                 }
 
                 //summer and winter default dates.
-                if (summerdate == "not_read")
+                if (SummerDate == "not_read")
                 {
-                    summerdate = "1-oct";
+                    SummerDate = "1-oct";
                 }
 
-                if (winterdate == "not_read")
+                if (WinterDate == "not_read")
                 {
-                    winterdate = "1-apr";
+                    WinterDate = "1-apr";
                 }
             }
 
             //assign u and cona to either sumer or winter values
             // Need to add 12 hours to move from "midnight" to "noon", or this won't work as expected
-            if (Utility.Date.WithinDates(winterdate, Clock.Today, summerdate))
+            if (Utility.Date.WithinDates(WinterDate, Clock.Today, SummerDate))
             {
-                _cona = wintercona;
-                _u = winteru;
+                _cona = WinterCona;
+                _u = WinterU;
             }
             else
             {
-                _cona = summercona;
-                _u = summeru;
+                _cona = SummerCona;
+                _u = SummerU;
             }
 
 
@@ -2303,13 +1838,7 @@ namespace Models.Soils
                 //sv- with mwcon: 0 is impermeable and 1 is permeable.
                 //sv- if mwcon is not specified then set it to 1 and don't use ks. If it is specified then use mwcon and use ks. 
                 //c dsg - if there is NO impermeable layer specified, then mwcon must be set to '1' in all layers by default.
-                if (mwcon == null)
-                {
-                    mwcon = new double[_dlayer.Length];
-                    for (int i = 0; i < mwcon.Length; i++)
-                        mwcon[i] = 1.0;
-                }
-                else
+                if (MWCON != null)
                 {
                     IssueWarning("mwcon is being replaced with a saturated conductivity (ks). " + "\n"
                                         + "See documentation for details.");
@@ -2347,30 +1876,6 @@ namespace Models.Soils
             }
 
 
-            // THE FOLLOWING CODE INTERACTS WITH soilwat2_set_default(). 
-            //It is necessary to make sure the "Sw cannot be specified with \"insoil\"." case is never activated.
-            //sv- comment out the code below because the GUI always defines SW in layers. The 5 different methods are sorted out in the GUI. The GUI then specifies the sw layers depending on the method and sets insoil is always set to be >1 and 
-            //sv-start
-            //sv- the following initialisation is removed from soilwat2_soil_profile_param()
-            //sv- if insoil is specified then sort out which of the two methods you are using (user specified sw OR FASW evenly distributed) 
-            //sv- if the user specified an insoil and they specified FASW evenly distributed method (ie. 0>=insoil<=1) not the user specified sw method.
-            if ((numvals_insoil > 0) && ((_insoil >= 0.0) && (_insoil <= 1.0)))
-            {
-                //sv- warn the user that their user specified sw is beign overridden.
-                Console.WriteLine("Soil water in parameter file is being overridden by");
-                Console.WriteLine("the insoil parameter which is between 0 and 1");
-                numvals_sw = 0;         //sv- change the flag to pretend that no sw values were not read in.
-            }
-            else
-            {
-                numvals_insoil = 0;     //sv- change the flag to pretend that no insoil value was read in.
-                //sv- isn't this a mistake? what if you want to use a user specifed sw method (ie. insoil > 1). I assume soilwat2_set_default() caters for this.
-            }
-
-            //sv- Since you have initialised all the _dep[] profile variables 
-            //sv- AND you have got all your numvals flags indicating what initial sw method was selected sorted out
-            //sv- now you can set your initial sw for the profile.
-            soilwat2_set_default();
             //sv-end
 
             //*****************
@@ -2454,8 +1959,8 @@ namespace Models.Soils
             if (Double.IsNaN(catchment_area))
                 catchment_area = 0.0;
 
-            if (klat == null)
-                klat = new double[_dlayer.Length];
+            if (KLAT == null)
+                KLAT = new double[_dlayer.Length];
 
             //taken from Lateral_zero_variables()
             ZeroArray(ref outflow_lat);
@@ -2706,7 +2211,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    obsrunoff = Double.NaN;
+                    //obsrunoff = Double.NaN;
                     //if (My.Get(obsrunoff_name, out obsrunoff) && !Double.IsNaN(obsrunoff))
                     //    runoff = obsrunoff;
                     //else
@@ -3037,7 +2542,7 @@ namespace Models.Soils
             //*       will appear to soilwat when get_other_varaibles() runs.
             //*       But, for now we either retrieve it "manually", or use priestly-taylor.
 
-            eo_system = Double.NaN;
+            //eo_system = Double.NaN;
 #if (APSIMX == false)
         if (_eo_source != "" && My.Get(_eo_source, out eo_system) && !Double.IsNaN(eo_system))
         {
@@ -3098,7 +2603,7 @@ namespace Models.Soils
             for (int crop = 0; crop < num_crops; ++crop)
                 cover_green_sum = 1.0 - (1.0 - cover_green_sum) * (1.0 - cover_green[crop]);
 
-            albedo = max_albedo - (max_albedo - salb) * (1.0 - cover_green_sum);
+            albedo = max_albedo - (max_albedo - Salb) * (1.0 - cover_green_sum);
 
             // ! wt_ave_temp is mean temp, weighted towards max.
             wt_ave_temp = (0.60 * maxt) + (0.40 * mint);
@@ -3287,15 +2792,15 @@ namespace Models.Soils
 
 
             // Need to add 12 hours to move from "midnight" to "noon", or this won't work as expected
-            if (Utility.Date.WithinDates(winterdate, Clock.Today, summerdate))
+            if (Utility.Date.WithinDates(WinterDate, Clock.Today, SummerDate))
             {
-                _cona = wintercona;
-                _u = winteru;
+                _cona = WinterCona;
+                _u = WinterU;
             }
             else
             {
-                _cona = summercona;
-                _u = summeru;
+                _cona = SummerCona;
+                _u = SummerU;
             }
 
             sumes1_max = _u;
@@ -3456,7 +2961,7 @@ namespace Models.Soils
 
                 if (w_tot > _dul_dep[layer])
                 {
-                    w_drain = (w_tot - _dul_dep[layer]) * swcon[layer];
+                    w_drain = (w_tot - _dul_dep[layer]) * Soil.SWCON[layer];
                     //!w_drain = min(w_drain,p%Ks(layer))
                 }
                 else
@@ -3569,7 +3074,7 @@ namespace Models.Soils
 
                 if (w_tot > _dul_dep[layer])
                 {
-                    w_drain = (w_tot - _dul_dep[layer]) * swcon[layer];
+                    w_drain = (w_tot - _dul_dep[layer]) * Soil.SWCON[layer];
                 }
                 else
                 {
@@ -3579,7 +3084,7 @@ namespace Models.Soils
                 //! get water draining out of layer (mm)
                 if (excess > 0.0)
                 {
-                    if (mwcon == null || mwcon[layer] >= 1.0)
+                    if (Soil.MWCON == null || Soil.MWCON[layer] >= 1.0)
                     {
                         //! all this excess goes on down so do nothing
                         w_out = excess + w_drain;
@@ -3595,8 +3100,8 @@ namespace Models.Soils
                         new_sw_dep[layer] = _sat_dep[layer] - w_drain + add;
 
                         //! partition between flow back up and flow down
-                        backup = (1.0 - mwcon[layer]) * excess;
-                        excess = mwcon[layer] * excess;
+                        backup = (1.0 - Soil.MWCON[layer]) * excess;
+                        excess = Soil.MWCON[layer] * excess;
 
                         w_out = excess + w_drain;
                         flux[layer] = w_out;
@@ -3716,7 +3221,7 @@ namespace Models.Soils
                 theta2 = Utility.Math.Divide(esw_dep2, dlayer2, 0.0);
 
                 //! find diffusivity, a function of mean thet.
-                dbar = diffus_const * Math.Exp(diffus_slope * (theta1 + theta2) * 0.5);
+                dbar = DiffusConst * Math.Exp(DiffusSlope * (theta1 + theta2) * 0.5);
 
                 //! testing found that a limit of 10000 (as used in ceres-maize)
                 //! for dbar limits instability for flow direction for consecutive
@@ -3757,7 +3262,7 @@ namespace Models.Soils
 
                 //c dsg 260202
                 //c dsg    this code will stop unsaturated flow downwards through an impermeable layer, but will allow flow up
-                if ((mwcon != null) && (mwcon[layer] == 0) && (flow[layer] < 0.0))
+                if ((Soil.MWCON != null) && (Soil.MWCON[layer] == 0) && (flow[layer] < 0.0))
                 {
                     flow[layer] = 0.0;
                 }
@@ -4283,7 +3788,7 @@ namespace Models.Soils
                     break;
                 }
                 //Or if mwcon is set to be impermeable for this layer and above sw is above dul then consider this layer as saturated.
-                else if ((mwcon != null) && (mwcon[layer] < 1.0) && (_sw_dep[layer] > _dul_dep[layer]))
+                else if ((Soil.MWCON != null) && (Soil.MWCON[layer] < 1.0) && (_sw_dep[layer] > _dul_dep[layer]))
                 {
                     //!  dsg 150302     also check whether impermeable layer is above dul. If so then consider it to be saturated
                     sat_layer = layer;
@@ -4381,41 +3886,42 @@ namespace Models.Soils
 
         private void SetWaterTable(double WaterTable)
         {
-
-            int layer;
-            int num_layers;
-            double top;
-            double bottom;
-            double fraction;
-            double drainable_porosity;
-
-            num_layers = _dlayer.Length;
-            top = 0.0;
-            bottom = 0.0;
-
-            for (layer = 0; layer < num_layers; layer++)
+            if (!double.IsNaN(WaterTable))
             {
-                top = bottom;
-                bottom = bottom + _dlayer[layer];
-                if (WaterTable >= bottom)
+                int layer;
+                int num_layers;
+                double top;
+                double bottom;
+                double fraction;
+                double drainable_porosity;
+
+                num_layers = _dlayer.Length;
+                top = 0.0;
+                bottom = 0.0;
+
+                for (layer = 0; layer < num_layers; layer++)
                 {
-                    //do nothing;
+                    top = bottom;
+                    bottom = bottom + _dlayer[layer];
+                    if (WaterTable >= bottom)
+                    {
+                        //do nothing;
+                    }
+                    else if (WaterTable > top)
+                    {
+                        //! top of water table is in this layer
+                        fraction = (bottom - WaterTable) / (bottom - top);
+                        drainable_porosity = _sat_dep[layer] - _dul_dep[layer];
+                        _sw_dep[layer] = _dul_dep[layer] + fraction * drainable_porosity;
+                    }
+                    else
+                    {
+                        _sw_dep[layer] = _sat_dep[layer];
+                    }
                 }
-                else if (WaterTable > top)
-                {
-                    //! top of water table is in this layer
-                    fraction = (bottom - WaterTable) / (bottom - top);
-                    drainable_porosity = _sat_dep[layer] - _dul_dep[layer];
-                    _sw_dep[layer] = _dul_dep[layer] + fraction * drainable_porosity;
-                }
-                else
-                {
-                    _sw_dep[layer] = _sat_dep[layer];
-                }
+
+                _water_table = WaterTable;
             }
-
-            _water_table = WaterTable;
-
         }
 
 
@@ -4471,7 +3977,7 @@ namespace Models.Soils
                 d = Math.Max(0.0, d);  //! water table depth in layer must be +ve
 
                 double i, j;
-                i = klat[layer] * d * (discharge_width / mm2m) * slope;
+                i = KLAT[layer] * d * (discharge_width / mm2m) * slope;
                 j = (catchment_area * sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
                 outflow_lat[layer] = Utility.Math.Divide(i, j, 0.0);
 
@@ -4580,7 +4086,7 @@ namespace Models.Soils
                                          Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0),
                                          bd[layer],
                                          runoff_wf[layer],
-                                         swcon[layer]);
+                                         Soil.SWCON[layer]);
                 }
                 else
                 {
@@ -4595,7 +4101,7 @@ namespace Models.Soils
                                          Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0),
                                          bd[layer],
                                          runoff_wf[layer],
-                                         swcon[layer],
+                                         Soil.SWCON[layer],
                                          ks[layer]);
                 }
                 Console.WriteLine(line);
@@ -4684,17 +4190,16 @@ namespace Models.Soils
             line = "     ---------------------------------------------------------";
             Console.WriteLine(line);
 
-            line = "            Insoil        Salb     Dif_Con   Dif_Slope";
+            line = "            Salb     Dif_Con   Dif_Slope";
             Console.WriteLine(line);
 
             line = "     ---------------------------------------------------------";
             Console.WriteLine(line);
 
-            line = String.Format("       {0,11:0.00} {1,11:0.00} {2,11:0.00} {3,11:0.00}",
-                                 _insoil,
-                                 salb,
-                                 diffus_const,
-                                 diffus_slope);
+            line = String.Format("       {1,11:0.00} {2,11:0.00} {3,11:0.00}",
+                                 Salb,
+                                 DiffusConst,
+                                 DiffusSlope);
 
             Console.WriteLine(line);
 
@@ -4755,7 +4260,7 @@ namespace Models.Soils
                 line = "      Using Ritchie evaporation model";
                 Console.WriteLine(line);
 
-                if (winteru == summeru)
+                if (WinterU == SummerU)
                 {
                     line = String.Format("       {0} {1,8:0.00} {2}",
                                          "Cuml evap (U):        ",
@@ -4768,15 +4273,15 @@ namespace Models.Soils
                 {
                     line = String.Format("        {0} {1,8:0.00} {2}        {3} {4,8:0.00} {5}",
                                          "Stage 1 Duration (U): Summer    ",
-                                         summeru,
+                                         SummerU,
                                          " (mm)" + Environment.NewLine,
                                          "                      Winter    ",
-                                         winteru,
+                                         WinterU,
                                          " (mm)");
                     Console.WriteLine(line);
                 }
 
-                if (wintercona == summercona)
+                if (WinterCona == SummerCona)
                 {
                     line = String.Format("       {0} {1,8:0.00} {2}",
                                          "CONA:                 ",
@@ -4788,18 +4293,18 @@ namespace Models.Soils
                 {
                     line = String.Format("        {0} {1,8:0.00} {2}        {3} {4,8:0.00} {5}",
                                          "Stage 2       (CONA): Summer    ",
-                                         summercona,
+                                         SummerCona,
                                          " (mm^0.5)" + Environment.NewLine,
                                          "                      Winter    ",
-                                         wintercona,
+                                         WinterCona,
                                          " (mm^0.5)");
                     Console.WriteLine(line);
                 }
 
-                if ((wintercona != summercona) || (winteru != summeru))
+                if ((WinterCona != SummerCona) || (WinterU != SummerU))
                 {
-                    Console.WriteLine("       Critical Dates:       Summer        " + summerdate + Environment.NewLine +
-                    "                             Winter        " + winterdate);
+                    Console.WriteLine("       Critical Dates:       Summer        " + SummerDate + Environment.NewLine +
+                    "                             Winter        " + WinterDate);
                 }
             }
             else
@@ -4934,12 +4439,15 @@ namespace Models.Soils
             air_dry = Soil.AirDry;
             ks = Soil.Water.KS;
             bd = Soil.Water.BD;
+            sw = Soil.SW;
 
             // some defaults.
-            swcon = new double[dlayer.Length];
-            for (int i = 0; i < dlayer.Length; i++)
-                swcon[i] = 0.3;
-
+            if (SWCON == null)
+            {
+                SWCON = new double[dlayer.Length];
+                for (int i = 0; i < dlayer.Length; i++)
+                    SWCON[i] = 0.3;
+            }
             //Save State
             soilwat2_save_state();
 
