@@ -93,13 +93,13 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnCellValueChanged(int Col, int Row, object OldValue, object NewValue)
         {
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model, 
-                                                                                    Properties[Row].Name, 
+            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model,
+                                                                                    Properties[Row].Name,
                                                                                     NewValue);
             //Stop the recursion. The users entry is the updated value in the grid.
-            Grid.CellValueChanged -= OnCellValueChanged;
+            CommandHistory.ModelChanged -= OnModelChanged;
             CommandHistory.Add(Cmd, true);
-            Grid.CellValueChanged += OnCellValueChanged;
+            CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -110,8 +110,9 @@ namespace UserInterface.Presenters
             if (ChangedModel == Model)
                 PopulateGrid();
         }
-
-
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 692fefe65c2527aa42a1dc6542be738a1644324f
