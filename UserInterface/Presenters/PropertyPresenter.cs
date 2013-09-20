@@ -96,7 +96,10 @@ namespace UserInterface.Presenters
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model, 
                                                                                     Properties[Row].Name, 
                                                                                     NewValue);
+            //Stop the recursion. The users entry is the updated value in the grid.
+            Grid.CellValueChanged -= OnCellValueChanged;
             CommandHistory.Add(Cmd, true);
+            Grid.CellValueChanged += OnCellValueChanged;
         }
 
         /// <summary>
