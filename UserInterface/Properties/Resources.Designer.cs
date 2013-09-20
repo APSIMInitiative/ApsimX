@@ -60,6 +60,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Analysis16 {
+            get {
+                object obj = ResourceManager.GetObject("Analysis16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap apsim_logo32 {
             get {
                 object obj = ResourceManager.GetObject("apsim_logo32", resourceCulture);
@@ -84,6 +91,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap DataStore16 {
             get {
                 object obj = ResourceManager.GetObject("DataStore16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Delete {
+            get {
+                object obj = ResourceManager.GetObject("Delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,6 +127,20 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("GraphToolbox", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap InitialNitrogen16 {
+            get {
+                object obj = ResourceManager.GetObject("InitialNitrogen16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap InitialWater16 {
+            get {
+                object obj = ResourceManager.GetObject("InitialWater16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -158,9 +186,9 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Run {
+        internal static System.Drawing.Bitmap RunAPSIM {
             get {
-                object obj = ResourceManager.GetObject("Run", resourceCulture);
+                object obj = ResourceManager.GetObject("RunAPSIM", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -200,10 +228,38 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static byte[] StandardToolbox {
+        internal static System.Drawing.Bitmap SoilOrganicMatter16 {
             get {
-                object obj = ResourceManager.GetObject("StandardToolbox", resourceCulture);
+                object obj = ResourceManager.GetObject("SoilOrganicMatter16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SoilWater16 {
+            get {
+                object obj = ResourceManager.GetObject("SoilWater16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Splitscreen {
+            get {
+                object obj = ResourceManager.GetObject("Splitscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static byte[] StandardToolBox {
+            get {
+                object obj = ResourceManager.GetObject("StandardToolBox", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap StandardToolboxIcon {
+            get {
+                object obj = ResourceManager.GetObject("StandardToolboxIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -238,6 +294,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap Undo {
             get {
                 object obj = ResourceManager.GetObject("Undo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Water16 {
+            get {
+                object obj = ResourceManager.GetObject("Water16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using UserInterface.Views;
-using Model.Components.Graph;
+using Models.Graph;
 using System.Data;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -23,6 +23,15 @@ namespace UserInterface.Presenters
             PopulateGraph();
         }
 
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            GraphView.OnAxisClick -= OnAxisClick;
+            GraphView.OnPlotClick -= OnPlotClick;
+            CommandHistory.ModelChanged -= OnGraphModelChanged;
+        }
 
 
         private void OnGraphModelChanged(object Model)

@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.VariableEditor = new Utility.Editor();
+            this.label2 = new System.Windows.Forms.Label();
             this.FrequencyEditor = new Utility.Editor();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -59,15 +59,19 @@
             this.splitContainer1.SplitterDistance = 321;
             this.splitContainer1.TabIndex = 7;
             // 
-            // label1
+            // VariableEditor
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Reporting frequency:";
+            this.VariableEditor.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
+            this.VariableEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.VariableEditor.Lines = new string[] {
+        "textEditorControl1",
+        ""};
+            this.VariableEditor.Location = new System.Drawing.Point(0, 13);
+            this.VariableEditor.Name = "VariableEditor";
+            this.VariableEditor.Size = new System.Drawing.Size(606, 308);
+            this.VariableEditor.TabIndex = 8;
+            this.VariableEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnVariableListNeedItems);
+            this.VariableEditor.TextHasChangedByUser += new System.EventHandler(this.OnVariableListChanged);
             // 
             // label2
             // 
@@ -79,29 +83,30 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Reporting variables:";
             // 
-            // VariableEditor
-            // 
-            this.VariableEditor.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.VariableEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.VariableEditor.Lines = new string[0];
-            this.VariableEditor.Location = new System.Drawing.Point(0, 13);
-            this.VariableEditor.Name = "VariableEditor";
-            this.VariableEditor.Size = new System.Drawing.Size(606, 308);
-            this.VariableEditor.TabIndex = 6;
-            this.VariableEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnVariableListNeedItems);
-            this.VariableEditor.TextHasChangedByUser += new System.EventHandler(this.OnVariableListChanged);
-            // 
             // FrequencyEditor
             // 
             this.FrequencyEditor.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.FrequencyEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FrequencyEditor.Lines = new string[0];
+            this.FrequencyEditor.Lines = new string[] {
+        "",
+        "",
+        ""};
             this.FrequencyEditor.Location = new System.Drawing.Point(0, 13);
             this.FrequencyEditor.Name = "FrequencyEditor";
             this.FrequencyEditor.Size = new System.Drawing.Size(606, 149);
             this.FrequencyEditor.TabIndex = 7;
             this.FrequencyEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnEventListNeedItems);
             this.FrequencyEditor.TextHasChangedByUser += new System.EventHandler(this.OnEventListChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(106, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Reporting frequency:";
             // 
             // ReportView
             // 
@@ -123,10 +128,10 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Utility.Editor VariableEditor;
         private Utility.Editor FrequencyEditor;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private Utility.Editor VariableEditor;
 
 
     }

@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{27056DED-A49C-4351-90A8-DFA9C8AC906E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{A3E10705-F2BB-4182-A19C-7F63222584DF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTests", "ModelTests\ModelTests.csproj", "{79CB308E-BC40-48CE-A2FD-06869D31320C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD18137A-918C-421F-922A-FA633A1C3884}"
 	ProjectSection(SolutionItems) = preProject
 		ApsimX.vsmdi = ApsimX.vsmdi
 		Local.testsettings = Local.testsettings
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{A3E10705-F2BB-4182-A19C-7F63222584DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{79CB308E-BC40-48CE-A2FD-06869D31320C}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

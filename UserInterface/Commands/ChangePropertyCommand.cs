@@ -15,22 +15,20 @@ namespace UserInterface.Commands
             this.Value = PropertyValue;
         }
 
-        public object Do()
+        public void Do(CommandHistory CommandHistory)
         {
             // Get original value of property so that we can restore it in Undo if needed.
             OriginalValue = Utility.Reflection.GetValueOfFieldOrProperty(Name, Obj);
 
             // Set the new property value.
             if (Utility.Reflection.SetValueOfFieldOrProperty(Name, Obj, Value))
-                return Obj;
-            return null;
+                CommandHistory.InvokeModelChanged(Obj);
         }
 
-        public object Undo()
+        public void Undo(CommandHistory CommandHistory)
         {
             if (Utility.Reflection.SetValueOfFieldOrProperty(Name, Obj, OriginalValue))
-                return Obj;
-            return null;
+                CommandHistory.InvokeModelChanged(Obj);
         }
     }
 }

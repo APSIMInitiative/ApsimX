@@ -166,7 +166,7 @@
   <data name="Graph16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Run" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="RunAPSIM" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\media_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DataStore16" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -175,7 +175,7 @@
   <data name="Simulations16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\folders.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="StandardToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="StandardToolBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StandardToolbox.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="GraphToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -201,5 +201,32 @@
   </data>
   <data name="Summary16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\scroll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StandardToolboxIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Splitscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\window_split_hor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Analysis16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\view.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InitialNitrogen16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drink_yellow16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InitialWater16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drink_blue16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SoilOrganicMatter16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SoilOrganicMatter16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SoilWater16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drop161.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Water16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drop16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

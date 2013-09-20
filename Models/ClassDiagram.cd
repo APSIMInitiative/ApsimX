@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Models.Clock" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACIAAAAAgAAAAcAAAAAAAAgAAABAAAAAAAAJEAAQAA=</HashCode>
+      <FileName>Clock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.DataStore" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQgAAACEAAIAAMABSAAAIAAAAgAJABAAAAAAAAAAAA=</HashCode>
+      <FileName>DataStore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Fertiliser" Collapsed="true">
+    <Position X="16.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkAAAQAAABAAAACBBCAQAAAAAAAAAAAAAgBAAAQAA=</HashCode>
+      <FileName>Fertiliser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.FertComponent" Collapsed="true">
+    <Position X="73.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAQAEAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Fertiliser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Program" Collapsed="true">
+    <Position X="68.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Manager" Collapsed="true">
+    <Position X="32" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAABAgAQACEABAAAAAAAgAgAAAAAA=</HashCode>
+      <FileName>Manager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Models.Report" Collapsed="true">
+    <Position X="41.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAMAAAACAQAAAgAAAAAAAAQQBAAAAAE=</HashCode>
+      <FileName>Report.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Summary" Collapsed="true">
+    <Position X="48.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAASAAAQAAAAAAAAAAAAAABAAAAgA=</HashCode>
+      <FileName>Summary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Models.Test" Collapsed="true">
+    <Position X="72" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAABAAYAAAQAAAAA=</HashCode>
+      <FileName>Tests.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Tests" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tests.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.WeatherFile" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACChgQBAEAEhAAMEAAAIAAAAAAgkCBAAAAAAAABAAgA=</HashCode>
+      <FileName>WeatherFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Link" Collapsed="true">
+    <Position X="66.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAIAAAAAIAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Units" Collapsed="true">
+    <Position X="75.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Bounds" Collapsed="true">
+    <Position X="72" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.PresenterName" Collapsed="true">
+    <Position X="75.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.ViewName" Collapsed="true">
+    <Position X="66.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Description" Collapsed="true">
+    <Position X="70.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.MainMenuName" Collapsed="true">
+    <Position X="68.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.ContextMenuName" Collapsed="true">
+    <Position X="73.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.ContextModelType" Collapsed="true">
+    <Position X="75.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.AllowDropOn" Collapsed="true">
+    <Position X="66.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Model" Collapsed="true">
+    <Position X="53" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAQNAAAQARAQAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Model.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.ModelCollection" Collapsed="true">
+    <Position X="53" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>CAAAIAAAAAAAAABAAAAAAgAAQAAIAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Core\ModelCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Simulation">
+    <Position X="53.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAABAAAAAI=</HashCode>
+      <FileName>Core\Simulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Simulations" Collapsed="true">
+    <Position X="51" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAABAAAAAAAACAAAAAAQAAAAAAAFABAI=</HashCode>
+      <FileName>Core\Simulations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Zone" Collapsed="true">
+    <Position X="52" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAgAiQABAAAAAAAgAgQAAAAA=</HashCode>
+      <FileName>Core\Zone.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Models.Graph.Axis" Collapsed="true">
+    <Position X="18.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Graph\Axis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Graph.Graph" Collapsed="true">
+    <Position X="25.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAUAAAAAAAQAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Graph\Graph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Graph.Series" Collapsed="true">
+    <Position X="27.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAABAAQAAAQAAYAA=</HashCode>
+      <FileName>Graph\Series.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Analysis" Collapsed="true">
+    <Position X="34.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QoAAUAAgBZRJEBCIBQJEAKwEQCAIQIAAIKIAAIBAAAE=</HashCode>
+      <FileName>Soils\Analysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.InitialWater" Collapsed="true">
+    <Position X="43.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABIEAAAAAEAAAQQAAAQBAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Soils\InitialWater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.IrrigationApplicationType" Collapsed="true">
+    <Position X="75.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgACAAAAAAABAAAACAAAAAAAAgABAAAAAAAAA=</HashCode>
+      <FileName>Soils\IrrigationApplicationType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.LayerStructure" Collapsed="true">
+    <Position X="62" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\LayerStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.NitrogenChangedType" Collapsed="true">
+    <Position X="72" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAQ=</HashCode>
+      <FileName>Soils\NitrogenChangedType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Phosphorus" Collapsed="true">
+    <Position X="20.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAABAAAAAAABAIAAAAAAAQAADAAAAAAAAAE=</HashCode>
+      <FileName>Soils\Phosphorus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.RunoffEventType" Collapsed="true">
+    <Position X="72" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\RunoffEventType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Sample" Collapsed="true">
+    <Position X="36.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gJAAEAAgIDAJAAABBXBAAABCAWREAAIhAAAAIATAAAA=</HashCode>
+      <FileName>Soils\Sample.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Soil" Collapsed="true">
+    <Position X="56" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QFD4GmhUy3Exk1K/zzBdAqwWQ4I5Y+HkVn7SXABEchk=</HashCode>
+      <FileName>Soils\Soil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilCrop" Collapsed="true">
+    <Position X="57.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAACAEAAQBAAAAAAAAAAAQAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Soils\SoilCrop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilOrganicMatter" Collapsed="true">
+    <Position X="64.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQCAAABAAABBAABAABAICKAEAIABABAQAAACBA=</HashCode>
+      <FileName>Soils\SoilOrganicMatter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilTemperature" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAACAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\SoilTemperature.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilTemperature2" Collapsed="true">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAQAACQCAAIAIAAAAAAAABAEAAAAAEAAAA=</HashCode>
+      <FileName>Soils\SoilTemperature2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilWater" Collapsed="true">
+    <Position X="23" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>1b4tfKX+e/e9vSP946tvzGXzPXLPpUu/+X+OSDL1Rhg=</HashCode>
+      <FileName>Soils\SoilWater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SoilWatTillageType" Collapsed="true">
+    <Position X="73.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgEAAAEAAAAAEACAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Soils\SoilWater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Swim" Collapsed="true">
+    <Position X="29.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABCAADwAIQACAAIgAAAIAAAAAAAAAgBAEAAEA=</HashCode>
+      <FileName>Soils\Swim.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SwimSoluteParameters" Collapsed="true">
+    <Position X="38.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAQEAAAAAAhACIkgAAAAAgEgMQAAkMAQABAKAAgYAk=</HashCode>
+      <FileName>Soils\SwimSoluteParameters.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SwimSubsurfaceDrain" Collapsed="true">
+    <Position X="46" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAgAAQAAAAAAAAAAAEAgAAAAA=</HashCode>
+      <FileName>Soils\SwimSubsurfaceDrain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.SwimWaterTable" Collapsed="true">
+    <Position X="59.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Soils\SwimWaterTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.TillageType" Collapsed="true">
+    <Position X="73.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABABAEAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\TillageType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Soils.Water" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAggQAAAABABAgAACAAAAARggAAgAAAADAIAAIAFA=</HashCode>
+      <FileName>Soils\Water.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.ApsimConstant" Collapsed="true">
+    <Position X="68.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAEAAgAAAAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\ApsimTextFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.ApsimTextFile" Collapsed="true">
+    <Position X="70.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAQAAAAAIAgAIAEAAACIAhIAAAxAGCABQAiwEKA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\ApsimTextFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.DataTable" Collapsed="true">
+    <Position X="66.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAADAAAIBQAACAAAAAAAEAAgABACAAJAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\DataTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Date" Collapsed="true">
+    <Position X="68.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAAhAAAAEAAQAAAAAAABAAgAAAAAQAAQABAAAEAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Date.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Directory" Collapsed="true">
+    <Position X="72" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAACAAAAAAAIABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Directory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Math" Collapsed="true">
+    <Position X="70.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AyCEgAIYIxAAABCF0AADAABgIASBAAQQIABCwAIhAqQ=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Math.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Path" Collapsed="true">
+    <Position X="73.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Path.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Process" Collapsed="true">
+    <Position X="66.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAAAAAABAAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Process.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Reflection" Collapsed="true">
+    <Position X="70.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAgAAAAAAAAAEAAAAQQAABAAAAIAAAAEQAAAAIA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Reflection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.SQLiteException" Collapsed="true">
+    <Position X="66.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\SQLite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.SQLite" Collapsed="true">
+    <Position X="75.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAgACAAoCASCkCRCAEJEAEAAQQgACAQQAKAIAAAEU=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\SQLite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.StreamReaderRandomAccess" Collapsed="true">
+    <Position X="68.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgBAAAIBgAAAIBAiCAAAAAgACAAAAAAAAAAAIACAhAA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\StreamReaderRandomAccess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.String" Collapsed="true">
+    <Position X="70.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAIEAAIgIARQQBAAABAAABABAAACQAAAACgBAASAAg=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\String.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Web" Collapsed="true">
+    <Position X="68.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAI=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Web.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility.Xml" Collapsed="true">
+    <Position X="70.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAABEQgAhCACAoACAQEYQAQAACEIgQAAgQKgQAIAgDA=</HashCode>
+      <FileName>C:\Users\hol353\ApsimX\Utility\Xml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Models.Core.ICrop" Collapsed="true">
+    <Position X="66.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ICrop.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Models.Core.ISummary" Collapsed="true">
+    <Position X="68.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAASAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ISummary.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="Models.Core.NullTypeDelegate" Collapsed="true">
+    <Position X="68.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Model.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Models.Soils.NitrogenChangedDelegate" Collapsed="true">
+    <Position X="66.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\NitrogenChangedType.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Models.Soils.RunoffEventDelegate" Collapsed="true">
+    <Position X="70.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Soils\RunoffEventType.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

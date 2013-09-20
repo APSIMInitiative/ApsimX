@@ -29,12 +29,10 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.TabPage Properties;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManagerView));
             this.Grid = new GridView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Script = new System.Windows.Forms.TabPage();
             this.ScriptEditor = new Utility.Editor();
-            this.CSHighlighter = new Utility.SyntaxHighlighter();
             Properties = new System.Windows.Forms.TabPage();
             Properties.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -58,6 +56,8 @@
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(3, 3);
             this.Grid.Name = "Grid";
+            this.Grid.ReadOnly = false;
+            this.Grid.RowCount = 0;
             this.Grid.Size = new System.Drawing.Size(612, 484);
             this.Grid.TabIndex = 0;
             // 
@@ -88,31 +88,16 @@
             this.ScriptEditor.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ScriptEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ScriptEditor.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScriptEditor.Lines = new string[0];
+            this.ScriptEditor.Lines = new string[] {
+        "",
+        ""};
             this.ScriptEditor.Location = new System.Drawing.Point(3, 3);
             this.ScriptEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ScriptEditor.Name = "ScriptEditor";
-            this.ScriptEditor.SelectedText = "";
-            this.ScriptEditor.SelectionColor = System.Drawing.Color.Black;
-            this.ScriptEditor.SelectionLength = 0;
-            this.ScriptEditor.SelectionStart = 0;
             this.ScriptEditor.Size = new System.Drawing.Size(612, 484);
-            this.ScriptEditor.SyntaxHighlighter = this.CSHighlighter;
             this.ScriptEditor.TabIndex = 0;
             this.ScriptEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnVariableListNeedItems);
             this.ScriptEditor.TextHasChangedByUser += new System.EventHandler(this.ScriptEditor_TextHasChangedByUser);
-            // 
-            // CSHighlighter
-            // 
-            this.CSHighlighter.CodeColor_Comment = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.CSHighlighter.CodeColor_Function = System.Drawing.Color.Empty;
-            this.CSHighlighter.CodeColor_Keyword = System.Drawing.Color.Blue;
-            this.CSHighlighter.CodeColor_PlainText = System.Drawing.Color.Empty;
-            this.CSHighlighter.CodeColor_Type = System.Drawing.Color.Empty;
-            this.CSHighlighter.CodeWords_Comments = ((System.Collections.Generic.List<string>)(resources.GetObject("CSHighlighter.CodeWords_Comments")));
-            this.CSHighlighter.CodeWords_Functions = ((System.Collections.Generic.List<string>)(resources.GetObject("CSHighlighter.CodeWords_Functions")));
-            this.CSHighlighter.CodeWords_Keywords = ((System.Collections.Generic.List<string>)(resources.GetObject("CSHighlighter.CodeWords_Keywords")));
-            this.CSHighlighter.CodeWords_Types = ((System.Collections.Generic.List<string>)(resources.GetObject("CSHighlighter.CodeWords_Types")));
             // 
             // ManagerView
             // 
@@ -134,7 +119,6 @@
         private System.Windows.Forms.TabPage Script;
         private Utility.Editor ScriptEditor;
         private GridView Grid;
-        private Utility.SyntaxHighlighter CSHighlighter;
 
     }
 }

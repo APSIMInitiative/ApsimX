@@ -3,7 +3,7 @@ namespace UserInterface.Commands
 {
     public interface ICommand
     {
-        object Do();
-        object Undo();
+        void Do(CommandHistory CommandHistory);
+        void Undo(CommandHistory CommandHistory);
     }
 }

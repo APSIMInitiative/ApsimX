@@ -51,7 +51,7 @@ namespace Utility
         static extern int sqlite3_finalize(IntPtr stmHandle);
 
         [DllImport("sqlite3.dll", EntryPoint = "sqlite3_errmsg", CallingConvention = CallingConvention.Cdecl)]
-        static extern string sqlite3_errmsg(IntPtr db);
+        static extern IntPtr sqlite3_errmsg(IntPtr db);
 
         [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_count", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_column_count(IntPtr stmHandle);
@@ -248,7 +248,7 @@ namespace Utility
 
             if (sqlite3_prepare_v2(_db, query, query.Length,
                   out stmHandle, IntPtr.Zero) != SQLITE_OK)
-                throw new SQLiteException(sqlite3_errmsg(_db));
+                throw new SQLiteException( Marshal.PtrToStringAnsi(sqlite3_errmsg(_db)));
 
             return stmHandle;
         }

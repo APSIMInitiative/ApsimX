@@ -75,7 +75,7 @@
             this.splitter1.Size = new System.Drawing.Size(6, 563);
             this.splitter1.TabIndex = 9;
             this.splitter1.TabStop = false;
-            this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer_SplitterMoved);
+            this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMoved);
             // 
             // TreeView
             // 
@@ -87,21 +87,26 @@
             this.TreeView.HideSelection = false;
             this.TreeView.ImageIndex = 0;
             this.TreeView.ImageList = this.TreeImageList;
+            this.TreeView.LabelEdit = true;
             this.TreeView.Location = new System.Drawing.Point(0, 0);
             this.TreeView.Name = "TreeView";
             this.TreeView.SelectedImageIndex = 0;
             this.TreeView.Size = new System.Drawing.Size(197, 563);
             this.TreeView.TabIndex = 8;
+            this.TreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnBeforeLabelEdit);
+            this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
             this.TreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnBeforeExpand);
-            this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.TreeView_ItemDrag);
-            this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeView_BeforeSelect);
-            this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeView_DragDrop);
-            this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeView_DragOver);
+            this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.OnNodeDrag);
+            this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnTreeViewBeforeSelect);
+            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
+            this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
+            this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.OnDragOver);
             // 
             // PopupMenu
             // 
             this.PopupMenu.Name = "ContextMenu";
             this.PopupMenu.Size = new System.Drawing.Size(61, 4);
+            this.PopupMenu.Opening += new System.ComponentModel.CancelEventHandler(this.OnPopupMenuOpening);
             // 
             // TreeImageList
             // 
@@ -154,6 +159,7 @@
             this.Controls.Add(this.ToolStrip);
             this.Name = "ExplorerView";
             this.Size = new System.Drawing.Size(600, 600);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.Panel.ResumeLayout(false);
             this.StatusPanel.ResumeLayout(false);
             this.ResumeLayout(false);

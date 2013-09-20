@@ -54,16 +54,18 @@
             this.Grid.AllowUserToAddRows = false;
             this.Grid.AllowUserToDeleteRows = false;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.Grid.CausesValidation = false;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(0, 0);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
+            this.Grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.Grid.ShowRowErrors = false;
             this.Grid.Size = new System.Drawing.Size(354, 345);
             this.Grid.TabIndex = 1;
             this.Grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.OnCellBeginEdit);
-            this.Grid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellValueChanged);
+            this.Grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.Grid_DataError);
             // 
             // GridView
             // 

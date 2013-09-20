@@ -1,15 +1,15 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Commands
 {
     class RunCommand : ICommand
     {
-        private ISimulation Simulation;
+        private Simulation Simulation;
         private Simulations Simulations;
         public bool ok { get; set; }
 
-        public RunCommand(Simulations Simulations, ISimulation Simulation)
+        public RunCommand(Simulations Simulations, Simulation Simulation)
         {
             this.Simulations = Simulations;
             this.Simulation = Simulation;
@@ -18,22 +18,19 @@ namespace UserInterface.Commands
         /// <summary>
         /// Perform the command
         /// </summary>
-        public object Do()
+        public void Do(CommandHistory CommandHistory)
         {
             if (Simulation == null)
                 Simulations.Run();
             else
                 ok = Simulations.Run(Simulation);
-            return null;
         }
 
         /// <summary>
         /// Undo the command
         /// </summary>
-        public object Undo()
+        public void Undo(CommandHistory CommandHistory)
         {
-            // Do nothing.
-            return null;
         }
 
     }

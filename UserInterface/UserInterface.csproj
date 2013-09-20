@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=2013.1.50.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\OxyPlot\oxyplot_a2fa94072d76\Source\OxyPlot.WindowsForms\bin\Debug\NET40\OxyPlot.dll</HintPath>
@@ -59,13 +63,16 @@
       <Link>Utility\DateTimeCellType.cs</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
-    <Compile Include="Commands\ExplorerUICommands.cs" />
+    <Compile Include="Commands\RenameModelCommand.cs" />
+    <Compile Include="Commands\DeleteModelCommand.cs" />
+    <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\ExplorerActions.cs" />
+    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
@@ -79,9 +86,6 @@
     <Compile Include="Utility\Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utility\SyntaxHighlighter.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Views\AxisView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -94,6 +98,7 @@
     <Compile Include="Views\GeneralView.Designer.cs">
       <DependentUpon>GeneralView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\IExplorerView.cs" />
     <Compile Include="Views\ManagerView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -140,13 +145,6 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Plugins\StartPagePlugin.cs" />
-    <Compile Include="Plugins\StartPageView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Plugins\StartPageView.Designer.cs">
-      <DependentUpon>StartPageView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\GridView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -160,6 +158,12 @@
     </Compile>
     <Compile Include="Views\DataStoreView.Designer.cs">
       <DependentUpon>DataStoreView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TabbedExplorerView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TabbedExplorerView.Designer.cs">
+      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
@@ -183,9 +187,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Plugins\StartPageView.resx">
-      <DependentUpon>StartPageView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\AxisView.resx">
       <DependentUpon>AxisView.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DataStoreView.resx">
       <DependentUpon>DataStoreView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TabbedExplorerView.resx">
+      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -269,12 +273,6 @@
     <None Include="Resources\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
-      <Name>Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\media_play.png" />
   </ItemGroup>
   <ItemGroup>
@@ -282,9 +280,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\folders.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Model.exe" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\copy.png" />
@@ -302,10 +297,40 @@
     <None Include="Resources\bug_green.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BugWindow.png" />
+    <None Include="Resources\scroll.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\scroll.png" />
+    <None Include="Resources\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window_split_hor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drink_blue16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drink_yellow16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drop16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoilOrganicMatter16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drop161.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\view.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

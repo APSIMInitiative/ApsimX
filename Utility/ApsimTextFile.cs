@@ -150,7 +150,14 @@ namespace Utility
                     c.Value = ConstantValue;
             }
         }
+        public void AddConstant(string ConstantName, string ConstantValue, string Units, string Comment)
+        {
+            // -------------------------------------
+            // Add and set a given constant's value.
+            // -------------------------------------
 
+            _Constants.Add(new ApsimConstant(ConstantName, ConstantValue, Units, Comment));
+        }
         /// <summary>
         /// Convert this file to a DataTable.
         /// </summary>

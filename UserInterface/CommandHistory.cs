@@ -23,6 +23,10 @@ namespace UserInterface
 
         public delegate void ModelChangedDelegate(object changedModel);
         public event ModelChangedDelegate ModelChanged;
+
+        public delegate void ModelStructureChangedDelegate(string Path);
+        public event ModelStructureChangedDelegate ModelStructureChanged;
+
         public void Clear()
         {
             commands.Clear();
@@ -90,7 +94,7 @@ namespace UserInterface
             }
             if (execute)
             {
-                Do(command);
+                command.Do(this);
             }
             commands.Add(command);
             lastExecuted = commands.Count - 1;
@@ -104,7 +108,7 @@ namespace UserInterface
             {
                 if (commands.Count > 0)
                 {
-                    Undo(commands[lastExecuted]);
+                    commands[lastExecuted].Undo(this);
                     lastExecuted--;
                     OnChanged(lastExecuted != lastSaved);
                 }
@@ -115,25 +119,22 @@ namespace UserInterface
         {
             if (lastExecuted + 1 < commands.Count)
             {
-                Do(commands[lastExecuted + 1]);
+                commands[lastExecuted + 1].Do(this);
                 lastExecuted++;
                 OnChanged(lastExecuted != lastSaved);
             }
         }
 
-        private void Do(ICommand command)
+        public void InvokeModelChanged(object Model)
         {
-            object O = command.Do();
-            if (ModelChanged != null && O != null)
-                ModelChanged(O);
+            if (ModelChanged != null && Model != null)
+                ModelChanged(Model);
         }
 
-        private void Undo(ICommand command)
+        public void InvokeModelStructureChanged(string Path)
         {
-            object O = command.Undo();
-            if (ModelChanged != null && O != null)
-                ModelChanged(O);
+            if (ModelStructureChanged != null && Path != null)
+                ModelStructureChanged(Path);
         }
-
     }
 }

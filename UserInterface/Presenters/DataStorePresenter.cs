@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Model.Core;
+using Models.Core;
 using UserInterface.Views;
 using System.Data;
-using Model.Components;
+using Models;
 
 namespace UserInterface.Presenters
 {
@@ -24,6 +24,14 @@ namespace UserInterface.Presenters
             
             DataStoreView.PopulateTables(DataStore.SimulationNames, DataStore.TableNames);
             DataStoreView.OnTableSelected += OnTableSelected;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            DataStoreView.OnTableSelected -= OnTableSelected;
         }
 
         /// <summary>

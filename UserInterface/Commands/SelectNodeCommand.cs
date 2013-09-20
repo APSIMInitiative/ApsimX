@@ -1,5 +1,5 @@
 ﻿using UserInterface.Views;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Commands
 {
@@ -9,35 +9,33 @@ namespace UserInterface.Commands
     class SelectNodeCommand : ICommand
     {
         private IExplorerView ExplorerView;
-        private string SavedSelection;
+        private string OldSelection;
         private string NewSelection;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SelectNodeCommand(IExplorerView ExplorerView, string NewSelection)
+        public SelectNodeCommand(IExplorerView ExplorerView, string OldSelection, string NewSelection)
         {
             this.ExplorerView = ExplorerView;
+            this.OldSelection = OldSelection;
             this.NewSelection = NewSelection;
         }
 
         /// <summary>
         /// Perform the command
         /// </summary>
-        public object Do()
+        public void Do(CommandHistory CommandHistory)
         {
-            SavedSelection = ExplorerView.CurrentNodePath;
             ExplorerView.CurrentNodePath = NewSelection;
-            return null;
         }
 
         /// <summary>
         /// Undo the command
         /// </summary>
-        public object Undo()
+        public void Undo(CommandHistory CommandHistory)
         {
-            ExplorerView.CurrentNodePath = SavedSelection;
-            return null;
+            ExplorerView.CurrentNodePath = OldSelection;
         }
 
     }

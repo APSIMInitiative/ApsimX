@@ -145,15 +145,45 @@ namespace Utility
         /// Gets the specified attribute type.
         /// </summary>
         /// <returns>Returns the attribute or null if not found.</returns>
-        public static Attribute GetAttribute(Type T, Type AttributeTypeToFind)
+        public static Attribute GetAttribute(Type T, Type AttributeTypeToFind, bool LookInBaseClasses)
         {
-            foreach (Attribute A in T.GetCustomAttributes(true))
+            foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
             {
                 if (A.GetType() == AttributeTypeToFind)
                     return A;
             }
             return null;
         }
+
+        /// <summary>
+        /// Gets the specified attribute type.
+        /// </summary>
+        /// <returns>Returns the attribute or null if not found.</returns>
+        public static Attribute GetAttribute(MethodInfo T, Type AttributeTypeToFind, bool LookInBaseClasses)
+        {
+            foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
+            {
+                if (A.GetType() == AttributeTypeToFind)
+                    return A;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets 0 or more attributes of the specified type.
+        /// </summary>
+        /// <returns>Returns the attributes or string[0] if none found.</returns>
+        public static Attribute[] GetAttributes(Type T, Type AttributeTypeToFind, bool LookInBaseClasses)
+        {
+            List<Attribute> Attributes = new List<Attribute>();
+            foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
+            {
+                if (A.GetType() == AttributeTypeToFind)
+                    Attributes.Add(A);
+            }
+            return Attributes.ToArray();
+        }
+
 
         /// <summary>
         /// Returns the name of the specified object if it has a public name property

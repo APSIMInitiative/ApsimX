@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using UserInterface.Views;
 using System.Reflection;
-using Model.Core;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -28,6 +28,15 @@ namespace UserInterface.Presenters
             PopulateGrid();
             Grid.CellValueChanged += OnCellValueChanged;
             CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            Grid.CellValueChanged -= OnCellValueChanged;
+            CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -54,7 +63,7 @@ namespace UserInterface.Presenters
             foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 // Only consider properties that have a public setter.
-                if (Property.Name != "Name" && Property.GetAccessors().Length == 2 && Property.GetAccessors()[1].IsPublic)
+                if (Property.Name != "Name" && Property.Name != "Parent" && Property.GetAccessors().Length == 2 && Property.GetAccessors()[1].IsPublic)
                 {
                     string PropertyName = Property.Name;
                     if (Property.IsDefined(typeof(Description), false))
@@ -74,10 +83,7 @@ namespace UserInterface.Presenters
         private void FormatGrid()
         {
             for (int i = 0; i < Properties.Count; i++)
-            {
-                if (Properties[i].PropertyType == typeof(DateTime))
-                    Grid.SetCellEditor(1, i, typeof(DateTime));
-            }
+                Grid.SetCellEditor(1, i, Properties[i].GetValue(Model, null));
             Grid.SetColumnAutoSize(0);
             Grid.SetColumnReadOnly(0, true);
         }

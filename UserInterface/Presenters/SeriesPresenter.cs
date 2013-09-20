@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Model.Components.Graph;
+using Models.Graph;
 using UserInterface.Views;
 using System.Data;
 using System.Drawing;
-using Model.Core;
+using Models.Core;
 using System;
 
 namespace UserInterface.Presenters
@@ -22,16 +22,26 @@ namespace UserInterface.Presenters
             Graph = Model as Graph;
             this.View = View as ISeriesView;
             this.CommandHistory = CommandHistory;
+            this.View.AddSeriesContextAction("Delete series", OnDeleteSeries);
+            this.View.AddSeriesContextAction("Clear all series", OnClearSeries);
             this.View.DatasetChanged += OnDatasetChanged;
             this.View.SeriesCellChanged += OnSeriesCellChanged;
             this.View.DataColumnClicked += OnDataColumnClicked;
-            this.View.AddSeriesContextAction("Delete series", OnDeleteSeries);
-            this.View.AddSeriesContextAction("Clear all series", OnClearSeries);
             this.CommandHistory.ModelChanged += OnGraphModelChanged;
-
 
             PopulateSeries();
             PopulateDatasets();
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            View.DatasetChanged -= OnDatasetChanged;
+            View.SeriesCellChanged -= OnSeriesCellChanged;
+            View.DataColumnClicked -= OnDataColumnClicked;
+            CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
         /// <summary>
