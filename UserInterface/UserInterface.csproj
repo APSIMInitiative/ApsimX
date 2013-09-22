@@ -72,6 +72,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Presenters\ExplorerActions.cs" />
+    <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -165,6 +166,12 @@
     <Compile Include="Views\TabbedExplorerView.Designer.cs">
       <DependentUpon>TabbedExplorerView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\TabbedMetDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TabbedMetDataView.Designer.cs">
+      <DependentUpon>TabbedMetDataView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
@@ -210,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TabbedExplorerView.resx">
       <DependentUpon>TabbedExplorerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TabbedMetDataView.resx">
+      <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
