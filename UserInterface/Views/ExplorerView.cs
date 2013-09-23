@@ -108,6 +108,7 @@ namespace UserInterface.Views
         {
             PopulateMainToolStrip();
             PopulateNodes(null);
+            TreeView.Nodes[0].Expand(); //expand the root tree node
         }
 
 
