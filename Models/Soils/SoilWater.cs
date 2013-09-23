@@ -15,7 +15,7 @@ namespace Models.Soils
     /// .NET port of the Fortran SoilWat model
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
-    ///</summary> 
+    ///</summary>
     public class SoilWater : Model
     {
         #region Links

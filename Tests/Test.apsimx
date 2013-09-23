@@ -62,13 +62,13 @@
 
                private void OnStartOfDay()
                {
-                  A++;
+
                }
             }
         }
         </Code>
         <Script>
-          <A>109608</A>
+          <A>2</A>
         </Script>
       </Manager>
       <Soil>
@@ -83,6 +83,7 @@
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
         <Water>
+          <Name>Water</Name>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -162,6 +163,7 @@
             <double>0.49</double>
           </SAT>
           <SoilCrop>
+            <Name>Wheat</Name>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -216,6 +218,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
+            <Name>Barley</Name>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -237,276 +240,6 @@
               <double>0.51</double>
               <double>0.5</double>
               <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.3</double>
-              <double>0.31</double>
-              <double>0.32</double>
-              <double>0.33</double>
-              <double>0.34</double>
-              <double>0.35</double>
-              <double>0.36</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.34</double>
-              <double>0.34</double>
-              <double>0.37</double>
-              <double>0.4</double>
-              <double>0.42</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.39</double>
-              <double>0.41</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.41</double>
-              <double>0.41</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.42</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.35</double>
-              <double>0.38</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.35</double>
-              <double>0.38</double>
-              <double>0.41</double>
               <double>0.48</double>
               <double>0.47</double>
               <double>0.46</double>
@@ -740,6 +473,7 @@
           <BoronUnits>HotWater</BoronUnits>
         </Analysis>
         <InitialWater>
+          <Name>Initial water</Name>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
           <PercentMethod>FilledFromTop</PercentMethod>

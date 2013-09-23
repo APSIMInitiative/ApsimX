@@ -159,7 +159,7 @@ namespace Utility
         /// Gets the specified attribute type.
         /// </summary>
         /// <returns>Returns the attribute or null if not found.</returns>
-        public static Attribute GetAttribute(MethodInfo T, Type AttributeTypeToFind, bool LookInBaseClasses)
+        public static Attribute GetAttribute(MemberInfo T, Type AttributeTypeToFind, bool LookInBaseClasses)
         {
             foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
             {

@@ -136,48 +136,53 @@ namespace UserInterface.Views
         /// </summary>
         public void SetCellEditor(int Col, int Row, object Obj)
         {
-            object Value = Grid[Col, Row].Value;
-
-            if (Obj is DateTime)
-                Grid[Col, Row] = new Utility.DataGridViewCalendarCell.CalendarCell();
-            else if (Obj.GetType().IsEnum)
+            if (Obj != null)
             {
-                List<string> Items = new List<string>();
-                foreach (object e in Obj.GetType().GetEnumValues())
-                    Items.Add(e.ToString());
+                object Value = Grid[Col, Row].Value;
 
-                SetCellEditor(Col, Row, Items.ToArray());
-            }
-            else if (Obj is string[])
-            {
-                DataGridViewComboBoxCell Combo;
-                if (Grid[Col, Row] is DataGridViewComboBoxCell)
-                    Combo = Grid[Col, Row] as DataGridViewComboBoxCell;
-                else
-                    Combo = new DataGridViewComboBoxCell();
-                Combo.Items.Clear();
-                Combo.Items.AddRange(Obj as string[]);
-                Combo.Value = Grid[Col, Row].Value;
-
-                Combo.FlatStyle = FlatStyle.Flat;
-                if (!(Grid[Col, Row] is DataGridViewComboBoxCell))
+                if (Obj is DateTime)
+                    Grid[Col, Row] = new Utility.DataGridViewCalendarCell.CalendarCell();
+                else if (Obj.GetType().IsEnum)
                 {
-                    // Normally you set a cell editor like this:
-                    //    Grid[Col, Row] = Combo;
-                    // But this doesn't work on MONO OSX. The two lines
-                    // below seem to work ok though.
-                    if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                        Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                        Grid[Col, Row] = Combo;
-                    else
-                    {
-                        Grid.Rows[Row].Cells.RemoveAt(Col);
-                        Grid.Rows[Row].Cells.Insert(Col, Combo);
-                    }                    
-                }
-            }
+                    List<string> Items = new List<string>();
+                    foreach (object e in Obj.GetType().GetEnumValues())
+                        Items.Add(e.ToString());
 
-            Grid[Col, Row].Value = Value;
+                    SetCellEditor(Col, Row, Items.ToArray());
+                }
+                else if (Obj is string[])
+                {
+                    DataGridViewComboBoxCell Combo;
+                    if (Grid[Col, Row] is DataGridViewComboBoxCell)
+                        Combo = Grid[Col, Row] as DataGridViewComboBoxCell;
+                    else
+                        Combo = new DataGridViewComboBoxCell();
+                    Combo.Items.Clear();
+                    foreach (string St in Obj as string[])
+                        if (St != null)
+                            Combo.Items.Add(St);
+                    Combo.Value = Grid[Col, Row].Value;
+
+                    Combo.FlatStyle = FlatStyle.Flat;
+                    if (!(Grid[Col, Row] is DataGridViewComboBoxCell))
+                    {
+                        // Normally you set a cell editor like this:
+                        //    Grid[Col, Row] = Combo;
+                        // But this doesn't work on MONO OSX. The two lines
+                        // below seem to work ok though.
+                        if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                            Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                            Grid[Col, Row] = Combo;
+                        else
+                        {
+                            Grid.Rows[Row].Cells.RemoveAt(Col);
+                            Grid.Rows[Row].Cells.Insert(Col, Combo);
+                        }
+                    }
+                }
+
+                Grid[Col, Row].Value = Value;
+            }
         }
 
         /// <summary>
@@ -214,6 +219,12 @@ namespace UserInterface.Views
         public void SetColumnReadOnly(int Col, bool IsReadOnly)
         {
             Grid.Columns[Col].ReadOnly = IsReadOnly;
+            Grid.Columns[Col].DefaultCellStyle.BackColor = Color.LightGray;
+            if (Grid.CurrentCell.ColumnIndex == Col)
+            {
+                // Move the current cell out of the readonly column.
+                Grid.CurrentCell = Grid.Rows[Grid.CurrentCell.RowIndex].Cells[Grid.CurrentCell.ColumnIndex + 1];
+            }
         }
 
         /// <summary>

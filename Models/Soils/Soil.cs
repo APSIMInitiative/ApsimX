@@ -18,6 +18,8 @@ namespace Models.Soils
     /// method. Mapping will occur to achieve this if necessary.
     /// To obtain the "raw", unmapped, values use the child classes e.g. SoilWater, Analysis and Sample.
     /// </summary>
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Soil : ModelCollection
     {
         private static bool PathFixed = false;
@@ -1758,7 +1760,8 @@ namespace Models.Soils
         #region Checking
         /// <summary>
         /// Checks validity of soil water parameters
-        /// This is a port of the soilwat2_check_profile routine.
+        /// This is a port of the soilwat2_check_profile routine. Returns a blank string if
+        /// no errors were found.
         /// </summary>
         public string Check(bool IgnoreStartingWaterN)
         {
