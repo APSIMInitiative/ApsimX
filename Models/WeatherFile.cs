@@ -153,6 +153,13 @@ namespace Models
                 return CalcPeriodTemps();
             }
         }
+        public double[] YearlyRainfall
+        {
+            get
+            {
+                return YearlyRain();
+            }
+        }
         //=====================================================================
         /// <summary>
         /// Open the specified weather data file.
@@ -394,6 +401,41 @@ namespace Models
             double deviation = tRangeFract * diurnalRange;
             return  (tMin + deviation);
         }
+        private double[] YearlyRain()
+        {
+            double rain;
 
+            //get dataset size
+            DateTime start = WtrFile.FirstDate;
+            DateTime last = WtrFile.LastDate;
+            int nyears = last.Year - start.Year + 1;
+            //temp storage arrays
+            double[] yearlySums = new double[nyears];
+
+            WtrFile.SeekToDate(start); //goto start of data set
+
+            //read the daily data from the met file
+            object[] Values;
+            DateTime curDate;
+            int curYear = 0;
+            Boolean moreData = true;
+            while (moreData)
+            {
+                Values = WtrFile.GetNextLineOfData();
+                curDate = WtrFile.GetDateFromValues(Values);
+                int yrIdx = curDate.Year - start.Year;
+                rain = Convert.ToDouble(Values[RainIndex]);
+                //accumulate the yearly rainfal
+                if (curYear != curDate.Year) //if next month then
+                {
+                    curYear = curDate.Year;
+                    yearlySums[yrIdx] = 0;    //initialise the total
+                }
+                yearlySums[yrIdx] = yearlySums[yrIdx] + rain;
+                if (curDate >= last)    //if have read last record
+                    moreData = false;
+            }
+            return yearlySums;
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace UserInterface.Views
         }
         public String Summarylabel
         {
-            set { label2.Text = value; }
+            set { richTextBox1.Text = value; }
         }
         public void PopulateData(DataTable Data)
         {

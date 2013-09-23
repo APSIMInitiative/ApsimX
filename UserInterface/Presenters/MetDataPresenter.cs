@@ -77,6 +77,9 @@ namespace UserInterface.Presenters
             MetDataView.PopulateData(data);
             MetDataView.Filename = filename;
         }
+        /// <summary>
+        /// Format a summary string about the weather file
+        /// </summary>
         private void WriteSummary()
         {
             StringBuilder summary = new StringBuilder();
@@ -86,8 +89,55 @@ namespace UserInterface.Presenters
             summary.AppendLine("AMP      : " + String.Format("{0, 2:f2}", MetData.Amp));
             summary.AppendLine("Start    : " + MetData.StartDate.ToShortDateString());
             summary.AppendLine("End      : " + MetData.EndDate.ToShortDateString());
+            summary.AppendLine("");
 
+            //long term average rainfall
+            double[] rainfall = MetData.YearlyRainfall;
+            int startYr = MetData.StartDate.Year;
+            int endYr   = MetData.EndDate.Year;
+            int count   = rainfall.Length;
+            List<double> yearly = new List<double>(rainfall);   //use a list as this is more flexible
+            if (MetData.EndDate.DayOfYear < 365) //if the final year is truncated
+            {
+                yearly.RemoveAt(count - 1);
+                count -= 1;
+                endYr -= 1;
+            }
+            if (MetData.StartDate.DayOfYear > 2) //if the start year is truncated
+            {
+                yearly.RemoveAt(0);
+                count -= 1;
+                startYr += 1;
+            }
+            if (count > 0)
+            {
+                double total = 0;
+                for (int yr = 0; yr < count; yr++)
+                {
+                    total += yearly[yr];
+                }
+                summary.AppendLine(String.Format("For years : {0} - {1}", startYr, endYr));
+                summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", total / count));
+                double stddev = getStandardDeviation(yearly, total / count);
+                summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
+            }
             MetDataView.Summarylabel = summary.ToString();
         }
+        /// <summary>
+        /// Calculate the std deviation
+        /// </summary>
+        /// <param name="doubleList"></param>
+        /// <param name="mean"></param>
+        /// <returns>Std deviation</returns>
+        private double getStandardDeviation(List<double> doubleList, double mean)
+        {
+            double sumOfDerivation = 0;
+            foreach (double value in doubleList)
+            {
+                sumOfDerivation += (value) * (value);
+            }
+            double sumOfDerivationAverage = sumOfDerivation / doubleList.Count;
+            return Math.Sqrt(sumOfDerivationAverage - (mean * mean)); 
+        }  
     }
 }
