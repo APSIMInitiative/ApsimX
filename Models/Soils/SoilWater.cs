@@ -4199,7 +4199,7 @@ namespace Models.Soils
             line = "     ---------------------------------------------------------";
             Console.WriteLine(line);
 
-            line = String.Format("       {1,11:0.00} {2,11:0.00} {3,11:0.00}",
+            line = String.Format("       {0,11:0.00} {1,11:0.00} {2,11:0.00}",
                                  Salb,
                                  DiffusConst,
                                  DiffusSlope);
