@@ -15,7 +15,7 @@ namespace Models
         // Links
         [Link] private Clock Clock = null;
         [Link] private Simulations Simulations = null;
-        [Link] private Simulation Simulation = null;
+        //[Link] private Simulation Simulation = null;
         [Link] private ISummary Summary = null;
 
         // Privates
@@ -126,9 +126,31 @@ namespace Models
         public double DayLength
         {
             get
-            { 
+            {
                 //APSIM uses civil twilight
                 return Utility.Math.DayLength(Clock.Today.DayOfYear, -6.0, Latitude); 
+            }
+        }
+        //=====================================================================
+        /// <summary>
+        /// Return the 3 hourly estimates of air temperature in this daily timestep.
+        /// ref: Jones, C. A., and Kiniry, J. R. (1986). "'CERES-Maize: A simulation model of maize growth
+        ///      and development'." Texas A&M University Press: College Station, TX.
+        /// Example of use:
+        /// <code>
+        /// double tot = 0;
+        /// for (int period = 1; period &lt;= 8; period++)
+        /// {
+        ///    tot = tot + ThermalTimeFn.ValueIndexed(Temps3Hours[i]);
+        /// }
+        /// return tot / 8;
+        ///</code>    
+        /// </summary>
+        public double[] Temps3Hours
+        {
+            get
+            {
+                return CalcPeriodTemps();
             }
         }
         //=====================================================================
@@ -214,7 +236,7 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        private void OnCompleted()
+        public override void OnCompleted()
         {
             Clock.Tick -= OnTick;
            // Simulation.Completed -= OnCompleted;
@@ -338,5 +360,40 @@ namespace Models
             else
                 return null;
         }
+        //=====================================================================
+        /// <summary>
+        /// Interpolations of the air temperature for 3 hourly intervals.
+        /// ref: Jones, C. A., and Kiniry, J. R. (1986). "'CERES-Maize: A simulation model of maize growth
+        ///      and development'"
+        /// Refactored from Phenology.cpp (Sorghum model)
+        /// </summary>
+        /// <returns>Array of air mean temperatures</returns>
+        private double[] CalcPeriodTemps()
+        {
+            double[] PeriodTemps = new double[8];
+            for (int period = 1; period <= 8; period++)
+            {
+                PeriodTemps[period - 1] = temp3Hr(MetData.maxt, MetData.mint, period);  // get an air temperature for this period
+            }
+            return PeriodTemps;
+        }
+        //=====================================================================
+        /// <summary>
+        /// An estimate of mean air temperature for the period number in this timestep
+        /// </summary>
+        /// <param name="tMax"></param>
+        /// <param name="tMin"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        private double temp3Hr (double tMax, double tMin, double period)
+        {
+            double tRangeFract = 0.92105 + 0.1140 * period - 
+                                           0.0703 * Math.Pow(period,2) +
+                                           0.0053 * Math.Pow(period,3);
+            double diurnalRange = tMax - tMin;
+            double deviation = tRangeFract * diurnalRange;
+            return  (tMin + deviation);
+        }
+
     }
 }
