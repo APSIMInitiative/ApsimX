@@ -11,7 +11,7 @@ args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "C:\\ApsimX\\ApsimX\\Tests\\
 args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
 
 
-source("RTestSuite/tests.R")
+source("Tests/RTestSuite/tests.R")
 
 # read control file - this will come from .apsimx in the future
 doc <- xmlTreeParse(paste(args[1], ".apsimx",sep=""), useInternalNodes=TRUE)
