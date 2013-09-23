@@ -8,6 +8,7 @@ using UserInterface.Views;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
+using Models.Soils;
 
 namespace UserInterface.Presenters
 {
@@ -187,6 +188,23 @@ namespace UserInterface.Presenters
 
         }
 
+        /// <summary>
+        /// Event handler for a User interface "Run APSIM" action
+        /// </summary>
+        [ContextModelType(typeof(Soil))]
+        [ContextMenuName("Check Soil")]
+        public void CheckSoil(object Sender, EventArgs e)
+        {
+            Soil CurrentSoil = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Soil;
+            if (CurrentSoil != null)
+            {
+                string ErrorMessages = CurrentSoil.Check(false);
+                if (ErrorMessages != "")
+                {
+                    MessageBox.Show(ErrorMessages, "Soil errors", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
         #endregion
 
 

@@ -63,7 +63,11 @@ namespace UserInterface.Presenters
             foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 // Only consider properties that have a public setter.
-                if (Property.Name != "Name" && Property.Name != "Parent" && Property.GetAccessors().Length == 2 && Property.GetAccessors()[1].IsPublic)
+                if (Property.Name != "Name" && Property.Name != "Parent" && 
+                    Property.GetAccessors().Length == 2 && 
+                    Property.GetAccessors()[1].IsPublic &&
+                    !Property.PropertyType.FullName.Contains("Models.") &&
+                    Utility.Reflection.GetAttribute(Property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
                 {
                     string PropertyName = Property.Name;
                     if (Property.IsDefined(typeof(Description), false))
@@ -85,6 +89,8 @@ namespace UserInterface.Presenters
             for (int i = 0; i < Properties.Count; i++)
                 Grid.SetCellEditor(1, i, Properties[i].GetValue(Model, null));
             Grid.SetColumnAutoSize(0);
+            Grid.SetColumnAutoSize(1);
+            
             Grid.SetColumnReadOnly(0, true);
         }
 

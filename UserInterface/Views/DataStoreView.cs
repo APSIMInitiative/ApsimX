@@ -63,12 +63,26 @@ namespace UserInterface.Views
             {
                 Grid.DataSource = Data;
                 Grid.Columns[0].Visible = false;
+                FormatGrid();
             }
             else
             {
                 Grid.ColumnCount = 0;
                 Grid.RowCount = 1;
             }
+        }
+
+        private void FormatGrid()
+        {
+            DataTable Data = Grid.DataSource as DataTable;
+            for (int i = 0; i < Data.Columns.Count; i++)
+            {
+                if (Data.Columns[i].DataType == typeof(float) || Data.Columns[i].DataType == typeof(double))
+                    Grid.Columns[i].DefaultCellStyle.Format = "N3";
+            }
+
+            foreach (DataGridViewColumn Col in Grid.Columns)
+                Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
         }
 
         /// <summary>

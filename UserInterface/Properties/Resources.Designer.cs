@@ -74,6 +74,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap CheckSoil {
+            get {
+                object obj = ResourceManager.GetObject("CheckSoil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Clock16 {
             get {
                 object obj = ResourceManager.GetObject("Clock16", resourceCulture);
