@@ -65,6 +65,7 @@ namespace UserInterface.Views
                 ListViewItem Item = new ListViewItem();
                 Item.Text = Description.Name;
                 Item.Tag = Description.OnClick;
+                Item.ToolTipText = "Double click to open";
 
                 // Load image
                 int ImageIndex = ListViewImages.Images.IndexOfKey(Description.ResourceNameForImage);
@@ -81,20 +82,20 @@ namespace UserInterface.Views
                 ListView.Items.Add(Item);
             }
         }
-
         /// <summary>
-        /// User has clicked open. Open a .apsim file.
+        /// User has double clicked. Open. Open a .apsim file.
         /// </summary>
-        private void OnSelectedIndexChanged(object sender, EventArgs e)
+        private void ListView_DoubleClick(object sender, EventArgs e)
         {
-            if (ListView.SelectedItems.Count > 0)
-            {
-                EventHandler OnClick = ListView.SelectedItems[0].Tag as EventHandler;
-                if (OnClick != null)
-                    OnClick(this, e);
-            }
+            EventHandler OnClick = ListView.SelectedItems[0].Tag as EventHandler;
+            if (OnClick != null)
+                OnClick(this, e);
         }
-
+        private void ListView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                ListView_DoubleClick(sender, e);
+        }
         /// <summary>
         /// Tab popup menu is about to open. Enable/disable the close menu item.
         /// </summary>
@@ -205,8 +206,6 @@ namespace UserInterface.Views
                 return OpenFileDialog.FileName;
             return null;
         }
-
-
     }
 
     public class PopulateStartPageArgs : EventArgs

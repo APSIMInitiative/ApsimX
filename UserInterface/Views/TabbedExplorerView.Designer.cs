@@ -74,11 +74,13 @@
             this.ListView.Location = new System.Drawing.Point(3, 3);
             this.ListView.MultiSelect = false;
             this.ListView.Name = "ListView";
+            this.ListView.ShowItemToolTips = true;
             this.ListView.Size = new System.Drawing.Size(596, 491);
             this.ListView.TabIndex = 2;
             this.ListView.TileSize = new System.Drawing.Size(400, 100);
             this.ListView.UseCompatibleStateImageBehavior = false;
-            this.ListView.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
+            this.ListView.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
+            this.ListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyUp);
             // 
             // ListViewImages
             // 
