@@ -29,7 +29,7 @@
           <string>.WeatherFile.MinT</string>
           <string>.WeatherFile.Radn</string>
           <string>.WeatherFile.Rain</string>
-          <string>Manager.Model.A</string>
+          <string>Script.Model.A</string>
           <string>Soil.SoilWater.sw_dep</string>
         </Variables>
         <Events>
