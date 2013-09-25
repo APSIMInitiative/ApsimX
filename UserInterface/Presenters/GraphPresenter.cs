@@ -96,13 +96,13 @@ namespace UserInterface.Presenters
         }
         private void PopulateAxis(Axis Axis)
         {
-            if (Axis.Type == Axis.AxisType.Bottom)
+            if (Axis.Type == Models.Graph.Axis.AxisType.Bottom)
                 GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Bottom, Axis.Title);
-            else if (Axis.Type == Axis.AxisType.Left)
+			else if (Axis.Type == Models.Graph.Axis.AxisType.Left)
                 GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Left, Axis.Title);
-            else if (Axis.Type == Axis.AxisType.Right)
+			else if (Axis.Type == Models.Graph.Axis.AxisType.Right)
                 GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Right, Axis.Title);
-            else if (Axis.Type == Axis.AxisType.Top)
+			else if (Axis.Type == Models.Graph.Axis.AxisType.Top)
                 GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Top, Axis.Title);
         }
 
