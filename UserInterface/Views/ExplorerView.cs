@@ -283,9 +283,10 @@ namespace UserInterface.Views
         /// Add a status message to the explorer window
         /// </summary>
         /// <param name="Message"></param>
-        public void AddStatusMessage(string Message)
+        public void AddStatusMessage(string Message, Color BackColour)
         {
             StatusPanel.Visible = Message != null;
+            StatusLabel.BackColor = BackColour;
             StatusLabel.Text = Message;
             Application.DoEvents();
         }
@@ -559,6 +560,13 @@ namespace UserInterface.Views
         }
 
 
+        /// <summary>
+        /// Ensure that a right mouse click selects the node also
+        /// </summary>
+        void TreeViewNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+        	TreeView.SelectedNode = e.Node; 
+        }
     }
 }
 
