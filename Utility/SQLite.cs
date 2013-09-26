@@ -34,53 +34,53 @@ namespace Utility
         const int SQLITE_NULL = 5;
 
         #region Externals
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_open", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_open", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_open(string filename, out IntPtr db);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_close", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_close", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_close(IntPtr db);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_prepare_v2", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_prepare_v2", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_prepare_v2(IntPtr db, string zSql,
             int nByte, out IntPtr ppStmpt, IntPtr pzTail);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_step", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_step", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_step(IntPtr stmHandle);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_finalize", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_finalize", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_finalize(IntPtr stmHandle);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_errmsg", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_errmsg", CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr sqlite3_errmsg(IntPtr db);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_count", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_column_count(IntPtr stmHandle);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_name", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_name", CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr sqlite3_column_name(IntPtr stmHandle, int iCol);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_type", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_type", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_column_type(IntPtr stmHandle, int iCol);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_int", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_int", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_column_int(IntPtr stmHandle, int iCol);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_text", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_text", CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr sqlite3_column_text(IntPtr stmHandle, int iCol);
 
-        [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_double", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", EntryPoint = "sqlite3_column_double", CallingConvention = CallingConvention.Cdecl)]
         static extern double sqlite3_column_double(IntPtr stmHandle, int iCol);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern string sqlite3_bind_double(IntPtr Query, int ParameterNumber, double Value);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern string sqlite3_bind_int(IntPtr Query, int ParameterNumber, int Value);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr sqlite3_bind_text(IntPtr Query, int ParameterNumber, string Value, int n, IntPtr CallBack);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern int sqlite3_reset(IntPtr Query);
         #endregion
 
