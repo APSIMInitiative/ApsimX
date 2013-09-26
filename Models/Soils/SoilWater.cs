@@ -832,9 +832,10 @@ namespace Models.Soils
 
         private double[] _sw_dep;
 
+        [XmlIgnore]
         [Units("mm")]
         [Description("sw * dlayer")]
-        private double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
+        public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sw_dep; }
             set

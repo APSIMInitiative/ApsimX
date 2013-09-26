@@ -210,7 +210,12 @@ namespace UserInterface.Views
         /// </summary>
         public void SetColumnAutoSize(int Col)
         {
-            Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+          Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+          //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
+          int w = Grid.Columns[Col].Width + 20;
+          Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+          Grid.Columns[Col].Width = w;
+
         }
 
         /// <summary>

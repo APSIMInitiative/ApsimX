@@ -99,6 +99,7 @@
             this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.OnNodeDrag);
             this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnTreeViewBeforeSelect);
             this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
+            this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeViewNodeMouseClick);
             this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
             this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.OnDragOver);
             // 
@@ -164,7 +165,6 @@
             this.StatusPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

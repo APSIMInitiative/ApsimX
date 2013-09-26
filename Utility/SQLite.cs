@@ -34,6 +34,8 @@ namespace Utility
         const int SQLITE_NULL = 5;
 
         #region Externals
+        //When using sqlite3 without .dll the platforms are intelligent enough to add the OS specific details.
+        //On Linux-Mono the lib .so artifacts appear to be accounted for.
         [DllImport("sqlite3", EntryPoint = "sqlite3_open", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_open(string filename, out IntPtr db);
 

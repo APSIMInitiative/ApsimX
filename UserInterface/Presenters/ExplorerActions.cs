@@ -6,6 +6,7 @@ using Models.Core;
 using UserInterface.Commands;
 using UserInterface.Views;
 using System.Windows.Forms;
+using System.Drawing;
 using System.IO;
 using System.Xml;
 using Models.Soils;
@@ -176,15 +177,15 @@ namespace UserInterface.Presenters
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
-            ExplorerView.AddStatusMessage("Simulation running...");
+        	ExplorerView.AddStatusMessage("Simulation running...", Color.LightYellow);
 
             Simulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Simulation;
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
             C.Do(null);
             if (C.ok)
-                ExplorerView.AddStatusMessage("Simulation complete");
+                ExplorerView.AddStatusMessage("Simulation complete", Color.LightGreen);
             else
-                ExplorerView.AddStatusMessage("Simulation complete with errors");
+                ExplorerView.AddStatusMessage("Simulation complete with errors", Color.Red);
 
         }
 

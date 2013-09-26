@@ -102,16 +102,16 @@ namespace Models
             Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
             CreateTable("Messages", Names, Types);
 
-            Simulations.AllCompleted += OnCompleted;
+            Simulations.AllCompleted += OnAllCompleted;
         }
 
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        public override void OnCompleted()
+        private void OnAllCompleted()
         {
             Connection.ExecuteNonQuery("COMMIT");
-            Simulations.AllCompleted -= OnCompleted;
+            Simulations.AllCompleted -= OnAllCompleted;
         }
 
         /// <summary>
@@ -147,6 +147,32 @@ namespace Models
             TableInsertQueries.Add(TableName, Query);
         }
 
+        /// <summary>
+        /// Create a table in the database based on the specified one.
+        /// </summary>
+        public void CreateTable(string SimulationName, string TableName, DataTable Table)
+        {
+            // Add all columns.
+            List<string> Names = new List<string>();
+            List<Type> Types = new List<Type>();
+            foreach (DataColumn Column in Table.Columns)
+            {
+                Names.Add(Column.ColumnName);
+                Types.Add(Column.DataType);
+            }
+
+            // Create the table.
+            CreateTable(TableName, Names.ToArray(), Types.ToArray());
+
+            // Add all rows.
+            object[] Values = new object[Table.Columns.Count];
+            foreach (DataRow Row in Table.Rows)
+            {
+                for (int i = 0; i < Table.Columns.Count; i++)
+                    Values[i] = Row[i];
+                WriteToTable(SimulationName, TableName, Values);
+            }
+        }
         /// <summary>
         /// Write a property to the DataStore.
         /// </summary>
@@ -318,6 +344,8 @@ namespace Models
         }
 
         #endregion
+
+
 
     }
 }
