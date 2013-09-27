@@ -78,6 +78,7 @@
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
+    <Compile Include="Utility\ConfigManager.cs" />
     <Compile Include="Utility\Editor.cs">
       <SubType>UserControl</SubType>
     </Compile>
