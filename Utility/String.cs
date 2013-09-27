@@ -6,9 +6,9 @@ using System.Collections.Specialized;
 namespace Utility
 {
     /// <summary>
-    /// Summary description for Class2.
+    /// Static functions for string manipulation
     /// </summary>
-    public class String
+    public class StringUtil
     {
 
         public const int MaxStringLength = 50000;
@@ -352,11 +352,11 @@ namespace Utility
             else if (Math.IsNumericalenUS(Value))
                 ColumnType = Type.GetType("System.Single");
 
-            else if (Units == "" && Utility.String.IsDateTime(Value))
+            else if (Units == "" && Utility.StringUtil.IsDateTime(Value))
                 ColumnType = Type.GetType("System.DateTime");
 
             else if ((Units.Contains("d") && Units.Contains("/") && Units.Contains("y"))
-                      || Utility.String.IsDateTime(Value))
+                      || Utility.StringUtil.IsDateTime(Value))
                 ColumnType = Type.GetType("System.DateTime");
 
             else
@@ -515,7 +515,7 @@ namespace Utility
             Dictionary<string, string> Options = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             for (int i = 0; i < args.Length; i++)
             {
-                StringCollection MacroBits = Utility.String.SplitStringHonouringQuotes(args[i], "=");
+                StringCollection MacroBits = Utility.StringUtil.SplitStringHonouringQuotes(args[i], "=");
                 if (MacroBits.Count == 2)
                     Options.Add(MacroBits[0].Replace("\"", ""), MacroBits[1].Replace("\"", ""));
             }

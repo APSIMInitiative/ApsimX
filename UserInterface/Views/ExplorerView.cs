@@ -483,7 +483,7 @@ namespace UserInterface.Views
                         AllowDrop(this, Args);
                         if (Args.Allow)
                         {
-                            string SourceParent = Utility.String.ParentName(SourcePathOfItemBeingDragged);
+                            string SourceParent = Utility.StringUtil.ParentName(SourcePathOfItemBeingDragged);
 
                             // Now determine the effect. If the drag originated from a different view 
                             // (e.g. a toolbox or another file) then only copy is supported.
