@@ -99,7 +99,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnDatasetChanged(string TableName)
         {
-            string SimulationName = Utility.String.SplitOffBracketedValue(ref TableName, '(', ')');
+            string SimulationName = Utility.StringUtil.SplitOffBracketedValue(ref TableName, '(', ')');
             View.Data = Graph.DataStore.GetData(SimulationName, TableName);
         }
 
@@ -157,7 +157,7 @@ namespace UserInterface.Presenters
             else if (Col == 1)
             {
                 string TableName = NewContents;
-                string SimulationName = Utility.String.SplitOffBracketedValue(ref TableName, '(', ')');
+                string SimulationName = Utility.StringUtil.SplitOffBracketedValue(ref TableName, '(', ')');
                 AllSeries[SeriesIndex].SimulationName = SimulationName;
                 AllSeries[SeriesIndex].TableName = TableName;
             }
@@ -207,7 +207,7 @@ namespace UserInterface.Presenters
         private void AddSeries(string ColumnText, Point Cell)
         {
             string TableName = View.CurrentDataset;
-            string SimulationName = Utility.String.SplitOffBracketedValue(ref TableName, '(', ')');
+            string SimulationName = Utility.StringUtil.SplitOffBracketedValue(ref TableName, '(', ')');
 
             // create a new series.
             Series NewSeries = new Series();

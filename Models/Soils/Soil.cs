@@ -702,7 +702,7 @@ namespace Models.Soils
             LL = Map(LL, PredictedThickness, Water.Thickness, MapType.Concentration, LL.Last());
             KL = Map(KL, PredictedThickness, Water.Thickness, MapType.Concentration, KL.Last());
             double[] XF = Map(PredictedXF, PredictedThickness, Water.Thickness, MapType.Concentration, PredictedXF.Last());
-            string[] Metadata = Utility.String.CreateStringArray("Estimated", Water.Thickness.Length);
+            string[] Metadata = Utility.StringUtil.CreateStringArray("Estimated", Water.Thickness.Length);
 
             return new SoilCrop()
             {

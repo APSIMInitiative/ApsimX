@@ -236,7 +236,7 @@ namespace UserInterface.Presenters
             if (DragObject != null && ToParent != null)
             {
                 string FromModelXml = DragObject.Xml;
-                string FromParentPath = Utility.String.ParentName(DragObject.NodePath);
+                string FromParentPath = Utility.StringUtil.ParentName(DragObject.NodePath);
 
                 ICommand Cmd = null;
                 if (e.Copied)
@@ -267,7 +267,7 @@ namespace UserInterface.Presenters
             if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
             {
                 HideRightHandPanel();
-                string ParentModelPath = Utility.String.ParentName(e.NodePath);
+                string ParentModelPath = Utility.StringUtil.ParentName(e.NodePath);
                 RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
                 CommandHistory.Add(Cmd);
                 View.CurrentNodePath = ParentModelPath + "." + e.NewName;

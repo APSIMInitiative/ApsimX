@@ -245,8 +245,8 @@ namespace Models
         {
             foreach (string Event in Events)
             {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
+                string ComponentName = Utility.StringUtil.ParentName(Event, '.');
+                string EventName = Utility.StringUtil.ChildName(Event, '.');
 
                 if (ComponentName == null)
                     throw new Exception("Invalid syntax for reporting event: " + Event);
@@ -283,8 +283,8 @@ namespace Models
             List<Type> Types = new List<Type>();
             foreach (string FullVariableName in Variables)
             {
-                string ParentName = Utility.String.ParentName(FullVariableName);
-                string VariableName = Utility.String.ChildName(FullVariableName);
+                string ParentName = Utility.StringUtil.ParentName(FullVariableName);
+                string VariableName = Utility.StringUtil.ChildName(FullVariableName);
                 object Parent = Paddock.Get(ParentName);
 
                 MemberInfo FoundMember = null;
@@ -331,8 +331,8 @@ namespace Models
             // Unsubscribe to all events.
             foreach (string Event in Events)
             {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
+                string ComponentName = Utility.StringUtil.ParentName(Event, '.');
+                string EventName = Utility.StringUtil.ChildName(Event, '.');
 
                 object Component = Paddock.Find(ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
