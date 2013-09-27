@@ -37,15 +37,13 @@
             // 
             // TableList
             // 
-            this.TableList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.TableList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
+            this.TableList.Dock = System.Windows.Forms.DockStyle.Top;
             this.TableList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.TableList.Location = new System.Drawing.Point(12, 13);
+            this.TableList.Location = new System.Drawing.Point(0, 0);
             this.TableList.Name = "TableList";
-            this.TableList.Size = new System.Drawing.Size(440, 97);
+            this.TableList.Size = new System.Drawing.Size(465, 97);
             this.TableList.TabIndex = 1;
             this.TableList.UseCompatibleStateImageBehavior = false;
             this.TableList.View = System.Windows.Forms.View.Details;
@@ -53,9 +51,6 @@
             // 
             // Grid
             // 
-            this.Grid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -66,11 +61,12 @@
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.Grid.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Grid.Location = new System.Drawing.Point(12, 116);
+            this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Grid.Location = new System.Drawing.Point(0, 97);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
             this.Grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.Grid.Size = new System.Drawing.Size(440, 358);
+            this.Grid.Size = new System.Drawing.Size(465, 391);
             this.Grid.TabIndex = 2;
             // 
             // DataStoreView
