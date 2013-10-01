@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Models.Graph;
 using Models.Core;
 using UserInterface.Views;
 using System.Data;
@@ -92,7 +93,9 @@ namespace UserInterface.Presenters
             summary.AppendLine("");
 
             //long term average rainfall
-            double[] rainfall = MetData.YearlyRainfall;
+            double[] rainfall;
+            double[] monthlyRain;
+            MetData.YearlyRainfall(out rainfall, out monthlyRain);
             int startYr = MetData.StartDate.Year;
             int endYr   = MetData.EndDate.Year;
             int count   = rainfall.Length;
@@ -121,7 +124,9 @@ namespace UserInterface.Presenters
                 double stddev = getStandardDeviation(yearly, total / count);
                 summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
             }
+
             MetDataView.Summarylabel = summary.ToString();
+            PopulateGraph(monthlyRain, String.Format("Long term average monthly rainfall for years : {0} - {1}", MetData.StartDate.Year, MetData.EndDate.Year));
         }
         /// <summary>
         /// Calculate the std deviation
@@ -138,6 +143,22 @@ namespace UserInterface.Presenters
             }
             double sumOfDerivationAverage = sumOfDerivation / doubleList.Count;
             return Math.Sqrt(sumOfDerivationAverage - (mean * mean)); 
-        }  
+        }
+        /// <summary>
+        /// Create the monthly lt av chart
+        /// </summary>
+        /// <param name="monthlyRain"></param>
+        /// <param name="title"></param>
+        private void PopulateGraph(double[] monthlyRain, String sTitle)
+        {
+            MetDataView.ChartTitle(sTitle);
+            MetDataView.ClearSeries();
+            MetDataView.CreateBarSeries(monthlyRain, "Monthly rain",
+                                                     "Month", "mm",
+                                                     OxyPlot.Axes.AxisPosition.Bottom, 
+                                                     OxyPlot.Axes.AxisPosition.Left);
+            MetDataView.RefreshGraph();
+        }
+
     }
 }
