@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 namespace Utility
 {
     /// <summary>
-    /// Summary description for Class2.
+    /// Static functions for string manipulation
     /// </summary>
     public class String
     {

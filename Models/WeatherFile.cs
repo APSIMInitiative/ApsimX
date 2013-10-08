@@ -153,12 +153,9 @@ namespace Models
                 return CalcPeriodTemps();
             }
         }
-        public double[] YearlyRainfall
+        public void YearlyRainfall(out double[] YearlyTotals, out double[] LTAvMonthly)
         {
-            get
-            {
-                return YearlyRain();
-            }
+            YearlyRain(out YearlyTotals, out LTAvMonthly);
         }
         //=====================================================================
         /// <summary>
@@ -401,7 +398,12 @@ namespace Models
             double deviation = tRangeFract * diurnalRange;
             return  (tMin + deviation);
         }
-        private double[] YearlyRain()
+        /// <summary>
+        /// Summarise the long term yearly rainfall
+        /// </summary>
+        /// <param name="YearlyTotals"></param>
+        /// <param name="LTAvMonthly"></param>
+        private void YearlyRain(out double[] YearlyTotals, out double[] LTAvMonthly)
         {
             double rain;
 
@@ -410,7 +412,11 @@ namespace Models
             DateTime last = WtrFile.LastDate;
             int nyears = last.Year - start.Year + 1;
             //temp storage arrays
-            double[] yearlySums = new double[nyears];
+            double[,] monthlySums = new double[12, nyears];
+            int[,] monthlyDays = new int[12, nyears];
+            //return values
+            YearlyTotals = new double[nyears];
+            LTAvMonthly = new double[12];
 
             WtrFile.SeekToDate(start); //goto start of data set
 
@@ -418,24 +424,50 @@ namespace Models
             object[] Values;
             DateTime curDate;
             int curYear = 0;
+            int curMonth = 0;
             Boolean moreData = true;
             while (moreData)
             {
                 Values = WtrFile.GetNextLineOfData();
                 curDate = WtrFile.GetDateFromValues(Values);
+                curMonth = curDate.Month;
                 int yrIdx = curDate.Year - start.Year;
                 rain = Convert.ToDouble(Values[RainIndex]);
                 //accumulate the yearly rainfal
-                if (curYear != curDate.Year) //if next month then
+                if (curYear != curDate.Year) //if next year then
                 {
                     curYear = curDate.Year;
-                    yearlySums[yrIdx] = 0;    //initialise the total
+                    YearlyTotals[yrIdx] = 0;    //initialise the total for next year
+                    for (int m = 0; m < 12; m++)
+                    {
+                        monthlySums[curMonth - 1, yrIdx] = 0;
+                        monthlyDays[curMonth - 1, yrIdx] = 0;
+                    }
                 }
-                yearlySums[yrIdx] = yearlySums[yrIdx] + rain;
+                monthlySums[curMonth - 1, yrIdx] += rain;
+                monthlyDays[curMonth - 1, yrIdx] += 1;
+                YearlyTotals[yrIdx] += rain;
                 if (curDate >= last)    //if have read last record
                     moreData = false;
             }
-            return yearlySums;
+            //now calculate the long term av month rainfall
+            int yrCount;
+            double sum;
+            for (int m = 0; m < 12; m++)
+            {
+                sum = 0;
+                yrCount = 0;
+                for (int y = 0; y < nyears; y++)
+                {
+                    if (monthlyDays[m, y] > 0)  //don't use 0 rainfall for non existent months
+                    {
+                        sum += monthlySums[m, y];
+                        yrCount++;
+                    }
+                }
+                if (yrCount > 0)
+                    LTAvMonthly[m] = sum / yrCount;
+            }
         }
     }
 }

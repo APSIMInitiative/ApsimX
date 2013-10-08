@@ -348,7 +348,5 @@ namespace UserInterface.Presenters
             CommandHistory.Add(Cmd);
         }
 
-
-
     }
 }

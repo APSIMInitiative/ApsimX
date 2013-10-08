@@ -339,6 +339,8 @@ namespace Models
 
                 ComponentEvent.RemoveEventHandler(Component, new NullTypeDelegate(OnReport));
             }
+            Members.Clear();
+            Members = null;
         }
 
     }
