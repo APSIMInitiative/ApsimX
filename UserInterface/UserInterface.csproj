@@ -68,6 +68,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\ExplorerActions.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
@@ -77,12 +78,18 @@
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
-    <Compile Include="Presenters\SeriesPresenter.cs" />
+    <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\Editor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Utility\Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SeriesView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SeriesView.Designer.cs">
+      <DependentUpon>SeriesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\AxisView.cs">
       <SubType>UserControl</SubType>
@@ -108,12 +115,6 @@
     </Compile>
     <Compile Include="Views\ReportView.Designer.cs">
       <DependentUpon>ReportView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SeriesView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\SeriesView.Designer.cs">
-      <DependentUpon>SeriesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Views\EditorView.cs">
@@ -172,6 +173,9 @@
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\SeriesView.resx">
+      <DependentUpon>SeriesView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
@@ -199,9 +203,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ReportView.resx">
       <DependentUpon>ReportView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\SeriesView.resx">
-      <DependentUpon>SeriesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\GraphView.resx">
       <DependentUpon>GraphView.cs</DependentUpon>
@@ -341,6 +342,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ShovelOk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\line-chart16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Close.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

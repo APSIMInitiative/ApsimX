@@ -15,5 +15,10 @@ namespace Models.Graph
         /// The title of the axis.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Is the axis inverted?
+        /// </summary>
+        public bool Inverted { get; set; }
     }
 }

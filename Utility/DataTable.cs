@@ -111,6 +111,27 @@ namespace Utility
             }
         }
 
+        // ---------------------------------------------------
+        // Add a column of values to the specified data table
+        // ---------------------------------------------------
+        static public void AddColumnOfObjects(System.Data.DataTable Table, string ColumnName, object[] Values)
+        {
+            if (Values.Length > 0)
+            {
+                if (Table.Columns.IndexOf(ColumnName) == -1)
+                    Table.Columns.Add(ColumnName, Values[0].GetType());
+
+                if (Values == null)
+                    return;
+
+                // Make sure there are enough values in the table.
+                while (Table.Rows.Count < Values.Length)
+                    Table.Rows.Add(Table.NewRow());
+
+                for (int Row = 0; Row != Values.Length; Row++)
+                    Table.Rows[Row][ColumnName] = Values[Row];
+            }
+        }
 
         // ---------------------------------------------------
         // Get a column of values from the specified data table

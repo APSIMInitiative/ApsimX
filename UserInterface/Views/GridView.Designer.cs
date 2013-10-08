@@ -29,33 +29,24 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Grid = new System.Windows.Forms.DataGridView();
-            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // contextMenuStrip1
+            // PopupMenu
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helloToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(103, 26);
-            // 
-            // helloToolStripMenuItem
-            // 
-            this.helloToolStripMenuItem.Name = "helloToolStripMenuItem";
-            this.helloToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.helloToolStripMenuItem.Text = "Hello";
+            this.PopupMenu.Name = "contextMenuStrip1";
+            this.PopupMenu.Size = new System.Drawing.Size(61, 4);
             // 
             // Grid
             // 
             this.Grid.AllowUserToAddRows = false;
             this.Grid.AllowUserToDeleteRows = false;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.Grid.CausesValidation = false;
+            this.Grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Grid.ContextMenuStrip = this.PopupMenu;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(0, 0);
             this.Grid.Name = "Grid";
@@ -65,7 +56,10 @@
             this.Grid.Size = new System.Drawing.Size(354, 345);
             this.Grid.TabIndex = 1;
             this.Grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.OnCellBeginEdit);
-            this.Grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.Grid_DataError);
+            this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellClick);
+            this.Grid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.Grid_CellValidating);
+            this.Grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
+            this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.OnEditingControlShowing);
             // 
             // GridView
             // 
@@ -74,7 +68,6 @@
             this.Controls.Add(this.Grid);
             this.Name = "GridView";
             this.Size = new System.Drawing.Size(354, 345);
-            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
 
@@ -82,8 +75,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem helloToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip PopupMenu;
         private System.Windows.Forms.DataGridView Grid;
 
     }

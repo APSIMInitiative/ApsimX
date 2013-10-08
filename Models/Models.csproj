@@ -88,6 +88,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="Fertiliser.cs" />
+    <Compile Include="Graph\GraphData.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\NitrogenChangedType.cs" />

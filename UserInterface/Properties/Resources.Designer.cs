@@ -88,6 +88,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Close {
+            get {
+                object obj = ResourceManager.GetObject("Close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Copy {
             get {
                 object obj = ResourceManager.GetObject("Copy", resourceCulture);
@@ -214,6 +221,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Series16 {
+            get {
+                object obj = ResourceManager.GetObject("Series16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Simulation16 {
             get {
                 object obj = ResourceManager.GetObject("Simulation16", resourceCulture);
@@ -315,6 +329,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap WeatherFile16 {
             get {
                 object obj = ResourceManager.GetObject("WeatherFile16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap WindowDelete {
+            get {
+                object obj = ResourceManager.GetObject("WindowDelete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

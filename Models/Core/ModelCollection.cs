@@ -17,6 +17,8 @@ namespace Models.Core
                     return ".";
                 else if (Parent is Simulation)
                     return "." + Name;
+                else if (Parent == null)
+                    return Name;
                 else
                     return Parent.FullPath + "." + Name;
             }

@@ -267,6 +267,8 @@ namespace Models.Soils
             }
         }
 
+        public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
+
         /// <summary>
         /// Bulk density at standard thickness. Units: mm/mm
         /// </summary>

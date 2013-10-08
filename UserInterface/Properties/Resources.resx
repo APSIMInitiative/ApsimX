@@ -232,4 +232,13 @@
   <data name="CheckSoil" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ShovelOk.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="WindowDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\window_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Series16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\line-chart16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -143,6 +143,30 @@ namespace Models.Core
             foreach (Model Child in Children)
                 Child.Completed();
         }
+
+        /// <summary>
+        /// Return a list of models in scope.
+        /// </summary>
+        /// <returns></returns>
+        public string[] ModelsInScope()
+        {
+            // Go looking for a zone or Simulation.
+            Model M = this;
+            while (M.Parent != null && !(M is Zone))
+                M = M.Parent;
+
+            // Get a list of children of this zone.
+            List<Model> AllModels = new List<Model>();
+            FindChildModels(M, AllModels);
+
+            // Convert a list of models to a list of model FullPaths
+            List<string> ModelPaths = new List<string>();
+            foreach (Model Model in AllModels)
+                ModelPaths.Add(Model.FullPath);
+
+            return ModelPaths.ToArray();
+        }
+
         /// <summary>
         /// Go looking for public, writtable, class properties that are in the "Model" namespace.
         /// For each one found, recursively call this method so that their [Link]s might be resolved.
@@ -153,7 +177,7 @@ namespace Models.Core
             {
                 if (Property.GetType().IsClass && Property.CanWrite)
                 {
-                    if ((Property.PropertyType.IsArray && Property.PropertyType.FullName.Contains("Model."))
+                    if ((Property.PropertyType.IsArray && Property.PropertyType.FullName.Contains("Models."))
                         || Property.PropertyType.FullName.Contains("Generic.List"))
                     {
                         // If a field is public and is a class and 
@@ -169,7 +193,7 @@ namespace Models.Core
                                 }
                         }
                     }
-                    else if (Property.Name != "Parent" && Property.PropertyType.IsAssignableFrom(typeof(Model)))
+                    else if (Property.Name != "Parent" && Property.PropertyType.IsSubclassOf(typeof(Model)))
                     {
                         Model Child = Property.GetValue(Model, null) as Model;
                         if (Child != null)
