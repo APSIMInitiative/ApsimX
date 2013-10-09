@@ -215,7 +215,7 @@ namespace Models
         /// <summary>
         /// An event handler for the tick event.
         /// </summary>
-        public void OnTick(DateTime today)
+        public void OnTick(object sender, EventArgs e)
         {
             if (!HaveReadData)
             {

@@ -4413,8 +4413,8 @@ namespace Models.Soils
             year = Clock.Today.Year;
 
             initDone = false;
-            Clock.StartOfDay += new NullTypeDelegate(OnPrepare);
-            Clock.MiddleOfDay += new NullTypeDelegate(OnProcess);
+            Clock.StartOfDay += OnPrepare;
+            Clock.MiddleOfDay += OnProcess;
             MetFile.NewMet += OnNewMet;
 
 
@@ -4467,7 +4467,7 @@ namespace Models.Soils
             initDone = true;
         }
 
-        public void OnPrepare()
+        public void OnPrepare(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_prepare
@@ -4494,7 +4494,7 @@ namespace Models.Soils
         }
 
 
-        public void OnProcess()
+        public void OnProcess(object sender, EventArgs e)
         {
 
             //Get variables from other modules

@@ -7,6 +7,7 @@ using Models.Core;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+
 namespace Models
 {
     [ViewName("UserInterface.Views.DataStoreView")]
@@ -17,7 +18,7 @@ namespace Models
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
 
-        public enum CriticalEnum { Information, Warning, Error };
+        public enum ErrorLevel { Information, Warning, Error };
 
         // Links
         [Link]
@@ -39,8 +40,8 @@ namespace Models
             if (Connection == null)
             {
                 string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
-                if (Filename == null || Filename == "")
-                    throw new Exception("The simulations object doesn't have a filename. Cannot open .db");
+                if (Filename == null || Filename.Length == 0)
+                    throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename);
             }
@@ -117,117 +118,117 @@ namespace Models
         /// <summary>
         ///  Go create a table in the DataStore with the specified field names and types.
         /// </summary>
-        public void CreateTable(string TableName, string[] Names, Type[] Types)
+        public void CreateTable(string tableName, string[] names, Type[] types)
         {
-            string Cmd = "CREATE TABLE " + TableName + "([SimulationID] integer";
+            string cmd = "CREATE TABLE " + tableName + "([SimulationID] integer";
 
-            for (int i = 0; i < Names.Length; i++)
+            for (int i = 0; i < names.Length; i++)
             {
-                string ColumnType = null;
-                if (Types[i].ToString() == "System.DateTime")
-                    ColumnType = "date";
-                else if (Types[i].ToString() == "System.Int32")
-                    ColumnType = "integer";
-                else if (Types[i].ToString() == "System.Single")
-                    ColumnType = "real";
-                else if (Types[i].ToString() == "System.Double")
-                    ColumnType = "real";
+                string columnType = null;
+                if (types[i].ToString() == "System.DateTime")
+                    columnType = "date";
+                else if (types[i].ToString() == "System.Int32")
+                    columnType = "integer";
+                else if (types[i].ToString() == "System.Single")
+                    columnType = "real";
+                else if (types[i].ToString() == "System.Double")
+                    columnType = "real";
                 else
-                    ColumnType = "char(50)";
+                    columnType = "char(50)";
 
-                Cmd += ",[" + Names[i] + "] " + ColumnType;
+                cmd += ",[" + names[i] + "] " + columnType;
             }
-            Cmd += ")";
-            Connection.ExecuteNonQuery(Cmd);
+            cmd += ")";
+            Connection.ExecuteNonQuery(cmd);
 
-            List<string> AllNames = new List<string>();
-            AllNames.Add("SimulationID");
-            AllNames.AddRange(Names);
-            IntPtr Query = PrepareInsertIntoTable(TableName, AllNames.ToArray());
-            TableInsertQueries.Add(TableName, Query);
+            List<string> allNames = new List<string>();
+            allNames.Add("SimulationID");
+            allNames.AddRange(names);
+            IntPtr query = PrepareInsertIntoTable(tableName, allNames.ToArray());
+            TableInsertQueries.Add(tableName, query);
         }
 
         /// <summary>
         /// Create a table in the database based on the specified one.
         /// </summary>
-        public void CreateTable(string SimulationName, string TableName, DataTable Table)
+        public void CreateTable(string simulationName, string tableName, DataTable table)
         {
             // Add all columns.
-            List<string> Names = new List<string>();
-            List<Type> Types = new List<Type>();
-            foreach (DataColumn Column in Table.Columns)
+            List<string> names = new List<string>();
+            List<Type> types = new List<Type>();
+            foreach (DataColumn column in table.Columns)
             {
-                Names.Add(Column.ColumnName);
-                Types.Add(Column.DataType);
+                names.Add(column.ColumnName);
+                types.Add(column.DataType);
             }
 
             // Create the table.
-            CreateTable(TableName, Names.ToArray(), Types.ToArray());
+            CreateTable(tableName, names.ToArray(), types.ToArray());
 
             // Add all rows.
-            object[] Values = new object[Table.Columns.Count];
-            foreach (DataRow Row in Table.Rows)
+            object[] values = new object[table.Columns.Count];
+            foreach (DataRow row in table.Rows)
             {
-                for (int i = 0; i < Table.Columns.Count; i++)
-                    Values[i] = Row[i];
-                WriteToTable(SimulationName, TableName, Values);
+                for (int i = 0; i < table.Columns.Count; i++)
+                    values[i] = row[i];
+                WriteToTable(simulationName, tableName, values);
             }
         }
         /// <summary>
         /// Write a property to the DataStore.
         /// </summary>
-        public void WriteProperty(string SimulationName, string Name, string Value)
+        public void WriteProperty(string simulationName, string name, string value)
         {
             StackTrace st = new StackTrace(true);
-            MethodInfo CallingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
-            string ComponentName = CallingMethod.DeclaringType.FullName;
+            MethodInfo callingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
+            string componentName = callingMethod.DeclaringType.FullName;
 
-            WriteToTable("Properties", new object[] { GetSimulationID(SimulationName), 
-                                                      ComponentName, Name, Value });
+            WriteToTable("Properties", new object[] { GetSimulationID(simulationName), 
+                                                      componentName, name, value });
         }
 
         /// <summary>
         /// Write a message to the DataStore.
         /// </summary>
-        public void WriteMessage(string SimulationName, DateTime Date, string Message, CriticalEnum Type = CriticalEnum.Information)
+        public void WriteMessage(string simulationName, DateTime date, string message, ErrorLevel type)
         {
             StackTrace st = new StackTrace(true);
-            MethodInfo CallingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
-            string ComponentName = CallingMethod.DeclaringType.FullName;
+            MethodInfo callingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
+            string componentName = callingMethod.DeclaringType.FullName;
 
-            WriteMessage(SimulationName, Date, ComponentName, Message, Type);
+            WriteMessage(simulationName, date, componentName, message, type);
         }
 
         /// <summary>
         /// Write a message to the DataStore.
         /// </summary>
-        public void WriteMessage(string SimulationName, DateTime Date, string ComponentName, string Message, CriticalEnum Type = CriticalEnum.Information)
+        public void WriteMessage(string simulationName, DateTime date, string componentName, string message, ErrorLevel type)
         {
-            WriteToTable("Messages", new object[] { GetSimulationID(SimulationName), 
-                                                      ComponentName, Date, Message, Convert.ToInt32(Type) });
+            WriteToTable("Messages", new object[] { GetSimulationID(simulationName), 
+                                                      componentName, date, message, Convert.ToInt32(type, System.Globalization.CultureInfo.InvariantCulture) });
         }
 
         /// <summary>
         /// Write temporal data to the datastore.
         /// </summary>
-        public void WriteToTable(string SimulationName, string TableName, object[] Values)
+        public void WriteToTable(string simulationName, string tableName, object[] values)
         {
-            List<object> AllValues = new List<object>();
-            AllValues.Add(GetSimulationID(SimulationName));
-            AllValues.AddRange(Values);
-            WriteToTable(TableName, AllValues.ToArray());
+            List<object> allValues = new List<object>();
+            allValues.Add(GetSimulationID(simulationName));
+            allValues.AddRange(values);
+            WriteToTable(tableName, allValues.ToArray());
         }
         
         /// <summary>
         /// Write a row to the specified table in the DataStore using the specified field values.
         /// Values should be in the correct field order.
         /// </summary>
-        private void WriteToTable(string TableName, object[] Values)
+        private void WriteToTable(string tableName, object[] values)
         {
-            if (!TableInsertQueries.ContainsKey(TableName))
-                throw new Exception("Cannot find table: " + TableName + " in the DataStore");
-            IntPtr Query = TableInsertQueries[TableName];
-            Connection.BindParametersAndRunQuery(Query, Values);
+            if (!TableInsertQueries.ContainsKey(tableName))
+                throw new ApsimXException(FullPath, "Cannot find table: " + tableName + " in the DataStore");
+            IntPtr query = TableInsertQueries[tableName];
+            Connection.BindParametersAndRunQuery(query, values);
         }
 
         /// <summary>
@@ -240,10 +241,10 @@ namespace Models
                 Connect();
                 try
                 {
-                    DataTable Table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
-                    return Utility.DataTable.GetColumnAsStrings(Table, "Name");
+                    DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
+                    return Utility.DataTable.GetColumnAsStrings(table, "Name");
                 }
-                catch (Exception err)
+                catch (Utility.SQLiteException err)
                 {
                     Console.WriteLine(err.Message);
                     return new string[0];
@@ -261,18 +262,20 @@ namespace Models
                 try
                 {
                     Connect();
-                    DataTable Table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                    DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                    List<string> tables = new List<string>();
+                    if (table != null)
+                    {
+                        tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
 
-                    List<string> Tables = new List<string>();
-                    Tables.AddRange(Utility.DataTable.GetColumnAsStrings(Table, "Name"));
-
-                    // remove the simulations table
-                    int SimulationsI = Tables.IndexOf("Simulations");
-                    if (SimulationsI != -1)
-                        Tables.RemoveAt(SimulationsI);
-                    return Tables.ToArray();
+                        // remove the simulations table
+                        int simulationsI = tables.IndexOf("Simulations");
+                        if (simulationsI != -1)
+                            tables.RemoveAt(simulationsI);
+                    }
+                    return tables.ToArray();
                 }
-                catch (Exception err)
+                catch (Utility.SQLiteException err)
                 {
                     Console.WriteLine(err.Message);
                     return new string[0];
@@ -284,13 +287,13 @@ namespace Models
         /// <summary>
         /// Return all data from the specified simulation and table name.
         /// </summary>
-        public DataTable GetData(string SimulationName, string TableName)
+        public DataTable GetData(string simulationName, string tableName)
         {
             Connect();
-            int SimulationID = GetSimulationID(SimulationName);
-            string sql = string.Format("SELECT * FROM {0}" +
-                                       " WHERE SimulationID = {1}",
-                                       TableName, SimulationID);
+            int simulationID = GetSimulationID(simulationName);
+            string sql = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                       "SELECT * FROM {0} WHERE SimulationID = {1}",
+                                       new object[] {tableName, simulationID});
                        
             return Connection.ExecuteQuery(sql);
         }
@@ -303,37 +306,37 @@ namespace Models
         /// If this name doesn't exist in the table then append a new row to the table and 
         /// returns its id.
         /// </summary>
-        private int GetSimulationID(string SimulationName)
+        private int GetSimulationID(string simulationName)
         {
-            if (SimulationIDs.ContainsKey(SimulationName))
-                return SimulationIDs[SimulationName];
+            if (SimulationIDs.ContainsKey(simulationName))
+                return SimulationIDs[simulationName];
 
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + SimulationName + "'", 0);
+            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             if (ID == -1)
             {
-                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + SimulationName + "')");
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + SimulationName + "'", 0);
+                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
+                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             }
-            SimulationIDs.Add(SimulationName, ID);
+            SimulationIDs.Add(simulationName, ID);
             return ID;
         }
 
         /// <summary>
         ///  Go prepare an insert into query and return the query.
         /// </summary>
-        private IntPtr PrepareInsertIntoTable(string TableName, string[] Names)
+        private IntPtr PrepareInsertIntoTable(string tableName, string[] names)
         {
-            string Cmd = "INSERT INTO " + TableName + "(";
+            string Cmd = "INSERT INTO " + tableName + "(";
 
-            for (int i = 0; i < Names.Length; i++)
+            for (int i = 0; i < names.Length; i++)
             {
                 if (i > 0)
                     Cmd += ",";
-                Cmd += "[" + Names[i] + "]";
+                Cmd += "[" + names[i] + "]";
             }
             Cmd += ") VALUES (";
 
-            for (int i = 0; i < Names.Length; i++)
+            for (int i = 0; i < names.Length; i++)
             {
                 if (i > 0)
                     Cmd += ",";

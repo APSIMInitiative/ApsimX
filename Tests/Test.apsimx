@@ -60,7 +60,7 @@
                   Clock.StartOfDay += OnStartOfDay;
                }
 
-               private void OnStartOfDay()
+               private void OnStartOfDay(object sender, EventArgs e)
                {
 
                }
