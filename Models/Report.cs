@@ -257,14 +257,14 @@ namespace Models
                 if (ComponentEvent == null)
                     throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
 
-                ComponentEvent.AddEventHandler(Component, new NullTypeDelegate(OnReport));
+                ComponentEvent.AddEventHandler(Component, new EventHandler(OnReport));
             }
         }
 
         /// <summary>
         /// Event handler for the report event.
         /// </summary>
-        public void OnReport()
+        public void OnReport(object sender, EventArgs e)
         {
             if (Members == null)
                 FindVariableMembers();
@@ -337,7 +337,7 @@ namespace Models
                 object Component = Paddock.Find(ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
 
-                ComponentEvent.RemoveEventHandler(Component, new NullTypeDelegate(OnReport));
+                ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
             }
             Members.Clear();
             Members = null;
