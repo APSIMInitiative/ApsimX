@@ -79,7 +79,7 @@
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Utility\ColourPickerCell.cs" />
-    <Compile Include="Utility\ConfigManager.cs" />
+    <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Editor.cs">
       <SubType>UserControl</SubType>
     </Compile>

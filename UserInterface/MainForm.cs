@@ -13,8 +13,7 @@ namespace UserInterface
         /// <summary>
         /// Public access to the settings
         /// </summary>
-  		public Utility.SessionSettings APSIMSession;    
-        private Utility.ConfigManager SessionConfiguration;
+        private Utility.Configuration Configuration;
         /// <summary>
         /// Construcotr
         /// </summary>
@@ -23,8 +22,7 @@ namespace UserInterface
             InitializeComponent();
             Application.EnableVisualStyles();
 
-            SessionConfiguration = new Utility.ConfigManager();
-            APSIMSession = SessionConfiguration.Session;
+            Configuration = new Utility.Configuration();
             
             TabbedExplorerPresenter Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
@@ -45,19 +43,11 @@ namespace UserInterface
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (APSIMSession != null)
-            {
-                APSIMSession.mainformwidth = this.Width;
-                APSIMSession.mainformtop = Top;
-                APSIMSession.mainformleft = Left;
-                APSIMSession.mainformheight = this.Height;
-                if (!(this.WindowState == (FormWindowState)1))
-                {
-                    APSIMSession.windowstate = (int)this.WindowState;
-                }
-                //store settings on closure
-                SessionConfiguration.StoreConfig();
-            }
+            Configuration.Settings.MainFormLocation = Location;
+            Configuration.Settings.MainFormSize = Size;
+            Configuration.Settings.MainFormWindowState = WindowState;
+            //store settings on closure
+            Configuration.Save();
 
             if (disposing && (components != null))
             {
@@ -71,21 +61,18 @@ namespace UserInterface
         private void MainForm_Load(object sender, EventArgs e)
         {
             SuspendLayout();
-            if (APSIMSession != null)
+
+            try
             {
-                try
-                {
-                    WindowState = (FormWindowState)Convert.ToInt32(APSIMSession.windowstate);
-                    Top = APSIMSession.mainformtop;
-                    Left = APSIMSession.mainformleft;
-                    this.Width = APSIMSession.mainformwidth;
-                    this.Height = APSIMSession.mainformheight;
-                }
-                catch (System.Exception)
-                {
-                    WindowState = FormWindowState.Maximized;
-                }
+                Location = Configuration.Settings.MainFormLocation;
+                Size = Configuration.Settings.MainFormSize;
+                WindowState = Configuration.Settings.MainFormWindowState;
             }
+            catch (System.Exception)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
+
             ResumeLayout();
         }
     }
