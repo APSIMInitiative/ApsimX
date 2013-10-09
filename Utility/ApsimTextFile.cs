@@ -131,7 +131,7 @@ namespace Utility
 
             foreach (ApsimConstant c in _Constants)
             {
-                if (Utility.StringUtil.StringsAreEqual(c.Name, ConstantName))
+                if (Utility.String.StringsAreEqual(c.Name, ConstantName))
                 {
                     return c;
                 }
@@ -146,7 +146,7 @@ namespace Utility
 
             foreach (ApsimConstant c in _Constants)
             {
-                if (Utility.StringUtil.StringsAreEqual(c.Name, ConstantName))
+                if (Utility.String.StringsAreEqual(c.Name, ConstantName))
                     c.Value = ConstantValue;
             }
         }
@@ -206,7 +206,7 @@ namespace Utility
                 else
                 {
                     char[] whitespace = { ' ', '\t' };
-                    int PosFirstNonBlankChar = Utility.StringUtil.IndexNotOfAny(Line, whitespace);
+                    int PosFirstNonBlankChar = Utility.String.IndexNotOfAny(Line, whitespace);
                     if (PosFirstNonBlankChar != -1 && Line[PosFirstNonBlankChar] == '(')
                     {
                         HeadingLines.Add(PreviousLine);
@@ -229,7 +229,7 @@ namespace Utility
             {
                 if (Table.Columns.IndexOf(Constant.Name) == -1)
                 {
-                    Type ColumnType = Utility.StringUtil.DetermineType(Constant.Value, "");
+                    Type ColumnType = Utility.String.DetermineType(Constant.Value, "");
                     Table.Columns.Add(new DataColumn(Constant.Name, ColumnType));
                 }
                 for (int Row = 0; Row < Table.Rows.Count; Row++)
@@ -256,7 +256,7 @@ namespace Utility
             foreach (string ConstantLine in ConstantLines)
             {
                 string Line = ConstantLine;
-                string Comment = Utility.StringUtil.SplitOffAfterDelimiter(ref Line, "!");
+                string Comment = Utility.String.SplitOffAfterDelimiter(ref Line, "!");
                 Comment.Trim();
                 int PosEquals = Line.IndexOf('=');
                 if (PosEquals != -1)
@@ -268,7 +268,7 @@ namespace Utility
                         Name = "Title";
                     }
                     string Value = Line.Substring(PosEquals + 1).Trim();
-                    string Unit = Utility.StringUtil.SplitOffBracketedValue(ref Value, '(', ')');
+                    string Unit = Utility.String.SplitOffBracketedValue(ref Value, '(', ')');
                     _Constants.Add(new ApsimConstant(Name, Value, Unit, Comment));
                 }
             }
@@ -289,10 +289,10 @@ namespace Utility
                 }
                 else
                 {
-                    Headings = Utility.StringUtil.SplitStringHonouringQuotes(HeadingLines[0], " \t");
-                    Units = Utility.StringUtil.SplitStringHonouringQuotes(HeadingLines[1], " \t");
+                    Headings = Utility.String.SplitStringHonouringQuotes(HeadingLines[0], " \t");
+                    Units = Utility.String.SplitStringHonouringQuotes(HeadingLines[1], " \t");
                 }
-                TitleFound = TitleFound || Utility.StringUtil.IndexOfCaseInsensitive(Headings, "title") != -1;
+                TitleFound = TitleFound || Utility.String.IndexOfCaseInsensitive(Headings, "title") != -1;
                 if (Headings.Count != Units.Count)
                     throw new Exception("The number of headings and units doesn't match in file: " + _FileName);
             }
@@ -309,9 +309,9 @@ namespace Utility
             for (int w = 0; w != Words.Count; w++)
             {
                 if (Words[w] == "?" || Words[w] == "*" || Words[w] == "")
-                    Types[w] = Utility.StringUtil.DetermineType(LookAheadForNonMissingValue(In, w), Units[w]);
+                    Types[w] = Utility.String.DetermineType(LookAheadForNonMissingValue(In, w), Units[w]);
                 else
-                    Types[w] = Utility.StringUtil.DetermineType(Words[w], Units[w]);
+                    Types[w] = Utility.String.DetermineType(Words[w], Units[w]);
             }
             return Types;
         }
@@ -334,7 +334,7 @@ namespace Utility
                     {
                         // Need to get a sanitised date e.g. d/M/yyyy 
                         string DateFormat = Units[w].ToLower();
-                        DateFormat = Utility.StringUtil.SplitOffBracketedValue(ref DateFormat, '(', ')');
+                        DateFormat = Utility.String.SplitOffBracketedValue(ref DateFormat, '(', ')');
                         DateFormat = DateFormat.Replace("mmm", "MMM");
                         DateFormat = DateFormat.Replace("mm", "m");
                         DateFormat = DateFormat.Replace("dd", "d");
@@ -386,7 +386,7 @@ namespace Utility
                 Words.AddRange(Line.Split(",".ToCharArray()));
             }
             else
-                Words = Utility.StringUtil.SplitStringHonouringQuotes(Line, " \t");
+                Words = Utility.String.SplitStringHonouringQuotes(Line, " \t");
             if (Words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
 

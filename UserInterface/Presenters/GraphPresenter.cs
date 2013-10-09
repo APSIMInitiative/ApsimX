@@ -11,6 +11,10 @@ namespace UserInterface.Presenters
         private IGraphView GraphView;
         private Graph Graph;
         private CommandHistory CommandHistory;
+
+        /// <summary>
+        /// Attach the model to the view.
+        /// </summary>
         public void Attach(object Model, object View, CommandHistory CommandHistory)
         {
             Graph = Model as Graph;
@@ -20,7 +24,7 @@ namespace UserInterface.Presenters
             GraphView.OnAxisClick += OnAxisClick;
             GraphView.OnPlotClick += OnPlotClick;
             CommandHistory.ModelChanged += OnGraphModelChanged;
-            PopulateGraph();
+            GraphView.DrawGraph(Graph);
         }
 
         /// <summary>
@@ -36,10 +40,10 @@ namespace UserInterface.Presenters
 
         private void OnGraphModelChanged(object Model)
         {
-            if (Graph.Axes.Length == 2 && 
+            if (Graph.Axes.Count >= 2 && 
                 (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1]))
             {
-                PopulateGraph();
+                GraphView.DrawGraph(Graph);
             }
         }
 
@@ -69,41 +73,7 @@ namespace UserInterface.Presenters
 
         private void OnAxisChanged(Axis Axis)
         {
-            PopulateAxis(Axis);
-        }
-
-        private void PopulateGraph()
-        {
-            GraphView.ClearSeries();
-            if (Graph.Series != null)
-            {
-                foreach (Series S in Graph.Series)
-                {
-                    DataTable Data = Graph.DataStore.GetData(S.SimulationName, S.TableName);
-                    if (S.Type == Series.SeriesType.Line)
-                        GraphView.CreateLineSeries(Data, S.Title,
-                                                   S.X, S.Y,
-                                                   OxyPlot.Axes.AxisPosition.Bottom, OxyPlot.Axes.AxisPosition.Left);
-                    else if (S.Type == Series.SeriesType.Bar)
-                        GraphView.CreateBarSeries(Data, S.Title,
-                                                  S.X, S.Y,
-                                                  OxyPlot.Axes.AxisPosition.Bottom, OxyPlot.Axes.AxisPosition.Left);
-                }
-            }
-            foreach (Axis A in Graph.Axes)
-                PopulateAxis(A);
-            GraphView.RefreshGraph();
-        }
-        private void PopulateAxis(Axis Axis)
-        {
-            if (Axis.Type == Models.Graph.Axis.AxisType.Bottom)
-                GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Bottom, Axis.Title);
-			else if (Axis.Type == Models.Graph.Axis.AxisType.Left)
-                GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Left, Axis.Title);
-			else if (Axis.Type == Models.Graph.Axis.AxisType.Right)
-                GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Right, Axis.Title);
-			else if (Axis.Type == Models.Graph.Axis.AxisType.Top)
-                GraphView.PopulateAxis(OxyPlot.Axes.AxisPosition.Top, Axis.Title);
+            GraphView.DrawGraph(Graph);
         }
 
 

@@ -12,7 +12,7 @@
     <Clock>
       <Name>Clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1989-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -60,7 +60,7 @@
                   Clock.StartOfDay += OnStartOfDay;
                }
 
-               private void OnStartOfDay()
+               private void OnStartOfDay(object sender, EventArgs e)
                {
 
                }
@@ -479,26 +479,84 @@
           <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
       </Soil>
+      <Graph>
+        <Name>Graph</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Temperature (oC)</Title>
+          <Inverted>true</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>.Field.Soil.AirDry</FieldName>
+          </X>
+          <Y>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>.Field.Soil.DUL</FieldName>
+          </X>
+          <Y>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>.Field.Soil.SW</FieldName>
+          </X>
+          <Y>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>.Field.Soil.SAT</FieldName>
+          </X>
+          <Y>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>.Field.Soil.LL15</FieldName>
+          </X>
+          <Y>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+      </Graph>
     </Zone>
-    <Graph>
-      <Name>Graph</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Y axis title</Title>
-      </Axis>
-      <Series>
-        <Title>Minimum temperature</Title>
-        <Type>Line</Type>
-        <SimulationName>Test</SimulationName>
-        <TableName>Report</TableName>
-        <X>.Clock.Today</X>
-        <Y>.WeatherFile.MinT</Y>
-      </Series>
-    </Graph>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

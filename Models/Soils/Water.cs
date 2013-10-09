@@ -100,7 +100,7 @@ namespace Models.Soils
                 // Remove unwanted crops if necessary.
                 for (int i = Crops.Count - 1; i >= 0; i--)
                 {
-                    int Pos = Utility.StringUtil.IndexOfCaseInsensitive(value, Crops[i].Name);
+                    int Pos = Utility.String.IndexOfCaseInsensitive(value, Crops[i].Name);
                     if (Pos != -1 && value[Pos] != "")
                         Crops[i].Name = value[Pos];  // ensure case transfer.
                     else

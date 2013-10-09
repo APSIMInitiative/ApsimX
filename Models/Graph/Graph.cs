@@ -1,5 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Models.Core;
+using System.Collections.Generic;
+using System;
 
 namespace Models.Graph
 {
@@ -12,10 +14,10 @@ namespace Models.Graph
         public string Title {get; set;}
 
         [XmlElement("Axis")]
-        public Axis[] Axes { get; set; }
+        public List<Axis> Axes { get; set; }
 
         [XmlElement("Series")]
-        public Series[] Series { get; set; }
+        public List<Series> Series { get; set; }
 
         /// <summary>
         /// Return a list of visible datasets.

@@ -4,14 +4,16 @@ using System.Windows.Forms;
 namespace UserInterface.Views
 {
     public delegate void TextChangedDelegate(string NewText);
-        
+    public delegate void InvertedhangedDelegate(bool Inverted);
+
     /// <summary>
     /// Describes an interface for an axis view.
     /// </summary>
     interface IAxisView
     {
         event TextChangedDelegate OnTitleChanged;
-        void Populate(string Title);
+        event InvertedhangedDelegate OnInvertedChanged;
+        void Populate(string Title, bool Inverted);
         
     }
 
@@ -23,6 +25,7 @@ namespace UserInterface.Views
         private string OriginalText;
 
         public event TextChangedDelegate OnTitleChanged;
+        public event InvertedhangedDelegate OnInvertedChanged;
 
         /// <summary>
         /// Construtor
@@ -35,9 +38,10 @@ namespace UserInterface.Views
         /// <summary>
         /// Populate the view with the specified title.
         /// </summary>
-        public void Populate(string Title)
+        public void Populate(string Title, bool Inverted)
         {
             TitleTextBox.Text = Title;
+            InvertedCheckBox.Checked = Inverted;
         }
 
         /// <summary>
@@ -56,6 +60,12 @@ namespace UserInterface.Views
         {
             if (TitleTextBox.Text != OriginalText && OnTitleChanged != null)
                 OnTitleChanged.Invoke(TitleTextBox.Text);
+        }
+
+        private void OnCheckedChanged(object sender, EventArgs e)
+        {
+            if (OnInvertedChanged != null)
+                OnInvertedChanged(InvertedCheckBox.Checked);
         }
     }
 }

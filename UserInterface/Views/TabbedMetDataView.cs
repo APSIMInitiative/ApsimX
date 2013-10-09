@@ -108,13 +108,15 @@ namespace UserInterface.Views
             GetAxis(AxisPosition.Left).MinorGridlineStyle = LineStyle.Dot;
 
             // Populate the series.
+            List<DataPoint> Points = new List<DataPoint>();
             for (int i = 0; i < Data.Length; i++)
             {
                 DataPoint P = new DataPoint();
                 P.X = i + 1;
                 P.Y = Data[i];
-                newSeries.Points.Add(P);
+                Points.Add(P);
             }
+            newSeries.ItemsSource = Points;
             newSeries.FillColor = OxyColor.FromRgb(64, 191, 255);
             newSeries.ColumnWidth = 0.05;   //% of axis width
             plot1.Model.Series.Add(newSeries);

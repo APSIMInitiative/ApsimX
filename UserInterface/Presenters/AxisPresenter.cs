@@ -1,5 +1,6 @@
 ﻿using Models.Graph;
 using UserInterface.Views;
+using System;
 
 namespace UserInterface.Presenters
 {
@@ -27,9 +28,10 @@ namespace UserInterface.Presenters
 
             // Trap events from the view.
             View.OnTitleChanged += OnTitleChanged;
+            View.OnInvertedChanged += OnInvertedChanged;
 
             // Tell the view to populate the axis.
-            View.Populate(Axis.Title);
+            View.Populate(Axis.Title, Axis.Inverted);
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object Model)
         {
             if (Model == Axis)
-                View.Populate(Axis.Title);
+                View.Populate(Axis.Title, Axis.Inverted);
         }
 
         /// <summary>
@@ -60,6 +62,14 @@ namespace UserInterface.Presenters
         void OnTitleChanged(string NewText)
         {
             CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Title", NewText));
+        }
+
+        /// <summary>
+        /// User has clicked inverted - change the property in the model.
+        /// </summary>
+        void OnInvertedChanged(bool Inverted)
+        {
+            CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Inverted", Inverted));
         }
     }
 }

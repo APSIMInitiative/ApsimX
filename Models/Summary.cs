@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
+﻿using Models.Core;
 
 namespace Models
 {
@@ -18,7 +14,7 @@ namespace Models
         /// </summary>
         public void WriteMessage(string Message)
         {
-            DataStore.WriteMessage(Simulation.Name, Clock.Today, Message);
+            DataStore.WriteMessage(Simulation.Name, Clock.Today, Message, Models.DataStore.ErrorLevel.Information);
         }
 
         /// <summary>

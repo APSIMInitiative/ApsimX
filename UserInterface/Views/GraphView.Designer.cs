@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphView));
             this.plot1 = new OxyPlot.WindowsForms.Plot();
             this.Splitter = new System.Windows.Forms.Splitter();
             this.BottomPanel = new System.Windows.Forms.Panel();
@@ -50,7 +49,7 @@
             this.plot1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
             this.plot1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.plot1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
-            this.plot1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.plot1_MouseDoubleClick);
+            this.plot1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnMouseDoubleClick);
             // 
             // Splitter
             // 
@@ -74,13 +73,13 @@
             // CloseButton
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseButton.Image = ((System.Drawing.Image)(resources.GetObject("CloseButton.Image")));
-            this.CloseButton.Location = new System.Drawing.Point(535, 3);
+            this.CloseButton.Image = global::UserInterface.Properties.Resources.Close;
+            this.CloseButton.Location = new System.Drawing.Point(546, 1);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(30, 23);
-            this.CloseButton.TabIndex = 1;
+            this.CloseButton.Size = new System.Drawing.Size(22, 23);
+            this.CloseButton.TabIndex = 0;
             this.CloseButton.UseVisualStyleBackColor = true;
-            this.CloseButton.Click += new System.EventHandler(this.OnCloseButtonClick);
+            this.CloseButton.Click += new System.EventHandler(this.CloseEditorPanel);
             // 
             // GraphView
             // 
@@ -91,7 +90,6 @@
             this.Controls.Add(this.BottomPanel);
             this.Name = "GraphView";
             this.Size = new System.Drawing.Size(568, 501);
-            this.Load += new System.EventHandler(this.GraphView_Load);
             this.BottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -177,10 +177,10 @@ namespace Models
                 }
                 FFileName = FullFileName;
                 WtrFile.Open(FullFileName);
-                MaxTIndex = Utility.StringUtil.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
-                MinTIndex = Utility.StringUtil.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
-                RadnIndex = Utility.StringUtil.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
-                RainIndex = Utility.StringUtil.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
+                MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
+                MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
+                RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
+                RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
                 if (MaxTIndex == -1)
                     throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
                 if (MinTIndex == -1)
@@ -215,7 +215,7 @@ namespace Models
         /// <summary>
         /// An event handler for the tick event.
         /// </summary>
-        public void OnTick(DateTime today)
+        public void OnTick(object sender, EventArgs e)
         {
             if (!HaveReadData)
             {

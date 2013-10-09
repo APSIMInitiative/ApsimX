@@ -20,11 +20,10 @@ namespace Models
         public DateTime EndDate { get; set; }
         
         // Public events that we're going to publish.
-        public delegate void TimeDelegate(DateTime Data);
-        public event TimeDelegate Tick;
-        public event NullTypeDelegate StartOfDay;
-        public event NullTypeDelegate MiddleOfDay;
-        public event NullTypeDelegate EndOfDay;
+        public event EventHandler Tick;
+        public event EventHandler StartOfDay;
+        public event EventHandler MiddleOfDay;
+        public event EventHandler EndOfDay;
 
         // Public properties available to other models.
         [XmlIgnore]
@@ -49,13 +48,13 @@ namespace Models
             while (Today <= EndDate)
             {
                 if (Tick != null)
-                    Tick.Invoke(Today);
+                    Tick.Invoke(this, new EventArgs());
                 if (StartOfDay != null)
-                    StartOfDay.Invoke();
+                    StartOfDay.Invoke(this, new EventArgs());
                 if (MiddleOfDay != null)
-                    MiddleOfDay.Invoke();
+                    MiddleOfDay.Invoke(this, new EventArgs());
                 if (EndOfDay != null)
-                    EndOfDay.Invoke();
+                    EndOfDay.Invoke(this, new EventArgs());
 
                 Today = Today.AddDays(1);
             }

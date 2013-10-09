@@ -12,15 +12,8 @@ namespace Utility
 
         public ColumnXYSeries()
         {
-            Points = new List<DataPoint>();
             ColumnWidth = 0.01;
         }
-
-
-        /// <summary>
-        /// Gets the rectangle bar items.
-        /// </summary>
-        public IList<DataPoint> Points { get; set; }
 
         /// <summary>
         /// Gets the width of the column (as fraction of width of axis.)
@@ -46,7 +39,7 @@ namespace Utility
         /// </param>
         public override void Render(IRenderContext rc, PlotModel model)
         {
-            if (this.Points.Count == 0)
+            if (this.Items.Count == 0)
             {
                 return;
             }
@@ -61,7 +54,7 @@ namespace Utility
         private void MovePointsToItems()
         {
             Items.Clear();
-            foreach (DataPoint P in Points)
+            foreach (DataPoint P in ItemsSource)
             {
                 double HalfBarWidth = XDataRange * ColumnWidth / 2.0;
                 double x0 = P.X - HalfBarWidth;
@@ -77,11 +70,11 @@ namespace Utility
         {
             get
             {
-                if (Points.Count == 0)
+                if (Items.Count == 0)
                     return 0;
                 double Minimum = double.MaxValue;
                 double Maximum = double.MinValue;
-                foreach (DataPoint P in Points)
+                foreach (DataPoint P in ItemsSource)
                 {
                     Minimum = System.Math.Min(Minimum, P.X);
                     Maximum = System.Math.Max(Maximum, P.X);

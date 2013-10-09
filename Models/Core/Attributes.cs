@@ -28,8 +28,10 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class Units : System.Attribute
     {
+        public string UnitsString;
         public Units(string text)
         {
+            UnitsString = text;
         }
     }
 

@@ -35,6 +35,7 @@ namespace UserInterface.Commands
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 ToParent.AddModel(FromModel);
+                ToParent.ResolveLinks();
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
                 ModelAdded = true;
             }

@@ -40,6 +40,11 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Return true if the grid is empty of rows.
+        /// </summary>
+        public bool IsEmpty { get { return Grid.RowCount == 0; } }
+
+        /// <summary>
         /// Populate the grid
         /// </summary>
         private void PopulateGrid()
@@ -64,8 +69,7 @@ namespace UserInterface.Presenters
             {
                 // Only consider properties that have a public setter.
                 if (Property.Name != "Name" && Property.Name != "Parent" && 
-                    Property.GetAccessors().Length == 2 && 
-                    Property.GetAccessors()[1].IsPublic &&
+                    Property.CanWrite && !Property.PropertyType.IsArray &&
                     !Property.PropertyType.FullName.Contains("Models.") &&
                     Utility.Reflection.GetAttribute(Property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
                 {

@@ -1,83 +1,63 @@
-﻿using System.Data;
-using System.Windows.Forms;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
-using System;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 namespace UserInterface.Views
 {
-    public delegate void DatasetDelegate(string TableName);
-    public delegate void CellDelegate(int Col, int Row, string NewContents);
-    public delegate void ColumnClickedDelegate(string ColumnHeader);
-    interface ISeriesView
+    public delegate void DataSourceChangedDelegate(string NewDataSource);
+    public interface ISeriesView
     {
         /// <summary>
-        /// Invoked when the dataset is changed.
+        /// Invokedn when the data source has changed by user.
         /// </summary>
-        event DatasetDelegate DatasetChanged;
+        event DataSourceChangedDelegate DataSourceChanged;
 
         /// <summary>
-        /// User has changed the selected cell in the data grid.
+        /// Get the Series grid.
         /// </summary>
-        event ColumnClickedDelegate DataColumnClicked;
+        IGridView SeriesGrid { get; }
 
         /// <summary>
-        /// User has changed a series cell.
+        /// Get the data grid.
         /// </summary>
-        event CellDelegate SeriesCellChanged;
+        IGridView DataGrid { get; }
 
         /// <summary>
-        /// Set the data source to use in the series grid at the top.
+        /// Get or set the data source items.
         /// </summary>
-        DataTable Series { get; set; }
-         
-        /// <summary>
-        /// Set the data source to use in the data grid at the bottom
-        /// </summary>
-        DataTable Data { get; set; }
+        string[] DataSourceItems { get; set; }
 
         /// <summary>
-        /// Set the datasets.
+        /// Get or set the focus on X variable list.
         /// </summary>
-        string[] Datasets { get; set; }
+        bool XFocused { get; set; }
 
         /// <summary>
-        /// Return the current selected series cell.
+        /// Get or set the focus on Y variable list.
         /// </summary>
-        Point CurrentSeriesCellSelected { get; set; }
+        bool YFocused { get; set; }
 
         /// <summary>
-        /// Return the current data set.
+        /// Get or set the data source.
         /// </summary>
-        string CurrentDataset { get; }
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        void AddSeriesContextAction(string ButtonText, System.EventHandler OnClick);
-
+        string DataSource { get; set; }
     }
 
 
     public partial class SeriesView : UserControl, ISeriesView
     {
         /// <summary>
-        /// Invoked when the dataset is changed.
+        /// Invokedn when the data source has changed by user.
         /// </summary>
-        public event DatasetDelegate DatasetChanged;
+        public event DataSourceChangedDelegate DataSourceChanged;
 
         /// <summary>
-        /// User has changed the selected cell in the data grid.
-        /// </summary>
-        public event ColumnClickedDelegate DataColumnClicked;
-
-        /// <summary>
-        /// User has changed a series cell.
-        /// </summary>
-        public event CellDelegate SeriesCellChanged;
-
-        /// <summary>
-        /// constructor.
+        /// Constructor
         /// </summary>
         public SeriesView()
         {
@@ -85,120 +65,116 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Set the data source to use in the series grid at the top.
+        /// Get the Series grid
         /// </summary>
-        public DataTable Series
-        {
-            get
-            {
-                return SeriesGrid.DataSource as DataTable;
-            }
-            set
-            {
-                SeriesGrid.DataSource = value;
-                foreach (DataGridViewColumn C in SeriesGrid.Columns)
-                    C.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-        }
+        public IGridView SeriesGrid { get { return SeriesGridView; } }
 
         /// <summary>
-        /// Set the data source to use in the data grid at the bottom
+        /// Get the data grid
         /// </summary>
-        public DataTable Data
-        {
-            get
-            {
-                return DataGrid.DataSource as DataTable;
-            }
-            set
-            {
-                DataGrid.DataSource = value;
-                foreach (DataGridViewColumn C in DataGrid.Columns)
-                    C.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-        }
+        public IGridView DataGrid { get { return DataGridView; } }
 
         /// <summary>
-        /// Set the datasets.
+        /// Get or set the data source items.
         /// </summary>
-        public string[] Datasets
+        public string[] DataSourceItems
         {
             get
             {
                 List<string> Items = new List<string>();
-                foreach (string S in DataCombo.Items)
-                    Items.Add(S);
+                foreach (string Item in DataSourceCombo.Items)
+                    Items.Add(Item);
                 return Items.ToArray();
             }
             set
             {
-                DataCombo.Items.Clear();
-                foreach (string S in value)
-                    DataCombo.Items.Add(S);
-                if (DataCombo.Items.Count > 0)
-                    DataCombo.SelectedIndex = 0;
+                DataSourceCombo.Items.Clear();
+                if (value != null && value.Length > 0)
+                {
+                    DataSourceCombo.Items.AddRange(value);
+                    DataSourceCombo.Text = value[0];
+                }
             }
         }
 
         /// <summary>
-        /// Return the current selected series cell.
+        /// Get or set the data source.
         /// </summary>
-        public Point CurrentSeriesCellSelected
+        public string DataSource
         {
             get
             {
-                if (SeriesGrid.SelectedCells.Count == 1)
-                    return new Point(SeriesGrid.SelectedCells[0].ColumnIndex, SeriesGrid.SelectedCells[0].RowIndex);
-                else
-                    throw new Exception("No cell selected in Series Grid");
+                return DataSourceCombo.Text;
             }
             set
             {
-                SeriesGrid.ClearSelection();
-                SeriesGrid[value.X, value.Y].Selected = true;
+                DataSourceCombo.Text = value;
             }
         }
 
         /// <summary>
-        /// Return the current data set.
+        /// Get or set the focus on X variable list.
         /// </summary>
-        public string CurrentDataset { get { return DataCombo.Text; } }
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        public void AddSeriesContextAction(string ButtonText, System.EventHandler OnClick)
+        public bool XFocused
         {
-            ToolStripItem Item = PopupMenu.Items.Add(ButtonText);
-            Item.Click += OnClick;
+            get
+            {
+                return XRadio.Checked;
+            }
+            set
+            {
+                XRadio.Checked = value;
+                if (value)
+                    XRadio.Font = new Font(XRadio.Font, FontStyle.Bold);
+                else
+                    XRadio.Font = new Font(XRadio.Font, FontStyle.Regular);
+            }
         }
 
         /// <summary>
-        /// User has changed the dataset.
+        /// Get or set the focus on Y variable list.
         /// </summary>
-        private void OnDataComboChanged(object sender, System.EventArgs e)
+        public bool YFocused
         {
-            if (DatasetChanged != null)
-                DatasetChanged(DataCombo.Text);
+            get
+            {
+                return YRadio.Checked;
+            }
+            set
+            {
+                YRadio.Checked = value;
+                if (value)
+                    YRadio.Font = new Font(XRadio.Font, FontStyle.Bold);
+                else
+                    YRadio.Font = new Font(XRadio.Font, FontStyle.Regular);
+            }
         }
 
         /// <summary>
-        /// User has changed the selected cell in the data grid.
+        /// User has changed the data source combo.
         /// </summary>
-        private void DataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void OnDataSourceComboChanged(object sender, EventArgs e)
         {
-            if (DataColumnClicked != null)
-                DataColumnClicked(DataGrid.Columns[e.ColumnIndex].HeaderText);
+            if (DataSourceChanged != null)
+                DataSourceChanged(DataSourceCombo.Text);
         }
 
-        /// <summary>
-        /// User has finished editing a cell.
-        /// </summary>
-        private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void OnXListBoxClick(object sender, EventArgs e)
         {
-            if (SeriesCellChanged != null)
-                SeriesCellChanged(e.ColumnIndex, e.RowIndex, SeriesGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+            XFocused = true;
+            YFocused = false;
         }
+
+        private void OnYListBoxClick(object sender, EventArgs e)
+        {
+            XFocused = false;
+            YFocused = true;
+
+        }
+
+
+
+
 
     }
 }

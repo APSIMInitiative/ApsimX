@@ -42,6 +42,7 @@
             this.InvertedCheckBox.TabIndex = 0;
             this.InvertedCheckBox.Text = "Inverted";
             this.InvertedCheckBox.UseVisualStyleBackColor = true;
+            this.InvertedCheckBox.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
             // 
             // TitleTextBox
             // 
@@ -49,7 +50,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TitleTextBox.Location = new System.Drawing.Point(68, 13);
             this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(182, 20);
+            this.TitleTextBox.Size = new System.Drawing.Size(151, 20);
             this.TitleTextBox.TabIndex = 1;
             this.TitleTextBox.Enter += new System.EventHandler(this.OnTitleTextBoxEnter);
             this.TitleTextBox.Leave += new System.EventHandler(this.OnTitleTextBoxLeave);
