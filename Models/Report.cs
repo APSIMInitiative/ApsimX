@@ -144,6 +144,11 @@ namespace Models
                         Value = (Info as FieldInfo).GetValue(Model);
                     else if (Info is PropertyInfo)
                         Value = (Info as PropertyInfo).GetValue(Model, null);
+                    if (Value.GetType().IsArray)
+                    {
+                        Array A = Value as Array;
+                        Value = A.Clone();
+                    }
                 }
                 _Values.Add(Value);
             }
