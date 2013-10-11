@@ -7,11 +7,29 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Sample : Model
     {
         public string Date { get; set; }
 
+        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
+
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
+            }
+        }  
+        
         public double[] NO3 { get; set; }
         public double[] NH4 { get; set; }
         public double[] SW { get; set; }
@@ -258,6 +276,7 @@ namespace Models.Soils
         /// <summary>
         /// Organic carbon. Units: Total %
         /// </summary>
+        [UserInterfaceIgnore]
         public double[] OCTotal
         {
             get
@@ -272,6 +291,7 @@ namespace Models.Soils
         /// <summary>
         /// PH. Units: (1:5 water)
         /// </summary>
+        [UserInterfaceIgnore]
         public double[] PHWater
         {
             get

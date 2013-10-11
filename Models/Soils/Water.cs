@@ -8,9 +8,13 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Water : Model
     {
         private double[] _Thickness;
+
+        [UserInterfaceIgnore]
         public double[] Thickness
         {
             get
@@ -20,6 +24,20 @@ namespace Models.Soils
             set
             {
                 _Thickness = value;
+            }
+        }
+
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
             }
         }
 
@@ -72,6 +90,7 @@ namespace Models.Soils
         /// the setting list of names. Also new crops will be added / deleted as required.
         /// </summary>
         [XmlIgnore]
+        [UserInterfaceIgnore]
         public string[] CropNames
         {
             get
@@ -90,8 +109,6 @@ namespace Models.Soils
                     if (Crop == null)
                     {
                         Crop = new SoilCrop { Name = value[i] };
-                        Crop.Thickness = new double[Thickness.Length];
-                        Array.Copy(Thickness, Crop.Thickness, Thickness.Length);
                         Crops.Add(Crop);
                     }
 

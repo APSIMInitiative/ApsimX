@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.Soils
 {
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilOrganicMatter : Model
     {
         [Description("Root C:N ratio")]
@@ -18,7 +21,24 @@ namespace Models.Soils
         public double EnrACoeff { get; set; }
         [Description("Erosion enrichment coefficient B")]
         public double EnrBCoeff { get; set; }
+
+        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
+
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
+            }
+        }
+
         public double[] OC { get; set; }
         public string[] OCMetadata { get; set; }
         [Units("0-1")]
@@ -54,6 +74,7 @@ namespace Models.Soils
         /// <summary>
         /// Organic carbon. Units: Total %
         /// </summary>
+        [UserInterfaceIgnore]
         public double[] OCTotal
         {
             get
@@ -69,81 +90,110 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return amount of inert carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        public double[] InertC(Soil Soil)
+        [DisplayFormat("N0")]
+        [Units("kg/ha")]
+        public double[] InertC
         {
-            double[] BD = Soil.BDMapped(Thickness);
-
-            double[] InertC = new double[Thickness.Length];
-
-            for (int i = 0; i < OC.Length; i++)
+            get
             {
-                if (FInert[i] == double.NaN ||
-                    OC[i] == double.NaN ||
-                    BD[i] == double.NaN)
-                    InertC[i] = double.NaN;
-                else
+                Soil soil = Parent as Soil;
+                if (soil != null)
                 {
-                    double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                    double oc_ppm = OCTotal[i] / 100 * ppm;
-                    double carbon_tot = oc_ppm / soiln2_fac;
-                    InertC[i] = FInert[i] * carbon_tot;
+                    double[] BD = soil.BDMapped(Thickness);
+
+                    double[] InertC = new double[Thickness.Length];
+
+                    for (int i = 0; i < OC.Length; i++)
+                    {
+                        if (FInert[i] == double.NaN ||
+                            OC[i] == double.NaN ||
+                            BD[i] == double.NaN)
+                            InertC[i] = double.NaN;
+                        else
+                        {
+                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
+                            double oc_ppm = OCTotal[i] / 100 * ppm;
+                            double carbon_tot = oc_ppm / soiln2_fac;
+                            InertC[i] = FInert[i] * carbon_tot;
+                        }
+                    }
+                    return InertC;
                 }
+                return null;
             }
-            return InertC;
         }
 
         /// <summary>
         /// Calculate and return the amount of biom carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        public double[] BiomC(Soil Soil)
+        [DisplayFormat("N0")]
+        [Units("kg/ha")]
+        public double[] BiomC
         {
-            double[] BD = Soil.BDMapped(Thickness);
-            double[] InertC = this.InertC(Soil);
-
-            double[] BiomC = new double[Thickness.Length];
-            for (int i = 0; i < Thickness.Length; i++)
+            get
             {
-                if (OC[i] == double.NaN ||
-                    FBiom[i] == double.NaN ||
-                    BD[i] == double.NaN ||
-                    InertC[i] == double.NaN)
-                    BiomC[i] = double.NaN;
-                else
+                Soil soil = Parent as Soil;
+                if (soil != null)
                 {
-                    double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                    double oc_ppm = OCTotal[i] / 100 * ppm;
-                    double carbon_tot = oc_ppm / soiln2_fac;
-                    BiomC[i] = ((carbon_tot - InertC[i]) * FBiom[i]) / (1.0 + FBiom[i]);
+                    double[] BD = soil.BDMapped(Thickness);
+                    double[] InertC = this.InertC;
+
+                    double[] BiomC = new double[Thickness.Length];
+                    for (int i = 0; i < Thickness.Length; i++)
+                    {
+                        if (OC[i] == double.NaN ||
+                            FBiom[i] == double.NaN ||
+                            BD[i] == double.NaN ||
+                            InertC[i] == double.NaN)
+                            BiomC[i] = double.NaN;
+                        else
+                        {
+                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
+                            double oc_ppm = OCTotal[i] / 100 * ppm;
+                            double carbon_tot = oc_ppm / soiln2_fac;
+                            BiomC[i] = ((carbon_tot - InertC[i]) * FBiom[i]) / (1.0 + FBiom[i]);
+                        }
+                    }
+                    return BiomC;
                 }
+                return null;
             }
-            return BiomC;
         }
 
         /// <summary>
         /// Calculate and return the amount of humic carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        public double[] HumC(Soil Soil)
+        [DisplayFormat("N0")]
+        [Units("kg/ha")]
+        public double[] HumC
         {
-            double[] BD = Soil.BDMapped(Thickness);
-            double[] InertC = this.InertC(Soil);
-            double[] BiomC = this.BiomC(Soil);
-
-            double[] HumC = new double[Thickness.Length];
-
-            for (int i = 0; i < Thickness.Length; i++)
+            get
             {
-                if (BiomC[i] == double.NaN)
-                    HumC[i] = double.NaN;
-                else
+                Soil soil = Parent as Soil;
+                if (soil != null)
                 {
-                    double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                    double oc_ppm = OCTotal[i] / 100 * ppm;
-                    double carbon_tot = oc_ppm / soiln2_fac;
-                    HumC[i] = carbon_tot - BiomC[i] - InertC[i];
-                }
-            }
-            return HumC;
-        }
+                    double[] BD = soil.BDMapped(Thickness);
+                    double[] InertC = this.InertC;
+                    double[] BiomC = this.BiomC;
 
+                    double[] HumC = new double[Thickness.Length];
+
+                    for (int i = 0; i < Thickness.Length; i++)
+                    {
+                        if (BiomC[i] == double.NaN)
+                            HumC[i] = double.NaN;
+                        else
+                        {
+                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
+                            double oc_ppm = OCTotal[i] / 100 * ppm;
+                            double carbon_tot = oc_ppm / soiln2_fac;
+                            HumC[i] = carbon_tot - BiomC[i] - InertC[i];
+                        }
+                    }
+                    return HumC;
+                }
+                return null;
+            }
+        }
     }
 }

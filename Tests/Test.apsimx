@@ -164,19 +164,6 @@
           </SAT>
           <SoilCrop>
             <Name>Wheat</Name>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -219,19 +206,6 @@
           </SoilCrop>
           <SoilCrop>
             <Name>Barley</Name>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -334,6 +308,12 @@
           <slope>NaN</slope>
           <discharge_width>NaN</discharge_width>
           <catchment_area>NaN</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <water_table>NaN</water_table>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -360,12 +340,6 @@
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <CN2Bare>73</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <water_table>NaN</water_table>
         </SoilWater>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -478,16 +452,65 @@
           <DepthWetSoil>NaN</DepthWetSoil>
           <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
+        <Sample>
+          <Name>Sample</Name>
+          <Date />
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>6.50300344798777</double>
+            <double>2.10100111398159</double>
+            <double>2.10100111398159</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+          </NO3>
+          <NH4>
+            <double>0.599004378686979</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+          </NH4>
+          <NO3Units>ppm</NO3Units>
+          <NH4Units>ppm</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
       </Soil>
       <Graph>
         <Name>Graph</Name>
         <Axis>
           <Type>Left</Type>
-          <Title>Temperature (oC)</Title>
+          <Title>Depth (mm)</Title>
           <Inverted>true</Inverted>
         </Axis>
         <Axis>
           <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Series>

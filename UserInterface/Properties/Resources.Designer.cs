@@ -144,13 +144,6 @@ namespace UserInterface.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap InitialNitrogen16 {
-            get {
-                object obj = ResourceManager.GetObject("InitialNitrogen16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap InitialWater16 {
             get {
                 object obj = ResourceManager.GetObject("InitialWater16", resourceCulture);
@@ -203,6 +196,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap RunAPSIM {
             get {
                 object obj = ResourceManager.GetObject("RunAPSIM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Sample16 {
+            get {
+                object obj = ResourceManager.GetObject("Sample16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,6 +323,32 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("Water16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to       &lt;Graph&gt;
+        ///        &lt;Name&gt;Graph&lt;/Name&gt;
+        ///        &lt;Axis&gt;
+        ///          &lt;Type&gt;Left&lt;/Type&gt;
+        ///          &lt;Title&gt;Depth (mm)&lt;/Title&gt;
+        ///          &lt;Inverted&gt;true&lt;/Inverted&gt;
+        ///        &lt;/Axis&gt;
+        ///        &lt;Axis&gt;
+        ///          &lt;Type&gt;Top&lt;/Type&gt;
+        ///          &lt;Title&gt;Volumetric water (mm/mm)&lt;/Title&gt;
+        ///          &lt;Inverted&gt;false&lt;/Inverted&gt;
+        ///        &lt;/Axis&gt;
+        ///        &lt;Series&gt;
+        ///          &lt;Type&gt;Line&lt;/Type&gt;
+        ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
+        ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
+        ///          &lt;ColourArgb&gt;-65536&lt;/ColourArgb&gt;
+        ///          &lt;Marker&gt;None&lt;/Marker&gt;        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WaterGraph {
+            get {
+                return ResourceManager.GetString("WaterGraph", resourceCulture);
             }
         }
         

@@ -474,7 +474,7 @@ namespace Models.Soils
             SoilCrop SoilCrop = Crop(CropName);
             if (SoilCrop.KL == null)
                 return null;
-            return Map(SoilCrop.KL, SoilCrop.Thickness, Thickness, MapType.Concentration, SoilCrop.KL.Last());
+            return Map(SoilCrop.KL, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.KL.Last());
         }
 
         /// <summary>
@@ -490,7 +490,7 @@ namespace Models.Soils
                     XF[i] = 1.0;
                 return XF;
             }
-            return Map(SoilCrop.XF, SoilCrop.Thickness, Thickness, MapType.Concentration, SoilCrop.XF.Last());
+            return Map(SoilCrop.XF, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.XF.Last());
         }
 
         /// <summary>
@@ -708,7 +708,6 @@ namespace Models.Soils
 
             return new SoilCrop()
             {
-                Thickness = Water.Thickness,
                 LL = LL,
                 LLMetadata = Metadata,
                 KL = KL,
@@ -1477,9 +1476,9 @@ namespace Models.Soils
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName);
-            if (Utility.Math.AreEqual(SoilCrop.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
                 return SoilCrop.LL;
-            double[] Values = Map(SoilCrop.LL, SoilCrop.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
+            double[] Values = Map(SoilCrop.LL, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
             if (Values == null) return null;
             double[] AirDry = AirDryMapped(ToThickness);
             double[] DUL = DULMapped(ToThickness);
@@ -1499,9 +1498,9 @@ namespace Models.Soils
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName);
-            if (Utility.Math.AreEqual(SoilCrop.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
                 return SoilCrop.XF;
-            return Map(SoilCrop.XF, SoilCrop.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            return Map(SoilCrop.XF, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
         }
 
         private enum MapType { Mass, Concentration, UseBD }

@@ -9,9 +9,29 @@ namespace Models.Soils
 {
     public class SoilCrop : Model
     {
-        public double[] Thickness { get; set; }
+        [Units("mm/mm")]
         public double[] LL { get; set; }
+
+        [DisplayTotal]
+        [DisplayFormat("N1")]
+        [Units("mm")]
+        public double[] PAWC
+        {
+            get
+            {
+                Soil parentSoil = Parent.Parent as Soil;
+                if (parentSoil == null)
+                    return null;
+                return Utility.Math.Multiply(Soil.CalcPAWC(parentSoil.Thickness, LL, parentSoil.DUL, XF), parentSoil.Thickness);
+            }
+        }
+
+        [DisplayFormat("N2")]
+        [Units("mm/mm")]
         public double[] KL { get; set; }
+        
+        [DisplayFormat("N1")]
+        [Units("mm/mm")]
         public double[] XF { get; set; }
 
         public string[] LLMetadata { get; set; }
