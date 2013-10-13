@@ -60,9 +60,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateSeries()
         {
+            DataTable Data = new DataTable();
             if (Graph != null && Graph.Series.Count > 0)
             {
-                DataTable Data = new DataTable();
                 Data.Columns.Add("X", typeof(string));
                 Data.Columns.Add("Y", typeof(string));
                 Data.Columns.Add("Title", typeof(string));
@@ -113,6 +113,8 @@ namespace UserInterface.Presenters
                     SeriesView.SeriesGrid.SetCellEditor(7, Row, S.Marker);
                 }
             }
+            else
+                SeriesView.SeriesGrid.DataSource = null;
         }
 
         /// <summary>
@@ -122,15 +124,18 @@ namespace UserInterface.Presenters
         {
             // Populate the view with a list of data sources.
             List<string> DataSources = new List<string>();
-            foreach (string SimulationName in DataStore.SimulationNames)
-                foreach (string TableName in DataStore.TableNames)
-                {
-                    if (TableName != "Properties" && TableName != "Messages")
+            if (DataStore != null)
+            {
+                foreach (string SimulationName in DataStore.SimulationNames)
+                    foreach (string TableName in DataStore.TableNames)
                     {
-                        DataSources.Add(SimulationName + "." + TableName);
+                        if (TableName != "Properties" && TableName != "Messages")
+                        {
+                            DataSources.Add(SimulationName + "." + TableName);
+                        }
                     }
-                }
-            DataSources.Sort();
+                DataSources.Sort();
+            }
             DataSources.AddRange(Graph.ModelsInScope());
             SeriesView.DataSourceItems = DataSources.ToArray();
         }
@@ -171,7 +176,7 @@ namespace UserInterface.Presenters
             else if (Col == 2) // Title
                 S.Title = NewContents.ToString();
             else if (Col == 3) // Colour
-                S.Colour = (Color)NewContents;
+                S.Colour = Color.FromArgb((int)NewContents);
             else if (Col == 4) // Type
                 S.Type = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), NewContents.ToString());
             else if (Col == 5) // Top?
@@ -344,7 +349,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnClearSeries(object Sender, EventArgs Args)
         {
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", new Series[0]);
+            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", new List<Series>());
             CommandHistory.Add(Cmd);
         }
 

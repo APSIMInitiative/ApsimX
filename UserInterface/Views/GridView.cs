@@ -66,6 +66,11 @@ namespace UserInterface.Views
                              string[] ToolTips = null);
 
         /// <summary>
+        /// Set the column header colours.
+        /// </summary>
+        void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null);
+
+        /// <summary>
         /// Set the numeric grid format e.g. N3
         /// </summary>
         void SetNumericFormat(string Format);
@@ -352,9 +357,24 @@ namespace UserInterface.Views
                 if (ToolTips != null)
                 {
                     for (int Row = 0; Row < Grid.RowCount; Row++)
-                        Grid.Rows[Row].Cells[Col].ToolTipText = ToolTips[Row];
+                    {
+                        if (Row < ToolTips.Length)
+                            Grid.Rows[Row].Cells[Col].ToolTipText = ToolTips[Row];
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Set the column header colours.
+        /// </summary>
+        public void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null)
+        {
+            Grid.EnableHeadersVisualStyles = false;
+            if (BackgroundColour.HasValue)
+                Grid.Columns[Col].HeaderCell.Style.BackColor = BackgroundColour.Value;
+            if (ForegroundColour.HasValue)
+                Grid.Columns[Col].HeaderCell.Style.ForeColor = ForegroundColour.Value;
         }
 
         /// <summary>
@@ -469,7 +489,7 @@ namespace UserInterface.Views
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     ValueBeforeEdit = Grid[e.ColumnIndex, e.RowIndex].Value;
-                    Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color;
+                    Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
                 }
             }
         }

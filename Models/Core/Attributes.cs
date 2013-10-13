@@ -95,6 +95,25 @@ namespace Models.Core
         public string ModelTypeName { get; set; }
         public AllowDropOn(string ModelTypeName) { this.ModelTypeName = ModelTypeName; }
     }
-    
 
+    [AttributeUsage(AttributeTargets.Property)]
+    public class UserInterfaceIgnore : System.Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DisplayFormat : System.Attribute
+    {
+        public string Format;
+
+        public DisplayFormat(string format)
+        {
+            Format = format;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DisplayTotal : System.Attribute
+    {
+    }
 }

@@ -6,6 +6,8 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Swim : Model
     {
         [Description("Bare soil albedo")]

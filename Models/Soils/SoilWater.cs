@@ -16,6 +16,8 @@ namespace Models.Soils
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
     ///</summary>
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilWater : Model
     {
         #region Links
@@ -635,6 +637,7 @@ namespace Models.Soils
 #endif
 
         [XmlIgnore]
+        [UserInterfaceIgnore]
         [Description("Soil water content of layer")]
         public double[] sw        //! soil water content of layer
         {
@@ -755,21 +758,36 @@ namespace Models.Soils
         // be mapped into a standardised layer structure. The 4 variables below (Thickness, SWCON, MWCON and KLAT) 
         // may be in a different layer structure.
 
-        public double[] Thickness;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
+        [UserInterfaceIgnore]
+        public double[] Thickness { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
+
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
+            }
+        }
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Description("Soil water conductivity constant")]
-        public double[] SWCON;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
+        public double[] SWCON { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Impermeable soil layer indicator")]
-        public double[] MWCON = null;     //! impermeable soil layer indicator
+        public double[] MWCON { get; set; }     //! impermeable soil layer indicator
 
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
-        private double[] KLAT = null;
+        public double[] KLAT { get; set; }
 
         #endregion
 
@@ -833,6 +851,7 @@ namespace Models.Soils
         private double[] _sw_dep;
 
         [XmlIgnore]
+        [UserInterfaceIgnore]
         [Units("mm")]
         [Description("sw * dlayer")]
         public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation

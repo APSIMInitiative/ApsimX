@@ -3,13 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.Soils
 {
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Analysis : Model
     {
-        
+        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
+
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
+            }
+        }        
+
         [Units("%")]
         public double[] Rocks { get; set; }
         public string[] RocksMetadata { get; set; }
@@ -110,6 +128,7 @@ namespace Models.Soils
         /// <summary>
         /// PH. Units: (1:5 water)
         /// </summary>
+        [UserInterfaceIgnore]
         public double[] PHWater
         {
             get
