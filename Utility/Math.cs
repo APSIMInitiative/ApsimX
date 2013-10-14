@@ -232,7 +232,7 @@ namespace Utility
         {
             double result = dInitialValue;
             if (iStartIndex < 0)
-                throw new Exception("MathUtility.Sum: End index or start index is out of range");
+                throw new Exception("Utility.Math.Sum: End index or start index is out of range");
             int iIndex = 0;
             foreach (double Value in Values)
             {
@@ -257,7 +257,7 @@ namespace Utility
             //find where x lies in the x coordinate
             if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
             {
-                throw new Exception("MathUtility.LinearInterpReal: Lengths of passed in arrays are incorrect");
+                throw new Exception("Utility.Math.LinearInterpReal: Lengths of passed in arrays are incorrect");
             }
 
             for (int iIndex = 0; iIndex < dXCoordinate.Length; iIndex++)

@@ -92,15 +92,18 @@
     <Compile Include="Graph\GraphData.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\NitrogenChangedType.cs" />
+    <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
     <Compile Include="Soils\Sample.cs" />
+    <Compile Include="Soils\simpleSoilTemp.cs" />
     <Compile Include="Soils\Soil.cs" />
+    <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
+    <Compile Include="Soils\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilOrganicMatter.cs" />
     <Compile Include="Soils\SoilTemperature.cs" />
     <Compile Include="Soils\SoilTemperature2.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
+    <Compile Include="Soils\Variables.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />

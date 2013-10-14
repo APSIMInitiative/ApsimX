@@ -341,6 +341,9 @@
             <double>0.3</double>
           </SWCON>
         </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+        </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>

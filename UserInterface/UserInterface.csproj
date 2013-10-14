@@ -338,9 +338,6 @@
     <None Include="Resources\drop16.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SoilOrganicMatter16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\drop161.png" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +363,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WaterGraph.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\N.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\H2O.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoilOrganicMatter16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
