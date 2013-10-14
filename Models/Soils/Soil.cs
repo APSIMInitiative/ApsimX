@@ -59,6 +59,7 @@ namespace Models.Soils
 
         public Water Water { get; set; }
         public SoilWater SoilWater { get; set; }
+        public SoilNitrogen SoilNitrogen { get; set; }
         public SoilOrganicMatter SoilOrganicMatter { get; set; }
         public Analysis Analysis { get; set; }
         public InitialWater InitialWater { get; set; }
@@ -108,6 +109,8 @@ namespace Models.Soils
                     AllModels.Add(Water);
                 if (SoilWater != null)
                     AllModels.Add(SoilWater);
+                if (SoilNitrogen != null)
+                    AllModels.Add(SoilNitrogen);
                 if (SoilOrganicMatter != null)
                     AllModels.Add(SoilOrganicMatter);
                 if (Analysis != null)
@@ -143,6 +146,8 @@ namespace Models.Soils
                 Water = Model as Water;
             if (Model is SoilWater)
                 SoilWater = Model as SoilWater;
+            if (Model is SoilNitrogen)
+                SoilNitrogen = Model as SoilNitrogen;
             if (Model is SoilOrganicMatter)
                 SoilOrganicMatter = Model as SoilOrganicMatter;
             if (Model is Analysis)
@@ -172,6 +177,8 @@ namespace Models.Soils
                 Water = null;
             if (Model is SoilWater)
                 SoilWater = null;
+            if (Model is SoilNitrogen)
+                SoilNitrogen = null;
             if (Model is SoilOrganicMatter)
                 SoilOrganicMatter = null;
             if (Model is Analysis)
