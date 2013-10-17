@@ -13,7 +13,7 @@
     /// </summary>
     public class Graph
     {
-        public static Models.Graph.Graph CreateGraphFromResource(string resourceName, Model parent)
+        public static Models.Graph.Graph CreateGraphFromResource(string resourceName)
         {
             string graphXmL = UserInterface.Properties.Resources.ResourceManager.GetString(resourceName);
 
@@ -22,13 +22,7 @@
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(graphXmL);
 
-                Models.Graph.Graph graph = Utility.Xml.Deserialise(doc.DocumentElement) as Models.Graph.Graph;
-                if (graph != null)
-                {
-                    graph.Parent = parent;
-                    graph.ResolveLinks();
-                }
-                return graph;
+                return Utility.Xml.Deserialise(doc.DocumentElement) as Models.Graph.Graph;
             }
             return null;
         }

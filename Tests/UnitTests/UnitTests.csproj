@@ -55,8 +55,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SimulationsTest.cs" />
-    <Compile Include="ZoneTest.cs" />
+    <Compile Include="ModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

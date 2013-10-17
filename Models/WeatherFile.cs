@@ -200,13 +200,12 @@ namespace Models
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
             if (WtrFile == null)
             {
                 HaveReadData = false;
-                Clock.Tick += OnTick;
-              //  Simulation.Completed += OnCompleted;
                 Summary.WriteProperty("Weather file name", FileName);
             }
             OpenDataFile(FFileName);
@@ -215,7 +214,8 @@ namespace Models
         /// <summary>
         /// An event handler for the tick event.
         /// </summary>
-        public void OnTick(object sender, EventArgs e)
+        [EventSubscribe("Tick")]
+        private void OnTick(object sender, EventArgs e)
         {
             if (!HaveReadData)
             {
@@ -240,7 +240,8 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        public override void OnCompleted()
+        [EventSubscribe("Completed")]
+        public void OnCompleted(object sender, EventArgs e)
         {
             Clock.Tick -= OnTick;
            // Simulation.Completed -= OnCompleted;

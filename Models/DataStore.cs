@@ -69,7 +69,8 @@ namespace Models
         /// <summary>
         /// Initialise this data store.
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("AllCommencing")]
+        private void OnAllCommencing(object sender, EventArgs e)
         {
             SimulationIDs.Clear();
 
@@ -102,17 +103,15 @@ namespace Models
             Names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
             Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
             CreateTable("Messages", Names, Types);
-
-            Simulations.AllCompleted += OnAllCompleted;
         }
 
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        private void OnAllCompleted()
+        [EventSubscribe("AllCompleted")]
+        private void OnAllCompleted(object sender, EventArgs e)
         {
             Connection.ExecuteNonQuery("COMMIT");
-            Simulations.AllCompleted -= OnAllCompleted;
         }
 
         /// <summary>

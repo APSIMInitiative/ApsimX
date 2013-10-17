@@ -24,9 +24,6 @@ namespace Models.Soils
         [Link]
         private Clock Clock = null;
 
-        [Link]
-        private WeatherFile MetFile = null;
-
         //[Link]
         //private Zone Paddock = null;
 
@@ -4424,18 +4421,14 @@ namespace Models.Soils
         #region Clock Event Handlers
 
 
-
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
 
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
 
             initDone = false;
-            Clock.StartOfDay += OnPrepare;
-            Clock.MiddleOfDay += OnProcess;
-            MetFile.NewMet += OnNewMet;
-
 
             //ApsimFile.Soil Soil = (ApsimFile.Soil) Paddock.Get("Soil");
             //diffus_const = Soil.SoilWater.DiffusConst;
@@ -4486,7 +4479,8 @@ namespace Models.Soils
             initDone = true;
         }
 
-        public void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnPrepare(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_prepare
@@ -4513,7 +4507,8 @@ namespace Models.Soils
         }
 
 
-        public void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("MiddleOfDay")]
+        private void OnProcess(object sender, EventArgs e)
         {
 
             //Get variables from other modules

@@ -43,6 +43,16 @@ namespace Models.Core
 
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
+    public class EventSubscribe : System.Attribute
+    {
+        public string Name;
+        public EventSubscribe(string name)
+        {
+            Name = name;
+        }
+    }
+
 
     [AttributeUsage(AttributeTargets.Class)]
     public class PresenterName : Attribute

@@ -33,22 +33,22 @@
       <Name>Field2</Name>
       <Graph>
         <Name>Graph1</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>X axis title</Title>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Y axis title</Title>
-        </Axis>
         <Series>
+          <Name>Series1</Name>
           <Title>Series 1</Title>
           <Type>Line</Type>
           <TableName>Report</TableName>
-          <X>Today</X>
-          <Y>MaxT</Y>
+          <X>
+            <Name>X</Name>
+            <FieldName>.Field.Soil.AirDry</FieldName>
+          </X>
+          <Y>
+            <Name>Y</Name>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
         </Series>
       </Graph>
+      <Soil />
       <Zone>
         <Name>Field2SubZone</Name>
         <Report>
@@ -60,6 +60,42 @@
           </Events>
         </Report>
       </Zone>
+    </Zone>
+  </Simulation>
+  <Simulation>
+    <Name>Test2</Name>
+    <WeatherFile>
+      <Name>WeatherFile</Name>
+      <FileName>Goondiwindi.met</FileName>
+    </WeatherFile>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1940-01-01T00:00:00</StartDate>
+      <EndDate>1989-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
+    <Zone>
+      <Name>Field2</Name>
+      <Graph>
+        <Name>Graph1</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Title>Series 1</Title>
+          <Type>Line</Type>
+          <TableName>Report</TableName>
+          <X>
+            <Name>X</Name>
+            <FieldName>.Field.Soil.AirDry</FieldName>
+          </X>
+          <Y>
+            <Name>Y</Name>
+            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Soil />
     </Zone>
   </Simulation>
   <DataStore>

@@ -188,6 +188,8 @@ namespace UserInterface.Presenters
         private GraphPresenter GraphPresenter;
         private PropertyPresenter PropertyPresenter;
         private List<ProfileProperty> PropertiesInGrid = new List<ProfileProperty>();
+        private Graph g;
+        private Zone ParentZone;
 
         /// <summary>
         /// Attach the model to the view.
@@ -213,14 +215,19 @@ namespace UserInterface.Presenters
             FormatGrid(Table);
 
             // Populate the graph.
-            Graph g = Utility.Graph.CreateGraphFromResource(Model.GetType().Name + "Graph", this.Model);
+            g = Utility.Graph.CreateGraphFromResource(Model.GetType().Name + "Graph");
             if (g == null)
                 this.View.ShowGraph(false);
             else
             {
-                this.View.ShowGraph(true);
-                GraphPresenter = new GraphPresenter();
-                GraphPresenter.Attach(g, this.View.Graph, CommandHistory);
+                ParentZone = this.Model.Find(typeof(Zone)) as Zone;
+                if (ParentZone != null)
+                {
+                    ParentZone.AddModel(g);
+                    this.View.ShowGraph(true);
+                    GraphPresenter = new GraphPresenter();
+                    GraphPresenter.Attach(g, this.View.Graph, CommandHistory);
+                }
             }
         }
 
@@ -229,6 +236,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            if (ParentZone != null && g != null)
+                this.Model.RemoveModel(g);
         }
 
         /// <summary>

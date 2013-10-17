@@ -25,27 +25,15 @@ namespace Models.Core
         /// <summary>
         /// A list of child models.
         /// </summary>
-        public override List<Model> Models { get; set; }
+        public List<Model> Children { get; set; }
 
-        /// <summary>
-        /// Add a model to the Models collection and ensure the name is unique.
+         /// <summary>
+        /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
-        public override void AddModel(Model Model)
+        public override void AddModel(Model model)
         {
-            Models.Add(Model);
-            Model.Parent = this;
-            EnsureNameIsUnique(Model);
-        }
-
-        /// <summary>
-        /// Remove a model from the Models collection
-        /// </summary>
-        public override bool RemoveModel(Model Model)
-        {
-            bool ok = Models.Remove(Model);
-            if (ok)
-                Model.Parent = null;
-            return ok;
+            base.AddModel(model);
+            EnsureNameIsUnique(model);
         }
 
         #region XmlSerializable methods
@@ -59,7 +47,7 @@ namespace Models.Core
         /// </summary>
         public virtual void ReadXml(XmlReader reader)
         {
-            Models = new List<Model>();
+            Children = new List<Model>();
             reader.Read();
             while (reader.IsStartElement())
             {
@@ -78,7 +66,9 @@ namespace Models.Core
                 else
                 {
                     Model NewChild = Utility.Xml.Deserialise(reader) as Model;
-                    AddModel(NewChild);
+                    Children.Add(NewChild);
+                    NewChild.Parent = this;
+                    EnsureNameIsUnique(NewChild);
                 }
             }
             reader.ReadEndElement();
@@ -102,7 +92,7 @@ namespace Models.Core
             writer.WriteString(Area.ToString());
             writer.WriteEndElement();
 
-            foreach (object Model in Models)
+            foreach (object Model in Children)
             {
                 Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
                 if (type.Length == 0)
@@ -128,12 +118,12 @@ namespace Models.Core
             string OriginalName = Utility.Reflection.Name(Model);
             string NewName = OriginalName;
             int Counter = 0;
-            object Child = FindChild(NewName);
+            object Child = LocateChild(NewName);
             while (Child != null && Child != Model && Counter < 10000)
             {
                 Counter++;
                 NewName = OriginalName + Counter.ToString();
-                Child = FindChild(NewName);
+                Child = LocateChild(NewName);
             }
             if (Counter == 1000)
                 throw new Exception("Cannot create a unique name for model: " + OriginalName);

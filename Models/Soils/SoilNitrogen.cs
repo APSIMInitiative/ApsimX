@@ -168,7 +168,8 @@ namespace Models.Soils
         /// <summary>
         /// Performs the initial checks and setup
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
 
             // Variable handling when using APSIMX
@@ -192,9 +193,6 @@ namespace Models.Soils
             root_cn = Soil.SoilOrganicMatter.RootCN;
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
-            Clock.Tick += OnTick;
-            Clock.MiddleOfDay += OnProcess;
-            Clock.EndOfDay += OnPost;
 
             initDone = true;
 
@@ -561,6 +559,7 @@ namespace Models.Soils
         /// <summary>
         /// Performs every-day calculations - main process phase
         /// </summary>
+        [EventSubscribe("StartOfDay")]
         public void OnProcess(object sender, EventArgs e)
         {
             // get other variables.
@@ -592,6 +591,7 @@ namespace Models.Soils
         /// Performs every-day calculations - before begining of day tasks 
         /// </summary>
         /// <param name="time">Today's time</param>
+        [EventSubscribe("Tick")]
         public void OnTick(object sender, EventArgs e)
         {
             // + Purpose: reset potential decomposition variables in each patch and get C and N status
@@ -606,6 +606,7 @@ namespace Models.Soils
         /// <summary>
         /// Performs every-day calculations - end of day processes
         /// </summary>
+        [EventSubscribe("EndOfDay")]
         public void OnPost(object sender, EventArgs e)
         {
             // + Purpose: Check patch status and clean up, if possible

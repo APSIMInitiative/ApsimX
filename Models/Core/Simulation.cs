@@ -3,33 +3,47 @@ using System;
 using Models;
 using System.Diagnostics;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace Models.Core
 {
     public class Simulation : Zone
     {
+
+
         // Private links
         [Link] private ISummary Summary = null;
 
         /// <summary>
+        /// This event will be invoked when the simulation is initialised.
+        /// </summary>
+        public event EventHandler Initialised;
+
+        /// <summary>
         /// To commence the simulation, this event will be invoked.
         /// </summary>
-        public event NullTypeDelegate Commenced;
+        public event EventHandler Commenced;
+
+        /// <summary>
+        /// This event will be invoked when the simulation has completed.
+        /// </summary>
+        public event EventHandler Completed;
 
         /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
         /// </summary>
         public bool Run()
         {
+            bool ok;
             try
             {
-                Initialise();
+                if (Initialised != null)
+                    Initialised(this, new EventArgs());
+
                 if (Commenced != null)
-                    Commenced.Invoke();
+                    Commenced.Invoke(this, new EventArgs());
 
-                Completed();
-
-                return true;
+                ok = true;
             }
             catch (Exception err)
             {
@@ -41,16 +55,20 @@ namespace Models.Core
                 Console.WriteLine(Msg);
                 Summary.WriteMessage(Msg);
 
-                Completed();
-
-                return false;
+                ok = false;
             }
+
+            if (Completed != null)
+                Completed.Invoke(this, new EventArgs());
+
+            return ok;
         }
 
         /// <summary>
         /// Simulation is being initialised.
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
             string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Summary.WriteProperty("Version", Version);
