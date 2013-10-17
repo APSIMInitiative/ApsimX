@@ -589,7 +589,7 @@
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>AllPos</Type>
-      <ColumnNames>.WeatherFile.MaxT</ColumnNames>
+      <ColumnNames>WeatherFile.MaxT</ColumnNames>
       <Parameters />
     </Test>
   </Tests>
