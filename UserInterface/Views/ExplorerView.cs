@@ -430,8 +430,9 @@ namespace UserInterface.Views
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
                     Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
-                    ToolStripItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick);
+                    ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
+                    Button.Checked = Description.Checked;
                 }
             }
             e.Cancel = false;

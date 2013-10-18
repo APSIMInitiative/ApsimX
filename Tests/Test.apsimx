@@ -504,77 +504,30 @@
       <Graph>
         <Name>Graph</Name>
         <Axis>
+          <Name>Axis 1</Name>
           <Type>Left</Type>
           <Title>Depth (mm)</Title>
           <Inverted>true</Inverted>
         </Axis>
         <Axis>
+          <Name>Axis 2</Name>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Series>
+          <Name>Series 1</Name>
           <Type>Line</Type>
           <XAxis>Top</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
           <X>
+            <Name>X</Name>
             <FieldName>[Soil].AirDry</FieldName>
           </X>
           <Y>
-            <FieldName>[Soil].DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>[Soil].DUL</FieldName>
-          </X>
-          <Y>
-            <FieldName>[Soil].DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>[Soil]l.SW</FieldName>
-          </X>
-          <Y>
-            <FieldName>[Soil].DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16760704</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>[Soil].SAT</FieldName>
-          </X>
-          <Y>
-            <FieldName>[Soil].DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>[Soil].LL15</FieldName>
-          </X>
-          <Y>
+            <Name>Y</Name>
             <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
         </Series>

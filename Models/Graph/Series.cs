@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 namespace Models.Graph
 {
-    [ViewName("UserInterface.Views.SeriesView")]
-    [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     public class Series : Model
     {
 

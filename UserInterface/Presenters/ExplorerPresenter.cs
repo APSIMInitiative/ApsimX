@@ -40,6 +40,7 @@ namespace UserInterface.Presenters
         private IExplorerView View;
         private ExplorerActions ExplorerActions;
         private IPresenter CurrentRightHandPresenter;
+        private bool AdvancedMode = false;
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
 
@@ -86,6 +87,12 @@ namespace UserInterface.Presenters
             View.Drop -= OnDrop;
             View.Rename -= OnRename;
             CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
+        }
+
+        public void ToggleAdvancedMode()
+        {
+            AdvancedMode = !AdvancedMode;
+            View.InvalidateNode(".Simulations", GetNodeDescription(ApsimXFile));
         }
 
         #region Events from view
@@ -138,6 +145,9 @@ namespace UserInterface.Presenters
                     EventHandler Handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), ExplorerActions, Method);
                     Desc.OnClick = Handler;
 
+                    if (Desc.Name == "Advanced mode")
+                        Desc.Checked = AdvancedMode;
+
                     e.Descriptions.Add(Desc);
                 }
             }
@@ -155,7 +165,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                ModelCollection Model = ApsimXFile.Get(e.NodePath) as ModelCollection;
+                Model Model = ApsimXFile.Get(e.NodePath) as Model;
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Models)
@@ -285,12 +295,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private NodeDescriptionArgs.Description GetNodeDescription(Model Model)
         {
-            return new NodeDescriptionArgs.Description()
-            {
-                Name = Model.Name,
-                ResourceNameForImage = Model.GetType().Name + "16",
-                HasChildren = Model is ModelCollection
-            };
+            NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
+            description.Name = Model.Name;
+            description.ResourceNameForImage = Model.GetType().Name + "16";
+            if (AdvancedMode)
+                description.HasChildren = Model.Models.Length > 0;
+            else
+                description.HasChildren = Model is ModelCollection;
+            return description;
         }
 
         /// <summary>
@@ -317,6 +329,12 @@ namespace UserInterface.Presenters
 
                 ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
                 PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
+
+                if (AdvancedMode)
+                {
+                    ViewName = new ViewName("UserInterface.Views.GridView");
+                    PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
+                }
 
                 if (ViewName != null && PresenterName != null)
                 {
