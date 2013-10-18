@@ -32,7 +32,7 @@ namespace Models.Core
             get
             {
                 if (Parent == null)
-                    return Name;
+                    return "." + Name;
                 else
                     return Parent.FullPath + "." + Name;
             }
@@ -227,7 +227,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Remove a model from the Models collection
+        /// Remove a model from the Models collection. Returns true if model was removed.
         /// </summary>
         public virtual bool RemoveModel(Model model)
         {

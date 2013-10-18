@@ -47,10 +47,10 @@ namespace ModelTests
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;
 
-            Assert.AreEqual(sim.FullPath, "Simulations.Test");
-            Assert.AreEqual(zone2.FullPath, "Simulations.Test.Field2");
-            Assert.AreEqual(graph.Series[0].FullPath, "Simulations.Test.Field2.Graph1.Series1");
-            Assert.AreEqual(soil.Water.FullPath, "Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(sim.FullPath, ".Simulations.Test");
+            Assert.AreEqual(zone2.FullPath, ".Simulations.Test.Field2");
+            Assert.AreEqual(graph.Series[0].FullPath, ".Simulations.Test.Field2.Graph1.Series1");
+            Assert.AreEqual(soil.Water.FullPath, ".Simulations.Test.Field2.Soil.Water");
         }
 
         /// <summary>
@@ -150,24 +150,24 @@ namespace ModelTests
             // Test the models that are in scope of zone2.graph
             Model[] inScopeForGraph = graph.FindAll();
             Assert.AreEqual(inScopeForGraph.Length, 18);
-            Assert.AreEqual(inScopeForGraph[0].FullPath, "Simulations.Test.Field2.Graph1");
-            Assert.AreEqual(inScopeForGraph[1].FullPath, "Simulations.Test.Field2.Graph1.Series1");
-            Assert.AreEqual(inScopeForGraph[2].FullPath, "Simulations.Test.Field2.Graph1.Series1.X");
-            Assert.AreEqual(inScopeForGraph[3].FullPath, "Simulations.Test.Field2.Graph1.Series1.Y");
-            Assert.AreEqual(inScopeForGraph[4].FullPath, "Simulations.Test.Field2.Soil");
-            Assert.AreEqual(inScopeForGraph[5].FullPath, "Simulations.Test.Field2.Soil.Water");
-            Assert.AreEqual(inScopeForGraph[6].FullPath, "Simulations.Test.Field2.Soil.SoilOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[7].FullPath, "Simulations.Test.Field2.Soil.Analysis");
-            Assert.AreEqual(inScopeForGraph[8].FullPath, "Simulations.Test.Field2.Field2SubZone");
-            Assert.AreEqual(inScopeForGraph[9].FullPath, "Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport");
-            Assert.AreEqual(inScopeForGraph[10].FullPath, "Simulations.Test.Field2");
-            Assert.AreEqual(inScopeForGraph[11].FullPath, "Simulations.Test.WeatherFile");
-            Assert.AreEqual(inScopeForGraph[12].FullPath, "Simulations.Test.Clock");
-            Assert.AreEqual(inScopeForGraph[13].FullPath, "Simulations.Test.Summary");
-            Assert.AreEqual(inScopeForGraph[14].FullPath, "Simulations.Test.Field1");
-            Assert.AreEqual(inScopeForGraph[15].FullPath, "Simulations.Test");
-            Assert.AreEqual(inScopeForGraph[16].FullPath, "Simulations.DataStore");
-            Assert.AreEqual(inScopeForGraph[17].FullPath, "Simulations");
+            Assert.AreEqual(inScopeForGraph[0].FullPath, ".Simulations.Test.Field2.Graph1");
+            Assert.AreEqual(inScopeForGraph[1].FullPath, ".Simulations.Test.Field2.Graph1.Series1");
+            Assert.AreEqual(inScopeForGraph[2].FullPath, ".Simulations.Test.Field2.Graph1.Series1.X");
+            Assert.AreEqual(inScopeForGraph[3].FullPath, ".Simulations.Test.Field2.Graph1.Series1.Y");
+            Assert.AreEqual(inScopeForGraph[4].FullPath, ".Simulations.Test.Field2.Soil");
+            Assert.AreEqual(inScopeForGraph[5].FullPath, ".Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(inScopeForGraph[6].FullPath, ".Simulations.Test.Field2.Soil.SoilOrganicMatter");
+            Assert.AreEqual(inScopeForGraph[7].FullPath, ".Simulations.Test.Field2.Soil.Analysis");
+            Assert.AreEqual(inScopeForGraph[8].FullPath, ".Simulations.Test.Field2.Field2SubZone");
+            Assert.AreEqual(inScopeForGraph[9].FullPath, ".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport");
+            Assert.AreEqual(inScopeForGraph[10].FullPath, ".Simulations.Test.Field2");
+            Assert.AreEqual(inScopeForGraph[11].FullPath, ".Simulations.Test.WeatherFile");
+            Assert.AreEqual(inScopeForGraph[12].FullPath, ".Simulations.Test.Clock");
+            Assert.AreEqual(inScopeForGraph[13].FullPath, ".Simulations.Test.Summary");
+            Assert.AreEqual(inScopeForGraph[14].FullPath, ".Simulations.Test.Field1");
+            Assert.AreEqual(inScopeForGraph[15].FullPath, ".Simulations.Test");
+            Assert.AreEqual(inScopeForGraph[16].FullPath, ".Simulations.DataStore");
+            Assert.AreEqual(inScopeForGraph[17].FullPath, ".Simulations");
 
             // Test that FindAll(type) works at the nested level
             Assert.AreEqual(graph.FindAll(typeof(Simulations)).Length, 1);

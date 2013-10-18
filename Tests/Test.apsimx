@@ -31,6 +31,7 @@
           <string>[WeatherFile].Rain</string>
           <string>[Script].Model.A</string>
           <string>[SoilWater].sw_dep</string>
+          <string>[SoilNitrogen].no3</string>
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>

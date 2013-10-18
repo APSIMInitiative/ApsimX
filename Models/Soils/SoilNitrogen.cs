@@ -68,7 +68,7 @@ namespace Models.Soils
     }
     public class NewSoluteType
     {
-        public int sender_id;
+        public string OwnerFullPath;
         public string[] solutes;
     }
     public class NitrogenChangedType
@@ -81,16 +81,6 @@ namespace Models.Soils
     }
     public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
 
-    public class NewProfileType
-    {
-        public double[] dlayer;
-        public double[] air_dry_dep;
-        public double[] ll15_dep;
-        public double[] dul_dep;
-        public double[] sat_dep;
-        public double[] sw_dep;
-        public double[] bd;
-    }
     public class MergeSoilCNPatchType
     {
         public string Sender = "";
@@ -152,7 +142,7 @@ namespace Models.Soils
         /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
         /// </summary>
         public delegate void NewSoluteDelegate(NewSoluteType Data);
-        public event NewSoluteDelegate new_solute;
+        public event NewSoluteDelegate NewSolute;
 
         /// <summary>
         /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
@@ -446,7 +436,7 @@ namespace Models.Soils
         private void AdvertiseMySolutes()
         {
 
-            if (new_solute != null)
+            if (NewSolute != null)
             {
                 string[] solute_names;
                 if (useOrganicSolutes)
@@ -459,9 +449,10 @@ namespace Models.Soils
                 }
 
                 NewSoluteType SoluteData = new NewSoluteType();
+                SoluteData.OwnerFullPath = FullPath;
                 SoluteData.solutes = solute_names;
 
-                new_solute.Invoke(SoluteData);
+                NewSolute.Invoke(SoluteData);
             }
         }
 
@@ -745,8 +736,8 @@ namespace Models.Soils
         /// <summary>
         /// Get information about changes in soil profile  (primarily due to erosion)
         /// </summary>
-        /// <param name="NewProfile"></param>
-        public void OnNew_profile(NewProfileType NewProfile)
+        [EventSubscribe("NewProfile")]
+        private void OnNew_profile(NewProfileType NewProfile)
         {
             // Note: are the changes maily (only) due to by erosion? what else??
 
@@ -791,8 +782,8 @@ namespace Models.Soils
         /// <summary>
         /// Gets the changes in mineral N made by other modules
         /// </summary>
-        /// <param name="NitrogenChanges"></param>
-        public void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
+        [EventSubscribe("NitrogenChanged")]
+        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
             // Note:
             //     Send deltas to each patch, if delta comes from soil or plant then the values are modified (partioned)

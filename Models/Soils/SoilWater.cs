@@ -10,6 +10,22 @@ using System.Xml.Serialization;
 
 namespace Models.Soils
 {
+    public class WaterChangedType
+    {
+        public double[] DeltaWater;
+    }
+    public class NewProfileType
+    {
+        public double[] dlayer;
+        public double[] air_dry_dep;
+        public double[] ll15_dep;
+        public double[] dul_dep;
+        public double[] sat_dep;
+        public double[] sw_dep;
+        public double[] bd;
+    }
+    public delegate void NewProfileDelegate(NewProfileType Data);
+
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model
@@ -1169,20 +1185,22 @@ namespace Models.Soils
         private void soilwat2_get_solute_variables()
         {
             //for the number of solutes that was read in by OnNewSolute event handler)
-#if (APSIMX == false)
-        for (int solnum = 0; solnum < num_solutes; solnum++)
-        {
-            double[] Value;
-            string propName;
-            if (solutes[solnum].ownerName != "")
-                propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
-            else
-                propName = solutes[solnum].name;
-            if (MyPaddock.Get(propName, out Value))
-              // Should check array size here to be sure it matches...
-              Array.Copy(Value, solutes[solnum].amount, Math.Min(Value.Length, solutes[solnum].amount.Length));
-        }
-#endif
+            for (int solnum = 0; solnum < num_solutes; solnum++)
+            {
+                double[] Value;
+                string propName;
+                if (solutes[solnum].ownerName != "")
+                    propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
+                else
+                    propName = solutes[solnum].name;
+                object objValue = this.Get(propName);
+                if (objValue != null)
+                {
+                    Value = objValue as double[];
+                    // Should check array size here to be sure it matches...
+                    Array.Copy(Value, solutes[solnum].amount, Math.Min(Value.Length, solutes[solnum].amount.Length));
+                }
+            }
         }
 
         //this is called in the On Process event handler
@@ -1216,6 +1234,7 @@ namespace Models.Soils
 
             NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
             NitrogenChanges.Sender = "SoilWater";
+            NitrogenChanges.SenderType = "WateModule";
             NitrogenChanges.DeltaUrea = new double[dlayer.Length];
             NitrogenChanges.DeltaNH4 = new double[dlayer.Length];
             NitrogenChanges.DeltaNO3 = new double[dlayer.Length];
@@ -4692,7 +4711,8 @@ namespace Models.Soils
 
         #region Met, Irrig, Solute, Plants Event Handlers
 
-        public void OnNewMet(WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewMet")]
+        private void OnNewMet(WeatherFile.NewMetType NewMet)
         {
             //*     ===========================================================
             //      subroutine soilwat2_ONnewmet (variant)
@@ -4720,50 +4740,48 @@ namespace Models.Soils
 
         //ToDo: Need to work out what the NewSolute event will be.
 
-        //public void OnNew_solute(NewSoluteType newsolute)
-        //{
+        [EventSubscribe("NewSolute")]
+        private void OnNewSolute(NewSoluteType newsolute)
+        {
 
-        //    //*     ===========================================================
-        //    //      subroutine soilwat2_on_new_solute ()
-        //    //*     ===========================================================
+            //*     ===========================================================
+            //      subroutine soilwat2_on_new_solute ()
+            //*     ===========================================================
 
-        //    //"On New Solute" simply tells modules the name of a new solute, what module owns the new solute, and whether it is mobile or immobile.
-        //    //       It alerts you at any given point in a simulation when a new solute is added. 
-        //    //       It does NOT tell you the amount of the new solute in each of the layers. You have to ask the module owner for this separately.
+            //"On New Solute" simply tells modules the name of a new solute, what module owns the new solute, and whether it is mobile or immobile.
+            //       It alerts you at any given point in a simulation when a new solute is added. 
+            //       It does NOT tell you the amount of the new solute in each of the layers. You have to ask the module owner for this separately.
 
 
-        //    int sender;
-        //    int counter;
-        //    int numvals;             //! number of values returned
-        //    string name;
+            int counter;
+            int numvals;             //! number of values returned
+            string name;
 
-        //    //*- Implementation Section ----------------------------------
-        //    string compName = "";
+            //*- Implementation Section ----------------------------------
+            numvals = newsolute.solutes.Length;
 
-        //    sender = newsolute.sender_id;
-        //    numvals = newsolute.solutes.Length;
+            Array.Resize(ref solutes, num_solutes + numvals);
 
-        //    Array.Resize(ref solutes, num_solutes + numvals);
-
-        //    for (counter = 0; counter < numvals; counter++)
-        //    {
-        //        name = newsolute.solutes[counter].ToLower();
-        //        solutes[num_solutes].name = name;
-        //        solutes[num_solutes].ownerName = compName;
-        //        solutes[num_solutes].mobility = PositionInCharArray(name, mobile_solutes) >= 0;
-        //        if (!solutes[num_solutes].mobility && PositionInCharArray(name, immobile_solutes) < 0)
-        //            throw new Exception("No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
-        //        int nLayers = _dlayer.Length;
-        //        // Create layer arrays for the new solute
-        //        solutes[num_solutes].amount = new double[nLayers];
-        //        solutes[num_solutes].delta = new double[nLayers];
-        //        solutes[num_solutes].leach = new double[nLayers];
-        //        solutes[num_solutes].up = new double[nLayers];
-        //        // Register new "flow" and "leach" outputs for these solutes
-        //        // See "getPropertyValue" function for the callback used to actually retrieve the values
-        //        num_solutes = num_solutes + 1;
-        //    }
-        //}
+            for (counter = 0; counter < numvals; counter++)
+            {
+                name = newsolute.solutes[counter].ToLower();
+                solutes[num_solutes] = new Solute();
+                solutes[num_solutes].name = name;
+                solutes[num_solutes].ownerName = newsolute.OwnerFullPath;
+                solutes[num_solutes].mobility = PositionInCharArray(name, mobile_solutes) >= 0;
+                if (!solutes[num_solutes].mobility && PositionInCharArray(name, immobile_solutes) < 0)
+                    throw new Exception("No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
+                int nLayers = _dlayer.Length;
+                // Create layer arrays for the new solute
+                solutes[num_solutes].amount = new double[nLayers];
+                solutes[num_solutes].delta = new double[nLayers];
+                solutes[num_solutes].leach = new double[nLayers];
+                solutes[num_solutes].up = new double[nLayers];
+                // Register new "flow" and "leach" outputs for these solutes
+                // See "getPropertyValue" function for the callback used to actually retrieve the values
+                num_solutes = num_solutes + 1;
+            }
+        }
 
         private int PositionInCharArray(string Name, string[] NameList)
         {
@@ -4843,28 +4861,28 @@ namespace Models.Soils
         //    }
         //}
 
+        [EventSubscribe("WaterChanged")]
+        private void OnWaterChanged(WaterChangedType WaterChanged)
+        {
 
-        //public void OnWaterChanged(WaterChangedType WaterChanged)
-        //{
+            //This event is Only used by Plant2 and AgPasture.
+            //This event was added so that the Plant2 module could extract water via its roots from the SoilWater module.
+            //At the time Plant2 was not advanced enough to be able to do a "Set" on another modules variables.
+            //Plant2 still uses this method to extract water using its roots.
 
-        //    //This event is Only used by Plant2 and AgPasture.
-        //    //This event was added so that the Plant2 module could extract water via its roots from the SoilWater module.
-        //    //At the time Plant2 was not advanced enough to be able to do a "Set" on another modules variables.
-        //    //Plant2 still uses this method to extract water using its roots.
-
-        //    //*+  Purpose
-        //    //*     Another module wants to change our water
+            //*+  Purpose
+            //*     Another module wants to change our water
 
 
-        //    int layer;
+            int layer;
 
-        //    for (layer = 0; layer < WaterChanged.DeltaWater.Length; layer++)
-        //    {
-        //        _sw_dep[layer] = _sw_dep[layer] + WaterChanged.DeltaWater[layer];
-        //        soilwat2_check_profile(layer);
-        //    }
+            for (layer = 0; layer < WaterChanged.DeltaWater.Length; layer++)
+            {
+                _sw_dep[layer] = _sw_dep[layer] + WaterChanged.DeltaWater[layer];
+                soilwat2_check_profile(layer);
+            }
 
-        //}
+        }
 
 
         #endregion
@@ -4981,23 +4999,23 @@ namespace Models.Soils
 
         private void soilwat2_New_Profile_Event()
         {
-        //    //*+  Mission Statement
-        //    //*     Advise other modules of new profile specification
-        //    if (New_profile != null)
-        //    {
-        //        NewProfileType newProfile = new NewProfileType();
-        //        int nLayers = _dlayer.Length;
-        //        // Convert array values from doubles to floats
-        //        newProfile.air_dry_dep = ToFloatArray(_air_dry_dep);
-        //        newProfile.bd = ToFloatArray(bd);
-        //        newProfile.dlayer = ToFloatArray(_dlayer);
-        //        newProfile.dul_dep = ToFloatArray(_dul_dep);
-        //        newProfile.ll15_dep = ToFloatArray(_ll15_dep);
-        //        newProfile.sat_dep = ToFloatArray(_sat_dep);
-        //        newProfile.sw_dep = ToFloatArray(_sw_dep);
-        //        if (newProfile != null)
-        //            New_profile.Invoke(newProfile);
-        //    }
+            //*+  Mission Statement
+            //*     Advise other modules of new profile specification
+            if (NewProfile != null)
+            {
+                NewProfileType newProfile = new NewProfileType();
+                int nLayers = _dlayer.Length;
+                // Convert array values from doubles to floats
+                newProfile.air_dry_dep = _air_dry_dep;
+                newProfile.bd = bd;
+                newProfile.dlayer = _dlayer;
+                newProfile.dul_dep = _dul_dep;
+                newProfile.ll15_dep = _ll15_dep;
+                newProfile.sat_dep = _sat_dep;
+                newProfile.sw_dep = _sw_dep;
+                if (NewProfile != null)
+                    NewProfile.Invoke(newProfile);
+            }
         }
 
 
@@ -5045,7 +5063,7 @@ namespace Models.Soils
         #region Events sent by this Module
 
         //Events
-        //public event NewProfileDelegate New_profile;
+        public event NewProfileDelegate NewProfile;
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         public event RunoffEventDelegate Runoff;
         public event NitrogenChangedDelegate NitrogenChanged;
