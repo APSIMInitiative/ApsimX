@@ -116,6 +116,11 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
+    <Compile Include="SurfaceOM\SurfaceOrganicMatter.cs" />
+    <Compile Include="SurfaceOM\_additions.cs" />
+    <Compile Include="SurfaceOM\_eventhandlers.cs" />
+    <Compile Include="SurfaceOM\_events.cs" />
+    <Compile Include="SurfaceOM\_exposedvars.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ModelCollection.cs" />
     <Compile Include="Core\ISummary.cs" />

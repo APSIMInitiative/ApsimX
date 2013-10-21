@@ -23,10 +23,10 @@ namespace Models.Soils
     }
     public class FOMPoolLayerType
     {
-        public float thickness;
-        public float no3;
-        public float nh4;
-        public float po4;
+        public double thickness;
+        public double no3;
+        public double nh4;
+        public double po4;
         public FOMType[] Pool;
     }
     public class FOMLayerType
@@ -60,11 +60,11 @@ namespace Models.Soils
     {
         public string PoolClass = "";
         public string FlowType = "";
-        public float C;
-        public float N;
-        public float P;
-        public float DM;
-        public float SW;
+        public double C;
+        public double N;
+        public double P;
+        public double DM;
+        public double SW;
     }
     public class NewSoluteType
     {
@@ -148,7 +148,7 @@ namespace Models.Soils
         /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
         /// </summary>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
-        public event SurfaceOrganicMatterDecompDelegate actualresiduedecompositioncalculated;
+        public event SurfaceOrganicMatterDecompDelegate ActualResidueDecompositionCalculated;
 
         #endregion
 
@@ -546,24 +546,17 @@ namespace Models.Soils
 
         #region Daily processes
 
-
         /// <summary>
-        /// Performs every-day calculations - main process phase
+        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        public void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("PotentialResidueDecompositionCalculated")]
+        private void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
         {
-            // get other variables.
-            dlayer = Soil.Thickness;
-            bd = Soil.Water.BD;
-            sat_dep = Utility.Math.Multiply(Soil.Water.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Soil.Water.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Soil.Water.LL15, Soil.Thickness);
-            sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
-            oc = Soil.OC;
-            ph = Soil.Analysis.PH;
-            salb = Soil.SoilWater.Salb;
+            foreach (soilCNPatch aPatch in Patch)
+                aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
+            num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
+        
             // update soil temperature
             if (use_external_st)
                 Tsoil = ave_soil_temp;
@@ -571,7 +564,13 @@ namespace Models.Soils
                 Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
 
             // calculate C and N processes
-            Process();
+            //    - Assesses potential decomposition of surface residues;
+            //		. adjust decomposition if needed;
+            //		. accounts for mineralisation/immobilisation of N;
+            //	  - Compute the transformations on soil organic matter (including N mineralisation/immobilition);
+            //    - Calculates hydrolysis of urea, nitrification, and denitrification;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].Process();
 
             // send actual decomposition back to surface OM
             if (!is_pond_active)
@@ -583,7 +582,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="time">Today's time</param>
         [EventSubscribe("Tick")]
-        public void OnTick(object sender, EventArgs e)
+        private void OnTick(object sender, EventArgs e)
         {
             // + Purpose: reset potential decomposition variables in each patch and get C and N status
 
@@ -598,7 +597,7 @@ namespace Models.Soils
         /// Performs every-day calculations - end of day processes
         /// </summary>
         [EventSubscribe("EndOfDay")]
-        public void OnPost(object sender, EventArgs e)
+        private void OnPost(object sender, EventArgs e)
         {
             // + Purpose: Check patch status and clean up, if possible
 
@@ -623,22 +622,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Performs the soil C and N balance processes, daily.
-        /// </summary>
-        private void Process()
-        {
-            // + Purpose
-            //    - Assesses potential decomposition of surface residues;
-            //		. adjust decomposition if needed;
-            //		. accounts for mineralisation/immobilisation of N;
-            //	  - Compute the transformations on soil organic matter (including N mineralisation/immobilition);
-            //    - Calculates hydrolysis of urea, nitrification, and denitrification;
-
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].Process();
-        }
-
-        /// <summary>
         /// Send back to SurfaceOM the information about residue decomposition
         /// </summary>
         private void SendActualResidueDecompositionCalculated()
@@ -648,7 +631,7 @@ namespace Models.Soils
             //		Now we explicitly tell the module the actual decomposition
             //      rate for each of its residues.  If there wasn't enough mineral N to decompose, the rate will be reduced from the potential value.
 
-            if (actualresiduedecompositioncalculated != null)
+            if (ActualResidueDecompositionCalculated != null)
             {
                 // will have to pack the SOMdecomp data from each patch and then invoke the event
                 //int num_residues = Patch[0].SOMDecomp.Pool.Length;
@@ -679,7 +662,7 @@ namespace Models.Soils
                 }
 
                 // send the decomposition information
-                actualresiduedecompositioncalculated.Invoke(SOMDecomp);
+                ActualResidueDecompositionCalculated.Invoke(SOMDecomp);
             }
         }
 
@@ -698,8 +681,8 @@ namespace Models.Soils
         /// <summary>
         /// Partition the given FOM C and N into fractions in each layer (one FOM)
         /// </summary>
-        /// <param name="inFOMdata"></param>
-        public void OnIncorpFOM(FOMLayerType inFOMdata)
+        [EventSubscribe("IncorpFOM")]
+        private void OnIncorpFOM(FOMLayerType inFOMdata)
         {
             // Note: In this event all FOM is given as one, so it will be assumed that the CN ratios of all fractions are equal
 
@@ -712,8 +695,8 @@ namespace Models.Soils
         /// <summary>
         /// Partition the given FOM C and N into fractions in each layer (FOM pools)
         /// </summary>
-        /// <param name="inFOMPoolData"></param>
-        public void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
+        [EventSubscribe("IncorpFOMPool")]
+        private void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
             // Note: In this event each of the three pools is given
 
@@ -721,17 +704,7 @@ namespace Models.Soils
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
         }
 
-        /// <summary>
-        /// Get the information on potential residue decomposition
-        /// </summary>
-        /// <param name="SurfaceOrganicMatterDecomp"></param>
-        public void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
-        {
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
-            num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
-        }
 
         /// <summary>
         /// Get information about changes in soil profile  (primarily due to erosion)
@@ -845,7 +818,8 @@ namespace Models.Soils
         /// Get the information about urine being added
         /// </summary>
         /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
-        public void OnAddUrine(AddUrineType UrineAdded)
+        [EventSubscribe("AddUrine")]
+        private void OnAddUrine(AddUrineType UrineAdded)
         {
 
             // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
@@ -879,8 +853,8 @@ namespace Models.Soils
         /// Gets and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
-
-        public void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
+        [EventSubscribe("AddSoilCNPatc")]
+        private void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
         {
             // data passed with this event:
             //.Sender: the name of the module that raised this event
@@ -946,8 +920,8 @@ namespace Models.Soils
         /// Gets the list of patches that will be merge into one, as defined by user
         /// </summary>
         /// <param name="MergeCNPatch">The list of CNPatches to merge</param>
-
-        public void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
+        [EventSubscribe("MergeSoilCNPatc")]
+        private void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
         {
             if ((MergeCNPatch.AffectedPatches_id.Length > 1) | (MergeCNPatch.AffectedPatches_nm.Length > 1))
             {

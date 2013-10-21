@@ -434,7 +434,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Pot sevap after modification for green cover & residue wt")]
-        private double eos;                      //! pot sevap after modification for green cover & residue wt
+        public double eos;                      //! pot sevap after modification for green cover & residue wt
 
 
         [Description("New cn2 after modification for crop cover & residue cover")]
@@ -4704,6 +4704,8 @@ namespace Models.Soils
             //taken from Main() 
             soilwat2_set_other_variables();
 
+            if (WaterMovementCompleted != null)
+                WaterMovementCompleted.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -4937,7 +4939,7 @@ namespace Models.Soils
             // They are always present here, but if the user sets the value to a negative number, we'll then
             // try to read the values from the initialisation data.
 
-            tillage_type = Tillage.type;       //sv - the event always gives us at least this.
+            tillage_type = Tillage.Name;       //sv - the event always gives us at least this.
 
             //sv- if the Tillage information did not come with the event.
             if ((Tillage.cn_red <= 0) || (Tillage.cn_rain <= 0))
@@ -4954,7 +4956,7 @@ namespace Models.Soils
                     tillage_cn_red = 0.0;
                     tillage_cn_rain = 0.0;
 
-                    message = "Cannot find info for tillage:- " + Tillage.type;
+                    message = "Cannot find info for tillage:- " + Tillage.Name;
                     throw new Exception(message);
                 }
                 else
@@ -5067,7 +5069,7 @@ namespace Models.Soils
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         public event RunoffEventDelegate Runoff;
         public event NitrogenChangedDelegate NitrogenChanged;
-
+        public event EventHandler WaterMovementCompleted;
         #endregion
 
 

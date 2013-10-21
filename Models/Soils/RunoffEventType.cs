@@ -7,7 +7,7 @@ namespace Models.Soils
 {
     public class RunoffEventType
     {
-        public float runoff;
+        public double runoff;
     }
 
     public delegate void RunoffEventDelegate(RunoffEventType Runoff);

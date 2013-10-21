@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 
 namespace Models.Soils
 {
-    public class TillageType
+    public class TillageType : Model
     {
-        public string type;
-        public int cn_red;
-        public int cn_rain;
+        public string Name { get; set; }
+        public double f_incorp { get; set; }
+        public double tillage_depth { get; set; }
+        public int cn_red { get; set; }
+        public int cn_rain { get; set; }
     }
 }

@@ -32,6 +32,7 @@
           <string>[Script].Model.A</string>
           <string>[SoilWater].sw_dep</string>
           <string>[SoilNitrogen].no3</string>
+          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -501,6 +502,45 @@
           <PHUnits>Water</PHUnits>
         </Sample>
       </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+
+        <ResidueTypes>
+          <ResidueType>
+            <Name>wheat</Name>
+            <fraction_C>0.08</fraction_C>
+            <po4ppm>10</po4ppm>
+            <nh4ppm>10</nh4ppm>
+            <no3ppm>10</no3ppm>
+            <specific_area>0.0001</specific_area>
+            <cf_contrib>1</cf_contrib>
+            <pot_decomp_rate>0.1</pot_decomp_rate>
+            <fr_c>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_c>
+            <fr_n>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_n>
+            <fr_p>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_p>
+          </ResidueType>
+        </ResidueTypes>
+        <TillageTypes>
+          <TillageType />
+        </TillageTypes>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
+        <mass>1000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cnr>80</cnr>
+      </SurfaceOrganicMatter>
       <Graph>
         <Name>Graph</Name>
         <Axis>
