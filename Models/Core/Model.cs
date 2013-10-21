@@ -12,6 +12,9 @@ namespace Models.Core
     /// </summary>
     public class Model
     {
+        // Cache the models list - this dramatically speeds up runtime!
+        private List<Model> AllModels = null;
+
         /// <summary>
         /// Get or set the name of the model
         /// </summary>
@@ -46,29 +49,32 @@ namespace Models.Core
         {
             get
             {
-                List<Model> allModels = new List<Model>();
-                foreach (PropertyInfo property in ModelProperties())
+                if (AllModels == null)
                 {
-                    // If a field is public and is a class 
-                    object value = property.GetValue(this, null);
-                    if (value != null)
+                    AllModels = new List<Model>();
+                    foreach (PropertyInfo property in ModelProperties())
                     {
-                        Model localModel = value as Model;
-                        if (localModel != null)
-                            allModels.Add(localModel);
-                        else if (property.PropertyType.GetInterface("IList") != null)
+                        // If a field is public and is a class 
+                        object value = property.GetValue(this, null);
+                        if (value != null)
                         {
-                            Type[] arguments = property.PropertyType.GetGenericArguments();
-                            if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
+                            Model localModel = value as Model;
+                            if (localModel != null)
+                                AllModels.Add(localModel);
+                            else if (property.PropertyType.GetInterface("IList") != null)
                             {
-                                IList list = (IList)value;
-                                foreach (Model child in list)
-                                    allModels.Add(child);
+                                Type[] arguments = property.PropertyType.GetGenericArguments();
+                                if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
+                                {
+                                    IList list = (IList)value;
+                                    foreach (Model child in list)
+                                        AllModels.Add(child);
+                                }
                             }
                         }
                     }
                 }
-                return allModels.ToArray();
+                return AllModels.ToArray();
             }
         }
 
@@ -188,7 +194,7 @@ namespace Models.Core
         /// <summary>
         /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
-        public virtual void AddModel(Model model)
+        public virtual void AddModel(Model model, bool resolveLinks)
         {
             model.Parent = this;
 
@@ -223,7 +229,11 @@ namespace Models.Core
             }
             if (!wasAdded)
                 throw new ApsimXException(FullPath, "Cannot add model: " + model.Name + " to parent model: " + Name);
-            model.ResolveLinks();
+
+            // Invalidate the AllModels list.
+            AllModels = null;
+            if (resolveLinks)
+                model.ResolveLinks();
         }
 
         /// <summary>
@@ -231,6 +241,9 @@ namespace Models.Core
         /// </summary>
         public virtual bool RemoveModel(Model model)
         {
+            // Invalidate the AllModels list.
+            AllModels = null;
+
             // Need to find where in the object to store this model.
             foreach (PropertyInfo property in ModelProperties())
             {

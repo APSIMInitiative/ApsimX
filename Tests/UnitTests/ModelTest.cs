@@ -87,22 +87,22 @@ namespace ModelTests
             Soil soil = zone2.Models[1] as Soil;
 
             // Test for ensuring we can add a model to a Zone.
-            Sim.AddModel(new Clock() { Name = "Clock" });
+            Sim.AddModel(new Clock() { Name = "Clock" }, true);
             Assert.AreEqual(Sim.Models.Length, 6);
             Assert.AreEqual(Sim.Models[5].Name, "Clock1");
 
             // Test for ensuring we can add a model to a simple model reference property of a class.
             Assert.IsNull(soil.SoilWater);
-            soil.AddModel(new SoilWater());
+            soil.AddModel(new SoilWater(), true);
             Assert.IsNotNull(soil.Water);
 
             // Test for ensuring we can add a model to a List<> property of a class where the list has already been created.
-            graph.AddModel(new Series());
+            graph.AddModel(new Series(), true);
             Assert.AreEqual(graph.Series.Count, 2);
 
             // Test for ensuring we can add a model to a List<> property of a class where the list is null
             graph.Series = null;
-            graph.AddModel(new Series());
+            graph.AddModel(new Series(), true);
             Assert.AreEqual(graph.Series.Count, 1);
         }
 

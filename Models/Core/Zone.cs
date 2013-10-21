@@ -30,9 +30,9 @@ namespace Models.Core
          /// <summary>
         /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
-        public override void AddModel(Model model)
+        public override void AddModel(Model model, bool resolveLinks)
         {
-            base.AddModel(model);
+            base.AddModel(model, resolveLinks);
             EnsureNameIsUnique(model);
         }
 
@@ -66,7 +66,7 @@ namespace Models.Core
                 else
                 {
                     Model NewChild = Utility.Xml.Deserialise(reader) as Model;
-                    Children.Add(NewChild);
+                    AddModel(NewChild, false);
                     NewChild.Parent = this;
                     EnsureNameIsUnique(NewChild);
                 }
