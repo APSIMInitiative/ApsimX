@@ -373,6 +373,18 @@
   <ItemGroup>
     <None Include="Resources\SoilOrganicMatter16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Axis.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Series16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GraphData.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoilCrop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

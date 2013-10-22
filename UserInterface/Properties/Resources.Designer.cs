@@ -74,6 +74,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Axis16 {
+            get {
+                object obj = ResourceManager.GetObject("Axis16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap CheckSoil {
             get {
                 object obj = ResourceManager.GetObject("CheckSoil", resourceCulture);
@@ -141,6 +148,13 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("GraphToolbox", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap GraphValues16 {
+            get {
+                object obj = ResourceManager.GetObject("GraphValues16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -245,6 +259,13 @@ namespace UserInterface.Properties {
         internal static System.Drawing.Bitmap Soil16 {
             get {
                 object obj = ResourceManager.GetObject("Soil16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SoilCrop16 {
+            get {
+                object obj = ResourceManager.GetObject("SoilCrop16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

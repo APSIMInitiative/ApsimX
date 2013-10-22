@@ -136,7 +136,12 @@ namespace UserInterface.Presenters
                     }
                 DataSources.Sort();
             }
-            DataSources.AddRange(Graph.ModelsInScope());
+
+            List<string> FullPaths = new List<string>();
+            foreach (Model Model in Graph.Models)
+                FullPaths.Add(Model.FullPath);
+
+            DataSources.AddRange(FullPaths);
             SeriesView.DataSourceItems = DataSources.ToArray();
         }
 

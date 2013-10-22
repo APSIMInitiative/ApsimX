@@ -29,11 +29,11 @@ namespace Models
        // [Link] private DataStore DataStore = null;
 
         public int cropsta { get; set; }
-        public float[] dlayer { get; set; }
+        public double[] dlayer { get; set; }
 
 
         [Units("kg/ha")]
-        public float fert_applied { get; set; }
+        public double fert_applied { get; set; }
 
        // ExternalMassFlowType externalMassFlow = new ExternalMassFlowType();
 
@@ -152,38 +152,38 @@ namespace Models
                                 if (comp.components[i].Equals("labile_p"))
                                 {
                                     massBalanceChange.N = 0.0F;
-                                    massBalanceChange.P = (float)deltaArray.Sum();
+                                    massBalanceChange.P = (double)deltaArray.Sum();
                                 }
                                 else if (comp.components[i].Equals("rock_p"))
                                 {
                                     massBalanceChange.N = 0.0F;
-                                    massBalanceChange.P = (float)deltaArray.Sum();
+                                    massBalanceChange.P = (double)deltaArray.Sum();
                                 }
                                 else if (comp.components[i].Equals("banded_p"))
                                 {
                                     massBalanceChange.N = 0.0F;
-                                    massBalanceChange.P = (float)deltaArray.Sum();
+                                    massBalanceChange.P = (double)deltaArray.Sum();
                                 }
                                 else if (comp.components[i].Equals("no3"))
                                 {
-                                    massBalanceChange.N = (float)deltaArray.Sum();
+                                    massBalanceChange.N = (double)deltaArray.Sum();
                                     massBalanceChange.P = 0.0F;
                                 }
                                 else if (comp.components[i].Equals("nh4"))
                                 {
-                                    massBalanceChange.N = (float)deltaArray.Sum();
+                                    massBalanceChange.N = (double)deltaArray.Sum();
                                     massBalanceChange.P = 0.0F;
                                 }
                                 else if (comp.components[i].Equals("urea"))
                                 {
-                                    massBalanceChange.N = (float)deltaArray.Sum();
+                                    massBalanceChange.N = (double)deltaArray.Sum();
                                     massBalanceChange.P = 0.0F;
                                 }
                                 externalMassFlow = massBalanceChange;*/
                             }
                         }
                     }
-   //         fert_applied = fert_applied + (float)amount;
+   //         fert_applied = fert_applied + (double)amount;
    //         Console.WriteLine("{0} kg/ha of {1} ({2}) added at depth {3} layer {4}", amount, full_name.Trim(), type.Trim(), depth, layer + 1);
    //     }
 
@@ -207,9 +207,9 @@ namespace Models
                 ApplyFertiliser(application.Amount, application.Depth, application.Type);
         }
 
-        private int getCumulativeIndex(double sum, float[] realArray)
+        private int getCumulativeIndex(double sum, double[] realArray)
         {
-            float cum = 0.0f;
+            double cum = 0.0f;
             for (int i = 0; i < realArray.Length; i++)
             {
                 cum += realArray[i];

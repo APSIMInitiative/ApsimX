@@ -89,7 +89,7 @@
     </Compile>
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Fertiliser.cs" />
-    <Compile Include="Graph\GraphData.cs" />
+    <Compile Include="Graph\GraphValues.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
@@ -116,6 +116,11 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
+    <Compile Include="SurfaceOM\SurfaceOrganicMatter.cs" />
+    <Compile Include="SurfaceOM\_additions.cs" />
+    <Compile Include="SurfaceOM\_eventhandlers.cs" />
+    <Compile Include="SurfaceOM\_events.cs" />
+    <Compile Include="SurfaceOM\_exposedvars.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ModelCollection.cs" />
     <Compile Include="Core\ISummary.cs" />

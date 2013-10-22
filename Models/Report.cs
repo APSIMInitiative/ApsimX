@@ -159,13 +159,15 @@ namespace Models
             /// </summary>
             private void AnalyseValue(string Name, object Value)
             {
+                string cleanName = Name.Replace("[", "").Replace("]", "");
+
                 Type T = Value.GetType();
 
                 // Scalar
                 if (T == typeof(DateTime) || T == typeof(string) || !T.IsClass)
                 {
                     // Built in type.
-                    _Names.Add(Name);
+                    _Names.Add(cleanName);
                     _Types.Add(T);
                 }
                 else
@@ -173,12 +175,12 @@ namespace Models
                     // class or struct.
                     foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                     {
-                        _Names.Add(Name + "." + Property.Name);
+                        _Names.Add(cleanName + "." + Property.Name);
                         _Types.Add(Property.PropertyType);
                     }
                     foreach (FieldInfo Field in Model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
                     {
-                        _Names.Add(Name + "." + Field.Name);
+                        _Names.Add(cleanName + "." + Field.Name);
                         _Types.Add(Field.FieldType);
                     }
                 }
@@ -246,7 +248,8 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
             foreach (string Event in Events)
             {
@@ -255,7 +258,7 @@ namespace Models
 
                 if (ComponentName == null)
                     throw new Exception("Invalid syntax for reporting event: " + Event);
-                object Component = Paddock.Find(ComponentName);
+                object Component = Paddock.Get(ComponentName);
                 if (Component == null)
                     throw new Exception(Name + " can not find the component: " + ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -306,10 +309,11 @@ namespace Models
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
-        public override void OnCompleted()
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
         {
             // Write and store a table in the DataStore
-            if (Members.Count > 0)
+            if (Members != null && Members.Count > 0)
             {
                 List<string> AllNames = new List<string>();
                 List<Type> AllTypes = new List<Type>();
@@ -331,6 +335,8 @@ namespace Models
                     }
                     DataStore.WriteToTable(Simulation.Name, Name, AllValues.ToArray());
                 }
+                Members.Clear();
+                Members = null;
             }
 
             // Unsubscribe to all events.
@@ -339,13 +345,11 @@ namespace Models
                 string ComponentName = Utility.String.ParentName(Event, '.');
                 string EventName = Utility.String.ChildName(Event, '.');
 
-                object Component = Paddock.Find(ComponentName);
+                object Component = Paddock.Get(ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
 
                 ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
             }
-            Members.Clear();
-            Members = null;
         }
 
     }

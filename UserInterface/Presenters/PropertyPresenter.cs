@@ -68,8 +68,8 @@ namespace UserInterface.Presenters
             foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 // Only consider properties that have a public setter.
-                if (Property.Name != "Name" && Property.Name != "Parent" && 
-                    Property.CanWrite && !Property.PropertyType.IsArray &&
+                if (Property.Name != "Name" && Property.Name != "Parent" &&
+                    Property.CanRead && Property.CanWrite && !Property.PropertyType.IsArray &&
                     !Property.PropertyType.FullName.Contains("Models.") &&
                     Utility.Reflection.GetAttribute(Property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
                 {

@@ -191,11 +191,15 @@ namespace Utility
         /// </summary>
         public static string Name(object Obj)
         {
-            PropertyInfo NameProperty = Obj.GetType().GetProperty("Name");
-            if (NameProperty == null)
-                return Obj.GetType().Name;
-            else
-                return NameProperty.GetValue(Obj, null) as string;
+            if (Obj != null)
+            {
+                PropertyInfo NameProperty = Obj.GetType().GetProperty("Name");
+                if (NameProperty == null)
+                    return Obj.GetType().Name;
+                else
+                    return NameProperty.GetValue(Obj, null) as string;
+            }
+            return null;
         }
 
         /// <summary>
@@ -219,6 +223,19 @@ namespace Utility
         {
             PropertyInfo NameProperty = Obj.GetType().GetProperty("Name");
             return NameProperty != null && NameProperty.CanWrite;
+        }
+
+        /// <summary>
+        /// Return a type from the specified unqualified (no namespaces) type name.
+        /// </summary>
+        public static Type GetTypeFromUnqualifiedName(string typeName)
+        {
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (type.Name == typeName)
+                    return type;
+            }
+            return null;
         }
     }
 }

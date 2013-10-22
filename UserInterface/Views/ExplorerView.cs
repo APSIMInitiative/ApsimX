@@ -34,7 +34,7 @@ namespace UserInterface.Views
     ///         +-- Test
     ///               |
     ///               +--- Clock
-    /// e.g.  Simulations.Test.Clock
+    /// e.g.  .Simulations.Test.Clock
     /// </remarks>
     public partial class ExplorerView : UserControl, IExplorerView
     {
@@ -181,15 +181,20 @@ namespace UserInterface.Views
         /// </summary>
         private string FullPath(TreeNode Node)
         {
-            return Node.FullPath.Replace("\\", ".");
+            return "." + Node.FullPath.Replace("\\", ".");
         }
 
         /// <summary>
         /// Find a specific node with the node path.
-        /// NodePath format: Parent.Child.SubChild
+        /// NodePath format: .Parent.Child.SubChild
         /// </summary>
         private TreeNode FindNode(string NamePath)
         {
+            if (!NamePath.StartsWith(".", StringComparison.CurrentCulture))
+                throw new Exception("Invalid name path '" + NamePath + "'");
+
+            NamePath = NamePath.Remove(0, 1); // Remove the leading '.'
+
             TreeNode Node = null;
 
             string[] NamePathBits = NamePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -425,8 +430,9 @@ namespace UserInterface.Views
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
                     Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
-                    ToolStripItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick);
+                    ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
+                    Button.Checked = Description.Checked;
                 }
             }
             e.Cancel = false;

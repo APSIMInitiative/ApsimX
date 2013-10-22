@@ -41,7 +41,7 @@ namespace UserInterface.Commands
                 // Undo later.
                 OriginalName = FromModel.Name;
 
-                ToParent.AddModel(FromModel);
+                ToParent.AddModel(FromModel, true);
                 CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
@@ -58,7 +58,7 @@ namespace UserInterface.Commands
             
                 ToParent.RemoveModel(FromModel);
                 FromModel.Name = OriginalName;
-                FromParent.AddModel(FromModel);
+                FromParent.AddModel(FromModel, true);
 
                 CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);

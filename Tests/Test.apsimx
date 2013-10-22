@@ -23,17 +23,19 @@
       <Report>
         <Name>Report</Name>
         <Variables>
-          <string>.Clock.Today</string>
-          <string>.WeatherFile.DayLength</string>
-          <string>.WeatherFile.MaxT</string>
-          <string>.WeatherFile.MinT</string>
-          <string>.WeatherFile.Radn</string>
-          <string>.WeatherFile.Rain</string>
-          <string>Script.Model.A</string>
-          <string>Soil.SoilWater.sw_dep</string>
+          <string>[Clock].Today</string>
+          <string>[WeatherFile].DayLength</string>
+          <string>[WeatherFile].MaxT</string>
+          <string>[WeatherFile].MinT</string>
+          <string>[WeatherFile].Radn</string>
+          <string>[WeatherFile].Rain</string>
+          <string>[Script].Model.A</string>
+          <string>[SoilWater].sw_dep</string>
+          <string>[SoilNitrogen].no3</string>
+          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
         </Variables>
         <Events>
-          <string>Clock.EndOfDay</string>
+          <string>[Clock].EndOfDay</string>
         </Events>
       </Report>
       <Manager>
@@ -55,11 +57,7 @@
                // Outputs
                public double B { get { return A * 9; } }
 
-               public override void OnInitialised()
-               {
-                  Clock.StartOfDay += OnStartOfDay;
-               }
-
+               [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
 
@@ -504,81 +502,73 @@
           <PHUnits>Water</PHUnits>
         </Sample>
       </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+
+        <ResidueTypes>
+          <ResidueType>
+            <Name>wheat</Name>
+            <fraction_C>0.08</fraction_C>
+            <po4ppm>10</po4ppm>
+            <nh4ppm>10</nh4ppm>
+            <no3ppm>10</no3ppm>
+            <specific_area>0.0001</specific_area>
+            <cf_contrib>1</cf_contrib>
+            <pot_decomp_rate>0.1</pot_decomp_rate>
+            <fr_c>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_c>
+            <fr_n>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_n>
+            <fr_p>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_p>
+          </ResidueType>
+        </ResidueTypes>
+        <TillageTypes>
+          <TillageType />
+        </TillageTypes>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
+        <mass>1000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cnr>80</cnr>
+      </SurfaceOrganicMatter>
       <Graph>
         <Name>Graph</Name>
         <Axis>
+          <Name>Axis 1</Name>
           <Type>Left</Type>
           <Title>Depth (mm)</Title>
           <Inverted>true</Inverted>
         </Axis>
         <Axis>
+          <Name>Axis 2</Name>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Series>
+          <Name>Series 1</Name>
           <Type>Line</Type>
           <XAxis>Top</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
           <X>
-            <FieldName>.Field.Soil.AirDry</FieldName>
+            <Name>X</Name>
+            <FieldName>[Soil].AirDry</FieldName>
           </X>
           <Y>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>.Field.Soil.DUL</FieldName>
-          </X>
-          <Y>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>.Field.Soil.SW</FieldName>
-          </X>
-          <Y>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16760704</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>.Field.Soil.SAT</FieldName>
-          </X>
-          <Y>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Top</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <FieldName>.Field.Soil.LL15</FieldName>
-          </X>
-          <Y>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+            <Name>Y</Name>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
         </Series>
       </Graph>
@@ -593,7 +583,7 @@
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>AllPos</Type>
-      <ColumnNames>.WeatherFile.MaxT</ColumnNames>
+      <ColumnNames>WeatherFile.MaxT</ColumnNames>
       <Parameters />
     </Test>
   </Tests>

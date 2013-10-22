@@ -206,6 +206,15 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
+        /// <summary>
+        /// Event handler for a User interface "Advanced mode" action
+        /// </summary>
+        [ContextMenuName("Advanced mode")]
+        public void AdvancedMode(object Sender, EventArgs e)
+        {
+            ExplorerPresenter.ToggleAdvancedMode();
+        }
         #endregion
 
 

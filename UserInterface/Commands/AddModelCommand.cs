@@ -34,8 +34,7 @@ namespace UserInterface.Commands
                 XmlDocument Doc = new XmlDocument();
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
-                ToParent.AddModel(FromModel);
-                ToParent.ResolveLinks();
+                ToParent.AddModel(FromModel, true);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
                 ModelAdded = true;
             }

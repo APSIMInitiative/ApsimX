@@ -37,6 +37,7 @@ namespace UserInterface.Views
             public string Name;
             public string ResourceNameForImage;
             public EventHandler OnClick;
+            public bool Checked;
         }
 
         public List<Description> Descriptions = new List<Description>();

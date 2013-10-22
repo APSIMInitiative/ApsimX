@@ -247,4 +247,13 @@
   <data name="SoilWater16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\H2O.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Axis16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Axis.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GraphValues16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GraphData.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SoilCrop16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SoilCrop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

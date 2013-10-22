@@ -82,6 +82,10 @@ namespace Models.Soils
             SoilOrganicMatter = new SoilOrganicMatter();
             Analysis = new Analysis();
             Samples = new List<Sample>();
+
+            Water.Name = "Water";
+            SoilOrganicMatter.Name = "SoilOrganicMatter";
+            Analysis.Name = "Analysis";
         }
 
         /// <summary>
@@ -94,114 +98,6 @@ namespace Models.Soils
             StringReader F = new StringReader(Xml);
             return x.Deserialize(F) as Soil;
         }
-
-        #region ModelCollection Interface
-        /// <summary>
-        /// A list of child models.
-        /// </summary>
-        [XmlIgnore]
-        public override List<Model> Models
-        {
-            get
-            {
-                List<Model> AllModels = new List<Model>();
-                if (Water != null)
-                    AllModels.Add(Water);
-                if (SoilWater != null)
-                    AllModels.Add(SoilWater);
-                if (SoilNitrogen != null)
-                    AllModels.Add(SoilNitrogen);
-                if (SoilOrganicMatter != null)
-                    AllModels.Add(SoilOrganicMatter);
-                if (Analysis != null)
-                    AllModels.Add(Analysis);
-                if (InitialWater != null)
-                    AllModels.Add(InitialWater);
-                if (Phosphorus != null)
-                    AllModels.Add(Phosphorus);
-                if (Swim != null)
-                    AllModels.Add(Swim);
-                if (LayerStructure != null)
-                    AllModels.Add(LayerStructure);
-                if (SoilTemperature != null)
-                    AllModels.Add(SoilTemperature);
-                if (SoilTemperature2 != null)
-                    AllModels.Add(SoilTemperature2);
-                foreach (Sample Sample in Samples)
-                    AllModels.Add(Sample);
-                return AllModels;
-            }
-            set
-            {
-                throw new Exception("Cannot set Soil.Models");
-            }
-        }
-
-        /// <summary>
-        /// Add a model to the Models collection
-        /// </summary>
-        public override void AddModel(Model Model)
-        {
-            if (Model is Water)
-                Water = Model as Water;
-            if (Model is SoilWater)
-                SoilWater = Model as SoilWater;
-            if (Model is SoilNitrogen)
-                SoilNitrogen = Model as SoilNitrogen;
-            if (Model is SoilOrganicMatter)
-                SoilOrganicMatter = Model as SoilOrganicMatter;
-            if (Model is Analysis)
-                Analysis = Model as Analysis;
-            if (Model is InitialWater)
-                InitialWater = Model as InitialWater;
-            if (Model is Phosphorus)
-                Phosphorus = Model as Phosphorus;
-            if (Model is Swim)
-                Swim = Model as Swim;
-            if (Model is LayerStructure)
-                LayerStructure = Model as LayerStructure;
-            if (Model is SoilTemperature)
-                SoilTemperature = Model as SoilTemperature;
-            if (Model is SoilTemperature2)
-                SoilTemperature2 = Model as SoilTemperature2;
-            if (Model is Sample)
-                Samples.Add(Model as Sample);
-        }
-
-        /// <summary>
-        /// Remove a model from the Models collection
-        /// </summary>
-        public override bool RemoveModel(Model Model)
-        {
-            if (Model is Water)
-                Water = null;
-            if (Model is SoilWater)
-                SoilWater = null;
-            if (Model is SoilNitrogen)
-                SoilNitrogen = null;
-            if (Model is SoilOrganicMatter)
-                SoilOrganicMatter = null;
-            if (Model is Analysis)
-                Analysis = null;
-            if (Model is InitialWater)
-                InitialWater = null;
-            if (Model is Phosphorus)
-                Phosphorus = null;
-            if (Model is Swim)
-                Swim = null;
-            if (Model is LayerStructure)
-                LayerStructure = null;
-            if (Model is SoilTemperature)
-                SoilTemperature = null;
-            if (Model is SoilTemperature2)
-                SoilTemperature2 = null;
-            if (Model is Sample)
-                return Samples.Remove(Model as Sample);
-            else
-                return true;
-        }
-        #endregion
-
 
         /// <summary>
         /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission 

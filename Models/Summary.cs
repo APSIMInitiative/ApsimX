@@ -14,7 +14,7 @@ namespace Models
         /// </summary>
         public void WriteMessage(string Message)
         {
-            DataStore.WriteMessage(Simulation.Name, Clock.Today, Message, Models.DataStore.ErrorLevel.Information);
+            DataStore.WriteMessage(Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Information);
         }
 
         /// <summary>

@@ -10,15 +10,15 @@ namespace Models
     public class Clock : Model
     {
         // Links
-        [Link] private Simulation Simulation = null;
-        [Link] private ISummary Summary = null;
+        [Link]
+        private ISummary Summary = null;
 
         [Description("The start date of the simulation")]
         public DateTime StartDate { get; set; }
 
         [Description("The end date of the simulation")]
         public DateTime EndDate { get; set; }
-        
+
         // Public events that we're going to publish.
         public event EventHandler Tick;
         public event EventHandler StartOfDay;
@@ -32,9 +32,9 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnInitialised()
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
-            Simulation.Commenced += OnCommence;
             Today = StartDate;
             Summary.WriteProperty("Start date", StartDate.ToString());
             Summary.WriteProperty("End date", EndDate.ToString());
@@ -43,7 +43,8 @@ namespace Models
         /// <summary>
         /// An event handler to signal start of a simulation.
         /// </summary>
-        private void OnCommence()
+        [EventSubscribe("Commenced")]
+        private void OnCommenced(object sender, EventArgs e)
         {
             while (Today <= EndDate)
             {
@@ -61,14 +62,6 @@ namespace Models
 
             //DataStore.WriteMessage(Simulation.Name, "Clock", "Simulation terminated normally", Today);
             Summary.WriteMessage("Simulation terminated normally");
-        }
-
-        /// <summary>
-        /// An event handler to perform model cleanup.
-        /// </summary>
-        public override void OnCompleted()
-        {
-            Simulation.Commenced -= OnCommence;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace UserInterface.Commands
         {
             if (ModelRemoved)
             {
-                Parent.AddModel(Model);
+                Parent.AddModel(Model, true);
                 CommandHistory.InvokeModelStructureChanged(Parent.FullPath);
             }
         }
