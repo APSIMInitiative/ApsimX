@@ -15,7 +15,12 @@ namespace UserInterface.Views
     {
         void PopulateTables(string[] Simulations, string[] TableNames);
         void PopulateData(DataTable Data);
+
+        bool AutoCreate { get; set; }
+        
         event TableSelectedDelegate OnTableSelected;
+        event EventHandler AutoCreateChanged;
+        event EventHandler CreateNowClicked;
     }
 
 
@@ -23,6 +28,8 @@ namespace UserInterface.Views
     {
 
         public event TableSelectedDelegate OnTableSelected;
+        public event EventHandler AutoCreateChanged;
+        public event EventHandler CreateNowClicked;
 
         /// <summary>
         /// constructor
@@ -72,6 +79,9 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Format the grid.
+        /// </summary>
         private void FormatGrid()
         {
             DataTable Data = Grid.DataSource as DataTable;
@@ -94,5 +104,39 @@ namespace UserInterface.Views
                 OnTableSelected.Invoke(e.Item.Group.Name, e.Item.Text);
         }
 
+        /// <summary>
+        /// Get/Set auto create checkbox state
+        /// </summary>
+        public bool AutoCreate
+        {
+            get
+            {
+                return AutoCreateCheckBox.Checked;
+            }
+            set
+            {
+                AutoCreateCheckBox.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// The user has changed the auto check state.
+        /// </summary>
+        private void OnAutoCreateCheckBoxChanged(object sender, EventArgs e)
+        {
+            if (AutoCreateChanged != null)
+                AutoCreateChanged(this, e);
+        }
+
+        /// <summary>
+        /// The user has clicked the create now button.
+        /// </summary>
+        private void OnCreateButtonClick(object sender, EventArgs e)
+        {
+            if (CreateNowClicked != null)
+                CreateNowClicked(this, e);
+        }
+
+        
     }
 }

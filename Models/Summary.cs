@@ -1,7 +1,10 @@
 ﻿using Models.Core;
+using System.IO;
 
 namespace Models
 {
+    [ViewName("UserInterface.Views.HtmlView")]
+    [PresenterName("UserInterface.Presenters.HtmlPresenter")]
     public class Summary : Model, ISummary
     {
         // Links
@@ -23,6 +26,19 @@ namespace Models
         public void WriteProperty(string Name, string Value)
         {
             DataStore.WriteProperty(Simulation.Name, Name, Value);
+        }
+
+        /// <summary>
+        /// A HTML property that the presenter will use to get a HTML version of the summary.
+        /// </summary>
+        public string HTML
+        {
+            get
+            {
+                StringWriter st = new StringWriter();
+                DataStore.WriteSummary(st, Simulation.Name, true);
+                return st.ToString();
+            }
         }
 
     }

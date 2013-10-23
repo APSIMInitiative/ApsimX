@@ -1394,11 +1394,15 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-                for (int k = 0; k < Patch.Count; k++)
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
-                        result[layer] += Patch[k].urea[layer] * Patch[k].RelativeArea;
-                return result;
+                if (dlayer != null)
+                {
+                    double[] result = new double[dlayer.Length];
+                    for (int k = 0; k < Patch.Count; k++)
+                        for (int layer = 0; layer < dlayer.Length; ++layer)
+                            result[layer] += Patch[k].urea[layer] * Patch[k].RelativeArea;
+                    return result;
+                }
+                return null;
             }
             set  // should this be private?
             {
@@ -1467,11 +1471,15 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-                for (int k = 0; k < Patch.Count; k++)
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
-                        result[layer] += Patch[k].nh4[layer] * Patch[k].RelativeArea;
-                return result;
+                if (dlayer != null)
+                {
+                    double[] result = new double[dlayer.Length];
+                    for (int k = 0; k < Patch.Count; k++)
+                        for (int layer = 0; layer < dlayer.Length; ++layer)
+                            result[layer] += Patch[k].nh4[layer] * Patch[k].RelativeArea;
+                    return result;
+                }
+                return null;
             }
             set  // should this be private?
             {
@@ -1540,11 +1548,15 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-                for (int layer = 0; layer < dlayer.Length; ++layer)
-                    for (int k = 0; k < Patch.Count; k++)
-                        result[layer] += Patch[k].no3[layer] * Patch[k].RelativeArea;
-                return result;
+                if (dlayer != null)
+                {
+                    double[] result = new double[dlayer.Length];
+                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                        for (int k = 0; k < Patch.Count; k++)
+                            result[layer] += Patch[k].no3[layer] * Patch[k].RelativeArea;
+                    return result;
+                }
+                return null;
             }
             set  // should this be private? or not exist at all?
             {
