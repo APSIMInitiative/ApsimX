@@ -52,7 +52,7 @@ namespace Models.Core
                 if (AllModels == null)
                 {
                     AllModels = new List<Model>();
-                    foreach (PropertyInfo property in ModelProperties())
+                    foreach (PropertyInfo property in ModelPropertyInfos())
                     {
                         // If a field is public and is a class 
                         object value = property.GetValue(this, null);
@@ -200,7 +200,7 @@ namespace Models.Core
 
             // Need to find where in the object to store this model.
             bool wasAdded = false;
-            foreach (PropertyInfo property in ModelProperties())
+            foreach (PropertyInfo property in ModelPropertyInfos())
             {
                 if (property.PropertyType == model.GetType())
                 {
@@ -245,7 +245,7 @@ namespace Models.Core
             AllModels = null;
 
             // Need to find where in the object to store this model.
-            foreach (PropertyInfo property in ModelProperties())
+            foreach (PropertyInfo property in ModelPropertyInfos())
             {
                 if (property.PropertyType == model.GetType())
                 {
@@ -350,7 +350,7 @@ namespace Models.Core
         /// Return a list of all child model properties. A child model is any public, writtable, class property
         /// that is in the "Models" namespace. Never returns null. Can return empty list.
         /// </summary>
-        private PropertyInfo[] ModelProperties()
+        public PropertyInfo[] ModelPropertyInfos()
         {
             List<PropertyInfo> allModelProperties = new List<PropertyInfo>();
             foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
@@ -365,6 +365,27 @@ namespace Models.Core
                 }
             }
             return allModelProperties.ToArray();
+        }
+
+        /// <summary>
+        /// Return a list of all properties (that are not references to child models). Never returns null. Can
+        /// return an empty array.
+        /// </summary>
+        public PropertyInfo[] Properties()
+        {
+            List<PropertyInfo> allProperties = new List<PropertyInfo>();
+            foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+            {
+                if (property.CanRead && property.CanWrite)
+                {
+                    if ((property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
+                        || property.PropertyType.IsSubclassOf(typeof(Model)))
+                    { }
+                    else
+                        allProperties.Add(property);
+                }
+            }
+            return allProperties.ToArray();
         }
     }
 }

@@ -466,6 +466,22 @@ namespace Utility
         }
 
         /// <summary>
+        /// A helper function for building a string from an array of strings.
+        /// Separator is inserted between each string.
+        /// </summary>
+        public static string BuildString(string[] Values, string separator)
+        {
+            string ReturnString = "";
+            for (int i = 0; i < Values.Length; i++)
+            {
+                if (i > 0)
+                    ReturnString += separator;
+                ReturnString += Values[i];
+            }
+            return ReturnString;
+        }
+
+        /// <summary>
         /// Look through the specified string for an environment variable name surrounded by
         /// % characters. Replace them with the environment variable value.
         /// </summary>

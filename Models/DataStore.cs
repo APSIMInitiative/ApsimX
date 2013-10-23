@@ -14,11 +14,18 @@ namespace Models
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
     {
+        private const string divider = "------------------------------------------------------------------------------";
+
         private Utility.SQLite Connection = null;
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
 
         public enum ErrorLevel { Information, Warning, Error };
+
+        /// <summary>
+        /// A property that controls auto creation of a text report.
+        /// </summary>
+        public bool AutoCreateReport { get; set; }
 
         // Links
         [Link]
@@ -112,6 +119,8 @@ namespace Models
         private void OnAllCompleted(object sender, EventArgs e)
         {
             Connection.ExecuteNonQuery("COMMIT");
+            if (AutoCreateReport)
+                CreateReport();
         }
 
         /// <summary>
@@ -296,6 +305,225 @@ namespace Models
                        
             return Connection.ExecuteQuery(sql);
         }
+
+        /// <summary>
+        /// Return all data from the specified simulation and table name.
+        /// </summary>
+        public DataTable RunQuery(string sql)
+        {
+            Connect();
+            return Connection.ExecuteQuery(sql);
+        }
+
+        /// <summary>
+        /// Create a text report from tables in this data store.
+        /// </summary>
+        public void CreateReport()
+        {
+
+            StreamWriter report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
+
+            foreach (string simulationName in SimulationNames)
+            {
+                report.WriteLine("SIMULATION: " + simulationName);
+
+                // Write out all summary messages for this simulation.
+                WriteSummary(report, simulationName, false);
+            }
+
+            // Write out each table for this simulation.
+            foreach (string tableName in TableNames)
+            {
+                if (tableName != "Messages" && tableName != "Properties")
+                {
+                    DataTable firstRowOfTable = RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                    string fieldNamesString = "";
+                    for (int i = 1; i < firstRowOfTable.Columns.Count; i++)
+                    {
+                        if (i > 1)
+                            fieldNamesString += ", ";
+                        fieldNamesString += "[" + firstRowOfTable.Columns[i].ColumnName + "]";
+                    }
+
+                    string sql = String.Format("SELECT Name, {0} FROM Simulations, {1} " +
+                                               "WHERE Simulations.ID = {1}.SimulationID",
+                                               fieldNamesString, tableName);
+                    DataTable data = RunQuery(sql);
+                    if (data.Rows.Count > 0)
+                    {
+                        
+                        report.WriteLine("TABLE: " + tableName);
+
+                        report.Write(Utility.DataTable.DataTableToCSV(data, 0));
+                    }
+                }
+            }
+            report.WriteLine(divider);
+            report.WriteLine();
+            report.Close();
+        }
+
+        /// <summary>
+        /// Write out summary information
+        /// </summary>
+        public void WriteSummary(TextWriter report, string simulationName, bool html)
+        {
+            if (html)
+            {
+                report.WriteLine("<!DOCTYPE html>");
+                report.WriteLine("<html>");
+                report.WriteLine("<body>");
+            }
+
+            // Write out all properties.
+            WriteHeading(report, "Properties:", html);
+            DataTable propertyTable = GetPropertyTable(simulationName);
+            WriteTable(report, propertyTable, html);
+            
+            // Write out all messages.
+            WriteHeading(report, "Simulation log:", html);
+            DataTable messageTable = GetMessageTable(simulationName);
+            WriteTable(report, messageTable, html);
+
+            if (html)
+            {
+                report.WriteLine("</body>");
+                report.WriteLine("</html>");
+            }
+        }
+
+        /// <summary>
+        /// Create a message table ready for writing.
+        /// </summary>
+        private DataTable GetMessageTable(string simulationName)
+        {
+            DataTable messageTable = new DataTable();
+            DataTable messages = GetData(simulationName, "Messages");
+            if (messages.Rows.Count > 0)
+            {
+                messageTable.Columns.Add("Date", typeof(string));
+                messageTable.Columns.Add("Model", typeof(string));
+                messageTable.Columns.Add("Message", typeof(string));
+                foreach (DataRow row in messages.Rows)
+                {
+                    string modelName = (string)row[1];
+                    DateTime date = (DateTime)row[2];
+                    string message = (string)row[3];
+                    ErrorLevel errorLevel = (ErrorLevel)Enum.Parse(typeof(ErrorLevel), row[4].ToString());
+
+                    if (errorLevel == ErrorLevel.Error)
+                        message = "FATAL ERROR: " + message;
+                    else if (errorLevel == ErrorLevel.Warning)
+                        message = "WARNING: " + message;
+
+                    messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
+                }
+            }
+            return messageTable;
+        }
+
+        /// <summary>
+        /// Get a table of all properties for all models in the specified simulation.
+        /// </summary>
+        private DataTable GetPropertyTable(string simulationName)
+        {
+            DataTable propertyTable = new DataTable();
+
+            Simulation simulation = Simulations.Get(simulationName) as Simulation;
+            if (simulation != null)
+            {
+                propertyTable.Columns.Add("Model name", typeof(string));
+                propertyTable.Columns.Add("Property name", typeof(string));
+                propertyTable.Columns.Add("Value", typeof(object));
+
+                Model[] models = simulation.FindAll();
+                foreach (Model model in models)
+                {
+                    string modelName = model.FullPath;
+
+                    PropertyInfo[] properties = model.Properties();
+                    foreach (PropertyInfo property in properties)
+                    {
+                        if (property.Name != "Name" && property.Name != "Parent")
+                        {
+                            object value = property.GetValue(model, null);
+                            if (value != null)
+                            {
+                                string units = null;
+                                Units unitsAttribute = Utility.Reflection.GetAttribute(property, typeof(Units), false) as Units;
+                                if (unitsAttribute != null)
+                                    units = "(" + unitsAttribute.UnitsString + ")";
+
+                                string propertyName = property.Name;
+                                if (units != null)
+                                    propertyName += " " + units;
+
+                                if (value.GetType().IsArray)
+                                {
+                                    Array array = value as Array;
+                                    if (array != null && array.Length > 0)
+                                    {
+                                        propertyTable.Rows.Add(new object[] { modelName, propertyName, array.GetValue(0) });
+                                        for (int arrayIndex = 1; arrayIndex < array.Length; arrayIndex++)
+                                        {
+                                            propertyTable.Rows.Add(new object[] { "", "", array.GetValue(arrayIndex) });
+                                        }
+                                    }
+                                }
+                                else
+                                    propertyTable.Rows.Add(new object[] { modelName, propertyName, value });
+                            }
+                        }
+                    }
+                }
+            }
+            return propertyTable;
+        }
+
+        private string FormatValue(object value)
+        {
+            if (value is double || value is float)
+                return String.Format("{0:N3}", value);
+            else if (value is DateTime)
+                return ((DateTime)value).ToString("yyyy-mm-dd");
+            else
+                return value.ToString();
+        }
+
+        private void WriteHeading(TextWriter writer, string heading, bool html)
+        {
+            if (html)
+                writer.WriteLine("<h1>" + heading + "</h1>");
+            else
+                writer.WriteLine(heading.ToUpper());
+        }
+
+        private void WriteTable(TextWriter report, DataTable table, bool html)
+        {
+            if (html)
+            {
+                report.WriteLine("<table border = \"0\">");
+                foreach (DataRow row in table.Rows)
+                {
+                    report.WriteLine("<tr>");
+                    foreach (DataColumn col in table.Columns)
+                    {
+                        report.Write("<td>");
+                        report.Write(FormatValue(row[col]));
+                        report.WriteLine("</td>");
+                    }
+                    report.WriteLine("</tr>");
+                }
+                report.WriteLine("</table>");
+            }
+            else
+            {
+                report.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
+                report.WriteLine(divider);
+            }
+
+        }
+
 
         #region Privates
 

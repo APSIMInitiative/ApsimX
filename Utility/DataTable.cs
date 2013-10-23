@@ -388,43 +388,66 @@ namespace Utility
             return MonthlyData;
         }
 
-
-        static public string DataTableToCSV(System.Data.DataTable Data, int StartColumnIndex)
+        /// <summary>
+        /// Write the specified DataTable to a CSV string, excluding the specified column names.
+        /// </summary>
+        static public string DataTableToCSV(System.Data.DataTable data, int startColumnIndex)
         {
-            StringBuilder St = new StringBuilder(100000);
-            bool FirstTime = true;
-            for (int i = StartColumnIndex; i < Data.Columns.Count; i++)
+            // Need to work out column widths
+            List<int> columnWidths = new List<int>();
+            foreach (DataColumn column in data.Columns)
             {
-                if (FirstTime)
-                    FirstTime = false;
-                else
-                    St.Append(',');
-                St.Append(Data.Columns[i].ColumnName);
-            }
-            St.Append("\r\n");
+                int width = column.ColumnName.Length;
+                foreach (DataRow row in data.Rows)
+                    width = System.Math.Max(width, row[column].ToString().Length);
 
-            foreach (DataRow Row in Data.Rows)
+                // If the last column width > 50 then make it an auto sizing column
+                if (column == data.Columns[data.Columns.Count - 1] && width > 50)
+                    width = 30;
+                columnWidths.Add(width);
+            }
+
+            // Write out column headings.
+            StringBuilder st = new StringBuilder(100000);
+            for (int i = startColumnIndex; i < data.Columns.Count; i++)
             {
-                FirstTime = true;
-                for (int i = StartColumnIndex; i < Data.Columns.Count; i++)
+                if (i > startColumnIndex) st.Append(',');
+                WriteObject(data.Columns[i].ColumnName, st, columnWidths[i]);
+            }
+            st.Append(Environment.NewLine);
+
+            // Write out each row.
+            foreach (DataRow Row in data.Rows)
+            {
+                for (int i = startColumnIndex; i < data.Columns.Count; i++)
                 {
-                    if (FirstTime)
-                        FirstTime = false;
-                    else
-                        St.Append(',');
-
-                    if (Row[i] is DateTime)
-                    {
-                        DateTime D = Convert.ToDateTime(Row[i]);
-                        St.Append(D.ToShortDateString());
-                    }
-                    else
-                        St.Append(Row[i].ToString().Replace(",", ""));
+                    if (i > startColumnIndex) st.Append(',');
+                    WriteObject(Row[i], st, columnWidths[i]);
                 }
-
-                St.Append("\r\n");
+                st.Append(Environment.NewLine);
             }
-            return St.ToString();
+            return st.ToString();
+        }
+
+        /// <summary>
+        /// Write the specified object to the specified StringBuilder using the field width.
+        /// </summary>
+        private static void WriteObject(object obj, StringBuilder st, int width)
+        {
+            string value = "";
+            if (obj is DateTime)
+            {
+                DateTime D = Convert.ToDateTime(obj);
+                value = (D.ToShortDateString());
+            }
+            else if (obj is float || obj is double)
+                value = string.Format("{0:N3}", obj);
+            else 
+                value = obj.ToString();
+
+            if (value.Length < width)
+                st.Append(new string(' ', width - value.Length));
+            st.Append(value);
         }
 
     }

@@ -656,11 +656,15 @@ namespace Models.Soils
         {
             get
             {
-                int num_layers = _dlayer.Length;
-                double[] _sw = new double[num_layers];
-                for (int layer = 0; layer < num_layers; layer++)
-                    _sw[layer] = Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0);
-                return _sw;
+                if (_dlayer != null)
+                {
+                    int num_layers = _dlayer.Length;
+                    double[] _sw = new double[num_layers];
+                    for (int layer = 0; layer < num_layers; layer++)
+                        _sw[layer] = Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0);
+                    return _sw;
+                }
+                return null;
             }
             set
             {
