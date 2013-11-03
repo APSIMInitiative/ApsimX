@@ -1148,7 +1148,7 @@ namespace Models.SurfaceOM
                 tot_c_decomp = SOMDecomp.Pool[counter].FOM.C;
                 tot_n_decomp = SOMDecomp.Pool[counter].FOM.N;
 
-                Bound_check_real_var(tot_n_decomp, 0.0f, n_pot_decomp[residue_no], "total n decompostion");
+                Bound_check_real_var(tot_n_decomp, 0.0f, n_pot_decomp[residue_no], "total n decomposition");
 
                 SOMc = g.SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + g.SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
                 SOMn = g.SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.N) + g.SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.N);
