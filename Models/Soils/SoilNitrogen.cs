@@ -993,16 +993,16 @@ namespace Models.Soils
         /// Check whether there is any considerable values in the array
         /// </summary>
         /// <param name="anArray">The array to analyse</param>
-        /// <param name="MinValue">The minimum considerable value</param>
+        /// <param name="Lowerue">The minimum considerable value</param>
         /// <returns>True if there is any value greater than the minimum, false otherwise</returns>
-        private bool hasValues(double[] anArray, double MinValue)
+        private bool hasValues(double[] anArray, double Lowerue)
         {
             bool result = false;
             if (anArray != null)
             {
                 foreach (double Value in anArray)
                 {
-                    if (Math.Abs(Value) > MinValue)
+                    if (Math.Abs(Value) > Lowerue)
                     {
                         result = true;
                         break;

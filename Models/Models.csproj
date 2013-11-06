@@ -91,6 +91,8 @@
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="MicroClimate.cs" />
+    <Compile Include="MicroClimateScience.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />

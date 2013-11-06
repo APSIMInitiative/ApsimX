@@ -541,6 +541,9 @@
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+      </MicroClimate>
       <Graph>
         <Name>Graph</Name>
         <Axis>
