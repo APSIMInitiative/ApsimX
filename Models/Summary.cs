@@ -31,14 +31,11 @@ namespace Models
         /// <summary>
         /// A HTML property that the presenter will use to get a HTML version of the summary.
         /// </summary>
-        public string HTML
+        public string GetHtml(string apsimSummaryImageFileName)
         {
-            get
-            {
-                StringWriter st = new StringWriter();
-                DataStore.WriteSummary(st, Simulation.Name, true);
-                return st.ToString();
-            }
+            StringWriter st = new StringWriter();
+            DataStore.WriteSummary(st, Simulation.Name, true, apsimSummaryImageFileName);
+            return st.ToString();
         }
 
     }

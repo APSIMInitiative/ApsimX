@@ -315,6 +315,8 @@ namespace Models
             return Connection.ExecuteQuery(sql);
         }
 
+        #region Summary report generation
+
         /// <summary>
         /// Create a text report from tables in this data store.
         /// </summary>
@@ -328,7 +330,7 @@ namespace Models
                 report.WriteLine("SIMULATION: " + simulationName);
 
                 // Write out all summary messages for this simulation.
-                WriteSummary(report, simulationName, false);
+                WriteSummary(report, simulationName, false, null);
             }
 
             // Write out each table for this simulation.
@@ -366,24 +368,38 @@ namespace Models
         /// <summary>
         /// Write out summary information
         /// </summary>
-        public void WriteSummary(TextWriter report, string simulationName, bool html)
+        public void WriteSummary(TextWriter report, string simulationName, bool html, string apsimSummaryImageFileName)
         {
             if (html)
             {
                 report.WriteLine("<!DOCTYPE html>");
                 report.WriteLine("<html>");
                 report.WriteLine("<body>");
+               
+                report.WriteLine("<style type=\"text/css\">");
+                report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
+                report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
+                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;{background-color:#d4e3e5;}");
+                report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
+
+                report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;}");
+                report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                report.WriteLine("</style>");
+
+                report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
             }
 
             // Write out all properties.
-            WriteHeading(report, "Properties:", html);
-            DataTable propertyTable = GetPropertyTable(simulationName);
-            WriteTable(report, propertyTable, html);
+            WriteProperties(report, simulationName, html);
             
             // Write out all messages.
+            if (html)
+                report.WriteLine("<hr>");
             WriteHeading(report, "Simulation log:", html);
             DataTable messageTable = GetMessageTable(simulationName);
-            WriteTable(report, messageTable, html);
+            WriteTable(report, messageTable, html, false, "PropertyTable");
 
             if (html)
             {
@@ -425,61 +441,119 @@ namespace Models
         /// <summary>
         /// Get a table of all properties for all models in the specified simulation.
         /// </summary>
-        private DataTable GetPropertyTable(string simulationName)
+        private void WriteProperties(TextWriter report, string simulationName, bool html)
         {
             DataTable propertyTable = new DataTable();
 
             Simulation simulation = Simulations.Get(simulationName) as Simulation;
             if (simulation != null)
             {
-                propertyTable.Columns.Add("Model name", typeof(string));
-                propertyTable.Columns.Add("Property name", typeof(string));
-                propertyTable.Columns.Add("Value", typeof(object));
-
                 Model[] models = simulation.FindAll();
                 foreach (Model model in models)
                 {
-                    string modelName = model.FullPath;
+                    WriteModelProperties(report, html, model);
+                }
+            }
+        }
 
-                    PropertyInfo[] properties = model.Properties();
-                    foreach (PropertyInfo property in properties)
+        /// <summary>
+        /// Write all properties of the specified model to the specified TextWriter.
+        /// </summary>
+        private void WriteModelProperties(TextWriter report, bool html, Model model)
+        {
+            string modelName = model.FullPath;
+
+            DataTable propertyTable = new DataTable();
+            propertyTable.Columns.Add("Property name", typeof(string));
+            propertyTable.Columns.Add("Value", typeof(object));
+
+            DataTable table = new DataTable();
+
+            PropertyInfo[] properties = model.Properties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "Name" && property.Name != "Parent" && 
+                    Utility.Reflection.GetAttribute(property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
+                {
+                    object value = property.GetValue(model, null);
+                    if (value != null)
                     {
-                        if (property.Name != "Name" && property.Name != "Parent")
+                        string propertyName = property.Name;
+
+                        // look for a description attribute.
+                        Description descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(Description), false) as Description;
+                        if (descriptionAttribute != null)
+                            propertyName = descriptionAttribute.ToString();
+
+                        // look for units
+                        Units unitsAttribute = Utility.Reflection.GetAttribute(property, typeof(Units), false) as Units;
+                        string units = "";
+                        if (unitsAttribute != null)
+                            units = "(" + unitsAttribute.UnitsString + ")";
+                        propertyName += units;
+                        propertyName += ":";
+
+                        // If an array was found then put values into table.
+                        if (value.GetType().IsArray)
                         {
-                            object value = property.GetValue(model, null);
-                            if (value != null)
+                            Array array = value as Array;
+                            if (array != null && array.Length > 0)
                             {
-                                string units = null;
-                                Units unitsAttribute = Utility.Reflection.GetAttribute(property, typeof(Units), false) as Units;
-                                if (unitsAttribute != null)
-                                    units = "(" + unitsAttribute.UnitsString + ")";
+                                List<string> tableValues = new List<string>();
 
-                                string propertyName = property.Name;
-                                if (units != null)
-                                    propertyName += " " + units;
+                                for (int arrayIndex = 1; arrayIndex < array.Length; arrayIndex++)
+                                    tableValues.Add(FormatValue(array.GetValue(arrayIndex)));
 
-                                if (value.GetType().IsArray)
-                                {
-                                    Array array = value as Array;
-                                    if (array != null && array.Length > 0)
-                                    {
-                                        propertyTable.Rows.Add(new object[] { modelName, propertyName, array.GetValue(0) });
-                                        for (int arrayIndex = 1; arrayIndex < array.Length; arrayIndex++)
-                                        {
-                                            propertyTable.Rows.Add(new object[] { "", "", array.GetValue(arrayIndex) });
-                                        }
-                                    }
-                                }
-                                else
-                                    propertyTable.Rows.Add(new object[] { modelName, propertyName, value });
+                                if (table.Rows.Count == 0 || table.Rows.Count == tableValues.Count)
+                                    Utility.DataTable.AddColumn(table, propertyName, tableValues.ToArray());
                             }
                         }
+
+                        // Write out a code block
+                        else if (value.ToString().Contains("\n"))
+                            WriteCodeBlock(report, html, value, propertyName);
+
+                        // Write out a normal property.
+                        else
+                            propertyTable.Rows.Add(new object[] { propertyName, value });
                     }
                 }
             }
-            return propertyTable;
+
+            if (propertyTable.Rows.Count > 0 || table.Rows.Count > 0)
+                WriteHeading(report, modelName, html);
+
+            // write out properties
+            if (propertyTable.Rows.Count > 0)
+                WriteTable(report, propertyTable, html, false, "PropertyTable");
+
+            // write out table.
+            if (table.Rows.Count > 0)
+                WriteTable(report, table, html, true, "ApsimTable");
+
         }
 
+        /// <summary>
+        /// Write the specified value as a code block to the specified TextWriter.
+        /// </summary>
+        private static void WriteCodeBlock(TextWriter report, bool html, object value, string propertyName)
+        {
+            // the value has <cr><lf> - write out manually 
+            if (html)
+            {
+                report.WriteLine("<p>" + propertyName + "</p>");
+                report.WriteLine("<code><pre>" + value.ToString().Replace("\n", "<br/>") + "</pre></code>");
+            }
+            else
+            {
+                report.WriteLine(propertyName);
+                report.WriteLine(value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Format the specified value into a string and return the string.
+        /// </summary>
         private string FormatValue(object value)
         {
             if (value is double || value is float)
@@ -490,31 +564,53 @@ namespace Models
                 return value.ToString();
         }
 
+        /// <summary>
+        /// Write the specified heading to the TextWriter.
+        /// </summary>
         private void WriteHeading(TextWriter writer, string heading, bool html)
         {
             if (html)
-                writer.WriteLine("<h1>" + heading + "</h1>");
+                writer.WriteLine("<h2>" + heading + "</h2>");
             else
                 writer.WriteLine(heading.ToUpper());
         }
 
-        private void WriteTable(TextWriter report, DataTable table, bool html)
+        /// <summary>
+        /// Write the specfieid table to the TextWriter.
+        /// </summary>
+        private void WriteTable(TextWriter report, DataTable table, bool html, bool includeHeadings, string className)
         {
             if (html)
             {
-                report.WriteLine("<table border = \"0\">");
+                report.WriteLine("<p><table class=\"" + className + "\">");
+                if (includeHeadings)
+                {
+                    report.WriteLine("<tr>");
+                    foreach (DataColumn col in table.Columns)
+                    {
+                        report.Write("<th>");
+                        report.Write(col.ColumnName);
+                        report.WriteLine("</th>");
+                    }
+                    report.WriteLine("</tr>");
+                }
+
                 foreach (DataRow row in table.Rows)
                 {
                     report.WriteLine("<tr>");
                     foreach (DataColumn col in table.Columns)
                     {
                         report.Write("<td>");
-                        report.Write(FormatValue(row[col]));
+                        string st = FormatValue(row[col]);
+                        if (st.Contains("\n"))
+                            st = st.Replace("\n", "<br/>");
+                        report.Write(st);
+                        
                         report.WriteLine("</td>");
                     }
                     report.WriteLine("</tr>");
                 }
-                report.WriteLine("</table>");
+                report.WriteLine("</table></p>");
             }
             else
             {
@@ -523,6 +619,8 @@ namespace Models
             }
 
         }
+
+        #endregion
 
 
         #region Privates
@@ -579,3 +677,4 @@ namespace Models
 
     }
 }
+

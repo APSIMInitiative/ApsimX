@@ -74,6 +74,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ApsimSummary {
+            get {
+                object obj = ResourceManager.GetObject("ApsimSummary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Axis16 {
             get {
                 object obj = ResourceManager.GetObject("Axis16", resourceCulture);

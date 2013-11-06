@@ -26,6 +26,7 @@ namespace Models
         private Zone Zone = null;
 
         // Publics
+        [XmlIgnore]
         public object Model { get; set; }
         public string Code { get; set; }
         public Zone ParentZone { get { return Zone; } }

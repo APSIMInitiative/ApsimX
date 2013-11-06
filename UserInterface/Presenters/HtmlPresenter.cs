@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using UserInterface.Views;
+using System.IO;
 
 namespace UserInterface.Presenters
 {
@@ -23,7 +24,14 @@ namespace UserInterface.Presenters
             Model = model as Model;
             View = view as HtmlView;
 
-            View.HTML = Utility.Reflection.GetValueOfFieldOrProperty("HTML", model) as string;
+            if (Model is ISummary)
+            {
+                ISummary summary = Model as ISummary;
+                Utility.Configuration configuration = new Utility.Configuration();
+                View.HTML = summary.GetHtml(configuration.SummaryPngFileName);
+            }
+            else
+                View.HTML = Utility.Reflection.GetValueOfFieldOrProperty("HTML", model) as string;
         }
 
         public void Detach()

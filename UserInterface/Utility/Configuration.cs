@@ -33,11 +33,7 @@ namespace Utility
         /// </summary>
         public Configuration()
         {
-            //On Linux and Mac the path will be .config/
-            ConfigurationFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-                                             "ApsimInitiative",
-                                             "ApsimX",
-                                             "ApsimX.xml");
+            ConfigurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
             //deserialise the file
             if (File.Exists(ConfigurationFile))
             {
@@ -67,5 +63,38 @@ namespace Utility
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
         }
+
+        /// <summary>
+        /// Return the configuration folder.
+        /// </summary>
+        public string ConfigurationFolder
+        {
+            get
+            {
+                //On Linux and Mac the path will be .config/
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                    "ApsimInitiative",
+                                    "ApsimX");
+            }
+        }
+
+        /// <summary>
+        /// Return the name of the summary file JPG.
+        /// </summary>
+        public string SummaryPngFileName
+        {
+            get
+            {
+                // Make sure the summary JPG exists in the configuration folder.
+                string summaryJpg = Path.Combine(ConfigurationFolder, "ApsimSummary.png");
+                if (!File.Exists(summaryJpg))
+                {
+                    Bitmap b = UserInterface.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
+                    b.Save(summaryJpg);
+                }
+                return summaryJpg;
+            }
+        }
+
     }
 }
