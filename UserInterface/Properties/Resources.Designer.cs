@@ -172,6 +172,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Input16 {
+            get {
+                object obj = ResourceManager.GetObject("Input16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static byte[] ManagementToolbox {
             get {
                 object obj = ResourceManager.GetObject("ManagementToolbox", resourceCulture);

@@ -170,6 +170,8 @@ namespace UserInterface.Presenters
                 Series NewSeries = new Series() { Parent = Graph };
                 NewSeries.X = new GraphValues() { Parent = NewSeries, SimulationName = SimulationName, TableName = TableName };
                 NewSeries.Y = new GraphValues() { Parent = NewSeries, SimulationName = SimulationName, TableName = TableName };
+                NewSeries.XAxis = Axis.AxisType.Bottom;
+                NewSeries.YAxis = Axis.AxisType.Left;
                 AllSeries.Add(NewSeries);
             }
             Series S = AllSeries[SeriesIndex];

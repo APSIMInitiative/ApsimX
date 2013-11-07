@@ -69,7 +69,7 @@ namespace UserInterface.Views
                         {
                             
                             ItemsSeries Series = null;
-                            if (S.Type == Models.Graph.Series.SeriesType.Line)
+                            if (S.Type == Models.Graph.Series.SeriesType.Line || S.Type == Models.Graph.Series.SeriesType.None)
                                 Series = CreateLineSeries(S);
                             else if (S.Type == Models.Graph.Series.SeriesType.Bar)
                                 Series = CreateBarSeries(S);
@@ -104,8 +104,11 @@ namespace UserInterface.Views
                 if (Enum.TryParse<MarkerType>(OxyMarkerName, out Type))
                     Series.MarkerType = Type;
 
+                if (S.Type == Models.Graph.Series.SeriesType.None)
+                    Series.LineStyle = LineStyle.None;
+
                 Series.Color = ConverterExtensions.ToOxyColor(S.Colour);
-                Series.MarkerSize = 5.0;
+                Series.MarkerSize = 7.0;
                 Series.MarkerStroke = ConverterExtensions.ToOxyColor(S.Colour);
                 if (Filled)
                 {

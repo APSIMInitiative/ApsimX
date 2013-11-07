@@ -7,7 +7,7 @@
     <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>Goondiwindi.met</FileName>
+      <FileName>C:\Users\hol353\ApsimX\Tests\Goondiwindi.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -294,24 +294,24 @@
           <irrigation_will_runoff>0</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
-          <SummerCona>3.5</SummerCona>
+          <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>3.5</WinterCona>
+          <WinterCona>3</WinterCona>
           <WinterU>6</WinterU>
           <WinterDate>1-Apr</WinterDate>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>NaN</slope>
-          <discharge_width>NaN</discharge_width>
-          <catchment_area>NaN</catchment_area>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eos>5.8408712516913539</eos>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <water_table>NaN</water_table>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -338,9 +338,178 @@
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
+          <n2o_approach>0</n2o_approach>
+          <wnmm_n_alpha>0.002</wnmm_n_alpha>
+          <wnmm_dn_alpha>0.5</wnmm_dn_alpha>
+          <nemis_dn_km>22</nemis_dn_km>
+          <nemis_dn_pot>7.194</nemis_dn_pot>
+          <cent_n_soilt_ave>15</cent_n_soilt_ave>
+          <cent_n_maxt_ave>25</cent_n_maxt_ave>
+          <cent_n_wfps_ave>0.7</cent_n_wfps_ave>
+          <cent_n_max_rate>0.1</cent_n_max_rate>
+          <ureappm_min>0</ureappm_min>
+          <nh4ppm_min>0</nh4ppm_min>
+          <no3ppm_min>0</no3ppm_min>
+          <fom_min>0</fom_min>
+          <ini_FOMtype>default</ini_FOMtype>
+          <oc2om_factor>0</oc2om_factor>
+          <ini_pH>0</ini_pH>
+          <WarningThreshold>0</WarningThreshold>
+          <FatalThreshold>0</FatalThreshold>
+          <enr_a_coeff>7.4</enr_a_coeff>
+          <enr_b_coeff>0.2</enr_b_coeff>
+          <fbiom>
+            <double>0.025</double>
+            <double>0.02</double>
+            <double>0.015</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </fbiom>
+          <finert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>0.9</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+          </finert>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <ef_res>0.4</ef_res>
+          <fr_res_biom>0.9</fr_res_biom>
+          <min_depth>100</min_depth>
+          <rd_carb>
+            <double>0.2</double>
+            <double>0.1</double>
+          </rd_carb>
+          <rd_cell>
+            <double>0.05</double>
+            <double>0.25</double>
+          </rd_cell>
+          <rd_lign>
+            <double>0.0095</double>
+            <double>0.003</double>
+          </rd_lign>
+          <ef_fom>0.4</ef_fom>
+          <fr_fom_biom>0.9</fr_fom_biom>
+          <cnrf_coeff>0.693</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <rd_biom>
+            <double>0.0081</double>
+            <double>0.004</double>
+          </rd_biom>
+          <ef_biom>0.4</ef_biom>
+          <fr_biom_biom>0.6</fr_biom_biom>
+          <rd_hum>
+            <double>0.00015</double>
+            <double>7E-05</double>
+          </rd_hum>
+          <ef_hum>0.4</ef_hum>
+          <opt_temp>
+            <double>32</double>
+            <double>32</double>
+          </opt_temp>
+          <wfmin_index>
+            <double>0</double>
+            <double>0.5</double>
+            <double>1</double>
+            <double>2</double>
+          </wfmin_index>
+          <wfmin_values>
+            <double>0</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0.5</double>
+          </wfmin_values>
+          <potHydrol_min>0</potHydrol_min>
+          <potHydrol_parmA>0</potHydrol_parmA>
+          <potHydrol_parmB>0</potHydrol_parmB>
+          <potHydrol_parmC>0</potHydrol_parmC>
+          <potHydrol_parmD>0</potHydrol_parmD>
+          <nitrification_pot>0</nitrification_pot>
+          <nh4_at_half_pot>0</nh4_at_half_pot>
+          <dnit_rate_coeff>0</dnit_rate_coeff>
+          <dnit_nitrf_loss>0</dnit_nitrf_loss>
+          <dnit_k1>0</dnit_k1>
+          <dnit_wf_power>0</dnit_wf_power>
+          <actC_parmB>0</actC_parmB>
+          <actC_parmA>0</actC_parmA>
+          <N2N2O_parmA>0</N2N2O_parmA>
+          <N2N2O_parmB>0</N2N2O_parmB>
+          <soiltype>standard</soiltype>
+          <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
+          <profile_reduction>no</profile_reduction>
+          <use_organic_solutes>no</use_organic_solutes>
+          <c_in_fom>0.4</c_in_fom>
+          <minPatchArea>1</minPatchArea>
+          <soil_cn>12.5</soil_cn>
+          <mcn>8</mcn>
+          <root_wt>200</root_wt>
+          <root_depth>3000</root_depth>
+          <root_cn>40</root_cn>
+          <root_cn_pool>
+            <double>40</double>
+            <double>40</double>
+            <double>40</double>
+          </root_cn_pool>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -504,7 +673,19 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <c_fract>0.4</c_fract>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <default_standing_fraction>0</default_standing_fraction>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
           <ResidueType>
             <Name>wheat</Name>
@@ -543,42 +724,84 @@
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.3</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <soil_heat>-2.1989999771118165</soil_heat>
+        <dryleaffraction>1</dryleaffraction>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+        <ComponentData />
       </MicroClimate>
       <Graph>
         <Name>Graph</Name>
         <Axis>
           <Name>Axis 1</Name>
           <Type>Left</Type>
-          <Title>Depth (mm)</Title>
-          <Inverted>true</Inverted>
+          <Title>Soil water (mm)</Title>
+          <Inverted>false</Inverted>
         </Axis>
         <Axis>
-          <Name>Axis 2</Name>
-          <Type>Top</Type>
-          <Title>Volumetric water (mm/mm)</Title>
+          <Type>Bottom</Type>
           <Inverted>false</Inverted>
         </Axis>
         <Series>
-          <Name>Series 1</Name>
+          <Title>Predicted</Title>
           <Type>Line</Type>
-          <XAxis>Top</XAxis>
+          <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
           <X>
-            <Name>X</Name>
-            <FieldName>[Soil].AirDry</FieldName>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <Name>Y</Name>
-            <FieldName>[Soil].DepthMidPoints</FieldName>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>SoilWater.sw_dep(1)</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>None</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744193</ColourArgb>
+          <Marker>FilledTriangle</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Input</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Input</TableName>
+            <FieldName>sw(1)</FieldName>
           </Y>
         </Series>
       </Graph>
     </Zone>
+    <Input>
+      <Name>Input</Name>
+      <FileName>C:\Users\hol353\ApsimX\Tests\TestObserved.txt</FileName>
+    </Input>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoCreateReport>false</AutoCreateReport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
