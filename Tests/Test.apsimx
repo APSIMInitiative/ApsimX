@@ -7,7 +7,7 @@
     <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>C:\Users\hol353\ApsimX\Tests\Goondiwindi.met</FileName>
+      <FileName>Goondiwindi.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
