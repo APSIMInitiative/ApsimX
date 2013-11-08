@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using Models.Core;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -27,22 +28,33 @@ namespace Models
         private int RadnIndex;
         private int RainIndex;
         private NewMetType TodaysMetData = new NewMetType();
-        private String FFileName = "";
 
         public WeatherFile()
         {
         }
 
-        // Parameters read in
-        public string FileName
+        /// <summary>
+        /// FileName parameter read in. Should be relative filename where possible.
+        /// </summary>
+        public string FileName { get; set;}
+
+        // A property providing a full file name. The user interface uses this.
+        [XmlIgnore]
+        public string FullFileName
         {
-            get 
-            { 
-                return FFileName;
+            get
+            {
+                string FullFileName = FileName;
+                if (Path.GetFullPath(FileName) != FileName)
+                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
+                return FullFileName;
             }
             set
             {
-                FFileName = value;
+                FileName = value;
+               
+                // try and convert to path relative to the Simulations.FileName.
+                FileName = FileName.Replace(Path.GetDirectoryName(Simulations.FileName) + @"\", "");
             }
         }
 
@@ -163,11 +175,8 @@ namespace Models
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        private Boolean OpenDataFile(String _filename)
+        private Boolean OpenDataFile()
         {
-            string FullFileName = _filename;
-            if (Path.GetFullPath(_filename) != _filename)
-                FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), _filename);
             if (System.IO.File.Exists(FullFileName))
             {
                 if (WtrFile == null)
@@ -175,7 +184,6 @@ namespace Models
                     HaveReadData = false;
                     WtrFile = new Utility.ApsimTextFile();
                 }
-                FFileName = FullFileName;
                 WtrFile.Open(FullFileName);
                 MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
                 MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
@@ -208,7 +216,7 @@ namespace Models
                 HaveReadData = false;
                 Summary.WriteProperty("Weather file name", FileName);
             }
-            if (!OpenDataFile(FFileName))
+            if (!OpenDataFile())
                 throw new ApsimXException(this.FullPath, "Cannot find weather file '" + FileName + "'");
         }
 
@@ -358,7 +366,7 @@ namespace Models
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
-            if (OpenDataFile(FFileName))
+            if (OpenDataFile())
             {
                 WtrData = WtrFile.ToTable();
                 return WtrData;

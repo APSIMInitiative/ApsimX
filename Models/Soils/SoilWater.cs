@@ -480,7 +480,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Water table depth (depth below the ground surface of the first saturated layer)")]
-        public double water_table     //! water table depth (depth below the ground surface of the first saturated layer)
+        private double water_table     //! water table depth (depth below the ground surface of the first saturated layer)
         {
             get { return _water_table; }
             set { SetWaterTable(value); }
@@ -488,6 +488,21 @@ namespace Models.Soils
 
 
         //end of soilwat2_set_my_variable()
+        private double WaterTableInitial = double.NaN;
+        public double WaterTable
+        {
+            get
+            {
+                return WaterTableInitial;
+            }
+            set
+            {
+                WaterTableInitial = value;
+                water_table = WaterTableInitial;
+            }
+        }
+
+
 
 
 

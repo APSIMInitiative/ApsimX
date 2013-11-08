@@ -23,7 +23,7 @@ namespace UserInterface.Presenters
             MetData = (Model as WeatherFile);
             MetDataView = (View as TabbedMetDataView);
             
-            WriteTable(MetData.FileName);
+            WriteTable(MetData.FullFileName);
             WriteSummary();
             
             MetDataView.OnBrowseClicked += OnBrowse;
@@ -46,7 +46,7 @@ namespace UserInterface.Presenters
         /// <param name="filename"></param>
         private void WriteTable(String filename)
         {
-            MetData.FileName = filename;
+            MetData.FullFileName = filename;
             DataTable data = MetData.GetAllData();
             
             //format the data into useful columns

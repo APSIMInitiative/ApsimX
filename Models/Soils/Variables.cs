@@ -286,13 +286,13 @@ namespace Models.Soils
         /// Coefficient a of the enrichment equation
         /// </summary>
 
-        public double enr_a_coeff;
+        private double enr_a_coeff;
 
         /// <summary>
         /// Coefficient b of the enrichment equation
         /// </summary>
 
-        public double enr_b_coeff;
+        private double enr_b_coeff;
 
         #endregion
 
@@ -309,7 +309,7 @@ namespace Models.Soils
         /// The C:N ratio of the soil OM, from xml/GUI (actually of humus)
         /// </summary>
         [Bounds(Lower = 1.0, Upper = 25.0)]
-        public double soil_cn
+        private double soil_cn
         {
             get { return hum_cn; }
             set { hum_cn = value; }
@@ -333,13 +333,13 @@ namespace Models.Soils
         /// Proportion of biomass-C in the initial mineralizable humic-C (0-1)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] fbiom;
+        private double[] fbiom;
 
         /// <summary>
         /// Proportion of the initial total soil C that is inert, not subject to mineralisation (0-1)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] finert;
+        private double[] finert;
 
         #endregion
 
@@ -350,7 +350,7 @@ namespace Models.Soils
         /// </summary>
         private double iniFomWt = 0.0;
         [Bounds(Lower = 0.0, Upper = 100000.0)]
-        public double root_wt
+        private double root_wt
         {
             get { return iniFomWt; }
             set { iniFomWt = value; }
@@ -376,7 +376,7 @@ namespace Models.Soils
         /// </summary>
         private double iniFomCNratio = 0.0;
         [Bounds(Lower = 0.1, Upper = 750.0)]
-        public double root_cn
+        private double root_cn
         {
             get { return iniFomCNratio; }
             set { iniFomCNratio = value; }
@@ -1280,7 +1280,7 @@ namespace Models.Soils
         /// pH of soil (assumed equivalent to a 1:1 soil-water slurry)
         /// </summary>
         [Bounds(Lower = 3.5, Upper = 11.0)]
-        public double[] ph;
+        private double[] ph;
 
         #endregion
 
@@ -1298,7 +1298,7 @@ namespace Models.Soils
 
         [Units("%")]
         [Description("Soil organic carbon (exclude FOM)")]
-        public double[] oc
+        private double[] oc
         {
             get
             {
@@ -1348,6 +1348,7 @@ namespace Models.Soils
 
         [Units("mg/kg")]
         [Description("Soil urea nitrogen content")]
+        [XmlIgnore]
         public double[] ureappm
         {
             get
@@ -1390,6 +1391,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil urea nitrogen amount")]
+        [XmlIgnore]
         public double[] urea
         {
             get
@@ -1426,6 +1428,7 @@ namespace Models.Soils
 
         [Units("mg/kg")]
         [Description("Soil ammonium nitrogen content")]
+        [XmlIgnore]
         public double[] nh4ppm
         {
             get
@@ -1467,6 +1470,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil ammonium nitrogen amount")]
+        [XmlIgnore]
         public double[] nh4
         {
             get
@@ -1504,6 +1508,7 @@ namespace Models.Soils
 
         [Units("mg/kg")]
         [Description("Soil nitrate nitrogen content")]
+        [XmlIgnore]
         public double[] no3ppm
         {
             get
@@ -1544,6 +1549,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil nitrate nitrogen amount")]
+        [XmlIgnore]
         public double[] no3
         {
             get
