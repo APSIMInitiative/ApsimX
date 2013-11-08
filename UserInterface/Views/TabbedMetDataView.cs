@@ -19,6 +19,7 @@ namespace UserInterface.Views
 
     interface IMetDataView
     {
+        void HandleError(string caption, string errorMsg);
         void PopulateData(DataTable Data);
         event BrowseDelegate OnBrowseClicked;
     }
@@ -120,6 +121,15 @@ namespace UserInterface.Views
             newSeries.FillColor = OxyColor.FromRgb(64, 191, 255);
             newSeries.ColumnWidth = 0.05;   //% of axis width
             plot1.Model.Series.Add(newSeries);
+        }
+        /// <summary>
+        /// Display an error message in a dialog
+        /// </summary>
+        /// <param name="caption">Dialog caption</param>
+        /// <param name="errorMsg">Error message</param>
+        public void HandleError(string caption, string errorMsg)
+        {
+            MessageBox.Show(errorMsg, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         /// <summary>
         /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn

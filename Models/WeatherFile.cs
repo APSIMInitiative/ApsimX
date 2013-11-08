@@ -208,7 +208,10 @@ namespace Models
                 HaveReadData = false;
                 Summary.WriteProperty("Weather file name", FileName);
             }
-            OpenDataFile(FFileName);
+            if (!OpenDataFile(FFileName))
+            {
+                throw new Exception(FFileName + " cannot be found!");
+            }
         }
 
         /// <summary>

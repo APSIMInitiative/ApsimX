@@ -22,10 +22,11 @@ namespace UserInterface.Presenters
             this.CommandHistory = CommandHistory;
             MetData = (Model as WeatherFile);
             MetDataView = (View as TabbedMetDataView);
-            
-            WriteTable(MetData.FileName);
-            WriteSummary();
-            
+
+            if (!WriteTable(MetData.FileName))
+            {
+                MetDataView.HandleError("File not found", "Weather data cannot be read from: " + MetData.FileName);
+            }
             MetDataView.OnBrowseClicked += OnBrowse;
         }
         /// <summary>
@@ -37,46 +38,59 @@ namespace UserInterface.Presenters
         }
         public void OnBrowse(String FileName)
         {
-            WriteTable(FileName);
-            WriteSummary();
+            if (!WriteTable(FileName))
+            {
+                MetDataView.HandleError("File not found", "Weather data cannot be read from: " + FileName);
+            }
         }
         /// <summary>
         /// Get the DataTable from the WeatherFile and send it to the View
         /// </summary>
-        /// <param name="filename"></param>
-        private void WriteTable(String filename)
+        /// <param name="filename">Weather file name</param>
+        /// <returns>True is file is found and data can be accessed</returns>
+        private Boolean WriteTable(String filename)
         {
             MetData.FileName = filename;
-            DataTable data = MetData.GetAllData();
-            
-            //format the data into useful columns
-            int siteIdx = data.Columns.IndexOf("site");
-            if (siteIdx >= 0)
-                data.Columns.RemoveAt(siteIdx);
-            int yrCol = data.Columns.IndexOf("year");
-            int dayCol = data.Columns.IndexOf("day");
-            if ((yrCol >= 0) && (dayCol >= 0))
-            {
-                //add a new column for the date string
-                DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
-                dateCol.SetOrdinal(0);
-                yrCol++;    //moved along
-                dayCol++;
+            MetDataView.Filename = filename;    // set the filename label
 
-                int yr, day;
-                for (int r = 0; r < data.Rows.Count; r++)               //for each row in the grid
+            DataTable data = MetData.GetAllData();
+
+            if (data != null)
+            {
+                //format the data into useful columns
+                int siteIdx = data.Columns.IndexOf("site");
+                if (siteIdx >= 0)
+                    data.Columns.RemoveAt(siteIdx);
+                int yrCol = data.Columns.IndexOf("year");
+                int dayCol = data.Columns.IndexOf("day");
+                if ((yrCol >= 0) && (dayCol >= 0))
                 {
-                    yr = Convert.ToInt32(data.Rows[r][yrCol]); 
-                    day = Convert.ToInt32(data.Rows[r][dayCol]);
-                    DateTime rowDate = new DateTime(yr, 1, 1);
-                    rowDate = rowDate.AddDays(day - 1);                 //calc date
-                    data.Rows[r][0] = rowDate.ToShortDateString();      //store in Date col
+                    //add a new column for the date string
+                    DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
+                    dateCol.SetOrdinal(0);
+                    yrCol++;    //moved along
+                    dayCol++;
+
+                    int yr, day;
+                    for (int r = 0; r < data.Rows.Count; r++)               //for each row in the grid
+                    {
+                        yr = Convert.ToInt32(data.Rows[r][yrCol]);
+                        day = Convert.ToInt32(data.Rows[r][dayCol]);
+                        DateTime rowDate = new DateTime(yr, 1, 1);
+                        rowDate = rowDate.AddDays(day - 1);                 //calc date
+                        data.Rows[r][0] = rowDate.ToShortDateString();      //store in Date col
+                    }
+                    data.Columns.RemoveAt(yrCol);       //remove unwanted columns
+                    data.Columns.RemoveAt(--dayCol);
                 }
-                data.Columns.RemoveAt(yrCol);       //remove unwanted columns
-                data.Columns.RemoveAt(--dayCol); 
+                MetDataView.PopulateData(data);
+                WriteSummary();
+                return true;
             }
-            MetDataView.PopulateData(data);
-            MetDataView.Filename = filename;
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// Format a summary string about the weather file
