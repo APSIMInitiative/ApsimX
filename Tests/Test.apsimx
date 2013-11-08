@@ -746,7 +746,7 @@
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>None</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744193</ColourArgb>
