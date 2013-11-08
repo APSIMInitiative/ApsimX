@@ -209,9 +209,7 @@ namespace Models
                 Summary.WriteProperty("Weather file name", FileName);
             }
             if (!OpenDataFile(FFileName))
-            {
-                throw new Exception(FFileName + " cannot be found!");
-            }
+                throw new ApsimXException(this.FullPath, "Cannot find weather file '" + FileName + "'");
         }
 
         /// <summary>
