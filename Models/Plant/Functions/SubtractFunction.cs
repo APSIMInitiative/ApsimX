@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Reflection;
+using Models.Core;
+
+namespace Models.Plant.Functions
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
+    public class SubtractFunction : Function
+    {
+        
+        public override double Value
+        {
+            get
+            {
+                double returnValue = 0.0;
+                object[] Children = this.Models;
+                if (Children.Length > 0)
+                {
+                    Function F = Children[0] as Function;
+                    returnValue = F.Value;
+
+                    if (Children.Length > 1)
+                        for (int i = 1; i < Children.Length; i++)
+                        {
+                            F = Children[i] as Function;
+                            returnValue = returnValue - F.Value;
+                        }
+
+                }
+                return returnValue;
+            }
+        }
+
+    }
+}

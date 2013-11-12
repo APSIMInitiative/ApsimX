@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using Models.Core;
 using Models;
+using Models.Plant;
 
 namespace Models
 {
@@ -48,11 +49,7 @@ namespace Models
         public string key = "";
         public double value;
     }
-    public class NewCropType
-    {
-        public string sender = "";
-        public string crop_type = "";
-    }
+
     public class ChangeGSMaxType
     {
         public string component = "";

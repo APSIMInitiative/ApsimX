@@ -70,7 +70,7 @@ namespace Models.Core
         public override string ToString() { return Name; }
     }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
     public class Description : System.Attribute
     {
         private string Desc;
