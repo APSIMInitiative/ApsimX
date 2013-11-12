@@ -75,7 +75,7 @@ namespace Models.Plant
         public String sender = "";
         public String crop_type = "";
     }
-    public class Plant: Model
+    public class Plant2: Model
     {
 
         public Phenology Phenology { get; set; }
@@ -271,15 +271,18 @@ namespace Models.Plant
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)
         {
-            DoPhenology();
-            DoDMSetUp();
-            DoWater();  //Fixme Do water should go before do DMsetup
-            if (Arbitrator != null)
-                Arbitrator.DoDMArbitration(Organs);
-            DoNutrientSetUp();
-            if (Arbitrator != null)
-                Arbitrator.DoNutrientArbitration(Organs);
-            DoActualGrowth();
+            if (SowingData != null)
+            {
+                DoPhenology();
+                DoDMSetUp();
+                DoWater();  //Fixme Do water should go before do DMsetup
+                if (Arbitrator != null)
+                    Arbitrator.DoDMArbitration(Organs);
+                DoNutrientSetUp();
+                if (Arbitrator != null)
+                    Arbitrator.DoNutrientArbitration(Organs);
+                DoActualGrowth();
+            }
         }
         [EventSubscribe("Harvest")]
         private void OnHarvest()

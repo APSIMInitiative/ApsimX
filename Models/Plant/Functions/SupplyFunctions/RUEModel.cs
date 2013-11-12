@@ -9,7 +9,7 @@ namespace Models.Plant.Functions.SupplyFunctions
     public class RUEModel
     {
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
 
         [Link]
         Function RUE = null;

@@ -11,7 +11,7 @@ namespace Models.Plant.Organs
     public class SimpleRoot : BaseOrgan // FIXME HEB This was inheriting from organ but changed to base organ to fix bug. Need to check collatoral impacts
     {
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
 
         [Link(IsOptional = true)]
         public Function DMDemandFunction = null;

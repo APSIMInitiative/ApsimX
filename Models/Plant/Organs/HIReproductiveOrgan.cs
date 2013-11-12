@@ -9,7 +9,7 @@ namespace Models.Plant.Organs
     class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
 
         [Link]
         Biomass AboveGround = null;

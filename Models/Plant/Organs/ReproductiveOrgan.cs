@@ -11,7 +11,7 @@ namespace Models.Plant.Organs
     {
         #region Parameter Input Classes
         [Link]
-        protected Plant Plant = null;
+        protected Plant2 Plant = null;
         [Link]
         protected Phenology Phenology = null;
         [Link]

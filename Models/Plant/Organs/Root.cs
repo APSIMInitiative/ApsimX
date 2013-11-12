@@ -17,7 +17,7 @@ namespace Models.Plant.Organs
         public Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
         [Link(IsOptional = true)]
         protected Function NitrogenDemandSwitch = null;
         [Link(IsOptional = true)]

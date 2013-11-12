@@ -19,7 +19,7 @@ namespace Models.Plant.Organs
 
         //Class Links
         [Link]
-        public Plant Plant = null;
+        public Plant2 Plant = null;
         [Link]
         public Arbitrator Arbitrator = null;
         [Link]

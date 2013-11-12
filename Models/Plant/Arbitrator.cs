@@ -79,6 +79,9 @@ namespace Models.Plant
             public double End { get; set; }
             public double BalanceError { get; set; }
             //Constructor for Array variables
+            public BiomassArbitrationType()
+            { }
+
             public BiomassArbitrationType(int Size)
             {
                 StructuralDemand = new double[Size];

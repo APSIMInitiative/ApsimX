@@ -20,10 +20,8 @@ namespace Models.Plant.Phen
         public event PhaseChangedDelegate PhaseChanged;
         
         public event NullTypeDelegate GrowthStage;
-        [Link(IsOptional = true)]
-        Function RewindDueToBiomassRemoved = null;
-        [Link(IsOptional = true)]
-        Function AboveGroundPeriod = null;
+        public Function RewindDueToBiomassRemoved { get; set; }
+        public Function AboveGroundPeriod { get; set; }
 
         [NonSerialized]
         private List<Phase> Phases = new List<Phase>();

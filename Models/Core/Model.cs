@@ -355,12 +355,12 @@ namespace Models.Core
             List<PropertyInfo> allModelProperties = new List<PropertyInfo>();
             foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
-                if (property.GetType().IsClass && property.CanWrite)
+                if (property.GetType().IsClass && property.CanWrite && property.Name != "Parent")
                 {
                     if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
                         allModelProperties.Add(property);
 
-                    else if (property.PropertyType.IsSubclassOf(typeof(Model)))
+                    else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
                         allModelProperties.Add(property);
                 }
             }

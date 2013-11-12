@@ -11,7 +11,7 @@ namespace Models.Plant.Organs
     {
         #region Class Dependency Links and Structures
         [Link]
-        protected Plant Plant = null;
+        protected Plant2 Plant = null;
         [Link]
         protected Arbitrator Arbitrator = null;
         #endregion

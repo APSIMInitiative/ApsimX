@@ -43,25 +43,25 @@
         <Code>
         using System;
         using Models.Core;
-
+        using Models.Plant;
         namespace Models
         {
             public class Script : Model
             {      
                // Links
-               [Link] Plant Plant;
+               [Link] Plant2 Plant;
                [Link] Clock Clock;
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
-				if(Clock.Today.DayOfYear == 1)
+				Console.WriteLine("this is working");
+				if(Clock.Today.DayOfYear == 3)
 					Plant.Sow(1, 200, "Russet_Burbank");
                }
             }
         }
         </Code>
         <Script>
-          <A>2</A>
         </Script>
       </Manager>
       <Soil>
@@ -709,7 +709,7 @@
         <soil_albedo>0.3</soil_albedo>
         <ComponentData />
       </MicroClimate>
-       <Plant>
+       <Plant2>
       <CropType type="text" description="CropType">Potato</CropType>
       <Arbitrator>
         <NArbitrationOption type="text" description="NArbitrationOption">PriorityThenRelativeAllocation</NArbitrationOption>
@@ -1391,7 +1391,7 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
       <CompositeBiomass name="TotalDead">
         <Property>Organs[].Dead</Property>
       </CompositeBiomass>
-    </Plant>
+    </Plant2>
    
 	  <Graph>
         <Name>Graph</Name>

@@ -8,7 +8,7 @@ namespace Models.Plant.Organs
     class RootSWIM : BaseOrgan, BelowGround
     {
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
 
         private double[] Uptake = null;
         public double[] rlv = null;

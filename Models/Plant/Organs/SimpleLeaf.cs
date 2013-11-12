@@ -10,7 +10,7 @@ namespace Models.Plant.Organs
     class SimpleLeaf : BaseOrgan, AboveGround
     {
         [Link]
-        Plant Plant = null;
+        Plant2 Plant = null;
         [Link(IsOptional = true)]
         Structure structure = null;
 

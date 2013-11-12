@@ -7,7 +7,7 @@ using Models.Plant.Phen;
 
 namespace Models.Plant
 {
-    class Summary
+    class Summariser
     {
         [Link]
         Biomass AboveGround = null;

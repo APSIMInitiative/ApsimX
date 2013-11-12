@@ -26,8 +26,7 @@ namespace Models
         private Zone Zone = null;
 
         // Publics
-        [XmlIgnore]
-        public object Model { get; set; }
+        public Model Model { get; set; }
         public string Code { get; set; }
         public Zone ParentZone { get { return Zone; } }
 
@@ -56,8 +55,8 @@ namespace Models
 
             // Deserialise to a model.
             XmlSerializer serial = new XmlSerializer(ScriptType);
-            Model = serial.Deserialize(reader);
-
+            Model = serial.Deserialize(reader) as Model;
+            
             // Tell reader we're done with the Manager deserialisation.
             reader.ReadEndElement();
         }
@@ -83,6 +82,11 @@ namespace Models
 
         #endregion
 
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+
+        }
 
         private Assembly CompileTextToAssembly()
         {
