@@ -8,17 +8,14 @@ namespace Models.Plant.Functions.DemandFunctions
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function calculates DM demand from the start stage over the growth duration as the product of potential growth rate (MaximumOrganWt/GrowthDuration) and daily thermal time. It returns the product of this potential rate and any childern so if other stress multipliers are required they can be constructed with generic functions.  Stress factors are optional")]
     public class PopulationBasedDemandFunction : Function
     {
-        [Link]
-        public Function ThermalTime = null;
+        public Function ThermalTime { get; set; }
 
         [Link]
         Structure Structure = null;
 
-        [Link]
-        StageBasedInterpolation StageCode = null;
+        public StageBasedInterpolation StageCode { get; set; }
 
-        [Link]
-        protected Function ExpansionStress = null;
+        public Function ExpansionStress { get; set; }
 
         [Description("Size individual organs will grow to when fully supplied with DM")]
         public double MaximumOrganWt = 0;
@@ -35,26 +32,26 @@ namespace Models.Plant.Functions.DemandFunctions
         [EventSubscribe("NewMet")]
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
         {
-            if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+            if ((StageCode.FunctionValue >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {
-                ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration - AccumulatedThermalTime);
+                ThermalTimeToday = Math.Min(ThermalTime.FunctionValue, GrowthDuration - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
         }
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
                 double Value = 0.0;
-                if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+                if ((StageCode.FunctionValue >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
                 {
                     double Rate = MaximumOrganWt / GrowthDuration;
                     Value = Rate * ThermalTimeToday * Structure.TotalStemPopn;
                 }
 
-                return Value * ExpansionStress.Value;
+                return Value * ExpansionStress.FunctionValue;
             }
         }
 

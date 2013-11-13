@@ -16,7 +16,7 @@ namespace Models.Plant.Functions
 
         public string End = "";
 
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Models.Plant.Functions
                 if (Phenology.Between(Start, End) && Children.Length > 0)
                 {
                     Function Lookup = Children[0] as Function;
-                    return Lookup.Value;
+                    return Lookup.FunctionValue;
                 }
                 else
                     return 0.0;

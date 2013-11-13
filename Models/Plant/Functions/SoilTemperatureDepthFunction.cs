@@ -26,7 +26,7 @@ namespace Models.Plant.Functions
 
         
         [Units("oC")]
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

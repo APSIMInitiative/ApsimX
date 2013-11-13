@@ -9,34 +9,25 @@ using Models.Plant.Phen;
 namespace Models.Plant
 {
     [Description("Keeps Track of Plants Structural Development")]
-    public class Structure
+    public class Structure : Model
     {
         #region Class Dependency Links
-        [Link]
-        protected Function ThermalTime = null;
+        public Function ThermalTime { get; set; }
         [Link]
         Leaf Leaf = null;
         [Link]
-        public Phenology Phenology = null;
+        private Phenology Phenology = null;
         #endregion
 
         #region Class Parameter Function Links
-        [Link(NamePath = "MainStemPrimordiaInitiationRate")]
-        public Function MainStemPrimordiaInitiationRate = null;
-        [Link(NamePath = "MainStemNodeAppearanceRate")]
-        public Function MainStemNodeAppearanceRate = null;
-        [Link(NamePath = "MainStemFinalNodeNumber")]
-        public Function MainStemFinalNodeNumberFunction = null;
-        [Link(NamePath = "Height")]
-        public Function HeightModel = null;
-        [Link(NamePath = "BranchingRate")]
-        public Function Branching = null;
-        [Link(NamePath = "ShadeInducedBranchMortality", IsOptional = true)]
-        public Function ShadeInducedBranchMortality = null;
-        [Link(NamePath = "DroughtInducedBranchMortality", IsOptional = true)]
-        public Function DroughtInducedBranchMortality = null;
-        [Link(NamePath = "PlantMortality", IsOptional = true)]
-        public Function PlantMortality = null;
+        public Function MainStemPrimordiaInitiationRate { get; set; }
+        public Function MainStemNodeAppearanceRate { get; set; }
+        public Function MainStemFinalNodeNumber { get; set; }
+        public Function HeightModel { get; set; }
+        public Function BranchingRate { get; set; }
+        public Function ShadeInducedBranchMortality { get; set; }
+        public Function DroughtInducedBranchMortality { get; set; }
+        public Function PlantMortality { get; set; }
 
         #endregion
 
@@ -81,7 +72,7 @@ namespace Models.Plant
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
         
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumberFunction.Value; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
+        public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.FunctionValue; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
         
         [Units("0-1")]
         [Description("Relative progress toward final leaf")]
@@ -102,7 +93,7 @@ namespace Models.Plant
         //Utility Variables
         [Units("mm")]
         //public double Height { get; set; }
-        public double Height { get { return HeightModel.Value; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
+        public double Height { get { return HeightModel.FunctionValue; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
         public double ProportionBranchMortality { get; set; }
         public double ProportionPlantMortality { get; set; }
         public double MaximumNodeNumber { get; set; }
@@ -113,21 +104,21 @@ namespace Models.Plant
         public void DoPotentialDM()
         {
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
-                if (MainStemPrimordiaInitiationRate.Value > 0.0)
+                if (MainStemPrimordiaInitiationRate.FunctionValue > 0.0)
                 {
-                    MainStemPrimordiaNo += ThermalTime.Value / MainStemPrimordiaInitiationRate.Value;
+                    MainStemPrimordiaNo += ThermalTime.FunctionValue / MainStemPrimordiaInitiationRate.FunctionValue;
                 }
 
             double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
 
-            MainStemFinalNodeNumberFunction.UpdateVariables("");
+            MainStemFinalNodeNumber.UpdateVariables("");
             MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MaximumNodeNumber);
 
             if (MainStemNodeNo > 0)
             {
                 DeltaNodeNumber = 0;
-                if (MainStemNodeAppearanceRate.Value > 0)
-                    DeltaNodeNumber = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
+                if (MainStemNodeAppearanceRate.FunctionValue > 0)
+                    DeltaNodeNumber = ThermalTime.FunctionValue / MainStemNodeAppearanceRate.FunctionValue;
                 MainStemNodeNo += DeltaNodeNumber;
                 MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNo);
             }
@@ -144,24 +135,24 @@ namespace Models.Plant
             //Increment total stem population if main-stem node number has increased by one.
             if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
             {
-                TotalStemPopn += Branching.Value * MainStemPopn;
+                TotalStemPopn += BranchingRate.FunctionValue * MainStemPopn;
             }
 
             //Reduce plant population incase of mortality
             if (PlantMortality != null)
             {
-                double DeltaPopn = Population * PlantMortality.Value;
+                double DeltaPopn = Population * PlantMortality.FunctionValue;
                 Population -= DeltaPopn;
                 TotalStemPopn -= DeltaPopn;
-                ProportionPlantMortality = PlantMortality.Value;
+                ProportionPlantMortality = PlantMortality.FunctionValue;
             }
 
             //Reduce stem number incase of mortality
             double PropnMortality = 0;
             if (DroughtInducedBranchMortality != null)
-                PropnMortality = DroughtInducedBranchMortality.Value;
+                PropnMortality = DroughtInducedBranchMortality.FunctionValue;
             if (ShadeInducedBranchMortality != null)
-                PropnMortality += ShadeInducedBranchMortality.Value;
+                PropnMortality += ShadeInducedBranchMortality.FunctionValue;
             {
                 double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Population);
                 TotalStemPopn -= DeltaPopn;
@@ -201,8 +192,8 @@ namespace Models.Plant
         private void OnInitialised(object sender, EventArgs e)
         {
             string initial = "yes";
-            MainStemFinalNodeNumberFunction.UpdateVariables(initial);
-            MaximumNodeNumber = MainStemFinalNodeNumberFunction.Value;
+            MainStemFinalNodeNumber.UpdateVariables(initial);
+            MaximumNodeNumber = MainStemFinalNodeNumber.FunctionValue;
         }
         [EventSubscribe("Sow")]
         private void OnSow(SowPlant2Type Sow)

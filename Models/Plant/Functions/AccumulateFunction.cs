@@ -30,7 +30,7 @@ namespace Models.Plant.Functions
                 double DailyIncrement = 0.0;
                 foreach (Function F in this.Models)
                 {
-                    DailyIncrement = DailyIncrement + F.Value;
+                    DailyIncrement = DailyIncrement + F.FunctionValue;
                 }
                 AccumulatedValue += DailyIncrement;
             }
@@ -38,7 +38,7 @@ namespace Models.Plant.Functions
         }
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

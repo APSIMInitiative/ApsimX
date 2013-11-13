@@ -9,24 +9,19 @@ namespace Models.Plant.Functions
     [Description("Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)")]
     public class BellCurveFunction : Function
     {
-        [Link]
-        Function LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
+        public Function LargestLeafPosition { get; set; } // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
 
-        [Link]
-        Function AreaMax = null;             // Area of the largest leaf of a plant (mm2)
+        public Function AreaMax { get; set; }             // Area of the largest leaf of a plant (mm2)
 
-        [Link]
-        Function Breadth = null;
+        public Function Breadth { get; set; }
 
-        [Link]
-        Function Skewness = null;
+        public Function Skewness { get; set; }
 
-        [Link]
-        Structure Structure = null;
+        public Structure Structure { get; set; }
 
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -34,8 +29,8 @@ namespace Models.Plant.Functions
 
                 double LeafNo = Structure.MainStemNodeNo;
 
-                LeafSizePerNode = AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
-                                  + Skewness.Value * (Math.Pow(LeafNo - LargestLeafPosition.Value, 3.0)));
+                LeafSizePerNode = AreaMax.FunctionValue * Math.Exp(Breadth.FunctionValue * Math.Pow(LeafNo - LargestLeafPosition.FunctionValue, 2.0)
+                                  + Skewness.FunctionValue * (Math.Pow(LeafNo - LargestLeafPosition.FunctionValue, 3.0)));
 
                 return LeafSizePerNode;
 

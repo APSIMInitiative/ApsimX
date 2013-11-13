@@ -17,7 +17,7 @@ namespace Models.Plant.Phen
         /// </summary>
         public override double DoTimeStep(double PropOfDayToUse)
         {
-            _CumulativeValue += ThermalTime.Value;
+            _CumulativeValue += ThermalTime.FunctionValue;
             return 0;
         }
 

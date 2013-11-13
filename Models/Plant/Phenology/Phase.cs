@@ -8,23 +8,18 @@ using Models.Plant.Functions;
 
 namespace Models.Plant.Phen
 {
-    abstract public class Phase
+    abstract public class Phase : Model
     {
         public string Start;
 
         public string End;
 
         [Link]
-        public Component My;
-
-        [Link]
         public Phenology Phenology = null;
 
-        [Link(IsOptional = true)]
-        public Function ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        public Function ThermalTime { get; set; }  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
-        [Link(IsOptional = true)]
-        public Function Stress = null;
+        public Function Stress { get; set; }
 
         protected double PropOfDayUnused = 0;
         protected double _TTForToday = 0;
@@ -35,14 +30,12 @@ namespace Models.Plant.Phen
             {
                 if (ThermalTime == null)
                     return 0;
-                return ThermalTime.Value;
+                return ThermalTime.FunctionValue;
             }
         }
         protected double _TTinPhase = 0;
         
         public double TTinPhase { get { return _TTinPhase; } }
-
-        public string Name { get { return this.Name; } }
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
@@ -53,10 +46,10 @@ namespace Models.Plant.Phen
         virtual public double DoTimeStep(double PropOfDayToUse)
         {
             // Calculate the TT for today and Accumulate.      
-            _TTForToday = ThermalTime.Value * PropOfDayToUse;
+            _TTForToday = ThermalTime.FunctionValue * PropOfDayToUse;
             if (Stress != null)
             {
-                _TTForToday *= Stress.Value;
+                _TTForToday *= Stress.FunctionValue;
             }
             _TTinPhase += _TTForToday;
 
@@ -66,7 +59,7 @@ namespace Models.Plant.Phen
         // Return proportion of TT unused
         virtual public double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            _TTinPhase += ThermalTime.FunctionValue * PropOfDayToUse;
             return 0;
         }
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }

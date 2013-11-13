@@ -7,10 +7,12 @@ using Models.Plant.Phen;
 
 namespace Models.Plant
 {
-    class Summariser
+    public class Summariser : Model
     {
-        [Link]
-        Biomass AboveGround = null;
+        public Biomass AboveGround { get; set; }
+        public Biomass BelowGround { get; set; }
+        public Biomass Total { get; set; }
+
 
         [Link]
         Phenology Phenology = null;

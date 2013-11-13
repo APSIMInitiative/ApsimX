@@ -42,11 +42,9 @@ namespace Models.Plant.OldPlant
         [Link]
         Leaf1 Leaf = null;
 
-        [Link(IsOptional = true)]
-        Function CropFailureStressPeriod = null;
+        public Function CropFailureStressPeriod { get; set; }
 
-        [Link]
-        Function DeathHighTemperatureDuringEmergence = null;
+        public Function DeathHighTemperatureDuringEmergence { get; set; }
 
         public double LeafNumberCritical = 0;
 
@@ -99,12 +97,12 @@ namespace Models.Plant.OldPlant
             else
                 dlt_plants_failure_leaf_sen = 0.0;
 
-            if (CropFailureStressPeriod.Value == 1)
+            if (CropFailureStressPeriod.FunctionValue == 1)
                 dlt_plants_failure_phen_delay = CropFailurePhenDelay();
             else
                 dlt_plants_failure_phen_delay = 0.0;
 
-            if (CropFailureStressPeriod.Value == 1)
+            if (CropFailureStressPeriod.FunctionValue == 1)
                 dlt_plants_death_drought = DeathDrought();
             else
                 dlt_plants_death_drought = 0.0;
@@ -131,7 +129,7 @@ namespace Models.Plant.OldPlant
 
         internal void Update()
         {
-            if (CropFailureStressPeriod.Value == 1)
+            if (CropFailureStressPeriod.FunctionValue == 1)
             {
                 CumSWStressPheno += (1 - SWStress.Pheno);
                 CumSWStressPhoto += (1 - SWStress.Photo);
@@ -203,7 +201,7 @@ namespace Models.Plant.OldPlant
         private double DeathSeedling()
         {
             // Calculate fraction of plants killed by high temperature
-            double killfr = DeathHighTemperatureDuringEmergence.Value;
+            double killfr = DeathHighTemperatureDuringEmergence.FunctionValue;
             double dlt_plants = -Density * killfr;
 
             if (killfr > 0.0)

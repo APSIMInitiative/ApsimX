@@ -11,13 +11,12 @@ namespace Models.Plant.Functions
     [Description("returns a y value that corresponds to the position of the value of XProperty in the specified xy matrix")]
     public class LinearInterpolationFunction : Function
     {
-        [Link]
-        XYPairs XYPairs = null;
+        public XYPairs XYPairs { get; set; }
 
         public string XProperty = "";
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

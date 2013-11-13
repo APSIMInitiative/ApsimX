@@ -13,8 +13,7 @@ namespace Models.Plant.OldPlant
         [Link]
         Root1 Root = null;
 
-        [Link]
-        Function NStressPeriod = null;
+        public Function NStressPeriod { get; set; }
 
         public double kno3 = 0;
 
@@ -35,7 +34,7 @@ namespace Models.Plant.OldPlant
 
 
             int deepest_layer = Root.FindLayerNo(RootDepth);
-            if (NStressPeriod.Value == 1)
+            if (NStressPeriod.FunctionValue == 1)
             {
                 // N stress period.
                 for (int layer = 0; layer <= deepest_layer; layer++)

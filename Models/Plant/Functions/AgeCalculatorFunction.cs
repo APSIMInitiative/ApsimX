@@ -18,7 +18,7 @@ namespace Models.Plant.Functions
         }
         
         [Units("y")]
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

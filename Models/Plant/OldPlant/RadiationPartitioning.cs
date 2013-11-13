@@ -6,7 +6,7 @@ using Models.Core;
 
 namespace Models.Plant.OldPlant
 {
-    class RadiationPartitioning: Model
+    public class RadiationPartitioning: Model
     {
         public double FractIncidentRadn = 0.0;
 

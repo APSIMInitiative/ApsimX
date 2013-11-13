@@ -8,6 +8,9 @@ using System.Collections;
 using Models.Plant.Organs;
 using Models.Plant.Phen;
 using Models.Soils;
+using System.Xml.Serialization;
+using System.Xml.Schema;
+using System.Xml;
 
 namespace Models.Plant
 {
@@ -53,13 +56,14 @@ namespace Models.Plant
     public class SowPlant2Type
     {
         public String Cultivar = "";
-        public Double Population;
-        public Double Depth;
-        public Double RowSpacing;
-        public Double MaxCover;
-        public Double BudNumber;
-        public Double SkipRow;
-        public Double SkipPlant;
+        public Double Population = 100;
+        public Double Depth = 100;
+        public Double RowSpacing = 150;
+        public Double MaxCover = 1;
+        public Double BudNumber = 1;
+        public String CropClass = "Plant";
+        public Double SkipRow; //Not yet handled in Code
+        public Double SkipPlant; //Not yet handled in Code
     }
     public class BiomassRemovedType
     {
@@ -75,8 +79,9 @@ namespace Models.Plant
         public String sender = "";
         public String crop_type = "";
     }
-    public class Plant2: Model
+    public class Plant2: Model, IXmlSerializable
     {
+        public string CropType { get; set; }
 
         public Phenology Phenology { get; set; }
 
@@ -84,23 +89,84 @@ namespace Models.Plant
 
         public Structure Structure { get; set; }
 
+        public Summariser Summariser { get; set; }
+
         public SowPlant2Type SowingData;
 
-        private List<Organ> _Organs = new List<Organ>();
+        public List<Organ> Organs { get; set; }
         
-        public List<Organ> Organs
+        #region XmlSerializable methods
+        /// <summary>
+        /// Return our schema - needed for IXmlSerializable.
+        /// </summary>
+        public XmlSchema GetSchema() { return null; }
+
+        /// <summary>
+        /// Read XML from specified reader. Called during Deserialisation.
+        /// </summary>
+        public virtual void ReadXml(XmlReader reader)
         {
-            // Public property to return our organs to caller. Used primarily for unit testing.
-            get { return _Organs; }
+            Organs = new List<Organ>();
+            reader.Read();
+            while (reader.IsStartElement())
+            {
+                string Type = reader.Name;
+
+                if (Type == "Name")
+                {
+                    Name = reader.ReadString();
+                    reader.Read();
+                }
+                else if (Type == "CropType")
+                {
+                    CropType = reader.ReadString();
+                    reader.Read();
+                } 
+                else
+                {
+                    Model NewChild = Utility.Xml.Deserialise(reader) as Model;
+                    if (NewChild is Organ)
+                        Organs.Add(NewChild as Organ);
+                    else
+                        AddModel(NewChild, false);
+                    NewChild.Parent = this;
+                }
+            }
+            reader.ReadEndElement();
         }
+
+        /// <summary>
+        /// Write this point to the specified XmlWriter
+        /// </summary>
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Name");
+            writer.WriteString(Name);
+            writer.WriteEndElement();
+
+            foreach (object Model in Organs)
+            {
+                Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
+                if (type.Length == 0)
+                    throw new Exception("Cannot find a model with class name: " + Model.GetType().Name);
+                if (type.Length > 1)
+                    throw new Exception("Found two models with class name: " + Model.GetType().Name);
+
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                XmlSerializer serial = new XmlSerializer(type[0]);
+                serial.Serialize(writer, Model, ns);
+            }
+        }
+
+        #endregion
 
         //Fixme, work out how to do swim
         //[Input(IsOptional = true)]
         Single swim3 = 0;
 
         #region Outputs
-        public string CropType = "";
-        
+         
         private double WaterSupplyDemandRatio = 0;
         
         public string plant_status
@@ -237,22 +303,26 @@ namespace Models.Plant
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        public void Sow(double BudNumber, double Population, string Cultivar)
+        public void Sow(SowPlant2Type ManagerSowingData)
         {
             SowingData = new SowPlant2Type();
-            SowingData.BudNumber = BudNumber;
-            SowingData.Population = Population;
-            SowingData.Cultivar = Cultivar;
+            if(ManagerSowingData.Population != null)
+                SowingData.Population = ManagerSowingData.Population;
+            if (ManagerSowingData.Depth != null)
+                SowingData.Depth = ManagerSowingData.Depth;
+            SowingData.Cultivar = ManagerSowingData.Cultivar;
+            if (ManagerSowingData.MaxCover != null)
+                SowingData.MaxCover = ManagerSowingData.MaxCover;
+            if (ManagerSowingData.BudNumber != null)
+                SowingData.BudNumber = ManagerSowingData.BudNumber;
+            if (ManagerSowingData.RowSpacing != null)
+                SowingData.RowSpacing = ManagerSowingData.RowSpacing;
+            if (ManagerSowingData.CropClass != null)
+                SowingData.CropClass = ManagerSowingData.CropClass;
+            
 
             // Go through all our children and find all organs.
-            Organs.Clear();
-            foreach (object ChildObject in this.Models)
-            {
-                Organ Child = ChildObject as Organ;
-                if (Child != null)
-                    Organs.Add(Child);
-            }
-
+            
             if (NewCrop != null)
             {
                 NewCropType Crop = new NewCropType();

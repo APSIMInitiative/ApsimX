@@ -15,7 +15,7 @@ namespace Models.Plant.Functions
 
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -24,7 +24,7 @@ namespace Models.Plant.Functions
                 {
                     Function F = Children[0] as Function;
 
-                    return A + B * Math.Exp(C * F.Value);
+                    return A + B * Math.Exp(C * F.FunctionValue);
                 }
                 else
                 {

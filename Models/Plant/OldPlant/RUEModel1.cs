@@ -21,14 +21,11 @@ namespace Models.Plant.OldPlant
         [Link]
         SWStress SWStress = null;
 
-        [Link]
-        Function TempStress = null;
+        public Function TempStress { get; set; }
 
-        [Link]
-        Function RUE = null;
+        public Function RUE { get; set; }
 
-        [Link]
-        Function RUEModifier = null;   // used for CO2
+        public Function RUEModifier { get; set; }   // used for CO2
 
         
         public event NewPotentialGrowthDelegate NewPotentialGrowth;
@@ -36,12 +33,12 @@ namespace Models.Plant.OldPlant
         public double PotentialDM(double radiationInterceptedGreen)
         {
             double RUEFactor = 1.0;
-            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),
                                             RUEFactor);
 
-            return radiationInterceptedGreen * RUE.Value * stress_factor * RUEModifier.Value;
+            return radiationInterceptedGreen * RUE.FunctionValue * stress_factor * RUEModifier.FunctionValue;
         }
 
         private void PublishNewPotentialGrowth()
@@ -51,7 +48,7 @@ namespace Models.Plant.OldPlant
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                GrowthType.frgr = (float)Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
                                                    Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
                 NewPotentialGrowth.Invoke(GrowthType);
             }

@@ -14,8 +14,7 @@ namespace Models.Plant.Organs
     {
         #region Parameter Input classes
         //Input Parameters
-        [Link]
-        public LeafCohort[] InitialLeaves;
+        public LeafCohort[] InitialLeaves { get; set; }
 
         //Class Links
         [Link]
@@ -26,29 +25,22 @@ namespace Models.Plant.Organs
         public Structure Structure = null;
         [Link]
         public Phenology Phenology = null;
-        [Link]
-        public RUEModel Photosynthesis = null;
+
+        public RUEModel Photosynthesis { get; set; }
         //Child Functions
-        [Link]
-        public Function ThermalTime = null;
-        [Link]
-        public Function ExtinctionCoeff = null;
-        [Link]
-        public Function FrostFraction = null;
-        [Link]
-        public Function ExpansionStress = null;
-        [Link(NamePath = "DroughtInducedSenAcceleration", IsOptional = true)]
-        public Function DroughtInducedSenAcceleration;
-        [Link]
-        public Function CriticalNConc = null;
-        [Link]
-        public Function MaximumNConc = null;
-        [Link]
-        public Function MinimumNConc = null;
-        [Link]
-        public Function StructuralFraction = null;
-        [Link(IsOptional = true)]
+        public Function ThermalTime { get; set; }
+        public Function ExtinctionCoeff { get; set; }
+        public Function FrostFraction { get; set; }
+        public Function ExpansionStress { get; set; }
+        public Function DroughtInducedSenAcceleration { get; set; }
+        public Function CriticalNConc { get; set; }
+        public Function MaximumNConc { get; set; }
+        public Function MinimumNConc { get; set; }
+        public Function StructuralFraction { get; set; }
         public Function DMDemandFunction = null;
+        public Biomass Total { get; set; }
+        public ArrayBiomass CohortLive { get; set; }
+        public ArrayBiomass CohortDead { get; set; }
         
         public List<LeafCohort> Leaves = new List<LeafCohort>();
         #endregion
@@ -60,7 +52,7 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return ExpansionStress.Value;
+                return ExpansionStress.FunctionValue;
             }
         }
         
@@ -247,7 +239,7 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAI / MaxCover));
             }
         }
         [Units("0-1")]
@@ -495,7 +487,7 @@ namespace Models.Plant.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (CriticalNConc.Value - (MinimumNConc.Value * StructuralFraction.Value)) * (1 / (1 - StructuralFraction.Value));
+                double FunctionalNConc = (CriticalNConc.FunctionValue - (MinimumNConc.FunctionValue * StructuralFraction.FunctionValue)) * (1 / (1 - StructuralFraction.FunctionValue));
                 if (FunctionalNConc == 0)
                     F = 1;
                 else
@@ -523,9 +515,9 @@ namespace Models.Plant.Organs
                 FinalLeafFraction = Structure.MainStemFinalNodeNo - AppearedCohortNo;
             }
 
-            if (FrostFraction.Value > 0)
+            if (FrostFraction.FunctionValue > 0)
                 foreach (LeafCohort L in Leaves)
-                    L.DoFrost(FrostFraction.Value);
+                    L.DoFrost(FrostFraction.FunctionValue);
 
             // On the initial day set up initial cohorts and set their properties
             if (Phenology.OnDayOf(Structure.InitialiseStage))
@@ -554,7 +546,7 @@ namespace Models.Plant.Organs
                 if (FinalLeafFraction != 1.0)
                     FinalLeafAppeared = true;
                 int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
-                double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
+                double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.FunctionValue * FinalLeafFraction;
                 if (AppearingNode > InitialisedCohortNo)
                     throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
                 int i = AppearingNode - 1;
@@ -641,7 +633,7 @@ namespace Models.Plant.Organs
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
+            return 1 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAIabove);
         }
 
         #endregion
@@ -659,8 +651,8 @@ namespace Models.Plant.Organs
 
                 if (DMDemandFunction != null)
                 {
-                    StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
-                    NonStructuralDemand = DMDemandFunction.Value * (1 - StructuralFraction.Value);
+                    StructuralDemand = DMDemandFunction.FunctionValue * StructuralFraction.FunctionValue;
+                    NonStructuralDemand = DMDemandFunction.FunctionValue * (1 - StructuralFraction.FunctionValue);
                 }
                 else
                 {
@@ -1130,14 +1122,14 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return MaximumNConc.Value;
+                return MaximumNConc.FunctionValue;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return CriticalNConc.Value;
+                return CriticalNConc.FunctionValue;
             }
         }
         #endregion
@@ -1236,9 +1228,9 @@ namespace Models.Plant.Organs
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
         {
             //This is a fudge until we get around to making canopy temperature drive phenology dirrectly.
-            if ((DroughtInducedSenAcceleration != null) && (DroughtInducedSenAcceleration.Value > 1.0))
-                _ThermalTime = ThermalTime.Value * DroughtInducedSenAcceleration.Value;
-            else _ThermalTime = ThermalTime.Value;
+            if ((DroughtInducedSenAcceleration != null) && (DroughtInducedSenAcceleration.FunctionValue > 1.0))
+                _ThermalTime = ThermalTime.FunctionValue * DroughtInducedSenAcceleration.FunctionValue;
+            else _ThermalTime = ThermalTime.FunctionValue;
         }
         #endregion
 

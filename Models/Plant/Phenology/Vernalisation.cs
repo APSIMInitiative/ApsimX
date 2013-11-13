@@ -10,8 +10,7 @@ namespace Models.Plant.Phen
         [Link]
         Phenology Phenology = null;
 
-        [Link]
-        AirTemperatureFunction VDModel = null;
+        public AirTemperatureFunction VDModel { get; set; }
 
         public string StartStage = "";
         public string EndStage = "";
@@ -42,7 +41,7 @@ namespace Models.Plant.Phen
         /// </summary>
         public void DoVernalisation(double Maxt, double Mint)
         {
-            CumulativeVD += VDModel.Value;
+            CumulativeVD += VDModel.FunctionValue;
         }
 
 

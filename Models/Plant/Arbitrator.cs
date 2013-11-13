@@ -6,7 +6,7 @@ using Models.Plant.Organs;
 
 namespace Models.Plant
 {
-    public class Arbitrator
+    public class Arbitrator : Model
     {
         #region Class Members
         // Input paramaters

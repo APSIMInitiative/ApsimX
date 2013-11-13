@@ -17,7 +17,7 @@ namespace Models.Plant.Functions.SupplyFunctions
         double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

@@ -8,17 +8,16 @@ namespace Models.Plant.Functions.DemandFunctions
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function returns the product of stem population (/m2), Delta leaf number (assuming internodes are expanding at the same rate that leaves are appearing) and the weight internode weight parameter specified")]
     public class InternodeDemandFunction : Function
     {
-        [Link]
-        Function InterNodeWt = null;
+        public Function InterNodeWt { get; set; }
 
         [Link]
         Structure Structure = null;
 
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
-                return Structure.DeltaNodeNumber * Structure.TotalStemPopn * InterNodeWt.Value;
+                return Structure.DeltaNodeNumber * Structure.TotalStemPopn * InterNodeWt.FunctionValue;
             }
         }
     }

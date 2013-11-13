@@ -9,16 +9,11 @@ namespace Models.Plant.Organs
     public class Nodule : GenericOrgan, BelowGround
     {
         #region Paramater Input Classes
-        [Link]
-        Function FixationMetabolicCost = null;
-        [Link]
-        Function SpecificNitrogenaseActivity = null;
-        [Link]
-        Function FT = null;
-        [Link]
-        Function FW = null;
-        [Link]
-        Function FWlog = null;
+        public Function FixationMetabolicCost { get; set; }
+        public Function SpecificNitrogenaseActivity { get; set; }
+        public Function FT { get; set; }
+        public Function FW { get; set; }
+        public Function FWlog { get; set; }
         #endregion
 
         #region Class Fields
@@ -32,7 +27,7 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return FixationMetabolicCost.Value;
+                return FixationMetabolicCost.FunctionValue;
             }
         }
         public override BiomassAllocationType NAllocation
@@ -59,7 +54,7 @@ namespace Models.Plant.Organs
                 if (Live != null)
                 {
                     // Now add in our fixation
-                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.Value * Math.Min(FT.Value, Math.Min(FW.Value, FWlog.Value));
+                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.FunctionValue * Math.Min(FT.FunctionValue, Math.Min(FW.FunctionValue, FWlog.FunctionValue));
                 }
                 return Supply;
             }

@@ -9,9 +9,9 @@ namespace Models.Plant.Functions
     [Description("returns the specified value")]
     public class Constant : Function
     {
-        public string k = "0";
+        public string Value { get; set; }
         
-        public override double Value { get { return Convert.ToDouble(k); } }
-        public override string ValueString { get { return k; } }
+        public override double FunctionValue { get { return Convert.ToDouble(Value); } }
+        public override string ValueString { get { return Value; } }
     }
 }

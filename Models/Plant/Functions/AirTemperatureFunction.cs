@@ -9,14 +9,13 @@ namespace Models.Plant.Functions
     public class AirTemperatureFunction : Function
     {
         #region Class Data Members
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
         #endregion
 
         
         [Units("deg.day")]
-        public override double Value
+        public override double FunctionValue
         {
 
             get

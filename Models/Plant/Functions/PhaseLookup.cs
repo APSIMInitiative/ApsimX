@@ -9,7 +9,7 @@ namespace Models.Plant.Functions
     public class PhaseLookup : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -17,7 +17,7 @@ namespace Models.Plant.Functions
                 {
                     PhaseLookupValue P = F as PhaseLookupValue;
                     if (P.InPhase)
-                        return P.Value;
+                        return P.FunctionValue;
                 }
                 return 0;  // Default value is zero
             }

@@ -13,7 +13,7 @@ namespace Models.Plant.Functions
     public class LessThanFunction : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -30,13 +30,13 @@ namespace Models.Plant.Functions
                 {
                     F = Children[i] as Function;
                     if (i == 0)
-                        Variable = F.Value;
+                        Variable = F.FunctionValue;
                     if (i == 1)
-                        Criteria = F.Value;
+                        Criteria = F.FunctionValue;
                     if (i == 2)
-                        IfTrue = F.Value;
+                        IfTrue = F.FunctionValue;
                     if (i == 3)
-                        IfFalse = F.Value;
+                        IfFalse = F.FunctionValue;
                 }
 
                 if (Variable < Criteria)

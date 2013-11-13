@@ -112,29 +112,21 @@ namespace Models.Plant.OldPlant
 
         #region Plant1 functionality
 
-        [Link]
-        NStress NStress = null;
+        public NStress NStress { get; set; }
 
-        [Link]
-        RadiationPartitioning RadiationPartitioning = null;
+        public RadiationPartitioning RadiationPartitioning { get; set; }
 
-        [Link]
-        Function NFixRate = null;
+        public Function NFixRate { get; set; }
 
-        [Link]
-        CompositeBiomass AboveGroundLive = null;
+        public CompositeBiomass AboveGroundLive { get; set; }
 
-        [Link]
-        CompositeBiomass AboveGround = null;
+        public CompositeBiomass AboveGround { get; set; }
 
-        [Link]
-        CompositeBiomass BelowGround = null;
+        public CompositeBiomass BelowGround { get; set; }
 
-        [Link]
-        SWStress SWStress = null;
+        public SWStress SWStress { get; set; }
 
-        [Link]
-        Function TempStress = null;
+        public Function TempStress { get; set; }
 
         [Link]
         Root1 Root = null;
@@ -298,7 +290,7 @@ namespace Models.Plant.OldPlant
 
             // PUBLISH NewPotentialGrowth event.
             NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-            NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+            NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
                                                             Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
             NewPotentialGrowthData.sender = Name;
             NewPotentialGrowth.Invoke(NewPotentialGrowthData);
@@ -547,7 +539,7 @@ namespace Models.Plant.OldPlant
                 ext_n_demand += Organ.NDemand;
 
             //nh  use zero growth value here so that estimated n fix is always <= actual;
-            double n_fix_pot = NFixRate.Value * AboveGroundLive.Wt * SWStress.Fixation;
+            double n_fix_pot = NFixRate.FunctionValue * AboveGroundLive.Wt * SWStress.Fixation;
 
             if (NSupplyPreference == "active")
             {

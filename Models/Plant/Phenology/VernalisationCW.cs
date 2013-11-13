@@ -11,8 +11,7 @@ namespace Models.Plant.Phen
         [Link]
         Phenology Phenology = null;
 
-        [Link]
-        Function Photoperiod = null;
+        public Function Photoperiod { get; set; }
 
         
         private double PhotopEff;
@@ -62,7 +61,7 @@ namespace Models.Plant.Phen
             double MaxVernalisationRequirement = 50; //maximum vernalisation requirement is 50 days
             VernEff = VernalisationEffect(VernSens, CumulativeVD, DeltaCumulativeVD, MaxVernalisationRequirement);
 
-            PhotopEff = PhotoperiodEffect(Photoperiod.Value, PhotopSens);
+            PhotopEff = PhotoperiodEffect(Photoperiod.FunctionValue, PhotopSens);
 
             CumulativeVD += DeltaCumulativeVD;
         }

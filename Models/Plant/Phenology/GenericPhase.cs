@@ -8,8 +8,8 @@ namespace Models.Plant.Phen
 {
     public class GenericPhase : Phase
     {
-        [Link(IsOptional = true)]
-        public Function Target = null;
+
+        public Function Target { get; set; }
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
@@ -31,7 +31,7 @@ namespace Models.Plant.Phen
                 double LeftOverValue = _TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value;
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.FunctionValue;
                     PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
                 }
                 else
@@ -49,15 +49,15 @@ namespace Models.Plant.Phen
         {
             if (Target == null)
                 throw new Exception("Cannot find target for phase: " + Name);
-            return Target.Value;
+            return Target.FunctionValue;
         }
         // Return proportion of TT unused
         public override double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            _TTinPhase += ThermalTime.FunctionValue * PropOfDayToUse;
             double AmountUnusedTT = _TTinPhase - CalcTarget();
             if (AmountUnusedTT > 0)
-                return AmountUnusedTT / ThermalTime.Value;
+                return AmountUnusedTT / ThermalTime.FunctionValue;
             return 0;
         }
         /// <summary>
@@ -75,7 +75,7 @@ namespace Models.Plant.Phen
         {
             base.WriteSummary();
             if (Target != null)
-                Console.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
+                Console.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.FunctionValue));
         }
 
     }

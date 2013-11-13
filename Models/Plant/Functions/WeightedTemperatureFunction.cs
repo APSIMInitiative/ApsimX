@@ -9,8 +9,7 @@ namespace Models.Plant.Functions
     public class WeightedTemperatureFunction : Function
     {
         #region Class Data Members
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
         public double MaximumTemperatureWeighting = 0.0;
 
@@ -21,7 +20,7 @@ namespace Models.Plant.Functions
 
         
         [Units("0-1")]
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

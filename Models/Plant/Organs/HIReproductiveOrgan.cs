@@ -11,22 +11,15 @@ namespace Models.Plant.Organs
         [Link]
         Plant2 Plant = null;
 
-        [Link]
-        Biomass AboveGround = null;
+        public Biomass AboveGround { get; set; }
 
-        [Link(IsOptional = true)]
-        Function WaterContent = null;
+        public Function WaterContent { get; set; }
 
-        [Link]
-        Function HIIncrement = null;
+        public Function HIIncrement { get; set; }
 
-        [Link]
-        Function NConc = null;
+        public Function NConc { get; set; }
 
         private double DailyGrowth = 0;
-
-        [Link]
-        Clock Clock = null;
 
         [Units("g/m^2")]
         public double LiveFWt
@@ -35,7 +28,7 @@ namespace Models.Plant.Organs
             {
 
                 if (WaterContent != null)
-                    return Live.Wt / (1 - WaterContent.Value);
+                    return Live.Wt / (1 - WaterContent.FunctionValue);
                 else
                     return 0.0;
             }
@@ -79,7 +72,7 @@ namespace Models.Plant.Organs
             get
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
-                double NewHI = HI + HIIncrement.Value;
+                double NewHI = HI + HIIncrement.FunctionValue;
                 double NewWt = NewHI * AboveGround.Wt;
                 double Demand = Math.Max(0.0, NewWt - CurrentWt);
 
@@ -94,7 +87,7 @@ namespace Models.Plant.Organs
         {
             get
             {
-                double demand = Math.Max(0.0, (NConc.Value * Live.Wt) - Live.N);
+                double demand = Math.Max(0.0, (NConc.FunctionValue * Live.Wt) - Live.N);
                 return new BiomassPoolType { Structural = demand };
             }
 

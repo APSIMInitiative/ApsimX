@@ -11,23 +11,17 @@ namespace Models.Plant.Functions.SupplyFunctions
         [Link]
         Plant2 Plant = null;
 
-        [Link]
-        Function RUE = null;
+        public Function RUE { get; set; }
 
-        [Link]
-        Function Fco2 = null;
+        public Function Fco2 { get; set; }
 
-        [Link]
-        Function Fn = null;
+        public Function Fn { get; set; }
 
-        [Link]
-        Function Ft = null;
+        public Function Ft { get; set; }
 
-        [Link]
-        Function Fw = null;
+        public Function Fw { get; set; }
 
-        [Link]
-        Function Fvpd = null;
+        public Function Fvpd { get; set; }
 
         [Link]
         public WeatherFile MetData = null;
@@ -69,8 +63,8 @@ namespace Models.Plant.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(Ft.Value, Math.Min(Fn.Value, Fvpd.Value)) * Fw.Value * Fco2.Value;
-                return RUE.Value * RueReductionFactor;
+                double RueReductionFactor = Math.Min(Ft.FunctionValue, Math.Min(Fn.FunctionValue, Fvpd.FunctionValue)) * Fw.FunctionValue * Fco2.FunctionValue;
+                return RUE.FunctionValue * RueReductionFactor;
             }
         }
         /// <summary>
@@ -90,7 +84,7 @@ namespace Models.Plant.Functions.SupplyFunctions
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Ft.Value, Math.Min(Fn.Value, Fvpd.Value));
+                GrowthType.frgr = (float)Math.Min(Ft.FunctionValue, Math.Min(Fn.FunctionValue, Fvpd.FunctionValue));
                 NewPotentialGrowth.Invoke(GrowthType);
             }
         }

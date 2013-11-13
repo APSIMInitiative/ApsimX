@@ -54,7 +54,7 @@ namespace Models.Plant
             if (RelativeTo is Model)
             {
                 My = RelativeTo as Model;
-                if ((My != null) && !NamePath.Contains("["))
+                if ((My != null))
                 {
                     object v = My.Get(NamePath);
                     return v;

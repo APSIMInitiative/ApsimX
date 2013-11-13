@@ -14,24 +14,15 @@ namespace Models.Plant.Organs
         protected Plant2 Plant = null;
         [Link]
         protected Phenology Phenology = null;
-        [Link]
-        protected Function WaterContent = null;
-        [Link]
-        protected Function FillingRate = null;
-        [Link]
-        protected Function NumberFunction = null;
-        [Link]
-        protected Function NFillingRate = null;
-        [Link]
-        protected Function MaxNConcDailyGrowth = null;
-        [Link(IsOptional = true)]
-        protected Function NitrogenDemandSwitch = null;
-        [Link]
-        protected Function MaximumNConc = null;
-        [Link]
-        protected Function MinimumNConc = null;
-        [Link(IsOptional = true)]
-        protected Function DMDemandFunction = null;
+        public Function WaterContent { get; set; }
+        public Function FillingRate { get; set; }
+        public Function NumberFunction { get; set; }
+        public Function NFillingRate { get; set; }
+        public Function MaxNConcDailyGrowth { get; set; }
+        public Function NitrogenDemandSwitch { get; set; }
+        public Function MaximumNConc { get; set; }
+        public Function MinimumNConc { get; set; }
+        public Function DMDemandFunction { get; set; }
         #endregion
 
         #region Class Fields
@@ -53,7 +44,7 @@ namespace Models.Plant.Organs
             get
             {
                 if (WaterContent != null)
-                    return Live.Wt / (1 - WaterContent.Value);
+                    return Live.Wt / (1 - WaterContent.FunctionValue);
                 else
                     return 0.0;
             }
@@ -79,7 +70,7 @@ namespace Models.Plant.Organs
                 if (Number > 0)
                 {
                     if (WaterContent != null)
-                        return (Live.Wt / Number) / (1 - WaterContent.Value);
+                        return (Live.Wt / Number) / (1 - WaterContent.FunctionValue);
                     else
                         return 0.0;
                 }
@@ -160,14 +151,14 @@ namespace Models.Plant.Organs
                 double Demand = 0;
                 if (DMDemandFunction != null)
                 {
-                    Demand = DMDemandFunction.Value;
+                    Demand = DMDemandFunction.FunctionValue;
                 }
                 else
                 {
-                    Number = NumberFunction.Value;
+                    Number = NumberFunction.FunctionValue;
                     if (Number > 0)
                     {
-                        double demand = Number * FillingRate.Value;
+                        double demand = Number * FillingRate.FunctionValue;
                         // Ensure filling does not exceed a maximum size
                         Demand = Math.Min(demand, (MaximumSize - Live.Wt / Number) * Number);
                     }
@@ -196,9 +187,9 @@ namespace Models.Plant.Organs
             {
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-                double demand = Number * NFillingRate.Value;
-                demand = Math.Min(demand, MaximumNConc.Value * DailyGrowth) * _NitrogenDemandSwitch;
+                    _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
+                double demand = Number * NFillingRate.FunctionValue;
+                demand = Math.Min(demand, MaximumNConc.FunctionValue * DailyGrowth) * _NitrogenDemandSwitch;
                 return new BiomassPoolType { Structural = demand };
             }
 
@@ -214,14 +205,14 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return MaximumNConc.Value;
+                return MaximumNConc.FunctionValue;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                return MinimumNConc.FunctionValue;
             }
         }
         #endregion

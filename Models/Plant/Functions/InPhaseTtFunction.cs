@@ -14,7 +14,7 @@ namespace Models.Plant.Functions
         Phenology Phenology = null;
 
 
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

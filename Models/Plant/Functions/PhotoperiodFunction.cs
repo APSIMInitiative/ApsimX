@@ -7,12 +7,12 @@ using Models.Core;
 namespace Models.Plant.Functions
 {
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
-    class PhotoperiodFunction : Function
+    public class PhotoperiodFunction : Function
     {
         public double Twilight = 0;
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

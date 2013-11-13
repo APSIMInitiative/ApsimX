@@ -11,13 +11,12 @@ namespace Models.Plant.Functions
     [Description("returns a y value that is interpolated between given XY pairs using cubic Hermite splines")]
     public class SplineInterpolationFunction : Function
     {
-        [Link]
-        XYPairs XYPairs = null;
+        public XYPairs XYPairs { get; set; }
 
         public string XProperty = "";
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -34,8 +33,6 @@ namespace Models.Plant.Functions
                 catch (IndexOutOfRangeException)
                 {
                 }
-                if (XYPairs.X == null)
-                    XYPairs.DoInitialisation();
                 return Interpolate(XYPairs.X, XYPairs.Y, XValue);
 
             }

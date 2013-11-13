@@ -12,8 +12,7 @@ namespace Models.Plant.Functions.StructureFunctions
         [Link]
         Structure Structure = null;
 
-        [Link(IsOptional = true)]
-        protected Function FinalLeafNumber = null;
+        public Function FinalLeafNumber { get; set; }
 
         double _FinalNodeNumber = 0;
 
@@ -28,7 +27,7 @@ namespace Models.Plant.Functions.StructureFunctions
                 if (FinalLeafNumber == null)
                     _FinalNodeNumber = Math.Min(MaximumMainStemNodeNumber, Structure.MainStemPrimordiaNo);
                 else
-                    _FinalNodeNumber = Math.Min(FinalLeafNumber.Value, MaximumMainStemNodeNumber);
+                    _FinalNodeNumber = Math.Min(FinalLeafNumber.FunctionValue, MaximumMainStemNodeNumber);
             }
         }
 
@@ -38,7 +37,7 @@ namespace Models.Plant.Functions.StructureFunctions
         }
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

@@ -32,51 +32,37 @@ namespace Models.Plant.OldPlant
         [Link]
         Phenology Phenology = null;
 
-        [Link]
-        Function TEModifier = null;
+        public Function TEModifier { get; set; }
 
-        [Link]
-        Function NConcCriticalModifier = null;
+        public Function NConcCriticalModifier { get; set; }
 
-        [Link]
-        Function TE = null;
+        public Function TE { get; set; }
 
-        [Link]
-        Function LeafSize = null;
+        public Function LeafSize { get; set; }
 
-        [Link]
-        SWStress SWStress = null;
+        public SWStress SWStress { get; set; }
 
-        [Link]
-        NStress NStress = null;
+        public NStress NStress { get; set; }
 
-        [Link]
-        PStress PStress = null;
+        public PStress PStress { get; set; }
 
 
         [Link]
         PlantSpatial1 PlantSpatial = null;
 
-        [Link]
-        Function SLAMax = null;
+        public Function SLAMax { get; set; }
 
-        [Link]
-        Function LeafNumberFraction = null;
+        public Function LeafNumberFraction { get; set; }
 
-        [Link]
-        Function ExtinctionCoefficient = null;
+        public Function ExtinctionCoefficient { get; set; }
 
-        [Link]
-        Function ExtinctionCoefficientDead = null;
+        public Function ExtinctionCoefficientDead { get; set; }
 
-        [Link]
-        Function NConcentrationCritical = null;
+        public Function NConcentrationCritical { get; set; }
 
-        [Link]
-        Function NConcentrationMinimum = null;
+        public Function NConcentrationMinimum { get; set; }
 
-        [Link]
-        Function NConcentrationMaximum = null;
+        public Function NConcentrationMaximum { get; set; }
 
         [Link]
         WeatherFile MetData = null;
@@ -222,8 +208,8 @@ namespace Models.Plant.OldPlant
                 // Calculate today's transpiration efficiency from min,max temperatures and co2 level
                 // and converting mm water to g dry matter (g dm/m^2/mm water)
 
-                transpEff = TE.Value / Environment.VPD / Conversions.g2mm;
-                transpEff = transpEff * TEModifier.Value;
+                transpEff = TE.FunctionValue / Environment.VPD / Conversions.g2mm;
+                transpEff = transpEff * TEModifier.FunctionValue;
 
                 if (transpEff == 0)
                 {
@@ -278,14 +264,14 @@ namespace Models.Plant.OldPlant
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
             Util.Debug("Leaf.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Leaf.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -464,15 +450,15 @@ namespace Models.Plant.OldPlant
         }
         public override void DoNConccentrationLimits()
         {
-            n_conc_crit = NConcentrationCritical.Value;
-            n_conc_min = NConcentrationMinimum.Value;
-            n_conc_max = NConcentrationMaximum.Value;
+            n_conc_crit = NConcentrationCritical.FunctionValue;
+            n_conc_min = NConcentrationMinimum.FunctionValue;
+            n_conc_max = NConcentrationMaximum.FunctionValue;
 
             Util.Debug("Leaf.n_conc_crit=%f", n_conc_crit);
             Util.Debug("Leaf.n_conc_min=%f", n_conc_min);
             Util.Debug("Leaf.n_conc_max=%f", n_conc_max);
 
-            n_conc_crit *= NConcCriticalModifier.Value;
+            n_conc_crit *= NConcCriticalModifier.FunctionValue;
             if (n_conc_crit <= n_conc_min)
                 throw new Exception("nconc_crit < nconc_min!. What's happened to CO2??");
         }
@@ -499,8 +485,8 @@ namespace Models.Plant.OldPlant
         }
         public override void DoCover()
         {
-            CoverGreen = CalculateCover(LAI, ExtinctionCoefficient.Value, PlantSpatial.CanopyFactor);
-            CoverSen = CalculateCover(_SLAI, ExtinctionCoefficientDead.Value, PlantSpatial.CanopyFactor);
+            CoverGreen = CalculateCover(LAI, ExtinctionCoefficient.FunctionValue, PlantSpatial.CanopyFactor);
+            CoverSen = CalculateCover(_SLAI, ExtinctionCoefficientDead.FunctionValue, PlantSpatial.CanopyFactor);
             Util.Debug("leaf.cover.green=%f", CoverGreen);
             Util.Debug("leaf.cover.sen=%f", CoverSen);
         }
@@ -623,16 +609,16 @@ namespace Models.Plant.OldPlant
         public void DoCanopyExpansion()
         {
             dltNodeNoPot = 0.0;
-            if (NodeFormationPeriod.Value == 1)
-                dltNodeNoPot = Utility.Math.Divide(Phenology.CurrentPhase.TTForToday, NodeAppearanceRate.Value, 0.0);
+            if (NodeFormationPeriod.FunctionValue == 1)
+                dltNodeNoPot = Utility.Math.Divide(Phenology.CurrentPhase.TTForToday, NodeAppearanceRate.FunctionValue, 0.0);
 
             dltLeafNoPot = 0;
             if (Phenology.OnDayOf("Emergence"))
-                _LeavesPerNode = LeavesPerNode.Value;
+                _LeavesPerNode = LeavesPerNode.FunctionValue;
 
-            else if (NodeFormationPeriod.Value == 1)
+            else if (NodeFormationPeriod.FunctionValue == 1)
             {
-                double leaves_per_node_now = LeavesPerNode.Value;
+                double leaves_per_node_now = LeavesPerNode.FunctionValue;
 
                 _LeavesPerNode = Math.Min(_LeavesPerNode, leaves_per_node_now);
 
@@ -648,7 +634,7 @@ namespace Models.Plant.OldPlant
 
 
             // Calculate leaf area potential.
-            dltLAI_pot = dltLeafNoPot * LeafSize.Value * Conversions.smm2sm * Population.Density;
+            dltLAI_pot = dltLeafNoPot * LeafSize.FunctionValue * Conversions.smm2sm * Population.Density;
 
             // Calculate leaf area stressed.
             double StressFactor = Math.Min(SWStress.Expansion, Math.Min(NStress.Expansion, PStress.Expansion));
@@ -659,7 +645,7 @@ namespace Models.Plant.OldPlant
         internal void Actual()
         {
             // maximum daily increase in leaf area
-            dltLAI_carbon = Growth.Wt * SLAMax.Value * Conversions.smm2sm;
+            dltLAI_carbon = Growth.Wt * SLAMax.FunctionValue * Conversions.smm2sm;
 
             // index from carbon supply
             dltLAI = Math.Min(dltLAI_carbon, dltLAI_stressed);
@@ -667,7 +653,7 @@ namespace Models.Plant.OldPlant
             // Simulate actual leaf number increase as limited by dry matter production.
 
             //ratio of actual to potential leaf appearance
-            double leaf_no_frac = LeafNumberFraction.Value;
+            double leaf_no_frac = LeafNumberFraction.FunctionValue;
 
             dltLeafNo = dltLeafNoPot * leaf_no_frac;
 
@@ -701,7 +687,7 @@ namespace Models.Plant.OldPlant
                 leaf_no_sen_now = Utility.Math.Sum(LeafNoSen);
                 dltLeafNoSen = Utility.Math.Constrain(leaf_no_now - leaf_no_sen_now, 0.0, double.MaxValue);
             }
-            else if (LeafSenescencePeriod.Value == 1)
+            else if (LeafSenescencePeriod.FunctionValue == 1)
             {
                 dltLeafNoSen = Utility.Math.Divide(Phenology.CurrentPhase.TTForToday, leaf_death_rate, 0.0);
 
@@ -1006,7 +992,7 @@ namespace Models.Plant.OldPlant
         /// </summary>
         private double LeafAreaSenescencFrost()
         {
-            double dlt_slai_low_temp = LeafSenescenceFrost.Value * _LAI;
+            double dlt_slai_low_temp = LeafSenescenceFrost.FunctionValue * _LAI;
             double min_lai = MinTPLA * Population.Density * Conversions.smm2sm;
             double max_sen = Utility.Math.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
             return Utility.Math.Constrain(dlt_slai_low_temp, 0.0, max_sen);

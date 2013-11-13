@@ -663,7 +663,16 @@ namespace Utility
             {
                 object ReturnObj = null;
                 string TypeName = Reader.Name;
-
+                string xsiType = Reader.GetAttribute("xsi:type");
+                if (xsiType != null)
+                {
+                    TypeName = xsiType;
+                    XmlDocument doc = new XmlDocument();
+                    doc.AppendChild(doc.CreateElement(TypeName));
+                    doc.DocumentElement.InnerXml = Reader.ReadInnerXml();
+                    Reader = new XmlNodeReader(doc);
+                    //Reader.ReadStartElement();
+                }
                 // Try using the pre built serialization assembly first.
                 string DeserializerFileName = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location,
                                                                              ".XmlSerializers.dll");

@@ -13,14 +13,14 @@ namespace Models.Plant.Functions
     public class MultiplyFunction : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
                 double returnValue = 1.0;
 
                 foreach (Function F in this.Models)
-                    returnValue = returnValue * F.Value;
+                    returnValue = returnValue * F.FunctionValue;
                 return returnValue;
             }
         }

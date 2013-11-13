@@ -47,10 +47,8 @@ namespace Models.Plant.Organs
     abstract public class Organ: Model
     {
         #region Links to other models or compontnets
-        [Link(IsOptional = true)]
-        public Biomass Live = null;
-        [Link(IsOptional = true)]
-        public Biomass Dead = null;
+        public Biomass Live { get; set; }
+        public Biomass Dead { get; set; }
         #endregion
 
         #region Fields

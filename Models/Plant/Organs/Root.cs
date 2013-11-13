@@ -18,28 +18,19 @@ namespace Models.Plant.Organs
         private SowPlant2Type SowingInfo = null;
         [Link]
         Plant2 Plant = null;
-        [Link(IsOptional = true)]
-        protected Function NitrogenDemandSwitch = null;
-        [Link(IsOptional = true)]
-        protected Function SenescenceRate = null;
+        public Function NitrogenDemandSwitch { get; set; }
+        public Function SenescenceRate { get; set; }
         [Link(IsOptional = true)]
         Structure Structure = null;
-        [Link(IsOptional = true)]
-        Function TemperatureEffect = null;
-        [Link]
-        Function RootFrontVelocity = null;
+        public Function TemperatureEffect { get; set; }
+        public Function RootFrontVelocity { get; set; }
         [Link]
         Arbitrator Arbitrator = null;
-        [Link]
-        Function PartitionFraction = null;
-        [Link]
-        Function MaximumNConc = null;
-        [Link]
-        Function MaxDailyNUptake = null;
-        [Link]
-        Function MinimumNConc = null;
-        [Link]
-        Function KLModifier = null;
+        public Function PartitionFraction { get; set; }
+        public Function MaximumNConc { get; set; }
+        public Function MaxDailyNUptake { get; set; }
+        public Function MinimumNConc { get; set; }
+        public Function KLModifier { get; set; }
         #endregion
 
         #region Class Fields
@@ -118,7 +109,7 @@ namespace Models.Plant.Organs
         {
             _SenescenceRate = 0;
             if (SenescenceRate != null) //Default of zero means no senescence
-                _SenescenceRate = SenescenceRate.Value;
+                _SenescenceRate = SenescenceRate.FunctionValue;
 
             if (Live.Wt == 0)
             {
@@ -148,8 +139,8 @@ namespace Models.Plant.Organs
 
             // Do Root Front Advance
             int RootLayer = LayerIndex(Depth);
-            double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
-            Depth = Depth + RootFrontVelocity.Value * xf[RootLayer] * TEM;
+            double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.FunctionValue;
+            Depth = Depth + RootFrontVelocity.FunctionValue * xf[RootLayer] * TEM;
             double MaxDepth = 0;
             for (int i = 0; i < SoilWat.dlayer.Length; i++)
                 if (xf[i] > 0)
@@ -312,7 +303,7 @@ namespace Models.Plant.Organs
             {
                 double Demand = 0;
                 if (isGrowing)
-                    Demand = Arbitrator.DMSupply * PartitionFraction.Value;
+                    Demand = Arbitrator.DMSupply * PartitionFraction.FunctionValue;
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -437,10 +428,10 @@ namespace Models.Plant.Organs
                 double TotalDeficit = 0.0;
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
+                    _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
                 foreach (Biomass Layer in LayerLive)
                 {
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
                     TotalDeficit += NDeficit;
                 }
                 TotalDeficit *= _NitrogenDemandSwitch;
@@ -457,7 +448,7 @@ namespace Models.Plant.Organs
                     double[] no3supply = new double[SoilWat.dlayer.Length];
                     double[] nh4supply = new double[SoilWat.dlayer.Length];
                     SoilNSupply(no3supply, nh4supply);
-                    double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
+                    double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.FunctionValue) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.FunctionValue)) * kgha2gsm;
                     return new BiomassSupplyType { Uptake = NSupply };
                 }
                 else
@@ -472,7 +463,7 @@ namespace Models.Plant.Organs
                 double Demand = 0.0;
                 foreach (Biomass Layer in LayerLive)
                 {
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
+                    double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * Layer.Wt - Layer.N);
                     Demand += NDeficit;
                 }
                 double Supply = value.Structural;
@@ -485,7 +476,7 @@ namespace Models.Plant.Organs
                 {
                     foreach (Biomass Layer in LayerLive)
                     {
-                        double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
+                        double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * Layer.Wt - Layer.N);
                         double fraction = NDeficit / Demand;
                         double Allocation = fraction * Supply;
                         Layer.StructuralN += Allocation;
@@ -535,14 +526,14 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return MaximumNConc.Value;
+                return MaximumNConc.FunctionValue;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                return MinimumNConc.FunctionValue;
             }
         }
         
@@ -557,7 +548,7 @@ namespace Models.Plant.Organs
 
                 for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, kl[layer] * KLModifier.Value * (SoilWat.sw_dep[layer] - ll[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, kl[layer] * KLModifier.FunctionValue * (SoilWat.sw_dep[layer] - ll[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

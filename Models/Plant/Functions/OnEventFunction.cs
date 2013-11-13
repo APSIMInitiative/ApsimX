@@ -14,11 +14,9 @@ namespace Models.Plant.Functions
         public string ReSetEvent = "";
 
 
-        [Link]
-        Function PreEventValue = null;
+        public Function PreEventValue { get; set; }
 
-        [Link]
-        Function PostEventValue = null;
+        public Function PostEventValue { get; set; }
 
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
@@ -26,7 +24,7 @@ namespace Models.Plant.Functions
             //Fixme, this needs to be fixed to respond to change and reset events
             //MyPaddock.Subscribe(SetEvent, OnSetEvent);
             //MyPaddock.Subscribe(ReSetEvent, OnReSetEvent);
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.FunctionValue;
         }
 
         //[EventSubscribe("")]
@@ -37,16 +35,16 @@ namespace Models.Plant.Functions
 
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.FunctionValue;
         }
 
         public void OnSetEvent()
         {
-            _Value = PostEventValue.Value;
+            _Value = PostEventValue.FunctionValue;
         }
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

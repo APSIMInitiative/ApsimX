@@ -14,8 +14,7 @@ namespace Models.Plant.Functions
         private double DayBeforeYesterday = 0;
         private double Yesterday = 0;
         private double Today = 0;
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
         [Units("oC")]
         double maxt_soil_surface = 15;  //Fixme.  Need to connect to soil temp model when it is working
@@ -36,7 +35,7 @@ namespace Models.Plant.Functions
 
         
         [Units("deg.day")]
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

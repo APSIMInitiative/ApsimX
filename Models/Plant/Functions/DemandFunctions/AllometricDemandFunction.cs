@@ -19,7 +19,7 @@ namespace Models.Plant.Functions.DemandFunctions
 
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

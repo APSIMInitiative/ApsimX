@@ -21,32 +21,19 @@ namespace Models.Plant.Organs
         #endregion
 
         #region Class Parameter Function Links
-        [Link(IsOptional = true)]
-        protected Function SenescenceRateFunction = null;
-        [Link(IsOptional = true)]
-        protected Function DMReallocationFunction = null;
-        [Link(IsOptional = true)]
-        protected Function NReallocationFactor = null;
-        [Link(IsOptional = true)]
-        protected Function NRetranslocationFactor = null;
-        [Link(IsOptional = true)]
-        protected Function NitrogenDemandSwitch = null;
-        [Link(IsOptional = true)]
-        protected Function DMRetranslocationFactor = null;
-        [Link(NamePath = "StructuralFraction", IsOptional = true)]
-        protected Function StructuralFractionFunction = null;
-        [Link]
-        protected Function DMDemandFunction = null;
-        [Link(IsOptional = true)]
-        protected Function InitialWtFunction = null;
-        [Link(IsOptional = true)]
-        protected Function InitialStructuralFraction = null;
-        [Link(IsOptional = true)]
-        protected Function WaterContent = null;
-        [Link]
-        protected Function MaximumNConc = null;
-        [Link]
-        protected Function MinimumNConc = null;
+        public Function SenescenceRateFunction { get; set; }
+        public Function DMReallocationFunction { get; set; }
+        public Function NReallocationFactor { get; set; }
+        public Function NRetranslocationFactor { get; set; }
+        public Function NitrogenDemandSwitch { get; set; }
+        public Function DMRetranslocationFactor { get; set; }
+        public Function StructuralFractionFunction { get; set; }
+        public Function DMDemandFunction { get; set; }
+        public Function InitialWtFunction { get; set; }
+        public Function InitialStructuralFraction { get; set; }
+        public Function WaterContent { get; set; }
+        public Function MaximumNConc { get; set; }
+        public Function MinimumNConc { get; set; }
         #endregion
 
         #region Class Fields
@@ -84,24 +71,24 @@ namespace Models.Plant.Organs
         {
             SenescenceRate = 0;
             if (SenescenceRateFunction != null) //Default of zero means no senescence
-                SenescenceRate = SenescenceRateFunction.Value;
+                SenescenceRate = SenescenceRateFunction.FunctionValue;
             _StructuralFraction = 1;
             if (StructuralFractionFunction != null) //Default of 1 means all biomass is structural
-                _StructuralFraction = StructuralFractionFunction.Value;
+                _StructuralFraction = StructuralFractionFunction.FunctionValue;
             InitialWt = 0; //Default of zero means no initial Wt
             if (InitialWtFunction != null)
-                InitialWt = InitialWtFunction.Value;
+                InitialWt = InitialWtFunction.FunctionValue;
             InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
             if (InitialStructuralFraction != null)
-                InitStutFraction = InitialStructuralFraction.Value;
+                InitStutFraction = InitialStructuralFraction.FunctionValue;
 
             //Initialise biomass and nitrogen
             if (Live.Wt == 0)
             {
                 Live.StructuralWt = InitialWt * InitStutFraction;
                 Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
-                Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-                Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
+                Live.StructuralN = Live.StructuralWt * MinimumNConc.FunctionValue;
+                Live.NonStructuralN = (InitialWt * MaximumNConc.FunctionValue) - Live.StructuralN;
             }
 
             StartLive = Live;
@@ -109,14 +96,14 @@ namespace Models.Plant.Organs
             StartNRetranslocationSupply = NSupply.Retranslocation;
 
             //Set DM demand
-            StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+            StructuralDMDemand = DMDemandFunction.FunctionValue * _StructuralFraction;
             double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
             MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
             NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
 
             //Set DM supply
             if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                DMRetranslocationSupply = StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
+                DMRetranslocationSupply = StartLive.NonStructuralWt * DMRetranslocationFactor.FunctionValue;
 
         }
         public override void DoActualGrowth()
@@ -129,27 +116,27 @@ namespace Models.Plant.Organs
             Live.NonStructuralN *= (1.0 - SenescenceRate);
 
             if (WaterContent != null)
-                LiveFWt = Live.Wt / (1 - WaterContent.Value);
+                LiveFWt = Live.Wt / (1 - WaterContent.FunctionValue);
         }
         public override void DoPotentialNutrient()
         {
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
+            double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Live.Wt + PotentialDMAllocation) - Live.N);
             if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                NDeficit *= NitrogenDemandSwitch.Value;
-            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value);
+                NDeficit *= NitrogenDemandSwitch.FunctionValue;
+            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.FunctionValue);
             NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand);
             //Nothing in generic organ to deal with metabolic N as yet.
 
             // Calculate Reallocation Supply.
             NReallocationSupply = SenescenceRate * StartLive.NonStructuralN;
             if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                NReallocationSupply *= NReallocationFactor.Value;
+                NReallocationSupply *= NReallocationFactor.FunctionValue;
 
             // Calculate Retranslocation Supply.
-            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.FunctionValue);
             NRetranslocationSupply = (LabileN - StartNReallocationSupply);
             if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                NRetranslocationSupply *= NReallocationFactor.Value;
+                NRetranslocationSupply *= NReallocationFactor.FunctionValue;
         }
         #endregion
 
@@ -251,14 +238,14 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return MaximumNConc.Value;
+                return MaximumNConc.FunctionValue;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                return MinimumNConc.FunctionValue;
             }
         }
         #endregion

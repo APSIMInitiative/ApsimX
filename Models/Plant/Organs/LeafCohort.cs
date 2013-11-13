@@ -11,57 +11,57 @@ namespace Models.Plant.Organs
     {
         #region Paramater Input Classes
         [Link]
-        public Plant2 Plant = null;
+        private Plant2 Plant = null;
         [Link]
-        Structure Structure = null;
+        private Structure Structure = null;
         [Link]
-        public Leaf Leaf = null;
+        private Leaf Leaf = null;
         [Link(NamePath = "MaxArea")]
-        public Function MaxAreaFunction;
+        private Function MaxAreaFunction;
         [Link(NamePath = "GrowthDuration")]
-        public Function GrowthDurationFunction;
+        private Function GrowthDurationFunction;
         [Link(NamePath = "LagDuration")]
-        public Function LagDurationFunction;
+        private Function LagDurationFunction;
         [Link(NamePath = "SenescenceDuration")]
-        public Function SenescenceDurationFunction;
+        private Function SenescenceDurationFunction;
         [Link(NamePath = "DetachmentLagDuration")]
-        public Function DetachmentLagDurationFunction;
+        private Function DetachmentLagDurationFunction;
         [Link(NamePath = "DetachmentDuration")]
-        public Function DetachmentDurationFunction;
+        private Function DetachmentDurationFunction;
         [Link(NamePath = "SpecificLeafAreaMax")]
-        public Function SpecificLeafAreaMaxFunction;
+        private Function SpecificLeafAreaMaxFunction;
         [Link(NamePath = "SpecificLeafAreaMin")]
-        public Function SpecificLeafAreaMinFunction;
+        private Function SpecificLeafAreaMinFunction;
         [Link(NamePath = "StructuralFraction")]
-        public Function StructuralFractionFunction = null;
+        private Function StructuralFractionFunction = null;
         [Link(NamePath = "MaximumNConc")]
-        public Function MaximumNConcFunction;
+        private Function MaximumNConcFunction;
         [Link(NamePath = "MinimumNConc")]
-        public Function MinimumNConcFunction;
+        private Function MinimumNConcFunction;
         [Link(NamePath = "StructuralNConc", IsOptional = true)]
-        public Function StructuralNConcFunction;
+        private Function StructuralNConcFunction;
         [Link(NamePath = "InitialNConc", IsOptional = true)]
-        public Function InitialNConcFunction;
+        private Function InitialNConcFunction;
         [Link(NamePath = "NReallocationFactor")]
-        public Function NReallocationFactorFunction = null;
+        private Function NReallocationFactorFunction = null;
         [Link(NamePath = "DMReallocationFactor", IsOptional = true)]
-        public Function DMReallocationFactorFunction = null;
+        private Function DMReallocationFactorFunction = null;
         [Link(NamePath = "NRetranslocationFactor")]
-        public Function NRetranslocationFactorFunction = null;
+        private Function NRetranslocationFactorFunction = null;
         [Link(NamePath = "ExpansionStress")]
-        public Function ExpansionStressFunction = null;
+        private Function ExpansionStressFunction = null;
         [Link(NamePath = "CriticalNConc")]
-        public Function CriticalNConcFunction = null;
+        private Function CriticalNConcFunction = null;
         [Link(NamePath = "DMRetranslocationFactor", IsOptional = true)]
-        public Function DMRetranslocationFactorFunction = null;
+        private Function DMRetranslocationFactorFunction = null;
         [Link(NamePath = "ShadeInducedSenescenceRate", IsOptional = true)]
-        public Function ShadeInducedSenescenceRateFunction = null;
+        private Function ShadeInducedSenescenceRateFunction = null;
         [Link(NamePath = "DroughtInducedSenAcceleration", IsOptional = true)]
-        public Function DroughtInducedSenAcceleration = null;
+        private Function DroughtInducedSenAcceleration = null;
         [Link(NamePath = "NonStructuralFraction", IsOptional = true)]
-        public Function NonStructuralFractionFunction = null;
+        private Function NonStructuralFractionFunction = null;
         [Link(NamePath = "CellDivisionStress", IsOptional = true)]
-        public Function CellDivisionStress = null; public Biomass Live = new Biomass();
+        private Function CellDivisionStress = null; public Biomass Live = new Biomass();
         public Biomass Dead = new Biomass();
         private Biomass LiveStart = null;
         #endregion
@@ -563,40 +563,40 @@ namespace Models.Plant.Organs
             IsAppeared = true;
             if (CohortPopulation == 0)
                 CohortPopulation = Structure.TotalStemPopn;
-            MaxArea = MaxAreaFunction.Value * CellDivisionStressFactor * LeafFraction;//Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
-            GrowthDuration = GrowthDurationFunction.Value * LeafFraction;
-            LagDuration = LagDurationFunction.Value;
-            SenescenceDuration = SenescenceDurationFunction.Value;
-            DetachmentLagDuration = DetachmentLagDurationFunction.Value;
-            DetachmentDuration = DetachmentDurationFunction.Value;
-            StructuralFraction = StructuralFractionFunction.Value;
-            SpecificLeafAreaMax = SpecificLeafAreaMaxFunction.Value;
-            SpecificLeafAreaMin = SpecificLeafAreaMinFunction.Value;
-            MaximumNConc = MaximumNConcFunction.Value;
-            MinimumNConc = MinimumNConcFunction.Value;
+            MaxArea = MaxAreaFunction.FunctionValue * CellDivisionStressFactor * LeafFraction;//Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
+            GrowthDuration = GrowthDurationFunction.FunctionValue * LeafFraction;
+            LagDuration = LagDurationFunction.FunctionValue;
+            SenescenceDuration = SenescenceDurationFunction.FunctionValue;
+            DetachmentLagDuration = DetachmentLagDurationFunction.FunctionValue;
+            DetachmentDuration = DetachmentDurationFunction.FunctionValue;
+            StructuralFraction = StructuralFractionFunction.FunctionValue;
+            SpecificLeafAreaMax = SpecificLeafAreaMaxFunction.FunctionValue;
+            SpecificLeafAreaMin = SpecificLeafAreaMinFunction.FunctionValue;
+            MaximumNConc = MaximumNConcFunction.FunctionValue;
+            MinimumNConc = MinimumNConcFunction.FunctionValue;
             if (NonStructuralFractionFunction != null)
-                NonStructuralFraction = NonStructuralFractionFunction.Value;
+                NonStructuralFraction = NonStructuralFractionFunction.FunctionValue;
             if (InitialNConcFunction != null) //FIXME HEB I think this can be removed
-                InitialNConc = InitialNConcFunction.Value;
+                InitialNConc = InitialNConcFunction.FunctionValue;
             //if (Area > MaxArea)  FIXMEE HEB  This error trap should be activated but throws errors in chickpea so that needs to be fixed first.
             //    throw new Exception("Initial Leaf area is greater that the Maximum Leaf Area.  Check set up of initial leaf area values to make sure they are not to large and check MaxArea function and CellDivisionStressFactor Function to make sure the values they are returning will not be too small.");
             Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
-            FunctionalNConc = (CriticalNConcFunction.Value - (MinimumNConcFunction.Value * StructuralFraction)) * (1 / (1 - StructuralFraction));
-            LuxaryNConc = (MaximumNConcFunction.Value - CriticalNConcFunction.Value);
+            FunctionalNConc = (CriticalNConcFunction.FunctionValue - (MinimumNConcFunction.FunctionValue * StructuralFraction)) * (1 / (1 - StructuralFraction));
+            LuxaryNConc = (MaximumNConcFunction.FunctionValue - CriticalNConcFunction.FunctionValue);
             Live.MetabolicWt = (Live.StructuralWt * 1 / StructuralFraction) - Live.StructuralWt;
             Live.NonStructuralWt = 0;
             Live.StructuralN = Live.StructuralWt * MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt * FunctionalNConc;
             Live.NonStructuralN = 0;
-            NReallocationFactor = NReallocationFactorFunction.Value;
+            NReallocationFactor = NReallocationFactorFunction.FunctionValue;
             if (DMReallocationFactorFunction != null)
-                DMReallocationFactor = DMReallocationFactorFunction.Value;
-            NRetranslocationFactor = NRetranslocationFactorFunction.Value;
+                DMReallocationFactor = DMReallocationFactorFunction.FunctionValue;
+            NRetranslocationFactor = NRetranslocationFactorFunction.FunctionValue;
             if (DMRetranslocationFactorFunction != null)
-                DMRetranslocationFactor = DMRetranslocationFactorFunction.Value;
+                DMRetranslocationFactor = DMRetranslocationFactorFunction.FunctionValue;
             else DMRetranslocationFactor = 0;
         }
         virtual public void DoPotentialGrowth(double TT)
@@ -619,7 +619,7 @@ namespace Models.Plant.Organs
             if (IsNotAppeared && (CellDivisionStress != null))
             {
                 CellDivisionStressDays += 1;
-                CellDivisionStressAccumulation += CellDivisionStress.Value;
+                CellDivisionStressAccumulation += CellDivisionStress.FunctionValue;
                 //FIXME HEB  The limitation below should be used to avoid zero values for maximum leaf size.
                 //CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
                 CellDivisionStressFactor = CellDivisionStressAccumulation / CellDivisionStressDays;
@@ -632,7 +632,7 @@ namespace Models.Plant.Organs
                 //Acellerate thermal time accumulation if crop is water stressed.
                 double _ThermalTime;
                 if ((DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * DroughtInducedSenAcceleration.Value;
+                    _ThermalTime = TT * DroughtInducedSenAcceleration.FunctionValue;
                 else _ThermalTime = TT;
 
                 //Leaf area growth parameters
@@ -642,7 +642,7 @@ namespace Models.Plant.Organs
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (ShadeInducedSenescenceRateFunction != null)
-                    ShadeInducedSenRate = ShadeInducedSenescenceRateFunction.Value;
+                    ShadeInducedSenRate = ShadeInducedSenescenceRateFunction.FunctionValue;
                 SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality);
 
                 // Doing leaf mass growth in the cohort
@@ -709,7 +709,7 @@ namespace Models.Plant.Organs
                 //Acellerate thermal time accumulation if crop is water stressed.
                 double _ThermalTime;
                 if ((DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * DroughtInducedSenAcceleration.Value;
+                    _ThermalTime = TT * DroughtInducedSenAcceleration.FunctionValue;
                 else _ThermalTime = TT;
 
                 //Growing leaf area after DM allocated

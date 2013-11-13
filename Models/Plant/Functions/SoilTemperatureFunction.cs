@@ -21,7 +21,7 @@ namespace Models.Plant.Functions
 
         
         [Units("deg.day")]
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

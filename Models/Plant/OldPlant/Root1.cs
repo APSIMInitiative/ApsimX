@@ -19,35 +19,26 @@ namespace Models.Plant.OldPlant
         [Link]
         public Plant15 Plant;
 
-        [Link]
-        Function RootAdvanceFactorTemp = null;
+        public Function RootAdvanceFactorTemp { get; set; }
 
-        [Link]
-        Function RootAdvanceFactorWaterStress = null;
+        public Function RootAdvanceFactorWaterStress { get; set; }
 
-        [Link]
-        Function SWFactorRootDepth = null;
+        public Function SWFactorRootDepth { get; set; }
 
-        [Link]
-        Function SWFactorRootLength = null;
+        public Function SWFactorRootLength { get; set; }
 
-        [Link]
-        Function RootDepthRate = null;
+        public Function RootDepthRate { get; set; }
 
         [Link]
         Population1 Population = null;
 
-        [Link]
-        Function RelativeRootRate = null;
+        public Function RelativeRootRate { get; set; }
 
-        [Link]
-        Function DMSenescenceFraction = null;
+        public Function DMSenescenceFraction { get; set; }
 
-        [Link]
-        CompositeBiomass TotalLive = null;
+        public CompositeBiomass TotalLive { get; set; }
 
-        [Link]
-        Function GrowthStructuralFractionStage = null;
+        public Function GrowthStructuralFractionStage { get; set; }
 
         [Link]
         object NUptakeFunction = null;
@@ -183,8 +174,8 @@ namespace Models.Plant.OldPlant
             //  the layer with root front
             int layer = FindLayerNo(RootDepth);
 
-            dltRootDepth = RootDepthRate.Value * RootAdvanceFactorTemp.Value *
-                            Math.Min(RootAdvanceFactorWaterStress.Value, SWFactorRootDepth.Value) *
+            dltRootDepth = RootDepthRate.FunctionValue * RootAdvanceFactorTemp.FunctionValue *
+                            Math.Min(RootAdvanceFactorWaterStress.FunctionValue, SWFactorRootDepth.FunctionValue) *
                             xf[layer];
 
             // prevent roots partially entering layers where xf == 0
@@ -238,14 +229,14 @@ namespace Models.Plant.OldPlant
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Root.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;

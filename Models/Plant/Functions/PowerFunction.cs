@@ -12,7 +12,7 @@ namespace Models.Plant.Functions
         public double Exponent = 1.0;
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -20,7 +20,7 @@ namespace Models.Plant.Functions
                 if (Children.Length == 1)
                 {
                     Function F = Children[0] as Function;
-                    return Math.Pow(F.Value, Exponent);
+                    return Math.Pow(F.FunctionValue, Exponent);
                 }
                 else
                 {

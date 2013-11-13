@@ -22,7 +22,7 @@ namespace Models.Plant.Functions
 
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

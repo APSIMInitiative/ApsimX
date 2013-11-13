@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Core;
 using Models.Plant.Functions;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace Models.Plant.Phen
 {
@@ -12,7 +14,7 @@ namespace Models.Plant.Phen
         public String OldPhaseName = "";
         public String NewPhaseName = "";
     }
-    public class Phenology: Model
+    public class Phenology: Model, IXmlSerializable
     {
         
         public delegate void PhaseChangedDelegate(PhaseChangedType Data);
@@ -22,9 +24,71 @@ namespace Models.Plant.Phen
         public event NullTypeDelegate GrowthStage;
         public Function RewindDueToBiomassRemoved { get; set; }
         public Function AboveGroundPeriod { get; set; }
+        public Function StageCode { get; set; }
 
-        [NonSerialized]
-        private List<Phase> Phases = new List<Phase>();
+        public List<Phase> Phases { get; set; }
+
+        #region XmlSerializable methods
+        /// <summary>
+        /// Return our schema - needed for IXmlSerializable.
+        /// </summary>
+        public XmlSchema GetSchema() { return null; }
+
+        /// <summary>
+        /// Read XML from specified reader. Called during Deserialisation.
+        /// </summary>
+        public virtual void ReadXml(XmlReader reader)
+        {
+            Phases = new List<Phase>();
+            reader.Read();
+            while (reader.IsStartElement())
+            {
+                string Type = reader.Name;
+
+                if (Type == "Name")
+                {
+                    Name = reader.ReadString();
+                    reader.Read();
+                }
+                else
+                {
+                    Model NewChild = Utility.Xml.Deserialise(reader) as Model;
+                    if (NewChild is Phase)
+                        Phases.Add(NewChild as Phase);
+                    else
+                        AddModel(NewChild, false);
+                    NewChild.Parent = this;
+                }
+            }
+            reader.ReadEndElement();
+        }
+
+        /// <summary>
+        /// Write this point to the specified XmlWriter
+        /// </summary>
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Name");
+            writer.WriteString(Name);
+            writer.WriteEndElement();
+
+            foreach (object Model in Phases)
+            {
+                Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
+                if (type.Length == 0)
+                    throw new Exception("Cannot find a model with class name: " + Model.GetType().Name);
+                if (type.Length > 1)
+                    throw new Exception("Found two models with class name: " + Model.GetType().Name);
+
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                XmlSerializer serial = new XmlSerializer(type[0]);
+                serial.Serialize(writer, Model, ns);
+            }
+        }
+
+        #endregion
+
 
         
         private int CurrentPhaseIndex;
@@ -373,7 +437,7 @@ namespace Models.Plant.Phen
                 FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.Value;
+                double removeFractPheno = RewindDueToBiomassRemoved.FunctionValue;
                 double removeTTPheno = ttCritical * removeFractPheno;
 
                 string msg;
@@ -441,7 +505,7 @@ namespace Models.Plant.Phen
                 double TTInPhase = 0.0;
                 for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
                 {
-                    if (AboveGroundPeriod.Value == 1)
+                    if (AboveGroundPeriod.FunctionValue == 1)
                         TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;

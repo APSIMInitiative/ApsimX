@@ -19,7 +19,7 @@ namespace Models.Plant.Functions
         private bool parsed = false;
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

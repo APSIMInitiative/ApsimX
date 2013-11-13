@@ -10,7 +10,7 @@ namespace Models.Plant.Functions
     public class AddFunction : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -18,7 +18,7 @@ namespace Models.Plant.Functions
 
                 foreach (Function F in this.Models)
                 {
-                    returnValue = returnValue + F.Value;
+                    returnValue = returnValue + F.FunctionValue;
                 }
 
                 return returnValue;

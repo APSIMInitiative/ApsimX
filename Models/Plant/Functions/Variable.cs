@@ -12,7 +12,7 @@ namespace Models.Plant.Functions
         public string VariableName = "";
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

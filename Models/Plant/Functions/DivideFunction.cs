@@ -10,7 +10,7 @@ namespace Models.Plant.Functions
     public class DivideFunction : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
@@ -19,13 +19,13 @@ namespace Models.Plant.Functions
                 if (Children.Length > 0)
                 {
                     Function F = Children[0] as Function;
-                    returnValue = F.Value;
+                    returnValue = F.FunctionValue;
 
                     if (Children.Length > 1)
                         for (int i = 1; i < Children.Length; i++)
                         {
                             F = Children[i] as Function;
-                            returnValue = returnValue / F.Value;
+                            returnValue = returnValue / F.FunctionValue;
                         }
 
                 }

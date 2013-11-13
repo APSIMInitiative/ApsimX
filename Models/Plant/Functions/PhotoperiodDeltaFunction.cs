@@ -13,7 +13,7 @@ namespace Models.Plant.Functions
 
         public double Twilight = 0;
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

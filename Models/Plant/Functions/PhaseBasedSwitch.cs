@@ -19,7 +19,7 @@ namespace Models.Plant.Functions
         public string End = "";
 
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {

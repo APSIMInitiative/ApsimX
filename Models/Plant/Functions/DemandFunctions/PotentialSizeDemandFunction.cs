@@ -10,35 +10,31 @@ namespace Models.Plant.Functions.DemandFunctions
 
         public string EndStageName = "";
 
-        [Link]
-        Function PotentialGrowthIncrement = null;
+        public Function PotentialGrowthIncrement { get; set; }
 
-        [Link]
-        Function OrganNumber = null;
+        public Function OrganNumber { get; set; }
 
         //[Link]
         //Phenology Phenology = null;
         [Link]
         Phenology Phenology = null;
 
-        [Link]
-        public Function ThermalTime = null;
+        public Function ThermalTime { get; set; }
 
-        [Link]
-        public Function AccumThermalTime = null;
+        public Function AccumThermalTime { get; set; }
 
         [Units("oCd")]
         public double AccumulatedThermalTime //FIXME.  This is not used in Code, check is needed
         {
-            get { return AccumThermalTime.Value; }
+            get { return AccumThermalTime.FunctionValue; }
         }
 
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
                 if (Phenology.Between(StartStageName, EndStageName))
-                    return PotentialGrowthIncrement.Value * OrganNumber.Value * ThermalTime.Value;
+                    return PotentialGrowthIncrement.FunctionValue * OrganNumber.FunctionValue * ThermalTime.FunctionValue;
                 else
                     return 0;
             }

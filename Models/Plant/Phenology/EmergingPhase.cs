@@ -5,7 +5,7 @@ using Models.Core;
 
 namespace Models.Plant.Phen
 {
-    class EmergingPhase : GenericPhase
+    public class EmergingPhase : GenericPhase
     {
         public double ShootLag = 0;
         public double ShootRate = 0;

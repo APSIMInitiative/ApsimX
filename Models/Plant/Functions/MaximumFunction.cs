@@ -10,14 +10,14 @@ namespace Models.Plant.Functions
     class MaximumFunction : Function
     {
         
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
                 double ReturnValue = -999999999;
                 foreach (Function F in this.Models)
                 {
-                    ReturnValue = Math.Max(ReturnValue, F.Value);
+                    ReturnValue = Math.Max(ReturnValue, F.FunctionValue);
                 }
                 return ReturnValue;
             }

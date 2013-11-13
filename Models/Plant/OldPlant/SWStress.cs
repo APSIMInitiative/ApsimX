@@ -24,23 +24,17 @@ namespace Models.Plant.OldPlant
         [Link]
         Plant15 Plant = null;
 
-        [Link]
-        Function ExpansionFactor = null;
+        public Function ExpansionFactor { get; set; }
 
-        [Link]
-        Function PhenoFactor = null;
+        public Function PhenoFactor { get; set; }
 
-        [Link]
-        Function FixationFactor = null;
+        public Function FixationFactor { get; set; }
 
-        [Link]
-        Function OxygenDeficitPhotoFactor = null;
+        public Function OxygenDeficitPhotoFactor { get; set; }
 
-        [Link]
-        Function PhenoFlowerFactor = null;
+        public Function PhenoFlowerFactor { get; set; }
 
-        [Link]
-        Function PhenoGrainFillingFactor = null;
+        public Function PhenoGrainFillingFactor { get; set; }
 
         public double PhotoStress { get { return 1 - Photo; } }
         public double PhenoStress { get { return 1 - Pheno; } }
@@ -63,18 +57,18 @@ namespace Models.Plant.OldPlant
             if (sw_demand > 0)
             {
                 _Photo = SWDefPhoto(sw_demand);
-                _Expansion = ExpansionFactor.Value;
+                _Expansion = ExpansionFactor.FunctionValue;
             }
             else
             {
                 _Photo = 1.0;
                 _Expansion = 1.0;
             }
-            _Pheno = PhenoFactor.Value;
-            _PhenoFlower = PhenoFlowerFactor.Value;
-            _PhenoGrainFilling = PhenoGrainFillingFactor.Value;
-            _Fixation = FixationFactor.Value;
-            _OxygenDeficitPhoto = OxygenDeficitPhotoFactor.Value;
+            _Pheno = PhenoFactor.FunctionValue;
+            _PhenoFlower = PhenoFlowerFactor.FunctionValue;
+            _PhenoGrainFilling = PhenoGrainFillingFactor.FunctionValue;
+            _Fixation = FixationFactor.FunctionValue;
+            _OxygenDeficitPhoto = OxygenDeficitPhotoFactor.FunctionValue;
 
             Util.Debug("SWStress.Photo=%f", _Photo);
             Util.Debug("SWStress.Pheno=%f", _Pheno);

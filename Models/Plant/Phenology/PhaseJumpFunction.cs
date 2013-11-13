@@ -7,8 +7,7 @@ namespace Models.Plant.Phen
 {
     class PhaseJumpFunction
     {
-        [Link]
-        Phenology Phenology = null;
+        public Phenology Phenology { get; set; }
 
         public string Start = "";
         public string End = "";

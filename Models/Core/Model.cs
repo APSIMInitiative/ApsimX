@@ -163,7 +163,12 @@ namespace Models.Core
                 // namePath has a [type] at its beginning.
                 int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
                 string typeName = namePath.Substring(1, pos - 1);
-                obj = Find(Utility.Reflection.GetTypeFromUnqualifiedName(typeName));
+                Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                if (t == null)
+                    obj = Find(typeName);
+                else
+                    obj = Find(t);
+                
                 namePath = namePath.Substring(pos + 1);
                 if (obj == null)
                     throw new ApsimXException(FullPath, "Cannot find type: " + typeName + " while doing a get for: " + namePath);
@@ -279,7 +284,7 @@ namespace Models.Core
         {
             // Go looking for private [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(this.GetType(),
-                                                                        BindingFlags.Instance | BindingFlags.NonPublic))
+                                                                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
                 if (field.IsDefined(typeof(Link), false))
                 {

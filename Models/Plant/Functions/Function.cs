@@ -8,17 +8,17 @@ namespace Models.Plant.Functions
     [Description("Base class from which other functions inherit")]
     abstract public class Function: Model
     {
-        abstract public double Value { get; }
-        virtual public string ValueString { get { return Value.ToString(); } }
-        virtual public double[] Values { get { return new double[1] { Value }; } }
+        abstract public double FunctionValue { get; }
+        virtual public string ValueString { get { return FunctionValue.ToString(); } }
+        virtual public double[] Values { get { return new double[1] { FunctionValue }; } }
 
         virtual public void UpdateVariables(string initial) { }
 
         [Link]
-        public WeatherFile MetData = null;
+        protected WeatherFile MetData = null;
 
         [Link]
-        public Clock Clock = null;
+        protected Clock Clock = null;
 
     }
 }

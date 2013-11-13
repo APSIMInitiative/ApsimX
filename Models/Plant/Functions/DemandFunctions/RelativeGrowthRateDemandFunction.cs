@@ -11,11 +11,9 @@ namespace Models.Plant.Functions.DemandFunctions
 
         public string InitialStageName = "";
 
-        [Link]
-        Function RelativeGrowthRate = null;
+        public Function RelativeGrowthRate { get; set; }
 
-        [Link]
-        Function OrganNumber = null;
+        public Function OrganNumber { get; set; }
 
         //[Link]
         //Phenology Phenology = null;
@@ -27,15 +25,15 @@ namespace Models.Plant.Functions.DemandFunctions
 
         double StartWt = 0;
 
-        public override double Value
+        public override double FunctionValue
         {
             get
             {
                 if (Phenology.OnDayOf(InitialStageName) && StartWt == 0)
                     StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
-                double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value);
-                double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value;
-                return OrganDemand * OrganNumber.Value;
+                double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.FunctionValue);
+                double OrganDemand = CurrentOrganWt * RelativeGrowthRate.FunctionValue;
+                return OrganDemand * OrganNumber.FunctionValue;
             }
         }
 

@@ -33,25 +33,15 @@ namespace Models.Plant.Organs
         public double _LAI;            // Leaf Area Index (Green)
         public double _LAIDead;        // Leaf Area Index (Dead)
         public double _Frgr;           // Relative Growth Rate Factor
-        [Link(IsOptional = true)]
-        private XYPairs FT = null;     // Temperature effect on Growth Interpolation Set
-        [Link]
-        private XYPairs FVPD = null;   // VPD effect on Growth Interpolation Set
-        [Link(IsOptional = true)]
-        public Function PotentialBiomass = null;
-        [Link(IsOptional = true)]
-        public Function DMDemandFunction = null;
-        [Link(IsOptional = true)]
-        public Function CoverFunction = null;
-        [Link(IsOptional = true)]
-        public Function NitrogenDemandSwitch = null;
-        [Link(IsOptional = true)]
-        protected Function NConc = null;
-
-        [Link(IsOptional = true)]
-        public Function LaiFunction = null;
-        [Link(IsOptional = true)]
-        public RUEModel Photosynthesis = null;
+        public XYPairs FT { get; set; }    // Temperature effect on Growth Interpolation Set
+        public XYPairs FVPD { get; set; }   // VPD effect on Growth Interpolation Set
+        public Function PotentialBiomass { get; set; }
+        public Function DMDemandFunction { get; set; }
+        public Function CoverFunction { get; set; }
+        public Function NitrogenDemandSwitch { get; set; }
+        public Function NConc { get; set; }
+        public Function LaiFunction { get; set; }
+        public RUEModel Photosynthesis { get; set; }
 
 
 
@@ -65,7 +55,7 @@ namespace Models.Plant.Organs
             {
                 double Demand = 0;
                 if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.Value;
+                    Demand = DMDemandFunction.FunctionValue;
                 else
                     Demand = 1;
                 return new BiomassPoolType { Structural = Demand };
@@ -201,7 +191,7 @@ namespace Models.Plant.Organs
 
                 if (CoverFunction == null)
                     return 1.0 - Math.Exp(-K * LAI);
-                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+                return Math.Min(Math.Max(CoverFunction.FunctionValue, 0), 1);
             }
         }
         public double CoverTot
@@ -234,8 +224,8 @@ namespace Models.Plant.Organs
         {
             if (PotentialBiomass != null)
             {
-                DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                BiomassYesterday = PotentialBiomass.Value;
+                DeltaBiomass = PotentialBiomass.FunctionValue - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                BiomassYesterday = PotentialBiomass.FunctionValue;
             }
 
             EP = 0;
@@ -290,7 +280,7 @@ namespace Models.Plant.Organs
                 // return _LAI;
                 _LAI = (Math.Log(1 - CoverGreen) / -K);
             if (LaiFunction != null)
-                _LAI = LaiFunction.Value;
+                _LAI = LaiFunction.FunctionValue;
         }
         [EventSubscribe("Cut")]
         private void OnCut()
@@ -315,13 +305,13 @@ namespace Models.Plant.Organs
                     NDeficit = 0;
                 if (NitrogenDemandSwitch != null)
                 {
-                    if (NitrogenDemandSwitch.Value == 0)
+                    if (NitrogenDemandSwitch.FunctionValue == 0)
                         NDeficit = 0;
                 }
                 if (NConc == null)
                     NDeficit = 0;
                 else
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N);
+                    NDeficit = Math.Max(0.0, NConc.FunctionValue * (Live.Wt + DeltaBiomass) - Live.N);
                 return new BiomassPoolType { Structural = NDeficit };
             }
         }

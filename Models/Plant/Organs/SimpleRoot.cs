@@ -13,8 +13,7 @@ namespace Models.Plant.Organs
         [Link]
         Plant2 Plant = null;
 
-        [Link(IsOptional = true)]
-        public Function DMDemandFunction = null;
+        public Function DMDemandFunction { get; set; }
 
         [Link]
         SoilWater SoilWat = null;
@@ -30,7 +29,7 @@ namespace Models.Plant.Organs
             {
                 double Demand = 0;
                 if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.Value;
+                    Demand = DMDemandFunction.FunctionValue;
                 else Demand = 0;
                 return new BiomassPoolType { Structural = Demand };
             }
