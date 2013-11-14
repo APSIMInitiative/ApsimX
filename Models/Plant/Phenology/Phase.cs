@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.ComponentModel;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
     abstract public class Phase : Model
     {

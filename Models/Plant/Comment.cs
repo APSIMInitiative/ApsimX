@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Models.Plant
+namespace Models.PMF
 {
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]

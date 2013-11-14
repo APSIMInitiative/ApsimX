@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A * B * exp(x * C)")]
     public class ExponentialFunction : Function

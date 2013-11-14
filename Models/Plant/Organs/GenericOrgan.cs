@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     public class GenericOrgan : BaseOrgan
     {
         #region Class Dependency Links and Structures
         [Link]
-        protected Plant2 Plant = null;
+        protected Plant Plant = null;
         [Link]
         protected Arbitrator Arbitrator = null;
         #endregion
@@ -46,16 +46,6 @@ namespace Models.Plant.Organs
         protected double PotentialMetabolicDMAllocation = 0;
         protected double StructuralDMDemand = 0;
         protected double NonStructuralDMDemand = 0;
-        protected double DMReallocationSupply = 0;
-        protected double DMFixationSupply = 0;
-        protected double DMUptakeSupply = 0;
-        protected double DMRetranslocationSupply = 0;
-        protected double StructuralNDemand = 0;
-        protected double NonStructuralNDemand = 0;
-        protected double NReallocationSupply = 0;
-        protected double NFixationSupply = 0;
-        protected double NUptakeSupply = 0;
-        protected double NRetranslocationSupply = 0;
         protected double InitialWt = 0;
         private double InitStutFraction = 1;
         #endregion
@@ -95,16 +85,6 @@ namespace Models.Plant.Organs
             StartNReallocationSupply = NSupply.Reallocation;
             StartNRetranslocationSupply = NSupply.Retranslocation;
 
-            //Set DM demand
-            StructuralDMDemand = DMDemandFunction.FunctionValue * _StructuralFraction;
-            double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
-            MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
-            NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
-
-            //Set DM supply
-            if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                DMRetranslocationSupply = StartLive.NonStructuralWt * DMRetranslocationFactor.FunctionValue;
-
         }
         public override void DoActualGrowth()
         {
@@ -118,26 +98,7 @@ namespace Models.Plant.Organs
             if (WaterContent != null)
                 LiveFWt = Live.Wt / (1 - WaterContent.FunctionValue);
         }
-        public override void DoPotentialNutrient()
-        {
-            double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Live.Wt + PotentialDMAllocation) - Live.N);
-            if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                NDeficit *= NitrogenDemandSwitch.FunctionValue;
-            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.FunctionValue);
-            NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand);
-            //Nothing in generic organ to deal with metabolic N as yet.
-
-            // Calculate Reallocation Supply.
-            NReallocationSupply = SenescenceRate * StartLive.NonStructuralN;
-            if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                NReallocationSupply *= NReallocationFactor.FunctionValue;
-
-            // Calculate Retranslocation Supply.
-            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.FunctionValue);
-            NRetranslocationSupply = (LabileN - StartNReallocationSupply);
-            if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                NRetranslocationSupply *= NReallocationFactor.FunctionValue;
-        }
+   
         #endregion
 
         #region Arbitrator methods
@@ -147,10 +108,12 @@ namespace Models.Plant.Organs
         {
             get
             {
+             StructuralDMDemand = DMDemandFunction.FunctionValue * _StructuralFraction;
+             double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
+             MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
+             NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt); 
                 return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
             }
-
-
         }
         public override BiomassPoolType DMPotentialAllocation
         {
@@ -169,13 +132,25 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return new BiomassSupplyType { Fixation = DMFixationSupply, Retranslocation = DMRetranslocationSupply, Reallocation = DMReallocationSupply };
+            double _DMRetranslocationFactor = 0;
+            if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
+                _DMRetranslocationFactor = DMRetranslocationFactor.FunctionValue;
+            return new BiomassSupplyType { Fixation = 0, 
+                                      Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
+            Reallocation = 0};
             }
         }
         public override BiomassPoolType NDemand
         {
             get
             {
+            double _NitrogenDemandSwitch = 1;
+            if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
+                _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
+            double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Live.Wt + PotentialDMAllocation) - Live.N);
+            NDeficit *= _NitrogenDemandSwitch;
+            double StructuralNDemand = Math.Min(NDeficit,PotentialStructuralDMAllocation * MinimumNConc.FunctionValue);
+            double NonStructuralNDemand = Math.Max(0,NDeficit - StructuralNDemand); 
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
         }
@@ -183,7 +158,22 @@ namespace Models.Plant.Organs
         {
             get
             {
-                return new BiomassSupplyType { Fixation = NFixationSupply, Retranslocation = NRetranslocationSupply, Reallocation = NReallocationSupply };
+            BiomassSupplyType Supply = new BiomassSupplyType();
+
+            // Calculate Reallocation Supply.
+            double _NReallocationFactor = 0;
+            if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
+                _NReallocationFactor = NReallocationFactor.FunctionValue;
+            Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
+
+            // Calculate Retranslocation Supply.
+            double _NRetranslocationFactor = 0;
+            if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
+                _NRetranslocationFactor = NRetranslocationFactor.FunctionValue;
+            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.FunctionValue);
+            Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
+
+            return Supply;
             }
         }
         public override BiomassAllocationType DMAllocation

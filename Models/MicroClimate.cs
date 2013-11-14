@@ -7,7 +7,8 @@ using System.Diagnostics;
 using System.Text;
 using Models.Core;
 using Models;
-using Models.Plant;
+using Models.PMF;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -591,6 +592,7 @@ namespace Models
 
         private bool todayHeaderWritten = false;
 
+        [XmlElement("ComponentData")]
         public List<ComponentDataStruct> ComponentData { get; set; }
 
         #endregion
@@ -714,7 +716,7 @@ namespace Models
         {
             for (int i = 0; i <= ComponentData.Count - 1; i++)
             {
-                if (ComponentData[i].Name == name.ToLower())
+                if (ComponentData[i].Name.Equals(name, StringComparison.CurrentCulture))
                 {
                     return i;
                 }

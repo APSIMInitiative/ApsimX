@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
     public class AccumulateFunction : Function

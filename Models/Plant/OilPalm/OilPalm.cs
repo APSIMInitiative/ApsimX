@@ -5,11 +5,11 @@ using Models.Core;
 
 using System.Reflection;
 using System.Collections;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 using Models.Soils;
 
 
-namespace Models.Plant.OilPalm
+namespace Models.PMF.OilPalm
 {
     public class OilPalm: Model
     {

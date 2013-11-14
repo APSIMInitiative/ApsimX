@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)")]
     public class BellCurveFunction : Function

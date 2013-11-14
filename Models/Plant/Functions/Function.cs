@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Base class from which other functions inherit")]
     abstract public class Function: Model

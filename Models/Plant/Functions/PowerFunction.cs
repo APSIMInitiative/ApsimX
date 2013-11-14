@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Raises the value of the child to the power of the exponent specified")]
     public class PowerFunction : Function

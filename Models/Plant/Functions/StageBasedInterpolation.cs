@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("A value is linearly interpolated between phenological growth stages")]
     public class StageBasedInterpolation : Function

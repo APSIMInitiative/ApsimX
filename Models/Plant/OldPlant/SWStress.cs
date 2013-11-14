@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant.OldPlant
+namespace Models.PMF.OldPlant
 {
     public class SWStress
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions.StructureFunctions
+namespace Models.PMF.Functions.StructureFunctions
 {
     [Description("Returns the curreent InPhase tempature accumulation")]
 

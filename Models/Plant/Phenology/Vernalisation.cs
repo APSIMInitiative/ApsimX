@@ -1,8 +1,8 @@
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 using System;
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
 
     public class Vernalisation

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     #region Class descriptor properties
     public interface AboveGround
@@ -47,8 +47,8 @@ namespace Models.Plant.Organs
     abstract public class Organ: Model
     {
         #region Links to other models or compontnets
-        public Biomass Live { get; set; }
-        public Biomass Dead { get; set; }
+        public virtual Biomass Live { get; set; }
+        public virtual Biomass Dead { get; set; }
         #endregion
 
         #region Fields

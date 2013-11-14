@@ -8,9 +8,9 @@ using System.Diagnostics;
 using System.Collections;
 using System.Reflection;
 using Models.Core;
-using Models.Plant.OldPlant;
+using Models.PMF.OldPlant;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     class Util
     {
@@ -54,7 +54,8 @@ namespace Models.Plant
             if (RelativeTo is Model)
             {
                 My = RelativeTo as Model;
-                if ((My != null))
+                bool embeddedBracket = NamePath.Substring(1).Contains("[");
+                if (My != null && embeddedBracket == false)
                 {
                     object v = My.Get(NamePath);
                     return v;

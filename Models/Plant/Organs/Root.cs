@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 using Models.Soils;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     public class Root : BaseOrgan, BelowGround
     {
@@ -17,7 +17,7 @@ namespace Models.Plant.Organs
         public Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
         public Function NitrogenDemandSwitch { get; set; }
         public Function SenescenceRate { get; set; }
         [Link(IsOptional = true)]
@@ -47,10 +47,9 @@ namespace Models.Plant.Organs
         Soils.SoilWater SoilWat = null;
         [Link]
         Soils.SoilNitrogen SoilN = null;
+        [Link]
+        Soils.Soil Soil = null;
         
-        public double[] ll = null;
-        public double[] kl = null;
-        public double[] xf = null;
         public double InitialDM = 0;
         public double SpecificRootLength = 0;
         public double KNO3 = 0;
@@ -78,7 +77,7 @@ namespace Models.Plant.Organs
             {
                 double[] value = new double[SoilWat.dlayer.Length];
                 for (int i = 0; i < SoilWat.dlayer.Length; i++)
-                    value[i] = ll[i] * SoilWat.dlayer[i];
+                    value[i] = Soil.LL(this.Plant.Name)[i] * SoilWat.dlayer[i];
                 return value;
             }
         }
@@ -125,13 +124,7 @@ namespace Models.Plant.Organs
             for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
                 Length += LengthDensity[layer];
 
-            if (ll.Length != SoilWat.dlayer.Length)
-                throw new Exception("Number of LL items does not match the number of soil layers.");
-            if (kl.Length != SoilWat.dlayer.Length)
-                throw new Exception("Number of KL items does not match the number of soil layers.");
-            if (xf.Length != SoilWat.dlayer.Length)
-                throw new Exception("Number of XF items does not match the number of soil layers.");
-
+   
         }
         public override void DoActualGrowth()
         {
@@ -140,10 +133,10 @@ namespace Models.Plant.Organs
             // Do Root Front Advance
             int RootLayer = LayerIndex(Depth);
             double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.FunctionValue;
-            Depth = Depth + RootFrontVelocity.FunctionValue * xf[RootLayer] * TEM;
+            Depth = Depth + RootFrontVelocity.FunctionValue * Soil.XF(this.Plant.Name)[RootLayer] * TEM;
             double MaxDepth = 0;
             for (int i = 0; i < SoilWat.dlayer.Length; i++)
-                if (xf[i] > 0)
+                if (Soil.XF(this.Plant.Name)[i] > 0)
                     MaxDepth += SoilWat.dlayer[i];
 
             Depth = Math.Min(Depth, MaxDepth);
@@ -548,7 +541,7 @@ namespace Models.Plant.Organs
 
                 for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, kl[layer] * KLModifier.FunctionValue * (SoilWat.sw_dep[layer] - ll[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, Soil.KL(this.Plant.Name)[layer] * KLModifier.FunctionValue * (SoilWat.sw_dep[layer] - Soil.LL(this.Plant.Name)[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

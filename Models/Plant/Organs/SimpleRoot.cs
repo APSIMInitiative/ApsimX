@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 using Models.Soils;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     public class SimpleRoot : BaseOrgan // FIXME HEB This was inheriting from organ but changed to base organ to fix bug. Need to check collatoral impacts
     {
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
 
         public Function DMDemandFunction { get; set; }
 

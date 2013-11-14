@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Collections;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("returns a y value that corresponds to the position of the value of XProperty in the specified xy matrix")]
     public class LinearInterpolationFunction : Function
@@ -22,13 +22,13 @@ namespace Models.Plant.Functions
             {
                 string PropertyName = XProperty;
                 string ArraySpec;
-                bool ArrayFound = PropertyName.Contains("[");
+                bool ArrayFound = PropertyName.Contains("[") && !PropertyName.StartsWith("[");
                 if (ArrayFound)
                     ArraySpec = Utility.String.SplitOffBracketedValue(ref PropertyName, '[', ']');
                 double XValue = 0;
                 try
                 {
-                    object v = Util.GetVariable(XProperty, this);
+                    object v = Util.GetVariable(PropertyName, this);
                     if (v == null)
                         throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                     XValue = Convert.ToDouble(v);

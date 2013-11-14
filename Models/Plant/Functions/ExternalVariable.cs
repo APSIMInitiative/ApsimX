@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     /// <summary>
     /// Returns the value of a nominated external APSIM numerical variable.

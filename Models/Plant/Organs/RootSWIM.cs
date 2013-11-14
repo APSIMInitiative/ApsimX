@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     class RootSWIM : BaseOrgan, BelowGround
     {
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
 
         private double[] Uptake = null;
         public double[] rlv = null;

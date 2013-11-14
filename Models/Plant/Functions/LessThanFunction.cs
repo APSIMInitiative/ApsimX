@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     /// <summary>
     /// FIXME: This can be generalised to a IF function 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Functions.StructureFunctions
+namespace Models.PMF.Functions.StructureFunctions
 {
     [Description("Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress)")]
     public class HeightFunction : Function

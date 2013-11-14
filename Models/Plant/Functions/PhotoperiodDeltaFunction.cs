@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
     class PhotoperiodDeltaFunction : Function

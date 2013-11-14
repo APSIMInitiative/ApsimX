@@ -63,11 +63,11 @@ namespace Models.Core
                                 AllModels.Add(localModel);
                             else if (property.PropertyType.GetInterface("IList") != null)
                             {
-                                Type[] arguments = property.PropertyType.GetGenericArguments();
-                                if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
+                                IList list = (IList)value;
+                                   
+                                if (list.Count > 0 && typeof(Model).IsAssignableFrom(list[0].GetType()))
                                 {
-                                    IList list = (IList)value;
-                                    foreach (Model child in list)
+                                     foreach (Model child in list)
                                         AllModels.Add(child);
                                 }
                             }
@@ -207,7 +207,7 @@ namespace Models.Core
             bool wasAdded = false;
             foreach (PropertyInfo property in ModelPropertyInfos())
             {
-                if (property.PropertyType == model.GetType())
+                if (property.PropertyType.IsAssignableFrom(model.GetType()))
                 {
                     // Simple reference to a model.
                     property.SetValue(this, model, null);

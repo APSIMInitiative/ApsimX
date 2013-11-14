@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.")]
     public class PhaseBasedSwitch : Function

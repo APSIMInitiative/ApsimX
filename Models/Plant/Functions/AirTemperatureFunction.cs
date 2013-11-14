@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Uses a sinusoidal function with Max and Min Temp to calculate 3 hourly temperature, useses these with temperatue profile specified in xy pairs to calculate 3 hourly thermal time and returns the mean of these 8 values")]
     public class AirTemperatureFunction : Function

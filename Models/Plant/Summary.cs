@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Organs;
-using Models.Plant.Phen;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     public class Summariser : Model
     {

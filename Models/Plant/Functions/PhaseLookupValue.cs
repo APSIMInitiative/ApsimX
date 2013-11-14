@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
     public class PhaseLookupValue : Function

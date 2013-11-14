@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("returns the specified value")]
     public class Constant : Function

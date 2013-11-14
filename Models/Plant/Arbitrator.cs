@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Organs;
+using Models.PMF.Organs;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     public class Arbitrator : Model
     {
@@ -202,15 +202,9 @@ namespace Models.Plant
                 DM.ReallocationSupply[i] = Supply.Reallocation;
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
-                //double test3;
-                //Organs[i].My.Get("DMSupply.Fixation", out test3);
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
-                //DM.Start += Organs[i].Live.Wt + Organs[i].Dead.Wt;
-                double _dead = (double) Organs[i].Get("Dead.Wt");
-                double _live = (double)Organs[i].Get("Live.Wt");
-                DM.Start += (_live + _dead);
-
-            }
+            DM.Start += Organs[i].Live.Wt + Organs[i].Dead.Wt;
+        }
 
             DM.TotalReallocationSupply = Utility.Math.Sum(DM.ReallocationSupply);
             DM.TotalUptakeSupply = Utility.Math.Sum(DM.UptakeSupply);

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using Models.Plant.OldPlant;
-using Models.Plant.Phen;
+using Models.PMF.OldPlant;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     public class Zadok
     {

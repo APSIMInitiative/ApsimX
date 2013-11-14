@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     public class Nodule : GenericOrgan, BelowGround
     {

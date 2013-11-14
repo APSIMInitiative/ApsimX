@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {

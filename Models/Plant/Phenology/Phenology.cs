@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
     public class PhaseChangedType
     {

@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Data;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     //FIXME  This class finds this ambigious.  [Description("Evaluate a mathematical expression using the EvaluateExpression dll. Obs: Expression can contain variable names from Plant2")]
     public class ExpressionFunction : Function

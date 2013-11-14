@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions.DemandFunctions
+namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
     /// Calculate partitioning of daily growth based upon allometric relationship

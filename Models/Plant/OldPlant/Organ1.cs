@@ -5,7 +5,7 @@ using System.Text;
 
 using Models.Core;
 
-namespace Models.Plant.OldPlant
+namespace Models.PMF.OldPlant
 {
     interface Organ1 
     {

@@ -3,22 +3,24 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
-using Models.Plant.Functions;
-using Models.Plant.Functions.SupplyFunctions;
-using Models.Plant.Phen;
+using Models.PMF.Functions;
+using Models.PMF.Functions.SupplyFunctions;
+using Models.PMF.Phen;
+using System.Xml.Serialization;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     [Description("Leaf Class")]
     public class Leaf : BaseOrgan, AboveGround
     {
         #region Parameter Input classes
         //Input Parameters
+        [XmlElement("InitialLeaf")]
         public LeafCohort[] InitialLeaves { get; set; }
 
         //Class Links
         [Link]
-        public Plant2 Plant = null;
+        public Plant Plant = null;
         [Link]
         public Arbitrator Arbitrator = null;
         [Link]
@@ -223,7 +225,38 @@ namespace Models.Plant.Organs
                 return value;
             }
         }
-        
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public override Biomass Live
+        {
+            get
+            {
+                Biomass Biomass = new Biomass();
+                foreach (LeafCohort L in Leaves)
+                    Biomass = Biomass + L.Live;
+                return Biomass;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public override Biomass Dead
+        {
+            get
+            {
+                Biomass Biomass = new Biomass();
+                foreach (LeafCohort L in Leaves)
+                    Biomass = Biomass + L.Dead;
+                return Biomass;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
         public double LAIDead
         {
             get

@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
     class GerminatingPhase : Phase
     {

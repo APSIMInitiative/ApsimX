@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
     public class DivideFunction : Function

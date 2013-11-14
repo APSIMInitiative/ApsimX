@@ -6,7 +6,7 @@ using System.Reflection;
 
 using Models.Core;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     public class CompositeBiomass : Biomass
     {

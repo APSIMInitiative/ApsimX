@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Collections;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("returns a y value that is interpolated between given XY pairs using cubic Hermite splines")]
     public class SplineInterpolationFunction : Function

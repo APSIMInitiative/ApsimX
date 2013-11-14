@@ -4,9 +4,9 @@ using System.Text;
 using System.Collections;
 using System.Reflection;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     public class ArrayBiomass: Model
     {

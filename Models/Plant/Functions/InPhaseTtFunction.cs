@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns the thermal time accumulation from the current phase in phenology")]
 

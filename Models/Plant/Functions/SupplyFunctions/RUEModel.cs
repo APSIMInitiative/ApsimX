@@ -4,24 +4,24 @@ using System.Text;
 
 using Models.Core;
 
-namespace Models.Plant.Functions.SupplyFunctions
+namespace Models.PMF.Functions.SupplyFunctions
 {
-    public class RUEModel
+    public class RUEModel : Model
     {
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
 
         public Function RUE { get; set; }
 
-        public Function Fco2 { get; set; }
+        public Function FCO2 { get; set; }
 
-        public Function Fn { get; set; }
+        public Function FN { get; set; }
 
-        public Function Ft { get; set; }
+        public Function FT { get; set; }
 
-        public Function Fw { get; set; }
+        public Function FW { get; set; }
 
-        public Function Fvpd { get; set; }
+        public Function FVPD { get; set; }
 
         [Link]
         public WeatherFile MetData = null;
@@ -63,7 +63,7 @@ namespace Models.Plant.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(Ft.FunctionValue, Math.Min(Fn.FunctionValue, Fvpd.FunctionValue)) * Fw.FunctionValue * Fco2.FunctionValue;
+                double RueReductionFactor = Math.Min(FT.FunctionValue, Math.Min(FN.FunctionValue, FVPD.FunctionValue)) * FW.FunctionValue * FCO2.FunctionValue;
                 return RUE.FunctionValue * RueReductionFactor;
             }
         }
@@ -84,7 +84,7 @@ namespace Models.Plant.Functions.SupplyFunctions
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Ft.FunctionValue, Math.Min(Fn.FunctionValue, Fvpd.FunctionValue));
+                GrowthType.frgr = (float)Math.Min(FT.FunctionValue, Math.Min(FN.FunctionValue, FVPD.FunctionValue));
                 NewPotentialGrowth.Invoke(GrowthType);
             }
         }

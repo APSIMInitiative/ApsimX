@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using System.Xml;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
     public class XYPairs : Function

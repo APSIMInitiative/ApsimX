@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
     public class EmergingPhase : GenericPhase
     {

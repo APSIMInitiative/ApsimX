@@ -185,7 +185,6 @@
     <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />
     <Compile Include="Plant\Organs\SimpleRoot.cs" />
-    <Compile Include="Plant\PhenologyModel.cs" />
     <Compile Include="Plant\Phenology\EmergingPhase.cs" />
     <Compile Include="Plant\Phenology\EndPhase.cs" />
     <Compile Include="Plant\Phenology\GenericPhase.cs" />

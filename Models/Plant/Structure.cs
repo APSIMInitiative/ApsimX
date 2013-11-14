@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
-using Models.Plant.Organs;
-using Models.Plant.Phen;
+using Models.PMF.Functions;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model

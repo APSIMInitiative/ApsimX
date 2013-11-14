@@ -1,8 +1,8 @@
 using System;
 using Models.Core;
-using Models.Plant.Phen;
+using Models.PMF.Phen;
 
-namespace Models.Plant.Functions.DemandFunctions
+namespace Models.PMF.Functions.DemandFunctions
 {
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!  This function calculates DM demand beyond the start stage as the product of current organ wt (g), relative growth rate and the specified organ number.")]
     public class RelativeGrowthRateDemandFunction : Function

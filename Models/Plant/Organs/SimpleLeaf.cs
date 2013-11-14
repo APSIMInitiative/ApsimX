@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
-using Models.Plant.Functions.SupplyFunctions;
+using Models.PMF.Functions;
+using Models.PMF.Functions.SupplyFunctions;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     class SimpleLeaf : BaseOrgan, AboveGround
     {
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
         [Link(IsOptional = true)]
         Structure structure = null;
 

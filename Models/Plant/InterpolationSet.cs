@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Models.Plant
+namespace Models.PMF
 {
    /*
        Private Class InterpSet

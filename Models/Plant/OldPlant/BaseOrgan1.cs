@@ -5,7 +5,7 @@ using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 
-namespace Models.Plant.OldPlant
+namespace Models.PMF.OldPlant
 {
     abstract public class BaseOrgan1 : Model, Organ1
     {

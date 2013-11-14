@@ -5,14 +5,14 @@ using Models.Core;
 
 using System.Reflection;
 using System.Collections;
-using Models.Plant.Organs;
-using Models.Plant.Phen;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
 using Models.Soils;
 using System.Xml.Serialization;
 using System.Xml.Schema;
 using System.Xml;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     public class WaterUptakesCalculatedUptakesType
     {
@@ -79,7 +79,7 @@ namespace Models.Plant
         public String sender = "";
         public String crop_type = "";
     }
-    public class Plant2: Model, IXmlSerializable
+    public class Plant: Model, IXmlSerializable
     {
         public string CropType { get; set; }
 
@@ -167,7 +167,7 @@ namespace Models.Plant
 
         #region Outputs
          
-        private double WaterSupplyDemandRatio = 0;
+        public double WaterSupplyDemandRatio = 0;
         
         public string plant_status
         {

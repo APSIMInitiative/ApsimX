@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     [Description("Returns the maximum value of all childern functions")]
     class MaximumFunction : Function

@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]
-        Plant2 Plant = null;
+        Plant Plant = null;
 
         public Biomass AboveGround { get; set; }
 

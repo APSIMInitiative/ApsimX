@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.Plant.Functions
+namespace Models.PMF.Functions
 {
     /// <summary>
     /// Purpose: Return soil temperature (oC) from a specified soil profile layer.

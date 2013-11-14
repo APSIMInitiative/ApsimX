@@ -5,12 +5,12 @@ using Models.Core;
 
 using System.Reflection;
 using System.Collections;
-using Models.Plant.Functions;
-using Models.Plant.Organs;
-using Models.Plant.Phen;
+using Models.PMF.Functions;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
 
 
-namespace Models.Plant.OldPlant
+namespace Models.PMF.OldPlant
 {
     public class HarvestType
     {

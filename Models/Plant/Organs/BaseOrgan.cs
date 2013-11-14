@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
     public class BaseOrgan : Organ
     {

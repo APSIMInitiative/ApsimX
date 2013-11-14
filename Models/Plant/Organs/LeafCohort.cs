@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
-using Models.Plant.Functions;
+using Models.PMF.Functions;
 
-namespace Models.Plant.Organs
+namespace Models.PMF.Organs
 {
-    public class LeafCohort
+    public class LeafCohort : Model
     {
         #region Paramater Input Classes
         [Link]
-        private Plant2 Plant = null;
+        private Plant Plant = null;
         [Link]
         private Structure Structure = null;
         [Link]
@@ -61,7 +61,8 @@ namespace Models.Plant.Organs
         [Link(NamePath = "NonStructuralFraction", IsOptional = true)]
         private Function NonStructuralFractionFunction = null;
         [Link(NamePath = "CellDivisionStress", IsOptional = true)]
-        private Function CellDivisionStress = null; public Biomass Live = new Biomass();
+        private Function CellDivisionStress = null; 
+        public Biomass Live = new Biomass();
         public Biomass Dead = new Biomass();
         private Biomass LiveStart = null;
         #endregion

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.Plant.Organs;
+using Models.PMF.Organs;
 
-namespace Models.Plant.Phen
+namespace Models.PMF.Phen
 {
     public class LeafDeathPhase : Phase
     {
