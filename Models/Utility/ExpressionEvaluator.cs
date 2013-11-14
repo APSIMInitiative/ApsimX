@@ -153,7 +153,7 @@ namespace Utility
                             state = 2;
                             temp += equation[i];
                         }
-                        else if (Char.IsLetter(equation[i]))
+                        else if (Char.IsLetter(equation[i]) || equation[i] == '[' || equation[i] == ']')
                         {
                             state = 3;
                             temp += equation[i];

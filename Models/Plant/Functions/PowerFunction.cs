@@ -11,13 +11,12 @@ namespace Models.PMF.Functions
     {
         public double Exponent = 1.0;
 
-        
+        public List<Function> Children { get; set; }
         public override double FunctionValue
         {
             get
             {
-                object[] Children = this.Models;
-                if (Children.Length == 1)
+                if (Children.Count == 1)
                 {
                     Function F = Children[0] as Function;
                     return Math.Pow(F.FunctionValue, Exponent);

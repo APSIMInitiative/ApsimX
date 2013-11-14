@@ -12,6 +12,8 @@ namespace Models.PMF.Functions
         [Link]
         Phenology Phenology = null;
 
+        public List<Function> Children { get; set; }
+
         public string Start = "";
 
         public string End = "";
@@ -25,8 +27,7 @@ namespace Models.PMF.Functions
                 if (End == "")
                     throw new Exception("Phase end name not set:" + Name);
 
-                object[] Children = this.Models;
-                if (Phenology.Between(Start, End) && Children.Length > 0)
+                if (Phenology.Between(Start, End) && Children.Count > 0)
                 {
                     Function Lookup = Children[0] as Function;
                     return Lookup.FunctionValue;
@@ -44,8 +45,7 @@ namespace Models.PMF.Functions
                 if (End == "")
                     throw new Exception("Phase end name not set:" + Name);
 
-                object[] Children = this.Models;
-                if (Phenology.Between(Start, End) && Children.Length > 0)
+                if (Phenology.Between(Start, End) && Children.Count > 0)
                 {
                     Function Lookup = Children[0] as Function;
                     return Lookup.ValueString;

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
     public class LessThanFunction : Function
     {
-        
+        public List<Function> Children { get; set; }
         public override double FunctionValue
         {
             get
@@ -22,11 +22,9 @@ namespace Models.PMF.Functions
                 double IfTrue = 0.0;
                 double IfFalse = 0.0;
 
-                object[] Children = this.Models;
-
                 Function F = Children[0] as Function;
 
-                for (int i = 0; i < Children.Length; i++)
+                for (int i = 0; i < Children.Count; i++)
                 {
                     F = Children[i] as Function;
                     if (i == 0)

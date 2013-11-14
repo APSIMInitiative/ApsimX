@@ -24,35 +24,25 @@ namespace Models.PMF
         public WaterUptakesCalculatedUptakesType[] Uptakes;
     }
     public delegate void WaterUptakesCalculatedDelegate(WaterUptakesCalculatedType Data);
-
     public class WaterChangedType
     {
         public Double[] DeltaWater;
     }
     public delegate void WaterChangedDelegate(WaterChangedType Data);
-
     public class PruneType
     {
         public Double BudNumber;
     }
     public delegate void NewPotentialGrowthDelegate(NewPotentialGrowthType Data);
-
     public class KillLeafType
     {
         public Single KillFraction;
     }
-
     public delegate void NewCanopyDelegate(NewCanopyType Data);
-
     public delegate void FOMLayerDelegate(FOMLayerType Data);
-
     public delegate void NullTypeDelegate();
-
     public delegate void NewCropDelegate(NewCropType Data);
-
-
     public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
-
     public class SowPlant2Type
     {
         public String Cultivar = "";
@@ -82,17 +72,11 @@ namespace Models.PMF
     public class Plant: Model, IXmlSerializable
     {
         public string CropType { get; set; }
-
         public Phenology Phenology { get; set; }
-
         public Arbitrator Arbitrator { get; set; }
-
         public Structure Structure { get; set; }
-
         public Summariser Summariser { get; set; }
-
         public SowPlant2Type SowingData;
-
         public List<Organ> Organs { get; set; }
         
         #region XmlSerializable methods
@@ -287,22 +271,13 @@ namespace Models.PMF
         }
         #endregion
 
-
-
         #region Event handlers and publishers
        
-        
-
         public event NewCropDelegate NewCrop;
-        
         public event NullTypeDelegate Sowing;
-        
         public event NullTypeDelegate Cutting;
-        
         public event NewCropDelegate CropEnding;
-        
         public event BiomassRemovedDelegate BiomassRemoved;
-
         public void Sow(SowPlant2Type ManagerSowingData)
         {
             SowingData = new SowPlant2Type();
@@ -337,6 +312,7 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnSow(SowingData);
+            Structure.OnSow(SowingData);
         }
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)

@@ -63,10 +63,11 @@ namespace Models.Core
                                 AllModels.Add(localModel);
                             else if (property.PropertyType.GetInterface("IList") != null)
                             {
-                                IList list = (IList)value;
-                                   
-                                if (list.Count > 0 && typeof(Model).IsAssignableFrom(list[0].GetType()))
+                                Type[] arguments = property.PropertyType.GetGenericArguments();
+                                if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
                                 {
+                                    IList list = (IList)value;
+
                                      foreach (Model child in list)
                                         AllModels.Add(child);
                                 }

@@ -196,7 +196,7 @@ namespace Models.PMF
             MaximumNodeNumber = MainStemFinalNodeNumber.FunctionValue;
         }
         [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
+        public void OnSow(SowPlant2Type Sow)
         {
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");

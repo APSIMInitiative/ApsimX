@@ -12,15 +12,14 @@ namespace Models.PMF.Functions
         public double Xmax = 1.0;
         public double Xo = 1.0;
         public double b = 1.0;
-
+        public List<Function> Children { get; set; }
 
         
         public override double FunctionValue
         {
             get
             {
-                object[] Children = this.Models;
-                if (Children.Length == 1)
+                if (Children.Count == 1)
                 {
                     Function F = Children[0] as Function;
 

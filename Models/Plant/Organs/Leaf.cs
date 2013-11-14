@@ -16,7 +16,36 @@ namespace Models.PMF.Organs
         #region Parameter Input classes
         //Input Parameters
         [XmlElement("InitialLeaf")]
-        public LeafCohort[] InitialLeaves { get; set; }
+        public List<LeafCohort> InitialLeaves { get; set; }
+
+        public class InitialLeafValues : Model
+        {
+            public Function MaxArea { get; set; }
+            public Function GrowthDuration { get; set; }
+            public Function LagDuration { get; set; }
+            public Function SenescenceDuration { get; set; }
+            public Function DetachmentLagDuration { get; set; }
+            public Function DetachmentDuration { get; set; }
+            public Function SpecificLeafAreaMax{ get; set; }
+            public Function SpecificLeafAreaMin{ get; set; }
+            public Function StructuralFraction{ get; set; }
+            public Function MaximumNConc{ get; set; }
+            public Function MinimumNConc{ get; set; }
+            public Function StructuralNConc{ get; set; }
+            public Function InitialNConc{ get; set; }
+            public Function NReallocationFactor{ get; set; }
+            public Function DMReallocationFactor{ get; set; }
+            public Function NRetranslocationFactor{ get; set; }
+            public Function ExpansionStress{ get; set; }
+            public Function CriticalNConc{ get; set; }
+            public Function DMRetranslocationFactor{ get; set; }
+            public Function ShadeInducedSenescenceRate{ get; set; }
+            public Function DroughtInducedSenAcceleration{ get; set; }
+            public Function NonStructuralFraction{ get; set; }
+            public Function CellDivisionStress{ get; set; } 
+        }
+
+        public InitialLeafValues LeafCohortParameters { get; set; }
 
         //Class Links
         [Link]
@@ -54,11 +83,19 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return ExpansionStress.FunctionValue;
+                return LeafCohortParameters.ExpansionStress.FunctionValue;
+            }
+        }
+
+        public LeafCohort CohortCurrentRank
+        {
+            get
+            {
+                return Leaves[CurrentRank]; 
             }
         }
         
-        public double CurrentRank = 0;
+        public int CurrentRank = 0;
         public double _WaterAllocation;
         public double PEP = 0;
         public double EP = 0;
@@ -520,7 +557,7 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (CriticalNConc.FunctionValue - (MinimumNConc.FunctionValue * StructuralFraction.FunctionValue)) * (1 / (1 - StructuralFraction.FunctionValue));
+                double FunctionalNConc = (LeafCohortParameters.CriticalNConc.FunctionValue - (LeafCohortParameters.MinimumNConc.FunctionValue * LeafCohortParameters.StructuralFraction.FunctionValue)) * (1 / (1 - LeafCohortParameters.StructuralFraction.FunctionValue));
                 if (FunctionalNConc == 0)
                     F = 1;
                 else
@@ -565,7 +602,7 @@ namespace Models.PMF.Organs
                 LeafCohort NewLeaf = InitialLeaves[0].Clone();
                 NewLeaf.CohortPopulation = 0;
                 NewLeaf.Age = 0;
-                NewLeaf.Rank = Math.Truncate(Structure.MainStemNodeNo);
+                NewLeaf.Rank = (int) Math.Truncate(Structure.MainStemNodeNo);
                 NewLeaf.Area = 0.0;
                 NewLeaf.DoInitialisation();
                 Leaves.Add(NewLeaf);
@@ -574,6 +611,7 @@ namespace Models.PMF.Organs
             //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
             if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalLeafFraction) && (FinalLeafFraction > 0.0))
             {
+                
                 if (CohortsInitialised == false)
                     throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
                 if (FinalLeafFraction != 1.0)
@@ -586,7 +624,7 @@ namespace Models.PMF.Organs
                 Leaves[i].Rank = AppearingNode;
                 Leaves[i].CohortPopulation = Structure.TotalStemPopn;
                 Leaves[i].Age = CohortAge;
-                Leaves[i].DoAppearance(FinalLeafFraction);
+                Leaves[i].DoAppearance(FinalLeafFraction, LeafCohortParameters);
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
@@ -596,7 +634,7 @@ namespace Models.PMF.Organs
 
             foreach (LeafCohort L in Leaves)
             {
-                L.DoPotentialGrowth(_ThermalTime);
+                L.DoPotentialGrowth(_ThermalTime, LeafCohortParameters);
                 if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                 {
                     NextExpandingLeaf = true;
@@ -614,7 +652,7 @@ namespace Models.PMF.Organs
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
             Leaves.Clear();
-            CopyLeaves(InitialLeaves, Leaves);
+            CopyLeaves(InitialLeaves.ToArray(), Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsInitialised = true;
@@ -624,7 +662,7 @@ namespace Models.PMF.Organs
 
                     Leaf.DoInitialisation();
                     Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0);
+                    Leaf.DoAppearance(1.0, LeafCohortParameters);
                 }
                 else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
                     Leaf.DoInitialisation();
@@ -634,7 +672,7 @@ namespace Models.PMF.Organs
         public override void DoActualGrowth()
         {
             foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(_ThermalTime);
+                L.DoActualGrowth(_ThermalTime, LeafCohortParameters);
 
             Structure.UpdateHeight();
 
@@ -1155,21 +1193,21 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaximumNConc.FunctionValue;
+                return LeafCohortParameters.MaximumNConc.FunctionValue;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return CriticalNConc.FunctionValue;
+                return LeafCohortParameters.CriticalNConc.FunctionValue;
             }
         }
         #endregion
 
         #region Event handlers and publishers
         
-        public event NewCanopyDelegate New_Canopy;
+        public event NewCanopyDelegate NewCanopy;
         
         public event NullTypeDelegate NewLeaf;
         [EventSubscribe("Prune")]
@@ -1244,7 +1282,7 @@ namespace Models.PMF.Organs
         }
         protected virtual void PublishNewCanopyEvent()
         {
-            if (New_Canopy != null)
+            if (NewCanopy != null)
             {
                 NewCanopyType Canopy = new NewCanopyType();
                 Canopy.sender = Plant.Name;
@@ -1254,7 +1292,7 @@ namespace Models.PMF.Organs
                 Canopy.depth = (float)Structure.Height;
                 Canopy.cover = (float)CoverGreen;
                 Canopy.cover_tot = (float)CoverTot;
-                New_Canopy.Invoke(Canopy);
+                NewCanopy.Invoke(Canopy);
             }
         }
         [EventSubscribe("NewMet")]
