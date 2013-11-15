@@ -12,6 +12,9 @@ namespace Models.Core
     /// </summary>
     public class Model
     {
+        private Model BaseModel = null;
+        private Model _DefaultModel = null;
+
         // Cache the models list - this dramatically speeds up runtime!
         private List<Model> AllModels = null;
 
@@ -25,6 +28,19 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public Model Parent { get; set; }
+
+        /// <summary>
+        /// Return a newly created empty model. Used for property comparisons with default values.
+        /// </summary>
+        private Model DefaultModel
+        {
+            get
+            {
+                if (_DefaultModel == null)
+                    _DefaultModel = Activator.CreateInstance(this.GetType()) as Model;
+                return _DefaultModel;
+            }
+        }
 
         /// <summary>
         /// Get the model's full path. 
@@ -350,7 +366,7 @@ namespace Models.Core
         /// Return a list of all child model properties. A child model is any public, writtable, class property
         /// that is in the "Models" namespace. Never returns null. Can return empty list.
         /// </summary>
-        public PropertyInfo[] ModelPropertyInfos()
+        private PropertyInfo[] ModelPropertyInfos()
         {
             List<PropertyInfo> allModelProperties = new List<PropertyInfo>();
             foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
@@ -365,6 +381,64 @@ namespace Models.Core
                 }
             }
             return allModelProperties.ToArray();
+        }
+
+        /// <summary>
+        /// This class encapsulates a single property of a model. Has properties for getting the value
+        /// of the property, the value in the base model and the default value as definned in the 
+        /// source code.
+        /// </summary>
+        public class ModelProperty
+        {
+            private Model Model;
+            private PropertyInfo PropertyInfo;
+
+            /// <summary>
+            /// Returns the value of the property.
+            /// </summary>
+            public object Value
+            {
+                get
+                {
+                    return PropertyInfo.GetValue(Model, null);
+                }
+            }
+
+            /// <summary>
+            /// Returns the base value of the property if the model is derived from a base. If not
+            /// derived from a base model then this will equal the Value property.
+            /// </summary>
+            public object BaseValue
+            {
+                get
+                {
+                    if (Model.BaseModel != null)
+                        return PropertyInfo.GetValue(Model.BaseModel, null);
+                    else
+                        return Value;
+                }
+            }
+
+            /// <summary>
+            /// Returns the default value as defined in the source code.
+            /// </summary>
+            public object DefaultValue
+            {
+                get
+                {
+                    return PropertyInfo.GetValue(Model.DefaultModel, null);
+
+                }
+            }
+
+            public string Units
+            {
+                get
+                {
+                    return "";
+                }
+            }
+
         }
 
         /// <summary>
@@ -387,5 +461,9 @@ namespace Models.Core
             }
             return allProperties.ToArray();
         }
+
+
+
+
     }
 }
