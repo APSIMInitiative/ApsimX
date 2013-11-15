@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -15,7 +16,7 @@ namespace Models.PMF
         protected double _MetabolicWt = 0;
         protected double _MetabolicN = 0;
 
-        
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double NonStructuralN
         {
@@ -26,7 +27,8 @@ namespace Models.PMF
 
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double StructuralN
         {
@@ -36,7 +38,8 @@ namespace Models.PMF
                 _StructuralN = Utility.Math.RoundToZero(value);
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double NonStructuralWt
         {
@@ -46,7 +49,8 @@ namespace Models.PMF
                 _NonStructuralWt = Utility.Math.RoundToZero(value);
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double StructuralWt
         {
@@ -56,7 +60,8 @@ namespace Models.PMF
                 _StructuralWt = Utility.Math.RoundToZero(value);
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double PotentialDMAllocation
         {
@@ -66,7 +71,8 @@ namespace Models.PMF
                 _PotentialDMAllocation = Utility.Math.RoundToZero(value);
             }
         } //FIXME  This was only added because it was the only way I could get potential DM allocation values into a root layer array.  need to pull back to the root module
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicWt
         {
@@ -76,7 +82,8 @@ namespace Models.PMF
                 _MetabolicWt = Utility.Math.RoundToZero(value);
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicN
         {
@@ -86,7 +93,8 @@ namespace Models.PMF
                 _MetabolicN = Utility.Math.RoundToZero(value);
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double Wt
         {
@@ -95,7 +103,8 @@ namespace Models.PMF
                 return StructuralWt + NonStructuralWt + MetabolicWt;
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         virtual public double N
         {
@@ -104,7 +113,8 @@ namespace Models.PMF
                 return StructuralN + NonStructuralN + MetabolicN;
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/g")]
         public double NConc
         {

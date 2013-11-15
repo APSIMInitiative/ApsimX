@@ -24,6 +24,7 @@ namespace Models.PMF.Phen
         public event NullTypeDelegate GrowthStage;
         public Function RewindDueToBiomassRemoved { get; set; }
         public Function AboveGroundPeriod { get; set; }
+
         public Function StageCode { get; set; }
 
         public List<Phase> Phases { get; set; }
@@ -55,6 +56,8 @@ namespace Models.PMF.Phen
                     Model NewChild = Utility.Xml.Deserialise(reader) as Model;
                     if (NewChild is Phase)
                         Phases.Add(NewChild as Phase);
+                    else if (NewChild is StageBasedInterpolation)
+                        StageCode = NewChild as StageBasedInterpolation;
                     else
                         AddModel(NewChild, false);
                     NewChild.Parent = this;
@@ -72,6 +75,9 @@ namespace Models.PMF.Phen
             writer.WriteString(Name);
             writer.WriteEndElement();
 
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
             foreach (object Model in Phases)
             {
                 Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
@@ -80,11 +86,12 @@ namespace Models.PMF.Phen
                 if (type.Length > 1)
                     throw new Exception("Found two models with class name: " + Model.GetType().Name);
 
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
+               
                 XmlSerializer serial = new XmlSerializer(type[0]);
                 serial.Serialize(writer, Model, ns);
             }
+            XmlSerializer serial2 = new XmlSerializer(typeof(StageBasedInterpolation));
+            serial2.Serialize(writer, StageCode, ns);
         }
 
         #endregion

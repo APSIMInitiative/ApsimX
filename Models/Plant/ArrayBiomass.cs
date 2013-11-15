@@ -5,6 +5,7 @@ using System.Collections;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -15,7 +16,7 @@ namespace Models.PMF
         public string ArraySize = null;
         private int ArraySizeNumber = -1;
 
-        
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] NonStructuralN
         {
@@ -26,7 +27,8 @@ namespace Models.PMF
 
             set { throw new Exception("Cannot set NonStructuralN in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] StructuralN
         {
@@ -37,7 +39,8 @@ namespace Models.PMF
 
             set { throw new Exception("Cannot set StructuralN in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] MetabolicN
         {
@@ -48,7 +51,8 @@ namespace Models.PMF
 
             set { throw new Exception("Cannot set MetabolicN in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] NonStructuralWt
         {
@@ -58,7 +62,8 @@ namespace Models.PMF
             }
             set { throw new Exception("Cannot set NonStructuralWt in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] StructuralWt
         {
@@ -69,7 +74,8 @@ namespace Models.PMF
 
             set { throw new Exception("Cannot set StructuralWt in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         public double[] MetabolicWt
         {
@@ -80,7 +86,8 @@ namespace Models.PMF
 
             set { throw new Exception("Cannot set MetabolicWt in ArrayBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/g")]
         public double[] NConc
         {
@@ -89,7 +96,8 @@ namespace Models.PMF
                 return AddValuesToList(".NConc");
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/g")]
         public double[] StructuralNConc
         {
@@ -98,7 +106,8 @@ namespace Models.PMF
                 return AddValuesToList(".StructuralNConc");
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/g")]
         public double[] NonStructuralNConc
         {
@@ -107,7 +116,8 @@ namespace Models.PMF
                 return AddValuesToList(".NonStructuralNConc");
             }
         }
-        
+
+        [XmlIgnore]
         [Units("g/g")]
         public double[] MetabolicNConc
         {

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Reflection;
 
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -46,42 +47,47 @@ namespace Models.PMF
             }
         }
 
-        
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double NonStructuralN
         {
             get { Update(); return base.NonStructuralN; }
             set { throw new Exception("Cannot set NonStructuralN in CompositeBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double StructuralN
         {
             get { Update(); return base.StructuralN; }
             set { throw new Exception("Cannot set StructuralN in CompositeBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double NonStructuralWt
         {
             get { Update(); return base.NonStructuralWt; }
             set { throw new Exception("Cannot set NonStructuralWt in CompositeBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double StructuralWt
         {
             get { Update(); return base.StructuralWt; }
             set { throw new Exception("Cannot set StructuralWt in CompositeBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double MetabolicN
         {
             get { Update(); return base.MetabolicN; }
             set { throw new Exception("Cannot set MetabolicN in CompositeBiomass"); }
         }
-        
+
+        [XmlIgnore]
         [Units("g/m^2")]
         override public double MetabolicWt
         {

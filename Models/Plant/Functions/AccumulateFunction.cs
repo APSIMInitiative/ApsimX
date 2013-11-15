@@ -11,16 +11,19 @@ namespace Models.PMF.Functions
     public class AccumulateFunction : Function
     {
         //Class members
-        public double AccumulatedValue = 0;
+        private double AccumulatedValue = 0;
 
         [Link]
         Phenology Phenology = null;
+
+        public List<Function> Children { get; set; }
+ 
 
         public string StartStageName = "";
 
         public string EndStageName = "";
 
-        public double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
+        private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
         [EventSubscribe("NewMet")]
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
@@ -28,7 +31,7 @@ namespace Models.PMF.Functions
             if (Phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
-                foreach (Function F in this.Models)
+                foreach (Function F in Children)
                 {
                     DailyIncrement = DailyIncrement + F.FunctionValue;
                 }

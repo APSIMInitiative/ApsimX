@@ -4,6 +4,7 @@ using System.Text;
 
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -16,8 +17,10 @@ namespace Models.PMF.Organs
         private Structure Structure = null;
         [Link]
         private Leaf Leaf = null;
-         
+
+        [XmlIgnore]
         public Biomass Live = new Biomass();
+        [XmlIgnore]
         public Biomass Dead = new Biomass();
         private Biomass LiveStart = null;
         #endregion
@@ -26,6 +29,7 @@ namespace Models.PMF.Organs
         public int Rank = 0;
         public double Area = 0;
         //Leaf coefficients
+        [XmlIgnore]
         public double Age = 0;
         private double NReallocationFactor = 0;
         private double DMReallocationFactor = 0;
@@ -33,50 +37,86 @@ namespace Models.PMF.Organs
         private double DMRetranslocationFactor = 0;
         private double FunctionalNConc = 0;
         private double LuxaryNConc = 0;
+        [XmlIgnore]
         public double StructuralFraction = 0;
+        [XmlIgnore]
         public double NonStructuralFraction = 0;
+        [XmlIgnore]
         public double MaxLiveArea = 0;
+        [XmlIgnore]
         public double GrowthDuration = 0;
+        [XmlIgnore]
         public double LagDuration = 0;
+        [XmlIgnore]
         public double SenescenceDuration = 0;
+        [XmlIgnore]
         public double DetachmentLagDuration = 0;
+        [XmlIgnore]
         public double DetachmentDuration = 0;
+        [XmlIgnore]
         public double SpecificLeafAreaMax = 0;
+        [XmlIgnore]
         public double SpecificLeafAreaMin = 0;
+        [XmlIgnore]
         public double MaximumNConc = 0;
+        [XmlIgnore]
         public double MinimumNConc = 0;
+        [XmlIgnore]
         public double InitialNConc = 0;
+        [XmlIgnore]
         public double LiveArea = 0;
+        [XmlIgnore]
         public double DeadArea = 0;
+        [XmlIgnore]
         public double MaxArea = 0;
+        [XmlIgnore]
         public double CoverAbove = 0;
         private double ShadeInducedSenRate = 0;
         private double SenescedFrac = 0;
         private double DetachedFrac = 0;
         private double _ExpansionStress = 0;
+        [XmlIgnore]
         public double CohortPopulation = 0; //Number of leaves in this cohort
+        [XmlIgnore]
         public double CellDivisionStressFactor = 1;
+        [XmlIgnore]
         public double CellDivisionStressAccumulation = 0;
+        [XmlIgnore]
         public double CellDivisionStressDays = 0;
         //Leaf Initial status paramaters
+        [XmlIgnore]
         public double LeafStartNRetranslocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartNReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartDMRetranslocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartDMReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartArea = 0;
+        [XmlIgnore]
         public double LeafStartMetabolicNReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartNonStructuralNReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartMetabolicNRetranslocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartNonStructuralNRetranslocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartMetabolicDMReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartNonStructuralDMReallocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartMetabolicDMRetranslocationSupply = 0;
+        [XmlIgnore]
         public double LeafStartNonStructuralDMRetranslocationSupply = 0;
         //variables used in calculating daily supplies and deltas
+        [XmlIgnore]
         public double DeltaWt = 0;
         //public double StructuralNDemand = 0;
         //public double MetabolicNDemand = 0;
         //public double NonStructuralNDemand = 0;
+        [XmlIgnore]
         public double PotentialAreaGrowth = 0;
         private double DeltaPotentialArea = 0;
         private double DeltaWaterConstrainedArea = 0;
@@ -102,6 +142,7 @@ namespace Models.PMF.Organs
         {
             get { return Age; }
         }
+        [XmlIgnore]
         public bool IsInitialised = false;
         public bool IsNotAppeared
         {
@@ -114,6 +155,7 @@ namespace Models.PMF.Organs
         {
             get { return (Age < GrowthDuration); }
         }
+        [XmlIgnore]
         public bool IsAppeared = false;
         public bool IsFullyExpanded
         {

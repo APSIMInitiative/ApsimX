@@ -77,6 +77,7 @@ namespace Models.PMF
         public Structure Structure { get; set; }
         public Summariser Summariser { get; set; }
         public SowPlant2Type SowingData;
+        [XmlIgnore]
         public List<Organ> Organs { get; set; }
         
         #region XmlSerializable methods
@@ -127,6 +128,24 @@ namespace Models.PMF
             writer.WriteStartElement("Name");
             writer.WriteString(Name);
             writer.WriteEndElement();
+            writer.WriteStartElement("CropType");
+            writer.WriteString(CropType);
+            writer.WriteEndElement();
+
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
+            XmlSerializer serial = new XmlSerializer(typeof(Arbitrator));
+            serial.Serialize(writer, Arbitrator, ns);
+
+            XmlSerializer serial2 = new XmlSerializer(typeof(Phenology));
+            serial2.Serialize(writer, Phenology, ns);
+
+            XmlSerializer serial3 = new XmlSerializer(typeof(Structure));
+            serial3.Serialize(writer, Structure, ns);
+
+            XmlSerializer serial4 = new XmlSerializer(typeof(Summariser));
+            serial4.Serialize(writer, Summariser, ns);
 
             foreach (object Model in Organs)
             {
@@ -136,9 +155,8 @@ namespace Models.PMF
                 if (type.Length > 1)
                     throw new Exception("Found two models with class name: " + Model.GetType().Name);
 
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                XmlSerializer serial = new XmlSerializer(type[0]);
+
+                serial = new XmlSerializer(type[0]);
                 serial.Serialize(writer, Model, ns);
             }
         }

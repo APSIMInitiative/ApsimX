@@ -72,6 +72,7 @@ namespace Models.PMF.Organs
         
         public ArrayBiomass CohortArrayLive { get; set; }
         public ArrayBiomass CohortArrayDead { get; set; }
+        [XmlIgnore]
         public List<LeafCohort> Leaves = new List<LeafCohort>();
         #endregion
 
@@ -93,24 +94,42 @@ namespace Models.PMF.Organs
                 return Leaves[CurrentRank]; 
             }
         }
-        
+        // Do these fields need to be public? If not make private and get rid of XmlIgnore
+        [XmlIgnore]
         public int CurrentRank = 0;
+        [XmlIgnore]
         public double _WaterAllocation;
+        [XmlIgnore]
         public double PEP = 0;
+        [XmlIgnore]
         public double EP = 0;
+        [XmlIgnore]
         public double DeltaNodeNumber = 0;
+        [XmlIgnore]
         public double PotentialHeightYesterday = 0;
+        [XmlIgnore]
         public double DeltaHeight = 0;
+        [XmlIgnore]
         public double DeadNodesYesterday = 0; //FIXME.  This is declarired and given a value but doesn't seem to be used
+        [XmlIgnore]
         public double FractionDied = 0;
+        [XmlIgnore]
         public double MaxNodeNo = 0;
+        [XmlIgnore]
         public bool CohortsInitialised = false;
+        [XmlIgnore]
         public double _ExpandedNodeNo = 0;
+        [XmlIgnore]
         public double FractionNextleafExpanded = 0;
+        [XmlIgnore]
         public double CurrentExpandingLeaf = 0;
+        [XmlIgnore]
         public double StartFractionExpanded = 0;
+        [XmlIgnore]
         public double _ThermalTime = 0;
+        [XmlIgnore]
         public double FinalLeafFraction = 1;
+        [XmlIgnore]
         public bool FinalLeafAppeared = false;
         #endregion
 
@@ -926,6 +945,7 @@ namespace Models.PMF.Organs
         }
         [Units("mm")]
         public override double WaterDemand { get { return PEP; } }
+        [XmlIgnore]
         public override double WaterAllocation
         {
             get { return _WaterAllocation; }

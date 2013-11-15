@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -56,22 +57,36 @@ namespace Models.PMF.Organs
 
         #region Organ - Arbitrator interface methods
         //DryMatter methods
+        [XmlIgnore]
         abstract public BiomassPoolType DMPotentialAllocation { set; }
+        [XmlIgnore]
         abstract public BiomassPoolType DMDemand { get; set; }
+        [XmlIgnore]
         abstract public BiomassSupplyType DMSupply { get; set; }
+        [XmlIgnore]
         abstract public BiomassAllocationType DMAllocation { set; }
         //Nitrogen methods
+        [XmlIgnore]
         abstract public BiomassPoolType NDemand { get; set; }
+        [XmlIgnore]
         abstract public BiomassSupplyType NSupply { get; set; }
+        [XmlIgnore]
         abstract public BiomassAllocationType NAllocation { set; }
         //Water methods
+        [XmlIgnore]
         abstract public double WaterDemand { get; set; }
+        [XmlIgnore]
         abstract public double WaterSupply { get; set; }
+        [XmlIgnore]
         abstract public double WaterAllocation { get; set; }
+        [XmlIgnore]
         abstract public double WaterUptake { get; set; }
         //Communicated organ variables
+        [XmlIgnore]
         abstract public double MaxNconc { get; set; }
+        [XmlIgnore]
         abstract public double MinNconc { get; set; }
+        [XmlIgnore]
         abstract public double NFixationCost { get; set; }
         #endregion
 

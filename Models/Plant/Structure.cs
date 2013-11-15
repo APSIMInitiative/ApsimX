@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -40,37 +41,45 @@ namespace Models.PMF
         #region Class Properties
         //Population state variables
         
+        [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
-        
+
         [Description("Number of mainstem units per plant")]
         [Units("/plant")]
         public double PrimaryBudNo = 1;
+        [XmlIgnore]
         [Description("Number of mainstems per meter")]
         [Units("/m2")]
         public double MainStemPopn { get { return Population * PrimaryBudNo; } }
-        
+
+        [XmlIgnore]
         [Description("Number of stems per meter including main and branch stems")]
         [Units("/m2")]
         public double TotalStemPopn { get; set; }
 
         //Plant leaf number state variables
-        
+
+        [XmlIgnore]
         [Description("Number of mainstem primordia initiated")]
         public double MainStemPrimordiaNo { get; set; }
-        
+
+        [XmlIgnore]
         [Description("Number of mainstem nodes appeared")]
         public double MainStemNodeNo { get; set; }
-        
+
+        [XmlIgnore]
         [Units("/plant")]
         [Description("Number of leaves appeared per plant including all main stem and branch leaves")]
         public double PlantTotalNodeNo { get; set; }
-        
+
+        [XmlIgnore]
         [Units("/PrimaryBud")]
         [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
-        
+
+        [XmlIgnore]
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
         public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.FunctionValue; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
         
@@ -94,9 +103,13 @@ namespace Models.PMF
         [Units("mm")]
         //public double Height { get; set; }
         public double Height { get { return HeightModel.FunctionValue; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
+        [XmlIgnore]
         public double ProportionBranchMortality { get; set; }
+        [XmlIgnore]
         public double ProportionPlantMortality { get; set; }
+        [XmlIgnore]
         public double MaximumNodeNumber { get; set; }
+        [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
         #endregion
 

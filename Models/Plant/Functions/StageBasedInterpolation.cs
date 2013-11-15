@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Functions
 {
@@ -18,6 +19,7 @@ namespace Models.PMF.Functions
 
         public new double[] Values = null;
 
+        [XmlIgnore]
         public bool Proportional = true;
 
 

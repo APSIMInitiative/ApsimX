@@ -4,6 +4,7 @@ using System.Text;
 
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -27,7 +28,7 @@ namespace Models.PMF.Organs
         public Function NRetranslocationFactor { get; set; }
         public Function NitrogenDemandSwitch { get; set; }
         public Function DMRetranslocationFactor { get; set; }
-        public Function StructuralFractionFunction { get; set; }
+        public Function StructuralFraction { get; set; }
         public Function DMDemandFunction { get; set; }
         public Function InitialWtFunction { get; set; }
         public Function InitialStructuralFraction { get; set; }
@@ -52,6 +53,7 @@ namespace Models.PMF.Organs
 
         #region Class properties
         
+        [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
         #endregion
@@ -63,8 +65,8 @@ namespace Models.PMF.Organs
             if (SenescenceRateFunction != null) //Default of zero means no senescence
                 SenescenceRate = SenescenceRateFunction.FunctionValue;
             _StructuralFraction = 1;
-            if (StructuralFractionFunction != null) //Default of 1 means all biomass is structural
-                _StructuralFraction = StructuralFractionFunction.FunctionValue;
+            if (StructuralFraction != null) //Default of 1 means all biomass is structural
+                _StructuralFraction = StructuralFraction.FunctionValue;
             InitialWt = 0; //Default of zero means no initial Wt
             if (InitialWtFunction != null)
                 InitialWt = InitialWtFunction.FunctionValue;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Organs;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -139,8 +140,11 @@ namespace Models.PMF
         }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
+        [XmlIgnore]
         public bool NAware = true;
+        [XmlIgnore]
         public bool PAware = false;
+        [XmlIgnore]
         public bool KAware = false;
 
         #endregion

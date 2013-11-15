@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.Organs
@@ -14,23 +15,35 @@ namespace Models.PMF.Organs
         [Link]
         public WeatherFile MetData = null;
 
+        [XmlIgnore]
         public override BiomassSupplyType DMSupply { get { return new BiomassSupplyType(); } set { } }
+        [XmlIgnore]
         public override BiomassPoolType DMPotentialAllocation { set { } }
+        [XmlIgnore]
         public override BiomassAllocationType DMAllocation { set { } }
+        [XmlIgnore]
         public override BiomassPoolType DMDemand { get { return new BiomassPoolType(); } set { } }
 
+        [XmlIgnore]
         public override BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } set { } }
+        [XmlIgnore]
         public override BiomassAllocationType NAllocation { set { } }
+        [XmlIgnore]
         public override double NFixationCost { get { return 0; } set { } }
+        [XmlIgnore]
         public override BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
 
+        [XmlIgnore]
         public override double WaterDemand { get { return 0; } set { } }
+        [XmlIgnore]
         public override double WaterSupply { get { return 0; } set { } }
+        [XmlIgnore]
         public override double WaterUptake
         {
             get { return 0; }
             set { throw new Exception("Cannot set water uptake for " + Name); }
         }
+        [XmlIgnore]
         public override double WaterAllocation
         {
             get { return 0; }
@@ -41,7 +54,9 @@ namespace Models.PMF.Organs
         public override void DoPotentialNutrient() { }
         public override void DoActualGrowth() { }
 
+        [XmlIgnore]
         public override double MaxNconc { get { return 0; } set { } }
+        [XmlIgnore]
         public override double MinNconc { get { return 0; } set { } }
 
 

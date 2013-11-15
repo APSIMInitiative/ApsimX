@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.Soils;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -11,9 +12,12 @@ namespace Models.PMF.Organs
     {
         #region Parameter Input Classes
         
-        public Biomass[] LayerLive;
-        public Biomass[] LayerDead;
-        public Biomass[] LayerLengthDensity;
+        [XmlIgnore]
+        public Biomass[] LayerLive = new Biomass[0];
+        [XmlIgnore]
+        public Biomass[] LayerDead = new Biomass[0];
+
+        private Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
         [Link]
         Plant Plant = null;
@@ -38,10 +42,10 @@ namespace Models.PMF.Organs
         private double[] Uptake = null;
         private double[] DeltaNH4;
         private double[] DeltaNO3;
-        private bool isGrowing { get { return (Plant.SowingData.Depth < this.Depth); } }
+        private bool isGrowing { get { return (Plant.SowingData != null && Plant.SowingData.Depth < this.Depth); } }
         private double _SenescenceRate = 0;
         private double _Nuptake = 0;
-        public double Length = 0;
+        private double Length = 0;
         [Link]
         Soils.SoilWater SoilWat = null;
         [Link]
@@ -54,6 +58,7 @@ namespace Models.PMF.Organs
         public double KNO3 = 0;
         public double KNH4 = 0;
         
+        [XmlIgnore]
         [Units("mm")]
         public double Depth = 0;
         #endregion
@@ -272,7 +277,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-           if (LayerLive == null)
+           if (LayerLive == null || LayerLive.Length == 0)
             {
                 LayerLive = new Biomass[SoilWat.dlayer.Length];
                 LayerDead = new Biomass[SoilWat.dlayer.Length];
@@ -561,7 +566,8 @@ namespace Models.PMF.Organs
                 return MinimumNConc.FunctionValue;
             }
         }
-        
+
+       
         [Units("mm")]
         public override double WaterSupply
         {

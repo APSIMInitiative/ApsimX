@@ -9,13 +9,14 @@ namespace Models.PMF.Functions
     [Description("Returns the maximum value of all childern functions")]
     class MaximumFunction : Function
     {
-        
+        public List<Function> Children { get; set; }
+
         public override double FunctionValue
         {
             get
             {
                 double ReturnValue = -999999999;
-                foreach (Function F in this.Models)
+                foreach (Function F in Children)
                 {
                     ReturnValue = Math.Max(ReturnValue, F.FunctionValue);
                 }

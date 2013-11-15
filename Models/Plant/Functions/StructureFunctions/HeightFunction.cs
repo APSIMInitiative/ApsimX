@@ -11,14 +11,15 @@ namespace Models.PMF.Functions.StructureFunctions
         public Function PotentialHeight { get; set; }
         double PotentialHeightYesterday = 0;
         double Height = 0;
-        
+        public List<Function> Children { get; set; }
+
         public double DeltaHeight = 0;
         public override void UpdateVariables(string initial)
         {
             double PotentialHeightIncrement = PotentialHeight.FunctionValue - PotentialHeightYesterday;
             double StressValue = 1.0;
             //This function is counting potential height as a stress.
-            foreach (Function F in this.Models)
+            foreach (Function F in Children)
             {
                 StressValue = Math.Min(StressValue, F.FunctionValue);
             }
