@@ -1927,9 +1927,87 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 		<Test>
 			<SimulationName>Test</SimulationName>
 			<TableName>Report</TableName>
-			<Type>AllPos</Type>
-			<ColumnNames>WeatherFile.MaxT</ColumnNames>
-			<Parameters />
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Phenology.StageCode.FunctionValue</ColumnNames>
+			<Parameters>1,1</Parameters>
 		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Structure.Population</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Leaf.LAI</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>	
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>	
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>	
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Root.Live.Wt</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Leaf.Live.N</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Stem.Live.N</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Tuber.Live.N</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>
+		<Test>
+			<SimulationName>Test</SimulationName>
+			<TableName>Report</TableName>
+			<Type>Tolerance</Type>
+			<ColumnNames>Plant.Root.Live.N</ColumnNames>
+			<Parameters>1,1</Parameters>
+		</Test>		
+
 	</Tests>
 </Simulations>
