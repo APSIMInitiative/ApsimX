@@ -125,16 +125,9 @@ namespace Models.PMF.Organs
         [Description("Max cover")]
         [Units("max units")]
         public double MaxCover;
-        
+
         [Description("Number of leaf cohort objects that have been initialised")] //Note:  InitialisedCohortNo is an interger of Primordia Number, increasing every time primordia increses by one and a new cohort is initialised
-        public double InitialisedCohortNo
-        {
-            get
-            {
-                int Count = CohortCounter("IsInitialised");
-                return Count;
-            }
-        }
+        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }       
         
         [Description("Number of leaf cohort that have appeared")] //Note:  AppearedCohortNo is an interger of AppearedNodeNo, increasing every time AppearedNodeNo increses by one and a new cohort is appeared
         public double AppearedCohortNo
@@ -150,14 +143,7 @@ namespace Models.PMF.Organs
         }
         
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public double ExpandingCohortNo
-        {
-            get
-            {
-                int Count = CohortCounter("IsGrowing");
-                return Count;
-            }
-        }
+        public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
         
         //FIXME ExpandedNodeNo and Expanded Cohort need to be merged
         [Description("Number of leaf cohorts that are fully expanded")]
@@ -170,14 +156,8 @@ namespace Models.PMF.Organs
         }
         
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo
-        {
-            get
-            {
-                return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo);
-            }
-        }
-      
+        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo); } }
+        
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
         public double GreenCohortNo
         {
@@ -190,7 +170,7 @@ namespace Models.PMF.Organs
                     return Count;
             }
         }
-
+        
         [Description("Number of leaf cohorts that are Senescing")]
         public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
         
@@ -225,6 +205,19 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
+        
+        [Units("m^2/m^2")]
+        public double LAIDead
+        {
+            get
+            {
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                    value = value + L.DeadArea / 1000000;
+                return value;
+            }
+        }
+       
         [XmlIgnore]
         [Units("g/m^2")]
         public Biomass CohortLive
@@ -241,6 +234,7 @@ namespace Models.PMF.Organs
                 throw new NotImplementedException();
             }
         }
+        
         [XmlIgnore]
         [Units("g/m^2")]
         public Biomass CohortDead
@@ -257,43 +251,19 @@ namespace Models.PMF.Organs
                 throw new NotImplementedException();
             }
         }
-        public double LAIDead
-        {
-            get
-            {
-                double value = 0;
-                foreach (LeafCohort L in Leaves)
-                    value = value + L.DeadArea / 1000000;
-                return value;
-            }
-        }
+                 
         [Units("0-1")]
-        public double CoverGreen
-        {
-            get
-            {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAI / MaxCover));
-            }
-        }
+        public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAI / MaxCover)); } }
+        
         [Units("0-1")]
-        public double CoverDead
-        {
-            get { return 1.0 - Math.Exp(-KDead * LAIDead); }
-        }
+        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+        
         [Units("0-1")]
-        public double CoverTot
-        {
-            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
-        }
+        public double CoverTot { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+        
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
-        {
-            get
-            {
-                return CoverGreen * MetData.Radn;
-            }
-        }
+        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
         
         [Units("mm^2/g")]
         public double SpecificArea
@@ -712,6 +682,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
         /// </summary>
+        [Units("g/m^2")]
         public override BiomassSupplyType DMSupply
         {
             get
@@ -729,6 +700,7 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType { Fixation = Photosynthesis.Growth(RadIntTot), Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
         }
+        [Units("g/m^2")]
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -806,6 +778,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        [Units("g/m^2")]
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -951,7 +924,6 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        
         [Units("mm")]
         public override double WaterDemand { get { return PEP; } }
         public override double WaterAllocation
@@ -963,7 +935,6 @@ namespace Models.PMF.Organs
                 EP = value;
             }
         }
-        
         [Units("g/m^2")]
         public override BiomassPoolType NDemand
         {
@@ -981,6 +952,7 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
             }
         }
+        [Units("g/m^2")]
         public override BiomassAllocationType NAllocation
         {
             set
@@ -1144,6 +1116,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        [Units("g/m^2")]
         public override BiomassSupplyType NSupply
         {
             get
@@ -1181,6 +1154,7 @@ namespace Models.PMF.Organs
         public event NewCanopyDelegate NewCanopy;
         
         public event NullTypeDelegate NewLeaf;
+        
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
@@ -1188,12 +1162,14 @@ namespace Models.PMF.Organs
             CohortsInitialised = false;
             ZeroLeaves();
         }
+        
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
             Console.WriteLine("Removing Lowest Leaf");
             Leaves.RemoveAt(0);
         }
+        
         public override void OnSow(SowPlant2Type Sow)
         {
             if (Sow.MaxCover <= 0.0)
@@ -1202,6 +1178,7 @@ namespace Models.PMF.Organs
             MaxNodeNo = Structure.MaximumNodeNumber;
 
         }
+        
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
         {
@@ -1218,6 +1195,7 @@ namespace Models.PMF.Organs
                     i++;
             }
         }
+        
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
@@ -1232,6 +1210,7 @@ namespace Models.PMF.Organs
                 L.DoKill(KillLeaf.KillFraction);
 
         }
+        
         [EventSubscribe("Cut")]
         private void OnCut()
         {
@@ -1251,6 +1230,7 @@ namespace Models.PMF.Organs
             InitialiseCohorts();
             //Structure.ResetStemPopn();
         }
+        
         protected virtual void PublishNewCanopyEvent()
         {
             if (NewCanopy != null)
@@ -1266,6 +1246,7 @@ namespace Models.PMF.Organs
                 NewCanopy.Invoke(Canopy);
             }
         }
+        
         [EventSubscribe("NewMet")]
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
         {
