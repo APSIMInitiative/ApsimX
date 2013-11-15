@@ -56,7 +56,6 @@ namespace Models.PMF.Organs
         public Structure Structure = null;
         [Link]
         public Phenology Phenology = null;
-
         public RUEModel Photosynthesis { get; set; }
         //Child Functions
         public Function ThermalTime { get; set; }
@@ -70,9 +69,9 @@ namespace Models.PMF.Organs
         public Function StructuralFraction { get; set; }
         public Function DMDemandFunction = null;
         public Biomass Total { get; set; }
-        public ArrayBiomass CohortLive { get; set; }
-        public ArrayBiomass CohortDead { get; set; }
         
+        public ArrayBiomass CohortArrayLive { get; set; }
+        public ArrayBiomass CohortArrayDead { get; set; }
         public List<LeafCohort> Leaves = new List<LeafCohort>();
         #endregion
 
@@ -132,10 +131,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsInitialised)
-                        Count++;
+                int Count = CohortCounter("IsInitialised");
                 return Count;
             }
         }
@@ -145,10 +141,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsAppeared)
-                        Count++;
+                int Count = CohortCounter("IsAppeared");
                 if (FinalLeafAppeared)
                     return Count - (1 - FinalLeafFraction);
                 else
@@ -161,11 +154,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsGrowing)
-                        count += 1;
-                return count;
+                int Count = CohortCounter("IsGrowing");
+                return Count;
             }
         }
         
@@ -184,56 +174,29 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsFullyExpanded)
-                        Count++;
-                return Math.Min(Count, Structure.MainStemFinalNodeNo);
+                return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo);
             }
         }
-        
+      
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
         public double GreenCohortNo
         {
             get
             {
-                double Count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsGreen)
-                        Count += 1;
+                int Count = CohortCounter("IsGreen");
                 if (FinalLeafAppeared)
                     return Count - (1 - FinalLeafFraction);
                 else
                     return Count;
             }
         }
-        
+
         [Description("Number of leaf cohorts that are Senescing")]
-        public double SenescingCohortNo
-        {
-            get
-            {
-                double count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsSenescing)
-                        count += 1;
-                return count;
-            }
-        }
+        public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
         
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo
-        {
-            get
-            {
-                int Count = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsDead)
-                        Count++;
-                return Math.Min(Count, Structure.MainStemFinalNodeNo);
-            }
-        }
-        
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsSenescing"), Structure.MainStemFinalNodeNo); } }
+      
         [Units("/plant")]
         [Description("Number of appeared leaves per plant that have appeared but not yet fully senesced on each plant")]
         public double PlantAppearedGreenLeafNo
@@ -264,7 +227,7 @@ namespace Models.PMF.Organs
         }
         [XmlIgnore]
         [Units("g/m^2")]
-        public override Biomass Live
+        public Biomass CohortLive
         {
             get
             {
@@ -280,7 +243,7 @@ namespace Models.PMF.Organs
         }
         [XmlIgnore]
         [Units("g/m^2")]
-        public override Biomass Dead
+        public Biomass CohortDead
         {
             get
             {
@@ -571,6 +534,14 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+        private int CohortCounter(string Condition)
+        {
+            int Count = 0;
+            foreach (LeafCohort L in Leaves)
+                if ((bool)L.Get(Condition))
+                    Count++;
+            return Count;
+        }
         public void CopyLeaves(LeafCohort[] From, List<LeafCohort> To)
         {
             foreach (LeafCohort Leaf in From)

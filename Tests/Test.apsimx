@@ -35,7 +35,16 @@
 					<string>[Plant].Phenology.StageCode.FunctionValue</string>
 					<string>[Plant].Structure.Population</string>
 					<string>[Plant].Leaf.LAI</string>
+					<string>[Plant].Leaf.CoverGreen</string>
 					<string>[Plant].Leaf.Live.Wt</string>
+					<string>[Plant].Stem.Live.Wt</string>
+					<string>[Plant].Tuber.Live.Wt</string>
+                    <string>[Plant].Root.Live.Wt</string>
+					<string>[Plant].Leaf.Live.N</string>
+					<string>[Plant].Stem.Live.N</string>
+					<string>[Plant].Tuber.Live.N</string>
+                    <string>[Plant].Root.Live.N</string>
+					
 				</Variables>
 				<Events>
 					<string>[Clock].EndOfDay</string>
@@ -648,7 +657,7 @@
 						<double>300</double>
 					</Thickness>
 					<NO3>
-						<double>6.50300344798777</double>
+						<double>1116.50300344798777</double>
 						<double>2.10100111398159</double>
 						<double>2.10100111398159</double>
 						<double>1.70100090189562</double>
@@ -1434,18 +1443,28 @@ In addition this organ has a relative growth rate variable and a tubers per stem
 					<Memo>The Leaf organ has 3 biomass pools, Structural, Metabolic and Non-Structural.
 
 Initial ages and initial areas are array fields so the size and age of multiple leaves can be entered, separated by a space.  The initial age is used to set how far through its expansion phase each leaf is on the day of planting.</Memo>
+					<Live xsi:type="CompositeBiomass">
+						<Propertys>
+							<string>[Leaf].CohortLive</string>
+						</Propertys>
+					</Live>
+					<Dead xsi:type="CompositeBiomass">
+						<Propertys>
+							<string>[Leaf].CohortDead</string>
+						</Propertys>
+					</Dead>
 					<Total xsi:type="CompositeBiomass">
 						<Property>[Leaf].Live</Property>
 						<Property>[Leaf].Dead</Property>
 					</Total>
-					<CohortLive xsi:type="ArrayBiomass">
+					<CohortArrayLive xsi:type="ArrayBiomass">
 						<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 						<Property>[Leaf].Live</Property>
-					</CohortLive>
-					<CohortDead xsi:type="ArrayBiomass">
+					</CohortArrayLive>
+					<CohortArrayDead xsi:type="ArrayBiomass">
 						<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 						<Property>[Leaf].Dead</Property>
-					</CohortDead>
+					</CohortArrayDead>
 					<ThermalTime xsi:type="AirTemperatureFunction">
 						<XYPairs>
 							<X>
@@ -1754,7 +1773,7 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 						</WaterStressReduction>
 					</ExtinctionCoeff>
 				</Leaf>
-				<GenericAboveGroundOrgan name="Stem">
+				<GenericAboveGroundOrgan>
 					<Name>Stem</Name>
 					<Memo>The stem inherits from the generic organ so has 6 optional paramaters.  If you wish to override the defaults values specified below drop a function onto this organ and name and set accordingly
 1. SenescenceRate.  Default value is 0 which means the organ will not seness.  If senesence is required place a function on the organ named SenescenceRate.  It needs to be a number for 0 - 1 that represents the proportion of total biomass that is senessed each day.

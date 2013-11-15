@@ -12,7 +12,6 @@ namespace Models.PMF.Organs
         #region Parameter Input Classes
         
         public Biomass[] LayerLive;
-        
         public Biomass[] LayerDead;
         public Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
@@ -60,7 +59,34 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Properties
-        
+        //public override Biomass Live
+        //{
+        //    get
+        //    {
+        //        Biomass Biomass = new Biomass();
+        //        for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+        //            Biomass = Biomass + LayerLive[layer];
+        //        return Biomass;
+        //    }
+        //    set
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
+        //public override Biomass Dead
+        //{
+        //    get
+        //    {
+        //        Biomass Biomass = new Biomass();
+        //        for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+        //            Biomass = Biomass + LayerLive[layer];
+        //        return Biomass;
+        //    }
+        //    set
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
         [Units("kg/ha")]
         public double NUptake
         {
@@ -242,10 +268,11 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        public override void OnSow(SowPlant2Type Sow)
+
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
         {
-            SowingInfo = Sow;
-            if (LayerLive == null)
+           if (LayerLive == null)
             {
                 LayerLive = new Biomass[SoilWat.dlayer.Length];
                 LayerDead = new Biomass[SoilWat.dlayer.Length];
@@ -257,6 +284,11 @@ namespace Models.PMF.Organs
             }
             DeltaNO3 = new double[SoilWat.dlayer.Length];
             DeltaNH4 = new double[SoilWat.dlayer.Length];
+        }
+
+        public override void OnSow(SowPlant2Type Sow)
+        {
+            SowingInfo = Sow;
         }
         public override void OnEndCrop()
         {
