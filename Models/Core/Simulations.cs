@@ -15,11 +15,7 @@ namespace Models.Core
     /// </summary>
     public class Simulations : Zone
     {
-        class EventSubscriber
-        {
-            public Model model;
-            public MethodInfo handler;
-        }
+       
 
         private string _FileName;
 
@@ -127,78 +123,9 @@ namespace Models.Core
         /// </summary>
         private Simulations() { }
         
-        /// <summary>
-        /// Connect all events up in this simulation
-        /// </summary>
-        private static void ConnectEvents(Simulation simulation)
-        {
-            Model[] modelsInScope = simulation.FindAll();
+       
 
-            // Loop through all events in all models: for each one locate all event handlers 9subscribers) and 
-            // attach them to the event.
-            foreach (Model model in modelsInScope)
-            {
-                foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    foreach (EventSubscriber subscriber in FindEventSubscribers(Event.Name, modelsInScope))
-                    {
-                        // connect subscriber to the event.
-                        Delegate eventdelegate = Delegate.CreateDelegate(Event.EventHandlerType, subscriber.model, subscriber.handler);
-                        Event.AddEventHandler(model, eventdelegate);
-                    }
-                }
-
-
-            }
-        }
-
-        /// <summary>
-        /// Disconnect all events in this simulation
-        /// </summary>
-        private static void DisconnectEvents(Simulation simulation)
-        {
-            Model[] modelsInScope = simulation.FindAll();
-
-            // Loop through all events in all models: for each one locate all event handlers 9subscribers) and 
-            // attach them to the event.
-            foreach (Model model in modelsInScope)
-            {
-                foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    //foreach (EventSubscriber subscriber in FindEventSubscribers(Event.Name, modelsInScope))
-                    {
-                        // disconnect all subscribers from the event.
-                        FieldInfo eventAsField = model.GetType().GetField(Event.Name, BindingFlags.Instance | BindingFlags.NonPublic);
-                        Delegate eventDelegate = eventAsField.GetValue(model) as Delegate;
-                        if (eventDelegate != null)
-                        {
-                            foreach (Delegate del in eventDelegate.GetInvocationList())
-                                Event.RemoveEventHandler(model, del);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Look through and return all models in scope for event subscribers with the specified event name.
-        /// </summary>
-        private static List<EventSubscriber> FindEventSubscribers(string eventName, Model[] modelsInScope)
-        {
-            List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in modelsInScope)
-            {
-                foreach (MethodInfo method in model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
-                {
-                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(method, typeof(EventSubscribe), false);
-                    if (subscriberAttribute != null && subscriberAttribute.Name == eventName)
-                        subscribers.Add(new EventSubscriber() { handler = method, model = model });
-                }
-            }
-            return subscribers;
-
-        }
-
+        
 
     }
 }

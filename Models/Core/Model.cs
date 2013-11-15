@@ -83,7 +83,8 @@ namespace Models.Core
                                 if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
                                 {
                                     IList list = (IList)value;
-                                    foreach (Model child in list)
+
+                                     foreach (Model child in list)
                                         AllModels.Add(child);
                                 }
                             }
@@ -179,7 +180,12 @@ namespace Models.Core
                 // namePath has a [type] at its beginning.
                 int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
                 string typeName = namePath.Substring(1, pos - 1);
-                obj = Find(Utility.Reflection.GetTypeFromUnqualifiedName(typeName));
+                Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                if (t == null)
+                    obj = Find(typeName);
+                else
+                    obj = Find(t);
+                
                 namePath = namePath.Substring(pos + 1);
                 if (obj == null)
                     throw new ApsimXException(FullPath, "Cannot find type: " + typeName + " while doing a get for: " + namePath);
@@ -218,7 +224,7 @@ namespace Models.Core
             bool wasAdded = false;
             foreach (PropertyInfo property in ModelPropertyInfos())
             {
-                if (property.PropertyType == model.GetType())
+                if (property.PropertyType.IsAssignableFrom(model.GetType()))
                 {
                     // Simple reference to a model.
                     property.SetValue(this, model, null);
@@ -295,7 +301,7 @@ namespace Models.Core
         {
             // Go looking for private [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(this.GetType(),
-                                                                        BindingFlags.Instance | BindingFlags.NonPublic))
+                                                                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
                 if (field.IsDefined(typeof(Link), false))
                 {
@@ -371,12 +377,12 @@ namespace Models.Core
             List<PropertyInfo> allModelProperties = new List<PropertyInfo>();
             foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
-                if (property.GetType().IsClass && property.CanWrite)
+                if (property.GetType().IsClass && property.CanWrite && property.Name != "Parent")
                 {
                     if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
                         allModelProperties.Add(property);
 
-                    else if (property.PropertyType.IsSubclassOf(typeof(Model)))
+                    else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
                         allModelProperties.Add(property);
                 }
             }

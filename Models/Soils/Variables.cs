@@ -1270,7 +1270,7 @@ namespace Models.Soils
         /// Soil temperature (oC), as computed by an external module (SoilTemp)
         /// </summary>
         [Units("oC")]
-        private double[] ave_soil_temp;
+        public double[] ave_soil_temp;
 
         #endregion
 
@@ -3251,7 +3251,7 @@ namespace Models.Soils
 
         [Units("oC")]
         [Description("Soil temperature")]
-        double[] st
+        public double[] st
         {
             get
             {

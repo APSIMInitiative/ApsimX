@@ -7,13 +7,10 @@ using System.IO;
 using Models.Core;
 using Models;
 using System.Xml.Serialization;
+using Models.PMF;
 
 namespace Models.Soils
 {
-    public class WaterChangedType
-    {
-        public double[] DeltaWater;
-    }
     public class NewProfileType
     {
         public double[] dlayer;
@@ -403,7 +400,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Potential extractable sw in profile")]
-        private double esw                       //! potential extractable sw in profile  
+        public double esw                       //! potential extractable sw in profile  
         {
             get
             {
@@ -429,7 +426,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Effective potential evapotranspiration")]
-        private double eo;                       //! effective potential evapotranspiration (mm)
+        public double eo;                       //! effective potential evapotranspiration (mm)
 
 
         [Units("mm")]
@@ -527,7 +524,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
         [Description("Thickness of soil layer")]
-        private double[] dlayer    //! thickness of soil layer (mm)
+        public double[] dlayer    //! thickness of soil layer (mm)
         {
             get { return _dlayer; }
             set
@@ -834,7 +831,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.01, Upper = 3.0)]
         [Units("g/cm^3")]
         [Description("Bulk density of soil")]
-        private double[] bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
+        public double[] bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
 
 
         //sv- Lateral Flow profile   //sv- also from Lateral_read_param()
@@ -845,7 +842,7 @@ namespace Models.Soils
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
-        private double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
+        public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sat_dep; }
             set
@@ -864,7 +861,7 @@ namespace Models.Soils
         private double[] _dul_dep;
         [Units("mm")]
         [Description("dul * dlayer")]
-        private double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
+        public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
             get { return _dul_dep; }
             set
@@ -909,7 +906,7 @@ namespace Models.Soils
         private double[] _ll15_dep;
         [Units("mm")]
         [Description("ll15 * dlayer")]
-        private double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
+        public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
             get { return _ll15_dep; }
             set
@@ -5114,7 +5111,7 @@ namespace Models.Soils
         [XmlAnyElement]
         public System.Xml.XmlElement[] Nodes = null;
 
-        public void OnInitialised()
+        public void OnInitialised(object sender, EventArgs e)
         {
             tillage_types = new Dictionary<string, float[]>();
 

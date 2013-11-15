@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.Soils;
+using Models.PMF;
 
 namespace Models.SurfaceOM
 {
@@ -84,16 +85,6 @@ namespace Models.SurfaceOM
 
         [EventSubscribe("CropChopped")]
         private void OnCrop_chopped(CropChoppedType data) { surfom_ON_Crop_chopped(data); }
-
-        public class BiomassRemovedType
-        {
-            public string crop_type = "";
-            public string[] dm_type;
-            public double[] dlt_crop_dm;
-            public double[] dlt_dm_n;
-            public double[] dlt_dm_p;
-            public double[] fraction_to_residue;
-        }
 
         [EventSubscribe("BiomassRemoved")]
         private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved) { SurfOMOnBiomassRemoved(BiomassRemoved); }
