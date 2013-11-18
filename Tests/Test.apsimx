@@ -1,58 +1,2285 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>Simulations</Name>
-	<Area>0</Area>
-	<Simulation>
-		<Name>Test</Name>
-		<Area>0</Area>
-		<WeatherFile>
-			<Name>WeatherFile</Name>
-			<FileName>Goondiwindi.met</FileName>
-		</WeatherFile>
-		<Clock>
-			<Name>Clock</Name>
-			<StartDate>1940-01-01T00:00:00</StartDate>
-			<EndDate>1940-12-31T00:00:00</EndDate>
-		</Clock>
-		<Summary>
-			<Name>Summary</Name>
-		</Summary>
-		<Zone>
-			<Name>Field</Name>
-			<Area>0</Area>
-			<Report>
-				<Name>Report</Name>
-				<Variables>
-					<string>[Clock].Today</string>
-					<string>[WeatherFile].DayLength</string>
-					<string>[WeatherFile].MaxT</string>
-					<string>[WeatherFile].MinT</string>
-					<string>[WeatherFile].Radn</string>
-					<string>[WeatherFile].Rain</string>
-					<string>[SoilWater].sw_dep</string>
-					<string>[SoilNitrogen].no3</string>
-					<string>[SurfaceOrganicMatter].surfaceom_wt</string>
-					<string>[Plant].Phenology.StageCode.FunctionValue</string>
-					<string>[Plant].Structure.Population</string>
-					<string>[Plant].Leaf.LAI</string>
-					<string>[Plant].Leaf.CoverGreen</string>
-					<string>[Plant].Leaf.Live.Wt</string>
-					<string>[Plant].Stem.Live.Wt</string>
-					<string>[Plant].Tuber.Live.Wt</string>
-					<string>[Plant].Root.Live.Wt</string>
-					<string>[Plant].Leaf.Live.N</string>
-					<string>[Plant].Stem.Live.N</string>
-					<string>[Plant].Tuber.Live.N</string>
-					<string>[Plant].Root.Live.N</string>
-
-				</Variables>
-				<Events>
-					<string>[Clock].EndOfDay</string>
-				</Events>
-			</Report>
-			<Manager>
-				<Name>Script</Name>
-				<Code>
+<Simulations>
+  <Name>Simulations</Name>
+  <Area>0</Area>
+  <Simulation>
+    <Name>Test</Name>
+    <Area>0</Area>
+    <WeatherFile>
+      <Name>WeatherFile</Name>
+      <FileName>Lincoln.met</FileName>
+    </WeatherFile>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>2003-10-20T00:00:00</StartDate>
+      <EndDate>2004-05-23T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
+    <Zone>
+      <Name>Field</Name>
+      <Area>0</Area>
+      <Report>
+        <Name>Report</Name>
+        <Variables>
+          <string>[Clock].Today</string>
+          <string>[WeatherFile].DayLength</string>
+          <string>[WeatherFile].MaxT</string>
+          <string>[WeatherFile].MinT</string>
+          <string>[WeatherFile].Radn</string>
+          <string>[WeatherFile].Rain</string>
+          <string>[SoilWater].sw_dep</string>
+          <string>[SoilNitrogen].no3</string>
+          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[Plant].Phenology.StageCode.FunctionValue</string>
+          <string>[Plant].Structure.Population</string>
+          <string>[Plant].Leaf.LAI</string>
+          <string>[Plant].Leaf.CoverGreen</string>
+          <string>[Plant].Leaf.Live.Wt</string>
+          <string>[Plant].Stem.Live.Wt</string>
+          <string>[Plant].Tuber.Live.Wt</string>
+          <string>[Plant].Root.Live.Wt</string>
+          <string>[Plant].Leaf.Live.N</string>
+          <string>[Plant].Stem.Live.N</string>
+          <string>[Plant].Tuber.Live.N</string>
+          <string>[Plant].Root.Live.N</string>
+        </Variables>
+        <Events>
+          <string>[Clock].EndOfDay</string>
+        </Events>
+      </Report>
+      <Soil>
+        <Name>Soil</Name>
+        <RecordNumber>0</RecordNumber>
+        <SoilType>Black Vertosol</SoilType>
+        <LocalName>Waco</LocalName>
+        <Site>Jimbour</Site>
+        <NearestTown>Jimbour, Q 4352</NearestTown>
+        <Region>South East Queensland</Region>
+        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
+        <Water>
+          <Name>Water</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.02</double>
+            <double>1.03</double>
+            <double>1.02</double>
+            <double>1.02</double>
+            <double>1.06</double>
+            <double>1.11</double>
+            <double>1.12</double>
+            <double>1.15</double>
+            <double>1.18</double>
+            <double>1.2</double>
+            <double>1.25</double>
+          </BD>
+          <AirDry>
+            <double>0.15</double>
+            <double>0.26</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </AirDry>
+          <LL15>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </LL15>
+          <DUL>
+            <double>0.54</double>
+            <double>0.53</double>
+            <double>0.54</double>
+            <double>0.54</double>
+            <double>0.52</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.48</double>
+            <double>0.47</double>
+            <double>0.46</double>
+            <double>0.44</double>
+          </DUL>
+          <SAT>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.57</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.53</double>
+            <double>0.52</double>
+            <double>0.51</double>
+            <double>0.49</double>
+          </SAT>
+          <SoilCrop>
+            <Name>Wheat</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.32</double>
+              <double>0.38</double>
+              <double>0.39</double>
+              <double>0.39</double>
+              <double>0.41</double>
+              <double>0.48</double>
+              <double>0.47</double>
+              <double>0.46</double>
+              <double>0.44</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>Barley</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.36</double>
+              <double>0.43</double>
+              <double>0.51</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.48</double>
+              <double>0.47</double>
+              <double>0.46</double>
+              <double>0.44</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>Potato</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.36</double>
+              <double>0.43</double>
+              <double>0.51</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.48</double>
+              <double>0.47</double>
+              <double>0.46</double>
+              <double>0.44</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <Name>SoilWater</Name>
+          <min_crit_temp>5</min_crit_temp>
+          <max_crit_temp>35</max_crit_temp>
+          <max_albedo>0.23</max_albedo>
+          <A_to_evap_fact>0.44</A_to_evap_fact>
+          <canopy_eos_coef>1.7</canopy_eos_coef>
+          <sw_top_crit>0.9</sw_top_crit>
+          <sumes1_max>100</sumes1_max>
+          <sumes2_max>25</sumes2_max>
+          <solute_flow_eff>
+            <double>1</double>
+          </solute_flow_eff>
+          <solute_flux_eff>
+            <double>1</double>
+          </solute_flux_eff>
+          <gravity_gradient>2E-05</gravity_gradient>
+          <specific_bd>2.65</specific_bd>
+          <hydrol_effective_depth>450</hydrol_effective_depth>
+          <mobile_solutes>
+            <string>no3</string>
+            <string>urea</string>
+            <string>cl</string>
+            <string>br</string>
+            <string>org_n</string>
+            <string>org_c_pool1</string>
+            <string>org_c_pool2</string>
+            <string>org_c_pool3</string>
+          </mobile_solutes>
+          <immobile_solutes>
+            <string>nh4</string>
+          </immobile_solutes>
+          <canopy_fact>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+            <double>0</double>
+          </canopy_fact>
+          <canopy_fact_height>
+            <double>0</double>
+            <double>600</double>
+            <double>1800</double>
+            <double>30000</double>
+          </canopy_fact_height>
+          <canopy_fact_default>0.5</canopy_fact_default>
+          <act_evap_method>ritchie</act_evap_method>
+          <irrigation_will_runoff>0</irrigation_will_runoff>
+          <irrigation_layer>0</irrigation_layer>
+          <obsrunoff_name />
+          <SummerCona>3</SummerCona>
+          <SummerU>6</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>3</WinterCona>
+          <WinterU>6</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.13</Salb>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo>5.8408712516913539</eo>
+          <eos>5.8408712516913539</eos>
+          <bd>
+            <double>1.02</double>
+            <double>1.03</double>
+            <double>1.02</double>
+            <double>1.02</double>
+            <double>1.06</double>
+            <double>1.11</double>
+            <double>1.12</double>
+            <double>1.15</double>
+            <double>1.18</double>
+            <double>1.2</double>
+            <double>1.25</double>
+          </bd>
+          <eo_source />
+          <max_pond>0</max_pond>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <WaterTable>NaN</WaterTable>
+          <dlayer>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </dlayer>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
+          <sat_dep>
+            <double>88.5</double>
+            <double>87</double>
+            <double>177</double>
+            <double>174</double>
+            <double>170.99999999999997</double>
+            <double>165</double>
+            <double>165</double>
+            <double>159</double>
+            <double>156</double>
+            <double>153</double>
+            <double>147</double>
+          </sat_dep>
+          <dul_dep>
+            <double>81</double>
+            <double>79.5</double>
+            <double>162</double>
+            <double>162</double>
+            <double>156</double>
+            <double>150</double>
+            <double>150</double>
+            <double>144</double>
+            <double>141</double>
+            <double>138</double>
+            <double>132</double>
+          </dul_dep>
+          <ll15_dep>
+            <double>43.5</double>
+            <double>43.5</double>
+            <double>87</double>
+            <double>87</double>
+            <double>90</double>
+            <double>93</double>
+            <double>96</double>
+            <double>99</double>
+            <double>102.00000000000001</double>
+            <double>105</double>
+            <double>108</double>
+          </ll15_dep>
+        </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
+          <n2o_approach>0</n2o_approach>
+          <wnmm_n_alpha>0.002</wnmm_n_alpha>
+          <wnmm_dn_alpha>0.5</wnmm_dn_alpha>
+          <nemis_dn_km>22</nemis_dn_km>
+          <nemis_dn_pot>7.194</nemis_dn_pot>
+          <cent_n_soilt_ave>15</cent_n_soilt_ave>
+          <cent_n_maxt_ave>25</cent_n_maxt_ave>
+          <cent_n_wfps_ave>0.7</cent_n_wfps_ave>
+          <cent_n_max_rate>0.1</cent_n_max_rate>
+          <ureappm_min>0</ureappm_min>
+          <nh4ppm_min>0</nh4ppm_min>
+          <no3ppm_min>0</no3ppm_min>
+          <fom_min>0</fom_min>
+          <ini_FOMtype>default</ini_FOMtype>
+          <oc2om_factor>0</oc2om_factor>
+          <ini_pH>0</ini_pH>
+          <WarningThreshold>0</WarningThreshold>
+          <FatalThreshold>0</FatalThreshold>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <ef_res>0.4</ef_res>
+          <fr_res_biom>0.9</fr_res_biom>
+          <min_depth>100</min_depth>
+          <rd_carb>
+            <double>0.2</double>
+            <double>0.1</double>
+          </rd_carb>
+          <rd_cell>
+            <double>0.05</double>
+            <double>0.25</double>
+          </rd_cell>
+          <rd_lign>
+            <double>0.0095</double>
+            <double>0.003</double>
+          </rd_lign>
+          <ef_fom>0.4</ef_fom>
+          <fr_fom_biom>0.9</fr_fom_biom>
+          <cnrf_coeff>0.693</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <rd_biom>
+            <double>0.0081</double>
+            <double>0.004</double>
+          </rd_biom>
+          <ef_biom>0.4</ef_biom>
+          <fr_biom_biom>0.6</fr_biom_biom>
+          <rd_hum>
+            <double>0.00015</double>
+            <double>7E-05</double>
+          </rd_hum>
+          <ef_hum>0.4</ef_hum>
+          <opt_temp>
+            <double>32</double>
+            <double>32</double>
+          </opt_temp>
+          <wfmin_index>
+            <double>0</double>
+            <double>0.5</double>
+            <double>1</double>
+            <double>2</double>
+          </wfmin_index>
+          <wfmin_values>
+            <double>0</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0.5</double>
+          </wfmin_values>
+          <potHydrol_min>0</potHydrol_min>
+          <potHydrol_parmA>0</potHydrol_parmA>
+          <potHydrol_parmB>0</potHydrol_parmB>
+          <potHydrol_parmC>0</potHydrol_parmC>
+          <potHydrol_parmD>0</potHydrol_parmD>
+          <nitrification_pot>0</nitrification_pot>
+          <nh4_at_half_pot>0</nh4_at_half_pot>
+          <dnit_rate_coeff>0</dnit_rate_coeff>
+          <dnit_nitrf_loss>0</dnit_nitrf_loss>
+          <dnit_k1>0</dnit_k1>
+          <dnit_wf_power>0</dnit_wf_power>
+          <actC_parmB>0</actC_parmB>
+          <actC_parmA>0</actC_parmA>
+          <N2N2O_parmA>0</N2N2O_parmA>
+          <N2N2O_parmB>0</N2N2O_parmB>
+          <soiltype>standard</soiltype>
+          <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
+          <profile_reduction>no</profile_reduction>
+          <use_organic_solutes>no</use_organic_solutes>
+          <c_in_fom>0.4</c_in_fom>
+          <minPatchArea>1</minPatchArea>
+          <mcn>8</mcn>
+          <root_depth>3000</root_depth>
+          <root_cn_pool>
+            <double>40</double>
+            <double>40</double>
+            <double>40</double>
+          </root_cn_pool>
+        </SoilNitrogen>
+        <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
+          <RootCN>40</RootCN>
+          <RootWt>200</RootWt>
+          <SoilCN>12.5</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>1.04</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.77</double>
+            <double>0.45</double>
+            <double>0.27</double>
+            <double>0.22</double>
+            <double>0.16</double>
+            <double>0.13</double>
+            <double>0.12</double>
+          </OC>
+          <FBiom>
+            <double>0.025</double>
+            <double>0.02</double>
+            <double>0.015</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>0.9</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+            <double>0.95</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Name>Analysis</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <EC>
+            <double>0.2</double>
+            <double>0.25</double>
+            <double>0.31</double>
+            <double>0.4</double>
+            <double>0.59</double>
+            <double>0.84</double>
+            <double>0.93</double>
+            <double>1.01</double>
+            <double>1.06</double>
+            <double>1.05</double>
+            <double>1.01</double>
+          </EC>
+          <PH>
+            <double>8.4</double>
+            <double>8.8</double>
+            <double>9</double>
+            <double>9.2</double>
+            <double>9.2</double>
+            <double>9.1</double>
+            <double>9</double>
+            <double>9</double>
+            <double>8.9</double>
+            <double>8.9</double>
+            <double>8.9</double>
+          </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <InitialWater>
+          <Name>Initial water</Name>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+        <Sample>
+          <Name>Sample</Name>
+          <Date />
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>1116.5030034479878</double>
+            <double>2.10100111398159</double>
+            <double>2.10100111398159</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+            <double>1.70100090189562</double>
+          </NO3>
+          <NH4>
+            <double>0.599004378686979</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+            <double>0.100000730999496</double>
+          </NH4>
+          <NO3Units>ppm</NO3Units>
+          <NH4Units>ppm</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+      </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <c_fract>0.4</c_fract>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <default_standing_fraction>0</default_standing_fraction>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <ResidueTypes>
+          <ResidueType>
+            <Name>wheat</Name>
+            <fraction_C>0.08</fraction_C>
+            <po4ppm>10</po4ppm>
+            <nh4ppm>10</nh4ppm>
+            <no3ppm>10</no3ppm>
+            <specific_area>0.0001</specific_area>
+            <cf_contrib>1</cf_contrib>
+            <pot_decomp_rate>0.1</pot_decomp_rate>
+            <fr_c>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_c>
+            <fr_n>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_n>
+            <fr_p>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.4</double>
+            </fr_p>
+          </ResidueType>
+        </ResidueTypes>
+        <TillageTypes>
+          <TillageType />
+        </TillageTypes>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
+        <mass>1000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cnr>80</cnr>
+      </SurfaceOrganicMatter>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.29488324999809262</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <soil_heat>-2.1989999771118165</soil_heat>
+        <dryleaffraction>1</dryleaffraction>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+        <ComponentData>
+          <Name>Potato</Name>
+          <Type>Potato</Type>
+          <LAI>0</LAI>
+          <LAItot>4.5624227523803711</LAItot>
+          <CoverGreen>0</CoverGreen>
+          <CoverTot>0.12791875004768372</CoverTot>
+          <Ktot>0.030000000063911226</Ktot>
+          <K>0</K>
+          <Height>0.15878612</Height>
+          <Depth>0.15878612</Depth>
+          <Albedo>0.26</Albedo>
+          <Emissivity>0.96</Emissivity>
+          <Gsmax>0.011</Gsmax>
+          <R50>200</R50>
+          <Frgr>0.53999996185302734</Frgr>
+          <layerLAI>
+            <double>0</double>
+          </layerLAI>
+          <layerLAItot>
+            <double>4.5624227523803711</double>
+          </layerLAItot>
+          <Ftot>
+            <double>1</double>
+          </Ftot>
+          <Fgreen>
+            <double>0</double>
+          </Fgreen>
+          <Rs>
+            <double>2.8129332842702865</double>
+          </Rs>
+          <Rl>
+            <double>-0.19034022797720193</double>
+          </Rl>
+          <Rsoil>
+            <double>-0.28129332842702864</double>
+          </Rsoil>
+          <Gc>
+            <double>0.0001</double>
+          </Gc>
+          <Ga>
+            <double>0.015570307991046443</double>
+          </Ga>
+          <PET>
+            <double>0.10793294975685777</double>
+          </PET>
+          <PETr>
+            <double>0.013084772250299468</double>
+          </PETr>
+          <PETa>
+            <double>0.0948481775065583</double>
+          </PETa>
+          <Omega>
+            <double>0.024855344497970652</double>
+          </Omega>
+          <interception>
+            <double>0</double>
+          </interception>
+        </ComponentData>
+      </MicroClimate>
+      <Plant>
+        <Name>Potato</Name>
+        <CropType>Potato</CropType>
+        <Arbitrator>
+          <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+          <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+          <DM>
+            <StructuralDemand>
+              <double>93.09735450024877</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </StructuralDemand>
+            <TotalStructuralDemand>93.09735450024877</TotalStructuralDemand>
+            <MetabolicDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </MetabolicDemand>
+            <TotalMetabolicDemand>0</TotalMetabolicDemand>
+            <NonStructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NonStructuralDemand>
+            <TotalNonStructuralDemand>0</TotalNonStructuralDemand>
+            <TotalDemand>
+              <double>93.09735450024877</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </TotalDemand>
+            <RelativeStructuralDemand>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeStructuralDemand>
+            <RelativeMetabolicDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeMetabolicDemand>
+            <RelativeNonStructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeNonStructuralDemand>
+            <TotalPlantDemand>93.09735450024877</TotalPlantDemand>
+            <ReallocationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </ReallocationSupply>
+            <TotalReallocationSupply>0</TotalReallocationSupply>
+            <UptakeSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </UptakeSupply>
+            <TotalUptakeSupply>0</TotalUptakeSupply>
+            <FixationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </FixationSupply>
+            <TotalFixationSupply>0</TotalFixationSupply>
+            <RetranslocationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RetranslocationSupply>
+            <TotalRetranslocationSupply>0</TotalRetranslocationSupply>
+            <Reallocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Reallocation>
+            <TotalReallocation>0</TotalReallocation>
+            <Uptake>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Uptake>
+            <Fixation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Fixation>
+            <Retranslocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Retranslocation>
+            <TotalRetranslocation>0</TotalRetranslocation>
+            <Respiration>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Respiration>
+            <TotalRespiration>0</TotalRespiration>
+            <ConstrainedGrowth>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </ConstrainedGrowth>
+            <StructuralAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </StructuralAllocation>
+            <TotalStructuralAllocation>0</TotalStructuralAllocation>
+            <MetabolicAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </MetabolicAllocation>
+            <TotalMetabolicAllocation>0</TotalMetabolicAllocation>
+            <NonStructuralAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NonStructuralAllocation>
+            <TotalNonStructuralAllocation>0</TotalNonStructuralAllocation>
+            <TotalAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </TotalAllocation>
+            <TotalAllocated>0</TotalAllocated>
+            <NotAllocated>0</NotAllocated>
+            <SinkLimitation>0</SinkLimitation>
+            <Start>877.625751521381</Start>
+            <End>877.625751521381</End>
+            <BalanceError>-93.0973545002488</BalanceError>
+          </DM>
+          <N>
+            <StructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </StructuralDemand>
+            <TotalStructuralDemand>0</TotalStructuralDemand>
+            <MetabolicDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </MetabolicDemand>
+            <TotalMetabolicDemand>0</TotalMetabolicDemand>
+            <NonStructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NonStructuralDemand>
+            <TotalNonStructuralDemand>0</TotalNonStructuralDemand>
+            <TotalDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </TotalDemand>
+            <RelativeStructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeStructuralDemand>
+            <RelativeMetabolicDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeMetabolicDemand>
+            <RelativeNonStructuralDemand>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RelativeNonStructuralDemand>
+            <TotalPlantDemand>0</TotalPlantDemand>
+            <ReallocationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </ReallocationSupply>
+            <TotalReallocationSupply>0</TotalReallocationSupply>
+            <UptakeSupply>
+              <double>0</double>
+              <double>0.0057732881459815208</double>
+              <double>0</double>
+              <double>0</double>
+            </UptakeSupply>
+            <TotalUptakeSupply>0.0057732881459815208</TotalUptakeSupply>
+            <FixationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </FixationSupply>
+            <TotalFixationSupply>0</TotalFixationSupply>
+            <RetranslocationSupply>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0.19952798278578743</double>
+            </RetranslocationSupply>
+            <TotalRetranslocationSupply>0.19952798278578743</TotalRetranslocationSupply>
+            <Reallocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Reallocation>
+            <TotalReallocation>0</TotalReallocation>
+            <Uptake>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Uptake>
+            <Fixation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Fixation>
+            <Retranslocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Retranslocation>
+            <TotalRetranslocation>0</TotalRetranslocation>
+            <Respiration>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </Respiration>
+            <TotalRespiration>0</TotalRespiration>
+            <ConstrainedGrowth>
+              <double>100000000</double>
+              <double>100000000</double>
+              <double>100000000</double>
+              <double>100000000</double>
+            </ConstrainedGrowth>
+            <StructuralAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </StructuralAllocation>
+            <TotalStructuralAllocation>0</TotalStructuralAllocation>
+            <MetabolicAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </MetabolicAllocation>
+            <TotalMetabolicAllocation>0</TotalMetabolicAllocation>
+            <NonStructuralAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NonStructuralAllocation>
+            <TotalNonStructuralAllocation>0</TotalNonStructuralAllocation>
+            <TotalAllocation>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </TotalAllocation>
+            <TotalAllocated>0</TotalAllocated>
+            <NotAllocated>0</NotAllocated>
+            <SinkLimitation>0</SinkLimitation>
+            <Start>21.811756284109777</Start>
+            <End>21.811756284109777</End>
+            <BalanceError>0</BalanceError>
+          </N>
+        </Arbitrator>
+        <Phenology>
+          <Name />
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
+          <EmergingPhase>
+            <Name>Sprouting</Name>
+            <Start>Peeping</Start>
+            <End>Emergence</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <ShootLag>72</ShootLag>
+            <ShootRate>1.35</ShootRate>
+          </EmergingPhase>
+          <GenericPhase>
+            <Name>Vegetative</Name>
+            <Start>Emergence</Start>
+            <End>TuberInitiation</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>300</Value>
+            </Target>
+          </GenericPhase>
+          <LeafAppearancePhase>
+            <Name>EarlyTuber</Name>
+            <Start>TuberInitiation</Start>
+            <End>FinalLeaf</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <RemainingLeaves>0</RemainingLeaves>
+          </LeafAppearancePhase>
+          <LeafDeathPhase>
+            <Name>LateTuber</Name>
+            <Start>FinalLeaf</Start>
+            <End>FullSenescence</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+          </LeafDeathPhase>
+          <GenericPhase>
+            <Name>Senesced</Name>
+            <Start>FullSenescence</Start>
+            <End>Maturity</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>200</Value>
+            </Target>
+          </GenericPhase>
+          <EndPhase>
+            <Name>Maturity</Name>
+            <Start>Maturity</Start>
+            <End>Unused</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+          </EndPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
+          <StageBasedInterpolation>
+            <Name>StageCode</Name>
+            <Stages>
+              <string>Planting</string>
+              <string>Peeping</string>
+              <string>Emergence</string>
+              <string>TuberInitiation</string>
+              <string>FinalLeaf</string>
+              <string>FullSenescence</string>
+              <string>Maturity</string>
+            </Stages>
+            <Values>
+              <double>1</double>
+              <double>2</double>
+              <double>3</double>
+              <double>4</double>
+              <double>5</double>
+              <double>6</double>
+              <double>7</double>
+            </Values>
+          </StageBasedInterpolation>
+        </Phenology>
+        <Structure>
+          <InitialiseStage>Emergence</InitialiseStage>
+          <PrimaryBudNo>1</PrimaryBudNo>
+          <ThermalTime d6p1:type="AirTemperatureFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XYPairs>
+              <X>
+                <double>2</double>
+                <double>20</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>18</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </ThermalTime>
+          <MainStemPrimordiaInitiationRate d6p1:type="PhaseLookupValue" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Start>Emergence</Start>
+            <End>FinalLeaf</End>
+            <Children>
+              <Function d6p1:type="DivideFunction">
+                <Name>NodeInitiationRateFunction</Name>
+                <Children>
+                  <Function d6p1:type="VariableReference">
+                    <Name>Phyllochron</Name>
+                    <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.FunctionValue</VariableName>
+                  </Function>
+                  <Function d6p1:type="Constant">
+                    <Name>PrimordiaPerMainstemNode</Name>
+                    <Value>2</Value>
+                  </Function>
+                </Children>
+              </Function>
+            </Children>
+          </MainStemPrimordiaInitiationRate>
+          <MainStemNodeAppearanceRate d6p1:type="PhaseLookupValue" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Start>Emergence</Start>
+            <End>FinalLeaf</End>
+            <Children>
+              <Function d6p1:type="LinearInterpolationFunction">
+                <Name>Phyllochron</Name>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+                <XYPairs>
+                  <X>
+                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.74</double>
+                    <double>0.75</double>
+                  </X>
+                  <Y>
+                    <double>5</double>
+                    <double>30</double>
+                    <double>30</double>
+                    <double>60</double>
+                  </Y>
+                </XYPairs>
+              </Function>
+            </Children>
+          </MainStemNodeAppearanceRate>
+          <MainStemFinalNodeNumber d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>34</Value>
+          </MainStemFinalNodeNumber>
+          <HeightModel d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Stem].Live.Wt</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>200</double>
+                <double>1200</double>
+                <double>4000</double>
+              </X>
+              <Y>
+                <double>20</double>
+                <double>300</double>
+                <double>700</double>
+                <double>900</double>
+              </Y>
+            </XYPairs>
+          </HeightModel>
+          <BranchingRate d6p1:type="MultiplyFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Children>
+              <Function d6p1:type="LinearInterpolationFunction">
+                <XProperty>[Structure].MainStemNodeNo</XProperty>
+                <XYPairs>
+                  <X>
+                    <double>0</double>
+                    <double>7</double>
+                    <double>8</double>
+                    <double>13</double>
+                    <double>14</double>
+                    <double>34</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.5</double>
+                    <double>0.5</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </Function>
+              <Function d6p1:type="LinearInterpolationFunction">
+                <XProperty>[Leaf].CoverGreen</XProperty>
+                <XYPairs>
+                  <X>
+                    <double>0</double>
+                    <double>0.4</double>
+                    <double>0.55</double>
+                    <double>0.8</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0.45</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </Function>
+            </Children>
+          </BranchingRate>
+          <ShadeInducedBranchMortality d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0</Value>
+          </ShadeInducedBranchMortality>
+          <DroughtInducedBranchMortality d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0</Value>
+          </DroughtInducedBranchMortality>
+        </Structure>
+        <Summariser>
+          <AboveGround d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+            </Propertys>
+          </AboveGround>
+          <BelowGround d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Live</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </BelowGround>
+          <Total d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Live</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </Total>
+        </Summariser>
+        <GenericAboveGroundOrgan>
+          <Name>Tuber</Name>
+          <Live />
+          <Dead />
+          <NitrogenDemandSwitch d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Leaf].LAI</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>0.02</double>
+                <double>0.0201</double>
+                <double>10</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+          </NitrogenDemandSwitch>
+          <StructuralFraction d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>1</Value>
+          </StructuralFraction>
+          <DMDemandFunction d6p1:type="PotentialSizeDemandFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <StartStageName>TuberInitiation</StartStageName>
+            <EndStageName>Maturity</EndStageName>
+            <PotentialGrowthIncrement d6p1:type="LinearInterpolationFunction">
+              <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+              <XYPairs>
+                <X>
+                  <double>4</double>
+                  <double>4.04</double>
+                  <double>4.32</double>
+                  <double>4.52</double>
+                  <double>4.95</double>
+                  <double>6.54</double>
+                </X>
+                <Y>
+                  <double>0.017</double>
+                  <double>0.017</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.018</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </PotentialGrowthIncrement>
+            <OrganNumber d6p1:type="MultiplyFunction">
+              <Children>
+                <Function d6p1:type="Constant">
+                  <Value>5</Value>
+                </Function>
+                <Function d6p1:type="VariableReference">
+                  <VariableName>[Structure].MainStemPopn</VariableName>
+                </Function>
+              </Children>
+            </OrganNumber>
+            <ThermalTime d6p1:type="AirTemperatureFunction">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <AccumThermalTime d6p1:type="AccumulateFunction">
+              <StartStageName>TuberInitiation</StartStageName>
+              <EndStageName>Maturity</EndStageName>
+              <Children>
+                <Function d6p1:type="VariableReference">
+                  <VariableName>[Structure].ThermalTime.FunctionValue</VariableName>
+                </Function>
+              </Children>
+            </AccumThermalTime>
+          </DMDemandFunction>
+          <WaterContent d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+            <XYPairs>
+              <X>
+                <double>3</double>
+                <double>4</double>
+                <double>4.1</double>
+                <double>4.7</double>
+                <double>5.4</double>
+                <double>6</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.16</double>
+                <double>0.2</double>
+                <double>0.22</double>
+              </Y>
+            </XYPairs>
+          </WaterContent>
+          <MaximumNConc d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+            <XYPairs>
+              <X>
+                <double>3</double>
+                <double>4</double>
+                <double>5</double>
+                <double>6</double>
+              </X>
+              <Y>
+                <double>0.023</double>
+                <double>0.023</double>
+                <double>0.018</double>
+                <double>0.015</double>
+              </Y>
+            </XYPairs>
+          </MaximumNConc>
+          <MinimumNConc d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+            <XYPairs>
+              <X>
+                <double>4</double>
+                <double>4.1</double>
+                <double>7</double>
+              </X>
+              <Y>
+                <double>0.02</double>
+                <double>0.006</double>
+                <double>0.006</double>
+              </Y>
+            </XYPairs>
+          </MinimumNConc>
+        </GenericAboveGroundOrgan>
+        <Root>
+          <Name>Root</Name>
+          <Live d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Root].LayerLive</string>
+            </Propertys>
+          </Live>
+          <Dead d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Root].LayerDead</string>
+            </Propertys>
+          </Dead>
+          <InitialDM>5</InitialDM>
+          <SpecificRootLength>40000</SpecificRootLength>
+          <KNO3>0.02</KNO3>
+          <KNH4>0</KNH4>
+          <NitrogenDemandSwitch d6p1:type="PhaseBasedSwitch" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Start>Planting</Start>
+            <End>FinalLeaf</End>
+          </NitrogenDemandSwitch>
+          <SenescenceRate d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Leaf].FractionDied</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.1</double>
+              </Y>
+            </XYPairs>
+          </SenescenceRate>
+          <TemperatureEffect d6p1:type="AirTemperatureFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>26</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+          </TemperatureEffect>
+          <RootFrontVelocity d6p1:type="PhaseLookup" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Children>
+              <Function d6p1:type="PhaseLookupValue">
+                <Start>Peeping</Start>
+                <End>FinalLeaf</End>
+                <Children>
+                  <Function d6p1:type="Constant">
+                    <Value>10</Value>
+                  </Function>
+                </Children>
+              </Function>
+            </Children>
+          </RootFrontVelocity>
+          <PartitionFraction d6p1:type="PhaseLookup" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Children>
+              <Function d6p1:type="PhaseLookupValue">
+                <Start>Emergence</Start>
+                <End>TuberInitiation</End>
+                <Children>
+                  <Function d6p1:type="Constant">
+                    <Value>0.3</Value>
+                  </Function>
+                </Children>
+              </Function>
+              <Function d6p1:type="PhaseLookupValue">
+                <Start>TuberInitiation</Start>
+                <End>FinalLeaf</End>
+                <Children>
+                  <Function d6p1:type="Constant">
+                    <Value>.05</Value>
+                  </Function>
+                </Children>
+              </Function>
+              <Function d6p1:type="PhaseLookupValue">
+                <Start>FinalLeaf</Start>
+                <End>FullSenescence</End>
+                <Children>
+                  <Function d6p1:type="Constant">
+                    <Value>0</Value>
+                  </Function>
+                </Children>
+              </Function>
+            </Children>
+          </PartitionFraction>
+          <MaximumNConc d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0.01</Value>
+          </MaximumNConc>
+          <MaxDailyNUptake d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Root].Length</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>0.02</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>6</double>
+              </Y>
+            </XYPairs>
+          </MaxDailyNUptake>
+          <MinimumNConc d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0.01</Value>
+          </MinimumNConc>
+          <KLModifier d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Leaf].LAI</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>3</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+          </KLModifier>
+        </Root>
+        <Leaf>
+          <Name>Leaf</Name>
+          <Live d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Leaf].CohortLive</string>
+            </Propertys>
+          </Live>
+          <Dead d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Leaf].CohortDead</string>
+            </Propertys>
+          </Dead>
+          <KDead>0.03</KDead>
+          <MaxCover>1</MaxCover>
+          <InitialLeaf>
+            <Rank>1</Rank>
+            <Area>900</Area>
+          </InitialLeaf>
+          <InitialLeaf>
+            <Rank>2</Rank>
+            <Area>600</Area>
+          </InitialLeaf>
+          <InitialLeaf>
+            <Rank>3</Rank>
+            <Area>300</Area>
+          </InitialLeaf>
+          <LeafCohortParameters>
+            <MaxArea d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.44</double>
+                  <double>0.59</double>
+                  <double>0.73</double>
+                </X>
+                <Y>
+                  <double>2000</double>
+                  <double>18000</double>
+                  <double>27000</double>
+                  <double>15000</double>
+                  <double>6000</double>
+                  <double>1500</double>
+                </Y>
+              </XYPairs>
+            </MaxArea>
+            <GrowthDuration d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.3</double>
+                  <double>0.4</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>200</double>
+                  <double>400</double>
+                  <double>400</double>
+                  <double>400</double>
+                </Y>
+              </XYPairs>
+            </GrowthDuration>
+            <LagDuration d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.4</double>
+                  <double>0.73</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>20</double>
+                </Y>
+              </XYPairs>
+            </LagDuration>
+            <SenescenceDuration d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.4</double>
+                  <double>0.73</double>
+                  <double>2</double>
+                </X>
+                <Y>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>350</double>
+                  <double>100</double>
+                </Y>
+              </XYPairs>
+            </SenescenceDuration>
+            <DetachmentLagDuration d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1e6</Value>
+            </DetachmentLagDuration>
+            <DetachmentDuration d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1e6</Value>
+            </DetachmentDuration>
+            <SpecificLeafAreaMax d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>40000</double>
+                  <double>25000</double>
+                </Y>
+              </XYPairs>
+            </SpecificLeafAreaMax>
+            <SpecificLeafAreaMin d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>25000</Value>
+            </SpecificLeafAreaMin>
+            <StructuralFraction d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.5</Value>
+            </StructuralFraction>
+            <MaximumNConc d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.07</Value>
+            </MaximumNConc>
+            <MinimumNConc d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.03</Value>
+            </MinimumNConc>
+            <InitialNConc d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>0</Value>
+            </InitialNConc>
+            <NReallocationFactor d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </NReallocationFactor>
+            <NRetranslocationFactor d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.01</Value>
+            </NRetranslocationFactor>
+            <ExpansionStress d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </ExpansionStress>
+            <CriticalNConc d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.05</Value>
+            </CriticalNConc>
+            <DMRetranslocationFactor d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.5</Value>
+            </DMRetranslocationFactor>
+            <ShadeInducedSenescenceRate d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Leaf].CohortCurrentRank.CoverAbove</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.5</double>
+                  <double>0.8</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0.03</double>
+                </Y>
+              </XYPairs>
+            </ShadeInducedSenescenceRate>
+            <NonStructuralFraction d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>.2</Value>
+            </NonStructuralFraction>
+          </LeafCohortParameters>
+          <Photosynthesis>
+            <RUE d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1.2</Value>
+            </RUE>
+            <FCO2 d7p1:type="RUECO2Function" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+            </FCO2>
+            <FN d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Leaf].Fn</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </FN>
+            <FT d7p1:type="WeightedTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>12</double>
+                  <double>24</double>
+                  <double>34</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </FT>
+            <FW d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Leaf].Fw</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>0.4</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </FW>
+            <FVPD d7p1:type="LinearInterpolationFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
+              <XYPairs>
+                <X>
+                  <double>0</double>
+                  <double>10</double>
+                  <double>50</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </FVPD>
+          </Photosynthesis>
+          <ThermalTime d6p1:type="AirTemperatureFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XYPairs>
+              <X>
+                <double>2</double>
+                <double>20</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>18</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </ThermalTime>
+          <ExtinctionCoeff d6p1:type="MultiplyFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Children>
+              <Function d6p1:type="Constant">
+                <Value>0.8</Value>
+              </Function>
+              <Function d6p1:type="LinearInterpolationFunction">
+                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+                <XYPairs>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0.5</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </Function>
+            </Children>
+          </ExtinctionCoeff>
+          <FrostFraction d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[WeatherFile].MinT</XProperty>
+            <XYPairs>
+              <X>
+                <double>-1</double>
+                <double>0</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </FrostFraction>
+          <Total d6p1:type="CompositeBiomass" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+            </Propertys>
+          </Total>
+          <CohortArrayLive>
+            <Propertys>
+              <string>[Leaf].Live</string>
+            </Propertys>
+            <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+          </CohortArrayLive>
+          <CohortArrayDead>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+            </Propertys>
+            <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+          </CohortArrayDead>
+        </Leaf>
+        <GenericAboveGroundOrgan>
+          <Name>Stem</Name>
+          <Live />
+          <Dead />
+          <NReallocationFactor d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0</Value>
+          </NReallocationFactor>
+          <NRetranslocationFactor d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>.05</Value>
+          </NRetranslocationFactor>
+          <NitrogenDemandSwitch d6p1:type="PhaseBasedSwitch" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Start>Planting</Start>
+            <End>FinalLeaf</End>
+          </NitrogenDemandSwitch>
+          <DMRetranslocationFactor d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0</Value>
+          </DMRetranslocationFactor>
+          <StructuralFraction d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>1</Value>
+          </StructuralFraction>
+          <DMDemandFunction d6p1:type="InternodeDemandFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <InterNodeWt d6p1:type="Constant">
+              <Value>.2</Value>
+            </InterNodeWt>
+          </DMDemandFunction>
+          <MaximumNConc d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+            <XYPairs>
+              <X>
+                <double>3</double>
+                <double>4</double>
+                <double>5.3</double>
+              </X>
+              <Y>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.025</double>
+              </Y>
+            </XYPairs>
+          </MaximumNConc>
+          <MinimumNConc d6p1:type="Constant" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
+            <Value>0.006</Value>
+          </MinimumNConc>
+        </GenericAboveGroundOrgan>
+      </Plant>
+      <Graph>
+        <Name>Graph</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Soil water (mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>SoilWater.sw_dep(1)</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744193</ColourArgb>
+          <Marker>FilledTriangle</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Input</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Input</TableName>
+            <FieldName>sw(1)</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Live.Wt</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Manager>
+        <Name>PotatoSowingRule</Name>
+        <Code>
         using System;
         using Models.Core;
         using Models.PMF;
@@ -60,1959 +2287,126 @@
         {
             public class Script : Model
             {      
-               // Links
                [Link] Plant Plant;
                [Link] Clock Clock;
+               
+               double RowSpace = 280;
+               double RowWidth = 770;
+               double PlantingDepth = 150;
+               double StemNumberPerSeedTuber = 2.2;
+               string CultivarName = "RussetBurbank";
+               DateTime SowingDate = new DateTime(2003, 11, 10, 0, 0, 0);
+
+               double PlantPopulation = 0;
+			   
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
-				if(Clock.Today.DayOfYear == 3)
-					Plant.Sow(new SowPlant2Type() {Population = 100, Cultivar = "Russet_Burbank"});
-               }
+				PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
+                
+				if (Clock.Today.Date.Equals(SowingDate))
+                    Plant.Sow(new SowPlant2Type() {Population = PlantPopulation, Cultivar = CultivarName, Depth = PlantingDepth, BudNumber = StemNumberPerSeedTuber});
+			   }
             }
         }
 				</Code>
-				<Script>
-				</Script>
-			</Manager>
-			<Soil>
-				<Name>Soil</Name>
-				<RecordNumber>0</RecordNumber>
-				<SoilType>Black Vertosol</SoilType>
-				<LocalName>Waco</LocalName>
-				<Site>Jimbour</Site>
-				<NearestTown>Jimbour, Q 4352</NearestTown>
-				<Region>South East Queensland</Region>
-				<NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-				<Latitude>0</Latitude>
-				<Longitude>0</Longitude>
-				<Water>
-					<Name>Water</Name>
-					<Thickness>
-						<double>150</double>
-						<double>150</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-					</Thickness>
-					<BD>
-						<double>1.02</double>
-						<double>1.03</double>
-						<double>1.02</double>
-						<double>1.02</double>
-						<double>1.06</double>
-						<double>1.11</double>
-						<double>1.12</double>
-						<double>1.15</double>
-						<double>1.18</double>
-						<double>1.2</double>
-						<double>1.25</double>
-					</BD>
-					<AirDry>
-						<double>0.15</double>
-						<double>0.26</double>
-						<double>0.29</double>
-						<double>0.29</double>
-						<double>0.3</double>
-						<double>0.31</double>
-						<double>0.32</double>
-						<double>0.33</double>
-						<double>0.34</double>
-						<double>0.35</double>
-						<double>0.36</double>
-					</AirDry>
-					<LL15>
-						<double>0.29</double>
-						<double>0.29</double>
-						<double>0.29</double>
-						<double>0.29</double>
-						<double>0.3</double>
-						<double>0.31</double>
-						<double>0.32</double>
-						<double>0.33</double>
-						<double>0.34</double>
-						<double>0.35</double>
-						<double>0.36</double>
-					</LL15>
-					<DUL>
-						<double>0.54</double>
-						<double>0.53</double>
-						<double>0.54</double>
-						<double>0.54</double>
-						<double>0.52</double>
-						<double>0.5</double>
-						<double>0.5</double>
-						<double>0.48</double>
-						<double>0.47</double>
-						<double>0.46</double>
-						<double>0.44</double>
-					</DUL>
-					<SAT>
-						<double>0.59</double>
-						<double>0.58</double>
-						<double>0.59</double>
-						<double>0.58</double>
-						<double>0.57</double>
-						<double>0.55</double>
-						<double>0.55</double>
-						<double>0.53</double>
-						<double>0.52</double>
-						<double>0.51</double>
-						<double>0.49</double>
-					</SAT>
-					<SoilCrop>
-						<Name>Wheat</Name>
-						<LL>
-							<double>0.29</double>
-							<double>0.29</double>
-							<double>0.32</double>
-							<double>0.38</double>
-							<double>0.39</double>
-							<double>0.39</double>
-							<double>0.41</double>
-							<double>0.48</double>
-							<double>0.47</double>
-							<double>0.46</double>
-							<double>0.44</double>
-						</LL>
-						<KL>
-							<double>0.1</double>
-							<double>0.1</double>
-							<double>0.08</double>
-							<double>0.06</double>
-							<double>0.04</double>
-							<double>0.02</double>
-							<double>0.01</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</KL>
-						<XF>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</XF>
-					</SoilCrop>
-					<SoilCrop>
-						<Name>Barley</Name>
-						<LL>
-							<double>0.29</double>
-							<double>0.29</double>
-							<double>0.36</double>
-							<double>0.43</double>
-							<double>0.51</double>
-							<double>0.5</double>
-							<double>0.5</double>
-							<double>0.48</double>
-							<double>0.47</double>
-							<double>0.46</double>
-							<double>0.44</double>
-						</LL>
-						<KL>
-							<double>0.1</double>
-							<double>0.1</double>
-							<double>0.08</double>
-							<double>0.06</double>
-							<double>0.04</double>
-							<double>0.02</double>
-							<double>0.01</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</KL>
-						<XF>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</XF>
-					</SoilCrop>
-					<SoilCrop>
-						<Name>Potato</Name>
-						<LL>
-							<double>0.29</double>
-							<double>0.29</double>
-							<double>0.36</double>
-							<double>0.43</double>
-							<double>0.51</double>
-							<double>0.5</double>
-							<double>0.5</double>
-							<double>0.48</double>
-							<double>0.47</double>
-							<double>0.46</double>
-							<double>0.44</double>
-						</LL>
-						<KL>
-							<double>0.1</double>
-							<double>0.1</double>
-							<double>0.08</double>
-							<double>0.06</double>
-							<double>0.04</double>
-							<double>0.02</double>
-							<double>0.01</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</KL>
-						<XF>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>1</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-							<double>0</double>
-						</XF>
-					</SoilCrop>
-				</Water>
-				<SoilWater>
-					<Name>SoilWater</Name>
-					<min_crit_temp>5</min_crit_temp>
-					<max_crit_temp>35</max_crit_temp>
-					<max_albedo>0.23</max_albedo>
-					<A_to_evap_fact>0.44</A_to_evap_fact>
-					<canopy_eos_coef>1.7</canopy_eos_coef>
-					<sw_top_crit>0.9</sw_top_crit>
-					<sumes1_max>100</sumes1_max>
-					<sumes2_max>25</sumes2_max>
-					<solute_flow_eff>
-						<double>1</double>
-					</solute_flow_eff>
-					<solute_flux_eff>
-						<double>1</double>
-					</solute_flux_eff>
-					<gravity_gradient>2E-05</gravity_gradient>
-					<specific_bd>2.65</specific_bd>
-					<hydrol_effective_depth>450</hydrol_effective_depth>
-					<mobile_solutes>
-						<string>no3</string>
-						<string>urea</string>
-						<string>cl</string>
-						<string>br</string>
-						<string>org_n</string>
-						<string>org_c_pool1</string>
-						<string>org_c_pool2</string>
-						<string>org_c_pool3</string>
-					</mobile_solutes>
-					<immobile_solutes>
-						<string>nh4</string>
-					</immobile_solutes>
-					<canopy_fact>
-						<double>1</double>
-						<double>1</double>
-						<double>0</double>
-						<double>0</double>
-					</canopy_fact>
-					<canopy_fact_height>
-						<double>0</double>
-						<double>600</double>
-						<double>1800</double>
-						<double>30000</double>
-					</canopy_fact_height>
-					<canopy_fact_default>0.5</canopy_fact_default>
-					<act_evap_method>ritchie</act_evap_method>
-					<irrigation_will_runoff>0</irrigation_will_runoff>
-					<irrigation_layer>0</irrigation_layer>
-					<obsrunoff_name />
-					<SummerCona>3</SummerCona>
-					<SummerU>6</SummerU>
-					<SummerDate>1-Nov</SummerDate>
-					<WinterCona>3</WinterCona>
-					<WinterU>6</WinterU>
-					<WinterDate>1-Apr</WinterDate>
-					<DiffusConst>40</DiffusConst>
-					<DiffusSlope>16</DiffusSlope>
-					<Salb>0.13</Salb>
-					<slope>0</slope>
-					<discharge_width>0</discharge_width>
-					<catchment_area>0</catchment_area>
-					<eos>5.8408712516913539</eos>
-					<eo_source />
-					<max_pond>0</max_pond>
-					<CN2Bare>73</CN2Bare>
-					<CNRed>20</CNRed>
-					<CNCov>0.8</CNCov>
-					<WaterTable>NaN</WaterTable>
-					<Thickness>
-						<double>150</double>
-						<double>150</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-					</Thickness>
-					<SWCON>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-						<double>0.3</double>
-					</SWCON>
-					<KLAT>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-						<double>0</double>
-					</KLAT>
-				</SoilWater>
-				<SoilNitrogen>
-					<Name>SoilNitrogen</Name>
-					<NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
-					<n2o_approach>0</n2o_approach>
-					<wnmm_n_alpha>0.002</wnmm_n_alpha>
-					<wnmm_dn_alpha>0.5</wnmm_dn_alpha>
-					<nemis_dn_km>22</nemis_dn_km>
-					<nemis_dn_pot>7.194</nemis_dn_pot>
-					<cent_n_soilt_ave>15</cent_n_soilt_ave>
-					<cent_n_maxt_ave>25</cent_n_maxt_ave>
-					<cent_n_wfps_ave>0.7</cent_n_wfps_ave>
-					<cent_n_max_rate>0.1</cent_n_max_rate>
-					<ureappm_min>0</ureappm_min>
-					<nh4ppm_min>0</nh4ppm_min>
-					<no3ppm_min>0</no3ppm_min>
-					<fom_min>0</fom_min>
-					<ini_FOMtype>default</ini_FOMtype>
-					<oc2om_factor>0</oc2om_factor>
-					<ini_pH>0</ini_pH>
-					<WarningThreshold>0</WarningThreshold>
-					<FatalThreshold>0</FatalThreshold>
-					<fom_type>
-						<string>default</string>
-						<string>manure</string>
-						<string>mucuna</string>
-						<string>lablab</string>
-						<string>shemp</string>
-						<string>stable</string>
-					</fom_type>
-					<fract_carb>
-						<double>0.2</double>
-						<double>0.3</double>
-						<double>0.54</double>
-						<double>0.57</double>
-						<double>0.45</double>
-						<double>0</double>
-					</fract_carb>
-					<fract_cell>
-						<double>0.7</double>
-						<double>0.3</double>
-						<double>0.37</double>
-						<double>0.37</double>
-						<double>0.47</double>
-						<double>0.1</double>
-					</fract_cell>
-					<fract_lign>
-						<double>0.1</double>
-						<double>0.4</double>
-						<double>0.09</double>
-						<double>0.06</double>
-						<double>0.08</double>
-						<double>0.9</double>
-					</fract_lign>
-					<ef_res>0.4</ef_res>
-					<fr_res_biom>0.9</fr_res_biom>
-					<min_depth>100</min_depth>
-					<rd_carb>
-						<double>0.2</double>
-						<double>0.1</double>
-					</rd_carb>
-					<rd_cell>
-						<double>0.05</double>
-						<double>0.25</double>
-					</rd_cell>
-					<rd_lign>
-						<double>0.0095</double>
-						<double>0.003</double>
-					</rd_lign>
-					<ef_fom>0.4</ef_fom>
-					<fr_fom_biom>0.9</fr_fom_biom>
-					<cnrf_coeff>0.693</cnrf_coeff>
-					<cnrf_optcn>25</cnrf_optcn>
-					<rd_biom>
-						<double>0.0081</double>
-						<double>0.004</double>
-					</rd_biom>
-					<ef_biom>0.4</ef_biom>
-					<fr_biom_biom>0.6</fr_biom_biom>
-					<rd_hum>
-						<double>0.00015</double>
-						<double>7E-05</double>
-					</rd_hum>
-					<ef_hum>0.4</ef_hum>
-					<opt_temp>
-						<double>32</double>
-						<double>32</double>
-					</opt_temp>
-					<wfmin_index>
-						<double>0</double>
-						<double>0.5</double>
-						<double>1</double>
-						<double>2</double>
-					</wfmin_index>
-					<wfmin_values>
-						<double>0</double>
-						<double>1</double>
-						<double>1</double>
-						<double>0.5</double>
-					</wfmin_values>
-					<potHydrol_min>0</potHydrol_min>
-					<potHydrol_parmA>0</potHydrol_parmA>
-					<potHydrol_parmB>0</potHydrol_parmB>
-					<potHydrol_parmC>0</potHydrol_parmC>
-					<potHydrol_parmD>0</potHydrol_parmD>
-					<nitrification_pot>0</nitrification_pot>
-					<nh4_at_half_pot>0</nh4_at_half_pot>
-					<dnit_rate_coeff>0</dnit_rate_coeff>
-					<dnit_nitrf_loss>0</dnit_nitrf_loss>
-					<dnit_k1>0</dnit_k1>
-					<dnit_wf_power>0</dnit_wf_power>
-					<actC_parmB>0</actC_parmB>
-					<actC_parmA>0</actC_parmA>
-					<N2N2O_parmA>0</N2N2O_parmA>
-					<N2N2O_parmB>0</N2N2O_parmB>
-					<soiltype>standard</soiltype>
-					<allow_simpleSoilTemp>no</allow_simpleSoilTemp>
-					<profile_reduction>no</profile_reduction>
-					<use_organic_solutes>no</use_organic_solutes>
-					<c_in_fom>0.4</c_in_fom>
-					<minPatchArea>1</minPatchArea>
-					<mcn>8</mcn>
-					<root_depth>3000</root_depth>
-					<root_cn_pool>
-						<double>40</double>
-						<double>40</double>
-						<double>40</double>
-					</root_cn_pool>
-				</SoilNitrogen>
-				<SoilOrganicMatter>
-					<Name>SoilOrganicMatter</Name>
-					<RootCN>40</RootCN>
-					<RootWt>200</RootWt>
-					<SoilCN>12.5</SoilCN>
-					<EnrACoeff>7.4</EnrACoeff>
-					<EnrBCoeff>0.2</EnrBCoeff>
-					<Thickness>
-						<double>150</double>
-						<double>150</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-					</Thickness>
-					<OC>
-						<double>1.04</double>
-						<double>0.89</double>
-						<double>0.89</double>
-						<double>0.89</double>
-						<double>0.77</double>
-						<double>0.45</double>
-						<double>0.27</double>
-						<double>0.22</double>
-						<double>0.16</double>
-						<double>0.13</double>
-						<double>0.12</double>
-					</OC>
-					<FBiom>
-						<double>0.025</double>
-						<double>0.02</double>
-						<double>0.015</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-						<double>0.01</double>
-					</FBiom>
-					<FInert>
-						<double>0.4</double>
-						<double>0.6</double>
-						<double>0.8</double>
-						<double>0.9</double>
-						<double>0.95</double>
-						<double>0.95</double>
-						<double>0.95</double>
-						<double>0.95</double>
-						<double>0.95</double>
-						<double>0.95</double>
-						<double>0.95</double>
-					</FInert>
-					<OCUnits>Total</OCUnits>
-				</SoilOrganicMatter>
-				<Analysis>
-					<Name>Analysis</Name>
-					<Thickness>
-						<double>150</double>
-						<double>150</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-					</Thickness>
-					<EC>
-						<double>0.2</double>
-						<double>0.25</double>
-						<double>0.31</double>
-						<double>0.4</double>
-						<double>0.59</double>
-						<double>0.84</double>
-						<double>0.93</double>
-						<double>1.01</double>
-						<double>1.06</double>
-						<double>1.05</double>
-						<double>1.01</double>
-					</EC>
-					<PH>
-						<double>8.4</double>
-						<double>8.8</double>
-						<double>9</double>
-						<double>9.2</double>
-						<double>9.2</double>
-						<double>9.1</double>
-						<double>9</double>
-						<double>9</double>
-						<double>8.9</double>
-						<double>8.9</double>
-						<double>8.9</double>
-					</PH>
-					<PHUnits>Water</PHUnits>
-					<BoronUnits>HotWater</BoronUnits>
-				</Analysis>
-				<InitialWater>
-					<Name>Initial water</Name>
-					<FractionFull>1</FractionFull>
-					<DepthWetSoil>NaN</DepthWetSoil>
-					<PercentMethod>FilledFromTop</PercentMethod>
-				</InitialWater>
-				<Sample>
-					<Name>Sample</Name>
-					<Date />
-					<Thickness>
-						<double>150</double>
-						<double>150</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-						<double>300</double>
-					</Thickness>
-					<NO3>
-						<double>1116.50300344798777</double>
-						<double>2.10100111398159</double>
-						<double>2.10100111398159</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-						<double>1.70100090189562</double>
-					</NO3>
-					<NH4>
-						<double>0.599004378686979</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-						<double>0.100000730999496</double>
-					</NH4>
-					<NO3Units>ppm</NO3Units>
-					<NH4Units>ppm</NH4Units>
-					<SWUnits>Volumetric</SWUnits>
-					<OCUnits>Total</OCUnits>
-					<PHUnits>Water</PHUnits>
-				</Sample>
-			</Soil>
-			<SurfaceOrganicMatter>
-				<Name>SurfaceOrganicMatter</Name>
-				<crit_residue_wt>2000</crit_residue_wt>
-				<opt_temp>20</opt_temp>
-				<cum_eos_max>20</cum_eos_max>
-				<cnrf_coeff>0.277</cnrf_coeff>
-				<cnrf_optcn>25</cnrf_optcn>
-				<c_fract>0.4</c_fract>
-				<leach_rain_tot>25</leach_rain_tot>
-				<min_rain_to_leach>10</min_rain_to_leach>
-				<crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-				<default_cpr>0</default_cpr>
-				<default_standing_fraction>0</default_standing_fraction>
-				<standing_extinct_coeff>0.5</standing_extinct_coeff>
-				<fractionFaecesAdded>0.5</fractionFaecesAdded>
-				<ResidueTypes>
-					<ResidueType>
-						<Name>wheat</Name>
-						<fraction_C>0.08</fraction_C>
-						<po4ppm>10</po4ppm>
-						<nh4ppm>10</nh4ppm>
-						<no3ppm>10</no3ppm>
-						<specific_area>0.0001</specific_area>
-						<cf_contrib>1</cf_contrib>
-						<pot_decomp_rate>0.1</pot_decomp_rate>
-						<fr_c>
-							<double>0.3</double>
-							<double>0.3</double>
-							<double>0.4</double>
-						</fr_c>
-						<fr_n>
-							<double>0.3</double>
-							<double>0.3</double>
-							<double>0.4</double>
-						</fr_n>
-						<fr_p>
-							<double>0.3</double>
-							<double>0.3</double>
-							<double>0.4</double>
-						</fr_p>
-					</ResidueType>
-				</ResidueTypes>
-				<TillageTypes>
-					<TillageType />
-				</TillageTypes>
-				<PoolName>wheat</PoolName>
-				<type>wheat</type>
-				<mass>1000</mass>
-				<standing_fraction>0</standing_fraction>
-				<cnr>80</cnr>
-			</SurfaceOrganicMatter>
-			<MicroClimate>
-				<Name>MicroClimate</Name>
-				<air_pressure>1010</air_pressure>
-				<soil_emissivity>0.96</soil_emissivity>
-				<sun_angle>15</sun_angle>
-				<soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-				<night_interception_fraction>0.5</night_interception_fraction>
-				<windspeed_default>3</windspeed_default>
-				<refheight>2</refheight>
-				<albedo>0.3</albedo>
-				<emissivity>0.96</emissivity>
-				<gsmax>0.01</gsmax>
-				<r50>200</r50>
-				<soil_heat>-2.1989999771118165</soil_heat>
-				<dryleaffraction>1</dryleaffraction>
-				<a_interception>0</a_interception>
-				<b_interception>1</b_interception>
-				<c_interception>0</c_interception>
-				<d_interception>0</d_interception>
-				<soil_albedo>0.3</soil_albedo>
-				<ComponentData>
-					<Name>Potato</Name>
-				</ComponentData>
-			</MicroClimate>
-			<Plant>
-				<Name>Potato</Name>
-				<CropType>Potato</CropType>
-				<Arbitrator>
-					<NArbitrationOption type="text" description="NArbitrationOption">PriorityThenRelativeAllocation</NArbitrationOption>
-					<DMArbitrationOption type="text" description="DMArbitrationOption">RelativeAllocation</DMArbitrationOption>
-				</Arbitrator>
-				<Phenology>
-					<Dormant xsi:type="GenericPhase">
-						<Name>Dormant</Name>
-						<Start type="text" description="Start">Planting</Start>
-						<End type="text" description="End">Peeping</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-						<Target xsi:type="Constant">
-							<Value type="text" description="Value">1</Value>
-						</Target>
-					</Dormant>
-					<Sprouting xsi:type="EmergingPhase">
-						<Name>Sprouting</Name>
-						<Start type="text" description="Start Stage">Peeping</Start>
-						<End type="text" description="End Stage">Emergence</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-						<ShootLag type="text" description="Thermal time lag before linear sprout growth starts (deg days)">72</ShootLag>
-						<ShootRate type="text" description="Sprout extension rate (deg day/mm length)">1.35</ShootRate>
-					</Sprouting>
-					<Vegetative xsi:type="GenericPhase">
-						<Name>Vegetative</Name>
-						<Start type="text" description="Start">Emergence</Start>
-						<End type="text" description="End">TuberInitiation</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-						<Target xsi:type="Constant">
-							<Value type="text" description="Value">300</Value>
-						</Target>
-					</Vegetative>
-					<EarlyTuber xsi:type="LeafAppearancePhase">
-						<Name>EarlyTuber</Name>
-						<Start type="text" description="Start stage name">TuberInitiation</Start>
-						<End type="text" description="End stage name">FinalLeaf</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>		
-						<RemainingLeaves type="text" description="RemainingLeaves">0</RemainingLeaves>
-					</EarlyTuber>
-					<LateTuber xsi:type="LeafDeathPhase">
-						<Name>LateTuber</Name>
-						<Start type="text" description="Start stage name">FinalLeaf</Start>
-						<End type="text" description="End stage name">FullSenescence</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-					</LateTuber>
-					<Senesced xsi:type="GenericPhase">
-						<Name>Senesced</Name>
-						<Start type="text" description="Start">FullSenescence</Start>
-						<End type="text" description="End">Maturity</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-						<Target xsi:type="Constant">
-							<Value type="text" description="Value">200</Value>
-						</Target>
-					</Senesced>
-					<Maturity xsi:type="EndPhase">
-						<Name>Maturity</Name>
-						<Start>Maturity</Start>
-						<End>Unused</End>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-					</Maturity>
-					<StageCode xsi:type="StageBasedInterpolation">
-						<Name>StageCode</Name>
-						<Stages>
-							<string>Planting</string>
-							<string>Peeping</string>
-							<string>Emergence</string> 
-							<string>TuberInitiation</string> 
-							<string>FinalLeaf</string> 
-							<string>FullSenescence</string> 
-							<string>Maturity</string>
-						</Stages>
-						<Values>
-							<double>1</double>           
-							<double>2</double>                 
-							<double>3</double>                 
-							<double>4</double>                    
-							<double>5</double>                 
-							<double>6</double>              
-							<double>7</double>                 
-						</Values>
-					</StageCode>     
-				</Phenology>
-				<Structure>
-					<PrimaryBudNo type="text" description="PrimaryBudNo">1</PrimaryBudNo>
-					<InitialiseStage type="text" description="InitialiseStage">Emergence</InitialiseStage>
-					<ThermalTime xsi:type="AirTemperatureFunction">
-						<XYPairs>
-							<X>
-								<double>2</double>
-								<double>20</double>
-								<double>35</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>18</double>
-								<double>0</double>
-							</Y>
-						</XYPairs>
-					</ThermalTime>
-					<MainStemPrimordiaInitiationRate xsi:type="PhaseLookupValue">
-						<Start type="text" description="Start">Emergence</Start>
-						<End type="text" description="End">FinalLeaf</End>
-						<Children>
-							<Function xsi:type="DivideFunction">
-								<Name>NodeInitiationRateFunction</Name>
-								<Memo>Starting with the first child value of this node, recursively divide by the values of the subsequent child values </Memo>
-								<Children>
-									<Function xsi:type="VariableReference">
-										<Name>Phyllochron</Name>
-										<VariableName type="text" description="Variable Name">[Structure].MainStemNodeAppearanceRate.Phyllochron.FunctionValue</VariableName>
-										<Memo>Returns the value of a nominated internal Plant2 numerical variable
-										</Memo>
-									</Function>
-									<Function xsi:type="Constant">
-										<Name>PrimordiaPerMainstemNode</Name>
-										<Value type="text" description="Value">2</Value>
-									</Function>
-								</Children>
-							</Function>
-						</Children>
-					</MainStemPrimordiaInitiationRate>
-					<MainStemNodeAppearanceRate xsi:type="PhaseLookupValue">
-						<Start type="text" description="Start">Emergence</Start>
-						<End type="text" description="End">FinalLeaf</End>
-						<Children>
-							<Function xsi:type="LinearInterpolationFunction">
-								<Name>Phyllochron</Name>
-								<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-								<XYPairs>
-									<X>
-										<double>0</double>
-										<double>0.15</double>
-										<double>0.74</double>
-										<double>0.75</double>
-									</X>
-									<Y>
-										<double>5</double>
-										<double>30</double>
-										<double>30</double>
-										<double>60</double>
-									</Y>
-								</XYPairs>
-							</Function>
-						</Children>
-						<Memo>Determines how quickly nodes appear</Memo>
-					</MainStemNodeAppearanceRate>
-					<MainStemFinalNodeNumber xsi:type="Constant">
-						<Value type="text" description="Value">34</Value>
-					</MainStemFinalNodeNumber>
-					<HeightModel xsi:type="LinearInterpolationFunction">
-						<XProperty>[Stem].Live.Wt</XProperty>
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>200</double>
-								<double>1200</double>
-								<double>4000</double>
-							</X>
-							<Y>
-								<double>20</double>
-								<double>300</double>
-								<double>700</double>
-								<double>900</double>
-							</Y>
-						</XYPairs>
-					</HeightModel>
-					<BranchingRate xsi:type="MultiplyFunction">
-                      <Children>
-						<Function xsi:type="LinearInterpolationFunction">
-							<XProperty>[Structure].MainStemNodeNo</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>7</double>
-									<double>8</double>
-									<double>13</double>
-									<double>14</double>
-									<double>34</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>0</double>
-									<double>0.5</double>
-									<double>0.5</double>
-									<double>0</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</Function>
-						<Function xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Leaf].CoverGreen</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.4</double>
-									<double>0.55</double>
-									<double>0.8</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>1</double>
-									<double>1</double>
-									<double>0.45</double>
-									<double>0</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</Function>
-                      </Children>
-					</BranchingRate>
-					<ShadeInducedBranchMortality xsi:type="Constant">
-						<Value type="text" description="Value">0</Value>
-					</ShadeInducedBranchMortality>
-					<DroughtInducedBranchMortality xsi:type="Constant">
-						<Value type="text" description="Value">0</Value>
-					</DroughtInducedBranchMortality>
-				</Structure>
-				<Summariser>
-		<AboveGround xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Leaf].Live</string>
-							<string>[Leaf].Dead</string>
-							<string>[Stem].Live</string>
-							<string>[Stem].Dead</string>
-						</Propertys> 	
-					</AboveGround>
-					<BelowGround xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Root].Live</string>
-							<string>[Root].Dead</string>
-							<string>[Tuber].Live</string>
-							<string>[Tuber].Dead</string>
-						</Propertys> 	
-					</BelowGround>
-					<Total xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Leaf].Live</string>
-							<string>[Leaf].Dead</string>
-							<string>[Stem].Live</string>
-							<string>[Stem].Dead</string>
-							<string>[Root].Live</string>
-							<string>[Root].Dead</string>
-							<string>[Tuber].Live</string>
-							<string>[Tuber].Dead</string>
-						</Propertys> 	
-					</Total>
-				</Summariser>
-				<GenericAboveGroundOrgan>
-					<Name>Tuber</Name>
-					<Live xsi:type="Biomass"/>
-					<Dead xsi:type="Biomass"/>
-					<Memo>This organ inherits from SIRIUSGeneric organ so has the same 6 optional paramaters and default values for these paramaters.
-In addition this organ has a relative growth rate variable and a tubers per stem variable.  These are used to calculate DM demand in the tubers.  This differs from the generic organ that uses a pratitioning fraction to calculate DM demand.
-					</Memo>
-					<NitrogenDemandSwitch xsi:type="LinearInterpolationFunction">
-						<XProperty>[Leaf].LAI</XProperty>
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>0.02</double>
-								<double>0.0201</double>
-								<double>10</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>0</double>
-								<double>1</double>
-								<double>1</double>
-							</Y>
-						</XYPairs>
-						<Memo>This turns of N demand after the canopy has fully senesed to stop the tubers from taking up N after canopy death</Memo>
-					</NitrogenDemandSwitch>
-                    <StructuralFraction xsi:type="Constant">
-						<Value type="text" description="Value">1</Value>
-						<Memo>Demand for DM is based on demand to grow structural components.  If the structural fraction is less than 1 the organ has the capacity to accumulate Non-structural biomass.  The lower the number the greater the capacity.  However, the arbitrator will only partition biomass to non-structural pools after all structural and metabolic DM demands have been met so the Non-Structural DM proportion of the organ may be less smaller that 1 - StructuralFraction.</Memo>
-					</StructuralFraction>
-                    <DMDemandFunction xsi:type="PotentialSizeDemandFunction">
-						<StartStageName type="text" description="StartStageName">TuberInitiation</StartStageName>
-						<EndStageName type="text" description="StartStageName">Maturity</EndStageName>
-						<PotentialGrowthIncrement xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Phenology].StageCode.FunctionValue</XProperty>
-							<XYPairs>
-								<X>
-									<double>4</double>
-									<double>4.04</double>
-									<double>4.32</double>
-									<double>4.52</double>
-									<double>4.95</double>
-									<double>6.54</double>
-								</X>
-								<Y>
-									<double>0.017</double>
-									<double>0.017</double>
-									<double>0.06</double>
-									<double>0.06</double>
-									<double>0.018</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-							<Memo>This is potential growth rate of tubers in g/degree day</Memo>
-						</PotentialGrowthIncrement>
-						<OrganNumber xsi:type="MultiplyFunction">
-                          <Children>
-							<Memo>Multiplies the values of the children of this node</Memo>
-							<Function xsi:type="Constant">
-								<Value type="text" description="Value">5</Value>
-							</Function>
-							<Function xsi:type="VariableReference">
-								<VariableName type="text" description="Variable Name">[Structure].MainStemPopn</VariableName>
-							</Function>
-                          </Children>
-						</OrganNumber>
-						<ThermalTime xsi:type="AirTemperatureFunction">
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>20</double>
-									<double>35</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>18</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</ThermalTime>
-						<AccumThermalTime xsi:type="AccumulateFunction">
-							<StartStageName type="text" description="StartStageName">TuberInitiation</StartStageName>
-							<EndStageName type="text" description="StartStageName">Maturity</EndStageName>
-							<Memo>Sum the values of the children of this node and accumulate daily between the start and end stages</Memo>
-                          <Children>
-							<Function xsi:type="VariableReference">
-								<VariableName type="text" description="Variable Name">[Structure].ThermalTime.FunctionValue</VariableName>
-								<Memo>Returns the value of a nominated internal Plant2 numerical variable
-								</Memo>
-							</Function>
-                          </Children>
-						</AccumThermalTime>
-					</DMDemandFunction>
-					<WaterContent xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Phenology].StageCode.FunctionValue</XProperty>
-						<XYPairs>
-							<X>
-								<double>3</double>
-								<double>4</double>
-								<double>4.1</double>
-								<double>4.7</double>
-								<double>5.4</double>
-								<double>6</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>0</double>
-								<double>0.1</double>
-								<double>0.16</double>
-								<double>0.2</double>
-								<double>0.22</double>
-							</Y>
-						</XYPairs>
-						<Memo>The relative growth rate is used to set the DM demand of each tuber</Memo>
-					</WaterContent>
-
-					
-					<MaximumNConc xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Phenology].StageCode.FunctionValue</XProperty>
-						<XYPairs>
-							<X>
-								<double>3</double>
-								<double>4</double>
-								<double>5</double>
-								<double>6</double>
-							</X>
-							<Y>
-								<double>0.023</double>
-								<double>0.023</double>
-								<double>0.018</double>
-								<double>0.015</double>
-							</Y>
-						</XYPairs>
-						<Memo>The relative growth rate is used to set the DM demand of each tuber</Memo>
-					</MaximumNConc>
-					<MinimumNConc xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Phenology].StageCode.FunctionValue</XProperty>
-						<XYPairs>
-							<X>
-								<double>4</double>
-								<double>4.1</double>
-								<double>7</double>
-							</X>
-							<Y>
-								<double>0.02</double>
-								<double>0.006</double>
-								<double>0.006</double>
-							</Y> 
-						</XYPairs>
-						<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
-					</MinimumNConc>
-				</GenericAboveGroundOrgan>
-				<Root>
-					<Name>Root</Name>   
-					<Live xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Root].LayerLive</string>
-						</Propertys>
-					</Live>
-					<Dead xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Root].LayerDead</string>
-						</Propertys>
-					</Dead>
-					<InitialDM type="text" description="InitialDM">5</InitialDM>
-					<SpecificRootLength type="text" description="SpecificRootLength">40000</SpecificRootLength>
-					<KNO3 type="text" description="KNO3">0.02</KNO3>
-					<KNH4 type="text" description="KNH4">0.0</KNH4>
-					<NitrogenDemandSwitch xsi:type="PhaseBasedSwitch">
-						<Start type="text" description="Start">Planting</Start>
-						<End type="text" description="End">FinalLeaf</End>
-						<Memo>Stops the roots from demanding Nitrogen after final leaf stage
-						</Memo>
-					</NitrogenDemandSwitch>
-					<SenescenceRate xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Leaf].FractionDied</XProperty>
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>1</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>0.1</double>
-							</Y>
-						</XYPairs>
-					</SenescenceRate>
-					<TemperatureEffect xsi:type="AirTemperatureFunction">
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>26</double>
-								<double>35</double>
-							</X>
-							<Y>
-								<double>1</double>
-								<double>1</double>
-								<double>1</double>
-							</Y>
-						</XYPairs>
-					</TemperatureEffect>
-					<RootFrontVelocity xsi:type="PhaseLookup">
-						<Children>
-						<Function xsi:type="PhaseLookupValue">
-							<Start type="text" description="Start">Peeping</Start>
-							<End type="text" description="End">FinalLeaf</End>
-							<Children>
-								<Function xsi:type="Constant">
-									<Value type="text" description="Value">10</Value>
-								</Function>
-							</Children>
-						</Function>
-						</Children>
-					</RootFrontVelocity>
-					<PartitionFraction xsi:type="PhaseLookup">
-						<Children>
-						<Function xsi:type="PhaseLookupValue">
-							<Start type="text" description="Start">Emergence</Start>
-							<End type="text" description="End">TuberInitiation</End>
-							<Children>
-								<Function xsi:type="Constant">
-									<Value type="text" description="Value">0.3</Value>
-								</Function>
-							</Children>
-						</Function>
-						<Function xsi:type="PhaseLookupValue">
-							<Start type="text" description="Start">TuberInitiation</Start>
-							<End type="text" description="End">FinalLeaf</End>
-							<Children>
-								<Function xsi:type="Constant">
-									<Value type="text" description="Value">.05</Value>
-								</Function>
-							</Children>
-						</Function>
-						<Function xsi:type="PhaseLookupValue">
-							<Start type="text" description="Start">FinalLeaf</Start>
-							<End type="text" description="End">FullSenescence</End>
-							<Children>
-								<Function xsi:type="Constant">
-									<Value type="text" description="Value">0</Value>
-								</Function>
-							</Children>
-						</Function>
-						</Children>
-					</PartitionFraction>
-					<MaximumNConc xsi:type="Constant">
-						<Value>0.01</Value>
-						<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
-					</MaximumNConc>										
-					<MaxDailyNUptake xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Root].Length</XProperty>
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>0.02</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>6</double>
-							</Y>
-						</XYPairs>
-					</MaxDailyNUptake>
-					<MinimumNConc xsi:type="Constant">
-						<Value>0.01</Value>
-						<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
-					</MinimumNConc>
-					<KLModifier xsi:type="LinearInterpolationFunction">
-						<XProperty>[Leaf].LAI</XProperty>
-						<XYPairs>
-							<X>
-								<double>0</double>
-								<double>3</double>
-							</X>
-							<Y>
-								<double>1</double>
-								<double>1</double>
-							</Y>
-						</XYPairs>
-					</KLModifier>
-					<SoilWaterEffect xsi:type="Constant">
-						<Value>1.0</Value>
-					</SoilWaterEffect>
-				</Root>
-				<Leaf>
-					<Name>Leaf</Name>
-					<Live xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Leaf].CohortLive</string>
-						</Propertys>
-					</Live>
-					<Dead xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Leaf].CohortDead</string>
-						</Propertys>
-					</Dead>
-					<KDead type="text" description="KDead">.03</KDead>
-					<MaxCover type="text" description="MaxCover">1.0</MaxCover>
-					<InitialLeaf>
-						<Rank>1</Rank>
-						<Area>900</Area>
-					</InitialLeaf>
-					<InitialLeaf>
-						<Rank>2</Rank>
-						<Area>600</Area>
-					</InitialLeaf>
-					<InitialLeaf>
-						<Rank>3</Rank>
-						<Area>300</Area>
-					</InitialLeaf>
-					<LeafCohortParameters>
-						<MaxArea xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.15</double>
-									<double>0.3</double>
-									<double>0.44</double>
-									<double>0.59</double>
-									<double>0.73</double>
-								</X>
-								<Y>
-									<double>2000</double>
-									<double>18000</double>
-									<double>27000</double>
-									<double>15000</double>
-									<double>6000</double>
-									<double>1500</double>
-								</Y>
-							</XYPairs>
-							<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
-						</MaxArea>
-						<GrowthDuration xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.3</double>
-									<double>0.4</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>200</double>
-									<double>400</double>
-									<double>400</double>
-									<double>400</double>
-								</Y>
-							</XYPairs>
-							<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
-						</GrowthDuration>
-						<LagDuration xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.15</double>
-									<double>0.3</double>
-									<double>0.4</double>
-									<double>0.73</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>20</double>
-								</Y>
-							</XYPairs>
-							<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
-						</LagDuration>
-						<SenescenceDuration xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.15</double>
-									<double>0.3</double>
-									<double>0.4</double>
-									<double>0.73</double>
-									<double>2</double>
-								</X>
-								<Y>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>350</double>
-									<double>100</double>
-								</Y>
-							</XYPairs>
-							<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
-						</SenescenceDuration>
-						<DetachmentLagDuration xsi:type="Constant">
-							<Value type="text" description="Value">1e6</Value>
-						</DetachmentLagDuration>
-						<DetachmentDuration xsi:type="Constant">
-							<Value type="text" description="Value">1e6</Value>
-						</DetachmentDuration>
-						<SpecificLeafAreaMax xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Structure].RelativeNodeApperance</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>40000</double>
-									<double>25000</double>
-								</Y>
-							</XYPairs>
-							<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
-						</SpecificLeafAreaMax>
-						<SpecificLeafAreaMin xsi:type="Constant">
-							<Value type="text" description="Value">25000</Value>
-							<Memo>sets the maximum density that leaves can obtain and sets up the potential size of the Non-Structural pool.  If leaf is partitioned enough DM to meet Structural and Metabolic Demands its SLA will be (DeltaStructuralWt * SpecificLeafAreaMax)/(DeltaStructuralWt* 1/StructuralFraction).  However, if there is surpless DM after all organs are allocated their DM demands it will be partitioned back to the leaf (assuming this would actually be stored as sugar of starch in such a situation) and the leaves can become more dense until they reach SpecificLeafAreaMin.  If leaf area expansion is constrained by water stress leaves will also get more dense until they reach SpecificLeafAreaMin.  Once leaves reach SpecificLeafAreaMin they can not absorb any further excess DM and if there are no other DM sinks available the leaf will discard potential biomass production, assuming that in this situation the leaf would down regulate photosynthesis due to source limitation.</Memo>
-						</SpecificLeafAreaMin>
-						<StructuralFraction xsi:type="Constant">
-							<Value type="text" description="Value">.5</Value>
-							<Memo>StructuralFraction sets the size of the metabolic pool with Metabolic DM demand calculated as: 
-(StructuralDMDemand * (1 / StructuralFraction)) - StructuralDMDemand such that the actual SLA of leaves will normally be less than SpecificLeafAreaMax.  If the leaf cohort is not partitioned sufficient biomass to meet both structural and metabolic N demands it will reduce the growth of both proportinatly.  With moderate DM limitations leaves will get less dense but when they reach SpecificLeafAreaMax and then leaf size will become constrained.</Memo>
-						</StructuralFraction>
-						<MaximumNConc xsi:type="Constant">
-							<Value type="text" description="Value">.07</Value>
-							<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the CriticalNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - CriticalNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation.</Memo>
-						</MaximumNConc>
-						<MinimumNConc xsi:type="Constant">
-							<Value type="text" description="Value">.03</Value>
-						</MinimumNConc>
-						<InitialNConc xsi:type="Constant">
-							<Value type="text" description="Value">0</Value>
-						</InitialNConc>
-						<NReallocationFactor xsi:type="Constant">
-							<Value type="text" description="Value">1</Value>
-							<Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
-						</NReallocationFactor>
-						<NRetranslocationFactor xsi:type="Constant">
-							<Value type="text" description="Value">.01</Value>
-							<Memo>sets the proportion of Metabolic N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
-						</NRetranslocationFactor>
-						<ExpansionStress xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Plant].WaterSupplyDemandRatio</XProperty>
-							<XYPairs>
-								<X>
-									<double>0.5</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>1</double>
-								</Y>
-							</XYPairs>
-							<Memo>This controls the effect of water stress on leaf area expansion</Memo>
-						</ExpansionStress>
-						<CriticalNConc xsi:type="Constant">
-							<Value type="text" description="Value">.05</Value>
-						</CriticalNConc>
-						<DMRetranslocationFactor xsi:type="Constant">
-							<Value type="text" description="Value">.5</Value>
-							<Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
-						</DMRetranslocationFactor>
-						<ShadeInducedSenescenceRate xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Leaf].CohortCurrentRank.CoverAbove</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.5</double>
-									<double>0.8</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>0</double>
-									<double>0</double>
-									<double>0.03</double>
-								</Y>        
-							</XYPairs>
-						</ShadeInducedSenescenceRate>
-						<NonStructuralFraction xsi:type="Constant">
-							<Value type="text" description="Value">.2</Value>
-						</NonStructuralFraction>
-						
-					</LeafCohortParameters>
-					<Photosynthesis xsi:type="RUEModel">
-						<Memo>Potential photosynthesis is set by the radiation use efficiency (RUE in gDM/MJ).  Stress and CO2 adjustments are applied as:
-Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
-						<RUE xsi:type="Constant">
-							<Value type="text" description="Value">1.2</Value>
-						</RUE>
-						<FCO2 xsi:type="RUECO2Function">
-							<PhotosyntheticPathway>C3</PhotosyntheticPathway>
-						</FCO2>
-						<FN xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Leaf].Fn</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>1</double>
-									<double>1.5</double>
-								</X>
-								<Y>
-									<double>1</double>
-									<double>1</double>
-									<double>1</double>
-								</Y>
-							</XYPairs>
-						</FN>
-						<FT xsi:type="WeightedTemperatureFunction">
-							<MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
-							<XYPairs>
-								<X>
-									<double>2</double>
-									<double>12</double>
-									<double>24</double>
-									<double>34</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>1</double>
-									<double>1</double>
-									<double>0</double>
-								</Y>
-							</XYPairs>
-						</FT>
-						<FW xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Leaf].Fw</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>0.4</double>
-									<double>1.5</double>
-								</X>
-								<Y>
-									<double>0</double>
-									<double>1</double>
-									<double>1</double>
-								</Y>
-							</XYPairs>
-						</FW>
-						<FVPD xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Leaf].Photosynthesis.VPD</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>10</double>
-									<double>50</double>
-								</X>
-								<Y>
-									<double>1</double>
-									<double>1</double>
-									<double>1</double>
-								</Y>
-							</XYPairs>
-						</FVPD>
-						
-						
-					</Photosynthesis>
-					<ThermalTime xsi:type="AirTemperatureFunction">
-						<XYPairs>
-							<X>
-								<double>2</double>
-								<double>20</double>
-								<double>35</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>18</double>
-								<double>0</double>
-							</Y>
-						</XYPairs>
-					</ThermalTime>
-					<ExtinctionCoeff xsi:type="MultiplyFunction">
-						<Memo>Quantifies the relationship between Leaf area index and radiation interception.  The PotentialExtinctionCoeff is the unstressed value and extinction coefficient declines in response to water stress as leaves wilt to reduce their radiation load</Memo>
-                        <Children>
-                        <Function xsi:type="Constant">
-							<Value type="text" description="Value">0.8</Value>
-						</Function>
-						<Function xsi:type="LinearInterpolationFunction">
-							<XProperty type="text" description="XProperty">[Plant].WaterSupplyDemandRatio</XProperty>
-							<XYPairs>
-								<X>
-									<double>0</double>
-									<double>1</double>
-								</X>
-								<Y>
-									<double>0.5</double>
-									<double>1</double>
-								</Y>
-							</XYPairs>
-						</Function>
-                      </Children>
-					</ExtinctionCoeff>
-					<FrostFraction xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[WeatherFile].MinT</XProperty>
-						<XYPairs>
-							<X>
-								<double>-1</double>
-								<double>0</double>
-							</X>
-							<Y>
-								<double>0</double>
-								<double>0</double>
-							</Y>
-						</XYPairs>
-						<Memo>Sets the proportion of leaf area that is killed by frost</Memo>
-					</FrostFraction>
-					<Total xsi:type="CompositeBiomass">
-						<Propertys>
-							<string>[Leaf].Live</string>
-							<string>[Leaf].Dead</string>
-						</Propertys>
-					</Total>
-					<CohortArrayLive xsi:type="ArrayBiomass">
-						<Propertys>
-							<string>[Leaf].Live</string>							
-						</Propertys>
-						<ArraySize>[Leaf].MaxNodeNo</ArraySize>
-					</CohortArrayLive>
-					<CohortArrayDead xsi:type="ArrayBiomass">
-						<Propertys>
-							<string>[Leaf].Dead</string>							
-						</Propertys>
-						<ArraySize>[Leaf].MaxNodeNo</ArraySize>
-					</CohortArrayDead>
-				</Leaf>
-				<GenericAboveGroundOrgan>
-					<Name>Stem</Name>
-					<Live xsi:type="Biomass"/>
-					<Dead xsi:type="Biomass"/>
-					<NReallocationFactor xsi:type="Constant">
-						<Value type="text" description="Value">0</Value>
-						<Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
-					</NReallocationFactor>
-					<NRetranslocationFactor xsi:type="Constant">
-						<Value type="text" description="Value">.05</Value>
-						<Memo>sets the proportion of Non-Structural N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
-					</NRetranslocationFactor>
-					<NitrogenDemandSwitch xsi:type="PhaseBasedSwitch">
-						<Start type="text" description="Start">Planting</Start>
-						<End type="text" description="End">FinalLeaf</End>
-						<Memo>stops the stem from demanding N following final leaf stage
-						</Memo>
-					</NitrogenDemandSwitch>
-					<DMRetranslocationFactor xsi:type="Constant">
-						<Value type="text" description="Value">0</Value>
-						<Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
-					</DMRetranslocationFactor>
-					<StructuralFraction xsi:type="Constant">
-						<Value type="text" description="Value">1</Value>
-						<Memo>Demand for DM is based on demand to grow structural components.  If the structural fraction is less than 1 the organ has the capacity to accumulate Non-structural biomass.  The lower the number the greater the capacity.  However, the arbitrator will only partition biomass to non-structural pools after all structural and metabolic DM demands have been met so the Non-Structural DM proportion of the organ may be less smaller that 1 - StructuralFraction.</Memo>
-					</StructuralFraction>
-					<DMDemandFunction xsi:type="InternodeDemandFunction">
-						<InterNodeWt xsi:type="Constant">
-							<Value type="text" description="Value">.2</Value>
-						</InterNodeWt>
-					</DMDemandFunction>
-					<MaximumNConc xsi:type="LinearInterpolationFunction">
-						<XProperty type="text" description="XProperty">[Phenology].StageCode.FunctionValue</XProperty>
-						<XYPairs>
-							<X>
-								<double>3</double>
-								<double>4</double>
-								<double>5.3</double>
-							</X>
-							<Y>
-								<double>0.06</double>
-								<double>0.06</double>
-								<double>0.025</double>
-							</Y>
-						</XYPairs>
-						<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the CriticalNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - CriticalNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation.</Memo>
-					</MaximumNConc>
-					<MinimumNConc xsi:type="Constant">
-						<Value type="text" description="Value">0.006</Value>
-						<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
-					</MinimumNConc>
-					
-				</GenericAboveGroundOrgan>
-			</Plant>
-			<Graph>
-				<Name>Graph</Name>
-				<Axis>
-					<Name>Axis 1</Name>
-					<Type>Left</Type>
-					<Title>Soil water (mm)</Title>
-					<Inverted>false</Inverted>
-				</Axis>
-				<Axis>
-					<Type>Bottom</Type>
-					<Inverted>false</Inverted>
-				</Axis>
-				<Series>
-					<Title>Predicted</Title>
-					<Type>Line</Type>
-					<XAxis>Bottom</XAxis>
-					<YAxis>Left</YAxis>
-					<ColourArgb>-16776961</ColourArgb>
-					<Marker>None</Marker>
-					<X>
-						<SimulationName>Test</SimulationName>
-						<TableName>Report</TableName>
-						<FieldName>Clock.Today</FieldName>
-					</X>
-					<Y>
-						<SimulationName>Test</SimulationName>
-						<TableName>Report</TableName>
-						<FieldName>SoilWater.sw_dep(1)</FieldName>
-					</Y>
-				</Series>
-				<Series>
-					<Title>Observed</Title>
-					<Type>Scatter</Type>
-					<XAxis>Bottom</XAxis>
-					<YAxis>Left</YAxis>
-					<ColourArgb>-16744193</ColourArgb>
-					<Marker>FilledTriangle</Marker>
-					<X>
-						<SimulationName>Test</SimulationName>
-						<TableName>Input</TableName>
-						<FieldName>Date</FieldName>
-					</X>
-					<Y>
-						<SimulationName>Test</SimulationName>
-						<TableName>Input</TableName>
-						<FieldName>sw(1)</FieldName>
-					</Y>
-				</Series>
-			</Graph>
-			<Graph>
-  <Name>Biomass</Name>
-  <Axis>
-    <Name>Axis 1</Name>
-    <Type>Left</Type>
-    <Title>Crop Biomass (g/m2)</Title>
-    <Inverted>false</Inverted>
-  </Axis>
-  <Axis>
-    <Type>Bottom</Type>
-    <Inverted>false</Inverted>
-  </Axis>
-  <Series>
-    <Title>Leaf</Title>
-    <Type>Line</Type>
-    <XAxis>Bottom</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-16744448</ColourArgb>
-    <Marker>None</Marker>
-    <X>
+        <Script />
+      </Manager>
+    </Zone>
+    <Input>
+      <Name>Input</Name>
+      <FileName>C:\ApsimX\Tests\TestObserved.txt</FileName>
+    </Input>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoCreateReport>false</AutoCreateReport>
+  </DataStore>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Clock.Today</FieldName>
-    </X>
-    <Y>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.FunctionValue</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Plant.Leaf.Live.Wt</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Title>Stem</Title>
-    <Type>Line</Type>
-    <XAxis>Bottom</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-16760704</ColourArgb>
-    <Marker>None</Marker>
-    <X>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Structure.Population</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Clock.Today</FieldName>
-    </X>
-    <Y>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Leaf.LAI</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Plant.Stem.Live.Wt</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Title>Tuber</Title>
-    <Type>Line</Type>
-    <XAxis>Bottom</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-65536</ColourArgb>
-    <Marker>None</Marker>
-    <X>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Clock.Today</FieldName>
-    </X>
-    <Y>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Plant.Tuber.Live.Wt</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Title>Root</Title>
-    <Type>Line</Type>
-    <XAxis>Bottom</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-32768</ColourArgb>
-    <Marker>None</Marker>
-    <X>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Clock.Today</FieldName>
-    </X>
-    <Y>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
-      <FieldName>Plant.Root.Live.Wt</FieldName>
-    </Y>
-  </Series>
-	</Graph>
-	</Zone>
-		<Input>
-			<Name>Input</Name>
-			<FileName>C:\ApsimX\Tests\TestObserved.txt</FileName>
-		</Input>
-	</Simulation>
-	<DataStore>
-		<Name>DataStore</Name>
-		<AutoCreateReport>false</AutoCreateReport>
-	</DataStore>
-	<Tests>
-		<Name>Tests</Name>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Phenology.StageCode.FunctionValue</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Structure.Population</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Leaf.LAI</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>	
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>	
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>	
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Root.Live.Wt</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Leaf.Live.N</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Stem.Live.N</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Tuber.Live.N</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>
-		<Test>
-			<SimulationName>Test</SimulationName>
-			<TableName>Report</TableName>
-			<Type>Tolerance</Type>
-			<ColumnNames>Plant.Root.Live.N</ColumnNames>
-			<Parameters>1,1</Parameters>
-		</Test>		
-
-	</Tests>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Root.Live.Wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Leaf.Live.N</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Stem.Live.N</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Tuber.Live.N</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Root.Live.N</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
 </Simulations>
