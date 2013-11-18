@@ -46,6 +46,8 @@ namespace Models.Soils
         [Link]
         private Soil Soil = null;
 
+        [Link] ISummary Summary = null;
+
         #endregion
 
         #region Constants
@@ -177,7 +179,7 @@ namespace Models.Soils
         //Irrigation Runoff
         [Bounds(Lower = 0, Upper = 100)]
         [Description("Irrigation will runoff (0 no runoff [default], 1 runoff like rain")]
-        public int irrigation_will_runoff = 0;  //0 means no runoff (default), 1 means allow the irrigation to runoff just like rain. (in future perhaps have other runoff methods)
+        public bool irrigation_will_runoff = false;
 
         //Irrigation Layer
         [Bounds(Lower = 0, Upper = 100)]
@@ -1587,20 +1589,10 @@ namespace Models.Soils
 
         #region Bounds checking and warning functions
 
-#if (APSIMX == true)
         private void IssueWarning(string warningText)
         {
-            Console.WriteLine(warningText);
+            Summary.WriteMessage(warningText);
         }
-#else
-    [Link]
-    private Component My = null;  // Get access to "Warning" function
-    private void IssueWarning(string warningText)
-    {
-    My.Warning(warningText);
-    }
-#endif
-
 
         private double bound(double A, double Lower, double Upper)
         {
@@ -4583,7 +4575,7 @@ namespace Models.Soils
             //c dsg 070302 added runon
             //! NIH Need to consider if interception losses were already considered in runoff model calibration
 
-            if (irrigation_will_runoff == 0)
+            if (irrigation_will_runoff)
             {
                 soilwat2_runoff(rain, runon, (interception + residueinterception), ref runoff_pot);
             }
@@ -4812,72 +4804,61 @@ namespace Models.Soils
             return -1;  // Not found
         }
 
-        //public void OnIrrigated(IrrigationApplicationType Irrigated)
-        //{
+        [EventSubscribe("Irrigated")]
+        private void OnIrrigated(object sender, Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType Irrigated)
+        {
+            int solnum;           //! solute no. counter variable               
+            double solute_amount = 0.0;
 
-        //    //* ====================================================================
-        //    //subroutine soilwat2_ONirrigated ()
-        //    //* ====================================================================
+            //see OnProcess event handler for where this irrigation is added to the soil water 
+            irrigation = Irrigated.Amount;  //! amount of irrigation (mm)    
 
-        //    //*+  Mission Statement
-        //    //*     Add Water
+            //Added on 5 Dec 2012 to allow irrigation to runoff like rain. 
+            irrigation_will_runoff = Irrigated.will_runoff;
 
-        //    //*+  Local Variables
-        //    int solnum;           //! solute no. counter variable               
-        //    double solute_amount = 0.0;
-
-        //    //*- Implementation Section ----------------------------------
-
-
-        //    //see OnProcess event handler for where this irrigation is added to the soil water 
-        //    irrigation = Irrigated.Amount;  //! amount of irrigation (mm)    
-
-        //    //Added on 5 Dec 2012 to allow irrigation to runoff like rain. 
-        //    irrigation_will_runoff = Irrigated.will_runoff;
-
-        //    if ((irrigation_will_runoff == 1) && (Irrigated.Depth > 0.0))
-        //    {
-        //        irrigation_will_runoff = 0;
-        //        String warningText;
-        //        warningText = "In the irrigation 'apply' command in the line above, 'will_runoff' was set to 0 not 1" + "\n"
-        //        + "If irrigation depth > 0 (mm), " + "\n"
-        //         + "then you can not choose to have irrigation runoff like rain as well. ('will_runoff = 1')" + "\n"
-        //         + "ie. Subsurface irrigations can not runoff like rain does. (Only surface irrigation can)" + "\n"
-        //         + "nb. Subsurface irrigations will cause runoff if ponding occurs though.";
-        //        IssueWarning(warningText);
-        //    }
+            if ((irrigation_will_runoff) && (Irrigated.Depth > 0.0))
+            {
+                irrigation_will_runoff = false;
+                String warningText;
+                warningText = "In the irrigation 'apply' command in the line above, 'will_runoff' was set to 0 not 1" + "\n"
+                + "If irrigation depth > 0 (mm), " + "\n"
+                 + "then you can not choose to have irrigation runoff like rain as well. ('will_runoff = 1')" + "\n"
+                 + "ie. Subsurface irrigations can not runoff like rain does. (Only surface irrigation can)" + "\n"
+                 + "nb. Subsurface irrigations will cause runoff if ponding occurs though.";
+                IssueWarning(warningText);
+            }
 
 
-        //    //sv- added on 26 Nov 2012. Needed for subsurface irrigation. 
-        //    //    Manager module sends "apply" command specifying depth as a argument to irrigation module.
-        //    //    irrigation module sends "Irrigated" event with the depth. 
-        //    //    Now need to turn depth into the specific subsurface layer that the irrigation is to go into.
-        //    irrigation_layer = FindLayerNo(Irrigated.Depth) + 1;    //irrigation_layer is 1 based layer number but FindLayerNo() returns zero based layer number, so add 1.
+            //sv- added on 26 Nov 2012. Needed for subsurface irrigation. 
+            //    Manager module sends "apply" command specifying depth as a argument to irrigation module.
+            //    irrigation module sends "Irrigated" event with the depth. 
+            //    Now need to turn depth into the specific subsurface layer that the irrigation is to go into.
+            irrigation_layer = FindLayerNo(Irrigated.Depth) + 1;    //irrigation_layer is 1 based layer number but FindLayerNo() returns zero based layer number, so add 1.
 
 
-        //    //Solute amount in irrigation water.
-        //    for (solnum = 0; solnum < num_solutes; solnum++)
-        //    {
-        //        switch (solutes[solnum].name)
-        //        {
-        //            case "no3":
-        //                solute_amount = Irrigated.NO3;
-        //                break;
-        //            case "nh4":
-        //                solute_amount = Irrigated.NH4;
-        //                break;
-        //            case "cl":
-        //                solute_amount = Irrigated.CL;
-        //                break;
-        //            default:
-        //                solute_amount = 0.0;
-        //                break;
-        //        }
+            //Solute amount in irrigation water.
+            for (solnum = 0; solnum < num_solutes; solnum++)
+            {
+                switch (solutes[solnum].name)
+                {
+                    case "no3":
+                        solute_amount = Irrigated.NO3;
+                        break;
+                    case "nh4":
+                        solute_amount = Irrigated.NH4;
+                        break;
+                    case "cl":
+                        solute_amount = Irrigated.CL;
+                        break;
+                    default:
+                        solute_amount = 0.0;
+                        break;
+                }
 
-        //        //this irrigation_solute is added to the the soil solutes (solute 2D array) when soilwat2_irrig_solute() is called from OnProcess event handler.
-        //        solutes[solnum].irrigation += solute_amount;
-        //    }
-        //}
+                //this irrigation_solute is added to the the soil solutes (solute 2D array) when soilwat2_irrig_solute() is called from OnProcess event handler.
+                solutes[solnum].irrigation += solute_amount;
+            }
+        }
 
         [EventSubscribe("WaterChanged")]
         private void OnWaterChanged(WaterChangedType WaterChanged)

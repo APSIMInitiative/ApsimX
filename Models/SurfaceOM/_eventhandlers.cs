@@ -55,22 +55,18 @@ namespace Models.SurfaceOM
         [EventSubscribe("NewMet")]
         private void OnNewmet(Models.WeatherFile.NewMetType newmetdata) { g.MetData = newmetdata; }
 
-        public class IrrigationApplicationType
+        public class IrrigationApplicationType : EventArgs
         {
             public double Amount;
-            public int will_runoff;
+            public bool will_runoff;
             public double Depth;
-            public double Duration;
-            public string time = "";
-            public string[] source;
-            public double Crop_Area;
             public double NO3;
             public double NH4;
             public double CL;
         }
 
         [EventSubscribe("Irrigated")]
-        private void OnIrrigated(IrrigationApplicationType data) { surfom_ONirrigated(data); }
+        private void OnIrrigated(object sender, IrrigationApplicationType data) { surfom_ONirrigated(data); }
 
         public class CropChoppedType
         {
