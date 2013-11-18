@@ -1,5 +1,6 @@
 #rm(list=ls()) # for testing only 
-setwd(".\\")
+#setwd("c:\\ApsimX\\ApsimX") # for testing only
+setwd(".\\"
 library("XML")
 library("RSQLite")
 
