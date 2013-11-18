@@ -91,6 +91,7 @@
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="Irrigation.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate.cs" />
     <Compile Include="MicroClimateScience.cs" />

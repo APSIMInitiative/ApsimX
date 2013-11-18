@@ -179,6 +179,13 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Irrigation16 {
+            get {
+                object obj = ResourceManager.GetObject("Irrigation16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static byte[] ManagementToolbox {
             get {
                 object obj = ResourceManager.GetObject("ManagementToolbox", resourceCulture);

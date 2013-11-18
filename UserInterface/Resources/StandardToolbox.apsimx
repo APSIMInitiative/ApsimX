@@ -53,6 +53,9 @@
           </FertiliserType>
         </Types>
       </Fertiliser>
+      <Irrigation>
+        <Name>Irrigation</Name>
+      </Irrigation>
       <Soil>
         <Name>Soil</Name>
         <RecordNumber>0</RecordNumber>
