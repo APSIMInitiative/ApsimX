@@ -3096,7 +3096,7 @@ namespace Models.Soils
                         TheVariable = MaximumValue;
                     else
                         throw new Exception("The value of " + VariableName + "[" + (layer + 1).ToString() +
-                        "] in Patch[" + PatchName + "] is above the maximum value, , " + MinimumValue.ToString());
+                        "] in Patch[" + PatchName + "] is above the maximum value, , " + MaximumValue.ToString());
                 }
 
                 return result;

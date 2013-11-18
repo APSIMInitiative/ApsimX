@@ -20,6 +20,27 @@
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
+      <Irrigation>
+        <Name>Irrigation</Name>
+        <IrrigationApplied>100</IrrigationApplied>
+      </Irrigation>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+        <Types>
+          <FertiliserType>
+            <Name>Urea_N</Name>
+            <FractionNO3>0</FractionNO3>
+            <FractionNH4>0</FractionNH4>
+            <FractionUrea>1</FractionUrea>
+          </FertiliserType>
+          <FertiliserType>
+            <Name>NO3_N</Name>
+            <FractionNO3>1</FractionNO3>
+            <FractionNH4>0</FractionNH4>
+            <FractionUrea>0</FractionUrea>
+          </FertiliserType>
+        </Types>
+      </Fertiliser>
       <Report>
         <Name>Report</Name>
         <Variables>
@@ -313,8 +334,8 @@
           </canopy_fact_height>
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>0</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
+          <irrigation_will_runoff>false</irrigation_will_runoff>
+          <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
@@ -328,8 +349,8 @@
           <slope>0</slope>
           <discharge_width>0</discharge_width>
           <catchment_area>0</catchment_area>
-          <eo>5.8408712516913539</eo>
-          <eos>5.8408712516913539</eos>
+          <eo>0.62622613399195615</eo>
+          <eos>0.62622613399195615</eos>
           <bd>
             <double>1.02</double>
             <double>1.03</double>
@@ -789,11 +810,11 @@
         <night_interception_fraction>0.5</night_interception_fraction>
         <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
-        <albedo>0.29488324999809262</albedo>
+        <albedo>0.29344836592674256</albedo>
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <soil_heat>-2.1989999771118165</soil_heat>
+        <soil_heat>-0.32999999523162843</soil_heat>
         <dryleaffraction>1</dryleaffraction>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
@@ -804,23 +825,23 @@
           <Name>Potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>4.5624227523803711</LAItot>
+          <LAItot>5.9625506401062012</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.12791875004768372</CoverTot>
-          <Ktot>0.030000000063911226</Ktot>
+          <CoverTot>0.16379085183143616</CoverTot>
+          <Ktot>0.030000000125488448</Ktot>
           <K>0</K>
-          <Height>0.15878612</Height>
-          <Depth>0.15878612</Depth>
+          <Height>0.20916092</Height>
+          <Depth>0.20916092</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <Frgr>0.53999996185302734</Frgr>
+          <Frgr>0.949999988079071</Frgr>
           <layerLAI>
             <double>0</double>
           </layerLAI>
           <layerLAItot>
-            <double>4.5624227523803711</double>
+            <double>5.9625506401062012</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
@@ -829,31 +850,31 @@
             <double>0</double>
           </Fgreen>
           <Rs>
-            <double>2.8129332842702865</double>
+            <double>0.54050980323358289</double>
           </Rs>
           <Rl>
-            <double>-0.19034022797720193</double>
+            <double>-0.093623019570591839</double>
           </Rl>
           <Rsoil>
-            <double>-0.28129332842702864</double>
+            <double>-0.05405098032335829</double>
           </Rsoil>
           <Gc>
             <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0.015570307991046443</double>
+            <double>0.017179356894558778</double>
           </Ga>
           <PET>
-            <double>0.10793294975685777</double>
+            <double>0.036463739780678094</double>
           </PET>
           <PETr>
-            <double>0.013084772250299468</double>
+            <double>0.00073785714759513194</double>
           </PETr>
           <PETa>
-            <double>0.0948481775065583</double>
+            <double>0.035725882633082962</double>
           </PETa>
           <Omega>
-            <double>0.024855344497970652</double>
+            <double>0.013217007798202224</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -868,12 +889,12 @@
           <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           <DM>
             <StructuralDemand>
-              <double>93.09735450024877</double>
+              <double>7.8274930069710038</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
             </StructuralDemand>
-            <TotalStructuralDemand>93.09735450024877</TotalStructuralDemand>
+            <TotalStructuralDemand>7.8274930069710038</TotalStructuralDemand>
             <MetabolicDemand>
               <double>0</double>
               <double>0</double>
@@ -889,7 +910,7 @@
             </NonStructuralDemand>
             <TotalNonStructuralDemand>0</TotalNonStructuralDemand>
             <TotalDemand>
-              <double>93.09735450024877</double>
+              <double>7.8274930069710038</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
@@ -912,7 +933,7 @@
               <double>0</double>
               <double>0</double>
             </RelativeNonStructuralDemand>
-            <TotalPlantDemand>93.09735450024877</TotalPlantDemand>
+            <TotalPlantDemand>7.8274930069710038</TotalPlantDemand>
             <ReallocationSupply>
               <double>0</double>
               <double>0</double>
@@ -1010,9 +1031,9 @@
             <TotalAllocated>0</TotalAllocated>
             <NotAllocated>0</NotAllocated>
             <SinkLimitation>0</SinkLimitation>
-            <Start>877.625751521381</Start>
-            <End>877.625751521381</End>
-            <BalanceError>-93.0973545002488</BalanceError>
+            <Start>1316.2702368456862</Start>
+            <End>1316.2702368456862</End>
+            <BalanceError>-7.8274930069710535</BalanceError>
           </DM>
           <N>
             <StructuralDemand>
@@ -1070,11 +1091,11 @@
             <TotalReallocationSupply>0</TotalReallocationSupply>
             <UptakeSupply>
               <double>0</double>
-              <double>0.0057732881459815208</double>
+              <double>0.00089576787028319653</double>
               <double>0</double>
               <double>0</double>
             </UptakeSupply>
-            <TotalUptakeSupply>0.0057732881459815208</TotalUptakeSupply>
+            <TotalUptakeSupply>0.00089576787028319653</TotalUptakeSupply>
             <FixationSupply>
               <double>0</double>
               <double>0</double>
@@ -1086,9 +1107,9 @@
               <double>0</double>
               <double>0</double>
               <double>0</double>
-              <double>0.19952798278578743</double>
+              <double>0.22186427634796982</double>
             </RetranslocationSupply>
-            <TotalRetranslocationSupply>0.19952798278578743</TotalRetranslocationSupply>
+            <TotalRetranslocationSupply>0.22186427634796982</TotalRetranslocationSupply>
             <Reallocation>
               <double>0</double>
               <double>0</double>
@@ -1158,8 +1179,8 @@
             <TotalAllocated>0</TotalAllocated>
             <NotAllocated>0</NotAllocated>
             <SinkLimitation>0</SinkLimitation>
-            <Start>21.811756284109777</Start>
-            <End>21.811756284109777</End>
+            <Start>30.44774981437569</Start>
+            <End>30.44774981437569</End>
             <BalanceError>0</BalanceError>
           </N>
         </Arbitrator>
@@ -1332,6 +1353,72 @@
               <Value>1</Value>
             </Target>
           </GenericPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
           <StageBasedInterpolation>
             <Name>StageCode</Name>
             <Stages>
@@ -1356,7 +1443,7 @@
         </Phenology>
         <Structure>
           <InitialiseStage>Emergence</InitialiseStage>
-          <PrimaryBudNo>1</PrimaryBudNo>
+          <PrimaryBudNo>2.2</PrimaryBudNo>
           <ThermalTime d6p1:type="AirTemperatureFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
             <XYPairs>
               <X>
@@ -2144,7 +2231,7 @@
         </GenericAboveGroundOrgan>
       </Plant>
       <Graph>
-        <Name>Graph</Name>
+        <Name>SoilWater</Name>
         <Axis>
           <Name>Axis 1</Name>
           <Type>Left</Type>
@@ -2171,24 +2258,6 @@
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilWater.sw_dep(1)</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744193</ColourArgb>
-          <Marker>FilledTriangle</Marker>
-          <X>
-            <SimulationName>Test</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Date</FieldName>
-          </X>
-          <Y>
-            <SimulationName>Test</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>sw(1)</FieldName>
           </Y>
         </Series>
       </Graph>
@@ -2289,7 +2358,7 @@
             {      
                [Link] Plant Plant;
                [Link] Clock Clock;
-               
+
                double RowSpace = 280;
                double RowWidth = 770;
                double PlantingDepth = 150;
@@ -2298,12 +2367,12 @@
                DateTime SowingDate = new DateTime(2003, 11, 10, 0, 0, 0);
 
                double PlantPopulation = 0;
-			   
+
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
 				PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
-                
+
 				if (Clock.Today.Date.Equals(SowingDate))
                     Plant.Sow(new SowPlant2Type() {Population = PlantPopulation, Cultivar = CultivarName, Depth = PlantingDepth, BudNumber = StemNumberPerSeedTuber});
 			   }
@@ -2312,6 +2381,92 @@
 				</Code>
         <Script />
       </Manager>
+      <Manager>
+        <Name>IrrigationRule</Name>
+        <Code>
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        namespace Models
+        {
+            public class Script : Model
+            {      
+               [Link] Irrigation Irrigation;
+               [Link] Clock Clock;
+
+               double ApplicationAmount = 100;
+               DateTime ApplicationDate = new DateTime(2003, 12, 20, 0, 0, 0);
+
+               [EventSubscribe("StartOfDay")]
+               private void OnStartOfDay(object sender, EventArgs e)
+               {
+				if (Clock.Today.Date.Equals(ApplicationDate))
+                    Irrigation.Apply(ApplicationAmount,0,100,false);
+			   }
+            }
+        }
+				</Code>
+        <Script />
+      </Manager>
+      <Manager>
+        <Name>FertiliserRule</Name>
+        <Code>
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        namespace Models
+        {
+            public class Script : Model
+            {      
+               [Link] Fertiliser Fertiliser;
+               [Link] Clock Clock;
+
+               double ApplicationAmount = 500;
+               string FertType = "NO3_N";
+               DateTime ApplicationDate = new DateTime(2003, 12, 30, 0, 0, 0);
+
+               [EventSubscribe("StartOfDay")]
+               private void OnStartOfDay(object sender, EventArgs e)
+               {
+               if (Clock.Today.Date.Equals(ApplicationDate))
+                    Fertiliser.Apply(ApplicationAmount,0,FertType);
+			   }
+            }
+        }
+				</Code>
+        <Script />
+      </Manager>
+      <Graph>
+        <Name>SoilNitrogen</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Soil water (mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>SoilN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388544</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>SoilNitrogen.no3(1)</FieldName>
+          </Y>
+        </Series>
+      </Graph>
     </Zone>
     <Input>
       <Name>Input</Name>

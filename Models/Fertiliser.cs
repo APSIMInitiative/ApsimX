@@ -46,6 +46,9 @@ namespace Models
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
                 NitrogenChanges.Sender = FullPath;
+
+                if ((fertiliserType.FractionNO3 + fertiliserType.FractionNH4 + fertiliserType.FractionUrea) != 1.0)
+                    throw new ApsimXException(FullPath, "The NO3, NH4 and Urea fractions of " + type + "must sum to a value of 1.0 ");
                 
                 if (fertiliserType.FractionNO3 != 0)
                 {
