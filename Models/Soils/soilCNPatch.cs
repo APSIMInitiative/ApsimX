@@ -185,27 +185,30 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
+                    if (value != null)
                     {
-                        if (layer >= g.dlayer.Length)
+                        for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
                         {
-                            Console.WriteLine(" Attempt to change the urea value of a non-existent layer - extra values will be ignored");
-                            break;
-                        }
-                        else if (layer >= value.Length)
-                        {
-                            // not all values were supplied, ignore these layers
-                            // value[layer] = 0.0;
-                        }
-                        else
-                        {
-                            // a value was supplied, check whether it is valid
-                            bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_urea", -2000.0, 2000.0, false);
-                            _urea[layer] += value[layer];
-                            IsVariableOK = CheckNegativeValues(_urea[layer], layer, "urea");
-                            if (!IsVariableOK)
-                                _urea[layer] = g.urea_min[layer];
-                            IsVariableOK = CheckVariableBounds(ref _urea[layer], layer, "urea", g.urea_min[layer], 10000, false);
+                            if (layer >= g.dlayer.Length)
+                            {
+                                Console.WriteLine(" Attempt to change the urea value of a non-existent layer - extra values will be ignored");
+                                break;
+                            }
+                            else if (layer >= value.Length)
+                            {
+                                // not all values were supplied, ignore these layers
+                                // value[layer] = 0.0;
+                            }
+                            else
+                            {
+                                // a value was supplied, check whether it is valid
+                                bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_urea", -2000.0, 2000.0, false);
+                                _urea[layer] += value[layer];
+                                IsVariableOK = CheckNegativeValues(_urea[layer], layer, "urea");
+                                if (!IsVariableOK)
+                                    _urea[layer] = g.urea_min[layer];
+                                IsVariableOK = CheckVariableBounds(ref _urea[layer], layer, "urea", g.urea_min[layer], 10000, false);
+                            }
                         }
                     }
                 }
@@ -216,27 +219,30 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
+                    if (value != null)
                     {
-                        if (layer >= g.dlayer.Length)
+                        for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
                         {
-                            Console.WriteLine(" Attempt to change the ammonium value of a non-existent layer - extra values will be ignored");
-                            break;
-                        }
-                        else if (layer >= value.Length)
-                        {
-                            // not all values were supplied, ignore these layers
-                            // value[layer] = 0.0;
-                        }
-                        else
-                        {
-                            // a value was supplied, check whether it is valid
-                            bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_nh4", -2000.0, 2000.0, false);
-                            _nh4[layer] += value[layer];
-                            IsVariableOK = CheckNegativeValues(_nh4[layer], layer, "nh4");
-                            if (!IsVariableOK)
-                                _nh4[layer] = g.nh4_min[layer];
-                            IsVariableOK = CheckVariableBounds(ref _nh4[layer], layer, "nh4", g.nh4_min[layer], 10000, false);
+                            if (layer >= g.dlayer.Length)
+                            {
+                                Console.WriteLine(" Attempt to change the ammonium value of a non-existent layer - extra values will be ignored");
+                                break;
+                            }
+                            else if (layer >= value.Length)
+                            {
+                                // not all values were supplied, ignore these layers
+                                // value[layer] = 0.0;
+                            }
+                            else
+                            {
+                                // a value was supplied, check whether it is valid
+                                bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_nh4", -2000.0, 2000.0, false);
+                                _nh4[layer] += value[layer];
+                                IsVariableOK = CheckNegativeValues(_nh4[layer], layer, "nh4");
+                                if (!IsVariableOK)
+                                    _nh4[layer] = g.nh4_min[layer];
+                                IsVariableOK = CheckVariableBounds(ref _nh4[layer], layer, "nh4", g.nh4_min[layer], 10000, false);
+                            }
                         }
                     }
                 }
@@ -247,31 +253,34 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
+                    if (value != null)
                     {
-                        if (layer >= g.dlayer.Length)
+                        for (int layer = 0; layer < Math.Max(value.Length, g.dlayer.Length); ++layer)
                         {
-                            Console.WriteLine(" Attempt to change the nitrate value of a non-existent layer - extra values will be ignored");
-                            break;
-                        }
-                        else if (layer >= value.Length)
-                        {
-                            // not all values were supplied, ignore these layers
-                            // value[layer] = 0.0;
-                        }
-                        else
-                        {
-                            // a value was supplied, check whether it is valid
-                            bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_no3", -2000.0, 2000.0, false);
+                            if (layer >= g.dlayer.Length)
+                            {
+                                Console.WriteLine(" Attempt to change the nitrate value of a non-existent layer - extra values will be ignored");
+                                break;
+                            }
+                            else if (layer >= value.Length)
+                            {
+                                // not all values were supplied, ignore these layers
+                                // value[layer] = 0.0;
+                            }
+                            else
+                            {
+                                // a value was supplied, check whether it is valid
+                                bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_no3", -2000.0, 2000.0, false);
 
-                            if (_no3[layer] + value[layer] < g.no3_min[layer])
-                                IsVariableOK = false;
+                                if (_no3[layer] + value[layer] < g.no3_min[layer])
+                                    IsVariableOK = false;
 
-                            _no3[layer] += value[layer];
-                            IsVariableOK = CheckNegativeValues(_no3[layer], layer, "no3");
-                            if (!IsVariableOK)
-                                _no3[layer] = g.no3_min[layer];
-                            IsVariableOK = CheckVariableBounds(ref _no3[layer], layer, "no3", g.no3_min[layer], 10000, false);
+                                _no3[layer] += value[layer];
+                                IsVariableOK = CheckNegativeValues(_no3[layer], layer, "no3");
+                                if (!IsVariableOK)
+                                    _no3[layer] = g.no3_min[layer];
+                                IsVariableOK = CheckVariableBounds(ref _no3[layer], layer, "no3", g.no3_min[layer], 10000, false);
+                            }
                         }
                     }
                 }

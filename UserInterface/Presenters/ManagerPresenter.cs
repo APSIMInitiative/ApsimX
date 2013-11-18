@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
             // If no dot was specified then the object name may be refering to a [Link] in the script.
             if (!e.ObjectName.Contains("."))
             {
-                o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName, Manager.Model);
+                o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Model);
                 if (o == null)
                 {
                     // Not a [Link] so look for the object within scope
@@ -66,6 +66,8 @@ namespace UserInterface.Presenters
             {
                 foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                     e.Items.Add(Property.Name);
+                foreach (MethodInfo Method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    e.Items.Add(Method.Name);
             }
         }
 

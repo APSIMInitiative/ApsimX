@@ -26,16 +26,33 @@
       <Report>
         <Name>Report</Name>
         <Variables>
-          <string>Clock.Today</string>
-          <string>WeatherFile.MaxT</string>
-          <string>WeatherFile.MinT</string>
-          <string>WeatherFile.Radn</string>
-          <string>WeatherFile.Rain</string>
+          <string>[Clock].Today</string>
+          <string>[WeatherFile].MaxT</string>
+          <string>[WeatherFile].MinT</string>
+          <string>[WeatherFile].Radn</string>
+          <string>[WeatherFile].Rain</string>
         </Variables>
         <Events>
           <string>Clock.EndOfDay</string>
         </Events>
       </Report>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+        <Types>
+          <FertiliserType>
+            <Name>NO3N</Name>
+            <FractionNO3>1.0</FractionNO3>
+          </FertiliserType>
+          <FertiliserType>
+            <Name>NH4N</Name>
+            <FractionNH4>1.0</FractionNH4>
+          </FertiliserType>
+          <FertiliserType>
+            <Name>Urea</Name>
+            <FractionNH4>0.46</FractionNH4>
+          </FertiliserType>
+        </Types>
+      </Fertiliser>
       <Soil>
         <Name>Soil</Name>
         <RecordNumber>0</RecordNumber>
