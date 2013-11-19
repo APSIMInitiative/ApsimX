@@ -2470,7 +2470,7 @@
     </Zone>
     <Input>
       <Name>Input</Name>
-      <FileName>C:\ApsimX\Tests\TestObserved.txt</FileName>
+      <FileName>TestObserved.txt</FileName>
     </Input>
   </Simulation>
   <DataStore>

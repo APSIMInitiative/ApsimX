@@ -47,7 +47,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileName", e.FileName));
+            CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FullFileName", e.FileName));
         }
 
         /// <summary>
