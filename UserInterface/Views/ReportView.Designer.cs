@@ -65,6 +65,8 @@
             this.VariableEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.VariableEditor.Lines = new string[] {
         "textEditorControl1",
+        "",
+        "",
         ""};
             this.VariableEditor.Location = new System.Drawing.Point(0, 13);
             this.VariableEditor.Name = "VariableEditor";
@@ -88,6 +90,8 @@
             this.FrequencyEditor.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.FrequencyEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FrequencyEditor.Lines = new string[] {
+        "",
+        "",
         "",
         "",
         ""};

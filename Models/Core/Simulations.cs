@@ -15,8 +15,6 @@ namespace Models.Core
     /// </summary>
     public class Simulations : Zone
     {
-       
-
         private string _FileName;
 
         /// <summary>
@@ -122,8 +120,8 @@ namespace Models.Core
         /// Constructor, private to stop developers using it. Use 'Utility.Xml.Deserialise' instead.
         /// </summary>
         private Simulations() { }
-        
-       
+
+
 
         
 

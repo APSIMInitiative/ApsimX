@@ -255,8 +255,13 @@ namespace Models.Core
             // Invalidate the AllModels list.
             AllModels = null;
             if (resolveLinks)
+            {
+                Utility.ModelFunctions.ConnectEvent(model);
                 model.ResolveLinks();
+            }
         }
+
+
 
         /// <summary>
         /// Remove a model from the Models collection. Returns true if model was removed.

@@ -95,6 +95,7 @@
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate.cs" />
     <Compile Include="MicroClimateScience.cs" />
+    <Compile Include="Operations.cs" />
     <Compile Include="Plant\Arbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
     <Compile Include="Plant\Biomass.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
+    <Compile Include="Utility\ModelFunctions.cs" />
     <Compile Include="WeatherFile.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Main.cs" />

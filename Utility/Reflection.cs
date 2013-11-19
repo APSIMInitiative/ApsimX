@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.CodeDom.Compiler;
 
 namespace Utility
 {
@@ -236,6 +237,51 @@ namespace Utility
                     return type;
             }
             return null;
+        }
+
+        public static Assembly CompileTextToAssembly(string Code)
+        {
+            bool VB = Code.IndexOf("Imports System") != -1;
+            string Language;
+            if (VB)
+                Language = CodeDomProvider.GetLanguageFromExtension(".vb");
+            else
+                Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+
+            if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
+            {
+                CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
+                if (Provider != null)
+                {
+                    CompilerParameters Params = new CompilerParameters();
+                    Params.GenerateInMemory = true;      //Assembly is created in memory
+                    Params.TempFiles = new TempFileCollection(System.IO.Path.GetTempPath(), false);
+                    Params.TreatWarningsAsErrors = false;
+                    Params.WarningLevel = 2;
+                    Params.ReferencedAssemblies.Add("System.dll");
+                    Params.ReferencedAssemblies.Add("System.Xml.dll");
+                    Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
+
+                    Params.TempFiles = new TempFileCollection(".");
+                    Params.TempFiles.KeepFiles = false;
+                    string[] source = new string[1];
+                    source[0] = Code;
+                    CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
+                    string Errors = "";
+                    foreach (CompilerError err in results.Errors)
+                    {
+                        if (Errors != "")
+                            Errors += "\r\n";
+
+                        Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                    }
+                    if (Errors != "")
+                        throw new Exception(Errors);
+
+                    return results.CompiledAssembly;
+                }
+            }
+            throw new Exception("Cannot compile manager script to an assembly");
         }
     }
 }

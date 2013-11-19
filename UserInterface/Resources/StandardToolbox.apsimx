@@ -56,6 +56,13 @@
       <Irrigation>
         <Name>Irrigation</Name>
       </Irrigation>
+      <Operations>
+        <Name>Operations</Name>
+        <Operation>
+          <Date>1940-01-02T00:00:00</Date>
+          <Action>Fertiliser.Apply(100, 0, "NO3N");</Action>
+        </Operation>
+      </Operations>
       <Soil>
         <Name>Soil</Name>
         <RecordNumber>0</RecordNumber>

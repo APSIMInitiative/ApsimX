@@ -17,12 +17,6 @@ namespace Models.Core
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Zone : ModelCollection, IXmlSerializable
     {
-        protected class EventSubscriber
-        {
-            public Model model;
-            public MethodInfo handler;
-        }
-
         /// <summary>
         /// Area of the zone.
         /// </summary>
@@ -118,25 +112,7 @@ namespace Models.Core
         #endregion
 
 
-        /// <summary>
-        /// Connect all events up in this simulation
-        /// </summary>
-        public static void ConnectEventsInModel(Model model)
-        {
-            Model[] modelsInScope = model.FindAll();
 
-            foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-            {
-                foreach (EventSubscriber subscriber in FindEventSubscribers(Event.Name, modelsInScope))
-                {
-                    // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(Event.EventHandlerType, subscriber.model, subscriber.handler);
-                    Event.AddEventHandler(model, eventdelegate);
-                }
-            }
-
-
-        }
         /// <summary>
         /// Connect all events up in this simulation
         /// </summary>
@@ -150,7 +126,7 @@ namespace Models.Core
             {
                 foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
                 {
-                    foreach (EventSubscriber subscriber in FindEventSubscribers(Event.Name, modelsInScope))
+                    foreach (Utility.ModelFunctions.EventSubscriber subscriber in Utility.ModelFunctions.FindEventSubscribers(Event.Name, modelsInScope))
                     {
                         // connect subscriber to the event.
                         Delegate eventdelegate = Delegate.CreateDelegate(Event.EventHandlerType, subscriber.model, subscriber.handler);
@@ -190,24 +166,7 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Look through and return all models in scope for event subscribers with the specified event name.
-        /// </summary>
-        protected static List<EventSubscriber> FindEventSubscribers(string eventName, Model[] modelsInScope)
-        {
-            List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in modelsInScope)
-            {
-                foreach (MethodInfo method in model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
-                {
-                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(method, typeof(EventSubscribe), false);
-                    if (subscriberAttribute != null && subscriberAttribute.Name == eventName)
-                        subscribers.Add(new EventSubscriber() { handler = method, model = model });
-                }
-            }
-            return subscribers;
 
-        }
 
 
         /// <summary>
