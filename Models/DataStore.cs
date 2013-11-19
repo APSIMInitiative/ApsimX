@@ -198,13 +198,9 @@ namespace Models
         /// <summary>
         /// Write a message to the DataStore.
         /// </summary>
-        public void WriteMessage(string simulationName, DateTime date, string message, ErrorLevel type)
+        public void WriteMessage(string componentFullPath, string simulationName, DateTime date, string message, ErrorLevel type)
         {
-            StackTrace st = new StackTrace(true);
-            MethodInfo callingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
-            string componentName = callingMethod.DeclaringType.FullName;
-
-            WriteMessage(simulationName, date, componentName, message, type);
+            WriteMessage(simulationName, date, componentFullPath, message, type);
         }
 
         /// <summary>
@@ -254,7 +250,6 @@ namespace Models
                 }
                 catch (Utility.SQLiteException err)
                 {
-                    Console.WriteLine(err.Message);
                     return new string[0];
                 }
             }
@@ -285,7 +280,6 @@ namespace Models
                 }
                 catch (Utility.SQLiteException err)
                 {
-                    Console.WriteLine(err.Message);
                     return new string[0];
                 }
 
@@ -379,13 +373,17 @@ namespace Models
                 report.WriteLine("<style type=\"text/css\">");
                 report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
                 report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
-                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;{background-color:#d4e3e5;}");
+                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
                 report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
 
                 report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
                 report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;}");
+                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
                 report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+
+                report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
+                report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
+                
                 report.WriteLine("</style>");
 
                 report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
@@ -469,28 +467,23 @@ namespace Models
 
             DataTable table = new DataTable();
 
-            PropertyInfo[] properties = model.Properties();
-            foreach (PropertyInfo property in properties)
+            Utility.ModelFunctions.Parameter[] properties = Utility.ModelFunctions.Parameters(model);
+            foreach (Utility.ModelFunctions.Parameter property in properties)
             {
-                if (property.Name != "Name" && property.Name != "Parent" && 
-                    Utility.Reflection.GetAttribute(property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
+                if (property.Name != "Name" && property.Name != "Parent")
                 {
-                    object value = property.GetValue(model, null);
+                    object value = property.Value;
                     if (value != null)
                     {
                         string propertyName = property.Name;
 
                         // look for a description attribute.
-                        Description descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(Description), false) as Description;
-                        if (descriptionAttribute != null)
-                            propertyName = descriptionAttribute.ToString();
+                        if (property.Description != null)
+                            propertyName = property.Description;
 
                         // look for units
-                        Units unitsAttribute = Utility.Reflection.GetAttribute(property, typeof(Units), false) as Units;
-                        string units = "";
-                        if (unitsAttribute != null)
-                            units = "(" + unitsAttribute.UnitsString + ")";
-                        propertyName += units;
+                        if (property.Units != null)
+                            propertyName += property.Units;
                         propertyName += ":";
 
                         // If an array was found then put values into table.
@@ -600,10 +593,16 @@ namespace Models
                     report.WriteLine("<tr>");
                     foreach (DataColumn col in table.Columns)
                     {
-                        report.Write("<td>");
+                        report.WriteLine("<td>");
                         string st = FormatValue(row[col]);
                         if (st.Contains("\n"))
                             st = st.Replace("\n", "<br/>");
+                        if (st.Contains("WARNING:"))
+                            report.WriteLine("<p class=\"Warning\">");
+                        else if (st.Contains("ERROR:"))
+                            report.WriteLine("<p class=\"Error\">");
+                        else
+                            report.WriteLine("<p>");
                         report.Write(st);
                         
                         report.WriteLine("</td>");

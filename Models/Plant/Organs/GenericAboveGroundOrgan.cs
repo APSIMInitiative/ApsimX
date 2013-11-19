@@ -7,15 +7,18 @@ namespace Models.PMF.Organs
 {
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
+        [Link]
+        Summary Summary = null;
+
         #region Event handlers
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Pruning " + Name + " from " + Plant.Name;
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
 
             Live.Clear();
             Dead.Clear();
@@ -25,9 +28,9 @@ namespace Models.PMF.Organs
         {
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
 
             Live.Clear();
             Dead.Clear();

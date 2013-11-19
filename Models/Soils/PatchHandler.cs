@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Models.Core;
 
 namespace Models.Soils
 {
@@ -36,7 +37,8 @@ namespace Models.Soils
             public Double[] FOM_N;
         }
 
-
+        [Link]
+        Summary Summary = null;
 
 
 
@@ -103,16 +105,12 @@ namespace Models.Soils
                     double OldPatch_NewArea = OldPatch_OldArea - NewPatch_NewArea;
                     if (NewPatch_NewArea < MinimumPatchArea)
                     {  // area to create is too small, patch will not be created
-                        Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year="
-                            + Clock.Today.DayOfYear.ToString() + "), SoilNitrogen.AddCNPatch:");
-                        Console.WriteLine("   attempt to create a new patch with area too small or negative ("
+                        Summary.WriteMessage(FullPath, "   attempt to create a new patch with area too small or negative ("
                             + NewPatch_NewArea.ToString("#0.00#") + "). The patch will not be created.");
                     }
                     else if (OldPatch_NewArea < MinimumPatchArea)
                     {  // remaining area is too small or negative, patch will be created but old one will be deleted
-                        Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year="
-                            + Clock.Today.DayOfYear.ToString() + "), SoilNitrogen.AddCNPatch:");
-                        Console.WriteLine(" attempt to set the area of existing patch(" + PatchIDs[i].ToString()
+                        Summary.WriteMessage(FullPath, " attempt to set the area of existing patch(" + PatchIDs[i].ToString()
                             + ") to a value too small or negative (" + OldPatch_NewArea.ToString("#0.00#")
                             + "). The patch will be eliminated.");
 
@@ -148,9 +146,7 @@ namespace Models.Soils
                             Patch[k].PatchName = "Patch" + k.ToString();
                         }
                         PatchesJustAdded.Add(k);
-                        Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year=" + Clock.Today.DayOfYear.ToString()
-                            + "), SoilNitrogen.AddPatch:");
-                        Console.WriteLine(" create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") + ", based on existing patch("
+                        Summary.WriteMessage(FullPath, " create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") + ", based on existing patch("
                             + PatchIDs[i].ToString() + ") - Old area = " + OldPatch_OldArea.ToString("#0.00#") + ", new area = "
                             + OldPatch_NewArea.ToString("#0.00#"));
                     }
@@ -337,9 +333,7 @@ namespace Models.Soils
                         }
                         else
                         {  // name passed did not correspond to any patch
-                            Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year="
-                                + Clock.Today.DayOfYear.ToString() + "), SoilNitrogen.AddPatch:");
-                            Console.WriteLine("  the patch name '" + NamesToCheck[pName] + "' did not correspond to any existing patch."
+                            Summary.WriteMessage(FullPath, "  the patch name '" + NamesToCheck[pName] + "' did not correspond to any existing patch."
                                 + " Patch will be ignored.");
                         }
                     }
@@ -385,9 +379,7 @@ namespace Models.Soils
                         }
                         else
                         {  // id passed did not correspond to any patch
-                            Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year=" + Clock.Today.DayOfYear.ToString()
-                                + "), SoilNitrogen.AddPatch:");
-                            Console.WriteLine("  the patch id '" + IDsToCheck[pId] + "' did not correspond to any existing patch."
+                            Summary.WriteMessage(FullPath, "  the patch id '" + IDsToCheck[pId] + "' did not correspond to any existing patch."
                                 + " Patch will be ignored.");
                         }
                     }

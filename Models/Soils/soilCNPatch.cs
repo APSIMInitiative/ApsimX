@@ -83,7 +83,7 @@ namespace Models.Soils
                     {
                         if (layer >= g.dlayer.Length)
                         {
-                            Console.WriteLine(" Attempt to assign urea value to a non-existent soil layer - extra values will be ignored");
+                            g.Summary.WriteMessage(g.FullPath, " Attempt to assign urea value to a non-existent soil layer - extra values will be ignored");
                             break;
                         }
                         else if (layer >= value.Length)
@@ -116,7 +116,7 @@ namespace Models.Soils
                     {
                         if (layer >= _nh4.Length)
                         {
-                            Console.WriteLine(" Attempt to assign ammonium value to a non-existent soil layer - extra values will be ignored");
+                            g.Summary.WriteMessage(g.FullPath, " Attempt to assign ammonium value to a non-existent soil layer - extra values will be ignored");
                             break;
                         }
                         else if (layer >= value.Length)
@@ -150,7 +150,7 @@ namespace Models.Soils
                     {
                         if (layer >= _no3.Length)
                         {
-                            Console.WriteLine(" Attempt to assign no3 value to a non-existent soil layer - extra values will be ignored");
+                            g.Summary.WriteMessage(g.FullPath, " Attempt to assign no3 value to a non-existent soil layer - extra values will be ignored");
                             break;
                         }
                         else if (layer >= value.Length)
@@ -191,7 +191,7 @@ namespace Models.Soils
                         {
                             if (layer >= g.dlayer.Length)
                             {
-                                Console.WriteLine(" Attempt to change the urea value of a non-existent layer - extra values will be ignored");
+                                g.Summary.WriteMessage(g.FullPath, " Attempt to change the urea value of a non-existent layer - extra values will be ignored");
                                 break;
                             }
                             else if (layer >= value.Length)
@@ -225,7 +225,7 @@ namespace Models.Soils
                         {
                             if (layer >= g.dlayer.Length)
                             {
-                                Console.WriteLine(" Attempt to change the ammonium value of a non-existent layer - extra values will be ignored");
+                                g.Summary.WriteMessage(g.FullPath, " Attempt to change the ammonium value of a non-existent layer - extra values will be ignored");
                                 break;
                             }
                             else if (layer >= value.Length)
@@ -259,7 +259,7 @@ namespace Models.Soils
                         {
                             if (layer >= g.dlayer.Length)
                             {
-                                Console.WriteLine(" Attempt to change the nitrate value of a non-existent layer - extra values will be ignored");
+                                g.Summary.WriteMessage(g.FullPath, " Attempt to change the nitrate value of a non-existent layer - extra values will be ignored");
                                 break;
                             }
                             else if (layer >= value.Length)
@@ -2508,7 +2508,7 @@ namespace Models.Soils
                             fom_n_pool3[layer] += FOMdata.Layer[layer].FOM.N * g.fract_lign[fom_type];
                         }
                         else
-                            Console.WriteLine(" Number of FOM values given is larger than the number of layers, extra values will be ignored");
+                            g.Summary.WriteMessage(g.FullPath, " Number of FOM values given is larger than the number of layers, extra values will be ignored");
                     }
                 }
             }
@@ -2534,7 +2534,7 @@ namespace Models.Soils
                         _nh4[layer] += FOMPoolData.Layer[layer].nh4;
                     }
                     else
-                        Console.WriteLine(" Number of FOM values given is larger than the number of layers, extra values will be ignored");
+                        g.Summary.WriteMessage(g.FullPath, " Number of FOM values given is larger than the number of layers, extra values will be ignored");
                 }
             }
 
@@ -3057,9 +3057,9 @@ namespace Models.Soils
                 else if (TheVariable < g.WarningThreshold)
                 {
                     result = false;
-                    Console.WriteLine(g.Clock.Today.ToShortDateString() + " - Attempt to change " + VariableName + "[" +
+                    g.Summary.WriteWarning(g.FullPath, g.Clock.Today.ToShortDateString() + " - Attempt to change " + VariableName + "[" +
                         (layer + 1).ToString() + "] in Patch[" + PatchName + "] to a value below the lower limit");
-                    Console.WriteLine("  The value " + TheVariable.ToString() + " will be reset to minimum value");
+                    g.Summary.WriteMessage(g.FullPath, "  The value " + TheVariable.ToString() + " will be reset to minimum value");
                 }
                 else if (TheVariable < 0.0)
                     result = false;

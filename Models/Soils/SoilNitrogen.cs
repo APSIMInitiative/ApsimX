@@ -261,13 +261,12 @@ namespace Models.Soils
         private void CheckParams()
         {
 
-            Console.WriteLine();
-            Console.WriteLine("        - Reading/checking parameters");
+            Summary.WriteMessage(FullPath, "        - Reading/checking parameters");
 
             SoilCNParameterSet = SoilCNParameterSet.Trim();
             NPartitionApproach = NPartitionApproach.Trim();
 
-            Console.WriteLine("           - Using " + SoilCNParameterSet + " soil mineralisation specification");
+            Summary.WriteMessage(FullPath, "           - Using " + SoilCNParameterSet + " soil mineralisation specification");
 
             // check whether soil temperature is present. If not, check whether the basic params for simpleSoilTemp have been supplied
             if (AllowsimpleSoilTemp)
@@ -491,53 +490,12 @@ namespace Models.Soils
                 myMessage = "   - Soil temperature supplied by apsim";
             else
                 myMessage = "   - Soil temperature calculated internally";
-            Console.WriteLine("        " + myMessage);
+            Summary.WriteMessage(FullPath, "        " + myMessage);
             if (use_external_ph)
                 myMessage = "   - Soil pH supplied by apsim";
             else
                 myMessage = "   - Soil pH was not supplied, default value will be used";
-            Console.WriteLine("        " + myMessage);
-            Console.WriteLine();
-
-            Console.Write(@"
-                      Soil Profile Properties
-          ------------------------------------------------
-           Layer    pH    OC     NO3     NH4    Urea
-                         (%) (kg/ha) (kg/ha) (kg/ha)
-          ------------------------------------------------
-");
-            for (int layer = 0; layer < dlayer.Length; ++layer)
-            {
-                Console.WriteLine("          {0,4:d1}     {1,4:F2}  {2,4:F2}  {3,6:F2}  {4,6:F2}  {5,6:F2}",
-                layer + 1, ph[layer], OC_reset[layer], no3[layer], nh4[layer], urea[layer]);
-            }
-            Console.WriteLine("          ------------------------------------------------");
-            Console.WriteLine("           Totals              {0,6:F2}  {1,6:F2}  {2,6:F2}",
-                      SumDoubleArray(no3), SumDoubleArray(nh4), SumDoubleArray(urea));
-            Console.WriteLine("          ------------------------------------------------");
-            Console.WriteLine();
-            Console.Write(@"
-                  Initial Soil Organic Matter Status
-          ---------------------------------------------------------
-           Layer      Hum-C   Hum-N  Biom-C  Biom-N   FOM-C   FOM-N
-                    (kg/ha) (kg/ha) (kg/ha) (kg/ha) (kg/ha) (kg/ha)
-          ---------------------------------------------------------
-");
-
-            double TotalFomC = 0.0;
-            for (int layer = 0; layer < dlayer.Length; ++layer)
-            {
-                //double FomC = fom_c_pool1[layer] + fom_c_pool2[layer] + fom_c_pool3[layer];
-                TotalFomC += fom_c[layer];
-                Console.WriteLine("          {0,4:d1}   {1,10:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}{6,8:F1}",
-                layer + 1, hum_c[layer], hum_n[layer], biom_c[layer], biom_n[layer], fom_c[layer], fom_n[layer]);
-            }
-            Console.WriteLine("          ---------------------------------------------------------");
-            Console.WriteLine("           Totals{0,10:F1}{1,8:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}",
-                SumDoubleArray(hum_c), SumDoubleArray(hum_n), SumDoubleArray(biom_c),
-                SumDoubleArray(biom_n), TotalFomC, SumDoubleArray(fom_n));
-            Console.WriteLine("          ---------------------------------------------------------");
-            Console.WriteLine();
+            Summary.WriteMessage(FullPath, "        " + myMessage);
         }
 
         #endregion
@@ -612,9 +570,7 @@ namespace Models.Soils
                     for (int k = 0; k < Patches.disappearing.Count; k++)
                     {
                         MergePatches(Patches.recipient[k], Patches.disappearing[k]);
-                        Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year=" + Clock.Today.DayOfYear.ToString() +
-                            "), SoilNitrogen.MergePatch:");
-                        Console.WriteLine("   merging Patch(" + Patches.disappearing[k].ToString() + ") into Patch(" +
+                        Summary.WriteMessage(FullPath, "   merging Patch(" + Patches.disappearing[k].ToString() + ") into Patch(" +
                             Patches.recipient[k].ToString() + "). New patch area = " + Patch[Patches.recipient[k]].RelativeArea.ToString("#0.00#"));
                     }
                 }

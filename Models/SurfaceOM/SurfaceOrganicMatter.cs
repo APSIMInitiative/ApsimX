@@ -25,6 +25,9 @@ namespace Models.SurfaceOM
         [Link]
         Clock Clock = null;
 
+        [Link]
+        ISummary Summary = null;
+
         //====================================================================
         //    SurfaceOM constants;
         //====================================================================
@@ -842,14 +845,6 @@ namespace Models.SurfaceOM
             //If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3_incorp[0] > 0.0 || nh4_incorp[0] > 0.0 || po4_incorp[0] > 0.0)
             {
-                Console.Write("Setting dlt_no3 - ");
-                foreach (double x in no3_incorp)
-                    Console.Write("{0}\t", x);
-                Console.WriteLine();
-
-                //MyPaddock.Set("dlt_no3", no3_incorp);
-                //MyPaddock.Set("dlt_nh4", nh4_incorp);
-
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
                 NitrogenChanges.Sender = "SurfaceOrganicMatter";
                 NitrogenChanges.SenderType = "SurfaceOrganicMatter";
@@ -866,7 +861,6 @@ namespace Models.SurfaceOM
                 if (g.phosphorus_aware)
                 {
                     throw new NotImplementedException();
-                    //MyPaddock.Set("dlt_labile_p", po4_incorp);
                 }
 
             }
@@ -1000,7 +994,7 @@ namespace Models.SurfaceOM
                 if (SOMNo < 0)
                 {
                     //This is an unknown type - error (<- original comment, not really an error as original code didn't throw one :S)
-                    Console.WriteLine("Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
+                    Summary.WriteMessage(FullPath, "Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
                 }
                 else
                 {
@@ -1032,7 +1026,7 @@ namespace Models.SurfaceOM
                         }
                         else
                         {
-                            Console.WriteLine(
+                            Summary.WriteMessage(FullPath, 
                                 "Attempting to remove more dm from " + SOM.Pool[som_index].Name + " standing Surface Organic Matter pool " + pool + " than available" + Environment.NewLine
                                 + "Removing " + SOM.Pool[SOMNo].LyingFraction[pool].amount + " (kg/ha) " + "from " + g.SurfOM[SOMNo].Lying[pool].amount + " (kg/ha) available."
                            );
@@ -1060,7 +1054,7 @@ namespace Models.SurfaceOM
 
                 //Report Removals;
                 if (p.report_removals == "yes")
-                    Console.WriteLine(
+                    Summary.WriteMessage(FullPath, String.Format(
     @"Removed SurfaceOM
     SurfaceOM name  = {0}
     SurfaceOM Type  = {1}
@@ -1074,7 +1068,7 @@ namespace Models.SurfaceOM
             Amount = {5:0.0##}
             N      = {6:0.0##}
             P      = {7:0.0##}", SOM.Pool[SOMNo].Name, SOM.Pool[SOMNo].OrganicMatterType, lamount, lN, lP, samount, sN, sP
-                    );
+                    ));
                 else
                 {
                     //The user has asked for no reports for removals of surfom;
@@ -1245,7 +1239,7 @@ namespace Models.SurfaceOM
             //----------------------------------------------------------
             if (data.f_incorp == 0 && data.tillage_depth == 0)
             {
-                Console.WriteLine("    - Reading default residue tillage info");
+                Summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
 
                 data = TillageTypes.GetTillageData(data.Name);
 
@@ -1261,11 +1255,11 @@ namespace Models.SurfaceOM
 
             surfom_incorp(data.Name, data.f_incorp, data.tillage_depth);
 
-            Console.WriteLine(
+            Summary.WriteMessage(FullPath, String.Format(
     @"Residue removed using {0}
     Fraction Incorporated = {1:0.0##}
     Incorporated Depth    = {2:0.0##}", data.Name, data.f_incorp, data.tillage_depth
-                 );
+                 ));
         }
 
 
@@ -1651,7 +1645,7 @@ namespace Models.SurfaceOM
                     if (surfom_cpr_added == 0)
                     {
                         surfom_p_added = divide((surfom_mass_added * c.C_fract[SOMNo]), c.default_cpr, 0.0f);
-                        Console.WriteLine("SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
+                        Summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
                         surfom_p_added = divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cpr_added, 0.0f);
@@ -1704,12 +1698,12 @@ namespace Models.SurfaceOM
                 }
                 //Report Additions;
                 if (p.report_additions == "yes")
-                    Console.WriteLine(
+                    Summary.WriteMessage(FullPath, String.Format(
     @"Added SurfaceOM
     SurfaceOM name       = {0}
     SurfaceOM Type       = {1}
     Amount Added [kg/ha] = {2:0.0##}", g.SurfOM[SOMNo].name.Trim(), g.SurfOM[SOMNo].OrganicMatterType.Trim(), surfom_mass_added
-                                         );
+                                         ));
 
                 residue2_Send_Res_added_Event(g.SurfOM[SOMNo].OrganicMatterType, g.SurfOM[SOMNo].OrganicMatterType, surfom_mass_added, surfom_n_added, surfom_p_added);
 
@@ -1834,12 +1828,12 @@ namespace Models.SurfaceOM
 
             //Report Additions;
             if (p.report_additions == "yes")
-                Console.WriteLine(
+                Summary.WriteMessage(FullPath, String.Format(
     @"Propped-up SurfaceOM
     SurfaceOM name        = {0}
     SurfaceOM Type        = {1}
     New Standing Fraction = {2}", g.SurfOM[SOMNo].name.Trim(), g.SurfOM[SOMNo].OrganicMatterType.Trim(), data.standing_fract
-                                    );
+                                    ));
 
         }
 
@@ -2018,10 +2012,10 @@ namespace Models.SurfaceOM
 
             //Report Additions;
             if (p.report_additions == "yes")
-                Console.WriteLine(
+                Summary.WriteMessage(FullPath, String.Format(
     @"Added surfom
     SurfaceOM Type          = {0}
-    Amount Added [kg/ha]    = {1}", crop_type.TrimEnd(), surfom_added);
+    Amount Added [kg/ha]    = {1}", crop_type.TrimEnd(), surfom_added));
 
             //Assume the "crop_type" is the unique name.  Now check whether this unique "name" already exists in the system.
             SOMNo = surfom_number(crop_type);
@@ -2134,48 +2128,6 @@ namespace Models.SurfaceOM
             }
         }
 
-        /// <summary>
-        /// Output residue module summary details
-        /// </summary>
-        private void surfom_Sum_Report()
-        {
-
-            string name;
-            string somtype;
-            double mass;
-            double C;
-            double N;
-            double P;
-            double cover;
-            double standfr;
-            double combined_cover;	//effective combined cover from covers 1 & 2 (0-1)
-
-            Console.WriteLine("                    Initial Surface Organic Matter Data");
-            Console.WriteLine("    ----------------------------------------------------------------------");
-            Console.WriteLine("       Name   Type        Dry matter   C        N        P    Cover  Standing_fr");
-            Console.WriteLine("                           (kg/ha)  (kg/ha)  (kg/ha)  (kg/ha) (0-1)     (0-1)");
-            Console.WriteLine("    ----------------------------------------------------------------------");
-
-            for (int i = 0; i < g.num_surfom; i++)
-            {
-
-                name = g.SurfOM[i].name;
-                somtype = g.SurfOM[i].OrganicMatterType;
-                mass = SumSurfOMStandingLying(g.SurfOM[i], x => x.amount);
-                C = SumSurfOMStandingLying(g.SurfOM[i], x => x.C);
-                N = SumSurfOMStandingLying(g.SurfOM[i], x => x.N);
-                P = SumSurfOMStandingLying(g.SurfOM[i], x => x.P);
-                cover = surfom_cover(i);
-                standfr = divide(SumOMFractionType(g.SurfOM[i].Standing, x => x.C), C, 0.0f);
-
-                Console.WriteLine("{0,5} {1,10} {2,10} {3:0.0}, {4:0.0},{5:0.0},{6:0.0},{7:0.000}, {8:0.0}", " ", name, somtype, mass, C, N, P, cover, standfr);
-            }
-            Console.WriteLine("    ----------------------------------------------------------------------");
-            Console.WriteLine("    ");
-            Console.WriteLine("                 Effective Cover from Surface Materials = f5.1", surfom_cover_total());
-            Console.WriteLine("    ");
-
-        }
 
         private void surfaceOM_ONtick()
         {

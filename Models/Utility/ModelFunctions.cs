@@ -13,29 +13,26 @@ namespace Utility
     /// </summary>
     public class ModelFunctions
     {
-        public class EventSubscriber
+        #region Event functions
+        private class EventSubscriber
         {
-            public Model model;
-            public MethodInfo handler;
-
+            public Model Model;
+            public MethodInfo MethodInfo;
             public string Name
             {
                 get
                 {
-                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(handler, typeof(EventSubscribe), false);
+                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(MethodInfo, typeof(EventSubscribe), false);
                     return subscriberAttribute.Name;
                 }
             }
         }
-        public class EventPublisher
+        private class EventPublisher
         {
             public Model Model;
             public EventInfo EventInfo;
-
             public string Name { get { return EventInfo.Name; } }
-
             public Type EventHandlerType { get { return EventInfo.EventHandlerType; } }
-
             public void AddEventHandler(Model model, Delegate eventDelegate)
             {
                 EventInfo.AddEventHandler(model, eventDelegate);
@@ -43,27 +40,39 @@ namespace Utility
         }
 
         /// <summary>
-        /// Connect all events up in this simulation
+        /// Connect all events in all models that are in scope of 'model'
         /// </summary>
         public static void ConnectEventsInAllModels(Model model)
         {
             Model[] modelsInScope = model.FindAll();
 
-            foreach (EventPublisher publisher in FindEventPublishers(null, model))
+            foreach (EventPublisher publisher in FindEventPublishers(null, modelsInScope))
             {
                 foreach (EventSubscriber subscriber in FindEventSubscribers(publisher.Name, modelsInScope))
                 {
                     // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.model, subscriber.handler);
-                    publisher.AddEventHandler(model, eventdelegate);
+                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
+                    publisher.AddEventHandler(publisher.Model, eventdelegate);
                 }
             }
         }
 
         /// <summary>
+        /// Disconnect all events in all models that are in scope of 'model'
+        /// </summary>
+        public static void DisconnectEventsInAllModels(Model model)
+        {
+            Model[] modelsInScope = model.FindAll();
+
+            foreach (EventPublisher publisher in FindEventPublishers(null, modelsInScope))
+                DisconnectEventPublisher(publisher, null);
+        }
+
+
+        /// <summary>
         /// Connect all events up in the specified model.
         /// </summary>
-        public static void ConnectEvent(Model model)
+        public static void ConnectEventsInModel(Model model)
         {
             Model[] modelsInScope = model.FindAll();
 
@@ -73,7 +82,7 @@ namespace Utility
                 foreach (EventSubscriber subscriber in FindEventSubscribers(publisher.Name, modelsInScope))
                 {
                     // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.model, subscriber.handler);
+                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
                     publisher.AddEventHandler(model, eventdelegate);
                 }
             }
@@ -84,18 +93,53 @@ namespace Utility
                 foreach (EventPublisher publisher in FindEventPublishers(subscriber.Name, modelsInScope))
                 {
                     // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.model, subscriber.handler);
+                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
                     publisher.AddEventHandler(publisher.Model, eventdelegate);
                 }
             }
+        }
 
+        /// <summary>
+        /// Disconnect the specified model from all events.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void DisconnectEventsInModel(Model model)
+        {
+            Model[] modelsInScope = model.FindAll();
+
+            // Go through all events in the specified model and detach them from subscribers.
+            foreach (EventPublisher publisher in FindEventPublishers(null, model))
+                DisconnectEventPublisher(publisher, null);
+
+            // Go through all subscribers in the specified model and find the event publisher to detach from.
+            foreach (EventSubscriber subscriber in FindEventSubscribers(null, model))
+                foreach (EventPublisher publisher in FindEventPublishers(subscriber.Name, modelsInScope))
+                    DisconnectEventPublisher(publisher, model);
+        }
+
+        /// <summary>
+        /// Clear all subscriptions from the specified event publisher if 'model' is null or
+        /// those subscriptions where the subscriber is 'model'
+        /// </summary>
+        private static void DisconnectEventPublisher(EventPublisher publisher, Model model)
+        {
+            FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
+            if (eventDelegate != null)
+            {
+                foreach (Delegate del in eventDelegate.GetInvocationList())
+                {
+                    if (model == null || del.Target == model)
+                        publisher.EventInfo.RemoveEventHandler(publisher.Model, del);
+                }
+            }
         }
 
         /// <summary>
         /// Look through and return all models in scope for event subscribers with the specified event name.
         /// If eventName is null then all will be returned.
         /// </summary>
-        public static List<EventSubscriber> FindEventSubscribers(string eventName, Model[] modelsInScope)
+        private static List<EventSubscriber> FindEventSubscribers(string eventName, Model[] modelsInScope)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
             foreach (Model model in modelsInScope)
@@ -108,14 +152,14 @@ namespace Utility
         /// Look through the specified model and return all event subscribers that match the event name. If
         /// eventName is null then all will be returned.
         /// </summary>
-        public static List<EventSubscriber> FindEventSubscribers(string eventName, Model model)
+        private static List<EventSubscriber> FindEventSubscribers(string eventName, Model model)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
             foreach (MethodInfo method in model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
             {
                 EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(method, typeof(EventSubscribe), false);
                 if (subscriberAttribute != null && (eventName == null || subscriberAttribute.Name == eventName))
-                    subscribers.Add(new EventSubscriber() { handler = method, model = model });
+                    subscribers.Add(new EventSubscriber() { MethodInfo = method, Model = model });
             }
             return subscribers;
         }
@@ -124,7 +168,7 @@ namespace Utility
         /// Look through and return all models in scope for event publishers with the specified event name.
         /// If eventName is null then all will be returned.
         /// </summary>
-        public static List<EventPublisher> FindEventPublishers(string eventName, Model[] modelsInScope)
+        private static List<EventPublisher> FindEventPublishers(string eventName, Model[] modelsInScope)
         {
             List<EventPublisher> publishers = new List<EventPublisher>();
             foreach (Model model in modelsInScope)
@@ -137,7 +181,7 @@ namespace Utility
         /// Look through the specified model and return all event publishers that match the event name. If
         /// eventName is null then all will be returned.
         /// </summary>
-        public static List<EventPublisher> FindEventPublishers(string eventName, Model model)
+        private static List<EventPublisher> FindEventPublishers(string eventName, Model model)
         {
             List<EventPublisher> publishers = new List<EventPublisher>();
             foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
@@ -147,5 +191,128 @@ namespace Utility
             }
             return publishers;
         }
+
+        #endregion
+
+        #region Link functions
+        /// <summary>
+        /// Recursively resolve all [Link] fields. A link must be private. This method will also
+        /// go through any public members that are a model or a list of models. For each one found
+        /// it will recursively call this method to resolve links in them. This is an internal
+        /// method that won't normally be called by models.
+        /// </summary>
+        public static void ResolveLinks(Model model)
+        {
+            // Go looking for private [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+            {
+                if (field.IsDefined(typeof(Link), false))
+                {
+                    object linkedObject = model.Find(field.FieldType);
+                    if (linkedObject != null)
+                        field.SetValue(model, linkedObject);
+                    else
+                        throw new ApsimXException(model.FullPath, "Cannot resolve [Link] " + field.ToString() + ". Model type is " + model.GetType().FullName);
+                }
+            }
+
+            foreach (Model child in model.Models)
+            {
+                // Set the childs parent property.
+                child.Parent = model;
+
+                // Tell child to resolve its links.
+                ResolveLinks(child);
+            }
+        }
+        #endregion
+
+        #region Parameter functions
+        /// <summary>
+        /// This class encapsulates a single property of a model. Has properties for getting the value
+        /// of the property, the value in the base model and the default value as definned in the 
+        /// source code.
+        /// </summary>
+        public class Parameter
+        {
+            private Model Model;
+            private PropertyInfo PropertyInfo;
+
+            public Parameter(Model model, PropertyInfo propertyInfo)
+            {
+                Model = model;
+                PropertyInfo = propertyInfo;
+
+            }
+            /// <summary>
+            /// Return the name of the property.
+            /// </summary>
+            public string Name { get { return PropertyInfo.Name; } }
+
+            /// <summary>
+            /// Returns the value of the property.
+            /// </summary>
+            public object Value
+            {
+                get
+                {
+                    return PropertyInfo.GetValue(Model, null);
+                }
+            }
+
+            /// <summary>
+            /// Returns a description of the property or null if not found.
+            /// </summary>
+            public string Description
+            {
+                get
+                {
+                    Description descriptionAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Description), false) as Description;
+                    if (descriptionAttribute != null)
+                        return descriptionAttribute.ToString();
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns the units of the property (in brackets) or null if not found.
+            /// </summary>
+            public string Units
+            {
+                get
+                {
+                    Units unitsAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Units), false) as Units;
+                    if (unitsAttribute != null)
+                        return "(" + unitsAttribute.UnitsString + ")";
+                    return null;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Return a list of all parameters (that are not references to child models). Never returns null. Can
+        /// return an empty array. A parameter is a class property that is public and read/writtable
+        /// </summary>
+        public static Parameter[] Parameters(Model model)
+        {
+            List<Parameter> allProperties = new List<Parameter>();
+            foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+            {
+                if (property.CanRead && property.CanWrite)
+                {
+                    Attribute XmlIgnore = Utility.Reflection.GetAttribute(property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), true);
+                    if (XmlIgnore != null ||
+                        (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
+                        || property.PropertyType.IsSubclassOf(typeof(Model)))
+                    { }
+                    else
+                        allProperties.Add(new Parameter(model, property));
+                }
+            }
+            return allProperties.ToArray();
+        }
+        #endregion
     }
 }

@@ -52,8 +52,7 @@ namespace Models.Core
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
                     Msg += "\r\n" + err.StackTrace;
-                Console.WriteLine(Msg);
-                Summary.WriteMessage(Msg);
+                Summary.WriteError(Msg);
 
                 ok = false;
             }

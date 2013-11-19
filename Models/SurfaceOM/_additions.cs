@@ -106,19 +106,13 @@ namespace Models.SurfaceOM
 
 
         const string apsim_bounds_warning_error =
-    @"     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                     APSIM  Warning  Error
-                     ---------------------
-     '{0}' out of bounds!
-     {1} < {2} < {3} evaluates 'FALSE'
-     Component name: SurfaceOMdotNET
-     
-     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+    @"'{0}' out of bounds!
+     {1} < {2} < {3} evaluates 'FALSE'";
 
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
             if (value + double.Epsilon < lower || value - double.Epsilon > upper)
-                Console.WriteLine(apsim_bounds_warning_error, vname, lower, value, upper);
+                Summary.WriteWarning(FullPath, String.Format(apsim_bounds_warning_error, vname, lower, value, upper));
         }
 
         private bool reals_are_equal(double first, double second)

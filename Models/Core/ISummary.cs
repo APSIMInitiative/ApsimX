@@ -5,7 +5,17 @@
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        void WriteMessage(string Message);
+        void WriteMessage(string FullPath, string Message);
+
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        void WriteWarning(string FullPath, string Message);
+
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        void WriteError(string Message);
 
         /// <summary>
         /// Write a property to the summary.

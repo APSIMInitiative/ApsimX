@@ -113,20 +113,10 @@ namespace Models.Soils
                 PathFixed = true;
                 try
                 {
-                    Directory.GetFiles(Path.GetTempPath());
-                    /*string FileName = Path.GetTempFileName();
-                    Console.WriteLine(FileName);
-                    StreamWriter Out = new StreamWriter(FileName);
-                    Out.Write(1);
-                    Out.Close();
-                    if (File.Exists(FileName))
-                        File.Delete(FileName);
-                    else
-                        Environment.SetEnvironmentVariable("TEMP", Directory.GetCurrentDirectory());*/
+                    Directory.GetFiles(Path.GetTempPath());                    
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("asdf");
                     Environment.SetEnvironmentVariable("TEMP", Directory.GetCurrentDirectory());
                 }
             }

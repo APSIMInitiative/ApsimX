@@ -51,6 +51,8 @@ namespace Models.PMF.Organs
         [Link]
         public Plant Plant = null;
         [Link]
+        Summary Summary = null;
+        [Link]
         public Arbitrator Arbitrator = null;
         [Link]
         public Structure Structure = null;
@@ -651,7 +653,7 @@ namespace Models.PMF.Organs
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
             Leaves.Clear();
-            Console.WriteLine("Removing Leaves from plant");
+            Summary.WriteMessage(FullPath, "Removing Leaves from plant");
         }
         /// <summary>
         /// Fractional interception "above" a given node position 
@@ -1186,7 +1188,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
-            Console.WriteLine("Removing Lowest Leaf");
+            Summary.WriteMessage(FullPath, "Removing Lowest Leaf");
             Leaves.RemoveAt(0);
         }
         
@@ -1222,9 +1224,8 @@ namespace Models.PMF.Organs
             //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Killing " + KillLeaf.KillFraction + " of leaves on " + Plant.Name;
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
 
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
@@ -1237,9 +1238,9 @@ namespace Models.PMF.Organs
             //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();

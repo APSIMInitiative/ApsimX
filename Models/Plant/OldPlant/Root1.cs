@@ -15,6 +15,9 @@ namespace Models.PMF.OldPlant
     public class Root1 : BaseOrgan1, BelowGround
     {
 
+        [Link]
+        Summary Summary = null;
+
         #region Parameters read from XML file and links to other functions.
         [Link]
         public Plant15 Plant;
@@ -700,19 +703,19 @@ namespace Models.PMF.OldPlant
         /// </summary>
         internal void WriteSummary()
         {
-            Console.WriteLine("                        Root Profile");
-            Console.WriteLine("         -----------------------------------------------");
-            Console.WriteLine("          Layer       Kl           Lower    Exploration");
-            Console.WriteLine("          Depth     Factor         Limit      Factor");
-            Console.WriteLine("          (mm)         ()        (mm/mm)       (0-1)");
-            Console.WriteLine("         -----------------------------------------------");
+            Summary.WriteMessage(FullPath, "                        Root Profile");
+            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
+            Summary.WriteMessage(FullPath, "          Layer       Kl           Lower    Exploration");
+            Summary.WriteMessage(FullPath, "          Depth     Factor         Limit      Factor");
+            Summary.WriteMessage(FullPath, "          (mm)         ()        (mm/mm)       (0-1)");
+            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
 
             double dep_tot, esw_tot;                      // total depth of soil & ll
 
             dep_tot = esw_tot = 0.0;
             for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
             {
-                Console.WriteLine(string.Format("     {0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
+                Summary.WriteMessage(FullPath, string.Format("     {0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
                                   SoilWat.dlayer[layer],
                                   getModifiedKL(layer),
                                   Utility.Math.Divide(ll_dep[layer], SoilWat.dlayer[layer], 0.0),
@@ -720,11 +723,11 @@ namespace Models.PMF.OldPlant
                 dep_tot += SoilWat.dlayer[layer];
                 esw_tot += SoilWat.dul_dep[layer] - ll_dep[layer];
             }
-            Console.WriteLine("         -----------------------------------------------");
+            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
             if (HaveModifiedKLValues)
-                Console.WriteLine("         **** KL's have been modified using either CL, EC or ESP values.");
+                Summary.WriteMessage(FullPath, "         **** KL's have been modified using either CL, EC or ESP values.");
 
-            Console.WriteLine(string.Format("         Extractable SW: {0,5:F0}mm in {1,5:F0}mm total depth ({2,3:F0}%).",
+            Summary.WriteMessage(FullPath, string.Format("         Extractable SW: {0,5:F0}mm in {1,5:F0}mm total depth ({2,3:F0}%).",
                                             esw_tot,
                                             dep_tot,
                                             Conversions.fract2pcnt * Utility.Math.Divide(esw_tot, dep_tot, 0.0)));
@@ -759,7 +762,7 @@ namespace Models.PMF.OldPlant
         {
             SwimIsPresent = swim3 > 0;
             if (SwimIsPresent)
-                Console.WriteLine("Using SWIM3 for Soil Water Uptake.");
+                Summary.WriteMessage(FullPath, "Using SWIM3 for Soil Water Uptake.");
 
             Senescing = new Biomass();
             Retranslocation = new Biomass();

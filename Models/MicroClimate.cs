@@ -323,60 +323,6 @@ namespace Models
 
         #region "Events to which we subscribe, and their handlers"
 
-        public void WriteLAITable()
-        {
-            WriteTable("LAI");
-        }
-
-        public void WriteFtotTable()
-        {
-            WriteTable("Ftot");
-        }
-
-        public void WriteFgreenTable()
-        {
-            WriteTable("Fgreen");
-        }
-
-        public void WriteRsTable()
-        {
-            WriteTable("Rs");
-        }
-
-        public void WriteRlTable()
-        {
-            WriteTable("Rl");
-        }
-
-        public void WriteGcTable()
-        {
-            WriteTable("Gc");
-        }
-
-        public void WriteGaTable()
-        {
-            WriteTable("Ga");
-        }
-
-        public void WritePetTable()
-        {
-            WriteTable("PET");
-        }
-
-        public void WritePetrTable()
-        {
-            WriteTable("PETr");
-        }
-
-        public void WritePetaTable()
-        {
-            WriteTable("PETa");
-        }
-
-        public void WriteOmegaTable()
-        {
-            WriteTable("Omega");
-        }
 
         [EventSubscribe("Tick")]
         private void OnTick(object sender, EventArgs e)
@@ -487,11 +433,6 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            Console.WriteLine("     Initialising");
-            Console.WriteLine("     ");
-            Console.WriteLine("        - Reading Constants");
-            Console.WriteLine("     ");
-            Console.WriteLine("        - Reading Parameters");
             latitude = (double)this.Get("latitude");
         }
 
@@ -647,69 +588,6 @@ namespace Models
             {
                 throw new Exception("Unknown table element: " + field);
             }
-        }
-
-        private void WriteTable(string title)
-        {
-            if (!todayHeaderWritten)
-            {
-                //Dim Today As New DateTime(year, 1, 1)
-                //Today = Today.AddDays(day - 1)
-                Console.WriteLine(Clock.Today.ToString("d MMMM yyyy") + "(Day of year=" + Clock.Today.DayOfYear.ToString() + "), " + this.Name + ": ");
-                todayHeaderWritten = false;
-            }
-
-            string lineRule = "          " + new string('-', 70);
-            Console.WriteLine("     Table for " + title);
-            Console.WriteLine(lineRule);
-            Console.Write("          Canopy Layer Height    ");
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
-            {
-                Console.Write(ComponentData[j].Name.PadRight(10));
-            }
-            Console.WriteLine("     Total");
-            Console.WriteLine(lineRule);
-
-            double[] compTot = new double[ComponentData.Count];
-            double grandTot = 0.0;
-            for (int i = numLayers - 1; i >= 0; i += -1)
-            {
-                double top = 0.0;
-                double bottom = 0;
-                for (int layer = 0; layer <= i; layer++)
-                {
-                    top += DeltaZ[layer];
-                }
-                if (i == 0)
-                {
-                    bottom = 0.0;
-                }
-                else
-                {
-                    bottom = top - DeltaZ[i];
-                }
-                double layerTot = 0.0;
-
-                Console.Write("      {0,7:F3} - {1,7:F3}     ", bottom, top);
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
-                {
-                    double val = FetchTableValue(title, j, i);
-                    Console.Write("{0,10:F3}", val);
-                    layerTot += val;
-                    compTot[j] += val;
-                    grandTot += val;
-                }
-                Console.WriteLine("{0,10:F3}", layerTot);
-            }
-            Console.WriteLine(lineRule);
-            Console.Write("             Total          ");
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
-            {
-                Console.Write("{0,10:F3}", compTot[j]);
-            }
-            Console.WriteLine("{0,10:F3}", grandTot);
-            Console.WriteLine(lineRule);
-
         }
 
         private int FindComponentIndex(string name)

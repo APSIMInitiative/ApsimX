@@ -60,8 +60,7 @@ namespace Models
                 Today = Today.AddDays(1);
             }
 
-            //DataStore.WriteMessage(Simulation.Name, "Clock", "Simulation terminated normally", Today);
-            Summary.WriteMessage("Simulation terminated normally");
+            Summary.WriteMessage(FullPath, "Simulation terminated normally");
         }
     }
 }

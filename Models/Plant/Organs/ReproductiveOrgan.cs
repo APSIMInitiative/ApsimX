@@ -9,6 +9,9 @@ namespace Models.PMF.Organs
 {
     class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
+        [Link]
+        Summary Summary = null;
+
         #region Parameter Input Classes
         [Link]
         protected Plant Plant = null;
@@ -101,13 +104,11 @@ namespace Models.PMF.Organs
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Harvesting " + Name + " from " + Plant.Name;
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
-            Console.WriteLine(Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Console.WriteLine(Indent + Name + " Size: " + Size.ToString("f2") + " (g)");
-            Console.WriteLine(Indent + Name + " Number: " + Number.ToString("f2") + " (/m^2)");
-            Console.WriteLine("");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+            Summary.WriteMessage(FullPath, Indent + Name + " Size: " + Size.ToString("f2") + " (g)");
+            Summary.WriteMessage(FullPath, Indent + Name + " Number: " + Number.ToString("f2") + " (/m^2)");
 
 
             Live.Clear();
@@ -125,9 +126,8 @@ namespace Models.PMF.Organs
         {
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
 
             Live.Clear();
             Dead.Clear();

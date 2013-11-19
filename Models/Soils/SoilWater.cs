@@ -203,7 +203,6 @@ namespace Models.Soils
             set
             {
                 _eo_source = value;
-                Console.WriteLine("Eo source: " + _eo_source);
             }
         }
 
@@ -1591,7 +1590,7 @@ namespace Models.Soils
 
         private void IssueWarning(string warningText)
         {
-            Summary.WriteMessage(warningText);
+            Summary.WriteWarning(FullPath, warningText);
         }
 
         private double bound(double A, double Lower, double Upper)
@@ -1869,16 +1868,6 @@ namespace Models.Soils
             //##################
             //Soil Profile  -->  soilwat2_soil_profile_param()
             //##################
-
-#if COMPARISON
-        Console.WriteLine("     ");
-        Console.WriteLine("     - Reading constants");
-        Console.WriteLine("     ");
-        Console.WriteLine("     - Reading Soil Property Parameters");
-        Console.WriteLine("     ");
-#endif
-            Console.WriteLine("   - Reading Soil Profile Parameters");
-
 
             //Initialise the Optional Array Parameters (if not read in).
 
@@ -2523,7 +2512,7 @@ namespace Models.Soils
                 tillage_cn_red = 0.0;
 
                 message = "Tillage CN reduction finished";
-                Console.WriteLine(message);
+                Summary.WriteMessage(FullPath, message);
 
             }
 
@@ -4057,334 +4046,7 @@ namespace Models.Soils
 
         #region Functions used in Event Handlers (mainly in Init, Reset, UserInit, and Write Summary Report Event Handlers)
 
-        //Summary Report & Init2
-        private void soilwat2_sum_report()
-        {
-
-            //*+  Mission Statement
-            //*      Report SoilWat module summary details
-
-            double depth_layer_top;     //! depth to top of layer (mm)
-            double depth_layer_bottom;  //! depth to bottom of layer (mm)
-            int layer;               //! layer number
-            int num_layers;          //! number of soil profile layers
-            string line;                //! temp output record
-            double[] runoff_wf;           //! weighting factor for runoff
-            double[] usw;                 //! unavail. sw (mm)
-            double[] asw;                 //! avail. sw (mm)
-            double[] masw;                //! max unavail. sw (mm)
-            double[] dsw;                 //! drainable sw (mm)
-
-            num_layers = _dlayer.Length;
-            runoff_wf = new double[num_layers];
-            usw = new double[num_layers];
-            asw = new double[num_layers];
-            masw = new double[num_layers];
-            dsw = new double[num_layers];
-
-            Console.WriteLine();    //new line
-#if COMPARISON
-        Console.WriteLine();
-        Console.WriteLine();
-#endif
-
-            line = "                 Soil Profile Properties";
-            Console.WriteLine(line);
-
-            line = "   ---------------------------------------------------------------------";
-            Console.WriteLine(line);
-
-            if (!using_ks)
-            {
-
-                line = "         Depth  Air_Dry  LL15   Dul    Sat     Sw     BD   Runoff  SWCON";
-                Console.WriteLine(line);
-
-                line = "           mm     mm/mm  mm/mm  mm/mm  mm/mm  mm/mm  g/cc    wf";
-                Console.WriteLine(line);
-            }
-            else
-            {
-                line = "         Depth  Air_Dry  LL15   Dul    Sat     Sw     BD   Runoff  SWCON   Ks";
-                Console.WriteLine(line);
-
-                line = "           mm     mm/mm  mm/mm  mm/mm  mm/mm  mm/mm  g/cc    wf           mm/day";
-                Console.WriteLine(line);
-            }
-
-            line = "   ---------------------------------------------------------------------";
-            Console.WriteLine(line);
-
-            depth_layer_top = 0.0;
-            soilwat2_runoff_depth_factor(ref runoff_wf);
-
-            for (layer = 0; layer < num_layers; layer++)
-            {
-                depth_layer_bottom = depth_layer_top + _dlayer[layer];
-
-                if (!using_ks)
-                {
-                    line = String.Format("   {0,6:0.#} {1} {2,4:0.#} {3,6:0.000} {4,6:0.000} {5,6:0.000} {6,6:0.000} {7,6:0.000} {8,6:0.000} {9,6:0.000} {10,6:0.000}",
-                                         depth_layer_top,
-                                         "-",
-                                         depth_layer_bottom,
-                                         Utility.Math.Divide(_air_dry_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_ll15_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_dul_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_sat_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0),
-                                         bd[layer],
-                                         runoff_wf[layer],
-                                         Soil.SWCON[layer]);
-                }
-                else
-                {
-                    line = String.Format("   {0,6:0.#} {1} {2,4:0.#} {3,6:0.000} {4,6:0.000} {5,6:0.000} {6,6:0.000} {7,6:0.000} {8,6:0.000} {9,6:0.000} {10,6:0.000} {11,6:0.000}",
-                                         depth_layer_top,
-                                         "-",
-                                         depth_layer_bottom,
-                                         Utility.Math.Divide(_air_dry_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_ll15_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_dul_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_sat_dep[layer], _dlayer[layer], 0.0),
-                                         Utility.Math.Divide(_sw_dep[layer], _dlayer[layer], 0.0),
-                                         bd[layer],
-                                         runoff_wf[layer],
-                                         Soil.SWCON[layer],
-                                         ks[layer]);
-                }
-                Console.WriteLine(line);
-                depth_layer_top = depth_layer_bottom;
-            }
-
-            line = "   ---------------------------------------------------------------------";
-            Console.WriteLine(line);
-
-            Console.WriteLine();
-            Console.WriteLine();
-#if COMPARISON
-        Console.WriteLine();
-#endif
-
-            line = "             Soil Water Holding Capacity";
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-            line = "         Depth    Unavailable Available  Max Avail.  Drainable";
-            Console.WriteLine(line);
-            line = "                     (LL15)   (SW-LL15)  (DUL-LL15)  (SAT-DUL)";
-            Console.WriteLine(line);
-
-            line = "                       mm        mm          mm         mm";
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-            num_layers = _dlayer.Length;
-            depth_layer_top = 0.0;
-
-            for (layer = 0; layer < num_layers; layer++)
-            {
-                depth_layer_bottom = depth_layer_top + _dlayer[layer];
-                usw[layer] = _ll15_dep[layer];
-                asw[layer] = Math.Max((_sw_dep[layer] - _ll15_dep[layer]), 0.0);
-                masw[layer] = _dul_dep[layer] - _ll15_dep[layer];
-                dsw[layer] = _sat_dep[layer] - _dul_dep[layer];
-
-                line = String.Format("   {0,6:0.#} {1} {2,4:0.#} {3,10:0.00} {4,10:0.00} {5,10:0.00} {6,10:0.00}",
-                                     depth_layer_top,
-                                     "-",
-                                     depth_layer_bottom,
-                                     usw[layer],
-                                     asw[layer],
-                                     masw[layer],
-                                     dsw[layer]);
-
-                Console.WriteLine(line);
-                depth_layer_top = depth_layer_bottom;
-            }
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-            line = String.Format("           Totals{0,10:0.00} {1,10:0.00} {2,10:0.00} {3,10:0.00}",
-                                 Utility.Math.Sum(usw),
-                                 Utility.Math.Sum(asw),
-                                 Utility.Math.Sum(masw),
-                                 Utility.Math.Sum(dsw));
-
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-
-            //! echo sw parameters
-
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-#if COMPARISON
-        Console.WriteLine();
-        Console.WriteLine();
-#endif
-
-            line = "             Initial Soil Parameters";
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-            line = "            Salb     Dif_Con   Dif_Slope";
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-
-            line = String.Format("       {0,11:0.00} {1,11:0.00} {2,11:0.00}",
-                                 Salb,
-                                 DiffusConst,
-                                 DiffusSlope);
-
-            Console.WriteLine(line);
-
-            line = "     ---------------------------------------------------------";
-            Console.WriteLine(line);
-            Console.WriteLine();
-            Console.WriteLine();
-#if COMPARISON
-        Console.WriteLine();
-#endif
-
-            if (obsrunoff_name != "")
-            {
-                string obsrunoff_name_trunc;
-                obsrunoff_name_trunc = obsrunoff_name.Trim();      //get rid of any whitespaces before and after the name.
-                line = String.Format("      {0} {1} {2}",
-                                     "             Observed runoff data ( ",
-                                     obsrunoff_name_trunc,
-                                     " ) is used in water balance");
-
-                Console.WriteLine(line);
-            }
-            else
-            {
-                //! no observed data
-                Console.WriteLine("             Runoff is predicted using scs curve number:");
-                line = "           Cn2  Cn_Red  Cn_Cov   H_Eff_Depth ";
-                Console.WriteLine(line);
-
-                line = "                                      mm     ";
-                Console.WriteLine(line);
-
-                line = "     ---------------------------------------------------------";
-                Console.WriteLine(line);
-
-                line = String.Format("      {0,8:0.00} {1,7:0.00} {2,7:0.00} {3,11:0.00}",
-                                     _cn2_bare,
-                                     _cn_red,
-                                     _cn_cov,
-                                     hydrol_effective_depth);
-
-                Console.WriteLine(line);
-
-                line = "     ---------------------------------------------------------";
-                Console.WriteLine(line);
-            }
-
-
-            Console.WriteLine();
-            Console.WriteLine();
-#if COMPARISON
-        Console.WriteLine();
-#endif
-
-
-            if (evap_method == ritchie_method)
-            {
-                line = "      Using Ritchie evaporation model";
-                Console.WriteLine(line);
-
-                if (WinterU == SummerU)
-                {
-                    line = String.Format("       {0} {1,8:0.00} {2}",
-                                         "Cuml evap (U):        ",
-                                         _u,
-                                         " (mm^0.5)");
-
-                    Console.WriteLine(line);
-                }
-                else
-                {
-                    line = String.Format("        {0} {1,8:0.00} {2}        {3} {4,8:0.00} {5}",
-                                         "Stage 1 Duration (U): Summer    ",
-                                         SummerU,
-                                         " (mm)" + Environment.NewLine,
-                                         "                      Winter    ",
-                                         WinterU,
-                                         " (mm)");
-                    Console.WriteLine(line);
-                }
-
-                if (WinterCona == SummerCona)
-                {
-                    line = String.Format("       {0} {1,8:0.00} {2}",
-                                         "CONA:                 ",
-                                         _cona,
-                                         " ()");
-                    Console.WriteLine(line);
-                }
-                else
-                {
-                    line = String.Format("        {0} {1,8:0.00} {2}        {3} {4,8:0.00} {5}",
-                                         "Stage 2       (CONA): Summer    ",
-                                         SummerCona,
-                                         " (mm^0.5)" + Environment.NewLine,
-                                         "                      Winter    ",
-                                         WinterCona,
-                                         " (mm^0.5)");
-                    Console.WriteLine(line);
-                }
-
-                if ((WinterCona != SummerCona) || (WinterU != SummerU))
-                {
-                    Console.WriteLine("       Critical Dates:       Summer        " + SummerDate + Environment.NewLine +
-                    "                             Winter        " + WinterDate);
-                }
-            }
-            else
-            {
-                line = "     Using unknown evaporation method!";
-                Console.WriteLine(line);
-            }
-
-#if (!COMPARISON)
-            Console.WriteLine();
-#endif
-
-
-            if (_eo_source != "")
-            {
-                line = String.Format("      {0} {1}",
-                                     "Eo source:             ",
-                                     _eo_source);
-                Console.WriteLine(line);
-            }
-            else
-            {
-                line = String.Format("       {0}",
-                                     "Eo from priestly-taylor");
-                Console.WriteLine(line);
-            }
-
-#if (!COMPARISON)
-            Console.WriteLine();
-#endif
-        }
+        
 
         //Init2, Reset, UserInit
         private void soilwat2_init()
@@ -4497,8 +4159,6 @@ namespace Models.Soils
             soilwat2_save_state();
 
             soilwat2_init();
-
-            soilwat2_sum_report();
 
             //Change State
             soilwat2_delta_state();
@@ -4941,9 +4601,6 @@ namespace Models.Soils
             //sv- if the Tillage information did not come with the event.
             if ((Tillage.cn_red <= 0) || (Tillage.cn_rain <= 0))
             {
-                Console.WriteLine();
-                Console.WriteLine("    - Reading tillage CN info");
-
                 TillageType data = SoilWatTillageType.GetTillageData(tillage_type);
 
                 if (data == null)
@@ -4980,7 +4637,7 @@ namespace Models.Soils
             string line;
             line = String.Format("{0} {1} {2}                                        {3} {4:F} {5}                                        {6} {7:F}",
                                  "Soil tilled using ", tillage_type, Environment.NewLine, "CN reduction = ", tillage_cn_red, Environment.NewLine, "Acc rain     = ", tillage_cn_rain);
-            Console.WriteLine(line);
+            Summary.WriteMessage(FullPath, line);
 
 
             //! 3. Reset the accumulator

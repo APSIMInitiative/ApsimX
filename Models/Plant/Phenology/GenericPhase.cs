@@ -8,7 +8,8 @@ namespace Models.PMF.Phen
 {
     public class GenericPhase : Phase
     {
-
+        [Link]
+        Summary Summary = null; 
         public Function Target { get; set; }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Models.PMF.Phen
         {
             base.WriteSummary();
             if (Target != null)
-                Console.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.FunctionValue));
+                Summary.WriteMessage(FullPath, string.Format("         Target                    = {0,8:F0} (dd)", Target.FunctionValue));
         }
 
     }

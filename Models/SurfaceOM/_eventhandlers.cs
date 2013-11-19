@@ -47,8 +47,6 @@ namespace Models.SurfaceOM
         [EventSubscribe("Reset")]
         private void OnReset() { initialised = true; surfom_Reset(); }
 
-        public void OnSum_report() { surfom_Sum_Report(); }
-
         [EventSubscribe("RemoveSurfaceOM")]
         private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM) { surfom_remove_surfom(SOM); }
 

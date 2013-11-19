@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Schema;
 using System.Reflection;
+using System.Linq;
 
 namespace Models.Core
 {
@@ -35,7 +36,6 @@ namespace Models.Core
         {
             base.AddModel(model, resolveLinks);
             EnsureNameIsUnique(model);
-
         }
 
         #region XmlSerializable methods
@@ -112,63 +112,6 @@ namespace Models.Core
         #endregion
 
 
-
-        /// <summary>
-        /// Connect all events up in this simulation
-        /// </summary>
-        public static void ConnectEvents(Simulation simulation)
-        {
-            Model[] modelsInScope = simulation.FindAll();
-
-            // Loop through all events in all models: for each one locate all event handlers 9subscribers) and 
-            // attach them to the event.
-            foreach (Model model in modelsInScope)
-            {
-                foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    foreach (Utility.ModelFunctions.EventSubscriber subscriber in Utility.ModelFunctions.FindEventSubscribers(Event.Name, modelsInScope))
-                    {
-                        // connect subscriber to the event.
-                        Delegate eventdelegate = Delegate.CreateDelegate(Event.EventHandlerType, subscriber.model, subscriber.handler);
-                        Event.AddEventHandler(model, eventdelegate);
-                    }
-                }
-
-
-            }
-        }
-
-        /// <summary>
-        /// Disconnect all events in this simulation
-        /// </summary>
-        protected static void DisconnectEvents(Simulation simulation)
-        {
-            Model[] modelsInScope = simulation.FindAll();
-
-            // Loop through all events in all models: for each one locate all event handlers 9subscribers) and 
-            // attach them to the event.
-            foreach (Model model in modelsInScope)
-            {
-                foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    //foreach (EventSubscriber subscriber in FindEventSubscribers(Event.Name, modelsInScope))
-                    {
-                        // disconnect all subscribers from the event.
-                        FieldInfo eventAsField = model.GetType().GetField(Event.Name, BindingFlags.Instance | BindingFlags.NonPublic);
-                        Delegate eventDelegate = eventAsField.GetValue(model) as Delegate;
-                        if (eventDelegate != null)
-                        {
-                            foreach (Delegate del in eventDelegate.GetInvocationList())
-                                Event.RemoveEventHandler(model, del);
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-
         /// <summary>
         /// If the specified model has a settable name property then ensure it has a unique name.
         /// Otherwise don't do anything.
@@ -178,21 +121,17 @@ namespace Models.Core
             string OriginalName = Utility.Reflection.Name(Model);
             string NewName = OriginalName;
             int Counter = 0;
-            object Child = LocateChild(NewName);
+            object Child = Models.FirstOrDefault(m => m.Name == NewName);
             while (Child != null && Child != Model && Counter < 10000)
             {
                 Counter++;
                 NewName = OriginalName + Counter.ToString();
-                Child = LocateChild(NewName);
+                Child = Models.FirstOrDefault(m => m.Name == NewName);
             }
             if (Counter == 1000)
                 throw new Exception("Cannot create a unique name for model: " + OriginalName);
             Utility.Reflection.SetName(Model, NewName);
             return NewName;
         }
-
-
     }
-
-
 }

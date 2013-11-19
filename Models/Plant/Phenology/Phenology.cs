@@ -16,7 +16,8 @@ namespace Models.PMF.Phen
     }
     public class Phenology: Model, IXmlSerializable
     {
-        
+        [Link]
+        Summary Summary = null;
         public delegate void PhaseChangedDelegate(PhaseChangedType Data);
 
         public event PhaseChangedDelegate PhaseChanged;
@@ -428,7 +429,7 @@ namespace Models.PMF.Phen
         /// </summary>
         internal void WriteSummary()
         {
-            Console.WriteLine("   Phases:");
+            Summary.WriteMessage(FullPath, "   Phases:");
             foreach (Phase P in Phases)
                 P.WriteSummary();
         }

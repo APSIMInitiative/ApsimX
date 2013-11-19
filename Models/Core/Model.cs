@@ -197,7 +197,7 @@ namespace Models.Core
                 object localObj = null;
                 Model localModel = obj as Model;
                 if (localModel != null)
-                    localObj = localModel.LocateChild(pathBit);
+                    localObj = localModel.Models.FirstOrDefault(m => m.Name == pathBit);
 
                 if (localObj != null)
                     obj = localObj;
@@ -256,18 +256,19 @@ namespace Models.Core
             AllModels = null;
             if (resolveLinks)
             {
-                Utility.ModelFunctions.ConnectEvent(model);
-                model.ResolveLinks();
+                Utility.ModelFunctions.ConnectEventsInModel(model);
+                Utility.ModelFunctions.ResolveLinks(model);
             }
         }
-
-
 
         /// <summary>
         /// Remove a model from the Models collection. Returns true if model was removed.
         /// </summary>
         public virtual bool RemoveModel(Model model)
         {
+            // Detach this model from all events.
+            Utility.ModelFunctions.DisconnectEventsInModel(model);
+
             // Invalidate the AllModels list.
             AllModels = null;
 
@@ -297,41 +298,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Recursively resolve all [Link] fields. A link must be private. This method will also
-        /// go through any public members that are a model or a list of models. For each one found
-        /// it will recursively call this method to resolve links in them. This is an internal
-        /// method that won't normally be called by models.
-        /// </summary>
-        protected virtual void ResolveLinks()
-        {
-            // Go looking for private [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(this.GetType(),
-                                                                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
-            {
-                if (field.IsDefined(typeof(Link), false))
-                {
-                    object linkedObject = Find(field.FieldType);
-                    if (linkedObject != null)
-                        field.SetValue(this, linkedObject);
-                    else
-                        throw new ApsimXException(FullPath, "Cannot resolve [Link] " + field.ToString() + ". Model type is " + this.GetType().FullName);
-                }
-            }
-
-            foreach (Model child in Models)
-            {
-                // Set the childs parent property.
-                child.Parent = this;
-
-                // Tell child to resolve its links.
-                child.ResolveLinks();
-            }
-        }
-
-        /// <summary>
         /// Locate the parent with the specified type. Returns null if not found.
         /// </summary>
-        protected Model LocateParent(Type parentType)
+        private Model LocateParent(Type parentType)
         {
             if (this.GetType() == parentType)
                 return this;
@@ -341,19 +310,6 @@ namespace Models.Core
                 m = m.Parent;
             if (m != null)
                 return m;
-            return null;
-        }
-
-        /// <summary>
-        /// Find a child model with the specified name. Returns null if not found.
-        /// </summary>
-        protected Model LocateChild(string nameToFind)
-        {
-            foreach (Model child in Models)
-            {
-                if (child.Name == nameToFind)
-                    return child;
-            }
             return null;
         }
 
@@ -393,88 +349,5 @@ namespace Models.Core
             }
             return allModelProperties.ToArray();
         }
-
-        /// <summary>
-        /// This class encapsulates a single property of a model. Has properties for getting the value
-        /// of the property, the value in the base model and the default value as definned in the 
-        /// source code.
-        /// </summary>
-        public class ModelProperty
-        {
-            private Model Model;
-            private PropertyInfo PropertyInfo;
-
-            /// <summary>
-            /// Returns the value of the property.
-            /// </summary>
-            public object Value
-            {
-                get
-                {
-                    return PropertyInfo.GetValue(Model, null);
-                }
-            }
-
-            /// <summary>
-            /// Returns the base value of the property if the model is derived from a base. If not
-            /// derived from a base model then this will equal the Value property.
-            /// </summary>
-            public object BaseValue
-            {
-                get
-                {
-                    if (Model.BaseModel != null)
-                        return PropertyInfo.GetValue(Model.BaseModel, null);
-                    else
-                        return Value;
-                }
-            }
-
-            /// <summary>
-            /// Returns the default value as defined in the source code.
-            /// </summary>
-            public object DefaultValue
-            {
-                get
-                {
-                    return PropertyInfo.GetValue(Model.DefaultModel, null);
-
-                }
-            }
-
-            public string Units
-            {
-                get
-                {
-                    return "";
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Return a list of all properties (that are not references to child models). Never returns null. Can
-        /// return an empty array.
-        /// </summary>
-        public PropertyInfo[] Properties()
-        {
-            List<PropertyInfo> allProperties = new List<PropertyInfo>();
-            foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
-            {
-                if (property.CanRead && property.CanWrite)
-                {
-                    if ((property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
-                        || property.PropertyType.IsSubclassOf(typeof(Model)))
-                    { }
-                    else
-                        allProperties.Add(property);
-                }
-            }
-            return allProperties.ToArray();
-        }
-
-
-
-
     }
 }

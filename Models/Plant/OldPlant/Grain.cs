@@ -13,6 +13,9 @@ namespace Models.PMF.OldPlant
 {
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
+        [Link]
+        Summary Summary;
+
         #region Parameters read from XML file and links to other functions.
 
         [Link]
@@ -455,10 +458,10 @@ namespace Models.PMF.OldPlant
         }
         internal void WriteCultivarInfo()
         {
-            Console.WriteLine(string.Format("   grains_per_gram_stem           = {0,10:F1} (/g)", GrainsPerGramStem));
-            Console.WriteLine(string.Format("   potential_grain_filling_rate   = {0,10:F4} (g/grain/day)", PotentialGrainFillingRate));
-            Console.WriteLine(string.Format("   potential_grain_growth_rate    = {0,10:F4} (g/grain/day)", PotentialGrainGrowthRate));
-            Console.WriteLine(string.Format("   max_grain_size                 = {0,10:F4} (g)", MaxGrainSize));
+            Summary.WriteMessage(FullPath, string.Format("   grains_per_gram_stem           = {0,10:F1} (/g)", GrainsPerGramStem));
+            Summary.WriteMessage(FullPath, string.Format("   potential_grain_filling_rate   = {0,10:F4} (g/grain/day)", PotentialGrainFillingRate));
+            Summary.WriteMessage(FullPath, string.Format("   potential_grain_growth_rate    = {0,10:F4} (g/grain/day)", PotentialGrainGrowthRate));
+            Summary.WriteMessage(FullPath, string.Format("   max_grain_size                 = {0,10:F4} (g)", MaxGrainSize));
         }
         #endregion
 

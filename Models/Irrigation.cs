@@ -33,7 +33,7 @@ namespace Models
                 water.will_runoff = willRunoff;
                 IrrigationApplied = amount;
                 Irrigated.Invoke(this, water);
-                Summary.WriteMessage(string.Format("{0} mm of water added at depth {1}", amount, depth));
+                Summary.WriteMessage(FullPath, string.Format("{0} mm of water added at depth {1}", amount, depth));
 
             }
         }

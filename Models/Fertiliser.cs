@@ -68,7 +68,7 @@ namespace Models
 
                 FertiliserApplied = amount;
                 NitrogenChanged.Invoke(NitrogenChanges);
-                Summary.WriteMessage(string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", amount, type, depth, layer + 1));
+                Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", amount, type, depth, layer + 1));
             }
         }
 

@@ -17,6 +17,8 @@ namespace Models.PMF.Phen
         [Link]
         public Phenology Phenology = null;
 
+        [Link]
+        Summary Summary = null;
         public Function ThermalTime { get; set; }  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         public Function Stress { get; set; }
@@ -76,7 +78,7 @@ namespace Models.PMF.Phen
 
         internal virtual void WriteSummary()
         {
-            Console.WriteLine("      " + Name);
+            Summary.WriteMessage(FullPath, "      " + Name);
         }
     }
 }

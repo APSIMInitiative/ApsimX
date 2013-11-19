@@ -1,5 +1,7 @@
 ﻿using Models.Core;
 using System.IO;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Models
 {
@@ -15,9 +17,25 @@ namespace Models
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        public void WriteMessage(string Message)
+        public void WriteMessage(string FullPath, string Message)
         {
-            DataStore.WriteMessage(Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Information);
+            DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Information);
+        }
+
+        /// <summary>
+        /// Write a warning message to the summary
+        /// </summary>
+        public void WriteWarning(string FullPath, string Message)
+        {
+            DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Warning);
+        }
+
+        /// <summary>
+        /// Write an error message to the summary
+        /// </summary>
+        public void WriteError(string Message)
+        {
+            DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Error);
         }
 
         /// <summary>

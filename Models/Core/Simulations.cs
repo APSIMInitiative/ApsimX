@@ -61,7 +61,7 @@ namespace Models.Core
         {
             base.ReadXml(reader);
             Name = "Simulations";
-            ResolveLinks();
+            Utility.ModelFunctions.ResolveLinks(this);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Models.Core
             // Connect all events for the simulations we're about to run.
             foreach (object Model in Models)
                 if (Model is Simulation)
-                    ConnectEvents(Model as Simulation);
+                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
 
             // Invoke the AllCommencing event.
             if (AllCommencing != null)
@@ -91,7 +91,7 @@ namespace Models.Core
             // Disconnect all events for the simulations we just ran.
             foreach (object Model in Models)
                 if (Model is Simulation)
-                    ConnectEvents(Model as Simulation);
+                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
             return ok;
         }
 
@@ -100,7 +100,7 @@ namespace Models.Core
         /// </summary>
         public bool Run(Simulation Sim)
         {
-            ConnectEvents(Sim);
+            Utility.ModelFunctions.ConnectEventsInAllModels(Sim);
 
             if (AllCommencing != null)
                 AllCommencing(this, new EventArgs());
@@ -111,7 +111,7 @@ namespace Models.Core
             if (AllCompleted != null)
                 AllCompleted(this, new EventArgs());
 
-            DisconnectEvents(Sim);
+            Utility.ModelFunctions.DisconnectEventsInAllModels(Sim);
 
             return ok;
         }

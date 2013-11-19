@@ -10,6 +10,8 @@ namespace Models.PMF.Organs
         [Link]
         Clock Clock = null;
 
+        [Link]
+        Summary Summary = null;
         
         public event NullTypeDelegate Harvesting;
         [EventSubscribe("Harvest")]
@@ -23,11 +25,11 @@ namespace Models.PMF.Organs
             string Title = Indent + Today.ToShortDateString() + "  - Harvesting " + Name + " from " + Plant.Name;
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
-            Console.WriteLine(Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Console.WriteLine("");
+            Summary.WriteMessage(FullPath, "");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+            Summary.WriteMessage(FullPath, "");
 
 
             Live.Clear();

@@ -11,6 +11,9 @@ namespace Models.PMF.Organs
         [Link]
         Plant Plant = null;
 
+        [Link]
+        Summary Summary = null;
+
         public Biomass AboveGround { get; set; }
 
         public Function WaterContent { get; set; }
@@ -45,11 +48,11 @@ namespace Models.PMF.Organs
             string Title = Indent + Today.ToString("d MMMM yyyy") + "  - Harvesting " + Name + " from " + Plant.Name;
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Console.WriteLine("");
-            Console.WriteLine(Title);
-            Console.WriteLine(Indent + new string('-', Title.Length));
-            Console.WriteLine(Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Console.WriteLine("");
+            Summary.WriteMessage(FullPath, "");
+            Summary.WriteMessage(FullPath, Title);
+            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+            Summary.WriteMessage(FullPath, "");
 
 
             Live.Clear();
