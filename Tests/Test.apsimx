@@ -162,7 +162,7 @@
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoilCrop</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -204,7 +204,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>BarleySoilCrop</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -246,7 +246,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoilCrop</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
