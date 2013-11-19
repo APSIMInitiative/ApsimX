@@ -266,11 +266,10 @@ namespace Models.Core
         /// </summary>
         public virtual bool RemoveModel(Model model)
         {
-            // Detach this model from all events.
-            Utility.ModelFunctions.DisconnectEventsInModel(model);
-
             // Invalidate the AllModels list.
             AllModels = null;
+
+            bool removed = false;
 
             // Need to find where in the object to store this model.
             foreach (PropertyInfo property in ModelPropertyInfos())
@@ -278,7 +277,8 @@ namespace Models.Core
                 if (property.PropertyType == model.GetType())
                 {
                     property.SetValue(this, null, null);
-                    return true;
+                    removed = true;
+                    break; ;
                 }
                 else if (property.PropertyType.GetInterface("IList") != null)
                 {
@@ -289,12 +289,19 @@ namespace Models.Core
                         if (value != null && value.Contains(model))
                         {
                             value.Remove(model);
-                            return true;
+                            removed = true;
+                            break;
                         }
                     }
                 }
             }
-            return false;
+
+            if (removed)
+            {
+                // Detach this model from all events.
+                Utility.ModelFunctions.DisconnectEventsInModel(model);
+            }
+            return removed;
         }
 
         /// <summary>
