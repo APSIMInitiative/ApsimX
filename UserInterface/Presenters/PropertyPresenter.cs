@@ -25,7 +25,7 @@ namespace UserInterface.Presenters
             this.Model = Model;
             this.CommandHistory = CommandHistory;
 
-            PopulateGrid();
+            PopulateGrid(Model);
             Grid.CellValueChanged += OnCellValueChanged;
             CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -47,8 +47,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Populate the grid
         /// </summary>
-        private void PopulateGrid()
+        public void PopulateGrid(object model)
         {
+            Model = model;
             DataTable Table = new DataTable();
             Table.Columns.Add("Description", typeof(string));
             Table.Columns.Add("Value", typeof(object));
@@ -118,7 +119,8 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object ChangedModel)
         {
             if (ChangedModel == Model)
-                PopulateGrid();
+                PopulateGrid(Model);
         }
+
     }
 }

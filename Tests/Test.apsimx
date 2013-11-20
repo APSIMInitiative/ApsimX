@@ -2354,6 +2354,7 @@
         using Models.PMF;
         namespace Models
         {
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
                [Link] Plant Plant;
@@ -2367,6 +2368,10 @@
                DateTime SowingDate = new DateTime(2003, 11, 10, 0, 0, 0);
 
                double PlantPopulation = 0;
+               public double A { get; set; }
+               [Description("B description")]
+               public double B { get; set; }
+               public double C { get; set; }
 
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
@@ -2379,7 +2384,11 @@
             }
         }
 				</Code>
-        <Script />
+        <Script>
+          <A>10</A>
+          <B>0</B>
+          <C>100</C>
+        </Script>
       </Manager>
       <Manager>
         <Name>IrrigationRule</Name>

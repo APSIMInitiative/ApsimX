@@ -254,7 +254,7 @@ namespace Models.Core
 
             // Invalidate the AllModels list.
             AllModels = null;
-            if (resolveLinks)
+            if (Parent != null)  // Only go in here if the model has been initialised.
             {
                 Utility.ModelFunctions.ConnectEventsInModel(model);
                 Utility.ModelFunctions.ResolveLinks(model);

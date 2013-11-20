@@ -41,6 +41,7 @@
             this.TextBox.TabIndex = 0;
             this.TextBox.Text = "textEditorControl1";
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
+            this.TextBox.Leave += new System.EventHandler(this.OnTextBoxLeave);
             // 
             // Editor
             // 
