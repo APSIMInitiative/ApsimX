@@ -810,7 +810,7 @@
         <night_interception_fraction>0.5</night_interception_fraction>
         <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
-        <albedo>0.29421683549880978</albedo>
+        <albedo>0.29366217672824863</albedo>
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
@@ -825,13 +825,13 @@
           <Name>Potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>5.2053890228271484</LAItot>
+          <LAItot>5.7501530647277832</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.14457911252975464</CoverTot>
-          <Ktot>0.02999999893123724</Ktot>
+          <CoverTot>0.1584455817937851</CoverTot>
+          <Ktot>0.03000000128696699</Ktot>
           <K>0</K>
-          <Height>0.21772302</Height>
-          <Depth>0.21772302</Depth>
+          <Height>0.20600931</Height>
+          <Depth>0.20600931</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
@@ -841,7 +841,7 @@
             <double>0</double>
           </layerLAI>
           <layerLAItot>
-            <double>5.2053890228271484</double>
+            <double>5.7501530647277832</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
@@ -850,31 +850,31 @@
             <double>0</double>
           </Fgreen>
           <Rs>
-            <double>0.477111064454121</double>
+            <double>0.52287041236421672</double>
           </Rs>
           <Rl>
-            <double>-0.082641569602448853</double>
+            <double>-0.090567657712774974</double>
           </Rl>
           <Rsoil>
-            <double>-0.0477111064454121</double>
+            <double>-0.052287041236421673</double>
           </Rsoil>
           <Gc>
             <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0.017433330104810994</double>
+            <double>0.01708462337676328</double>
           </Ga>
           <PET>
-            <double>0.036373730483911654</double>
+            <double>0.036440532052432847</double>
           </PET>
           <PETr>
-            <double>0.00064081024360864065</double>
+            <double>0.00071732733952490214</double>
           </PETr>
           <PETa>
-            <double>0.035732920240303015</double>
+            <double>0.035723204712907942</double>
           </PETa>
           <Omega>
-            <double>0.013026967375595232</double>
+            <double>0.013289321605835002</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -1031,8 +1031,8 @@
             <TotalAllocated>0</TotalAllocated>
             <NotAllocated>0</NotAllocated>
             <SinkLimitation>0</SinkLimitation>
-            <Start>1374.9894552037913</Start>
-            <End>1374.9894552037913</End>
+            <Start>1259.7724435411026</Start>
+            <End>1259.7724435411026</End>
             <BalanceError>-7.8274930069710535</BalanceError>
           </DM>
           <N>
@@ -1091,11 +1091,11 @@
             <TotalReallocationSupply>0</TotalReallocationSupply>
             <UptakeSupply>
               <double>0</double>
-              <double>0.002018064675249951</double>
+              <double>0.00087333591334252936</double>
               <double>0</double>
               <double>0</double>
             </UptakeSupply>
-            <TotalUptakeSupply>0.002018064675249951</TotalUptakeSupply>
+            <TotalUptakeSupply>0.00087333591334252936</TotalUptakeSupply>
             <FixationSupply>
               <double>0</double>
               <double>0</double>
@@ -1107,9 +1107,9 @@
               <double>0</double>
               <double>0</double>
               <double>0</double>
-              <double>0.23939346956124075</double>
+              <double>0.22359039179544357</double>
             </RetranslocationSupply>
-            <TotalRetranslocationSupply>0.23939346956124075</TotalRetranslocationSupply>
+            <TotalRetranslocationSupply>0.22359039179544357</TotalRetranslocationSupply>
             <Reallocation>
               <double>0</double>
               <double>0</double>
@@ -1179,8 +1179,8 @@
             <TotalAllocated>0</TotalAllocated>
             <NotAllocated>0</NotAllocated>
             <SinkLimitation>0</SinkLimitation>
-            <Start>32.392169736981792</Start>
-            <End>32.392169736981792</End>
+            <Start>29.723807476906938</Start>
+            <End>29.723807476906938</End>
             <BalanceError>0</BalanceError>
           </N>
         </Arbitrator>
@@ -1331,6 +1331,28 @@
               </XYPairs>
             </ThermalTime>
           </EndPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
           <GenericPhase>
             <Name>Dormant</Name>
             <Start>Planting</Start>
