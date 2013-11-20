@@ -2505,7 +2505,7 @@
         }
 				</Code>
         <Script>
-          <ApplicationAmount>10000</ApplicationAmount>
+          <ApplicationAmount>100</ApplicationAmount>
           <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
         </Script>
       </Manager>
