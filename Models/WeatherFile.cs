@@ -22,12 +22,12 @@ namespace Models
         // Privates
         private Utility.ApsimTextFile WtrFile = null;
         private DataTable WtrData = new DataTable();
-        private bool HaveReadData = false;
         private int MaxTIndex;
         private int MinTIndex;
         private int RadnIndex;
         private int RainIndex;
         private NewMetType TodaysMetData = new NewMetType();
+        private bool DoSeek;
 
         public WeatherFile()
         {
@@ -180,11 +180,7 @@ namespace Models
         {
             if (System.IO.File.Exists(FullFileName))
             {
-                if (WtrFile == null)
-                {
-                    HaveReadData = false;
-                    WtrFile = new Utility.ApsimTextFile();
-                }
+                WtrFile = new Utility.ApsimTextFile();
                 WtrFile.Open(FullFileName);
                 MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
                 MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
@@ -212,13 +208,10 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            if (WtrFile == null)
-            {
-                HaveReadData = false;
-                Summary.WriteProperty("Weather file name", FileName);
-            }
+            Summary.WriteProperty("Weather file name", FileName);
             if (!OpenDataFile())
                 throw new ApsimXException(this.FullPath, "Cannot find weather file '" + FileName + "'");
+            DoSeek = true; 
         }
 
         /// <summary>
@@ -227,10 +220,10 @@ namespace Models
         [EventSubscribe("Tick")]
         private void OnTick(object sender, EventArgs e)
         {
-            if (!HaveReadData)
+            if (DoSeek)
             {
+                DoSeek = false;
                 WtrFile.SeekToDate(Clock.Today);
-                HaveReadData = true;
             }
 
             object[] Values = WtrFile.GetNextLineOfData();
@@ -357,8 +350,6 @@ namespace Models
 
             tav = yearlySumMeans / nyears;  //calc the ave of the yearly ave means
             amp = yearlySumAmp / nyears;    //calc the ave of the yearly amps
-
-            HaveReadData = false;           //ensure that OnTick will set the file ptr correctly for next read    
         }
         //=====================================================================
         /// <summary>
