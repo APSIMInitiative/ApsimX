@@ -296,22 +296,16 @@ namespace Models.PMF
         public event NullTypeDelegate Cutting;
         public event NewCropDelegate CropEnding;
         public event BiomassRemovedDelegate BiomassRemoved;
-        public void Sow(SowPlant2Type ManagerSowingData)
+        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-            if(ManagerSowingData.Population != null)
-                SowingData.Population = ManagerSowingData.Population;
-            if (ManagerSowingData.Depth != null)
-                SowingData.Depth = ManagerSowingData.Depth;
-            SowingData.Cultivar = ManagerSowingData.Cultivar;
-            if (ManagerSowingData.MaxCover != null)
-                SowingData.MaxCover = ManagerSowingData.MaxCover;
-            if (ManagerSowingData.BudNumber != null)
-                SowingData.BudNumber = ManagerSowingData.BudNumber;
-            if (ManagerSowingData.RowSpacing != null)
-                SowingData.RowSpacing = ManagerSowingData.RowSpacing;
-            if (ManagerSowingData.CropClass != null)
-                SowingData.CropClass = ManagerSowingData.CropClass;
+                SowingData.Population = Population;
+                SowingData.Depth = Depth;
+                SowingData.Cultivar = Cultivar;
+                SowingData.MaxCover = MaxCover;
+                SowingData.BudNumber = BudNumber;
+                SowingData.RowSpacing = RowSpacing;
+                SowingData.CropClass = CropClass;
             
 
             // Go through all our children and find all organs.
