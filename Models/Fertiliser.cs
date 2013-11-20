@@ -33,42 +33,42 @@ namespace Models
         /// <summary>
         /// Apply fertiliser.
         /// </summary>
-        public void Apply(double amount, double depth, string type)
+        public void Apply(double Amount, string Type, double Depth = 0.0)
         {
-            if (amount > 0 && NitrogenChanged != null)
+            if (Amount > 0 && NitrogenChanged != null)
             {
                 // find the layer that the fertilizer is to be added to.
-                int layer = GetLayerDepth(depth, Soil.Thickness);
+                int layer = GetLayerDepth(Depth, Soil.Thickness);
 
-                FertiliserType fertiliserType = this.Get(type) as FertiliserType;
+                FertiliserType fertiliserType = this.Get(Type) as FertiliserType;
                 if (fertiliserType == null)
-                    throw new ApsimXException(FullPath, "Cannot find fertiliser type '" + type + "'");
+                    throw new ApsimXException(FullPath, "Cannot find fertiliser type '" + Type + "'");
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
                 NitrogenChanges.Sender = FullPath;
 
                 if ((fertiliserType.FractionNO3 + fertiliserType.FractionNH4 + fertiliserType.FractionUrea) != 1.0)
-                    throw new ApsimXException(FullPath, "The NO3, NH4 and Urea fractions of " + type + "must sum to a value of 1.0 ");
+                    throw new ApsimXException(FullPath, "The NO3, NH4 and Urea fractions of " + Type + "must sum to a value of 1.0 ");
                 
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     NitrogenChanges.DeltaNO3 = new double[Soil.Thickness.Length];
-                    NitrogenChanges.DeltaNO3[layer] = amount * fertiliserType.FractionNO3;
+                    NitrogenChanges.DeltaNO3[layer] = Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
                     NitrogenChanges.DeltaNH4 = new double[Soil.Thickness.Length];
-                    NitrogenChanges.DeltaNH4[layer] = amount * fertiliserType.FractionNH4;
+                    NitrogenChanges.DeltaNH4[layer] = Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
                     NitrogenChanges.DeltaUrea = new double[Soil.Thickness.Length];
-                    NitrogenChanges.DeltaUrea[layer] = amount * fertiliserType.FractionUrea;
+                    NitrogenChanges.DeltaUrea[layer] = Amount * fertiliserType.FractionUrea;
                 }
 
-                FertiliserApplied = amount;
+                FertiliserApplied = Amount;
                 NitrogenChanged.Invoke(NitrogenChanges);
-                Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", amount, type, depth, layer + 1));
+                Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
             }
         }
 

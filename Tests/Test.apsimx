@@ -1419,6 +1419,28 @@
               <Value>1</Value>
             </Target>
           </GenericPhase>
+          <GenericPhase>
+            <Name>Dormant</Name>
+            <Start>Planting</Start>
+            <End>Peeping</End>
+            <ThermalTime d7p1:type="AirTemperatureFunction" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <XYPairs>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </ThermalTime>
+            <Target d7p1:type="Constant" xmlns:d7p1="http://www.w3.org/2001/XMLSchema-instance">
+              <Value>1</Value>
+            </Target>
+          </GenericPhase>
           <StageBasedInterpolation>
             <Name>StageCode</Name>
             <Stages>
@@ -2374,7 +2396,15 @@
 				PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date.Equals(SowingDate))
-                    Plant.Sow(new SowPlant2Type() {Population = PlantPopulation, Cultivar = CultivarName, Depth = PlantingDepth, BudNumber = StemNumberPerSeedTuber});
+                    Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                //Plant.Sow(... Contains the following arguements:
+                //Population  double  Required  Seeds sowing/m2
+                //Cultivar    string  Required  "NameOfCultivar"
+                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
 			   }
             }
         }
@@ -2401,7 +2431,15 @@
                private void OnStartOfDay(object sender, EventArgs e)
                {
 				if (Clock.Today.Date.Equals(ApplicationDate))
-                    Irrigation.Apply(ApplicationAmount,0,100,false);
+                    Irrigation.Apply(Amount:ApplicationAmount);
+                  //Irrigation.Apply(Amount:a, Depth:b, Efficiency:c, willRunoff:"d");
+                  //a is a double and can be represented by a variable name or a number representing the amount (mm) of irrigation to apply
+			      //b is an optional double and can be represented by a variable name or a number representing the depth (mm) at which irrigation is applied
+			      //if b is omitted a default value of 0 is used (irrigation is applied to the surface by defalt)
+			      //c is an optional double and can be represented by a varialbe name or a number representing the efficiency (0-1) with which irrigation is applied
+			      //if c is omitted a default of 1 is used (irrigation efficiency is 100% by defalt)
+			      //d is a optional boolen and can be represented by text strings "true" or "false" determining if irrigation water will runoff or not
+			      //if d is omitted a default of false is used (irrigation won't run off by defalt)
 			   }
             }
         }
@@ -2429,7 +2467,12 @@
                private void OnStartOfDay(object sender, EventArgs e)
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
-                    Fertiliser.Apply(ApplicationAmount,0,FertType);
+                    Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
+			      //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
+			      //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
+			      //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
+			      //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
+			      //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
 			   }
             }
         }
