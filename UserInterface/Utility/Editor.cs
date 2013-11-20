@@ -10,21 +10,65 @@ using ICSharpCode.TextEditor.Document;
 
 namespace Utility
 {
+
+    public class NeedContextItems : EventArgs
+    {
+        public string ObjectName;
+        public List<string> Items;
+    }
+
+    public interface IEditor
+    {
+        /// <summary>
+        /// Invoked when the editor needs context items (after user presses '.')
+        /// </summary>
+        event EventHandler<NeedContextItems> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the user changes the text in the editor.
+        /// </summary>
+        event EventHandler TextHasChangedByUser;
+
+        /// <summary>
+        /// Invoked when the user leaves the text editor.
+        /// </summary>
+        event EventHandler Leave;
+
+        /// <summary>
+        /// Text property to get and set the content of the editor.
+        /// </summary>
+        string Text { get; set; }
+
+        /// <summary>
+        /// Lines property to get and set the lines in the editor.
+        /// </summary>
+        string[] Lines { get; set; }
+
+    }
+
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
-    public partial class Editor : UserControl
+    public partial class Editor : UserControl, IEditor
     {
         private Form CompletionForm;
         private ListBox CompletionList;
 
-        public class NeedContextItems : EventArgs
-        {
-            public string ObjectName;
-            public List<string> Items;
-        }
+
+        /// <summary>
+        /// Invoked when the editor needs context items (after user presses '.')
+        /// </summary>
         public event EventHandler<NeedContextItems> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the user changes the text in the editor.
+        /// </summary>
         public event EventHandler TextHasChangedByUser;
+
+        /// <summary>
+        /// Invoked when the user leaves the text editor.
+        /// </summary>
+        event EventHandler Leave;
 
         /// <summary>
         /// Constructor
@@ -46,7 +90,6 @@ namespace Utility
             TextBox.ActiveTextAreaControl.TextArea.KeyDown += OnKeyDown;
         }
 
-
         /// <summary>
         /// Text property to get and set the content of the editor.
         /// </summary>
@@ -64,8 +107,6 @@ namespace Utility
                 TextBox.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             }
         }
-
-
 
         /// <summary>
         /// Lines property to get and set the lines in the editor.
@@ -156,7 +197,7 @@ namespace Utility
             TextBox.Document.ReadOnly = false;
         }
 
-        void OnContextListKeyDown(object sender, KeyEventArgs e)
+        private void OnContextListKeyDown(object sender, KeyEventArgs e)
         {
             // If user clicks ENTER and the context list is visible then insert the currently
             // selected item from the list into the TextBox and close the list.
@@ -177,7 +218,7 @@ namespace Utility
         /// <summary>
         /// User has double clicked on a completion list item. 
         /// </summary>
-        void OnComtextListMouseDoubleClick(object sender, MouseEventArgs e)
+        private void OnComtextListMouseDoubleClick(object sender, MouseEventArgs e)
         {
             InsertCompletionItemIntoTextBox();
         }
@@ -208,102 +249,12 @@ namespace Utility
                 TextHasChangedByUser(sender, e);
         }
 
-        #region Functions needed by the SyntaxHighlighter
-        //public string GetLastWord()
-        //{
-        //    int pos = TextBox.SelectionStart;
+        private void OnTextBoxLeave(object sender, EventArgs e)
+        {
+            if (Leave != null)
+                Leave.Invoke(this, e);
+        }
 
-        //    while (pos > 1)
-        //    {
-        //        string substr = Text.Substring(pos - 1, 1);
-
-        //        if (Char.IsWhiteSpace(substr, 0))
-        //        {
-        //            return Text.Substring(pos, TextBox.SelectionStart - pos);
-        //        }
-
-        //        pos--;
-        //    }
-
-        //    return Text.Substring(0, TextBox.SelectionStart);
-        //}
-        //public string GetLastLine()
-        //{
-        //    int charIndex = TextBox.SelectionStart;
-        //    int currentLineNumber = TextBox.GetLineFromCharIndex(charIndex);
-
-        //    // the carriage return hasn't happened yet... 
-        //    //      so the 'previous' line is the current one.
-        //    string previousLineText;
-        //    if (TextBox.Lines.Length <= currentLineNumber)
-        //        previousLineText = TextBox.Lines[TextBox.Lines.Length - 1];
-        //    else
-        //        previousLineText = TextBox.Lines[currentLineNumber];
-
-        //    return previousLineText;
-        //}
-        //public string GetCurrentLine()
-        //{
-        //    int charIndex = TextBox.SelectionStart;
-        //    int currentLineNumber = TextBox.GetLineFromCharIndex(charIndex);
-
-        //    if (currentLineNumber < TextBox.Lines.Length)
-        //    {
-        //        return TextBox.Lines[currentLineNumber];
-        //    }
-        //    else
-        //    {
-        //        return string.Empty;
-        //    }
-        //}
-        //public int GetCurrentLineStartIndex()
-        //{
-        //    return TextBox.GetFirstCharIndexOfCurrentLine();
-        //}
-        //public int SelectionStart
-        //{
-        //    get
-        //    {
-        //        return TextBox.SelectionStart;
-        //    }
-        //    set
-        //    {
-        //        TextBox.SelectionStart = value;
-        //    }
-        //}
-        //public int SelectionLength
-        //{
-        //    get
-        //    {
-        //        return TextBox.SelectionLength;
-        //    }
-        //    set
-        //    {
-        //        TextBox.SelectionLength = value;
-        //    }
-        //}
-        //public Color SelectionColor
-        //{
-        //    get
-        //    {
-        //        return TextBox.SelectionColor;
-        //    }
-        //    set
-        //    {
-        //        TextBox.SelectionColor = value;
-        //    }
-        //}
-        //public string SelectedText
-        //{
-        //    get
-        //    {
-        //        return TextBox.SelectedText;
-        //    }
-        //    set
-        //    {
-        //        TextBox.SelectedText = value;
-        //    }
-        //}
-        #endregion
+       
     }
 }

@@ -23,12 +23,12 @@ namespace UserInterface.Presenters
             this.CommandHistory = CommandHistory;
             this.View = View as IReportView;
 
-            this.View.VariableNames = Report.Variables;
-            this.View.EventNames = Report.Events;
-            this.View.NeedVariableNames += OnNeedVariableNames;
-            this.View.NeedEventNames += OnNeedEventNames;
-            this.View.VariableNamesChanged +=OnVariableNamesChanged;
-            this.View.EventNamesChanged += OnEventNamesChanged;
+            this.View.VariableList.Lines = Report.Variables;
+            this.View.EventList.Lines = Report.Events;
+            this.View.VariableList.ContextItemsNeeded += OnNeedVariableNames;
+            this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
+            this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
+            this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
             CommandHistory.ModelChanged += CommandHistory_ModelChanged;
         }
 
@@ -37,17 +37,17 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            View.NeedVariableNames -= OnNeedVariableNames;
-            View.NeedEventNames -= OnNeedEventNames;
-            View.VariableNamesChanged -= OnVariableNamesChanged;
-            View.EventNamesChanged -= OnEventNamesChanged;
+            this.View.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
+            this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
+            this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
         }
 
         /// <summary>
         /// The view is asking for variable names.
         /// </summary>
-        void OnNeedVariableNames(object Sender, Utility.Editor.NeedContextItems e)
+        void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for event names.
         /// </summary>
-        void OnNeedEventNames(object Sender, Utility.Editor.NeedContextItems e)
+        void OnNeedEventNames(object Sender, Utility.NeedContextItems e)
         {
             object o = Report.ParentZone.Get(e.ObjectName);
 
@@ -94,7 +94,7 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableNames));
+            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
             CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventNames));
+            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
             CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -115,8 +115,8 @@ namespace UserInterface.Presenters
         {
             if (changedModel == Report)
             {
-                View.VariableNames = Report.Variables;
-                View.EventNames = Report.Events;
+                View.VariableList.Lines = Report.Variables;
+                View.EventList.Lines = Report.Events;
             }
         }
 

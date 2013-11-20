@@ -72,8 +72,6 @@
             this.VariableEditor.Name = "VariableEditor";
             this.VariableEditor.Size = new System.Drawing.Size(606, 308);
             this.VariableEditor.TabIndex = 8;
-            this.VariableEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnVariableListNeedItems);
-            this.VariableEditor.TextHasChangedByUser += new System.EventHandler(this.OnVariableListChanged);
             // 
             // label2
             // 
@@ -99,8 +97,6 @@
             this.FrequencyEditor.Name = "FrequencyEditor";
             this.FrequencyEditor.Size = new System.Drawing.Size(606, 149);
             this.FrequencyEditor.TabIndex = 7;
-            this.FrequencyEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnEventListNeedItems);
-            this.FrequencyEditor.TextHasChangedByUser += new System.EventHandler(this.OnEventListChanged);
             // 
             // label1
             // 

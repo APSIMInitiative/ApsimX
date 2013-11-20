@@ -26,9 +26,9 @@ namespace UserInterface.Presenters
 
             PropertyPresenter.Attach(Manager.Model, ManagerView.GridView, CommandHistory);
 
-            ManagerView.Code = Manager.Code;
-            ManagerView.NeedVariableNames += OnNeedVariableNames;
-            ManagerView.CodeChanged += OnCodeChanged;
+            ManagerView.Editor.Text = Manager.Code;
+            ManagerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
+            ManagerView.Editor.Leave += OnEditorLeave;
         }
 
         /// <summary>
@@ -36,14 +36,14 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            ManagerView.NeedVariableNames -= OnNeedVariableNames;
-            ManagerView.CodeChanged -= OnCodeChanged;
+            ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
+            ManagerView.Editor.Leave -= OnEditorLeave;
         }
 
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        void OnNeedVariableNames(object Sender, Utility.Editor.NeedContextItems e)
+        void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
         {
             object o = null;
 
@@ -74,11 +74,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The user has changed the code script.
         /// </summary>
-        void OnCodeChanged(object sender, EventArgs e)
+        void OnEditorLeave(object sender, EventArgs e)
         {
             CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Code));
+            CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
             CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            PropertyPresenter.PopulateGrid(Manager.Model);
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace UserInterface.Presenters
         void CommandHistory_ModelChanged(object changedModel)
         {
             if (changedModel == Manager)
-                ManagerView.Code = Manager.Code;
+                ManagerView.Editor.Text = Manager.Code;
         }
     }
 }

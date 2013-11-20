@@ -96,8 +96,7 @@
             this.ScriptEditor.Name = "ScriptEditor";
             this.ScriptEditor.Size = new System.Drawing.Size(612, 484);
             this.ScriptEditor.TabIndex = 0;
-            this.ScriptEditor.ContextItemsNeeded += new System.EventHandler<Utility.Editor.NeedContextItems>(this.OnVariableListNeedItems);
-            this.ScriptEditor.TextHasChangedByUser += new System.EventHandler(this.ScriptEditor_TextHasChangedByUser);
+
             // 
             // ManagerView
             // 
