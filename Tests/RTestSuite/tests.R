@@ -10,7 +10,7 @@
 # @Param output:bool - results of the test
 # @Param func:string - name of the calling test
 ######################################
-Output <- function(x, passed, output, func, params, baseData, ...) {
+Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   split <- unlist(strsplit(as.character(Sys.time()), " ", fixed=TRUE))
   date <-split[1]
   time <- split[2]
@@ -23,15 +23,16 @@ Output <- function(x, passed, output, func, params, baseData, ...) {
   }
   index <- index[-1]
   output <- output[, index]
+  output <- cbind(baseData, output)
   output <- cbind(tests, output)
+  output <- cbind(cols, output)
   output <- cbind(simsToTest, output)
   output <- cbind(time, output)
   output <- cbind(date, output)
   output <- cbind(output, paste(params, collapse=","))
-  output <- cbind(output, ifelse(exists("baseData"), baseData, NA))
-  names(output) <- c("Date","Time","Simulation", "Test","RunValue","Passed")
-  
-#  print(output)
+  names(output) <- c("Date","Time","Simulation", "Column", "Test","BaseValue", "RunValue","Passed", "Paramaters")
+  buildRecord <<- rbind(buildRecord, output)  
+  print(head(output, n=10))
   return(passed)
 }
 
@@ -110,6 +111,5 @@ Tolerance <- function (x, func, params, baseData, ...) {
       output <- x <= baseData + params[2] &
                 x >= baseData - params[2]
     }  
-  print(baseData)
    ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
   }

@@ -14,10 +14,12 @@ args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), arg
 
 source("Tests/RTestSuite/tests.R")
 
-buildRecord <- data.frame(Date=character(), Time=character(), Simulation=character(), TestName=character(), ColumnName=character(),
-                          RunValue=double(), Comparator=double(), BaseValue=double(), Passed=logical())
+#create a blank data frame to hold all test output
+buildRecord <- data.frame(Date=character(), Time=character(), Simulation=character(), Column=character(), Test=character(), 
+                          BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
 
 # read tests from .apsimx
+# this will need to change to search the file instead of using an absolute path
 doc <- xmlTreeParse(paste(args[1], ".apsimx",sep=""), useInternalNodes=TRUE)
 group <- getNodeSet(doc, "/Simulations/Tests/Test")
 
@@ -71,7 +73,7 @@ for (ind in c(1:length(groupdf))){
             
       # retrieve the test name
       func <- match.fun(tests[i])
-      #unpack parameters
+      #unpack parameters - TODO: catch error when invalid
       params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
       #run each test
       ifelse(i == 1,      
