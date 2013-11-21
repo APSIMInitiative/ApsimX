@@ -54,7 +54,11 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnCreateNowClicked(object sender, EventArgs e)
         {
-            DataStore.CreateReport();
+            DataStore.CreateReport(false);
+            DataStore.Disconnect();
+            DataStore.Connect(true);
+            DataStore.CreateReport(true);
+            DataStore.Disconnect();
         }
 
         /// <summary>

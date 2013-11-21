@@ -13,9 +13,9 @@ namespace Models.PMF.Organs
         #region Parameter Input Classes
         
         [XmlIgnore]
-        public Biomass[] LayerLive = new Biomass[0];
+        public Biomass[] LayerLive {get; set; }
         [XmlIgnore]
-        public Biomass[] LayerDead = new Biomass[0];
+        public Biomass[] LayerDead { get; set; }
 
         private Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
@@ -45,7 +45,7 @@ namespace Models.PMF.Organs
         private bool isGrowing { get { return (Plant.SowingData != null && Plant.SowingData.Depth < this.Depth); } }
         private double _SenescenceRate = 0;
         private double _Nuptake = 0;
-        private double Length = 0;
+        public double Length { get; set; }
         [Link]
         Soils.SoilWater SoilWat = null;
         [Link]
@@ -62,7 +62,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth = 0;
         #endregion
-
+        
         #region Class Properties
         //public override Biomass Live
         //{

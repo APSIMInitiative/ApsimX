@@ -10,6 +10,10 @@ using System.Drawing;
 using System.IO;
 using System.Xml;
 using Models.Soils;
+using System.Reflection;
+using System.Diagnostics;
+using Models;
+
 
 namespace UserInterface.Presenters
 {
@@ -214,6 +218,24 @@ namespace UserInterface.Presenters
         public void AdvancedMode(object Sender, EventArgs e)
         {
             ExplorerPresenter.ToggleAdvancedMode();
+        }
+
+         /// <summary>
+        /// Event handler for a User interface "Run APSIM" action
+        /// </summary>
+        [ContextModelType(typeof(Tests))]
+        [ContextMenuName("Run Tests")]
+        public void RunTests(object Sender, EventArgs e)
+        {
+            string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string scriptFileName = Path.Combine(new string[] {binFolder, 
+                                                       "..", 
+                                                       "Tests", 
+                                                       "RTestSuite",
+                                                       "RunTest.Bat"});
+            string workingFolder = Path.GetDirectoryName(scriptFileName);
+            Process process = Utility.Process.RunProcess(scriptFileName, ExplorerPresenter.ApsimXFile.FileName, workingFolder);
+            string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
         }
         #endregion
 

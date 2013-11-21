@@ -37,6 +37,8 @@ namespace Models.PMF
                 Debug(format, value[i]);
         }
 
+        static Dictionary<string, Utility.ModelFunctions.Parameter> VariableCache = new Dictionary<string, Utility.ModelFunctions.Parameter>();
+
         /// <summary>
         /// Return the value (using Reflection) of the specified property on the specified object.
         /// Returns null if not found. Examples of Names that can be found.
@@ -48,120 +50,9 @@ namespace Models.PMF
         ///     Leaf.Leaves[Leaf.CurrentRank].CoverAbove
         ///  Can return an Instance, an Entity or an object[] when an array specifier is present.
         /// </summary>
-        public static object GetVariable(string NamePath, object RelativeTo)
+        public static object GetVariable(string namePath, Model relativeTo)
         {
-            Model My = null;
-            if (RelativeTo is Model)
-            {
-                My = RelativeTo as Model;
-                bool embeddedBracket = NamePath.Substring(1).Contains("[");
-                if (My != null && embeddedBracket == false)
-                {
-                    object v = My.Get(NamePath);
-                    return v;
-                }
-            }
-
-            if (VarParts == null)
-                VarParts = new Dictionary<string, List<string>>();
-
-            string[] Bits;
-            //cache the list of names that are parsed here
-            List<String> Parts;
-            if (VarParts.TryGetValue(NamePath, out Parts))
-                Bits = Parts.ToArray();
-            else
-            {
-                Bits = Utility.String.SplitStringHonouringBrackets(NamePath, '.', '[', ']');
-                VarParts.Add(NamePath, Bits.ToList());
-            }
-
-            for (int i = 0; i < Bits.Length; i++)
-            {
-                string ArraySpecifier = "";
-                bool ArrayFound = Bits[i].Contains("[");
-                if (ArrayFound)
-                    ArraySpecifier = Utility.String.SplitOffBracketedValue(ref Bits[i], '[', ']');
-
-                object MatchingChild;
-                if (RelativeTo is Model)
-                {
-                    MatchingChild = (RelativeTo as Model).Find(Bits[i]);  // Try for a model name first. e.g. Root
-                    if (MatchingChild == null)
-                        MatchingChild = (RelativeTo as Model).Get(Bits[i]);  // may be a variable. e.g. Organs
-                }
-                else
-                    MatchingChild = Utility.Reflection.GetValueOfFieldOrProperty(Bits[i], RelativeTo);
-
-                if (MatchingChild == null)
-                    throw new Exception("Cannot find variable: " + NamePath);
-
-                // Look for array spec
-                if (ArrayFound)
-                {
-                    if (!(MatchingChild is IList))
-                        throw new Exception("Cannot specify an array on a non array variable. Name: " + NamePath);
-                    IList Array = MatchingChild as IList;
-
-                    // First try and treat the ArraySpecifier as an integer index.
-                    // If that's not possible, then assume it is a reference to an integer variable
-                    // somewhere in the system.
-                    // If that's not possible then assume it is a type name e.g. AboveGround.
-                    int ArrayIndex;
-
-                    bool ok = int.TryParse(ArraySpecifier, out ArrayIndex);
-
-                    if (ArraySpecifier != "" && !ok && My != null)
-                    {
-                        object ArraySpec = My.Get(ArraySpecifier);
-                        ok = ArraySpec != null;
-                        if (ok && (ArraySpec is Int32 || ArraySpec is Double))
-                            ArrayIndex = Convert.ToInt32(ArraySpec);
-                        else
-                            ok = false;
-                    }
-
-                    if (ok)
-                    {
-                        if (ArrayIndex < 0 || ArrayIndex >= Array.Count)
-                            throw new Exception("Invalid index of " + ArrayIndex.ToString() + " found while indexing into variable: " + NamePath);
-                        MatchingChild = Array[ArrayIndex];
-                    }
-                    else
-                    {
-                        // Must be a type name. Go collect an array of objects of that type.
-                        List<object> ArrayOfType = new List<object>();
-
-                        // Construct a name remainder.
-                        string RestOfName = null;
-                        for (int j = i + 1; j < Bits.Length; j++)
-                        {
-                            if (RestOfName != null)
-                                RestOfName += ".";
-                            RestOfName += Bits[j];
-                        }
-
-                        foreach (object o in Array)
-                            if (ArraySpecifier == "" || Utility.Reflection.IsOfType(o.GetType(), ArraySpecifier))
-                            {
-                                if (RestOfName == null)
-                                    ArrayOfType.Add(o);
-                                else
-                                {
-                                    object ChildObject = GetVariable(RestOfName, o);  // recursion
-                                    if (ChildObject != null)
-                                        ArrayOfType.Add(ChildObject);
-                                }
-                            }
-                        return ArrayOfType.ToArray();
-                    }
-                }
-
-                RelativeTo = MatchingChild;
-            }
-
-            // If we get this far then we've found a match.
-            return RelativeTo;
+            return relativeTo.Get(namePath);
         }
 
         public static void ZeroArray(double[] Arr)

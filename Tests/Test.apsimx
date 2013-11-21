@@ -1824,19 +1824,6 @@
             <Start>Planting</Start>
             <End>FinalLeaf</End>
           </NitrogenDemandSwitch>
-          <SenescenceRate d6p1:type="LinearInterpolationFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
-            <XProperty>[Leaf].FractionDied</XProperty>
-            <XYPairs>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0.1</double>
-              </Y>
-            </XYPairs>
-          </SenescenceRate>
           <TemperatureEffect d6p1:type="AirTemperatureFunction" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance">
             <XYPairs>
               <X>

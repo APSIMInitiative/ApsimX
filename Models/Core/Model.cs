@@ -165,14 +165,99 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// This class encapsulates a single property of a model. Has properties for getting the value
+        /// of the property, the value in the base model and the default value as definned in the 
+        /// source code.
+        /// </summary>
+        public class Variable
+        {
+            public object Model { get; set; }
+            public PropertyInfo PropertyInfo { get; set; }
+
+            public Variable(object model, PropertyInfo propertyInfo)
+            {
+                Model = model;
+                PropertyInfo = propertyInfo;
+
+            }
+            /// <summary>
+            /// Return the name of the property.
+            /// </summary>
+            public string Name { get { return PropertyInfo.Name; } }
+
+            /// <summary>
+            /// Returns the value of the property.
+            /// </summary>
+            public object Value
+            {
+                get
+                {
+                    if (PropertyInfo == null)
+                        return Model;
+                    else
+                        return PropertyInfo.GetValue(Model, null);
+                }
+            }
+
+            /// <summary>
+            /// Returns a description of the property or null if not found.
+            /// </summary>
+            public string Description
+            {
+                get
+                {
+                    Description descriptionAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Description), false) as Description;
+                    if (descriptionAttribute != null)
+                        return descriptionAttribute.ToString();
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns the units of the property (in brackets) or null if not found.
+            /// </summary>
+            public string Units
+            {
+                get
+                {
+                    Units unitsAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Units), false) as Units;
+                    if (unitsAttribute != null)
+                        return "(" + unitsAttribute.UnitsString + ")";
+                    return null;
+                }
+            }
+
+        }
+
+        private Dictionary<string, Variable> VariableCache = new Dictionary<string, Variable>();
+
+        /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
         public object Get(string namePath)
         {
-            object obj = this;
+            Variable variable = GetVariable(namePath);
+            if (variable == null)
+                return null;
+            else
+                return variable.Value;
+        }
+
+        /// <summary>
+        /// Return a variable using the specified NamePath. Returns null if not found.
+        /// </summary>
+        private Variable GetVariable(string namePath)
+        {
+            if (VariableCache.ContainsKey(namePath))
+                return VariableCache[namePath];
+            
+            string originalNamePath = namePath;
+            
+            Variable variable = new Variable(this, null);
+
             if (namePath.StartsWith(".Simulations", StringComparison.CurrentCulture))
             {
-                obj = LocateParent(typeof(Simulations));
+                variable.Model = LocateParent(typeof(Simulations));
                 namePath = namePath.Remove(0, 12);
             }
             else if (namePath.StartsWith("[", StringComparison.CurrentCulture) && namePath.Contains(']'))
@@ -182,35 +267,41 @@ namespace Models.Core
                 string typeName = namePath.Substring(1, pos - 1);
                 Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
                 if (t == null)
-                    obj = Find(typeName);
+                    variable.Model = Find(typeName);
                 else
-                    obj = Find(t);
-                
+                    variable.Model = Find(t);
+
                 namePath = namePath.Substring(pos + 1);
-                if (obj == null)
+                if (variable.Model == null)
                     throw new ApsimXException(FullPath, "Cannot find type: " + typeName + " while doing a get for: " + namePath);
             }
 
             string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string pathBit in namePathBits)
             {
+                if (variable.PropertyInfo != null)
+                {
+                    variable.Model = variable.Value;
+                    variable.PropertyInfo = null;
+                }
+
                 object localObj = null;
-                Model localModel = obj as Model;
+                Model localModel = variable.Model as Model;
                 if (localModel != null)
                     localObj = localModel.Models.FirstOrDefault(m => m.Name == pathBit);
 
                 if (localObj != null)
-                    obj = localObj;
+                    variable.Model = localObj;
                 else
                 {
-                    object value = Utility.Reflection.GetValueOfFieldOrProperty(pathBit, obj);
-                    if (value == null)
+                    variable.PropertyInfo = variable.Model.GetType().GetProperty(pathBit);
+                    if (variable.PropertyInfo == null)
                         return null;
-                    else
-                        obj = value;
                 }
             }
-            return obj;
+
+            VariableCache[originalNamePath] = variable;
+            return variable;
         }
 
         /// <summary>

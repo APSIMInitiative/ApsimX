@@ -42,11 +42,13 @@ namespace Models
         /// <summary>
         /// Connect to the SQLite database.
         /// </summary>
-        private void Connect()
+        public void Connect(bool baseline = false)
         {
             if (Connection == null)
             {
                 string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
+                if (baseline)
+                    Filename += ".baseline";
                 if (Filename == null || Filename.Length == 0)
                     throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
@@ -57,7 +59,7 @@ namespace Models
         /// <summary>
         /// Disconnect from the SQLite database.
         /// </summary>
-        private void Disconnect()
+        public void Disconnect()
         {
             if (Connection != null)
             {
@@ -120,7 +122,7 @@ namespace Models
         {
             Connection.ExecuteNonQuery("COMMIT");
             if (AutoCreateReport)
-                CreateReport();
+                CreateReport(false);
         }
 
         /// <summary>
@@ -314,10 +316,14 @@ namespace Models
         /// <summary>
         /// Create a text report from tables in this data store.
         /// </summary>
-        public void CreateReport()
+        public void CreateReport(bool baseline)
         {
 
-            StreamWriter report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
+            StreamWriter report;
+            if (baseline)
+                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".baseline.csv"));
+            else
+                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
 
             foreach (string simulationName in SimulationNames)
             {

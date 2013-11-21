@@ -433,7 +433,6 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            latitude = (double)this.Get("latitude");
         }
 
 
@@ -507,7 +506,6 @@ namespace Models
             public double[] interception;
         }
 
-        private double latitude;
         private double maxt;
         private double mint;
         private double radn;
@@ -618,13 +616,13 @@ namespace Models
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = CalcDayLength(latitude, day, sun_angle);
+            dayLength = CalcDayLength(Weather.Latitude, day, sun_angle);
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = CalcDayLength(latitude, day, SunSetAngle);
+            dayLengthLight = CalcDayLength(Weather.Latitude, day, SunSetAngle);
 
-            sunshineHours = CalcSunshineHours(radn, dayLengthLight, latitude, day);
+            sunshineHours = CalcSunshineHours(radn, dayLengthLight, Weather.Latitude, day);
 
             fractionClearSky = Utility.Math.Divide(sunshineHours, dayLengthLight, 0.0);
         }

@@ -168,8 +168,8 @@ namespace Models.PMF
         Single swim3 = 0;
 
         #region Outputs
-         
-        public double WaterSupplyDemandRatio = 0;
+
+        public double WaterSupplyDemandRatio { get; set; }
         
         public string plant_status
         {

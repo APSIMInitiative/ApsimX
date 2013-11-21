@@ -70,7 +70,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double MaxArea = 0;
         [XmlIgnore]
-        public double CoverAbove = 0;
+        public double CoverAbove { get; set; }
         private double ShadeInducedSenRate = 0;
         private double SenescedFrac = 0;
         private double DetachedFrac = 0;
@@ -156,7 +156,7 @@ namespace Models.PMF.Organs
             get { return (Age < GrowthDuration); }
         }
         [XmlIgnore]
-        public bool IsAppeared = false;
+        public bool IsAppeared { get; set; }
         public bool IsFullyExpanded
         {
             get
