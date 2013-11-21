@@ -4,13 +4,16 @@
 # Note that R will pass the data in as a list.
 # You might need to unlist() it to get it to work. 
 
-############# FailOutput #############
+############# Output #############
 # On a failed test, print out all values along with T/F list
 # @Param x:multi - list
 # @Param output:bool - results of the test
 # @Param func:string - name of the calling test
 ######################################
-FailOutput <- function(x, output, func, ...) {
+Output <- function(x, passed, output, func, params, baseData, ...) {
+  split <- unlist(strsplit(as.character(Sys.time()), " ", fixed=TRUE))
+  date <-split[1]
+  time <- split[2]
   temp <- list()
   output <- cbind(x,output)
   #reorder the columns
@@ -20,8 +23,16 @@ FailOutput <- function(x, output, func, ...) {
   }
   index <- index[-1]
   output <- output[, index]
+  output <- cbind(tests, output)
+  output <- cbind(simsToTest, output)
+  output <- cbind(time, output)
+  output <- cbind(date, output)
+  output <- cbind(output, paste(params, collapse=","))
+  output <- cbind(output, ifelse(exists("baseData"), baseData, NA))
+  names(output) <- c("Date","Time","Simulation", "Test","RunValue","Passed")
+  
   print(output)
-  return(FALSE)
+  return(passed)
 }
 
 ############# AllPos #############
@@ -32,7 +43,7 @@ FailOutput <- function(x, output, func, ...) {
 AllPos <- function(x, func, ...) {
   output <- ifelse(x >= 0, TRUE, FALSE)
   
-  ifelse(all(output), return(TRUE), FailOutput(x, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
 }
 
 ############# GreaterThan ########
@@ -43,7 +54,7 @@ AllPos <- function(x, func, ...) {
 ##################################
 GreaterThan <- function (x, func, params, ...) {
   output <- x > params[1]
-  ifelse(all(output), TRUE, FailOutput(x, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
 }
 
 ############# LessThan ############
@@ -54,7 +65,7 @@ GreaterThan <- function (x, func, params, ...) {
 ##################################
 LessThan <- function (x, func, params, ...) {
   output <- x < params[1]
-  ifelse(all(output), TRUE, FailOutput(x, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
 }
 
 ############# Between ############
@@ -66,7 +77,7 @@ LessThan <- function (x, func, params, ...) {
 ##################################
 Between <- function (x, func, params, ...) {
   output <- x >= params[1] &  x <= params[2]
-  ifelse(all(output), TRUE, FailOutput(x, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
 }
 
 ############# Mean ############
@@ -80,7 +91,7 @@ Mean <- function (x, func, params, ...) {
   x <- unlist(x)
   output <- mean(x) <= params[2] + params[2] * params[1] / 100 &
             mean(x) >= params[2] - params[2] * params[1] / 100
-  ifelse(output, TRUE, FailOutput(x, output, func))
+  ifelse(output, Output(x, TRUE, output, func), Output(x, FALSE, output, func))
 }
 
 ############# Tolerance ############
@@ -99,5 +110,6 @@ Tolerance <- function (x, func, params, baseData, ...) {
       output <- x <= baseData + params[2] &
                 x >= baseData - params[2]
     }  
-   ifelse(all(output), TRUE, FailOutput(x, output, func))
+  print(baseData)
+   ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
   }
