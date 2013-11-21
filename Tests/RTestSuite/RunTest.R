@@ -1,6 +1,6 @@
 #rm(list=ls()) # for testing only 
-#setwd("c:\\ApsimX\\ApsimX") # for testing only
 setwd(".\\")
+#setwd("c:\\ApsimX\\ApsimX") # for testing only
 library("XML")
 library("RSQLite")
 
@@ -12,10 +12,14 @@ args <- commandArgs(TRUE)
 
 args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
 
-
 source("Tests/RTestSuite/tests.R")
 
+#create a blank data frame to hold all test output
+buildRecord <- data.frame(Date=character(), Time=character(), Simulation=character(), Column=character(), Test=character(), 
+                          BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
+
 # read tests from .apsimx
+# this will need to change to search the file instead of using an absolute path
 doc <- xmlTreeParse(paste(args[1], ".apsimx",sep=""), useInternalNodes=TRUE)
 group <- getNodeSet(doc, "/Simulations/Tests/Test")
 
@@ -69,11 +73,11 @@ for (ind in c(1:length(groupdf))){
             
       # retrieve the test name
       func <- match.fun(tests[i])
-      #unpack parameters
+      #unpack parameters - TODO: catch error when invalid
       params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
       #run each test
       ifelse(i == 1,      
-        results <- func((simOutput), tests, params, simOutputBase),
+        results <- func(simOutput, tests, params, simOutputBase),
         results <- c(results, func(simOutput, tests, params, simOutputBase)))
       print(paste(tests, results[i], cols, sep=" "))
     }
