@@ -31,7 +31,7 @@ Output <- function(x, passed, output, func, params, baseData, ...) {
   output <- cbind(output, ifelse(exists("baseData"), baseData, NA))
   names(output) <- c("Date","Time","Simulation", "Test","RunValue","Passed")
   
-  print(output)
+#  print(output)
   return(passed)
 }
 
