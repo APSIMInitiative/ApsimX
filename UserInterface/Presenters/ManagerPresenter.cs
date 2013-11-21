@@ -46,28 +46,31 @@ namespace UserInterface.Presenters
         void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
         {
             object o = null;
-
-            // If no dot was specified then the object name may be refering to a [Link] in the script.
-            if (!e.ObjectName.Contains("."))
+            if (Manager.Model != null)
             {
-                o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Model);
-                if (o == null)
+
+                // If no dot was specified then the object name may be refering to a [Link] in the script.
+                if (!e.ObjectName.Contains("."))
                 {
-                    // Not a [Link] so look for the object within scope
-                    o = Manager.ParentZone.Find(e.ObjectName);
+                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Model);
+                    if (o == null)
+                    {
+                        // Not a [Link] so look for the object within scope
+                        o = Manager.ParentZone.Find(e.ObjectName);
+                    }
                 }
-            }
-            // If still not found then try a specific get for the object.
-            if (o == null)
-                o = Manager.ParentZone.Get(e.ObjectName);
+                // If still not found then try a specific get for the object.
+                if (o == null)
+                    o = Manager.ParentZone.Get(e.ObjectName);
 
-            // If found then loop through all properties and add to the items list.
-            if (o != null)
-            {
-                foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Property.Name);
-                foreach (MethodInfo Method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Method.Name);
+                // If found then loop through all properties and add to the items list.
+                if (o != null)
+                {
+                    foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        e.Items.Add(Property.Name);
+                    foreach (MethodInfo Method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                        e.Items.Add(Method.Name);
+                }
             }
         }
 

@@ -21,7 +21,7 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         // Parameters
-        public List<FertiliserType> Types { get; set; }
+        public List<FertiliserType> Definitions { get; set; }
 
         // Events we're going to send.
         public event NitrogenChangedDelegate NitrogenChanged;
@@ -30,17 +30,19 @@ namespace Models
         [Units("kg/ha")]
         public double FertiliserApplied { get; private set; }
 
+        public enum Types { NO3N, NH4N, Urea };
+
         /// <summary>
         /// Apply fertiliser.
         /// </summary>
-        public void Apply(double Amount, string Type, double Depth = 0.0)
+        public void Apply(double Amount, Types Type, double Depth = 0.0)
         {
             if (Amount > 0 && NitrogenChanged != null)
             {
                 // find the layer that the fertilizer is to be added to.
                 int layer = GetLayerDepth(Depth, Soil.Thickness);
 
-                FertiliserType fertiliserType = this.Get(Type) as FertiliserType;
+                FertiliserType fertiliserType = this.Get(Type.ToString()) as FertiliserType;
                 if (fertiliserType == null)
                     throw new ApsimXException(FullPath, "Cannot find fertiliser type '" + Type + "'");
 

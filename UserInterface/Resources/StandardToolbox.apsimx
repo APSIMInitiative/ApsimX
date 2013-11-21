@@ -38,7 +38,7 @@
       </Report>
       <Fertiliser>
         <Name>Fertiliser</Name>
-        <Types>
+        <Definitions>
           <FertiliserType>
             <Name>NO3N</Name>
             <FractionNO3>1.0</FractionNO3>
@@ -51,7 +51,7 @@
             <Name>Urea</Name>
             <FractionNH4>0.46</FractionNH4>
           </FertiliserType>
-        </Types>
+        </Definitions>
       </Fertiliser>
       <Irrigation>
         <Name>Irrigation</Name>

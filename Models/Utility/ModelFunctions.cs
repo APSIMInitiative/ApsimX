@@ -303,11 +303,13 @@ namespace Utility
                 if (property.CanRead && property.CanWrite)
                 {
                     Attribute XmlIgnore = Utility.Reflection.GetAttribute(property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), true);
-                    if (XmlIgnore != null ||
-                        (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
-                        || property.PropertyType.IsSubclassOf(typeof(Model)))
-                    { }
-                    else
+
+                    bool ignoreProperty = XmlIgnore != null;                                 // No [XmlIgnore]
+                    ignoreProperty |= property.PropertyType.GetInterface("IList") != null;   // No List<T>
+                    ignoreProperty |= property.PropertyType.IsSubclassOf(typeof(Model));     // Nothing derived from Model.
+                    ignoreProperty |= property.Name == "Name";                               // No Name properties.
+
+                    if (!ignoreProperty)
                         allProperties.Add(new Parameter(model, property));
                 }
             }

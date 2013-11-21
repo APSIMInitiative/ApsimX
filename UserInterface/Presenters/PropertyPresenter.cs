@@ -12,9 +12,9 @@ namespace UserInterface.Presenters
     class PropertyPresenter : IPresenter
     {
         private IGridView Grid;
-        private object Model;
+        private Model Model;
         private CommandHistory CommandHistory;
-        private List<PropertyInfo> Properties = new List<PropertyInfo>();
+        private List<Utility.ModelFunctions.Parameter> Properties = new List<Utility.ModelFunctions.Parameter>();
 
         /// <summary>
         /// Attach the model to the view.
@@ -22,10 +22,10 @@ namespace UserInterface.Presenters
         public void Attach(object Model, object View, CommandHistory CommandHistory)
         {
             Grid = View as IGridView;
-            this.Model = Model;
+            this.Model = Model as Model;
             this.CommandHistory = CommandHistory;
 
-            PopulateGrid(Model);
+            PopulateGrid(this.Model);
             Grid.CellValueChanged += OnCellValueChanged;
             CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -47,7 +47,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Populate the grid
         /// </summary>
-        public void PopulateGrid(object model)
+        public void PopulateGrid(Model model)
         {
             Model = model;
             DataTable Table = new DataTable();
@@ -66,22 +66,16 @@ namespace UserInterface.Presenters
         private void GetAllProperties(DataTable Table)
         {
             Properties.Clear();
-            foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            if (Model != null)
             {
-                // Only consider properties that have a public setter.
-                if (Property.Name != "Name" && Property.Name != "Parent" &&
-                    Property.CanRead && Property.CanWrite && !Property.PropertyType.IsArray &&
-                    !Property.PropertyType.FullName.Contains("Models.") &&
-                    Utility.Reflection.GetAttribute(Property, typeof(System.Xml.Serialization.XmlIgnoreAttribute), false) == null)
+                foreach (Utility.ModelFunctions.Parameter parameter in Utility.ModelFunctions.Parameters(Model))
                 {
-                    string PropertyName = Property.Name;
-                    if (Property.IsDefined(typeof(Description), false))
-                    {
-                        Description Desc = Property.GetCustomAttributes(typeof(Description), false)[0] as Description;
-                        PropertyName = Desc.ToString();
-                    }
-                    Table.Rows.Add(new object[] { PropertyName, Property.GetValue(Model, null) });
-                    Properties.Add(Property);
+                    string PropertyName = parameter.Name;
+                    if (parameter.Description != null)
+                        PropertyName = parameter.Description;
+                    Table.Rows.Add(new object[] { PropertyName, parameter.Value });
+                    Properties.Add(parameter);
+
                 }
             }
         }
@@ -92,7 +86,7 @@ namespace UserInterface.Presenters
         private void FormatGrid()
         {
             for (int i = 0; i < Properties.Count; i++)
-                Grid.SetCellEditor(1, i, Properties[i].GetValue(Model, null));
+                Grid.SetCellEditor(1, i, Properties[i].Value);
             Grid.SetColumnAutoSize(0);
             Grid.SetColumnAutoSize(1);
             

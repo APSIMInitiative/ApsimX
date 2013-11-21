@@ -58,11 +58,20 @@ namespace Models
             reader.Read();
             Code = reader.ReadString();
             reader.Read();
-            CompileScript();
 
             // Deserialise to a model.
-            XmlSerializer serial = new XmlSerializer(ScriptType);
-            Model = serial.Deserialize(reader) as Model;
+            try
+            {
+                CompileScript();
+                XmlSerializer serial = new XmlSerializer(ScriptType);
+                Model = serial.Deserialize(reader) as Model;
+            }
+            catch (Exception)
+            {
+                if (reader.Name == "Script")
+                    reader.ReadInnerXml();
+                Model = null;
+            }
 
             // Tell reader we're done with the Manager deserialisation.
             reader.ReadEndElement();
@@ -130,20 +139,28 @@ namespace Models
                 }
 
                 // Compile the script
-                CompileScript();
-
-                if (scriptXml != null)
+                try
                 {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(scriptXml);
+                    CompileScript();
 
-                    XmlSerializer serial = new XmlSerializer(ScriptType);
-                    Model = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                    if (scriptXml != null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(scriptXml);
+
+                        XmlSerializer serial = new XmlSerializer(ScriptType);
+                        Model = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                    }
+                    else
+                        Model = Activator.CreateInstance(ScriptType) as Model;
+
+                    this.AddModel(Model, true);
                 }
-                else
-                    Model = Activator.CreateInstance(ScriptType) as Model;
-
-                this.AddModel(Model, true);
+                catch (Exception)
+                {
+                    // Probably a compile error.
+                    
+                }
             }
         }
     }

@@ -26,20 +26,20 @@
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
-        <Types>
+        <Definitions>
           <FertiliserType>
-            <Name>Urea_N</Name>
+            <Name>UreaN</Name>
             <FractionNO3>0</FractionNO3>
             <FractionNH4>0</FractionNH4>
             <FractionUrea>1</FractionUrea>
           </FertiliserType>
           <FertiliserType>
-            <Name>NO3_N</Name>
+            <Name>NO3N</Name>
             <FractionNO3>1</FractionNO3>
             <FractionNH4>0</FractionNH4>
             <FractionUrea>0</FractionUrea>
           </FertiliserType>
-        </Types>
+        </Definitions>
       </Fertiliser>
       <Report>
         <Name>Report</Name>
@@ -2525,7 +2525,7 @@
                [Description("Amount (kg/ha) of fertiliser to apply")]
                public double ApplicationAmount {get; set;} //= 500;
                [Description("Type of fertiliser to apply")]
-               public string FertType {get; set;}//= "NO3_N";
+               public Fertiliser.Types FertType {get; set;}//= "NO3_N";
                [Description("Date of fertiliser application")]
                public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
 
@@ -2545,7 +2545,7 @@
 				</Code>
         <Script>
           <ApplicationAmount>500</ApplicationAmount>
-          <FertType>NO3_N</FertType>
+          <FertType>NO3N</FertType>
           <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
         </Script>
       </Manager>
