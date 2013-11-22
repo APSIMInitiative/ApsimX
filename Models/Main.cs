@@ -22,10 +22,9 @@ namespace Models
 
             try
             {
-                Simulations Simulations = Utility.Xml.Deserialise(args[0]) as Simulations;
+                Simulations Simulations = Simulations.Read(args[0]);
                 if (Simulations == null)
                     throw new Exception("No simulations found in file: " + args[0]);
-                Simulations.FileName = args[0];
                 if (Simulations.Run())
                     return 0;
                 else

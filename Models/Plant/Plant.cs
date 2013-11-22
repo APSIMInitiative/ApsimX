@@ -69,7 +69,7 @@ namespace Models.PMF
         public String sender = "";
         public String crop_type = "";
     }
-    public class Plant: Model, IXmlSerializable
+    public class Plant: Model
     {
         public string CropType { get; set; }
         public Phenology Phenology { get; set; }
@@ -77,98 +77,29 @@ namespace Models.PMF
         public Structure Structure { get; set; }
         public Summariser Summariser { get; set; }
         public SowPlant2Type SowingData;
-        [XmlIgnore]
+
+
+        [XmlArrayItem(typeof(BelowGroundOrgan))]
+        [XmlArrayItem(typeof(GenericAboveGroundOrgan))]
+        [XmlArrayItem(typeof(GenericBelowGroundOrgan))]
+        [XmlArrayItem(typeof(GenericOrgan))]
+        [XmlArrayItem(typeof(HIReproductiveOrgan))]
+        [XmlArrayItem(typeof(Leaf))]
+        [XmlArrayItem(typeof(Nodule))]
+        [XmlArrayItem(typeof(ReproductiveOrgan))]
+        [XmlArrayItem(typeof(ReserveOrgan))]
+        [XmlArrayItem(typeof(Root))]
+        [XmlArrayItem(typeof(RootSWIM))]
+        [XmlArrayItem(typeof(SimpleLeaf))]
+        [XmlArrayItem(typeof(SimpleRoot))]
         public List<Organ> Organs { get; set; }
         
-        #region XmlSerializable methods
-        /// <summary>
-        /// Return our schema - needed for IXmlSerializable.
-        /// </summary>
-        public XmlSchema GetSchema() { return null; }
-
-        /// <summary>
-        /// Read XML from specified reader. Called during Deserialisation.
-        /// </summary>
-        public virtual void ReadXml(XmlReader reader)
-        {
-            Organs = new List<Organ>();
-            reader.Read();
-            while (reader.IsStartElement())
-            {
-                string Type = reader.Name;
-
-                if (Type == "Name")
-                {
-                    Name = reader.ReadString();
-                    reader.Read();
-                }
-                else if (Type == "CropType")
-                {
-                    CropType = reader.ReadString();
-                    reader.Read();
-                } 
-                else
-                {
-                    Model NewChild = Utility.Xml.Deserialise(reader) as Model;
-                    if (NewChild is Organ)
-                        Organs.Add(NewChild as Organ);
-                    else
-                        AddModel(NewChild, false);
-                    NewChild.Parent = this;
-                }
-            }
-            reader.ReadEndElement();
-        }
-
-        /// <summary>
-        /// Write this point to the specified XmlWriter
-        /// </summary>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("Name");
-            writer.WriteString(Name);
-            writer.WriteEndElement();
-            writer.WriteStartElement("CropType");
-            writer.WriteString(CropType);
-            writer.WriteEndElement();
-
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            XmlSerializer serial = new XmlSerializer(typeof(Arbitrator));
-            serial.Serialize(writer, Arbitrator, ns);
-
-            XmlSerializer serial2 = new XmlSerializer(typeof(Phenology));
-            serial2.Serialize(writer, Phenology, ns);
-
-            XmlSerializer serial3 = new XmlSerializer(typeof(Structure));
-            serial3.Serialize(writer, Structure, ns);
-
-            XmlSerializer serial4 = new XmlSerializer(typeof(Summariser));
-            serial4.Serialize(writer, Summariser, ns);
-
-            foreach (object Model in Organs)
-            {
-                Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
-                if (type.Length == 0)
-                    throw new Exception("Cannot find a model with class name: " + Model.GetType().Name);
-                if (type.Length > 1)
-                    throw new Exception("Found two models with class name: " + Model.GetType().Name);
-
-
-                serial = new XmlSerializer(type[0]);
-                serial.Serialize(writer, Model, ns);
-            }
-        }
-
-        #endregion
-
         //Fixme, work out how to do swim
         //[Input(IsOptional = true)]
         Single swim3 = 0;
 
         #region Outputs
-
+        [XmlIgnore]
         public double WaterSupplyDemandRatio { get; set; }
         
         public string plant_status

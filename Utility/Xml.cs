@@ -756,7 +756,7 @@ namespace Utility
         public static string Serialise(object Component, bool WithNamespace)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
+            ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
             MemoryStream M = new MemoryStream();
             StreamWriter Writer = new StreamWriter(M);

@@ -6,7 +6,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
-    class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]
         Plant Plant = null;

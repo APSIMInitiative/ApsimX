@@ -5,7 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
-    class ReserveOrgan : GenericOrgan  //Neither above or below ground for now
+    public class ReserveOrgan : GenericOrgan  //Neither above or below ground for now
     {
     }
 }

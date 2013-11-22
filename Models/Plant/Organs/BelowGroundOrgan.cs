@@ -5,7 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
-    class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
+    public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
         [Link]
         Clock Clock = null;

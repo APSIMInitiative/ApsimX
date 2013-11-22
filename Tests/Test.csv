@@ -120,14 +120,8 @@ a_interception(mm/mm):,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO
-          Property name, Value
-              CropType:,Potato
-WaterSupplyDemandRatio:, 0.000
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.
-    Property name,  Value
-CurrentPhaseName:,Dormant
+Property name, Value
+    CropType:,Potato
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
@@ -211,8 +205,8 @@ Property name,Value
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.ROOT
-Property name,Value
-      Length:,0.000
+Property name,             Value
+      Length:,             0.012
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.ROOT...

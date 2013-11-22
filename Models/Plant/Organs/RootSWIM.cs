@@ -5,7 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
-    class RootSWIM : BaseOrgan, BelowGround
+    public class RootSWIM : BaseOrgan, BelowGround
     {
         [Link]
         Plant Plant = null;

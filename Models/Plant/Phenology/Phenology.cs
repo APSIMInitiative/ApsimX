@@ -14,7 +14,7 @@ namespace Models.PMF.Phen
         public String OldPhaseName = "";
         public String NewPhaseName = "";
     }
-    public class Phenology: Model, IXmlSerializable
+    public class Phenology: Model
     {
         [Link]
         Summary Summary = null;
@@ -28,79 +28,18 @@ namespace Models.PMF.Phen
 
         public Function StageCode { get; set; }
 
+        [XmlArrayItem(typeof(EmergingPhase))]
+        [XmlArrayItem(typeof(EndPhase))]
+        [XmlArrayItem(typeof(GenericPhase))]
+        [XmlArrayItem(typeof(GerminatingPhase))]
+        [XmlArrayItem(typeof(GotoPhase))]
+        [XmlArrayItem(typeof(LeafAppearancePhase))]
+        [XmlArrayItem(typeof(LeafDeathPhase))]
         public List<Phase> Phases { get; set; }
 
-        #region XmlSerializable methods
-        /// <summary>
-        /// Return our schema - needed for IXmlSerializable.
-        /// </summary>
-        public XmlSchema GetSchema() { return null; }
-
-        /// <summary>
-        /// Read XML from specified reader. Called during Deserialisation.
-        /// </summary>
-        public virtual void ReadXml(XmlReader reader)
-        {
-            Phases = new List<Phase>();
-            reader.Read();
-            while (reader.IsStartElement())
-            {
-                string Type = reader.Name;
-
-                if (Type == "Name")
-                {
-                    Name = reader.ReadString();
-                    reader.Read();
-                }
-                else
-                {
-                    Model NewChild = Utility.Xml.Deserialise(reader) as Model;
-                    if (NewChild is Phase)
-                        Phases.Add(NewChild as Phase);
-                    else if (NewChild is StageBasedInterpolation)
-                        StageCode = NewChild as StageBasedInterpolation;
-                    else
-                        AddModel(NewChild, false);
-                    NewChild.Parent = this;
-                }
-            }
-            reader.ReadEndElement();
-        }
-
-        /// <summary>
-        /// Write this point to the specified XmlWriter
-        /// </summary>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("Name");
-            writer.WriteString(Name);
-            writer.WriteEndElement();
-
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            foreach (object Model in Phases)
-            {
-                Type[] type = Utility.Reflection.GetTypeWithoutNameSpace(Model.GetType().Name);
-                if (type.Length == 0)
-                    throw new Exception("Cannot find a model with class name: " + Model.GetType().Name);
-                if (type.Length > 1)
-                    throw new Exception("Found two models with class name: " + Model.GetType().Name);
-
-               
-                XmlSerializer serial = new XmlSerializer(type[0]);
-                serial.Serialize(writer, Model, ns);
-            }
-            XmlSerializer serial2 = new XmlSerializer(typeof(StageBasedInterpolation));
-            serial2.Serialize(writer, StageCode, ns);
-        }
-
-        #endregion
-
-
-        
+       
         private int CurrentPhaseIndex;
-        public double _AccumulatedTT = 0;
+        private double _AccumulatedTT = 0;
         
         public double AccumulatedTT
         {
@@ -110,12 +49,13 @@ namespace Models.PMF.Phen
         private bool JustInitialised = true;
 
         
-        public double FractionBiomassRemoved = 0;
+        private double FractionBiomassRemoved = 0;
 
         /// <summary>
         /// A one based stage number.
         /// </summary>
         
+        [XmlIgnore]
         public double Stage = 1;
 
         //[Input]
@@ -129,6 +69,7 @@ namespace Models.PMF.Phen
         /// This property is used to retrieve or set the current phase name.
         /// </summary>
         
+        [XmlIgnore]
         public string CurrentPhaseName
         {
             get
@@ -280,6 +221,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// A utility property to return the current phase.
         /// </summary>
+        [XmlIgnore]
         public Phase CurrentPhase
         {
             get

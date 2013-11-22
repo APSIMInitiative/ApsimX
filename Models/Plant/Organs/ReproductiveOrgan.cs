@@ -7,7 +7,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Organs
 {
-    class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]
         Summary Summary = null;

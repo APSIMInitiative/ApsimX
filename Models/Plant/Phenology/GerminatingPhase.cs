@@ -6,7 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
-    class GerminatingPhase : Phase
+    public class GerminatingPhase : Phase
     {
         [Link]
         Soils.SoilWater SoilWater = null;

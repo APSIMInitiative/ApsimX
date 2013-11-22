@@ -43,6 +43,21 @@ namespace Models.Core
             }
         }
 
+        public static Simulations Read(string FileName)
+        {
+            Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
+            simulations.FileName = FileName;
+            Utility.ModelFunctions.ResolveLinks(simulations);
+            return simulations;
+        }
+
+        public static Simulations Read(XmlNode xmlNode)
+        {
+            Simulations simulations = Utility.Xml.Deserialise(xmlNode) as Simulations;
+            Utility.ModelFunctions.ResolveLinks(simulations);
+            return simulations;
+        }
+
         /// <summary>
         /// Write the specified simulation set to the specified filename
         /// </summary>
@@ -52,16 +67,6 @@ namespace Models.Core
             Out.Write(Utility.Xml.Serialise(this, true));
             Out.Close();
             this.FileName = FileName;
-        }
-
-        /// <summary>
-        /// Read XML from specified reader. Called during Deserialisation.
-        /// </summary>
-        public override void ReadXml(XmlReader reader)
-        {
-            base.ReadXml(reader);
-            Name = "Simulations";
-            Utility.ModelFunctions.ResolveLinks(this);
         }
 
         /// <summary>
@@ -117,7 +122,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Constructor, private to stop developers using it. Use 'Utility.Xml.Deserialise' instead.
+        /// Constructor, private to stop developers using it. Use Simulations.Read instead.
         /// </summary>
         private Simulations() { }
 

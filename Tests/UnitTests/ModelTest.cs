@@ -26,7 +26,7 @@ namespace ModelTests
             FileStream F = new FileStream("Test.apsimx", FileMode.Create);
             F.Write(Properties.Resources.TestFile, 0, Properties.Resources.TestFile.Length);
             F.Close();
-            S = Utility.Xml.Deserialise("Test.apsimx") as Simulations;
+            S = Simulations.Read("Test.apsimx");
         }
 
 

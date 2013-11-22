@@ -81,8 +81,9 @@ namespace UserInterface.Presenters
             {
                 ExplorerView ExplorerView = new ExplorerView();
                 ExplorerPresenter Presenter = new ExplorerPresenter();
-                Simulations Simulations = Utility.Xml.Deserialise(FileName) as Simulations;
-                Simulations.FileName = FileName;
+                Console.WriteLine(FileName);
+
+                Simulations Simulations = Simulations.Read(FileName);
 
                 Presenter.Attach(Simulations, ExplorerView, null);
 

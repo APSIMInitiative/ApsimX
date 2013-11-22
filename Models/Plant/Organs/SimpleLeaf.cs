@@ -7,7 +7,7 @@ using Models.PMF.Functions.SupplyFunctions;
 
 namespace Models.PMF.Organs
 {
-    class SimpleLeaf : BaseOrgan, AboveGround
+    public class SimpleLeaf : BaseOrgan, AboveGround
     {
         [Link]
         Plant Plant = null;
