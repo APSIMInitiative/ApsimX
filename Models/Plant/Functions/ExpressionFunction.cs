@@ -19,7 +19,7 @@ namespace Models.PMF.Functions
         private bool parsed = false;
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

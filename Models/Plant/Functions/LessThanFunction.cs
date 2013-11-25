@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     public class LessThanFunction : Function
     {
         public List<Function> Children { get; set; }
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -28,13 +28,13 @@ namespace Models.PMF.Functions
                 {
                     F = Children[i] as Function;
                     if (i == 0)
-                        Variable = F.FunctionValue;
+                        Variable = F.Value;
                     if (i == 1)
-                        Criteria = F.FunctionValue;
+                        Criteria = F.Value;
                     if (i == 2)
-                        IfTrue = F.FunctionValue;
+                        IfTrue = F.Value;
                     if (i == 3)
-                        IfFalse = F.FunctionValue;
+                        IfFalse = F.Value;
                 }
 
                 if (Variable < Criteria)

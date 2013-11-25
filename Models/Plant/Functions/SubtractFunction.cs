@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     public class SubtractFunction : Function
     {
         public List<Function> Children { get; set; }
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -21,13 +21,13 @@ namespace Models.PMF.Functions
                 if (Children.Count > 0)
                 {
                     Function F = Children[0] as Function;
-                    returnValue = F.FunctionValue;
+                    returnValue = F.Value;
 
                     if (Children.Count > 1)
                         for (int i = 1; i < Children.Count; i++)
                         {
                             F = Children[i] as Function;
-                            returnValue = returnValue - F.FunctionValue;
+                            returnValue = returnValue - F.Value;
                         }
 
                 }

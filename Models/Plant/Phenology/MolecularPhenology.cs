@@ -89,7 +89,7 @@ namespace Models.PMF.Phen
             //Pre-Vernalisation lag, determine the repression of Vrn4
             if (IsPreVernalised == false)
             {
-                Vrn4 -= Vrn1rate.FunctionValue * DeltaHaunStage;
+                Vrn4 -= Vrn1rate.Value * DeltaHaunStage;
                 Vrn4 = Math.Max(Vrn4, 0.0);
                 if (Vrn4 == 0.0)
                     IsPreVernalised = true;
@@ -98,7 +98,7 @@ namespace Models.PMF.Phen
             //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
             if ((IsPreVernalised) && (IsVernalised == false))
             {
-                Vrn1 += Vrn1rate.FunctionValue * DeltaHaunStage;
+                Vrn1 += Vrn1rate.Value * DeltaHaunStage;
                 Vrn1 = Math.Min(1.0, Vrn1);
             }
 
@@ -107,7 +107,7 @@ namespace Models.PMF.Phen
             {
                 if (Structure.MainStemNodeNo >= 1.1)
                 {
-                    Vrn2 += Vrn2rate.FunctionValue * DeltaHaunStage;
+                    Vrn2 += Vrn2rate.Value * DeltaHaunStage;
                     Vrn1Target = Math.Min(1.0, BaseVrn1Target + Vrn2);
                 }
                 if (Vrn1 >= Vrn1Target)
@@ -116,7 +116,7 @@ namespace Models.PMF.Phen
             //If Vernalisation is complete begin expressing Vrn3
             if ((IsVernalised) && (IsReproductive == false))
             {
-                Vrn3 += Vrn3rate.FunctionValue * DeltaHaunStage;
+                Vrn3 += Vrn3rate.Value * DeltaHaunStage;
                 Vrn3 = Math.Min(1.0, Vrn3);
             }
 

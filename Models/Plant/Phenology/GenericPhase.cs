@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
                 double LeftOverValue = _TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.FunctionValue;
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value;
                     PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
                 }
                 else
@@ -50,15 +50,15 @@ namespace Models.PMF.Phen
         {
             if (Target == null)
                 throw new Exception("Cannot find target for phase: " + Name);
-            return Target.FunctionValue;
+            return Target.Value;
         }
         // Return proportion of TT unused
         public override double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.FunctionValue * PropOfDayToUse;
+            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
             double AmountUnusedTT = _TTinPhase - CalcTarget();
             if (AmountUnusedTT > 0)
-                return AmountUnusedTT / ThermalTime.FunctionValue;
+                return AmountUnusedTT / ThermalTime.Value;
             return 0;
         }
         /// <summary>
@@ -76,7 +76,7 @@ namespace Models.PMF.Phen
         {
             base.WriteSummary();
             if (Target != null)
-                Summary.WriteMessage(FullPath, string.Format("         Target                    = {0,8:F0} (dd)", Target.FunctionValue));
+                Summary.WriteMessage(FullPath, string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
         }
 
     }

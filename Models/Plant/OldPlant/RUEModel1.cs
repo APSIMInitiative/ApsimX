@@ -33,12 +33,12 @@ namespace Models.PMF.OldPlant
         public double PotentialDM(double radiationInterceptedGreen)
         {
             double RUEFactor = 1.0;
-            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
+            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),
                                             RUEFactor);
 
-            return radiationInterceptedGreen * RUE.FunctionValue * stress_factor * RUEModifier.FunctionValue;
+            return radiationInterceptedGreen * RUE.Value * stress_factor * RUEModifier.Value;
         }
 
         private void PublishNewPotentialGrowth()
@@ -48,7 +48,7 @@ namespace Models.PMF.OldPlant
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
+                GrowthType.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
                                                    Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
                 NewPotentialGrowth.Invoke(GrowthType);
             }

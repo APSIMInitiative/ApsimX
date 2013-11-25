@@ -13,11 +13,11 @@ namespace Models.PMF.Functions.DemandFunctions
         [Link]
         Structure Structure = null;
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
-                return Structure.DeltaNodeNumber * Structure.TotalStemPopn * InterNodeWt.FunctionValue;
+                return Structure.DeltaNodeNumber * Structure.TotalStemPopn * InterNodeWt.Value;
             }
         }
     }

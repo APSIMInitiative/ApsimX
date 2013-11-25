@@ -27,7 +27,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return FixationMetabolicCost.FunctionValue;
+                return FixationMetabolicCost.Value;
             }
         }
         public override BiomassAllocationType NAllocation
@@ -54,7 +54,7 @@ namespace Models.PMF.Organs
                 if (Live != null)
                 {
                     // Now add in our fixation
-                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.FunctionValue * Math.Min(FT.FunctionValue, Math.Min(FW.FunctionValue, FWlog.FunctionValue));
+                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.Value * Math.Min(FT.Value, Math.Min(FW.Value, FWlog.Value));
                 }
                 return Supply;
             }

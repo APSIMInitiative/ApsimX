@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     {
         public List<Function> Children { get; set; }
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -18,23 +18,9 @@ namespace Models.PMF.Functions
                 {
                     PhaseLookupValue P = F as PhaseLookupValue;
                     if (P.InPhase)
-                        return P.FunctionValue;
+                        return P.Value;
                 }
                 return 0;  // Default value is zero
-            }
-        }
-
-        public override string ValueString
-        {
-            get
-            {
-                foreach (Function F in Children)
-                {
-                    PhaseLookupValue P = F as PhaseLookupValue;
-                    if (P.InPhase)
-                        return P.ValueString;
-                }
-                return "";
             }
         }
 

@@ -41,7 +41,7 @@ namespace Models.PMF.Phen
         /// </summary>
         public void DoVernalisation(double Maxt, double Mint)
         {
-            CumulativeVD += VDModel.FunctionValue;
+            CumulativeVD += VDModel.Value;
         }
 
 

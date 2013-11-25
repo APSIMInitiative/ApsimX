@@ -63,24 +63,24 @@ namespace Models.PMF.Organs
         {
             SenescenceRate = 0;
             if (SenescenceRateFunction != null) //Default of zero means no senescence
-                SenescenceRate = SenescenceRateFunction.FunctionValue;
+                SenescenceRate = SenescenceRateFunction.Value;
             _StructuralFraction = 1;
             if (StructuralFraction != null) //Default of 1 means all biomass is structural
-                _StructuralFraction = StructuralFraction.FunctionValue;
+                _StructuralFraction = StructuralFraction.Value;
             InitialWt = 0; //Default of zero means no initial Wt
             if (InitialWtFunction != null)
-                InitialWt = InitialWtFunction.FunctionValue;
+                InitialWt = InitialWtFunction.Value;
             InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
             if (InitialStructuralFraction != null)
-                InitStutFraction = InitialStructuralFraction.FunctionValue;
+                InitStutFraction = InitialStructuralFraction.Value;
 
             //Initialise biomass and nitrogen
             if (Live.Wt == 0)
             {
                 Live.StructuralWt = InitialWt * InitStutFraction;
                 Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
-                Live.StructuralN = Live.StructuralWt * MinimumNConc.FunctionValue;
-                Live.NonStructuralN = (InitialWt * MaximumNConc.FunctionValue) - Live.StructuralN;
+                Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
+                Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
             }
 
             StartLive = Live;
@@ -98,7 +98,7 @@ namespace Models.PMF.Organs
             Live.NonStructuralN *= (1.0 - SenescenceRate);
 
             if (WaterContent != null)
-                LiveFWt = Live.Wt / (1 - WaterContent.FunctionValue);
+                LiveFWt = Live.Wt / (1 - WaterContent.Value);
         }
    
         #endregion
@@ -110,7 +110,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-             StructuralDMDemand = DMDemandFunction.FunctionValue * _StructuralFraction;
+             StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
              double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
              MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
              NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt); 
@@ -136,7 +136,7 @@ namespace Models.PMF.Organs
             {
             double _DMRetranslocationFactor = 0;
             if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                _DMRetranslocationFactor = DMRetranslocationFactor.FunctionValue;
+                _DMRetranslocationFactor = DMRetranslocationFactor.Value;
             return new BiomassSupplyType { Fixation = 0, 
                                       Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
             Reallocation = 0};
@@ -148,10 +148,10 @@ namespace Models.PMF.Organs
             {
             double _NitrogenDemandSwitch = 1;
             if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
-            double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Live.Wt + PotentialDMAllocation) - Live.N);
+                _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
             NDeficit *= _NitrogenDemandSwitch;
-            double StructuralNDemand = Math.Min(NDeficit,PotentialStructuralDMAllocation * MinimumNConc.FunctionValue);
+            double StructuralNDemand = Math.Min(NDeficit,PotentialStructuralDMAllocation * MinimumNConc.Value);
             double NonStructuralNDemand = Math.Max(0,NDeficit - StructuralNDemand); 
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
@@ -165,14 +165,14 @@ namespace Models.PMF.Organs
             // Calculate Reallocation Supply.
             double _NReallocationFactor = 0;
             if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                _NReallocationFactor = NReallocationFactor.FunctionValue;
+                _NReallocationFactor = NReallocationFactor.Value;
             Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
 
             // Calculate Retranslocation Supply.
             double _NRetranslocationFactor = 0;
             if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                _NRetranslocationFactor = NRetranslocationFactor.FunctionValue;
-            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.FunctionValue);
+                _NRetranslocationFactor = NRetranslocationFactor.Value;
+            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
             Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
 
             return Supply;
@@ -230,14 +230,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaximumNConc.FunctionValue;
+                return MaximumNConc.Value;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.FunctionValue;
+                return MinimumNConc.Value;
             }
         }
         #endregion

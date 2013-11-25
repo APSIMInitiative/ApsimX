@@ -22,10 +22,10 @@ namespace Models
 
             try
             {
-                Simulations Simulations = Simulations.Read(args[0]);
-                if (Simulations == null)
+                Simulations simulations = Simulations.Read(args[0]);
+                if (simulations == null)
                     throw new Exception("No simulations found in file: " + args[0]);
-                if (Simulations.Run())
+                if (simulations.Run())
                     return 0;
                 else
                     return 1;

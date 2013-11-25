@@ -100,12 +100,12 @@ namespace Models.PMF.OldPlant
             else
                 dlt_plants_failure_leaf_sen = 0.0;
 
-            if (CropFailureStressPeriod.FunctionValue == 1)
+            if (CropFailureStressPeriod.Value == 1)
                 dlt_plants_failure_phen_delay = CropFailurePhenDelay();
             else
                 dlt_plants_failure_phen_delay = 0.0;
 
-            if (CropFailureStressPeriod.FunctionValue == 1)
+            if (CropFailureStressPeriod.Value == 1)
                 dlt_plants_death_drought = DeathDrought();
             else
                 dlt_plants_death_drought = 0.0;
@@ -132,7 +132,7 @@ namespace Models.PMF.OldPlant
 
         internal void Update()
         {
-            if (CropFailureStressPeriod.FunctionValue == 1)
+            if (CropFailureStressPeriod.Value == 1)
             {
                 CumSWStressPheno += (1 - SWStress.Pheno);
                 CumSWStressPhoto += (1 - SWStress.Photo);
@@ -204,7 +204,7 @@ namespace Models.PMF.OldPlant
         private double DeathSeedling()
         {
             // Calculate fraction of plants killed by high temperature
-            double killfr = DeathHighTemperatureDuringEmergence.FunctionValue;
+            double killfr = DeathHighTemperatureDuringEmergence.Value;
             double dlt_plants = -Density * killfr;
 
             if (killfr > 0.0)

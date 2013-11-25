@@ -292,7 +292,7 @@ namespace Models.PMF.OldPlant
 
             // PUBLISH NewPotentialGrowth event.
             NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-            NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.FunctionValue, NStress.Photo),
+            NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
                                                             Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
             NewPotentialGrowthData.sender = Name;
             NewPotentialGrowth.Invoke(NewPotentialGrowthData);
@@ -537,7 +537,7 @@ namespace Models.PMF.OldPlant
                 ext_n_demand += Organ.NDemand;
 
             //nh  use zero growth value here so that estimated n fix is always <= actual;
-            double n_fix_pot = NFixRate.FunctionValue * AboveGroundLive.Wt * SWStress.Fixation;
+            double n_fix_pot = NFixRate.Value * AboveGroundLive.Wt * SWStress.Fixation;
 
             if (NSupplyPreference == "active")
             {

@@ -6,14 +6,14 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
-    class PhotoperiodDeltaFunction : Function
+    public class PhotoperiodDeltaFunction : Function
     {
         //[Link]
         //Clock Clock = null;
 
         public double Twilight = 0;
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

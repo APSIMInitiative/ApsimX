@@ -15,10 +15,10 @@ namespace Models.PMF.Phen
         public string End;
 
         [Link]
-        public Phenology Phenology = null;
+        protected Phenology Phenology = null;
 
         [Link]
-        Summary Summary = null;
+        private Summary Summary = null;
         public Function ThermalTime { get; set; }  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         public Function Stress { get; set; }
@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
             {
                 if (ThermalTime == null)
                     return 0;
-                return ThermalTime.FunctionValue;
+                return ThermalTime.Value;
             }
         }
         protected double _TTinPhase = 0;
@@ -48,10 +48,10 @@ namespace Models.PMF.Phen
         virtual public double DoTimeStep(double PropOfDayToUse)
         {
             // Calculate the TT for today and Accumulate.      
-            _TTForToday = ThermalTime.FunctionValue * PropOfDayToUse;
+            _TTForToday = ThermalTime.Value * PropOfDayToUse;
             if (Stress != null)
             {
-                _TTForToday *= Stress.FunctionValue;
+                _TTForToday *= Stress.Value;
             }
             _TTinPhase += _TTForToday;
 
@@ -61,7 +61,7 @@ namespace Models.PMF.Phen
         // Return proportion of TT unused
         virtual public double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.FunctionValue * PropOfDayToUse;
+            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
             return 0;
         }
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }

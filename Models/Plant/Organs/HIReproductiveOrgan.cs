@@ -31,7 +31,7 @@ namespace Models.PMF.Organs
             {
 
                 if (WaterContent != null)
-                    return Live.Wt / (1 - WaterContent.FunctionValue);
+                    return Live.Wt / (1 - WaterContent.Value);
                 else
                     return 0.0;
             }
@@ -75,7 +75,7 @@ namespace Models.PMF.Organs
             get
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
-                double NewHI = HI + HIIncrement.FunctionValue;
+                double NewHI = HI + HIIncrement.Value;
                 double NewWt = NewHI * AboveGround.Wt;
                 double Demand = Math.Max(0.0, NewWt - CurrentWt);
 
@@ -90,7 +90,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double demand = Math.Max(0.0, (NConc.FunctionValue * Live.Wt) - Live.N);
+                double demand = Math.Max(0.0, (NConc.Value * Live.Wt) - Live.N);
                 return new BiomassPoolType { Structural = demand };
             }
 

@@ -387,7 +387,7 @@ namespace Models.PMF.Phen
                 FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.FunctionValue;
+                double removeFractPheno = RewindDueToBiomassRemoved.Value;
                 double removeTTPheno = ttCritical * removeFractPheno;
 
                 string msg;
@@ -455,7 +455,7 @@ namespace Models.PMF.Phen
                 double TTInPhase = 0.0;
                 for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
                 {
-                    if (AboveGroundPeriod.FunctionValue == 1)
+                    if (AboveGroundPeriod.Value == 1)
                         TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;

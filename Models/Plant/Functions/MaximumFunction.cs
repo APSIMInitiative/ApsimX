@@ -7,18 +7,18 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Description("Returns the maximum value of all childern functions")]
-    class MaximumFunction : Function
+    public class MaximumFunction : Function
     {
         public List<Function> Children { get; set; }
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
                 double ReturnValue = -999999999;
                 foreach (Function F in Children)
                 {
-                    ReturnValue = Math.Max(ReturnValue, F.FunctionValue);
+                    ReturnValue = Math.Max(ReturnValue, F.Value);
                 }
                 return ReturnValue;
             }

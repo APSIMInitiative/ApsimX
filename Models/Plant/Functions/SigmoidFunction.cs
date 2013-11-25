@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
         public List<Function> Children { get; set; }
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Models.PMF.Functions
                 {
                     Function F = Children[0] as Function;
 
-                    return Xmax * 1 / (1 + Math.Exp(-(F.FunctionValue - Xo) / b));
+                    return Xmax * 1 / (1 + Math.Exp(-(F.Value - Xo) / b));
                 }
                 else
                 {

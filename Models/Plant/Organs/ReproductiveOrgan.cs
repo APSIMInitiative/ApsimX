@@ -47,7 +47,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (WaterContent != null)
-                    return Live.Wt / (1 - WaterContent.FunctionValue);
+                    return Live.Wt / (1 - WaterContent.Value);
                 else
                     return 0.0;
             }
@@ -73,7 +73,7 @@ namespace Models.PMF.Organs
                 if (Number > 0)
                 {
                     if (WaterContent != null)
-                        return (Live.Wt / Number) / (1 - WaterContent.FunctionValue);
+                        return (Live.Wt / Number) / (1 - WaterContent.Value);
                     else
                         return 0.0;
                 }
@@ -151,14 +151,14 @@ namespace Models.PMF.Organs
                 double Demand = 0;
                 if (DMDemandFunction != null)
                 {
-                    Demand = DMDemandFunction.FunctionValue;
+                    Demand = DMDemandFunction.Value;
                 }
                 else
                 {
-                    Number = NumberFunction.FunctionValue;
+                    Number = NumberFunction.Value;
                     if (Number > 0)
                     {
-                        double demand = Number * FillingRate.FunctionValue;
+                        double demand = Number * FillingRate.Value;
                         // Ensure filling does not exceed a maximum size
                         Demand = Math.Min(demand, (MaximumSize - Live.Wt / Number) * Number);
                     }
@@ -187,9 +187,9 @@ namespace Models.PMF.Organs
             {
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
-                double demand = Number * NFillingRate.FunctionValue;
-                demand = Math.Min(demand, MaximumNConc.FunctionValue * DailyGrowth) * _NitrogenDemandSwitch;
+                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
+                double demand = Number * NFillingRate.Value;
+                demand = Math.Min(demand, MaximumNConc.Value * DailyGrowth) * _NitrogenDemandSwitch;
                 return new BiomassPoolType { Structural = demand };
             }
 
@@ -205,14 +205,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaximumNConc.FunctionValue;
+                return MaximumNConc.Value;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.FunctionValue;
+                return MinimumNConc.Value;
             }
         }
         #endregion

@@ -21,7 +21,7 @@ namespace Models.PMF.Functions
 
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -29,8 +29,8 @@ namespace Models.PMF.Functions
 
                 double LeafNo = Structure.MainStemNodeNo;
 
-                LeafSizePerNode = AreaMax.FunctionValue * Math.Exp(Breadth.FunctionValue * Math.Pow(LeafNo - LargestLeafPosition.FunctionValue, 2.0)
-                                  + Skewness.FunctionValue * (Math.Pow(LeafNo - LargestLeafPosition.FunctionValue, 3.0)));
+                LeafSizePerNode = AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
+                                  + Skewness.Value * (Math.Pow(LeafNo - LargestLeafPosition.Value, 3.0)));
 
                 return LeafSizePerNode;
 

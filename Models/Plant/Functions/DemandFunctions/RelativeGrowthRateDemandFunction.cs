@@ -25,15 +25,15 @@ namespace Models.PMF.Functions.DemandFunctions
 
         double StartWt = 0;
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
                 if (Phenology.OnDayOf(InitialStageName) && StartWt == 0)
                     StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
-                double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.FunctionValue);
-                double OrganDemand = CurrentOrganWt * RelativeGrowthRate.FunctionValue;
-                return OrganDemand * OrganNumber.FunctionValue;
+                double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value);
+                double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value;
+                return OrganDemand * OrganNumber.Value;
             }
         }
 

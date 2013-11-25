@@ -19,7 +19,7 @@ namespace Models.PMF.Functions.DemandFunctions
 
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

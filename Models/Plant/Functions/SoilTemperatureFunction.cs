@@ -21,7 +21,7 @@ namespace Models.PMF.Functions
 
         
         [Units("deg.day")]
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

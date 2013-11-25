@@ -676,7 +676,13 @@ namespace Utility
                 // Try using the pre built serialization assembly first.
                 string DeserializerFileName = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location,
                                                                              ".XmlSerializers.dll");
-                if (File.Exists(DeserializerFileName))
+
+                // Under MONO it seems that if a class is not in the serialization assembly then exception will 
+                // be thrown. Under windows this doesn't happen. For now, only use the prebuilt serialisation
+                // dll if on windows.
+                if ((Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                    Environment.OSVersion.Platform == PlatformID.Win32Windows) &&
+                    File.Exists(DeserializerFileName))
                 {
                     Assembly SerialiserAssembly = Assembly.LoadFile(DeserializerFileName);
                     string SerialiserFullName = "Microsoft.Xml.Serialization.GeneratedAssembly." + TypeName + "Serializer";

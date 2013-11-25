@@ -63,8 +63,8 @@ namespace Models.PMF.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(FT.FunctionValue, Math.Min(FN.FunctionValue, FVPD.FunctionValue)) * FW.FunctionValue * FCO2.FunctionValue;
-                return RUE.FunctionValue * RueReductionFactor;
+                double RueReductionFactor = Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value)) * FW.Value * FCO2.Value;
+                return RUE.Value * RueReductionFactor;
             }
         }
         /// <summary>
@@ -84,7 +84,7 @@ namespace Models.PMF.Functions.SupplyFunctions
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(FT.FunctionValue, Math.Min(FN.FunctionValue, FVPD.FunctionValue));
+                GrowthType.frgr = (float)Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value));
                 NewPotentialGrowth.Invoke(GrowthType);
             }
         }

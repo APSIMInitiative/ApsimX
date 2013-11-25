@@ -139,7 +139,7 @@ namespace Models.PMF.Organs
         {
             _SenescenceRate = 0;
             if (SenescenceRate != null) //Default of zero means no senescence
-                _SenescenceRate = SenescenceRate.FunctionValue;
+                _SenescenceRate = SenescenceRate.Value;
 
             if (Live.Wt == 0)
             {
@@ -163,9 +163,9 @@ namespace Models.PMF.Organs
 
             // Do Root Front Advance
             int RootLayer = LayerIndex(Depth);
-            double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.FunctionValue;
+            double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
             string SoilCropPlantName = this.Plant.Name + "SoilCrop";
-            Depth = Depth + RootFrontVelocity.FunctionValue * Soil.XF(SoilCropPlantName)[RootLayer] * TEM;
+            Depth = Depth + RootFrontVelocity.Value * Soil.XF(SoilCropPlantName)[RootLayer] * TEM;
             double MaxDepth = 0;
             for (int i = 0; i < SoilWat.dlayer.Length; i++)
                 if (Soil.XF(SoilCropPlantName)[i] > 0)
@@ -334,7 +334,7 @@ namespace Models.PMF.Organs
             {
                 double Demand = 0;
                 if (isGrowing)
-                    Demand = Arbitrator.DMSupply * PartitionFraction.FunctionValue;
+                    Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -459,10 +459,10 @@ namespace Models.PMF.Organs
                 double TotalDeficit = 0.0;
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.FunctionValue;
+                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
                 foreach (Biomass Layer in LayerLive)
                 {
-                    double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
                     TotalDeficit += NDeficit;
                 }
                 TotalDeficit *= _NitrogenDemandSwitch;
@@ -479,7 +479,7 @@ namespace Models.PMF.Organs
                     double[] no3supply = new double[SoilWat.dlayer.Length];
                     double[] nh4supply = new double[SoilWat.dlayer.Length];
                     SoilNSupply(no3supply, nh4supply);
-                    double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.FunctionValue) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.FunctionValue)) * kgha2gsm;
+                    double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
                     return new BiomassSupplyType { Uptake = NSupply };
                 }
                 else
@@ -494,7 +494,7 @@ namespace Models.PMF.Organs
                 double Demand = 0.0;
                 foreach (Biomass Layer in LayerLive)
                 {
-                    double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * Layer.Wt - Layer.N);
+                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
                     Demand += NDeficit;
                 }
                 double Supply = value.Structural;
@@ -507,7 +507,7 @@ namespace Models.PMF.Organs
                 {
                     foreach (Biomass Layer in LayerLive)
                     {
-                        double NDeficit = Math.Max(0.0, MaximumNConc.FunctionValue * Layer.Wt - Layer.N);
+                        double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
                         double fraction = NDeficit / Demand;
                         double Allocation = fraction * Supply;
                         Layer.StructuralN += Allocation;
@@ -557,14 +557,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaximumNConc.FunctionValue;
+                return MaximumNConc.Value;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.FunctionValue;
+                return MinimumNConc.Value;
             }
         }
 
@@ -580,7 +580,7 @@ namespace Models.PMF.Organs
                 string SoilCropPlantName = this.Plant.Name + "SoilCrop";
                 for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, Soil.KL(SoilCropPlantName)[layer] * KLModifier.FunctionValue * (SoilWat.sw_dep[layer] - Soil.LL(SoilCropPlantName)[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, Soil.KL(SoilCropPlantName)[layer] * KLModifier.Value * (SoilWat.sw_dep[layer] - Soil.LL(SoilCropPlantName)[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

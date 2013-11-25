@@ -14,7 +14,7 @@ namespace Models.PMF.Functions.StructureFunctions
         Phenology Phenology = null;
 
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

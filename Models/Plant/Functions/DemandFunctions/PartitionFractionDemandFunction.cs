@@ -13,11 +13,11 @@ namespace Models.PMF.Functions.DemandFunctions
         [Link]
         Arbitrator Arbitrator = null;
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
-                return Arbitrator.DMSupply * PartitionFraction.FunctionValue;
+                return Arbitrator.DMSupply * PartitionFraction.Value;
             }
         }
 

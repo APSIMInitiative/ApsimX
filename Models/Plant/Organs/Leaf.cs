@@ -85,7 +85,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.ExpansionStress.FunctionValue;
+                return LeafCohortParameters.ExpansionStress.Value;
             }
         }
 
@@ -274,7 +274,7 @@ namespace Models.PMF.Organs
         }
                  
         [Units("0-1")]
-        public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAI / MaxCover)); } }
+        public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); } }
         
         [Units("0-1")]
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
@@ -511,7 +511,7 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (LeafCohortParameters.CriticalNConc.FunctionValue - (LeafCohortParameters.MinimumNConc.FunctionValue * LeafCohortParameters.StructuralFraction.FunctionValue)) * (1 / (1 - LeafCohortParameters.StructuralFraction.FunctionValue));
+                double FunctionalNConc = (LeafCohortParameters.CriticalNConc.Value - (LeafCohortParameters.MinimumNConc.Value * LeafCohortParameters.StructuralFraction.Value)) * (1 / (1 - LeafCohortParameters.StructuralFraction.Value));
                 if (FunctionalNConc == 0)
                     F = 1;
                 else
@@ -547,9 +547,9 @@ namespace Models.PMF.Organs
                 FinalLeafFraction = Structure.MainStemFinalNodeNo - AppearedCohortNo;
             }
 
-            if (FrostFraction.FunctionValue > 0)
+            if (FrostFraction.Value > 0)
                 foreach (LeafCohort L in Leaves)
-                    L.DoFrost(FrostFraction.FunctionValue);
+                    L.DoFrost(FrostFraction.Value);
 
             // On the initial day set up initial cohorts and set their properties
             if (Phenology.OnDayOf(Structure.InitialiseStage))
@@ -579,7 +579,7 @@ namespace Models.PMF.Organs
                 if (FinalLeafFraction != 1.0)
                     FinalLeafAppeared = true;
                 int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
-                double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.FunctionValue * FinalLeafFraction;
+                double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
                 if (AppearingNode > InitialisedCohortNo)
                     throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
                 int i = AppearingNode - 1;
@@ -666,7 +666,7 @@ namespace Models.PMF.Organs
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.FunctionValue * LAIabove);
+            return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
 
         #endregion
@@ -684,8 +684,8 @@ namespace Models.PMF.Organs
 
                 if (DMDemandFunction != null)
                 {
-                    StructuralDemand = DMDemandFunction.FunctionValue * StructuralFraction.FunctionValue;
-                    NonStructuralDemand = DMDemandFunction.FunctionValue * (1 - StructuralFraction.FunctionValue);
+                    StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
+                    NonStructuralDemand = DMDemandFunction.Value * (1 - StructuralFraction.Value);
                 }
                 else
                 {
@@ -1159,14 +1159,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.MaximumNConc.FunctionValue;
+                return LeafCohortParameters.MaximumNConc.Value;
             }
         }
         public override double MinNconc
         {
             get
             {
-                return LeafCohortParameters.CriticalNConc.FunctionValue;
+                return LeafCohortParameters.CriticalNConc.Value;
             }
         }
         #endregion
@@ -1272,9 +1272,9 @@ namespace Models.PMF.Organs
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
         {
             //This is a fudge until we get around to making canopy temperature drive phenology dirrectly.
-            if ((DroughtInducedSenAcceleration != null) && (DroughtInducedSenAcceleration.FunctionValue > 1.0))
-                _ThermalTime = ThermalTime.FunctionValue * DroughtInducedSenAcceleration.FunctionValue;
-            else _ThermalTime = ThermalTime.FunctionValue;
+            if ((DroughtInducedSenAcceleration != null) && (DroughtInducedSenAcceleration.Value > 1.0))
+                _ThermalTime = ThermalTime.Value * DroughtInducedSenAcceleration.Value;
+            else _ThermalTime = ThermalTime.Value;
         }
         #endregion
 

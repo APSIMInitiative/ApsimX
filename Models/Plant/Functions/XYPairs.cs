@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
         public double[] X { get; set; }
         public double[] Y { get; set; }
 
-        public override double FunctionValue { get { throw new Exception("Cannot call Value on XYPairs function. Must be indexed."); } }
+        public override double Value { get { throw new Exception("Cannot call Value on XYPairs function. Must be indexed."); } }
 
         public double ValueIndexed(double dX)
         {

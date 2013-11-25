@@ -177,8 +177,8 @@ namespace Models.PMF.OldPlant
             //  the layer with root front
             int layer = FindLayerNo(RootDepth);
 
-            dltRootDepth = RootDepthRate.FunctionValue * RootAdvanceFactorTemp.FunctionValue *
-                            Math.Min(RootAdvanceFactorWaterStress.FunctionValue, SWFactorRootDepth.FunctionValue) *
+            dltRootDepth = RootDepthRate.Value * RootAdvanceFactorTemp.Value *
+                            Math.Min(RootAdvanceFactorWaterStress.Value, SWFactorRootDepth.Value) *
                             xf[layer];
 
             // prevent roots partially entering layers where xf == 0
@@ -232,14 +232,14 @@ namespace Models.PMF.OldPlant
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Root.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;

@@ -16,7 +16,7 @@ namespace Models.PMF.Functions
         public string XProperty = "";
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

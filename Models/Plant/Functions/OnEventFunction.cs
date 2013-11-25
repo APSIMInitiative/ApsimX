@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Description("Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent")]
-    class OnEventFunction : Function
+    public class OnEventFunction : Function
     {
         private double _Value = 0;
 
@@ -24,7 +24,7 @@ namespace Models.PMF.Functions
             //Fixme, this needs to be fixed to respond to change and reset events
             //MyPaddock.Subscribe(SetEvent, OnSetEvent);
             //MyPaddock.Subscribe(ReSetEvent, OnReSetEvent);
-            _Value = PreEventValue.FunctionValue;
+            _Value = PreEventValue.Value;
         }
 
         //[EventSubscribe("")]
@@ -35,16 +35,16 @@ namespace Models.PMF.Functions
 
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.FunctionValue;
+            _Value = PreEventValue.Value;
         }
 
         public void OnSetEvent()
         {
-            _Value = PostEventValue.FunctionValue;
+            _Value = PostEventValue.Value;
         }
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

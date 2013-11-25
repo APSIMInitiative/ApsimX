@@ -103,7 +103,7 @@ namespace Models.PMF.OldPlant
             // Calculate today's transpiration efficiency from min,max temperatures and co2 level
             // and converting mm water to g dry matter (g dm/m^2/mm water)
 
-            transpEff = TE.FunctionValue / Environment.VPD / Conversions.g2mm;
+            transpEff = TE.Value / Environment.VPD / Conversions.g2mm;
 
             if (transpEff == 0)
             {
@@ -151,9 +151,9 @@ namespace Models.PMF.OldPlant
             double dm_grain_demand = Grain.DltDmPotentialGrain;
 
             if (dm_grain_demand > 0.0)
-                _DMGreenDemand = dm_grain_demand * FractionGrainInPod.FunctionValue - dlt_dm_supply_by_pod;
+                _DMGreenDemand = dm_grain_demand * FractionGrainInPod.Value - dlt_dm_supply_by_pod;
             else
-                _DMGreenDemand = DMSupply * FractionGrainInPod.FunctionValue - dlt_dm_supply_by_pod;
+                _DMGreenDemand = DMSupply * FractionGrainInPod.Value - dlt_dm_supply_by_pod;
             Util.Debug("Pod.DMGreenDemand=%f", _DMGreenDemand);
         }
         public override void DoDmRetranslocate(double DMAvail, double DMDemandDifferentialTotal)
@@ -163,14 +163,14 @@ namespace Models.PMF.OldPlant
         }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
             Util.Debug("Pod.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Pod.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -298,9 +298,9 @@ namespace Models.PMF.OldPlant
         }
         public override void DoNConccentrationLimits()
         {
-            n_conc_crit = NConcentrationCritical.FunctionValue;
-            n_conc_min = NConcentrationMinimum.FunctionValue;
-            n_conc_max = NConcentrationMaximum.FunctionValue;
+            n_conc_crit = NConcentrationCritical.Value;
+            n_conc_min = NConcentrationMinimum.Value;
+            n_conc_max = NConcentrationMaximum.Value;
             Util.Debug("Pod.n_conc_crit=%f", n_conc_crit);
             Util.Debug("Pod.n_conc_min=%f", n_conc_min);
             Util.Debug("Pod.n_conc_max=%f", n_conc_max);

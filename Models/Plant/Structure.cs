@@ -81,7 +81,7 @@ namespace Models.PMF
 
         [XmlIgnore]
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.FunctionValue; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
+        public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.Value; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
         
         [Units("0-1")]
         [Description("Relative progress toward final leaf")]
@@ -102,7 +102,7 @@ namespace Models.PMF
         //Utility Variables
         [Units("mm")]
         //public double Height { get; set; }
-        public double Height { get { return HeightModel.FunctionValue; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
+        public double Height { get { return HeightModel.Value; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
         [XmlIgnore]
         public double ProportionBranchMortality { get; set; }
         [XmlIgnore]
@@ -117,9 +117,9 @@ namespace Models.PMF
         public void DoPotentialDM()
         {
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
-                if (MainStemPrimordiaInitiationRate.FunctionValue > 0.0)
+                if (MainStemPrimordiaInitiationRate.Value > 0.0)
                 {
-                    MainStemPrimordiaNo += ThermalTime.FunctionValue / MainStemPrimordiaInitiationRate.FunctionValue;
+                    MainStemPrimordiaNo += ThermalTime.Value / MainStemPrimordiaInitiationRate.Value;
                 }
 
             double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
@@ -130,8 +130,8 @@ namespace Models.PMF
             if (MainStemNodeNo > 0)
             {
                 DeltaNodeNumber = 0;
-                if (MainStemNodeAppearanceRate.FunctionValue > 0)
-                    DeltaNodeNumber = ThermalTime.FunctionValue / MainStemNodeAppearanceRate.FunctionValue;
+                if (MainStemNodeAppearanceRate.Value > 0)
+                    DeltaNodeNumber = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
                 MainStemNodeNo += DeltaNodeNumber;
                 MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNo);
             }
@@ -148,24 +148,24 @@ namespace Models.PMF
             //Increment total stem population if main-stem node number has increased by one.
             if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
             {
-                TotalStemPopn += BranchingRate.FunctionValue * MainStemPopn;
+                TotalStemPopn += BranchingRate.Value * MainStemPopn;
             }
 
             //Reduce plant population incase of mortality
             if (PlantMortality != null)
             {
-                double DeltaPopn = Population * PlantMortality.FunctionValue;
+                double DeltaPopn = Population * PlantMortality.Value;
                 Population -= DeltaPopn;
                 TotalStemPopn -= DeltaPopn;
-                ProportionPlantMortality = PlantMortality.FunctionValue;
+                ProportionPlantMortality = PlantMortality.Value;
             }
 
             //Reduce stem number incase of mortality
             double PropnMortality = 0;
             if (DroughtInducedBranchMortality != null)
-                PropnMortality = DroughtInducedBranchMortality.FunctionValue;
+                PropnMortality = DroughtInducedBranchMortality.Value;
             if (ShadeInducedBranchMortality != null)
-                PropnMortality += ShadeInducedBranchMortality.FunctionValue;
+                PropnMortality += ShadeInducedBranchMortality.Value;
             {
                 double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Population);
                 TotalStemPopn -= DeltaPopn;
@@ -206,7 +206,7 @@ namespace Models.PMF
         {
             string initial = "yes";
             MainStemFinalNodeNumber.UpdateVariables(initial);
-            MaximumNodeNumber = MainStemFinalNodeNumber.FunctionValue;
+            MaximumNodeNumber = MainStemFinalNodeNumber.Value;
         }
         [EventSubscribe("Sow")]
         public void OnSow(SowPlant2Type Sow)

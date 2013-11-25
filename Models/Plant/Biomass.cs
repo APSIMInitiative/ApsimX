@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    [XmlInclude(typeof(CompositeBiomass))]
     public class Biomass: Model
     {
         protected double _StructuralWt = 0;

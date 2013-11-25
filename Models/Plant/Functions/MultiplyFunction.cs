@@ -13,14 +13,14 @@ namespace Models.PMF.Functions
     public class MultiplyFunction : Function
     {
         public List<Function> Children { get; set; }
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
                 double returnValue = 1.0;
 
                 foreach (Function F in Children)
-                    returnValue = returnValue * F.FunctionValue;
+                    returnValue = returnValue * F.Value;
                 return returnValue;
             }
         }

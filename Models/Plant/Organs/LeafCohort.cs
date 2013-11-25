@@ -561,40 +561,40 @@ namespace Models.PMF.Organs
             IsAppeared = true;
             if (CohortPopulation == 0)
                 CohortPopulation = Structure.TotalStemPopn;
-            MaxArea = LeafCohortParameters.MaxArea.FunctionValue * CellDivisionStressFactor * LeafFraction;//Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
-            GrowthDuration = LeafCohortParameters.GrowthDuration.FunctionValue * LeafFraction;
-            LagDuration = LeafCohortParameters.LagDuration.FunctionValue;
-            SenescenceDuration = LeafCohortParameters.SenescenceDuration.FunctionValue;
-            DetachmentLagDuration = LeafCohortParameters.DetachmentLagDuration.FunctionValue;
-            DetachmentDuration = LeafCohortParameters.DetachmentDuration.FunctionValue;
-            StructuralFraction = LeafCohortParameters.StructuralFraction.FunctionValue;
-            SpecificLeafAreaMax = LeafCohortParameters.SpecificLeafAreaMax.FunctionValue;
-            SpecificLeafAreaMin = LeafCohortParameters.SpecificLeafAreaMin.FunctionValue;
-            MaximumNConc = LeafCohortParameters.MaximumNConc.FunctionValue;
-            MinimumNConc = LeafCohortParameters.MinimumNConc.FunctionValue;
+            MaxArea = LeafCohortParameters.MaxArea.Value * CellDivisionStressFactor * LeafFraction;//Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
+            GrowthDuration = LeafCohortParameters.GrowthDuration.Value * LeafFraction;
+            LagDuration = LeafCohortParameters.LagDuration.Value;
+            SenescenceDuration = LeafCohortParameters.SenescenceDuration.Value;
+            DetachmentLagDuration = LeafCohortParameters.DetachmentLagDuration.Value;
+            DetachmentDuration = LeafCohortParameters.DetachmentDuration.Value;
+            StructuralFraction = LeafCohortParameters.StructuralFraction.Value;
+            SpecificLeafAreaMax = LeafCohortParameters.SpecificLeafAreaMax.Value;
+            SpecificLeafAreaMin = LeafCohortParameters.SpecificLeafAreaMin.Value;
+            MaximumNConc = LeafCohortParameters.MaximumNConc.Value;
+            MinimumNConc = LeafCohortParameters.MinimumNConc.Value;
             if (LeafCohortParameters.NonStructuralFraction != null)
-                NonStructuralFraction = LeafCohortParameters.NonStructuralFraction.FunctionValue;
+                NonStructuralFraction = LeafCohortParameters.NonStructuralFraction.Value;
             if (LeafCohortParameters.InitialNConc != null) //FIXME HEB I think this can be removed
-                InitialNConc = LeafCohortParameters.InitialNConc.FunctionValue;
+                InitialNConc = LeafCohortParameters.InitialNConc.Value;
             //if (Area > MaxArea)  FIXMEE HEB  This error trap should be activated but throws errors in chickpea so that needs to be fixed first.
             //    throw new Exception("Initial Leaf area is greater that the Maximum Leaf Area.  Check set up of initial leaf area values to make sure they are not to large and check MaxArea function and CellDivisionStressFactor Function to make sure the values they are returning will not be too small.");
             Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
-            FunctionalNConc = (LeafCohortParameters.CriticalNConc.FunctionValue - (LeafCohortParameters.MinimumNConc.FunctionValue * StructuralFraction)) * (1 / (1 - StructuralFraction));
-            LuxaryNConc = (LeafCohortParameters.MaximumNConc.FunctionValue - LeafCohortParameters.CriticalNConc.FunctionValue);
+            FunctionalNConc = (LeafCohortParameters.CriticalNConc.Value - (LeafCohortParameters.MinimumNConc.Value * StructuralFraction)) * (1 / (1 - StructuralFraction));
+            LuxaryNConc = (LeafCohortParameters.MaximumNConc.Value - LeafCohortParameters.CriticalNConc.Value);
             Live.MetabolicWt = (Live.StructuralWt * 1 / StructuralFraction) - Live.StructuralWt;
             Live.NonStructuralWt = 0;
             Live.StructuralN = Live.StructuralWt * MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt * FunctionalNConc;
             Live.NonStructuralN = 0;
-            NReallocationFactor = LeafCohortParameters.NReallocationFactor.FunctionValue;
+            NReallocationFactor = LeafCohortParameters.NReallocationFactor.Value;
             if (LeafCohortParameters.DMReallocationFactor != null)
-                DMReallocationFactor = LeafCohortParameters.DMReallocationFactor.FunctionValue;
-            NRetranslocationFactor = LeafCohortParameters.NRetranslocationFactor.FunctionValue;
+                DMReallocationFactor = LeafCohortParameters.DMReallocationFactor.Value;
+            NRetranslocationFactor = LeafCohortParameters.NRetranslocationFactor.Value;
             if (LeafCohortParameters.DMRetranslocationFactor != null)
-                DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.FunctionValue;
+                DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.Value;
             else DMRetranslocationFactor = 0;
         }
         virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
@@ -617,7 +617,7 @@ namespace Models.PMF.Organs
             if (IsNotAppeared && (LeafCohortParameters.CellDivisionStress != null))
             {
                 CellDivisionStressDays += 1;
-                CellDivisionStressAccumulation += LeafCohortParameters.CellDivisionStress.FunctionValue;
+                CellDivisionStressAccumulation += LeafCohortParameters.CellDivisionStress.Value;
                 //FIXME HEB  The limitation below should be used to avoid zero values for maximum leaf size.
                 //CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
                 CellDivisionStressFactor = CellDivisionStressAccumulation / CellDivisionStressDays;
@@ -630,7 +630,7 @@ namespace Models.PMF.Organs
                 //Acellerate thermal time accumulation if crop is water stressed.
                 double _ThermalTime;
                 if ((LeafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.FunctionValue;
+                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.Value;
                 else _ThermalTime = TT;
 
                 //Leaf area growth parameters
@@ -640,7 +640,7 @@ namespace Models.PMF.Organs
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (LeafCohortParameters.ShadeInducedSenescenceRate != null)
-                    ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.FunctionValue;
+                    ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.Value;
                 SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality);
 
                 // Doing leaf mass growth in the cohort
@@ -707,7 +707,7 @@ namespace Models.PMF.Organs
                 //Acellerate thermal time accumulation if crop is water stressed.
                 double _ThermalTime;
                 if ((LeafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.FunctionValue;
+                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.Value;
                 else _ThermalTime = TT;
 
                 //Growing leaf area after DM allocated

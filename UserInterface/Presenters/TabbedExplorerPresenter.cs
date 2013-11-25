@@ -83,9 +83,9 @@ namespace UserInterface.Presenters
                 ExplorerPresenter Presenter = new ExplorerPresenter();
                 Console.WriteLine(FileName);
 
-                Simulations Simulations = Simulations.Read(FileName);
+                Simulations simulations = Simulations.Read(FileName);
 
-                Presenter.Attach(Simulations, ExplorerView, null);
+                Presenter.Attach(simulations, ExplorerView, null);
 
                 View.AddTab(FileName, Properties.Resources.apsim_logo32, ExplorerView, true);
             }

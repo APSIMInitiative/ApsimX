@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     {
         public List<Function> Children { get; set; }
 
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -19,7 +19,7 @@ namespace Models.PMF.Functions
 
                 foreach (Function F in Children)
                 {
-                    returnValue = returnValue + F.FunctionValue;
+                    returnValue = returnValue + F.Value;
                 }
 
                 return returnValue;

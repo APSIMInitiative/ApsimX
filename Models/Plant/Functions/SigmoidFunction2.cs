@@ -17,14 +17,14 @@ namespace Models.PMF.Functions
 
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
 
                 try
                 {
-                    return Ymax.FunctionValue * 1 / (1 + Math.Exp(-(XValue.FunctionValue - Xo) / b));
+                    return Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
                 }
                 catch (Exception E)
                 {

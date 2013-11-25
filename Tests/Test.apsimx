@@ -7,7 +7,7 @@
     <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>Lincoln.met</FileName>
+      <FileName>lincoln.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -53,7 +53,7 @@
           <string>[SoilWater].sw_dep</string>
           <string>[SoilNitrogen].no3</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
-          <string>[Plant].Phenology.StageCode.FunctionValue</string>
+          <string>[Plant].Phenology.StageCode.Value</string>
           <string>[Plant].Structure.Population</string>
           <string>[Plant].Leaf.LAI</string>
           <string>[Plant].Leaf.CoverGreen</string>
@@ -897,7 +897,7 @@
               <string>FullSenescence</string>
               <string>Maturity</string>
             </Stages>
-            <Values>
+            <Codes>
               <double>1</double>
               <double>2</double>
               <double>3</double>
@@ -905,7 +905,7 @@
               <double>5</double>
               <double>6</double>
               <double>7</double>
-            </Values>
+            </Codes>
           </StageCode>
           <Phases>
             <GenericPhase>
@@ -1535,7 +1535,7 @@
                 <Children>
                   <Function xsi:type="VariableReference">
                     <Name>Phyllochron</Name>
-                    <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.FunctionValue</VariableName>
+                    <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
                   </Function>
                   <Function xsi:type="Constant">
                     <Name>PrimordiaPerMainstemNode</Name>
@@ -1699,7 +1699,7 @@
               <StartStageName>TuberInitiation</StartStageName>
               <EndStageName>Maturity</EndStageName>
               <PotentialGrowthIncrement xsi:type="LinearInterpolationFunction">
-                <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+                <XProperty>[Phenology].StageCode.Value</XProperty>
                 <XYPairs>
                   <X>
                     <double>4</double>
@@ -1748,13 +1748,13 @@
                 <EndStageName>Maturity</EndStageName>
                 <Children>
                   <Function xsi:type="VariableReference">
-                    <VariableName>[Structure].ThermalTime.FunctionValue</VariableName>
+                    <VariableName>[Structure].ThermalTime.Value</VariableName>
                   </Function>
                 </Children>
               </AccumThermalTime>
             </DMDemandFunction>
             <WaterContent xsi:type="LinearInterpolationFunction">
-              <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+              <XProperty>[Phenology].StageCode.Value</XProperty>
               <XYPairs>
                 <X>
                   <double>3</double>
@@ -1775,7 +1775,7 @@
               </XYPairs>
             </WaterContent>
             <MaximumNConc xsi:type="LinearInterpolationFunction">
-              <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+              <XProperty>[Phenology].StageCode.Value</XProperty>
               <XYPairs>
                 <X>
                   <double>3</double>
@@ -1792,7 +1792,7 @@
               </XYPairs>
             </MaximumNConc>
             <MinimumNConc xsi:type="LinearInterpolationFunction">
-              <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+              <XProperty>[Phenology].StageCode.Value</XProperty>
               <XYPairs>
                 <X>
                   <double>4</double>
@@ -2268,7 +2268,7 @@
               </InterNodeWt>
             </DMDemandFunction>
             <MaximumNConc xsi:type="LinearInterpolationFunction">
-              <XProperty>[Phenology].StageCode.FunctionValue</XProperty>
+              <XProperty>[Phenology].StageCode.Value</XProperty>
               <XYPairs>
                 <X>
                   <double>3</double>
@@ -2588,7 +2588,7 @@
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.FunctionValue</ColumnNames>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>

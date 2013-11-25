@@ -470,22 +470,6 @@ namespace Utility
                 In.ReadLine();
                 NumRowsToSkip--;
             }
-            int SavedPosition = In.Position;
-            StringCollection Words = new StringCollection();
-            if (GetNextLine(In, ref Words))
-            {
-                // Make sure we found the date.
-                object[] Values = ConvertWordsToObjects(Words, ColumnTypes);
-                DateTime RowDate = GetDateFromValues(Values);
-                if (RowDate != Date)
-                    throw new Exception("Non consecutive dates found in file: " + _FileName);
-            }
-            else
-                throw new Exception("End of file reached while trying to find date " + Date.ToShortDateString() +
-                                    " in file " + _FileName);
-
-            // All ok - restore position.
-            In.Seek(SavedPosition, SeekOrigin.Begin);
         }
 
         /// <summary>

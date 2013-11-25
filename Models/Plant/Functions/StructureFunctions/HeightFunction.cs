@@ -16,19 +16,19 @@ namespace Models.PMF.Functions.StructureFunctions
         public double DeltaHeight = 0;
         public override void UpdateVariables(string initial)
         {
-            double PotentialHeightIncrement = PotentialHeight.FunctionValue - PotentialHeightYesterday;
+            double PotentialHeightIncrement = PotentialHeight.Value - PotentialHeightYesterday;
             double StressValue = 1.0;
             //This function is counting potential height as a stress.
             foreach (Function F in Children)
             {
-                StressValue = Math.Min(StressValue, F.FunctionValue);
+                StressValue = Math.Min(StressValue, F.Value);
             }
             DeltaHeight = PotentialHeightIncrement * StressValue;
-            PotentialHeightYesterday = PotentialHeight.FunctionValue;
+            PotentialHeightYesterday = PotentialHeight.Value;
             Height += DeltaHeight;
         }
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

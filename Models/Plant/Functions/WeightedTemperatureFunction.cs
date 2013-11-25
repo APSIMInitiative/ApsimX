@@ -20,7 +20,7 @@ namespace Models.PMF.Functions
 
         
         [Units("0-1")]
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

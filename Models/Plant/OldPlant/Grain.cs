@@ -142,14 +142,14 @@ namespace Models.PMF.OldPlant
         }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
             Util.Debug("meal.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("meal.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -239,9 +239,9 @@ namespace Models.PMF.OldPlant
         }
         public override void DoNConccentrationLimits()
         {
-            n_conc_crit = NConcentrationCritical.FunctionValue;
-            n_conc_min = NConcentrationMinimum.FunctionValue;
-            n_conc_max = NConcentrationMaximum.FunctionValue;
+            n_conc_crit = NConcentrationCritical.Value;
+            n_conc_min = NConcentrationMinimum.Value;
+            n_conc_max = NConcentrationMaximum.Value;
             Util.Debug("meal.n_conc_crit=%f", n_conc_crit);
             Util.Debug("meal.n_conc_min=%f", n_conc_min);
             Util.Debug("meal.n_conc_max=%f", n_conc_max);
@@ -370,22 +370,22 @@ namespace Models.PMF.OldPlant
         {
             double RueReduction;          // Effect of non-optimal N and Temp conditions on RUE (0-1)
 
-            RueReduction = Math.Min(TempStress.FunctionValue, NStress.Photo);
+            RueReduction = Math.Min(TempStress.Value, NStress.Photo);
             double Dlt_dm_stress_max = SWStress.Photo * RueReduction;
             Util.Debug("Grain.Dlt_dm_stress_max=%f", Dlt_dm_stress_max);
         }
         void DoDMDemandGrain()
         {
-            if (GrainGrowthPeriod.FunctionValue == 1)
+            if (GrainGrowthPeriod.Value == 1)
             {
                 // Perform grain filling calculations
 
                 if (Phenology.InPhase("StartGrainFillToEndGrainFill"))
-                    DltDMGrainDemand = GrainNo * PotentialGrainFillingRate * RelativeGrainFill.FunctionValue;
+                    DltDMGrainDemand = GrainNo * PotentialGrainFillingRate * RelativeGrainFill.Value;
                 else
                 {
                     // we are in the flowering to grainfill phase
-                    DltDMGrainDemand = GrainNo * PotentialGrainGrowthRate * RelativeGrainFill.FunctionValue;
+                    DltDMGrainDemand = GrainNo * PotentialGrainGrowthRate * RelativeGrainFill.Value;
                 }
                 // check that grain growth will not result in daily n conc below minimum conc
                 // for daily grain growth
@@ -420,26 +420,26 @@ namespace Models.PMF.OldPlant
             double gN_grain_demand1 = 0.0;
             double gN_grain_demand2 = 0.0;
             N_grain_demand = 0.0;
-            if (ReproductivePeriod.FunctionValue == 1)
+            if (ReproductivePeriod.Value == 1)
             {
                 // we are in grain filling stage
 
                 gN_grain_demand1 = GrainNo
                                * PotentialGrainNFillingRate * NStress.Grain
-                               * RelativeGrainNFill.FunctionValue;
+                               * RelativeGrainNFill.Value;
 
                 // calculate total N supply
                 double NSupply = 0;
                 foreach (Organ1 Organ in Plant.Organ1s)
                     NSupply += Organ.NSupply;
 
-                gN_grain_demand2 = Math.Min(GrainNo * PotentialGrainNFillingRate * RelativeGrainNFill.FunctionValue, NSupply);
+                gN_grain_demand2 = Math.Min(GrainNo * PotentialGrainNFillingRate * RelativeGrainNFill.Value, NSupply);
                 N_grain_demand = Math.Max(gN_grain_demand1, gN_grain_demand2);
                 N_grain_demand = gN_grain_demand1;
 
             }
 
-            if (GrainGrowthPeriod.FunctionValue == 1)
+            if (GrainGrowthPeriod.Value == 1)
             {
                 // during grain C filling period so make sure that C filling is still
                 // going on otherwise stop putting N in now

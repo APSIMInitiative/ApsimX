@@ -105,14 +105,14 @@ namespace Models.PMF.OldPlant
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.FunctionValue;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.FunctionValue);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
             Util.Debug("Stem.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Stem.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.FunctionValue, 0.0, 1.0);
+            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -135,7 +135,7 @@ namespace Models.PMF.OldPlant
             double dm_plant = Utility.Math.Divide(Live.Wt, Population.Density, 0.0);
 
             if (HeightFunction != null)
-                Height = HeightFunction.FunctionValue;
+                Height = HeightFunction.Value;
         }
         // nitrogen
         public override double NDemand { get { return _NDemand; } }
@@ -247,9 +247,9 @@ namespace Models.PMF.OldPlant
         }
         public override void DoNConccentrationLimits()
         {
-            n_conc_crit = NConcentrationCritical.FunctionValue;
-            n_conc_min = NConcentrationMinimum.FunctionValue;
-            n_conc_max = NConcentrationMaximum.FunctionValue;
+            n_conc_crit = NConcentrationCritical.Value;
+            n_conc_min = NConcentrationMinimum.Value;
+            n_conc_max = NConcentrationMaximum.Value;
             Util.Debug("Stem.n_conc_crit=%f", n_conc_crit);
             Util.Debug("Stem.n_conc_min=%f", n_conc_min);
             Util.Debug("Stem.n_conc_max=%f", n_conc_max);
@@ -310,7 +310,7 @@ namespace Models.PMF.OldPlant
 
         internal void Morphology()
         {
-            DeltaHeight = Utility.Math.Constrain(HeightFunction.FunctionValue - Height, 0.0, double.MaxValue);
+            DeltaHeight = Utility.Math.Constrain(HeightFunction.Value - Height, 0.0, double.MaxValue);
             Util.Debug("Stem.DeltaHeight=%f", DeltaHeight);
         }
 
@@ -356,8 +356,8 @@ namespace Models.PMF.OldPlant
             // Some biomass is removed according to harvest height
             FractionHeightRemoved = Utility.Math.Divide(Harvest.Height, Height, 0.0);
 
-            double chop_fr_green = (1.0 - RetainFraction.FunctionValue);
-            double chop_fr_sen = (1.0 - RetainFraction.FunctionValue);
+            double chop_fr_green = (1.0 - RetainFraction.Value);
+            double chop_fr_sen = (1.0 - RetainFraction.Value);
 
             double dlt_dm_harvest = Live.Wt * chop_fr_green
                                  + Dead.Wt * chop_fr_sen;
@@ -368,8 +368,8 @@ namespace Models.PMF.OldPlant
             //double dlt_p_harvest = Green.P * chop_fr_green
             //                    + Senesced.P * chop_fr_sen;
 
-            Dead = Dead * RetainFraction.FunctionValue;
-            Live = Live * RetainFraction.FunctionValue;
+            Dead = Dead * RetainFraction.Value;
+            Live = Live * RetainFraction.Value;
 
             Height = Utility.Math.Constrain(Harvest.Height, 1.0, double.MaxValue);
 

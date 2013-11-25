@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
             {
                 double Demand = 0;
                 if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.FunctionValue;
+                    Demand = DMDemandFunction.Value;
                 else Demand = 0;
                 return new BiomassPoolType { Structural = Demand };
             }

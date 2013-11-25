@@ -32,26 +32,26 @@ namespace Models.PMF.Functions.DemandFunctions
         [EventSubscribe("NewMet")]
         private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
         {
-            if ((StageCode.FunctionValue >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+            if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {
-                ThermalTimeToday = Math.Min(ThermalTime.FunctionValue, GrowthDuration - AccumulatedThermalTime);
+                ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
         }
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
                 double Value = 0.0;
-                if ((StageCode.FunctionValue >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+                if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
                 {
                     double Rate = MaximumOrganWt / GrowthDuration;
                     Value = Rate * ThermalTimeToday * Structure.TotalStemPopn;
                 }
 
-                return Value * ExpansionStress.FunctionValue;
+                return Value * ExpansionStress.Value;
             }
         }
 

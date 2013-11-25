@@ -57,18 +57,18 @@ namespace Models.PMF.OldPlant
             if (sw_demand > 0)
             {
                 _Photo = SWDefPhoto(sw_demand);
-                _Expansion = ExpansionFactor.FunctionValue;
+                _Expansion = ExpansionFactor.Value;
             }
             else
             {
                 _Photo = 1.0;
                 _Expansion = 1.0;
             }
-            _Pheno = PhenoFactor.FunctionValue;
-            _PhenoFlower = PhenoFlowerFactor.FunctionValue;
-            _PhenoGrainFilling = PhenoGrainFillingFactor.FunctionValue;
-            _Fixation = FixationFactor.FunctionValue;
-            _OxygenDeficitPhoto = OxygenDeficitPhotoFactor.FunctionValue;
+            _Pheno = PhenoFactor.Value;
+            _PhenoFlower = PhenoFlowerFactor.Value;
+            _PhenoGrainFilling = PhenoGrainFillingFactor.Value;
+            _Fixation = FixationFactor.Value;
+            _OxygenDeficitPhoto = OxygenDeficitPhotoFactor.Value;
 
             Util.Debug("SWStress.Photo=%f", _Photo);
             Util.Debug("SWStress.Pheno=%f", _Pheno);

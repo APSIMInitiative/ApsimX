@@ -57,7 +57,7 @@ namespace Models.PMF.Organs
             {
                 double Demand = 0;
                 if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.FunctionValue;
+                    Demand = DMDemandFunction.Value;
                 else
                     Demand = 1;
                 return new BiomassPoolType { Structural = Demand };
@@ -193,7 +193,7 @@ namespace Models.PMF.Organs
 
                 if (CoverFunction == null)
                     return 1.0 - Math.Exp(-K * LAI);
-                return Math.Min(Math.Max(CoverFunction.FunctionValue, 0), 1);
+                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
             }
         }
         public double CoverTot
@@ -226,8 +226,8 @@ namespace Models.PMF.Organs
         {
             if (PotentialBiomass != null)
             {
-                DeltaBiomass = PotentialBiomass.FunctionValue - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                BiomassYesterday = PotentialBiomass.FunctionValue;
+                DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                BiomassYesterday = PotentialBiomass.Value;
             }
 
             EP = 0;
@@ -282,7 +282,7 @@ namespace Models.PMF.Organs
                 // return _LAI;
                 _LAI = (Math.Log(1 - CoverGreen) / -K);
             if (LaiFunction != null)
-                _LAI = LaiFunction.FunctionValue;
+                _LAI = LaiFunction.Value;
         }
         [EventSubscribe("Cut")]
         private void OnCut()
@@ -307,13 +307,13 @@ namespace Models.PMF.Organs
                     NDeficit = 0;
                 if (NitrogenDemandSwitch != null)
                 {
-                    if (NitrogenDemandSwitch.FunctionValue == 0)
+                    if (NitrogenDemandSwitch.Value == 0)
                         NDeficit = 0;
                 }
                 if (NConc == null)
                     NDeficit = 0;
                 else
-                    NDeficit = Math.Max(0.0, NConc.FunctionValue * (Live.Wt + DeltaBiomass) - Live.N);
+                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N);
                 return new BiomassPoolType { Structural = NDeficit };
             }
         }

@@ -17,14 +17,14 @@ namespace Models.PMF.Functions
 
         int[] StageCodes = null;
 
-        public new double[] Values = null;
+        public double[] Codes { get; set; }
 
         [XmlIgnore]
         public bool Proportional = true;
 
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
@@ -41,7 +41,7 @@ namespace Models.PMF.Functions
                 }
 
                 //Fixme.  For some reason this error message won't cast properly??
-                if (Values.Length != StageCodes.Length)
+                if (Codes.Length != StageCodes.Length)
                 {
                     throw new Exception("Something is a miss here.  Specifically, the number of values in your StageCode function don't match the number of stage names.  Sort it out numb nuts!!");
                 }
@@ -51,25 +51,25 @@ namespace Models.PMF.Functions
                     if (Phenology.Stage <= StageCodes[i])
                     {
                         if (i == 0)
-                            return Values[0];
+                            return Codes[0];
                         if (Phenology.Stage == StageCodes[i])
-                            return Values[i];
+                            return Codes[i];
 
                         if (Proportional)
                         {
-                            double slope = Utility.Math.Divide(Values[i] - Values[i - 1],
+                            double slope = Utility.Math.Divide(Codes[i] - Codes[i - 1],
                                                                 StageCodes[i] - StageCodes[i - 1],
-                                                                Values[i]);
-                            return Values[i] + slope * (Phenology.Stage - StageCodes[i]);
+                                                                Codes[i]);
+                            return Codes[i] + slope * (Phenology.Stage - StageCodes[i]);
                         }
                         else
                         {
                             // Simple lookup.
-                            return Values[i - 1];
+                            return Codes[i - 1];
                         }
                     }
                 }
-                return Values[StageCodes.Length - 1];
+                return Codes[StageCodes.Length - 1];
             }
         }
 

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
         public string VariableName = "";
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

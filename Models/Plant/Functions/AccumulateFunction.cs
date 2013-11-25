@@ -33,7 +33,7 @@ namespace Models.PMF.Functions
                 double DailyIncrement = 0.0;
                 foreach (Function F in Children)
                 {
-                    DailyIncrement = DailyIncrement + F.FunctionValue;
+                    DailyIncrement = DailyIncrement + F.Value;
                 }
                 AccumulatedValue += DailyIncrement;
             }
@@ -41,7 +41,7 @@ namespace Models.PMF.Functions
         }
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

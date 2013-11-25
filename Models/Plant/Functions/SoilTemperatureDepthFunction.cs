@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// The source of soil temperature array can be either SoilN ("st" property) or SoilTemp ("ave_soil_temp" property)
     /// </summary>
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
-    class SoilTemperatureDepthFunction : Function
+    public class SoilTemperatureDepthFunction : Function
     {
 
         [Link]
@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
 
         
         [Units("oC")]
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

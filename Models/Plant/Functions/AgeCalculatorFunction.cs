@@ -7,7 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Description("Returns the age (in years) of the crop")]
-    class AgeCalculatorFunction : Function
+    public class AgeCalculatorFunction : Function
     {
         private int _Age = 0;
 
@@ -18,7 +18,7 @@ namespace Models.PMF.Functions
         }
         
         [Units("y")]
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

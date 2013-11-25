@@ -17,7 +17,7 @@ namespace Models.PMF.Functions.SupplyFunctions
         double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

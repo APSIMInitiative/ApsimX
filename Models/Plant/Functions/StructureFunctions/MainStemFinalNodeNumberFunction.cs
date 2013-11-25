@@ -27,7 +27,7 @@ namespace Models.PMF.Functions.StructureFunctions
                 if (FinalLeafNumber == null)
                     _FinalNodeNumber = Math.Min(MaximumMainStemNodeNumber, Structure.MainStemPrimordiaNo);
                 else
-                    _FinalNodeNumber = Math.Min(FinalLeafNumber.FunctionValue, MaximumMainStemNodeNumber);
+                    _FinalNodeNumber = Math.Min(FinalLeafNumber.Value, MaximumMainStemNodeNumber);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Models.PMF.Functions.StructureFunctions
         }
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {

@@ -34,7 +34,7 @@ namespace Models.PMF.OldPlant
 
 
             int deepest_layer = Root.FindLayerNo(RootDepth);
-            if (NStressPeriod.FunctionValue == 1)
+            if (NStressPeriod.Value == 1)
             {
                 // N stress period.
                 for (int layer = 0; layer <= deepest_layer; layer++)

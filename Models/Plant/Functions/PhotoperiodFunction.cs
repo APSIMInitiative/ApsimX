@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
         public double Twilight = 0;
 
         
-        public override double FunctionValue
+        public override double Value
         {
             get
             {
