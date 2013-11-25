@@ -1,7 +1,7 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 #setwd("c:\\ApsimX\\ApsimX") # for testing only
-library("XML")
+library("XML") 
 library("RSQLite")
 library("RODBC")
 
