@@ -5,10 +5,13 @@
 # You might need to unlist() it to get it to work. 
 
 ############# Output #############
-# On a failed test, print out all values along with T/F list
+# On a completed test, print out all values along with T/F list
 # @Param x:multi - list
+# @Param passed: bool - did the test pass?
 # @Param output:bool - results of the test
 # @Param func:string - name of the calling test
+# @Param params: tests paramaters, if any
+# @Param baseData: baseline data for the test
 ######################################
 Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   split <- unlist(strsplit(as.character(Sys.time()), " ", fixed=TRUE))
@@ -29,10 +32,12 @@ Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   output <- cbind(simsToTest, output)
   output <- cbind(time, output)
   output <- cbind(date, output)
+  output <- cbind(args[3], output)
+  output <- cbind(args[4], output)
   output <- cbind(output, paste(params, collapse=","))
-  names(output) <- c("Date","Time","Simulation", "Column", "Test","BaseValue", "RunValue","Passed", "Paramaters")
+  names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
   buildRecord <<- rbind(buildRecord, output)  
-  print(head(output, n=10))
+ # print(head(output, n=10))
   return(passed)
 }
 
