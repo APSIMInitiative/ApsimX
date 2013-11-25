@@ -3,19 +3,22 @@ setwd(".\\")
 #setwd("c:\\ApsimX\\ApsimX") # for testing only
 library("XML")
 library("RSQLite")
+library("RODBC")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "C:\\ApsimX\\ApsimX\\Tests\\") # for testing only 
+#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "C:\\ApsimX\\ApsimX\\Tests\\", "Windows_NT", 500) # for testing only 
 
 #if(length(args) == 0)
 #  stop("Usage: rscript RunTest.R <path to .apsimx>")
 
 args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
+dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
+connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
 
 source("Tests/RTestSuite/tests.R")
 
 #create a blank data frame to hold all test output
-buildRecord <- data.frame(Date=character(), Time=character(), Simulation=character(), Column=character(), Test=character(), 
+buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 
                           BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
 
 # read tests from .apsimx
@@ -84,5 +87,7 @@ for (ind in c(1:length(groupdf))){
   }
 }
 print(results)
+sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+odbcCloseAll()
 
 if (all(results) == FALSE) stop("One or more tests failed.")
