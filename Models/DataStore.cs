@@ -658,15 +658,11 @@ namespace Models
             if (SimulationIDs.ContainsKey(simulationName))
                 return SimulationIDs[simulationName];
 
-            int ID;
-            try
-            {
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-            }
-            catch (Exception e)
-            {
+            if (!TableExists("Simulations"))
                 return -1;
-            }
+
+            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+
             if (ID == -1)
             {
                 Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
