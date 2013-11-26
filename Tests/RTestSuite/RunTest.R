@@ -87,7 +87,8 @@ for (ind in c(1:length(groupdf))){
   }
 }
 print(results)
-sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+#disabled for infrastructure testing
+#sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
 odbcCloseAll()
 
 if (all(results) == FALSE) stop("One or more tests failed.")
