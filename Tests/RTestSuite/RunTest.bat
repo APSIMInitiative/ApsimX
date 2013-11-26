@@ -1,4 +1,4 @@
-@echo off
+@echo off 
 
 rem Go back to the ApsimX root directory.
 cd ..\..
