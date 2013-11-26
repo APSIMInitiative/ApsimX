@@ -662,7 +662,6 @@ namespace Models
                 return -1;
 
             int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-
             if (ID == -1)
             {
                 Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
