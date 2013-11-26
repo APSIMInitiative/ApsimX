@@ -14,9 +14,6 @@ namespace Models.SurfaceOM
     public partial class SurfaceOrganicMatter : Model
     {
         [Link]
-        Zone MyPaddock;
-
-        [Link]
         SoilWater SoilWater = null;
 
         [Link]
@@ -32,10 +29,10 @@ namespace Models.SurfaceOM
         //    SurfaceOM constants;
         //====================================================================
 
-        static int max_table = 10;                              //number of points allowed for specifying coeff tables;
+        //static int max_table = 10;                              //number of points allowed for specifying coeff tables;
         static int max_layer = 100;
         static int max_residues = 100;                          //maximum number of residues in at once;
-        static int MaxStringSize = 100;                         //max length of the crop type.
+        //static int MaxStringSize = 100;                         //max length of the crop type.
         static int MaxArraySize = 10;                           //maximum number of dry matter types;
         static int MaxFr = 3;
         //    ================================================================
@@ -828,9 +825,7 @@ namespace Models.SurfaceOM
             double[] nh4_incorp = new double[max_layer];
             double[] no3_incorp = new double[max_layer];
             double[] po4_incorp = new double[max_layer];
-            int deepest_layer;
-
-
+            
             // Calculate Leaching Fraction;
             g.leaching_fr = bound(divide(leach_rain, c.leach_rain_tot, 0.0f), 0.0f, 1.0f);
 
@@ -1578,9 +1573,7 @@ namespace Models.SurfaceOM
         private void surfom_add_surfom(Add_surfaceomType data)
         {
 
-            int
-                residue = 0,               //residue counter;
-                SOMNo = 0;                 //specific system number for this residue name;
+            int SOMNo = 0;                 //specific system number for this residue name;
 
             string
                 surfom_name = data.name,
@@ -1596,7 +1589,6 @@ namespace Models.SurfaceOM
                 surfom_p_added = bound(data.p, -10000, 10000),          //P added in new material (kg/ha)
                 surfom_po4_added = 0,	                                //PO4 added in new material (kg/ha)
                 surfom_cpr_added = bound(data.cpr, 0, 10000),	        //C:P ratio of new material;
-                added_wt = 0,
                 tot_mass = 0,
                 removed_from_standing = 0,
                 removed_from_lying = 0;
@@ -1933,27 +1925,15 @@ namespace Models.SurfaceOM
         {
             //APSIM THING
 
-            string crop_type;
             string[] dm_type = new string[MaxArraySize];
             double[] dlt_crop_dm = new double[MaxArraySize];
             double[] dlt_dm_N = new double[MaxArraySize];
             double[] dlt_dm_P = new double[MaxArraySize];
             double[] fraction_to_Residue = new double[MaxArraySize];
-            string Err_string;
-            string Event_string;
-            string flag;
-            int NumVals;                //number of values read from file;
-            int NumVal_dm;              //number of values read from file;
-            int NumVal_N;               //number of values read from file;
-            int NumVal_P;               //number of values read from file;
-            int SOMNo;      //system number of the surface organic matter added;
-            int residue;                //system surfom counter;
             double surfom_added = 0;	//amount of residue added (kg/ha)
             double surfom_N_added = 0;	//amount of residue N added (kg/ha)
             double surfom_P_added = 0;	//amount of residue N added (kg/ha)
-            BiomassRemovedType BiomassRemoved;
-
-
+            
             if (data.fraction_to_residue.Sum() != 0)
             {
                 for (int i = 0; i < data.dlt_crop_dm.Length; i++)
@@ -2007,7 +1987,6 @@ namespace Models.SurfaceOM
 
         private void AddSurfaceOM(double surfom_added, double surfom_N_added, double surfom_P_added, string crop_type)
         {
-            string Event_string;
             int SOMNo;      //system number of the surface organic matter added;
 
             //Report Additions;

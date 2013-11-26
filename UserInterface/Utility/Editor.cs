@@ -32,7 +32,7 @@ namespace Utility
         /// <summary>
         /// Invoked when the user leaves the text editor.
         /// </summary>
-        event EventHandler Leave;
+        event EventHandler LeaveEditor;
 
         /// <summary>
         /// Text property to get and set the content of the editor.
@@ -68,7 +68,7 @@ namespace Utility
         /// <summary>
         /// Invoked when the user leaves the text editor.
         /// </summary>
-        event EventHandler Leave;
+        public event EventHandler LeaveEditor;
 
         /// <summary>
         /// Constructor
@@ -251,8 +251,8 @@ namespace Utility
 
         private void OnTextBoxLeave(object sender, EventArgs e)
         {
-            if (Leave != null)
-                Leave.Invoke(this, e);
+            if (LeaveEditor != null)
+                LeaveEditor.Invoke(this, e);
         }
 
        

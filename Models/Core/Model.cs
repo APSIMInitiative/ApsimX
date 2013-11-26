@@ -12,7 +12,7 @@ namespace Models.Core
     /// </summary>
     public class Model
     {
-        private Model BaseModel = null;
+        //private Model BaseModel = null;
         private Model _DefaultModel = null;
 
         // Cache the models list - this dramatically speeds up runtime!

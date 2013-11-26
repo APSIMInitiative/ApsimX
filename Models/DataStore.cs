@@ -250,7 +250,7 @@ namespace Models
                     DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
                     return Utility.DataTable.GetColumnAsStrings(table, "Name");
                 }
-                catch (Utility.SQLiteException err)
+                catch (Utility.SQLiteException )
                 {
                     return new string[0];
                 }
@@ -280,7 +280,7 @@ namespace Models
                     }
                     return tables.ToArray();
                 }
-                catch (Utility.SQLiteException err)
+                catch (Utility.SQLiteException )
                 {
                     return new string[0];
                 }
@@ -473,8 +473,8 @@ namespace Models
 
             DataTable table = new DataTable();
 
-            Utility.ModelFunctions.Parameter[] properties = Utility.ModelFunctions.Parameters(model);
-            foreach (Utility.ModelFunctions.Parameter property in properties)
+            Model.Variable[] properties = Utility.ModelFunctions.Parameters(model);
+            foreach (Model.Variable property in properties)
             {
                 if (property.Name != "Name" && property.Name != "Parent")
                 {

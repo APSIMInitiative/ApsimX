@@ -111,9 +111,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public partial class MicroClimate : Model
     {
-        [Link()]
-        Simulation MySimulation;
-        [Link()]
+        [Link]
         Clock Clock = null;
 
         [Link]
@@ -327,7 +325,6 @@ namespace Models
         [EventSubscribe("Tick")]
         private void OnTick(object sender, EventArgs e)
         {
-            todayHeaderWritten = false;
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
             //DateUtility.JulianDayNumberToDayOfYear(time.startday, day, year)
@@ -528,8 +525,6 @@ namespace Models
         private double[] layerKtot = new double[-1 + 1];
         private double[] layerLAIsum = new double[-1 + 1];
         private int numLayers;
-
-        private bool todayHeaderWritten = false;
 
         [XmlElement("ComponentData")]
         public List<ComponentDataStruct> ComponentData { get; set; }

@@ -123,8 +123,6 @@ namespace Models.SurfaceOM
         [Units("0-1")]
         public double fractionFaecesAdded = 0.5;
 
-        private string[] fom_types;
-        private int num_fom_types;
         private int[] cf_contrib = new int[max_residues];            //determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)
 
         private double[] C_fract = new double[max_residues];	        //Fraction of Carbon in plant material (0-1)
@@ -142,20 +140,14 @@ namespace Models.SurfaceOM
 
         #region Inputs
 
-        [Units("mm")]
-        double eos = double.NaN;
-
-        [Units("mm")]
-        double[] dlayer = null;
+        //[Units("mm")]
+        //double eos = double.NaN;
 
         [Units("")]
         string pond_active = null;
 
         [Units("")]
         double[] labile_p = null;
-
-        [Units("")]
-        double irrigation = double.NaN;
 
         //int today { set { Today = DateUtility.JulianDayNumberToDateTime(value); } get { return DateUtility.dateTimeToJulianDayNumber(Today); } }
         DateTime Today;

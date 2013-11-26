@@ -229,75 +229,14 @@ namespace Utility
         #endregion
 
         #region Parameter functions
-        /// <summary>
-        /// This class encapsulates a single property of a model. Has properties for getting the value
-        /// of the property, the value in the base model and the default value as definned in the 
-        /// source code.
-        /// </summary>
-        public class Parameter
-        {
-            private Model Model;
-            private PropertyInfo PropertyInfo;
-
-            public Parameter(Model model, PropertyInfo propertyInfo)
-            {
-                Model = model;
-                PropertyInfo = propertyInfo;
-
-            }
-            /// <summary>
-            /// Return the name of the property.
-            /// </summary>
-            public string Name { get { return PropertyInfo.Name; } }
-
-            /// <summary>
-            /// Returns the value of the property.
-            /// </summary>
-            public object Value
-            {
-                get
-                {
-                    return PropertyInfo.GetValue(Model, null);
-                }
-            }
-
-            /// <summary>
-            /// Returns a description of the property or null if not found.
-            /// </summary>
-            public string Description
-            {
-                get
-                {
-                    Description descriptionAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Description), false) as Description;
-                    if (descriptionAttribute != null)
-                        return descriptionAttribute.ToString();
-                    return null;
-                }
-            }
-
-            /// <summary>
-            /// Returns the units of the property (in brackets) or null if not found.
-            /// </summary>
-            public string Units
-            {
-                get
-                {
-                    Units unitsAttribute = Utility.Reflection.GetAttribute(PropertyInfo, typeof(Units), false) as Units;
-                    if (unitsAttribute != null)
-                        return "(" + unitsAttribute.UnitsString + ")";
-                    return null;
-                }
-            }
-
-        }
 
         /// <summary>
         /// Return a list of all parameters (that are not references to child models). Never returns null. Can
         /// return an empty array. A parameter is a class property that is public and read/writtable
         /// </summary>
-        public static Parameter[] Parameters(Model model)
+        public static Model.Variable[] Parameters(Model model)
         {
-            List<Parameter> allProperties = new List<Parameter>();
+            List<Model.Variable> allProperties = new List<Model.Variable>();
             foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
                 if (property.CanRead && property.CanWrite)
@@ -310,7 +249,7 @@ namespace Utility
                     ignoreProperty |= property.Name == "Name";                               // No Name properties.
 
                     if (!ignoreProperty)
-                        allProperties.Add(new Parameter(model, property));
+                        allProperties.Add(new Model.Variable(model, property));
                 }
             }
             return allProperties.ToArray();

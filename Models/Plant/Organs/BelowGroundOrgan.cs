@@ -8,14 +8,10 @@ namespace Models.PMF.Organs
     public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
         [Link]
-        Clock Clock = null;
-
-        [Link]
         Summary Summary = null;
         
         public event NullTypeDelegate Harvesting;
-        [EventSubscribe("Harvest")]
-        private void OnHarvest()
+        public override void OnHarvest()
         {
             Harvesting.Invoke();
 

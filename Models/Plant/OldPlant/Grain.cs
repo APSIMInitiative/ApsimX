@@ -14,7 +14,7 @@ namespace Models.PMF.OldPlant
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
         [Link]
-        Summary Summary;
+        Summary Summary = null;
 
         #region Parameters read from XML file and links to other functions.
 

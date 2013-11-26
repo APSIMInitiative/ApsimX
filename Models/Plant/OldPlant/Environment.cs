@@ -11,8 +11,6 @@ namespace Models.PMF.OldPlant
 
         [Link]
         WeatherFile MetData = null;
-        [Link]
-        Clock Clock = null;
         
         public double CO2 = 350;
 

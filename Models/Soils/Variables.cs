@@ -32,13 +32,6 @@ namespace Models.Soils
         [Link]
         private WeatherFile MetFile = null;
 
-        /// <summary>
-        /// Link to container paddock
-        /// </summary>
-        [Link]
-        private Zone Paddock;		// not sure why it is here
-
-
         [Link]
         private Soil Soil = null;
 
@@ -94,7 +87,7 @@ namespace Models.Soils
         #region ALTERNATIVE Params for alternarive nitrification/denitrification processes
 
         // soil texture by layer: COARSE = 1.0;/MEDIUM = 2.0; FINE = 3.0; VERYFINE = 4.0;
-        double[] SoilTextureID;
+        double[] SoilTextureID = null;
         [Bounds(Lower = 1.0, Upper = 4.0)]
         public double[] texture
         {

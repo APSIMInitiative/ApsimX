@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
         private IGridView Grid;
         private Model Model;
         private CommandHistory CommandHistory;
-        private List<Utility.ModelFunctions.Parameter> Properties = new List<Utility.ModelFunctions.Parameter>();
+        private List<Model.Variable> Properties = new List<Model.Variable>();
 
         /// <summary>
         /// Attach the model to the view.
@@ -68,7 +68,7 @@ namespace UserInterface.Presenters
             Properties.Clear();
             if (Model != null)
             {
-                foreach (Utility.ModelFunctions.Parameter parameter in Utility.ModelFunctions.Parameters(Model))
+                foreach (Model.Variable parameter in Utility.ModelFunctions.Parameters(Model))
                 {
                     string PropertyName = parameter.Name;
                     if (parameter.Description != null)

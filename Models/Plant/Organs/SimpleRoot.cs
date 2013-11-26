@@ -15,9 +15,6 @@ namespace Models.PMF.Organs
 
         public Function DMDemandFunction { get; set; }
 
-        [Link]
-        SoilWater SoilWat = null;
-   
         private double Uptake = 0;
         private string CurrentPaddockName;
         private string OurName;
@@ -133,12 +130,12 @@ namespace Models.PMF.Organs
                 double fraction = Amount / Utility.Math.Sum(Supply);
                 if (fraction > 1)
                     throw new Exception("Requested SW uptake > Available supplies.");
-                int i = 0;
+                //int i = 0;
                 foreach (string ModelName in ModelNames)
                 {
                     //MyPaddock.Set(ModelName + ".SWUptake", Supply[i] * fraction);
                     throw new NotImplementedException();
-                    i++;
+                    //i++;
                 }
 
             }

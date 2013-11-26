@@ -11,9 +11,7 @@ namespace Models.PMF.Functions
         #region Class Data Members
         [Link]
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
-        [Link]
-        Soils.SoilTemperature SoilTemp = null;
-
+        
         public double maxt_soil_surface = 20; //Fixme.  These need to be connected to soil temp model when complete
         public double mint_soil_surface = 10; //Fixme.  These need to be connected to soil temp model when complete
         

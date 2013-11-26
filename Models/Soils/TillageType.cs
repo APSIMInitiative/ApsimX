@@ -8,7 +8,6 @@ namespace Models.Soils
 {
     public class TillageType : Model
     {
-        public string Name { get; set; }
         public double f_incorp { get; set; }
         public double tillage_depth { get; set; }
         public int cn_red { get; set; }

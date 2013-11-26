@@ -18,9 +18,6 @@ namespace Models.PMF.OldPlant
         [Link]
         Environment Environment = null;
 
-        [Link]
-        Stem1 Stem = null;
-
         public Function TE { get; set; }
 
         [Link]

@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
 
             ManagerView.Editor.Text = Manager.Code;
             ManagerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
-            ManagerView.Editor.Leave += OnEditorLeave;
+            ManagerView.Editor.LeaveEditor += OnEditorLeave;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
-            ManagerView.Editor.Leave -= OnEditorLeave;
+            ManagerView.Editor.LeaveEditor -= OnEditorLeave;
         }
 
         /// <summary>

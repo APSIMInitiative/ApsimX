@@ -25,9 +25,9 @@ namespace Models.PMF.Phen
 
         //Set up class variables
         
-        double AccumTt = 0;
+        //double AccumTt = 0;
         
-        double Vrn1Lag = 0;
+        //double Vrn1Lag = 0;
         
         double Vrn1 = 0;
         
@@ -39,13 +39,13 @@ namespace Models.PMF.Phen
         
         double Vrn1Target = 0;
         
-        double Pp = 0;
+        //double Pp = 0;
         
         double Tt = 0;
         
-        double MeanT = 0;
+        //double MeanT = 0;
         
-        double HaunStageYesterday = 0;
+        //double HaunStageYesterday = 0;
         
         double DeltaHaunStage = 0;
         

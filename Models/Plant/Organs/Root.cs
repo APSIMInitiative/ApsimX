@@ -17,7 +17,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass[] LayerDead { get; set; }
 
-        private Biomass[] LayerLengthDensity;
         private SowPlant2Type SowingInfo = null;
         [Link]
         Plant Plant = null;

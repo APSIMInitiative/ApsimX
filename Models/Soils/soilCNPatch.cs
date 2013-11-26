@@ -430,7 +430,7 @@ namespace Models.Soils
 
             public double[] n2o_atm;           // amount of N2O produced
 
-            public double[] n2_atm;            // amount of N2 produced
+            public double[] n2_atm { get; set; }            // amount of N2 produced
 
             public double[] dnit
             {

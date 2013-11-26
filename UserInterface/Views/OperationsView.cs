@@ -19,8 +19,6 @@ namespace UserInterface.Views
 
     public partial class OperationsView : UserControl
     {
-        public event EventHandler<Utility.NeedContextItems> NeedContextItems;
-
         /// <summary>
         /// Constructor
         /// </summary>

@@ -14,14 +14,11 @@ namespace Models.PMF.OilPalm
        
         public string plant_status = "out";
         
-        [Link]
-        Clock Clock = null;
-        
         public string Crop_Type = "OilPalmUnderstory";
         
-        double height = 300.0;
+        //double height = 300.0;
         
-        double cover_tot = 0.0;
+        //double cover_tot = 0.0;
         
         double cover_green = 0.0;
         
@@ -46,7 +43,7 @@ namespace Models.PMF.OilPalm
         
         double FW = 0.0;
 
-        double[] sw_dep;
+        //double[] sw_dep;
         double[] PotNUptake;
         double[] NUptake;
         

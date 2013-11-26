@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
                 {
                     return Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
                 }
-                catch (Exception E)
+                catch (Exception)
                 {
                     throw new Exception("Error with values to Sigmoid function");
                 }

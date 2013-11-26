@@ -131,7 +131,6 @@ namespace Models.PMF.Organs
         private double MetabolicNRetranslocated = 0;
         private double NonStructuralNRetrasnlocated = 0;
         private double DMRetranslocated = 0;
-        private double StructuralNAllocation = 0;
         private double MetabolicNAllocation = 0;
         private double StructuralDMAllocation = 0;
         private double MetabolicDMAllocation = 0;
@@ -693,7 +692,6 @@ namespace Models.PMF.Organs
                 NonStructuralWtReallocated = 0;
                 MetabolicNRetranslocated = 0;
                 NonStructuralNRetrasnlocated = 0;
-                StructuralNAllocation = 0;
                 MetabolicNAllocation = 0;
                 StructuralDMAllocation = 0;
                 MetabolicDMAllocation = 0;

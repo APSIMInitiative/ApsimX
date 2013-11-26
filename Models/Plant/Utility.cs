@@ -15,8 +15,7 @@ namespace Models.PMF
     class Util
     {
         public static StreamWriter Dbg = null;
-        protected static Dictionary<String, List<String>> VarParts;
-
+        
         [Conditional("DEBUG")]
         public static void Debug(string format, object value)
         {
@@ -37,7 +36,7 @@ namespace Models.PMF
                 Debug(format, value[i]);
         }
 
-        static Dictionary<string, Utility.ModelFunctions.Parameter> VariableCache = new Dictionary<string, Utility.ModelFunctions.Parameter>();
+        static Dictionary<string, Model.Variable> VariableCache = new Dictionary<string, Model.Variable>();
 
         /// <summary>
         /// Return the value (using Reflection) of the specified property on the specified object.
