@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     {
         private Model Model;
         private HtmlView View;
+        private bool html;
 
         /// <summary>
         /// Attach the model to the view.
@@ -24,14 +25,18 @@ namespace UserInterface.Presenters
             Model = model as Model;
             View = view as HtmlView;
 
+            html = Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                   Environment.OSVersion.Platform == PlatformID.Win32Windows;
+
             if (Model is ISummary)
             {
                 ISummary summary = Model as ISummary;
                 Utility.Configuration configuration = new Utility.Configuration();
-                View.HTML = summary.GetHtml(configuration.SummaryPngFileName);
+                string contents = summary.GetSummary(configuration.SummaryPngFileName, html);
+                View.SetSummary(contents, html);
             }
             else
-                View.HTML = Utility.Reflection.GetValueOfFieldOrProperty("HTML", model) as string;
+                View.SetSummary(Utility.Reflection.GetValueOfFieldOrProperty("HTML", model) as string, true);
         }
 
         public void Detach()

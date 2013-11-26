@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.HtmlControl = new System.Windows.Forms.WebBrowser();
+            this.TextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // HtmlControl
@@ -40,19 +41,33 @@
             this.HtmlControl.Size = new System.Drawing.Size(754, 773);
             this.HtmlControl.TabIndex = 0;
             // 
+            // TextBox
+            // 
+            this.TextBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBox.Location = new System.Drawing.Point(0, 0);
+            this.TextBox.MaxLength = 1000000;
+            this.TextBox.Multiline = true;
+            this.TextBox.Name = "TextBox";
+            this.TextBox.ReadOnly = true;
+            this.TextBox.Size = new System.Drawing.Size(100, 20);
+            this.TextBox.TabIndex = 1;
+            // 
             // HtmlView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TextBox);
             this.Controls.Add(this.HtmlControl);
             this.Name = "HtmlView";
             this.Size = new System.Drawing.Size(754, 773);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.WebBrowser HtmlControl;
+        private System.Windows.Forms.TextBox TextBox;
     }
 }

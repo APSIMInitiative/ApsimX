@@ -25,6 +25,6 @@
         /// <summary>
         /// Return the html for the summary file.
         /// </summary>
-        string GetHtml(string apsimSummaryImageFileName);
+        string GetSummary(string apsimSummaryImageFileName, bool html);
     }
 }

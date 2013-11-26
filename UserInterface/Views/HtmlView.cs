@@ -16,16 +16,22 @@ namespace UserInterface.Views
             InitializeComponent();
         }
 
-
-        public string HTML
+        /// <summary>
+        /// Set the summary contents.
+        /// </summary>
+        public void SetSummary(string contents, bool html)
         {
-            get
+            if (html)
             {
-                return HtmlControl.DocumentText;
-                }
-            set
+                TextBox.Visible = false;
+                HtmlControl.DocumentText = contents;
+            }
+            else
             {
-                HtmlControl.DocumentText = value;
+                HtmlControl.Visible = false;
+                TextBox.Dock = DockStyle.Fill;
+                TextBox.Visible = true;
+                TextBox.Text = contents;
             }
         }
     }

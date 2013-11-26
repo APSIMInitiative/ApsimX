@@ -47,12 +47,12 @@ namespace Models
         }
 
         /// <summary>
-        /// A HTML property that the presenter will use to get a HTML version of the summary.
+        /// A property that the presenter will use to get the summary.
         /// </summary>
-        public string GetHtml(string apsimSummaryImageFileName)
+        public string GetSummary(string apsimSummaryImageFileName, bool html)
         {
             StringWriter st = new StringWriter();
-            DataStore.WriteSummary(st, Simulation.Name, true, apsimSummaryImageFileName);
+            DataStore.WriteSummary(st, Simulation.Name, html, apsimSummaryImageFileName);
             return st.ToString();
         }
 
