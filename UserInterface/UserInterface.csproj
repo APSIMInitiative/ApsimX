@@ -68,7 +68,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
-    <Compile Include="Presenters\HtmlPresenter.cs" />
+    <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
@@ -91,11 +91,11 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
-    <Compile Include="Views\HtmlView.cs">
+    <Compile Include="Views\SummaryView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\HtmlView.Designer.cs">
-      <DependentUpon>HtmlView.cs</DependentUpon>
+    <Compile Include="Views\SummaryView.Designer.cs">
+      <DependentUpon>SummaryView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\InputView.cs">
       <SubType>UserControl</SubType>
@@ -203,8 +203,8 @@
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HtmlView.resx">
-      <DependentUpon>HtmlView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\SummaryView.resx">
+      <DependentUpon>SummaryView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InputView.resx">
       <DependentUpon>InputView.cs</DependentUpon>

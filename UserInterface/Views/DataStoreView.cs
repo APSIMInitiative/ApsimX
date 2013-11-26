@@ -136,7 +136,6 @@ namespace UserInterface.Views
             if (CreateNowClicked != null)
                 CreateNowClicked(this, e);
         }
-
         
     }
 }

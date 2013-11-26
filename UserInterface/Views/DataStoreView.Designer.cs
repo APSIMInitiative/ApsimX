@@ -87,22 +87,22 @@
             // 
             this.CreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CreateButton.AutoSize = true;
-            this.CreateButton.Location = new System.Drawing.Point(337, 7);
+            this.CreateButton.Location = new System.Drawing.Point(337, 3);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(125, 23);
             this.CreateButton.TabIndex = 4;
-            this.CreateButton.Text = "Create text report now";
+            this.CreateButton.Text = "Write output file now";
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.OnCreateButtonClick);
             // 
             // AutoCreateCheckBox
             // 
             this.AutoCreateCheckBox.AutoSize = true;
-            this.AutoCreateCheckBox.Location = new System.Drawing.Point(3, 11);
+            this.AutoCreateCheckBox.Location = new System.Drawing.Point(3, 3);
             this.AutoCreateCheckBox.Name = "AutoCreateCheckBox";
-            this.AutoCreateCheckBox.Size = new System.Drawing.Size(187, 17);
+            this.AutoCreateCheckBox.Size = new System.Drawing.Size(176, 17);
             this.AutoCreateCheckBox.TabIndex = 5;
-            this.AutoCreateCheckBox.Text = "Automatically create text file report";
+            this.AutoCreateCheckBox.Text = "Automatically create output file?";
             this.AutoCreateCheckBox.UseVisualStyleBackColor = true;
             this.AutoCreateCheckBox.CheckedChanged += new System.EventHandler(this.OnAutoCreateCheckBoxChanged);
             // 

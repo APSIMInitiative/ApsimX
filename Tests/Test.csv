@@ -1,491 +1,2232 @@
 SIMULATION: Test
 .SIMULATIONS.TEST.WEATHERFILE
-Property name,      Value
-    FileName:,lincoln.met
+ Property name,                        Value
+      Summary:,               Models.Summary
+      WtrData:,                             
+    MaxTIndex:,                            0
+    MinTIndex:,                            0
+    RadnIndex:,                            0
+    RainIndex:,                            0
+TodaysMetData:,Models.WeatherFile+NewMetType
+       DoSeek:,                        False
+   <FileName>:,                  lincoln.met
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.CLOCK
-                    Property name,                 Value
-The start date of the simulation:,            20/10/2003
-  The end date of the simulation:,            23/05/2004
+Property name,                 Value
+     Summary:,        Models.Summary
+ <StartDate>:,            20/10/2003
+   <EndDate>:,            23/05/2004
+     <Today>:,             1/01/0001
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD
-     Property name,Value
-Area of zone (ha):,0.000
+Property name,                         Value
+      <Area>:,                         0.000
+  <Children>:,System.Collections.Generic.List`1[Models.Core.Model]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.IRRIGATION
-     Property name,Value
-IrrigationApplied:,100.000
+       Property name,         Value
+            Summary:,Models.Summary
+<IrrigationApplied>:,       100.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.FERTILISER
+       Property name,                         Value
+            Summary:,                Models.Summary
+      <Definitions>:,System.Collections.Generic.List`1[Models.FertiliserType]
+<FertiliserApplied>:,                         0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.FERTILISER.UREAN
-Property name,Value
- FractionNO3:,0.000
- FractionNH4:,0.000
-FractionUrea:,1.000
+  Property name,Value
+ <FractionNO3>:,0.000
+ <FractionNH4>:,0.000
+<FractionUrea>:,1.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.FERTILISER.NO3N
-Property name,Value
- FractionNO3:,1.000
- FractionNH4:,0.000
-FractionUrea:,0.000
+  Property name,Value
+ <FractionNO3>:,1.000
+ <FractionNH4>:,0.000
+<FractionUrea>:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.REPORT
+                       <Variables>:
+                      [Clock].Today
+            [WeatherFile].DayLength
+                 [WeatherFile].MaxT
+                 [WeatherFile].MinT
+                 [WeatherFile].Radn
+                 [WeatherFile].Rain
+                 [SoilWater].sw_dep
+                 [SoilNitrogen].no3
+[SurfaceOrganicMatter].surfaceom_wt
+  [Plant].Phenology.StageCode.Value
+       [Plant].Structure.Population
+                   [Plant].Leaf.LAI
+            [Plant].Leaf.CoverGreen
+               [Plant].Leaf.Live.Wt
+               [Plant].Stem.Live.Wt
+              [Plant].Tuber.Live.Wt
+               [Plant].Root.Live.Wt
+                [Plant].Leaf.Live.N
+                [Plant].Stem.Live.N
+               [Plant].Tuber.Live.N
+                [Plant].Root.Live.N
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL
-                    Property name,                          Value
-                   Record number:,                              0
-Soil texture or other descriptor:,                 Black Vertosol
-                      Local name:,                           Waco
-                            Site:,                        Jimbour
-                    Nearest town:,                Jimbour, Q 4352
-                          Region:,          South East Queensland
-              Natural vegetation:,Grassland, mainly Qld bluegrass
-                Latitude (WGS84):,                          0.000
-               Longitude (WGS84):,                          0.000
+       Property name,                         Value
+     <RecordNumber>:,                             0
+         <SoilType>:,                Black Vertosol
+        <LocalName>:,                          Waco
+             <Site>:,                       Jimbour
+      <NearestTown>:,               Jimbour, Q 4352
+           <Region>:,         South East Queensland
+<NaturalVegetation>:,Grassland, mainly Qld bluegrass
+         <Latitude>:,                         0.000
+        <Longitude>:,                         0.000
+          <Samples>:,System.Collections.Generic.List`1[Models.Soils.Sample]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOIL.WATER
+Property name,                         Value
+     <Crops>:,System.Collections.Generic.List`1[Models.Soils.SoilCrop]
+
+------------------------------------------------------------------------------
+_Thickness:,<BD>:,<AirDry>:,<LL15>:,<DUL>:,<SAT>:
+    150.000,1.020,    0.150,  0.290, 0.540, 0.590
+    150.000,1.030,    0.260,  0.290, 0.530, 0.580
+    300.000,1.020,    0.290,  0.290, 0.540, 0.590
+    300.000,1.020,    0.290,  0.290, 0.540, 0.580
+    300.000,1.060,    0.300,  0.300, 0.520, 0.570
+    300.000,1.110,    0.310,  0.310, 0.500, 0.550
+    300.000,1.120,    0.320,  0.320, 0.500, 0.550
+    300.000,1.150,    0.330,  0.330, 0.480, 0.530
+    300.000,1.180,    0.340,  0.340, 0.470, 0.520
+    300.000,1.200,    0.350,  0.350, 0.460, 0.510
+    300.000,1.250,    0.360,  0.360, 0.440, 0.490
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOIL.WATER.WHEATSOILCROP
+<LL>:,<KL>:,<XF>:
+0.290,0.100,1.000
+0.290,0.100,1.000
+0.320,0.080,1.000
+0.380,0.060,1.000
+0.390,0.040,1.000
+0.390,0.020,1.000
+0.410,0.010,1.000
+0.480,0.000,0.000
+0.470,0.000,0.000
+0.460,0.000,0.000
+0.440,0.000,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOIL.WATER.BARLEYSOILCROP
+<LL>:,<KL>:,<XF>:
+0.290,0.100,1.000
+0.290,0.100,1.000
+0.360,0.080,1.000
+0.430,0.060,1.000
+0.510,0.040,1.000
+0.500,0.020,1.000
+0.500,0.010,1.000
+0.480,0.000,0.000
+0.470,0.000,0.000
+0.460,0.000,0.000
+0.440,0.000,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOIL.WATER.POTATOSOILCROP
+<LL>:,<KL>:,<XF>:
+0.290,0.100,1.000
+0.290,0.100,1.000
+0.360,0.080,1.000
+0.430,0.060,1.000
+0.510,0.040,1.000
+0.500,0.020,1.000
+0.500,0.010,1.000
+0.480,0.000,0.000
+0.470,0.000,0.000
+0.460,0.000,0.000
+0.440,0.000,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.SOILWATER
-                                     Property name,Value
-       System variable name of external eo source:,     
-     Maximum surface storage capacity of soil(mm):,0.000
-Curve number input used to calculate daily runoff:,73.000
-       Maximum reduction in cn2_bare due to cover:,20.000
-                Cover at which cn_red occurs(0-1):,0.800
-                                       WaterTable:,  NaN
+                                                                    Property name,            Value
+                                                                         Summary:,   Models.Summary
+                                       Temperature below which eeq decreases(oC):,            5.000
+                                       Temperature above which eeq increases(oC):,           35.000
+                                            Maximum bare ground soil albedo(0-1):,            0.230
+  Factor to convert 'A' to coefficient in Adam's type residue effect on Eos(0-1):,            0.440
+                               Coefficient in cover Eos reduction equation(0-10):,            1.700
+      Critical sw ratio in top layer below which stage 2 evaporation occurs(0-1):,            0.900
+                                                       Upper limit of sumes1(mm):,          100.000
+                                                       Upper limit of sumes2(mm):,           25.000
+                                                                 num_solute_flow:,                0
+                                                                 num_solute_flux:,                0
+                                    Gradient due to hydraulic differentials(0-1):,            0.000
+                                                   Specific bulk density(g/cm^3):,            2.650
+                                   Hydrologically effective depth for runoff(mm):,          450.000
+                                 Default canopy factor in absence of height(0-1):,            0.500
+                                        Actual soil evaporation model being used:,          ritchie
+                                                                     evap_method:,                0
+               Irrigation will runoff (0 no runoff [default], 1 runoff like rain:,            False
+Number of soil layer to which irrigation water is applied (where top layer == 1):,                1
+                         System variable name of external observed runoff source:,                 
+                                                                      _eo_source:,                 
+                                                                       _max_pond:,            0.000
+                                                                         _u(0-1):,            6.000
+                                                                           _cona:,            3.000
+                                        Stage 2 drying coefficient during summer:,            3.000
+                       Upper limit of stage 1 soil evaporation during summer(mm):,            6.000
+                                   Date for start of summer evaporation (dd-mmm):,            1-Nov
+                                        Stage 2 drying coefficient during winter:,            3.000
+                       Upper limit of stage 1 soil evaporation during winter(mm):,            6.000
+                                   Date for start of winter evaporation (dd-mmm):,            1-Apr
+                                           Diffusivity constant for soil testure:,           40.000
+                           Slope for diffusivity/soil water content relationship:,           16.000
+                                                                Bare soil albedo:,            0.130
+                                                                       _cn2_bare:,           73.000
+                                                                         _cn_red:,           20.000
+                                                                         _cn_cov:,            0.800
+                                                                      Slope(0-1):,            0.000
+                                                Basal width of discharge area(m):,            0.000
+                                   Area over which lateral flow is occuring(m^2):,            0.000
+                                                           Effective total cover:,            0.000
+                           time after which 2nd-stage soil evaporation begins(d):,            0.000
+                                      Effective potential evapotranspiration(mm):,            0.626
+                   Pot sevap after modification for green cover & residue wt(mm):,            0.626
+                       New cn2 after modification for crop cover & residue cover:,            0.000
+                                             Drainage rate from bottom layer(mm):,            0.000
+                                                                Infiltration(mm):,            0.000
+                                                                      Runoff(mm):,            0.000
+                                    Evaporation from the surface of the pond(mm):,            0.000
+                                                 Surface water ponding depth(mm):,            0.000
+                                                                    _water_table:,              NaN
+                                                               WaterTableInitial:,              NaN
+                                                                        initDone:,            False
+                                                                         inReset:,            False
+                                                                      numvals_sw:,                0
+                                 Flag to determine if Ks has been chosen for use:,            False
+                                                            surfaceom_cover(0-1):,            0.000
+                                                                     runon(mm/d):,            0.000
+                                                                interception(mm):,            0.000
+                                                         residueinterception(mm):,            0.000
+                                                                            rain:,            0.000
+                                                                            radn:,            0.000
+                                                                            mint:,            0.000
+                                                                            maxt:,            0.000
+                                                                      runoff_pot:,            0.000
+                                                                       num_crops:,                0
+                                                                  tillage_cn_red:,            0.000
+                                                                 tillage_cn_rain:,            0.000
+                                                                tillage_rain_sum:,            0.000
+                                                                            year:,                0
+                                                                             day:,                0
+                                                                          sumes1:,            0.000
+                                                                          sumes2:,            0.000
+                                                                         real_eo:,            0.000
+                                                                     num_solutes:,                0
+                                                                      irrigation:,            0.000
+                                                                        oldSWDep:,            0.000
+                                                                  reset_cn2_bare:,           73.000
+                                                                    reset_cn_red:,           20.000
+                                                                    reset_cn_cov:,            0.800
+                                                                  reset_max_pond:,            0.000
+                                                                reset_numvals_sw:,                0
+
+------------------------------------------------------------------------------
+Efficiency of moving solute with unsaturated flow(0-1):,Efficiency of moving solute with flux (saturated flow)(0-1):,Names of all possible immobile solutes:
+                                                  1.000,                                                       1.000,                                    nh4
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.SOILNITROGEN
-        Property name,   Value
-            soiltype:,standard
-allow_simpleSoilTemp:,      no
-   profile_reduction:,      no
- use_organic_solutes:,      no
-            c_in_fom:,   0.400
-        minPatchArea:,   1.000
-                 mcn:,   8.000
-          root_depth:,3,000.000
+                 Property name,                         Value
+            useNewSTFFunction:,                         False
+            useNewSWFFunction:,                         False
+              useNewProcesses:,                         False
+        useSingleMinerFactors:,                          True
+          useFactorsBySOMpool:,                         False
+          useFactorsByFOMpool:,                         False
+           NPartitionApproach:,     BasedOnLayerConcentration
+                 n2o_approach:,                             0
+                 wnmm_n_alpha:,                         0.002
+                wnmm_dn_alpha:,                         0.500
+                  nemis_dn_km:,                        22.000
+                 nemis_dn_pot:,                         7.194
+             cent_n_soilt_ave:,                        15.000
+              cent_n_maxt_ave:,                        25.000
+              cent_n_wfps_ave:,                         0.700
+              cent_n_max_rate:,                         0.100
+           SoilCNParameterSet:,                      standard
+          AllowsimpleSoilTemp:,                         False
+        AllowProfileReduction:,                         False
+            useOrganicSolutes:,                         False
+                  ureappm_min:,                         0.000
+                   nh4ppm_min:,                         0.000
+                   no3ppm_min:,                         0.000
+                      fom_min:,                         0.000
+                  ini_FOMtype:,                       default
+                 oc2om_factor:,                         0.000
+      defaultFOMCarbonContent:,                         0.400
+                       ini_pH:,                         0.000
+             MinimumPatchArea:,                         1.000
+             WarningThreshold:,                         0.000
+               FatalThreshold:,                         0.000
+                  enr_a_coeff:,                         0.000
+                  enr_b_coeff:,                         0.000
+                       hum_cn:,                         0.000
+                      biom_cn:,                         8.000
+                     iniFomWt:,                         0.000
+                  iniFomDepth:,                     3,000.000
+                iniFomCNratio:,                         0.000
+                       ef_res:,                         0.400
+                  fr_res_biom:,                         0.900
+                    min_depth:,                       100.000
+                       ef_fom:,                         0.400
+                  fr_fom_biom:,                         0.900
+                   cnrf_coeff:,                         0.693
+                   cnrf_optcn:,                        25.000
+      TempFactorData_MinerFOM:,Models.Soils.SoilNitrogen+BentStickData
+     MoistFactorData_MinerFOM:,Models.Soils.SoilNitrogen+BrokenStickData
+       CNFactorMinerFOM_OptCN:,                         0.000
+      CNFactorMinerFOM_RateCN:,                         0.000
+                      ef_biom:,                         0.400
+                 fr_biom_biom:,                         0.600
+                       ef_hum:,                         0.400
+      TempFactorData_MinerSOM:,Models.Soils.SoilNitrogen+BentStickData
+     MoistFactorData_MinerSOM:,Models.Soils.SoilNitrogen+BrokenStickData
+  TempFactorData_MinerSOM_Hum:,Models.Soils.SoilNitrogen+BentStickData
+ MoistFactorData_MinerSOM_Hum:,Models.Soils.SoilNitrogen+BrokenStickData
+ TempFactorData_MinerSOM_Biom:,Models.Soils.SoilNitrogen+BentStickData
+MoistFactorData_MinerSOM_Biom:,Models.Soils.SoilNitrogen+BrokenStickData
+       TempFactorData_UHydrol:,Models.Soils.SoilNitrogen+BentStickData
+      MoistFactorData_UHydrol:,Models.Soils.SoilNitrogen+BrokenStickData
+                potHydrol_min:,                         0.000
+              potHydrol_parmA:,                         0.000
+              potHydrol_parmB:,                         0.000
+              potHydrol_parmC:,                         0.000
+              potHydrol_parmD:,                         0.000
+            nitrification_pot:,                         0.000
+              nh4_at_half_pot:,                         0.000
+        TempFactorData_Nitrif:,Models.Soils.SoilNitrogen+BentStickData
+       MoistFactorData_Nitrif:,Models.Soils.SoilNitrogen+BrokenStickData
+          pHFactorData_Nitrif:,Models.Soils.SoilNitrogen+BrokenStickData
+              dnit_rate_coeff:,                         0.000
+              dnit_nitrf_loss:,                         0.000
+                      dnit_k1:,                         0.000
+                dnit_wf_power:,                         0.000
+                   actC_parmB:,                         0.000
+                   actC_parmA:,                         0.000
+         TempFactorData_Denit:,Models.Soils.SoilNitrogen+BentStickData
+        MoistFactorData_Denit:,Models.Soils.SoilNitrogen+BrokenStickData
+                  N2N2O_parmA:,                         0.000
+                  N2N2O_parmB:,                         0.000
+         WFPSFactorData_N2N2O:,Models.Soils.SoilNitrogen+BrokenStickData
+                         salb:,                         0.000
+        allowProfileReduction:,                         False
+              soil_loss(t/ha):,                         0.000
+                 isPondActive:,                         False
+           pond_biom_C(kg/ha):,                         0.000
+            pond_hum_C(kg/ha):,                         0.000
+                  PatchesData:,System.Collections.Generic.Dictionary`2[System.String,System.Double[]]
+                      EPSILON:,                         0.000
+                        Patch:,System.Collections.Generic.List`1[Models.Soils.SoilNitrogen+soilCNPatch]
+                     initDone:,                         False
+                      inReset:,                         False
+              use_external_st:,                         False
+              use_external_ph:,                         False
+               is_pond_active:,                         False
+                dailyInitialC:,                         0.000
+                dailyInitialN:,                         0.000
+                     fom_type:,                             0
+                 num_residues:,                             0
+       UreaHydrolysisApproach:,                  APSIMdefault
+        NitrificationApproach:,                  APSIMdefault
+      DenitrificationApproach:,                  APSIMdefault
+
+------------------------------------------------------------------------------
+fomPoolsCNratio:
+          40.000
+          40.000
+          40.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.SOILORGANICMATTER
-                    Property name,Value
-                  Root C:N ratio:,40.000
-             Root Weight (kg/ha):,200.000
-                  Soil C:N ratio:,12.500
-Erosion enrichment coefficient A:,7.400
-Erosion enrichment coefficient B:,0.200
-                         OCUnits:,Total
+Property name,Value
+    <RootCN>:,40.000
+    <RootWt>:,200.000
+    <SoilCN>:,12.500
+ <EnrACoeff>:,7.400
+ <EnrBCoeff>:,0.200
+   <OCUnits>:,Total
+
+------------------------------------------------------------------------------
+<Thickness>:,<OC>:,<FBiom>:,<FInert>:
+     150.000,1.040,   0.025,    0.400
+     150.000,0.890,   0.020,    0.600
+     300.000,0.890,   0.015,    0.800
+     300.000,0.890,   0.010,    0.900
+     300.000,0.770,   0.010,    0.950
+     300.000,0.450,   0.010,    0.950
+     300.000,0.270,   0.010,    0.950
+     300.000,0.220,   0.010,    0.950
+     300.000,0.160,   0.010,    0.950
+     300.000,0.130,   0.010,    0.950
+     300.000,0.120,   0.010,    0.950
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.ANALYSIS
 Property name,   Value
-     PHUnits:,   Water
-  BoronUnits:,HotWater
+   <PHUnits>:,   Water
+<BoronUnits>:,HotWater
+
+------------------------------------------------------------------------------
+<Thickness>:,<EC>:,<PH>:
+     150.000,0.200,8.400
+     150.000,0.250,8.800
+     300.000,0.310,9.000
+     300.000,0.400,9.200
+     300.000,0.590,9.200
+     300.000,0.840,9.100
+     300.000,0.930,9.000
+     300.000,1.010,9.000
+     300.000,1.060,8.900
+     300.000,1.050,8.900
+     300.000,1.010,8.900
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.INITIAL WATER
- Property name,        Value
-PercentMethod:,FilledFromTop
+   Property name,        Value
+   FractionFull:,        1.000
+   DepthWetSoil:,          NaN
+<PercentMethod>:,FilledFromTop
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOIL.SAMPLE
 Property name,     Value
-        Date:,          
-    NO3Units:,       ppm
-    NH4Units:,       ppm
-     SWUnits:,Volumetric
-     OCUnits:,     Total
-     PHUnits:,     Water
+      <Date>:,          
+  <NO3Units>:,       ppm
+  <NH4Units>:,       ppm
+   <SWUnits>:,Volumetric
+   <OCUnits>:,     Total
+   <PHUnits>:,     Water
+
+------------------------------------------------------------------------------
+<Thickness>:,  <NO3>:,<NH4>:
+     150.000,1116.503, 0.599
+     150.000,   2.101, 0.100
+     300.000,   2.101, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
+     300.000,   1.701, 0.100
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SURFACEORGANICMATTER
-       Property name,                        Value
-       ResidueTypes:,Models.SurfaceOM.ResidueTypes
-         PoolName():,                        wheat
-             type():,                        wheat
-             mass():,                         1000
-standing_fraction():,                            0
-              cnr():,                           80
+               Property name,                         Value
+          crit_residue_wt():,                     2,000.000
+                 opt_temp():,                        20.000
+              cum_eos_max():,                        20.000
+               cnrf_coeff():,                         0.277
+               cnrf_optcn():,                        25.000
+                  c_fract():,                         0.400
+           leach_rain_tot():,                        25.000
+        min_rain_to_leach():,                        10.000
+     crit_min_surfom_orgC():,                         0.004
+              default_cpr():,                         0.000
+default_standing_fraction():,                         0.000
+   standing_extinct_coeff():,                         0.500
+   fractionFaecesAdded(0-1):,                         0.500
+                      Today:,                     1/01/0001
+                initialised:,                         False
+                    Summary:,                Models.Summary
+                          g:,Models.SurfaceOM.SurfaceOrganicMatter+SurfaceOMGlobals
+                          p:,Models.SurfaceOM.SurfaceOrganicMatter+SurfaceOMParameters
+                          c:,Models.SurfaceOM.SurfaceOrganicMatter+SurfaceOMConstants
+             <ResidueTypes>:, Models.SurfaceOM.ResidueTypes
+                 <PoolName>:,                         wheat
+                     <type>:,                         wheat
+                     <mass>:,                          1000
+        <standing_fraction>:,                             0
+                      <cnr>:,                            80
+
+------------------------------------------------------------------------------
+cf_contrib:,C_fract:,nh4ppm:,no3ppm:,po4ppm:,specific_area:
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+          0,   0.000,  0.000,  0.000,  0.000,         0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SURFACEORGANICMATTER.
+ Property name,                         Value
+<TillageType>:,System.Collections.Generic.List`1[Models.Soils.TillageType]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.MICROCLIMATE
-         Property name,Value
-a_interception(mm/mm):,0.000
-       b_interception:,1.000
-   c_interception(mm):,0.000
-   d_interception(mm):,0.000
-          soil_albedo:,0.300
+          Property name,                         Value
+                 (hPa):,                     1,010.000
+                    ():,                         0.960
+                 (deg):,                        15.000
+                    ():,                         0.400
+                    ():,                         0.500
+                 (m/s):,                         3.000
+                   (m):,                         2.000
+                 (0-1):,                         0.294
+                 (0-1):,                         0.960
+                 (m/s):,                         0.010
+               (W/m^2):,                       200.000
+             soil_heat:,                        -0.330
+       dryleaffraction:,                         1.000
+                  maxt:,                         0.000
+                  mint:,                         0.000
+                  radn:,                         0.000
+                  rain:,                         0.000
+                    vp:,                         0.000
+use_external_windspeed:,                         False
+     windspeed_checked:,                         False
+                   day:,                             0
+                  year:,                             0
+           netLongWave:,                         0.000
+                 sumRs:,                         0.000
+              averageT:,                         0.000
+         sunshineHours:,                         0.000
+      fractionClearSky:,                         0.000
+             dayLength:,                         0.000
+        dayLengthLight:,                         0.000
+             numLayers:,                             0
+      <a_interception>:,                         0.000
+      <b_interception>:,                         1.000
+      <c_interception>:,                         0.000
+      <d_interception>:,                         0.000
+         <soil_albedo>:,                         0.300
+       <ComponentData>:,System.Collections.Generic.List`1[Models.MicroClimate+ComponentDataStruct]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO
-Property name, Value
-    CropType:,Potato
+            Property name,                         Value
+                   swim3:,                         0.000
+              <CropType>:,                        Potato
+                <Organs>:,System.Collections.Generic.List`1[Models.PMF.Organs.Organ]
+<WaterSupplyDemandRatio>:,                         0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.
+              Property name,                         Value
+         CurrentPhaseIndex:,                             0
+            _AccumulatedTT:,                         0.000
+CurrentlyOnFirstDayOfPhase:,                              
+           JustInitialised:,                          True
+    FractionBiomassRemoved:,                         0.000
+                     Stage:,                         1.000
+                   SowDate:,                     1/01/0001
+                  <Phases>:,System.Collections.Generic.List`1[Models.PMF.Phen.Phase]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..STAGECODE
+Property name,Value
+Proportional:, True
+
+------------------------------------------------------------------------------
+        Stages:,<Codes>:
+       Planting,   1.000
+        Peeping,   2.000
+      Emergence,   3.000
+TuberInitiation,   4.000
+      FinalLeaf,   5.000
+ FullSenescence,   6.000
+       Maturity,   7.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..SPROUTING
+   Property name,    Value
+       ShootLag:,   72.000
+      ShootRate:,    1.350
+       SowDepth:,    0.000
+          Start:,  Peeping
+            End:,Emergence
+PropOfDayUnused:,    0.000
+    _TTForToday:,    0.000
+     _TTinPhase:,    0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..SPROUTING..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..VEGETATIVE
+   Property name,          Value
+          Start:,      Emergence
+            End:,TuberInitiation
+PropOfDayUnused:,          0.000
+    _TTForToday:,          0.000
+     _TTinPhase:,          0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..VEGETATIVE.
 Property name,Value
-       value:,300.000
+     <value>:,300.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..VEGETATIVE..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..EARLYTUBER
+             Property name,          Value
+          CohortNoAtStart:,          0.000
+                    First:,           True
+          RemainingLeaves:,          0.000
+FractionCompleteYesterday:,          0.000
+                    Start:,TuberInitiation
+                      End:,      FinalLeaf
+          PropOfDayUnused:,          0.000
+              _TTForToday:,          0.000
+               _TTinPhase:,          0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..EARLYTUBER..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..LATETUBER
+     Property name,         Value
+DeadNodeNoAtStart:,         0.000
+            First:,          True
+            Start:,     FinalLeaf
+              End:,FullSenescence
+  PropOfDayUnused:,         0.000
+      _TTForToday:,         0.000
+       _TTinPhase:,         0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..LATETUBER..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..SENESCED
+   Property name,         Value
+          Start:,FullSenescence
+            End:,      Maturity
+PropOfDayUnused:,         0.000
+    _TTForToday:,         0.000
+     _TTinPhase:,         0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..SENESCED.
 Property name,Value
-       value:,200.000
+     <value>:,200.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..SENESCED..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..MATURITY
+    Property name,   Value
+_CumulativeValue:,   0.000
+           Start:,Maturity
+             End:,  Unused
+ PropOfDayUnused:,   0.000
+     _TTForToday:,   0.000
+      _TTinPhase:,   0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..MATURITY..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT
+   Property name,   Value
+          Start:,Planting
+            End:, Peeping
+PropOfDayUnused:,   0.000
+    _TTForToday:,   0.000
+     _TTinPhase:,   0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..DORMANT.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..DORMANT..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.
+                        Property name,                                       Value
+  Select method used for Arbitration:,              PriorityThenRelativeAllocation
+Select method used for DMArbitration:,                          RelativeAllocation
+                                  DM:,Models.PMF.Arbitrator+BiomassArbitrationType
+                                   N:,Models.PMF.Arbitrator+BiomassArbitrationType
+                              NAware:,                                        True
+                              PAware:,                                       False
+                              KAware:,                                       False
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.
+                               Property name,    Value
+The stage name that leaves get initialised.:,Emergence
+ Number of mainstem units per plant(/plant):,    2.200
+                               <Population>:,    0.000
+                            <TotalStemPopn>:,    0.000
+                      <MainStemPrimordiaNo>:,    0.000
+                           <MainStemNodeNo>:,    0.000
+                         <PlantTotalNodeNo>:,    0.000
+                <ProportionBranchMortality>:,    0.000
+                 <ProportionPlantMortality>:,    0.000
+                        <MaximumNodeNumber>:,    0.000
+                          <DeltaNodeNumber>:,    0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+Property name,                         Value
+       Start:,                     Emergence
+         End:,                     FinalLeaf
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...NODEINITIATIONRATEFUNCTION
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...NODEINITIATIONRATEFUNCTION.PHYLLOCHRON
+Property name,                         Value
+VariableName:,[Structure].MainStemNodeAppearanceRate.Phyllochron.Value
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO...NODEINITIATIONRATEFUNCTION.PRIMORDIAPERMAINSTEMNODE
 Property name,Value
-       value:,2.000
+     <value>:,2.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+Property name,                         Value
+       Start:,                     Emergence
+         End:,                     FinalLeaf
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...PHYLLOCHRON
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...PHYLLOCHRON.
+ <X>:,  <Y>:
+0.000, 5.000
+0.150,30.000
+0.740,30.000
+0.750,60.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..
 Property name,Value
-       value:,34.000
+     <value>:,34.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+Property name,         Value
+   XProperty:,[Stem].Live.Wt
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...
+    <X>:,   <Y>:
+   0.000, 20.000
+ 200.000,300.000
+1200.000,700.000
+4000.000,900.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...
+Property name,                     Value
+   XProperty:,[Structure].MainStemNodeNo
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO....
+  <X>:, <Y>:
+ 0.000,0.000
+ 7.000,0.000
+ 8.000,0.500
+13.000,0.500
+14.000,0.000
+34.000,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO...
+Property name,            Value
+   XProperty:,[Leaf].CoverGreen
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO....
+ <X>:, <Y>:
+0.000,1.000
+0.400,1.000
+0.550,0.450
+0.800,0.000
+1.000,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..
 Property name,Value
-       value:,0.000
+     <value>:,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO..
 Property name,Value
-       value:,0.000
+     <value>:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+ Propertys:
+[Leaf].Live
+[Leaf].Dead
+[Stem].Live
+[Stem].Dead
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+  Propertys:
+ [Root].Live
+ [Root].Dead
+[Tuber].Live
+[Tuber].Dead
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO..
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+  Propertys:
+ [Leaf].Live
+ [Leaf].Dead
+ [Stem].Live
+ [Stem].Dead
+ [Root].Live
+ [Root].Dead
+[Tuber].Live
+[Tuber].Dead
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER
+                   Property name,Value
+          PotentialDMAllocation:,0.000
+PotentialStructuralDMAllocation:,0.000
+ PotentialMetabolicDMAllocation:,0.000
+             StructuralDMDemand:,0.000
+          NonStructuralDMDemand:,0.000
+                      InitialWt:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+Property name,     Value
+   XProperty:,[Leaf].LAI
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+  <X>:, <Y>:
+ 0.000,0.000
+ 0.020,0.000
+ 0.020,1.000
+10.000,1.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.TUBER.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+  Property name,          Value
+StartStageName:,TuberInitiation
+  EndStageName:,       Maturity
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+Property name,                      Value
+   XProperty:,[Phenology].StageCode.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER...
+ <X>:, <Y>:
+4.000,0.017
+4.040,0.017
+4.320,0.060
+4.520,0.060
+4.950,0.018
+6.540,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.TUBER...
 Property name,Value
-       value:,5.000
+     <value>:,5.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER...
+Property name,                   Value
+VariableName:,[Structure].MainStemPopn
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER...
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+        Property name,                         Value
+    AccumulatedValue:,                         0.000
+      StartStageName:,               TuberInitiation
+        EndStageName:,                      Maturity
+FractionRemovedOnCut:,                         0.000
+          <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER...
+Property name,                        Value
+VariableName:,[Structure].ThermalTime.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+Property name,                      Value
+   XProperty:,[Phenology].StageCode.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+ <X>:, <Y>:
+3.000,0.000
+4.000,0.000
+4.100,0.100
+4.700,0.160
+5.400,0.200
+6.000,0.220
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+Property name,                      Value
+   XProperty:,[Phenology].StageCode.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+ <X>:, <Y>:
+3.000,0.023
+4.000,0.023
+5.000,0.018
+6.000,0.015
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+Property name,                      Value
+   XProperty:,[Phenology].StageCode.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER..
+ <X>:, <Y>:
+4.000,0.020
+4.100,0.006
+7.000,0.006
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.TUBER.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.ROOT
+      Property name,Value
+   _SenescenceRate:,0.000
+          _Nuptake:,0.000
+         InitialDM:,5.000
+SpecificRootLength:,40,000.000
+              KNO3:,0.020
+              KNH4:,0.000
+         Depth(mm):,0.000
+          <Length>:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,    Value
+       Start:, Planting
+         End:,FinalLeaf
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+  <X>:, <Y>:
+ 0.000,1.000
+26.000,1.000
+35.000,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+Property name,                         Value
+       Start:,                       Peeping
+         End:,                     FinalLeaf
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
+Property name,Value
+     <value>:,10.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+Property name,                         Value
+       Start:,                     Emergence
+         End:,               TuberInitiation
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
+Property name,Value
+     <value>:,0.300
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+Property name,                         Value
+       Start:,               TuberInitiation
+         End:,                     FinalLeaf
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
+Property name,Value
+     <value>:,0.050
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+Property name,                         Value
+       Start:,                     FinalLeaf
+         End:,                FullSenescence
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
+Property name,Value
+     <value>:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,Value
+     <value>:,0.010
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,        Value
+   XProperty:,[Root].Length
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+ <X>:, <Y>:
+0.000,0.000
+0.020,6.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,Value
+     <value>:,0.010
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+Property name,     Value
+   XProperty:,[Leaf].LAI
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT..
+ <X>:, <Y>:
+0.000,1.000
+3.000,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+      Propertys:
+[Root].LayerLive
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+      Propertys:
+[Root].LayerDead
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF
+                 Property name,                         Value
+                       Leaves:,System.Collections.Generic.List`1[Models.PMF.Organs.LeafCohort]
+Extinction Coefficient (Dead):,                         0.030
+                  CurrentRank:,                             0
+             _WaterAllocation:,                         0.000
+                          PEP:,                         0.000
+                           EP:,                         0.000
+              DeltaNodeNumber:,                         0.000
+     PotentialHeightYesterday:,                         0.000
+                  DeltaHeight:,                         0.000
+           DeadNodesYesterday:,                         0.000
+                 FractionDied:,                         0.000
+                    MaxNodeNo:,                         0.000
+           CohortsInitialised:,                         False
+              _ExpandedNodeNo:,                         0.000
+     FractionNextleafExpanded:,                         0.000
+         CurrentExpandingLeaf:,                         0.000
+        StartFractionExpanded:,                         0.000
+                 _ThermalTime:,                         0.000
+            FinalLeafFraction:,                         1.000
+            FinalLeafAppeared:,                         False
+         Max cover(max units):,                         1.000
+              <InitialLeaves>:,System.Collections.Generic.List`1[Models.PMF.Organs.LeafCohort]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+                                 Property name,Value
+                                         Rank:,    1
+                                         Area:,900.000
+                                          Age:,0.000
+                          NReallocationFactor:,0.000
+                         DMReallocationFactor:,0.000
+                       NRetranslocationFactor:,0.000
+                      DMRetranslocationFactor:,0.000
+                              FunctionalNConc:,0.000
+                                  LuxaryNConc:,0.000
+                           StructuralFraction:,0.000
+                        NonStructuralFraction:,0.000
+                                  MaxLiveArea:,0.000
+                               GrowthDuration:,0.000
+                                  LagDuration:,0.000
+                           SenescenceDuration:,0.000
+                        DetachmentLagDuration:,0.000
+                           DetachmentDuration:,0.000
+                          SpecificLeafAreaMax:,0.000
+                          SpecificLeafAreaMin:,0.000
+                                 MaximumNConc:,0.000
+                                 MinimumNConc:,0.000
+                                 InitialNConc:,0.000
+                                     LiveArea:,0.000
+                                     DeadArea:,0.000
+                                      MaxArea:,0.000
+                          ShadeInducedSenRate:,0.000
+                                 SenescedFrac:,0.000
+                                 DetachedFrac:,0.000
+                             _ExpansionStress:,0.000
+                             CohortPopulation:,0.000
+                     CellDivisionStressFactor:,1.000
+               CellDivisionStressAccumulation:,0.000
+                       CellDivisionStressDays:,0.000
+              LeafStartNRetranslocationSupply:,0.000
+                 LeafStartNReallocationSupply:,0.000
+             LeafStartDMRetranslocationSupply:,0.000
+                LeafStartDMReallocationSupply:,0.000
+                                LeafStartArea:,0.000
+        LeafStartMetabolicNReallocationSupply:,0.000
+    LeafStartNonStructuralNReallocationSupply:,0.000
+     LeafStartMetabolicNRetranslocationSupply:,0.000
+ LeafStartNonStructuralNRetranslocationSupply:,0.000
+       LeafStartMetabolicDMReallocationSupply:,0.000
+   LeafStartNonStructuralDMReallocationSupply:,0.000
+    LeafStartMetabolicDMRetranslocationSupply:,0.000
+LeafStartNonStructuralDMRetranslocationSupply:,0.000
+                                      DeltaWt:,0.000
+                          PotentialAreaGrowth:,0.000
+                           DeltaPotentialArea:,0.000
+                    DeltaWaterConstrainedArea:,0.000
+              PotentialStructuralDMAllocation:,0.000
+               PotentialMetabolicDMAllocation:,0.000
+                        MetabolicNReallocated:,0.000
+                       MetabolicWtReallocated:,0.000
+                    NonStructuralNReallocated:,0.000
+                   NonStructuralWtReallocated:,0.000
+                     MetabolicNRetranslocated:,0.000
+                 NonStructuralNRetrasnlocated:,0.000
+                             DMRetranslocated:,0.000
+                         MetabolicNAllocation:,0.000
+                       StructuralDMAllocation:,0.000
+                        MetabolicDMAllocation:,0.000
+                                IsInitialised:,False
+                                 <CoverAbove>:,0.000
+                                 <IsAppeared>:,False
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+                                 Property name,Value
+                                         Rank:,    2
+                                         Area:,600.000
+                                          Age:,0.000
+                          NReallocationFactor:,0.000
+                         DMReallocationFactor:,0.000
+                       NRetranslocationFactor:,0.000
+                      DMRetranslocationFactor:,0.000
+                              FunctionalNConc:,0.000
+                                  LuxaryNConc:,0.000
+                           StructuralFraction:,0.000
+                        NonStructuralFraction:,0.000
+                                  MaxLiveArea:,0.000
+                               GrowthDuration:,0.000
+                                  LagDuration:,0.000
+                           SenescenceDuration:,0.000
+                        DetachmentLagDuration:,0.000
+                           DetachmentDuration:,0.000
+                          SpecificLeafAreaMax:,0.000
+                          SpecificLeafAreaMin:,0.000
+                                 MaximumNConc:,0.000
+                                 MinimumNConc:,0.000
+                                 InitialNConc:,0.000
+                                     LiveArea:,0.000
+                                     DeadArea:,0.000
+                                      MaxArea:,0.000
+                          ShadeInducedSenRate:,0.000
+                                 SenescedFrac:,0.000
+                                 DetachedFrac:,0.000
+                             _ExpansionStress:,0.000
+                             CohortPopulation:,0.000
+                     CellDivisionStressFactor:,1.000
+               CellDivisionStressAccumulation:,0.000
+                       CellDivisionStressDays:,0.000
+              LeafStartNRetranslocationSupply:,0.000
+                 LeafStartNReallocationSupply:,0.000
+             LeafStartDMRetranslocationSupply:,0.000
+                LeafStartDMReallocationSupply:,0.000
+                                LeafStartArea:,0.000
+        LeafStartMetabolicNReallocationSupply:,0.000
+    LeafStartNonStructuralNReallocationSupply:,0.000
+     LeafStartMetabolicNRetranslocationSupply:,0.000
+ LeafStartNonStructuralNRetranslocationSupply:,0.000
+       LeafStartMetabolicDMReallocationSupply:,0.000
+   LeafStartNonStructuralDMReallocationSupply:,0.000
+    LeafStartMetabolicDMRetranslocationSupply:,0.000
+LeafStartNonStructuralDMRetranslocationSupply:,0.000
+                                      DeltaWt:,0.000
+                          PotentialAreaGrowth:,0.000
+                           DeltaPotentialArea:,0.000
+                    DeltaWaterConstrainedArea:,0.000
+              PotentialStructuralDMAllocation:,0.000
+               PotentialMetabolicDMAllocation:,0.000
+                        MetabolicNReallocated:,0.000
+                       MetabolicWtReallocated:,0.000
+                    NonStructuralNReallocated:,0.000
+                   NonStructuralWtReallocated:,0.000
+                     MetabolicNRetranslocated:,0.000
+                 NonStructuralNRetrasnlocated:,0.000
+                             DMRetranslocated:,0.000
+                         MetabolicNAllocation:,0.000
+                       StructuralDMAllocation:,0.000
+                        MetabolicDMAllocation:,0.000
+                                IsInitialised:,False
+                                 <CoverAbove>:,0.000
+                                 <IsAppeared>:,False
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+                                 Property name,Value
+                                         Rank:,    3
+                                         Area:,300.000
+                                          Age:,0.000
+                          NReallocationFactor:,0.000
+                         DMReallocationFactor:,0.000
+                       NRetranslocationFactor:,0.000
+                      DMRetranslocationFactor:,0.000
+                              FunctionalNConc:,0.000
+                                  LuxaryNConc:,0.000
+                           StructuralFraction:,0.000
+                        NonStructuralFraction:,0.000
+                                  MaxLiveArea:,0.000
+                               GrowthDuration:,0.000
+                                  LagDuration:,0.000
+                           SenescenceDuration:,0.000
+                        DetachmentLagDuration:,0.000
+                           DetachmentDuration:,0.000
+                          SpecificLeafAreaMax:,0.000
+                          SpecificLeafAreaMin:,0.000
+                                 MaximumNConc:,0.000
+                                 MinimumNConc:,0.000
+                                 InitialNConc:,0.000
+                                     LiveArea:,0.000
+                                     DeadArea:,0.000
+                                      MaxArea:,0.000
+                          ShadeInducedSenRate:,0.000
+                                 SenescedFrac:,0.000
+                                 DetachedFrac:,0.000
+                             _ExpansionStress:,0.000
+                             CohortPopulation:,0.000
+                     CellDivisionStressFactor:,1.000
+               CellDivisionStressAccumulation:,0.000
+                       CellDivisionStressDays:,0.000
+              LeafStartNRetranslocationSupply:,0.000
+                 LeafStartNReallocationSupply:,0.000
+             LeafStartDMRetranslocationSupply:,0.000
+                LeafStartDMReallocationSupply:,0.000
+                                LeafStartArea:,0.000
+        LeafStartMetabolicNReallocationSupply:,0.000
+    LeafStartNonStructuralNReallocationSupply:,0.000
+     LeafStartMetabolicNRetranslocationSupply:,0.000
+ LeafStartNonStructuralNRetranslocationSupply:,0.000
+       LeafStartMetabolicDMReallocationSupply:,0.000
+   LeafStartNonStructuralDMReallocationSupply:,0.000
+    LeafStartMetabolicDMRetranslocationSupply:,0.000
+LeafStartNonStructuralDMRetranslocationSupply:,0.000
+                                      DeltaWt:,0.000
+                          PotentialAreaGrowth:,0.000
+                           DeltaPotentialArea:,0.000
+                    DeltaWaterConstrainedArea:,0.000
+              PotentialStructuralDMAllocation:,0.000
+               PotentialMetabolicDMAllocation:,0.000
+                        MetabolicNReallocated:,0.000
+                       MetabolicWtReallocated:,0.000
+                    NonStructuralNReallocated:,0.000
+                   NonStructuralWtReallocated:,0.000
+                     MetabolicNRetranslocated:,0.000
+                 NonStructuralNRetrasnlocated:,0.000
+                             DMRetranslocated:,0.000
+                         MetabolicNAllocation:,0.000
+                       StructuralDMAllocation:,0.000
+                        MetabolicDMAllocation:,0.000
+                                IsInitialised:,False
+                                 <CoverAbove>:,0.000
+                                 <IsAppeared>:,False
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:,     <Y>:
+0.000, 2000.000
+0.150,18000.000
+0.300,27000.000
+0.440,15000.000
+0.590, 6000.000
+0.730, 1500.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:,   <Y>:
+0.000,200.000
+0.300,400.000
+0.400,400.000
+1.000,400.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:,   <Y>:
+0.000,350.000
+0.150,350.000
+0.300,350.000
+0.400,350.000
+0.730,350.000
+1.000, 20.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:,   <Y>:
+0.000,350.000
+0.150,350.000
+0.300,350.000
+0.400,350.000
+0.730,350.000
+2.000,100.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,  Value
+     <value>:,1,000,000.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,  Value
+     <value>:,1,000,000.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                            Value
+   XProperty:,[Structure].RelativeNodeApperance
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:,     <Y>:
+0.000,40000.000
+1.000,25000.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,25,000.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.500
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.070
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.030
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.010
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                         Value
+   XProperty:,[Plant].WaterSupplyDemandRatio
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:, <Y>:
+0.500,0.000
+1.000,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.050
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.500
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                              Value
+   XProperty:,[Leaf].CohortCurrentRank.CoverAbove
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:, <Y>:
+0.000,0.000
+0.500,0.000
+0.800,0.000
+1.000,0.030
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.200
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,1.200
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+         Property name,Value
+PhotosyntheticPathway:,   C3
+                  CO2:,350.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,    Value
+   XProperty:,[Leaf].Fn
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:, <Y>:
+0.000,1.000
+1.000,1.000
+1.500,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+               Property name,Value
+MaximumTemperatureWeighting:,0.750
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+  <X>:, <Y>:
+ 2.000,0.000
+12.000,1.000
+24.000,1.000
+34.000,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,    Value
+   XProperty:,[Leaf].Fw
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:, <Y>:
+0.000,0.000
+0.400,1.000
+1.500,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                    Value
+   XProperty:,[Leaf].Photosynthesis.VPD
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+  <X>:, <Y>:
+ 0.000,1.000
+10.000,1.000
+50.000,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+  <X>:,  <Y>:
+ 2.000, 0.000
+20.000,18.000
+35.000, 0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+Property name,                         Value
+  <Children>:,System.Collections.Generic.List`1[Models.PMF.Functions.Function]
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,Value
+     <value>:,0.800
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
+Property name,                         Value
+   XProperty:,[Plant].WaterSupplyDemandRatio
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF...
+ <X>:, <Y>:
+0.000,0.500
+1.000,1.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
 Property name,             Value
-      Length:,             0.012
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
-Property name,Value
-       value:,10.000
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
-Property name,Value
-       value:,0.300
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
-Property name,Value
-       value:,0.050
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT...
-Property name,Value
-       value:,0.000
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
-Property name,Value
-       value:,0.010
-
-------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.ROOT.
-Property name,Value
-       value:,0.010
+   XProperty:,[WeatherFile].MinT
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,  Value
-       value:,1,000,000.000
+  <X>:, <Y>:
+-1.000,0.000
+ 0.000,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,  Value
-       value:,1,000,000.000
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,25,000.000
+ Propertys:
+[Leaf].Live
+[Leaf].Dead
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.500
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+   Property name,           Value
+      ArraySize:,[Leaf].MaxNodeNo
+ArraySizeNumber:,              -1
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.070
+ Propertys:
+[Leaf].Live
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.030
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+   Property name,           Value
+      ArraySize:,[Leaf].MaxNodeNo
+ArraySizeNumber:,              -1
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.000
+ Propertys:
+[Leaf].Dead
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,1.000
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.010
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.050
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.500
+       Propertys:
+[Leaf].CohortLive
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.200
+.SIMULATIONS.TEST.FIELD.POTATO.LEAF.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,1.200
+       Propertys:
+[Leaf].CohortDead
 
 ------------------------------------------------------------------------------
-.SIMULATIONS.TEST.FIELD.POTATO.LEAF..
-Property name,Value
-       value:,0.800
+.SIMULATIONS.TEST.FIELD.POTATO.STEM
+                   Property name,Value
+          PotentialDMAllocation:,0.000
+PotentialStructuralDMAllocation:,0.000
+ PotentialMetabolicDMAllocation:,0.000
+             StructuralDMDemand:,0.000
+          NonStructuralDMDemand:,0.000
+                      InitialWt:,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM.
 Property name,Value
-       value:,0.000
+     <value>:,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM.
 Property name,Value
-       value:,0.050
+     <value>:,0.050
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.STEM.
+Property name,    Value
+       Start:, Planting
+         End:,FinalLeaf
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM.
 Property name,Value
-       value:,0.000
+     <value>:,0.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM.
 Property name,Value
-       value:,1.000
+     <value>:,1.000
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM..
 Property name,Value
-       value:,0.200
+     <value>:,0.200
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.STEM.
+Property name,                      Value
+   XProperty:,[Phenology].StageCode.Value
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.STEM..
+ <X>:, <Y>:
+3.000,0.060
+4.000,0.060
+5.300,0.025
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATO.STEM.
 Property name,Value
-       value:,0.006
+     <value>:,0.006
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.STEM.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.POTATO.STEM.
+          Property name,Value
+         _StructuralWt:,0.000
+      _NonStructuralWt:,0.000
+          _StructuralN:,0.000
+       _NonStructuralN:,0.000
+_PotentialDMAllocation:,0.000
+          _MetabolicWt:,0.000
+           _MetabolicN:,0.000
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOILWATER
+Property name,                         Value
+      <Axes>:,System.Collections.Generic.List`1[Models.Graph.Axis]
+    <Series>:,System.Collections.Generic.List`1[Models.Graph.Series]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILWATER.AXIS 1
 Property name,          Value
-        Type:,           Left
-       Title:,Soil water (mm)
-    Inverted:,          False
+      <Type>:,           Left
+     <Title>:,Soil water (mm)
+  <Inverted>:,          False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILWATER.
 Property name, Value
-        Type:,Bottom
-    Inverted:, False
+      <Type>:,Bottom
+  <Inverted>:, False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILWATER.
 Property name,    Value
-       Title:,Predicted
-        Type:,     Line
-       XAxis:,   Bottom
-       YAxis:,     Left
-  ColourArgb:,-16776961
-      Marker:,     None
+     <Title>:,Predicted
+      <Type>:,     Line
+     <XAxis>:,   Bottom
+     <YAxis>:,     Left
+<ColourArgb>:,-16776961
+    <Marker>:,     None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILWATER..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILWATER..
-  Property name,              Value
-SimulationName:,               Test
-     TableName:,             Report
-     FieldName:,SoilWater.sw_dep(1)
+    Property name,              Value
+<SimulationName>:,               Test
+     <TableName>:,             Report
+     <FieldName>:,SoilWater.sw_dep(1)
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.BIOMASS
+Property name,                         Value
+      <Axes>:,System.Collections.Generic.List`1[Models.Graph.Axis]
+    <Series>:,System.Collections.Generic.List`1[Models.Graph.Series]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.AXIS 1
 Property name,              Value
-        Type:,               Left
-       Title:,Crop Biomass (g/m2)
-    Inverted:,              False
+      <Type>:,               Left
+     <Title>:,Crop Biomass (g/m2)
+  <Inverted>:,              False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.
 Property name, Value
-        Type:,Bottom
-    Inverted:, False
+      <Type>:,Bottom
+  <Inverted>:, False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.
 Property name,    Value
-       Title:,     Leaf
-        Type:,     Line
-       XAxis:,   Bottom
-       YAxis:,     Left
-  ColourArgb:,-16744448
-      Marker:,     None
+     <Title>:,     Leaf
+      <Type>:,     Line
+     <XAxis>:,   Bottom
+     <YAxis>:,     Left
+<ColourArgb>:,-16744448
+    <Marker>:,     None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,             Value
-SimulationName:,              Test
-     TableName:,            Report
-     FieldName:,Plant.Leaf.Live.Wt
+    Property name,             Value
+<SimulationName>:,              Test
+     <TableName>:,            Report
+     <FieldName>:,Plant.Leaf.Live.Wt
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.
 Property name,    Value
-       Title:,     Stem
-        Type:,     Line
-       XAxis:,   Bottom
-       YAxis:,     Left
-  ColourArgb:,-16760704
-      Marker:,     None
+     <Title>:,     Stem
+      <Type>:,     Line
+     <XAxis>:,   Bottom
+     <YAxis>:,     Left
+<ColourArgb>:,-16760704
+    <Marker>:,     None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,             Value
-SimulationName:,              Test
-     TableName:,            Report
-     FieldName:,Plant.Stem.Live.Wt
+    Property name,             Value
+<SimulationName>:,              Test
+     <TableName>:,            Report
+     <FieldName>:,Plant.Stem.Live.Wt
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.
 Property name, Value
-       Title:, Tuber
-        Type:,  Line
-       XAxis:,Bottom
-       YAxis:,  Left
-  ColourArgb:,-65536
-      Marker:,  None
+     <Title>:, Tuber
+      <Type>:,  Line
+     <XAxis>:,Bottom
+     <YAxis>:,  Left
+<ColourArgb>:,-65536
+    <Marker>:,  None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,              Value
-SimulationName:,               Test
-     TableName:,             Report
-     FieldName:,Plant.Tuber.Live.Wt
+    Property name,              Value
+<SimulationName>:,               Test
+     <TableName>:,             Report
+     <FieldName>:,Plant.Tuber.Live.Wt
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS.
 Property name, Value
-       Title:,  Root
-        Type:,  Line
-       XAxis:,Bottom
-       YAxis:,  Left
-  ColourArgb:,-32768
-      Marker:,  None
+     <Title>:,  Root
+      <Type>:,  Line
+     <XAxis>:,Bottom
+     <YAxis>:,  Left
+<ColourArgb>:,-32768
+    <Marker>:,  None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.BIOMASS..
-  Property name,             Value
-SimulationName:,              Test
-     TableName:,            Report
-     FieldName:,Plant.Root.Live.Wt
+    Property name,             Value
+<SimulationName>:,              Test
+     <TableName>:,            Report
+     <FieldName>:,Plant.Root.Live.Wt
 
 ------------------------------------------------------------------------------
-Code:
+_Code:
 
         using System;
         using Models.Core;
@@ -533,21 +2274,25 @@ Code:
         }
 				
 .SIMULATIONS.TEST.FIELD.POTATOSOWINGRULE
-Property name,        Value
-       Model:,Models.Script
+    Property name,                         Value
+CompiledAssembly:,wpc21ogh, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      ScriptType:,                 Models.Script
+ HasDeserialised:,                          True
+         <Model>:,                 Models.Script
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.POTATOSOWINGRULE.
-                           Property name,                 Value
-Spacing (mm) between plants within rows:,               280.000
-              Spacing (mm) between rows:,               770.000
-          Depth (mm) tubers are planted:,               150.000
-         Number of stems per seed tuber:,                 2.200
-                               Cultivar:,         RussetBurbank
-                            Sowing Date:,            10/11/2003
+            Property name,                 Value
+         PlantPopulation:,                 0.000
+              <RowSpace>:,               280.000
+              <RowWidth>:,               770.000
+         <PlantingDepth>:,               150.000
+<StemNumberPerSeedTuber>:,                 2.200
+          <CultivarName>:,         RussetBurbank
+            <SowingDate>:,            10/11/2003
 
 ------------------------------------------------------------------------------
-Code:
+_Code:
 
         using System;
         using Models.Core;
@@ -582,17 +2327,20 @@ Code:
         }
 				
 .SIMULATIONS.TEST.FIELD.IRRIGATIONRULE
-Property name,        Value
-       Model:,Models.Script
+    Property name,                         Value
+CompiledAssembly:,pfihjdva, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      ScriptType:,                 Models.Script
+ HasDeserialised:,                          True
+         <Model>:,                 Models.Script
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.IRRIGATIONRULE.
-              Property name,                 Value
-  Amount of water to apply:,               100.000
-Date irrigation is applied:,            20/12/2003
+       Property name,                 Value
+<ApplicationAmount>:,               100.000
+  <ApplicationDate>:,            20/12/2003
 
 ------------------------------------------------------------------------------
-Code:
+_Code:
 
         using System;
         using Models.Core;
@@ -626,72 +2374,101 @@ Code:
         }
 				
 .SIMULATIONS.TEST.FIELD.FERTILISERRULE
-Property name,        Value
-       Model:,Models.Script
+    Property name,                         Value
+CompiledAssembly:,jx4vt24y, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      ScriptType:,                 Models.Script
+ HasDeserialised:,                          True
+         <Model>:,                 Models.Script
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.FERTILISERRULE.
-                         Property name,                 Value
-Amount (kg/ha) of fertiliser to apply:,               500.000
-          Type of fertiliser to apply:,                  NO3N
-       Date of fertiliser application:,            30/12/2003
+       Property name,                 Value
+<ApplicationAmount>:,               500.000
+         <FertType>:,                  NO3N
+  <ApplicationDate>:,            30/12/2003
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TEST.FIELD.SOILNITROGEN
+Property name,                         Value
+      <Axes>:,System.Collections.Generic.List`1[Models.Graph.Axis]
+    <Series>:,System.Collections.Generic.List`1[Models.Graph.Series]
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILNITROGEN.AXIS 1
 Property name,          Value
-        Type:,           Left
-       Title:,Soil water (mm)
-    Inverted:,          False
+      <Type>:,           Left
+     <Title>:,Soil water (mm)
+  <Inverted>:,          False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILNITROGEN.
 Property name, Value
-        Type:,Bottom
-    Inverted:, False
+      <Type>:,Bottom
+  <Inverted>:, False
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILNITROGEN.
 Property name,   Value
-       Title:,   SoilN
-        Type:,    Line
-       XAxis:,  Bottom
-       YAxis:,    Left
-  ColourArgb:,-8388544
-      Marker:,    None
+     <Title>:,   SoilN
+      <Type>:,    Line
+     <XAxis>:,  Bottom
+     <YAxis>:,    Left
+<ColourArgb>:,-8388544
+    <Marker>:,    None
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILNITROGEN..
-  Property name,      Value
-SimulationName:,       Test
-     TableName:,     Report
-     FieldName:,Clock.Today
+    Property name,      Value
+<SimulationName>:,       Test
+     <TableName>:,     Report
+     <FieldName>:,Clock.Today
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.FIELD.SOILNITROGEN..
-  Property name,              Value
-SimulationName:,               Test
-     TableName:,             Report
-     FieldName:,SoilNitrogen.no3(1)
+    Property name,              Value
+<SimulationName>:,               Test
+     <TableName>:,             Report
+     <FieldName>:,SoilNitrogen.no3(1)
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST.INPUT
 Property name,           Value
-    FileName:,TestObserved.txt
+  <FileName>:,TestObserved.txt
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.TEST
-     Property name,Value
-Area of zone (ha):,0.000
+Property name,         Value
+     Summary:,Models.Summary
 
 ------------------------------------------------------------------------------
 .SIMULATIONS.DATASTORE
-    Property name,Value
-AutoCreateReport:,False
+      Property name,                         Value
+        Connection:,                Utility.SQLite
+TableInsertQueries:,System.Collections.Generic.Dictionary`2[System.String,System.IntPtr]
+     SimulationIDs:,System.Collections.Generic.Dictionary`2[System.String,System.Int32]
+<AutoCreateReport>:,                         False
+
+------------------------------------------------------------------------------
+.SIMULATIONS.TESTS
+<AllTests>:
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
+Models.Test
 
 ------------------------------------------------------------------------------
 .SIMULATIONS
-     Property name,Value
-Area of zone (ha):,0.000
+Property name,                                   Value
+   _FileName:,C:\Users\hol353\ApsimX\Tests\Test.apsimx
 
 ------------------------------------------------------------------------------
 SIMULATION LOG:

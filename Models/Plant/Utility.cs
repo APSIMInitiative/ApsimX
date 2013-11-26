@@ -36,8 +36,6 @@ namespace Models.PMF
                 Debug(format, value[i]);
         }
 
-        static Dictionary<string, Model.Variable> VariableCache = new Dictionary<string, Model.Variable>();
-
         /// <summary>
         /// Return the value (using Reflection) of the specified property on the specified object.
         /// Returns null if not found. Examples of Names that can be found.

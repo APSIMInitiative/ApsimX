@@ -28,8 +28,6 @@ namespace UserInterface.Presenters
             CommandHistory.ModelChanged += OnModelChanged;
         }
 
-
-
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
@@ -54,10 +52,9 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnCreateNowClicked(object sender, EventArgs e)
         {
-            DataStore.CreateReport(false);
             DataStore.Disconnect();
             DataStore.Connect(true);
-            DataStore.CreateReport(true);
+            DataStore.WriteOutputFile();
             DataStore.Disconnect();
         }
 
@@ -69,6 +66,9 @@ namespace UserInterface.Presenters
             CommandHistory.Add(new Commands.ChangePropertyCommand(DataStore, "AutoCreateReport", DataStoreView.AutoCreate));
         }
 
+        /// <summary>
+        /// Model has changed - probably because of Undo/Redo
+        /// </summary>
         void OnModelChanged(object changedModel)
         {
             if (changedModel == DataStore)

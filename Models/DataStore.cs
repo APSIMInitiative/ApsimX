@@ -14,17 +14,13 @@ namespace Models
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
     {
-        private const string divider = "------------------------------------------------------------------------------";
-
         private Utility.SQLite Connection = null;
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
 
         public enum ErrorLevel { Information, Warning, Error };
 
-        /// <summary>
-        /// A property that controls auto creation of a text report.
-        /// </summary>
+        // Parameters
         public bool AutoCreateReport { get; set; }
 
         // Links
@@ -122,7 +118,7 @@ namespace Models
         {
             Connection.ExecuteNonQuery("COMMIT");
             if (AutoCreateReport)
-                CreateReport(false);
+                WriteOutputFile();
         }
 
         /// <summary>
@@ -311,28 +307,25 @@ namespace Models
             return Connection.ExecuteQuery(sql);
         }
 
-        #region Summary report generation
+        /// <summary>
+        /// Write all outputs to a text file (.csv)
+        /// </summary>
+        public void WriteOutputFile()
+        {
+            StreamWriter report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
+            WriteAllTables(report);
+            report.Close();
+        }
+
+
+
+        #region Privates
 
         /// <summary>
         /// Create a text report from tables in this data store.
         /// </summary>
-        public void CreateReport(bool baseline)
+        private void WriteAllTables(StreamWriter report)
         {
-
-            StreamWriter report;
-            if (baseline)
-                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".baseline.csv"));
-            else
-                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
-
-            foreach (string simulationName in SimulationNames)
-            {
-                report.WriteLine("SIMULATION: " + simulationName);
-
-                // Write out all summary messages for this simulation.
-                WriteSummary(report, simulationName, false, null);
-            }
-
             // Write out each table for this simulation.
             foreach (string tableName in TableNames)
             {
@@ -353,283 +346,15 @@ namespace Models
                     DataTable data = RunQuery(sql);
                     if (data.Rows.Count > 0)
                     {
-                        
+
                         report.WriteLine("TABLE: " + tableName);
 
                         report.Write(Utility.DataTable.DataTableToCSV(data, 0));
                     }
                 }
             }
-            report.WriteLine(divider);
             report.WriteLine();
-            report.Close();
         }
-
-        /// <summary>
-        /// Write out summary information
-        /// </summary>
-        public void WriteSummary(TextWriter report, string simulationName, bool html, string apsimSummaryImageFileName)
-        {
-            if (html)
-            {
-                report.WriteLine("<!DOCTYPE html>");
-                report.WriteLine("<html>");
-                report.WriteLine("<body>");
-               
-                report.WriteLine("<style type=\"text/css\">");
-                report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
-                report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
-                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
-                report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
-
-                report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
-                report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-
-                report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
-                report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-                
-                report.WriteLine("</style>");
-
-                report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
-            }
-
-            // Write out all properties.
-            WriteProperties(report, simulationName, html);
-            
-            // Write out all messages.
-            if (html)
-                report.WriteLine("<hr>");
-            WriteHeading(report, "Simulation log:", html);
-            DataTable messageTable = GetMessageTable(simulationName);
-            WriteTable(report, messageTable, html, false, "PropertyTable");
-
-            if (html)
-            {
-                report.WriteLine("</body>");
-                report.WriteLine("</html>");
-            }
-        }
-
-        /// <summary>
-        /// Create a message table ready for writing.
-        /// </summary>
-        private DataTable GetMessageTable(string simulationName)
-        {
-            DataTable messageTable = new DataTable();
-            DataTable messages = GetData(simulationName, "Messages");
-            if (messages.Rows.Count > 0)
-            {
-                messageTable.Columns.Add("Date", typeof(string));
-                messageTable.Columns.Add("Model", typeof(string));
-                messageTable.Columns.Add("Message", typeof(string));
-                foreach (DataRow row in messages.Rows)
-                {
-                    string modelName = (string)row[1];
-                    DateTime date = (DateTime)row[2];
-                    string message = (string)row[3];
-                    ErrorLevel errorLevel = (ErrorLevel)Enum.Parse(typeof(ErrorLevel), row[4].ToString());
-
-                    if (errorLevel == ErrorLevel.Error)
-                        message = "FATAL ERROR: " + message;
-                    else if (errorLevel == ErrorLevel.Warning)
-                        message = "WARNING: " + message;
-
-                    messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
-                }
-            }
-            return messageTable;
-        }
-
-        /// <summary>
-        /// Get a table of all properties for all models in the specified simulation.
-        /// </summary>
-        private void WriteProperties(TextWriter report, string simulationName, bool html)
-        {
-            DataTable propertyTable = new DataTable();
-
-            Simulation simulation = Simulations.Get(simulationName) as Simulation;
-            if (simulation != null)
-            {
-                Model[] models = simulation.FindAll();
-                foreach (Model model in models)
-                {
-                    WriteModelProperties(report, html, model);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Write all properties of the specified model to the specified TextWriter.
-        /// </summary>
-        private void WriteModelProperties(TextWriter report, bool html, Model model)
-        {
-            string modelName = model.FullPath;
-
-            DataTable propertyTable = new DataTable();
-            propertyTable.Columns.Add("Property name", typeof(string));
-            propertyTable.Columns.Add("Value", typeof(object));
-
-            DataTable table = new DataTable();
-
-            Model.Variable[] properties = Utility.ModelFunctions.Parameters(model);
-            foreach (Model.Variable property in properties)
-            {
-                if (property.Name != "Name" && property.Name != "Parent")
-                {
-                    object value = property.Value;
-                    if (value != null)
-                    {
-                        string propertyName = property.Name;
-
-                        // look for a description attribute.
-                        if (property.Description != null)
-                            propertyName = property.Description;
-
-                        // look for units
-                        if (property.Units != null)
-                            propertyName += property.Units;
-                        propertyName += ":";
-
-                        // If an array was found then put values into table.
-                        if (value.GetType().IsArray)
-                        {
-                            Array array = value as Array;
-                            if (array != null && array.Length > 0)
-                            {
-                                List<string> tableValues = new List<string>();
-
-                                for (int arrayIndex = 1; arrayIndex < array.Length; arrayIndex++)
-                                    tableValues.Add(FormatValue(array.GetValue(arrayIndex)));
-
-                                if (table.Rows.Count == 0 || table.Rows.Count == tableValues.Count)
-                                    Utility.DataTable.AddColumn(table, propertyName, tableValues.ToArray());
-                            }
-                        }
-
-                        // Write out a code block
-                        else if (value.ToString().Contains("\n"))
-                            WriteCodeBlock(report, html, value, propertyName);
-
-                        // Write out a normal property.
-                        else
-                            propertyTable.Rows.Add(new object[] { propertyName, value });
-                    }
-                }
-            }
-
-            if (propertyTable.Rows.Count > 0 || table.Rows.Count > 0)
-                WriteHeading(report, modelName, html);
-
-            // write out properties
-            if (propertyTable.Rows.Count > 0)
-                WriteTable(report, propertyTable, html, false, "PropertyTable");
-
-            // write out table.
-            if (table.Rows.Count > 0)
-                WriteTable(report, table, html, true, "ApsimTable");
-
-        }
-
-        /// <summary>
-        /// Write the specified value as a code block to the specified TextWriter.
-        /// </summary>
-        private static void WriteCodeBlock(TextWriter report, bool html, object value, string propertyName)
-        {
-            // the value has <cr><lf> - write out manually 
-            if (html)
-            {
-                report.WriteLine("<p>" + propertyName + "</p>");
-                report.WriteLine("<code><pre>" + value.ToString().Replace("\n", "<br/>") + "</pre></code>");
-            }
-            else
-            {
-                report.WriteLine(propertyName);
-                report.WriteLine(value.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Format the specified value into a string and return the string.
-        /// </summary>
-        private string FormatValue(object value)
-        {
-            if (value is double || value is float)
-                return String.Format("{0:N3}", value);
-            else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-mm-dd");
-            else
-                return value.ToString();
-        }
-
-        /// <summary>
-        /// Write the specified heading to the TextWriter.
-        /// </summary>
-        private void WriteHeading(TextWriter writer, string heading, bool html)
-        {
-            if (html)
-                writer.WriteLine("<h2>" + heading + "</h2>");
-            else
-                writer.WriteLine(heading.ToUpper());
-        }
-
-        /// <summary>
-        /// Write the specfieid table to the TextWriter.
-        /// </summary>
-        private void WriteTable(TextWriter report, DataTable table, bool html, bool includeHeadings, string className)
-        {
-            if (html)
-            {
-                report.WriteLine("<p><table class=\"" + className + "\">");
-                if (includeHeadings)
-                {
-                    report.WriteLine("<tr>");
-                    foreach (DataColumn col in table.Columns)
-                    {
-                        report.Write("<th>");
-                        report.Write(col.ColumnName);
-                        report.WriteLine("</th>");
-                    }
-                    report.WriteLine("</tr>");
-                }
-
-                foreach (DataRow row in table.Rows)
-                {
-                    report.WriteLine("<tr>");
-                    foreach (DataColumn col in table.Columns)
-                    {
-                        report.WriteLine("<td>");
-                        string st = FormatValue(row[col]);
-                        if (st.Contains("\n"))
-                            st = st.Replace("\n", "<br/>");
-                        if (st.Contains("WARNING:"))
-                            report.WriteLine("<p class=\"Warning\">");
-                        else if (st.Contains("ERROR:"))
-                            report.WriteLine("<p class=\"Error\">");
-                        else
-                            report.WriteLine("<p>");
-                        report.Write(st);
-                        
-                        report.WriteLine("</td>");
-                    }
-                    report.WriteLine("</tr>");
-                }
-                report.WriteLine("</table></p>");
-            }
-            else
-            {
-                report.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
-                report.WriteLine(divider);
-            }
-
-        }
-
-        #endregion
-
-
-        #region Privates
-
 
         /// <summary>
         /// Return the simulation id (from the simulations table) for the specified name.

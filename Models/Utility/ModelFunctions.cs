@@ -234,9 +234,9 @@ namespace Utility
         /// Return a list of all parameters (that are not references to child models). Never returns null. Can
         /// return an empty array. A parameter is a class property that is public and read/writtable
         /// </summary>
-        public static Model.Variable[] Parameters(Model model)
+        public static IVariable[] Parameters(Model model)
         {
-            List<Model.Variable> allProperties = new List<Model.Variable>();
+            List<IVariable> allProperties = new List<IVariable>();
             foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
                 if (property.CanRead && property.CanWrite)
@@ -249,11 +249,27 @@ namespace Utility
                     ignoreProperty |= property.Name == "Name";                               // No Name properties.
 
                     if (!ignoreProperty)
-                        allProperties.Add(new Model.Variable(model, property));
+                        allProperties.Add(new VariableProperty(model, property));
                 }
             }
             return allProperties.ToArray();
         }
+
+        /// <summary>
+        /// Return a complete list of state variables (public and private) for the specified model.
+        /// </summary>
+        public static IVariable[] States(Model model)
+        {
+            List<IVariable> variables = new List<IVariable>();
+            foreach (FieldInfo field in model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+            {
+                if (!field.FieldType.IsSubclassOf(typeof(Model)))
+                    variables.Add(new VariableField(model, field));
+            }
+
+            return variables.ToArray();
+        }
+        
         #endregion
     }
 }
