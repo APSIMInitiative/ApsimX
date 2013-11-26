@@ -1,12 +1,12 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 #setwd("c:\\ApsimX\\ApsimX") # for testing only
-library("XML") 
+library("XML")
 library("RSQLite")
 library("RODBC")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "C:\\ApsimX\\ApsimX\\Tests\\", "Windows_NT", 500) # for testing only 
+#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "Windows_NT", 500) # for testing only 
 
 #if(length(args) == 0)
 #  stop("Usage: rscript RunTest.R <path to .apsimx>")
