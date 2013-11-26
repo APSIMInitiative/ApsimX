@@ -126,6 +126,17 @@ namespace Models
         }
 
         /// <summary>
+        /// Determine whether a table exists in the database
+        /// </summary>
+        /// <param name="table_name">Name of the table</param>
+        /// <returns>True if the table is present</returns>
+        public bool TableExists(string table_name)
+        {
+            return Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
+                                                    table_name + "'", 0) > 0;
+        }
+
+        /// <summary>
         ///  Go create a table in the DataStore with the specified field names and types.
         /// </summary>
         public void CreateTable(string tableName, string[] names, Type[] types)
@@ -184,6 +195,7 @@ namespace Models
                 WriteToTable(simulationName, tableName, values);
             }
         }
+
         /// <summary>
         /// Write a property to the DataStore.
         /// </summary>
@@ -245,6 +257,9 @@ namespace Models
             get
             {
                 Connect();
+                if (!TableExists("Simulations"))
+                    return new string[0];
+
                 try
                 {
                     DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
@@ -294,6 +309,8 @@ namespace Models
         public DataTable GetData(string simulationName, string tableName)
         {
             Connect();
+            if (!TableExists("Simulations"))
+                return null;
             int simulationID = GetSimulationID(simulationName);
             string sql = string.Format(System.Globalization.CultureInfo.InvariantCulture,
                                        "SELECT * FROM {0} WHERE SimulationID = {1}",
@@ -641,7 +658,15 @@ namespace Models
             if (SimulationIDs.ContainsKey(simulationName))
                 return SimulationIDs[simulationName];
 
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            int ID;
+            try
+            {
+                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
             if (ID == -1)
             {
                 Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
