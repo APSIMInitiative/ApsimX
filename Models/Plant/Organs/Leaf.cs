@@ -55,7 +55,6 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-
         #region Parameters
         // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
         // in the XML. No need for it to be in leaf.
@@ -88,16 +87,13 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Initialise all state variables.
         /// </summary>
-        public void Clear()
+        private void Clear()
         {
-
-
+            Leaves = new List<LeafCohort>();
         }
 
 
         #endregion
-
-
 
         #region Outputs
         //Note on naming convention.  
@@ -124,8 +120,6 @@ namespace Models.PMF.Organs
                 return Leaves.Count > 0;
             }
         }
-        public double _FinalLeafFraction = 1;
-        public bool _FinalLeafAppeared = false;
 
         [Description("Max cover")]
         [Units("max units")]
@@ -152,10 +146,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return _FinalLeafFraction;
-
                 int Count = CohortCounter("IsAppeared");
-                if (Count == (int)Structure.MainStemFinalNodeNo) 
+                // DeanH: I don't think this next if statement will ever be true. Isn't MaximumNodeNumber
+                // always equal to MainStemFinalNodeNo?
+                if (Count == (int)Structure.MainStemFinalNodeNo && Count < Structure.MaximumNodeNumber) 
                     return Leaves[Count-1].FractionExpanded;
                 else
                     return 1.0;
@@ -167,16 +161,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return _FinalLeafAppeared;
-
-
                 if (FinalLeafFraction != 1.0)
                     return true;
                 else
                     return false;
             }
         }
-
 
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
         public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
@@ -594,11 +584,6 @@ namespace Models.PMF.Organs
         {
             WaterAllocation = 0;
 
-            if ((AppearedCohortNo == (int)Structure.MainStemFinalNodeNo) && (AppearedCohortNo > 0.0) && (AppearedCohortNo < Structure.MaximumNodeNumber)) //If last interger leaf has appeared set the fraction of the final part leaf.
-            {
-                _FinalLeafFraction = Structure.MainStemFinalNodeNo - AppearedCohortNo;
-            }
-
             if (FrostFraction.Value > 0)
                 foreach (LeafCohort L in Leaves)
                     L.DoFrost(FrostFraction.Value);
@@ -628,8 +613,6 @@ namespace Models.PMF.Organs
 
                 if (CohortsInitialised == false)
                     throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-                if (FinalLeafFraction != 1.0)
-                    _FinalLeafAppeared = true;
                 int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
                 double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
                 if (AppearingNode > InitialisedCohortNo)
@@ -1193,8 +1176,13 @@ namespace Models.PMF.Organs
         #region Event handlers and publishers
 
         public event NewCanopyDelegate NewCanopy;
-
         public event NullTypeDelegate NewLeaf;
+
+        [EventSubscribe("OnInitialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+            Clear();
+        }
 
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
