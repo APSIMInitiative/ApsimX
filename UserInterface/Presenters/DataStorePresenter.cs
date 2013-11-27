@@ -52,10 +52,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnCreateNowClicked(object sender, EventArgs e)
         {
-            DataStore.Disconnect();
-            DataStore.Connect(true);
             DataStore.WriteOutputFile();
-            DataStore.Disconnect();
         }
 
         /// <summary>

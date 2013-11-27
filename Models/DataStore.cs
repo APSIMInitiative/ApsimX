@@ -17,6 +17,7 @@ namespace Models
         private Utility.SQLite Connection = null;
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
+        private string Filename;
 
         public enum ErrorLevel { Information, Warning, Error };
 
@@ -42,7 +43,7 @@ namespace Models
         {
             if (Connection == null)
             {
-                string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
+                Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
                 if (baseline)
                     Filename += ".baseline";
                 if (Filename == null || Filename.Length == 0)
@@ -328,7 +329,17 @@ namespace Models
         /// </summary>
         public void WriteOutputFile()
         {
-            StreamWriter report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
+            // Write baseline .csv
+            Disconnect();
+            Connect(baseline: true);
+            StreamWriter report = new StreamWriter(Filename + ".csv");
+            WriteAllTables(report);
+            report.Close();
+            
+            // Write normal .csv
+            Disconnect();
+            Connect(baseline: false);
+            report = new StreamWriter(Filename + ".csv");
             WriteAllTables(report);
             report.Close();
         }
