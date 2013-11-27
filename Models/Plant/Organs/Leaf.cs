@@ -120,8 +120,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public bool CohortsInitialised = false;
         [XmlIgnore]
-        public double _ExpandedNodeNo = 0;
-        [XmlIgnore]
         public double FractionNextleafExpanded = 0;
         [XmlIgnore]
         public double CurrentExpandingLeaf = 0;
@@ -172,7 +170,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return _ExpandedNodeNo;
+                foreach (LeafCohort L in Leaves)
+                    if (!L.IsFullyExpanded)
+                        return ExpandedCohortNo + L.FractionExpanded;
+                return 0;
             }
         }
         
@@ -529,8 +530,14 @@ namespace Models.PMF.Organs
         {
             int Count = 0;
             foreach (LeafCohort L in Leaves)
-                if ((bool)L.Get(Condition))
+            {
+                object o = Utility.Reflection.GetValueOfFieldOrProperty(Condition, L);
+                if (o == null)
+                    throw new NotImplementedException();
+                bool ok = (bool)o;
+                if (ok)
                     Count++;
+            }
             return Count;
         }
         public void CopyLeaves(LeafCohort[] From, List<LeafCohort> To)
@@ -591,25 +598,8 @@ namespace Models.PMF.Organs
                     NewLeaf.Invoke();
             }
 
-            FractionNextleafExpanded = 0;
-            bool NextExpandingLeaf = false;
-
             foreach (LeafCohort L in Leaves)
-            {
                 L.DoPotentialGrowth(_ThermalTime, LeafCohortParameters);
-                if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
-                {
-                    NextExpandingLeaf = true;
-                    if (CurrentExpandingLeaf != L.Rank)
-                    {
-                        CurrentExpandingLeaf = L.Rank;
-                        StartFractionExpanded = L.FractionExpanded;
-                    }
-                    FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
-                }
-            }
-            _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
-
         }
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
