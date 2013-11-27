@@ -2580,7 +2580,7 @@
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>false</AutoCreateReport>
+    <AutoCreateReport>true</AutoCreateReport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>

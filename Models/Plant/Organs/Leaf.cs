@@ -13,41 +13,7 @@ namespace Models.PMF.Organs
     [Description("Leaf Class")]
     public class Leaf : BaseOrgan, AboveGround
     {
-        #region Parameter Input classes
-        //Input Parameters
-        [XmlElement("InitialLeaf")]
-        public List<LeafCohort> InitialLeaves { get; set; }
-
-        public class InitialLeafValues : Model
-        {
-            public Function MaxArea { get; set; }
-            public Function GrowthDuration { get; set; }
-            public Function LagDuration { get; set; }
-            public Function SenescenceDuration { get; set; }
-            public Function DetachmentLagDuration { get; set; }
-            public Function DetachmentDuration { get; set; }
-            public Function SpecificLeafAreaMax{ get; set; }
-            public Function SpecificLeafAreaMin{ get; set; }
-            public Function StructuralFraction{ get; set; }
-            public Function MaximumNConc{ get; set; }
-            public Function MinimumNConc{ get; set; }
-            public Function StructuralNConc{ get; set; }
-            public Function InitialNConc{ get; set; }
-            public Function NReallocationFactor{ get; set; }
-            public Function DMReallocationFactor{ get; set; }
-            public Function NRetranslocationFactor{ get; set; }
-            public Function ExpansionStress{ get; set; }
-            public Function CriticalNConc{ get; set; }
-            public Function DMRetranslocationFactor{ get; set; }
-            public Function ShadeInducedSenescenceRate{ get; set; }
-            public Function DroughtInducedSenAcceleration{ get; set; }
-            public Function NonStructuralFraction{ get; set; }
-            public Function CellDivisionStress{ get; set; } 
-        }
-
-        public InitialLeafValues LeafCohortParameters { get; set; }
-
-        //Class Links
+        #region Links
         [Link]
         public Plant Plant = null;
         [Link]
@@ -58,96 +24,116 @@ namespace Models.PMF.Organs
         public Structure Structure = null;
         [Link]
         public Phenology Phenology = null;
+        #endregion
+
+        #region Structures
+        public class InitialLeafValues : Model
+        {
+            public Function MaxArea { get; set; }
+            public Function GrowthDuration { get; set; }
+            public Function LagDuration { get; set; }
+            public Function SenescenceDuration { get; set; }
+            public Function DetachmentLagDuration { get; set; }
+            public Function DetachmentDuration { get; set; }
+            public Function SpecificLeafAreaMax { get; set; }
+            public Function SpecificLeafAreaMin { get; set; }
+            public Function StructuralFraction { get; set; }
+            public Function MaximumNConc { get; set; }
+            public Function MinimumNConc { get; set; }
+            public Function StructuralNConc { get; set; }
+            public Function InitialNConc { get; set; }
+            public Function NReallocationFactor { get; set; }
+            public Function DMReallocationFactor { get; set; }
+            public Function NRetranslocationFactor { get; set; }
+            public Function ExpansionStress { get; set; }
+            public Function CriticalNConc { get; set; }
+            public Function DMRetranslocationFactor { get; set; }
+            public Function ShadeInducedSenescenceRate { get; set; }
+            public Function DroughtInducedSenAcceleration { get; set; }
+            public Function NonStructuralFraction { get; set; }
+            public Function CellDivisionStress { get; set; }
+        }
+        #endregion
+
+
+        #region Parameters
+        // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
+        // in the XML. No need for it to be in leaf.
+
+        [XmlElement("InitialLeaf")]
+        public List<LeafCohort> InitialLeaves { get; set; }
+        public InitialLeafValues LeafCohortParameters { get; set; }
         public RUEModel Photosynthesis { get; set; }
-        //Child Functions
         public Function ThermalTime { get; set; }
         public Function ExtinctionCoeff { get; set; }
         public Function FrostFraction { get; set; }
         public Function ExpansionStress { get; set; }
-        public Function DroughtInducedSenAcceleration { get; set; }
         public Function CriticalNConc { get; set; }
         public Function MaximumNConc { get; set; }
         public Function MinimumNConc { get; set; }
         public Function StructuralFraction { get; set; }
         public Function DMDemandFunction = null;
         public Biomass Total { get; set; }
-        
         public ArrayBiomass CohortArrayLive { get; set; }
         public ArrayBiomass CohortArrayDead { get; set; }
-        [XmlIgnore]
-        public List<LeafCohort> Leaves = new List<LeafCohort>();
+
+        [Description("Extinction Coefficient (Dead)")]
+        public double KDead { get; set; }
+
         #endregion
 
-        #region Class Fields
-        [Description("Extinction Coefficient (Dead)")]
-        public double KDead = 0;
-        public double ExpansionStressValue //This property is necessary so the leaf class can update Expansion stress value each day an pass it down to cohorts
+        #region States
+        private List<LeafCohort> Leaves = new List<LeafCohort>();
+
+        /// <summary>
+        /// Initialise all state variables.
+        /// </summary>
+        public void Clear()
         {
-            get
-            {
-                return LeafCohortParameters.ExpansionStress.Value;
-            }
+
+
         }
 
+
+        #endregion
+
+
+
+        #region Outputs
+        //Note on naming convention.  
+        //Variables that represent the number of units per meter of area these are called population (Popn suffix) variables 
+        //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
+        //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
+        //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
+
+        /// <summary>
+        /// Return the 
+        /// </summary>
         public LeafCohort CohortCurrentRank
         {
             get
             {
-                return Leaves[CurrentRank]; 
+                return Leaves[CurrentRank-1];
             }
         }
-        // Do these fields need to be public? If not make private and get rid of XmlIgnore
-        [XmlIgnore]
-        public int CurrentRank = 0;
-        [XmlIgnore]
-        public double _WaterAllocation;
-        [XmlIgnore]
-        public double PEP = 0;
-        [XmlIgnore]
-        public double EP = 0;
-        [XmlIgnore]
-        public double DeltaNodeNumber = 0;
-        [XmlIgnore]
-        public double PotentialHeightYesterday = 0;
-        [XmlIgnore]
-        public double DeltaHeight = 0;
-        [XmlIgnore]
-        public double DeadNodesYesterday = 0; //FIXME.  This is declarired and given a value but doesn't seem to be used
-        [XmlIgnore]
-        public double FractionDied = 0;
-        [XmlIgnore]
-        public double MaxNodeNo = 0;
-        [XmlIgnore]
-        public bool CohortsInitialised = false;
-        [XmlIgnore]
-        public double FractionNextleafExpanded = 0;
-        [XmlIgnore]
-        public double CurrentExpandingLeaf = 0;
-        [XmlIgnore]
-        public double StartFractionExpanded = 0;
-        [XmlIgnore]
-        public double _ThermalTime = 0;
-        [XmlIgnore]
-        public double FinalLeafFraction = 1;
-        [XmlIgnore]
-        public bool FinalLeafAppeared = false;
-        #endregion
 
-        #region Class Properties
-        /// <summary>
-        ///Note on naming convention.  
-        ///Variables that represent the number of units per meter of area these are called population (Popn suffix) variables 
-        ///Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
-        ///Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
-        ///Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
-        /// </summary>
+        public bool CohortsInitialised
+        {
+            get
+            {
+                return Leaves.Count > 0;
+            }
+        }
+        public double _FinalLeafFraction = 1;
+        public bool _FinalLeafAppeared = false;
+
         [Description("Max cover")]
         [Units("max units")]
         public double MaxCover;
 
         [Description("Number of leaf cohort objects that have been initialised")] //Note:  InitialisedCohortNo is an interger of Primordia Number, increasing every time primordia increses by one and a new cohort is initialised
-        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }       
-        
+        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
+
         [Description("Number of leaf cohort that have appeared")] //Note:  AppearedCohortNo is an interger of AppearedNodeNo, increasing every time AppearedNodeNo increses by one and a new cohort is appeared
         public double AppearedCohortNo
         {
@@ -160,10 +146,41 @@ namespace Models.PMF.Organs
                     return Count;
             }
         }
-        
+
+        [Description("If last leaf has appeared, return the fraction of the final part leaf")]
+        public double FinalLeafFraction
+        {
+            get
+            {
+                return _FinalLeafFraction;
+
+                int Count = CohortCounter("IsAppeared");
+                if (Count == (int)Structure.MainStemFinalNodeNo) 
+                    return Leaves[Count-1].FractionExpanded;
+                else
+                    return 1.0;
+            }
+        }
+
+        [Description("Returns true if the final leaf has appeared")]
+        public bool FinalLeafAppeared
+        {
+            get
+            {
+                return _FinalLeafAppeared;
+
+
+                if (FinalLeafFraction != 1.0)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
         public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
-        
+
         //FIXME ExpandedNodeNo and Expanded Cohort need to be merged
         [Description("Number of leaf cohorts that are fully expanded")]
         public double ExpandedNodeNo
@@ -176,10 +193,10 @@ namespace Models.PMF.Organs
                 return 0;
             }
         }
-        
+
         [Description("Number of leaf cohorts that are fully expanded")]
         public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo); } }
-        
+
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
         public double GreenCohortNo
         {
@@ -192,13 +209,13 @@ namespace Models.PMF.Organs
                     return Count;
             }
         }
-        
+
         [Description("Number of leaf cohorts that are Senescing")]
         public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
-        
+
         [Description("Number of leaf cohorts that have fully Senesced")]
         public double DeadCohortNo { get { return Math.Min(CohortCounter("IsSenescing"), Structure.MainStemFinalNodeNo); } }
-      
+
         [Units("/plant")]
         [Description("Number of appeared leaves per plant that have appeared but not yet fully senesced on each plant")]
         public double PlantAppearedGreenLeafNo
@@ -213,8 +230,22 @@ namespace Models.PMF.Organs
             }
         }
 
+        [Units("/plant")]
+        [Description("Number of leaves per plant that have appeared")]
+        public double PlantAppearedLeafNo
+        {
+            get
+            {
+                double n = 0;
+                foreach (LeafCohort L in Leaves)
+                    if (L.IsAppeared)
+                        n += L.CohortPopulation;
+                return n;
+            }
+        }
+
         //Canopy State variables
-        
+
         [Units("m^2/m^2")]
         public double LAI
         {
@@ -227,7 +258,7 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
-        
+
         [Units("m^2/m^2")]
         public double LAIDead
         {
@@ -239,7 +270,7 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
-       
+
         [XmlIgnore]
         [Units("g/m^2")]
         public Biomass CohortLive
@@ -251,12 +282,9 @@ namespace Models.PMF.Organs
                     Biomass = Biomass + L.Live;
                 return Biomass;
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            
         }
-        
+
         [XmlIgnore]
         [Units("g/m^2")]
         public Biomass CohortDead
@@ -268,25 +296,21 @@ namespace Models.PMF.Organs
                     Biomass = Biomass + L.Dead;
                 return Biomass;
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
         }
-                 
+
         [Units("0-1")]
         public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); } }
-        
+
         [Units("0-1")]
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
-        
+
         [Units("0-1")]
         public double CoverTot { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
-        
+
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
-        
+
         [Units("mm^2/g")]
         public double SpecificArea
         {
@@ -299,15 +323,15 @@ namespace Models.PMF.Organs
             }
         }
         //Cohort State variable outputs
-        
+
         public double[] CohortSize
         {
             get
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[(int)Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -319,7 +343,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2")]
         public double[] MaxLeafArea
         {
@@ -327,8 +351,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -340,7 +364,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2")]
         public double[] CohortArea
         {
@@ -348,8 +372,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -361,7 +385,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2")]
         public double[] CohortAge
         {
@@ -369,8 +393,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -382,7 +406,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2")]
         public double[] CohortMaxSize
         {
@@ -390,8 +414,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -403,7 +427,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2")]
         public double[] CohortMaxArea
         {
@@ -411,8 +435,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -424,7 +448,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("mm2/g")]
         public double[] CohortSLA
         {
@@ -432,8 +456,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -445,7 +469,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        
+
         [Units("0-1")]
         public double[] CohortStructuralFrac
         {
@@ -453,8 +477,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)MaxNodeNo];
-                for (i = 0; i <= ((int)MaxNodeNo - 1); i++)
+                double[] values = new double[Structure.MaximumNodeNumber];
+                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -476,7 +500,7 @@ namespace Models.PMF.Organs
         }
 
         //General Leaf State variables
-        
+
         [Units("g/g")]
         public double LiveNConc
         {
@@ -485,27 +509,27 @@ namespace Models.PMF.Organs
                 return Live.NConc;
             }
         }
-        
+
         [Units("g/m^2")]
         public double PotentialGrowth { get { return DMDemand.Structural; } }
-        
+
         [Units("mm")]
-        public double Transpiration { get { return EP; } }
-        
+        public double Transpiration { get { return WaterAllocation; } }
+
         [Units("0-1")]
         public double Fw
         {
             get
             {
                 double F = 0;
-                if (PEP > 0)
-                    F = EP / PEP;
+                if (WaterDemand > 0)
+                    F = WaterAllocation / WaterDemand;
                 else
                     F = 1;
                 return F;
             }
         }
-        
+
         [Units("0-1")]
         public double Fn
         {
@@ -526,6 +550,27 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+        /// <summary>
+        /// 1 based rank of the current leaf.
+        /// </summary>
+        private int CurrentRank
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return 0;
+
+                // Find the first non appeared leaf.
+                int i = 0;
+                while (i < Leaves.Count && Leaves[i].IsAppeared)
+                    i++;
+
+                if (i == 0)
+                    throw new ApsimXException(this.FullPath, "No leaves have appeared. Cannot calculate Leaf.CurrentRank");
+
+                return Leaves[i - 1].Rank;
+            }
+        }
         private int CohortCounter(string Condition)
         {
             int Count = 0;
@@ -547,11 +592,11 @@ namespace Models.PMF.Organs
         }
         public override void DoPotentialDM()
         {
+            WaterAllocation = 0;
 
-            EP = 0;
-            if ((AppearedCohortNo == (int)Structure.MainStemFinalNodeNo) && (AppearedCohortNo > 0.0) && (AppearedCohortNo < MaxNodeNo)) //If last interger leaf has appeared set the fraction of the final part leaf.
+            if ((AppearedCohortNo == (int)Structure.MainStemFinalNodeNo) && (AppearedCohortNo > 0.0) && (AppearedCohortNo < Structure.MaximumNodeNumber)) //If last interger leaf has appeared set the fraction of the final part leaf.
             {
-                FinalLeafFraction = Structure.MainStemFinalNodeNo - AppearedCohortNo;
+                _FinalLeafFraction = Structure.MainStemFinalNodeNo - AppearedCohortNo;
             }
 
             if (FrostFraction.Value > 0)
@@ -571,7 +616,7 @@ namespace Models.PMF.Organs
                 LeafCohort NewLeaf = InitialLeaves[0].Clone();
                 NewLeaf.CohortPopulation = 0;
                 NewLeaf.Age = 0;
-                NewLeaf.Rank = (int) Math.Truncate(Structure.MainStemNodeNo);
+                NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
                 NewLeaf.Area = 0.0;
                 NewLeaf.DoInitialisation();
                 Leaves.Add(NewLeaf);
@@ -580,11 +625,11 @@ namespace Models.PMF.Organs
             //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
             if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalLeafFraction) && (FinalLeafFraction > 0.0))
             {
-                
+
                 if (CohortsInitialised == false)
                     throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
                 if (FinalLeafFraction != 1.0)
-                    FinalLeafAppeared = true;
+                    _FinalLeafAppeared = true;
                 int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
                 double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
                 if (AppearingNode > InitialisedCohortNo)
@@ -597,17 +642,16 @@ namespace Models.PMF.Organs
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
-
+           
             foreach (LeafCohort L in Leaves)
-                L.DoPotentialGrowth(_ThermalTime, LeafCohortParameters);
+                L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
         }
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
-            Leaves.Clear();
+            Leaves = new List<LeafCohort>();
             CopyLeaves(InitialLeaves.ToArray(), Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
-                CohortsInitialised = true;
                 if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day
                 {
                     Leaf.CohortPopulation = Structure.TotalStemPopn;
@@ -624,19 +668,11 @@ namespace Models.PMF.Organs
         public override void DoActualGrowth()
         {
             foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(_ThermalTime, LeafCohortParameters);
+                L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
 
             Structure.UpdateHeight();
 
             PublishNewCanopyEvent();
-
-            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
-            FractionDied = 0;
-            if (DeadCohortNo > 0 && GreenCohortNo > 0)
-            {
-                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
-                FractionDied = DeltaDeadLeaves / GreenCohortNo;
-            }
         }
         public virtual void ZeroLeaves()
         {
@@ -662,7 +698,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
-        
+
         [Units("g/m^2")]
         public override BiomassPoolType DMDemand
         {
@@ -936,17 +972,10 @@ namespace Models.PMF.Organs
             }
         }
         [Units("mm")]
-        public override double WaterDemand { get { return PEP; } }
+        public override double WaterDemand { get; set; }
         [XmlIgnore]
-        public override double WaterAllocation
-        {
-            get { return _WaterAllocation; }
-            set
-            {
-                _WaterAllocation = value;
-                EP = value;
-            }
-        }
+        public override double WaterAllocation { get; set;}
+       
         [Units("g/m^2")]
         public override BiomassPoolType NDemand
         {
@@ -1162,35 +1191,32 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event handlers and publishers
-        
+
         public event NewCanopyDelegate NewCanopy;
-        
+
         public event NullTypeDelegate NewLeaf;
-        
+
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
             Structure.PrimaryBudNo = Prune.BudNumber;
-            CohortsInitialised = false;
             ZeroLeaves();
         }
-        
+
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
             Summary.WriteMessage(FullPath, "Removing Lowest Leaf");
             Leaves.RemoveAt(0);
         }
-        
+
         public override void OnSow(SowPlant2Type Sow)
         {
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             MaxCover = Sow.MaxCover;
-            MaxNodeNo = Structure.MaximumNodeNumber;
-
         }
-        
+
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
         {
@@ -1200,14 +1226,14 @@ namespace Models.PMF.Organs
             {
                 if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
                 {
-                    PEP = CWB.Canopy[i].PotentialEp;
+                    WaterDemand = CWB.Canopy[i].PotentialEp;
                     found = true;
                 }
                 else
                     i++;
             }
         }
-        
+
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
@@ -1221,7 +1247,7 @@ namespace Models.PMF.Organs
                 L.DoKill(KillLeaf.KillFraction);
 
         }
-        
+
         [EventSubscribe("Cut")]
         private void OnCut()
         {
@@ -1241,7 +1267,7 @@ namespace Models.PMF.Organs
             InitialiseCohorts();
             //Structure.ResetStemPopn();
         }
-        
+
         protected virtual void PublishNewCanopyEvent()
         {
             if (NewCanopy != null)
@@ -1257,15 +1283,7 @@ namespace Models.PMF.Organs
                 NewCanopy.Invoke(Canopy);
             }
         }
-        
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
-        {
-            //This is a fudge until we get around to making canopy temperature drive phenology dirrectly.
-            if ((DroughtInducedSenAcceleration != null) && (DroughtInducedSenAcceleration.Value > 1.0))
-                _ThermalTime = ThermalTime.Value * DroughtInducedSenAcceleration.Value;
-            else _ThermalTime = ThermalTime.Value;
-        }
+
         #endregion
 
 

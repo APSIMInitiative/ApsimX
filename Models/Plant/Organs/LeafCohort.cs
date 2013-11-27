@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Fields
-        public int Rank = 0;
+        public int Rank = 0;  // 1 based ranking
         public double Area = 0;
         //Leaf coefficients
         [XmlIgnore]
@@ -74,7 +74,6 @@ namespace Models.PMF.Organs
         private double ShadeInducedSenRate = 0;
         private double SenescedFrac = 0;
         private double DetachedFrac = 0;
-        private double _ExpansionStress = 0;
         [XmlIgnore]
         public double CohortPopulation = 0; //Number of leaves in this cohort
         [XmlIgnore]
@@ -625,7 +624,7 @@ namespace Models.PMF.Organs
             if (IsAppeared)
             {
                 // The following line needs to be CHANGED!!!!!!
-                Leaf.CurrentRank = Rank - 1; //Set currentRank variable in parent leaf for use in experssion functions
+                //Leaf.CurrentRank = Rank - 1; //Set currentRank variable in parent leaf for use in experssion functions
                 //Acellerate thermal time accumulation if crop is water stressed.
                 double _ThermalTime;
                 if ((LeafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
@@ -633,9 +632,8 @@ namespace Models.PMF.Organs
                 else _ThermalTime = TT;
 
                 //Leaf area growth parameters
-                _ExpansionStress = Leaf.ExpansionStressValue;  //Get daily expansion stress value
                 DeltaPotentialArea = PotentialAreaGrowthFunction(_ThermalTime); //Calculate delta leaf area in the absence of water stress
-                DeltaWaterConstrainedArea = DeltaPotentialArea * _ExpansionStress; //Reduce potential growth for water stress
+                DeltaWaterConstrainedArea = DeltaPotentialArea * LeafCohortParameters.ExpansionStress.Value; //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (LeafCohortParameters.ShadeInducedSenescenceRate != null)

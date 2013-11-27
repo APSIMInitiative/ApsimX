@@ -108,7 +108,7 @@ namespace Models.PMF
         [XmlIgnore]
         public double ProportionPlantMortality { get; set; }
         [XmlIgnore]
-        public double MaximumNodeNumber { get; set; }
+        public int MaximumNodeNumber { get; set; }
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
         #endregion
@@ -175,11 +175,7 @@ namespace Models.PMF
         public void DoActualGrowth()
         {
             //Set PlantTotalNodeNo    
-            double n = 0;
-            foreach (LeafCohort L in Leaf.Leaves)
-                if (L.IsAppeared)
-                    n += L.CohortPopulation;
-            PlantTotalNodeNo = n / Population;
+            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Population;
         }
         #endregion
 
@@ -206,7 +202,7 @@ namespace Models.PMF
         {
             string initial = "yes";
             MainStemFinalNodeNumber.UpdateVariables(initial);
-            MaximumNodeNumber = MainStemFinalNodeNumber.Value;
+            MaximumNodeNumber = (int) MainStemFinalNodeNumber.Value;
         }
         [EventSubscribe("Sow")]
         public void OnSow(SowPlant2Type Sow)
