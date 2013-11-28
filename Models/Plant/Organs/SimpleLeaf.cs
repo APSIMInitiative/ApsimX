@@ -284,8 +284,7 @@ namespace Models.PMF.Organs
             if (LaiFunction != null)
                 _LAI = LaiFunction.Value;
         }
-        [EventSubscribe("Cut")]
-        private void OnCut()
+        public override void OnCut()
         {
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;

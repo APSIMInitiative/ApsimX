@@ -13,8 +13,6 @@ namespace Models.PMF.Organs
         #region Class Dependency Links and Structures
         [Link]
         protected Plant Plant = null;
-        [Link]
-        protected Arbitrator Arbitrator = null;
         #endregion
 
         #region Class Structures
@@ -37,9 +35,9 @@ namespace Models.PMF.Organs
         public Function MinimumNConc { get; set; }
         #endregion
 
-        #region Class Fields
+        #region States
         private double SenescenceRate = 0;
-        double _StructuralFraction = 1;
+        private double _StructuralFraction = 1;
         private double StartNRetranslocationSupply = 0;
         private double StartNReallocationSupply = 0;
         protected double PotentialDMAllocation = 0;
@@ -49,6 +47,22 @@ namespace Models.PMF.Organs
         protected double NonStructuralDMDemand = 0;
         protected double InitialWt = 0;
         private double InitStutFraction = 1;
+
+        protected override void Clear()
+        {
+            base.Clear();
+            SenescenceRate = 0;
+            _StructuralFraction = 1;
+            StartNRetranslocationSupply = 0;
+            StartNReallocationSupply = 0;
+            PotentialDMAllocation = 0;
+            PotentialStructuralDMAllocation = 0;
+            PotentialMetabolicDMAllocation = 0;
+            StructuralDMDemand = 0;
+            NonStructuralDMDemand = 0;
+            InitialWt = 0;
+            InitStutFraction = 1;
+        }
         #endregion
 
         #region Class properties

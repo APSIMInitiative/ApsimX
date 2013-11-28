@@ -49,8 +49,8 @@ namespace Models.PMF.Functions
             }
         }
 
-        [EventSubscribe("Cut")]
-        private void OnCut()
+        [EventSubscribe("Cutting")]
+        private void OnCut(object sender, EventArgs e)
         {
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
         }

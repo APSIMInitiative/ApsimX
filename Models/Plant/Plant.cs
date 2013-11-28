@@ -93,206 +93,77 @@ namespace Models.PMF
         [XmlArrayItem(typeof(SimpleLeaf))]
         [XmlArrayItem(typeof(SimpleRoot))]
         public List<Organ> Organs { get; set; }
-        
-        //Fixme, work out how to do swim
-        //[Input(IsOptional = true)]
-        Single swim3 = 0;
+
+        #region Links
+        [Link]
+        ISummary Summary = null;
+        #endregion
 
         #region Outputs
+        /// <summary>
+        /// Is the plant in the ground?
+        /// </summary>
+        public bool InGround
+        {
+            get
+            {
+                return SowingData != null;
+            }
+        }
+
         [XmlIgnore]
-        public double WaterSupplyDemandRatio { get; set; }
-        
-        public string plant_status
-        {
-            get
-            {
-                // What should be returned here?
-                // The old "plant" component returned either "out", "alive"
-                // How to determine "dead"?
-                return "alive";
-            }
-        }
-        
-        [Units("mm")]
-        private double WaterDemand   // Needed for SWIM2
-        {
-            get
-            {
-                double Demand = 0;
-                foreach (Organ o in Organs)
-                    Demand += o.WaterDemand;
-                return Demand;
-            }
-        }
-
-        public string FullName
-        {
-            get { return this.FullName; }
-        }
+        public double WaterSupplyDemandRatio { get; private set; }
         #endregion
 
-        #region Plant functions
-        private void DoPhenology()
-        {
-            if (Phenology != null)
-                Phenology.DoTimeStep();
-        }
-        public void DoDMSetUp()
-        {
-            if (Structure != null)
-                Structure.DoPotentialDM();
-            foreach (Organ o in Organs)
-                o.DoPotentialDM();
-        }
-        public void DoNutrientSetUp()
-        {
-            foreach (Organ o in Organs)
-                o.DoPotentialNutrient();
-        }
-        private void DoWater()
-        {
-            if (swim3 == 0)
-            {
-                double Supply = 0;
-                double Demand = 0;
-                foreach (Organ o in Organs)
-                {
-                    Supply += o.WaterSupply;
-                    Demand += o.WaterDemand;
-                }
-
-                if (Demand > 0)
-                    WaterSupplyDemandRatio = Supply / Demand;
-                else
-                    WaterSupplyDemandRatio = 1;
-
-                double fraction = 1;
-                if (Demand > 0)
-                    fraction = Math.Min(1.0, Supply / Demand);
-
-                foreach (Organ o in Organs)
-                    if (o.WaterDemand > 0)
-                        o.WaterAllocation = fraction * o.WaterDemand;
-
-                double FractionUsed = 0;
-                if (Supply > 0)
-                    FractionUsed = Math.Min(1.0, Demand / Supply);
-
-                foreach (Organ o in Organs)
-                    o.DoWaterUptake(FractionUsed * Supply);
-            }
-            else
-            {
-                double Uptake = 0;
-                double Demand = 0;
-                double Supply = 0;
-                foreach (Organ o in Organs)
-                {
-                    Supply += o.WaterSupply;
-                    Uptake += o.WaterUptake;
-                    Demand += o.WaterDemand;
-                }
-                // It is REALLY dodgy that we need to do this at all
-                if (Demand > 0)
-                    WaterSupplyDemandRatio = Supply / Demand;
-                else
-                    WaterSupplyDemandRatio = 1;
-
-                double fraction = 1;
-                if (Demand > 0)
-                    fraction = Uptake / Demand;
-                if (fraction > 1.001)
-                    throw new Exception("Water uptake exceeds total crop demand.");
-
-                foreach (Organ o in Organs)
-                    if (o.WaterDemand > 0)
-                        o.WaterAllocation = fraction * o.WaterDemand;
-
-                //throw new Exception("Cannot talk to swim3 yet");
-            }
-        }
-        public void DoActualGrowth()
-        {
-            if (Structure != null)
-                Structure.DoActualGrowth();
-            foreach (Organ o in Organs)
-                o.DoActualGrowth();
-        }
-        #endregion
-
-        #region Event handlers and publishers
-       
-        public event NewCropDelegate NewCrop;
-        public event NullTypeDelegate Sowing;
-        public event NullTypeDelegate Cutting;
-        public event NewCropDelegate CropEnding;
-        public event BiomassRemovedDelegate BiomassRemoved;
+        #region Public functions
+        /// <summary>
+        /// Sow the crop with the specified parameters.
+        /// </summary>
         public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-                SowingData.Population = Population;
-                SowingData.Depth = Depth;
-                SowingData.Cultivar = Cultivar;
-                SowingData.MaxCover = MaxCover;
-                SowingData.BudNumber = BudNumber;
-                SowingData.RowSpacing = RowSpacing;
-                SowingData.CropClass = CropClass;
-            
+            SowingData.Population = Population;
+            SowingData.Depth = Depth;
+            SowingData.Cultivar = Cultivar;
+            SowingData.MaxCover = MaxCover;
+            SowingData.BudNumber = BudNumber;
+            SowingData.RowSpacing = RowSpacing;
+            SowingData.CropClass = CropClass;
 
-            // Go through all our children and find all organs.
-            
-            if (NewCrop != null)
-            {
-                NewCropType Crop = new NewCropType();
-                Crop.crop_type = CropType;
-                Crop.sender = Name;
-                NewCrop.Invoke(Crop);
-            }
-
+            // Invoke a sowing event.
             if (Sowing != null)
-                Sowing.Invoke();
+                Sowing.Invoke(this, new EventArgs());
 
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnSow(SowingData);
             Structure.OnSow(SowingData);
+            Phenology.OnSow();
         }
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+
+        /// <summary>
+        /// Harvest the crop.
+        /// </summary>
+        public void Harvest()
         {
-            if (SowingData != null)
-            {
-                DoPhenology();
-                DoDMSetUp();
-                DoWater();  //Fixme Do water should go before do DMsetup
-                if (Arbitrator != null)
-                    Arbitrator.DoDMArbitration(Organs);
-                DoNutrientSetUp();
-                if (Arbitrator != null)
-                    Arbitrator.DoNutrientArbitration(Organs);
-                DoActualGrowth();
-            }
-        }
-        [EventSubscribe("Harvest")]
-        private void OnHarvest()
-        {
+            // Invoke a harvesting event.
+            if (Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
+
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
-
-            // I cannot end call end crop, however can call onharvest?
-            // temp
-            //     OnEndCrop();
-
         }
-        [EventSubscribe("EndCrop")]
-        private void OnEndCrop()
+
+        /// <summary>
+        /// End the crop.
+        /// </summary>
+        public void EndCrop()
         {
-            NewCropType Crop = new NewCropType();
-            Crop.crop_type = CropType;
-            Crop.sender = Name;
-            if (CropEnding != null)
-                CropEnding.Invoke(Crop);
+            Summary.WriteMessage(FullPath, "Crop ending");
+
+            if (PlantEnding != null)
+                PlantEnding.Invoke(this, new EventArgs());
 
             BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
             BiomassRemovedData.crop_type = CropType;
@@ -324,15 +195,110 @@ namespace Models.PMF
             }
             BiomassRemoved.Invoke(BiomassRemovedData);
 
-            // tell all our children about sow
+            // tell all our children about endcrop
             foreach (Organ Child in Organs)
                 Child.OnEndCrop();
+            Structure.OnPlantEnding();
+            Phenology.OnPlantEnding();
+            SowingData = null;
         }
-        [EventSubscribe("Cut")]
-        public void OnCut()
+
+        /// <summary>
+        /// Cut the crop.
+        /// </summary>
+        public void Cut()
         {
-            Cutting.Invoke();
+            if (Cutting != null)
+                Cutting.Invoke(this, new EventArgs());
+
+            // tell all our children about endcrop
+            foreach (Organ Child in Organs)
+                Child.OnCut();
         }
+        #endregion
+
+        #region Private functions
+        private void DoPhenology()
+        {
+            if (Phenology != null)
+                Phenology.DoTimeStep();
+        }
+        private void DoDMSetUp()
+        {
+            if (Structure != null)
+                Structure.DoPotentialDM();
+            foreach (Organ o in Organs)
+                o.DoPotentialDM();
+        }
+        private void DoNutrientSetUp()
+        {
+            foreach (Organ o in Organs)
+                o.DoPotentialNutrient();
+        }
+        private void DoWater()
+        {
+            double Supply = 0;
+            double Demand = 0;
+            foreach (Organ o in Organs)
+            {
+                Supply += o.WaterSupply;
+                Demand += o.WaterDemand;
+            }
+
+            if (Demand > 0)
+                WaterSupplyDemandRatio = Supply / Demand;
+            else
+                WaterSupplyDemandRatio = 1;
+
+            double fraction = 1;
+            if (Demand > 0)
+                fraction = Math.Min(1.0, Supply / Demand);
+
+            foreach (Organ o in Organs)
+                if (o.WaterDemand > 0)
+                    o.WaterAllocation = fraction * o.WaterDemand;
+
+            double FractionUsed = 0;
+            if (Supply > 0)
+                FractionUsed = Math.Min(1.0, Demand / Supply);
+
+            foreach (Organ o in Organs)
+                o.DoWaterUptake(FractionUsed * Supply);
+        }
+        private void DoActualGrowth()
+        {
+            if (Structure != null)
+                Structure.DoActualGrowth();
+            foreach (Organ o in Organs)
+                o.DoActualGrowth();
+        }
+        #endregion
+
+        #region Event handlers and publishers
+
+        public event EventHandler Sowing;
+        public event EventHandler Harvesting;
+        public event EventHandler Cutting;
+        public event EventHandler PlantEnding;
+        public event BiomassRemovedDelegate BiomassRemoved;
+
+        [EventSubscribe("MiddleOfDay")]
+        private void OnProcess(object sender, EventArgs e)
+        {
+            if (InGround)
+            {
+                DoPhenology();
+                DoDMSetUp();
+                DoWater();  //Fixme Do water should go before do DMsetup
+                if (Arbitrator != null)
+                    Arbitrator.DoDMArbitration(Organs);
+                DoNutrientSetUp();
+                if (Arbitrator != null)
+                    Arbitrator.DoNutrientArbitration(Organs);
+                DoActualGrowth();
+            }
+        }
+       
         #endregion
 
     }

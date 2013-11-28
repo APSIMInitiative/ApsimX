@@ -52,9 +52,6 @@ namespace Models.PMF.Organs
         public virtual Biomass Dead { get; set; }
         #endregion
 
-        #region Fields
-        #endregion
-
         #region Organ - Arbitrator interface methods
         //DryMatter methods
         [XmlIgnore]
@@ -100,6 +97,7 @@ namespace Models.PMF.Organs
         abstract public void OnSow(SowPlant2Type Sow);
         abstract public void OnHarvest();
         abstract public void OnEndCrop();
+        abstract public void OnCut();
         #endregion
     }
 }

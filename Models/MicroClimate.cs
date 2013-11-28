@@ -380,19 +380,21 @@ namespace Models
         /// <summary>
         /// Register presence of a new crop
         /// </summary>
-        [EventSubscribe("NewCrop")]
-        private void OnNewCrop(NewCropType newCrop)
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
-            int senderIdx = FindComponentIndex(newCrop.sender);
+            Plant newCrop = sender as Plant;
+
+            int senderIdx = FindComponentIndex(newCrop.Name);
 
             // If sender is unknown, add it to the list
             if (senderIdx < 0)
             {
                 ComponentData.Add(new ComponentDataStruct());
                 senderIdx = ComponentData.Count - 1;
-                ComponentData[senderIdx].Name = newCrop.sender.ToLower();
+                ComponentData[senderIdx].Name = newCrop.Name.ToLower();
             }
-            ComponentData[senderIdx].Type = newCrop.crop_type;
+            ComponentData[senderIdx].Type = newCrop.CropType;
         }
 
         [EventSubscribe("NewCanopy")]

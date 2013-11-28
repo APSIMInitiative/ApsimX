@@ -767,7 +767,7 @@
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
           <ResidueType>
-            <Name>wheat</Name>
+            <Name>Potato</Name>
             <fraction_C>0.08</fraction_C>
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
@@ -795,8 +795,8 @@
         <TillageTypes>
           <TillageType />
         </TillageTypes>
-        <PoolName>wheat</PoolName>
-        <type>wheat</type>
+        <PoolName>Potato</PoolName>
+        <type>Potato</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
@@ -2448,6 +2448,8 @@
                 //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
                 //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
                 //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+                //if (Clock.Today.DayOfYear == 30)
+                //   Plant.EndCrop();
 			   }
             }
         }

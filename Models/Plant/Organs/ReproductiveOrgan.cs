@@ -121,8 +121,7 @@ namespace Models.PMF.Organs
         #region Event handlers
         
         public event NullTypeDelegate Harvesting;
-        [EventSubscribe("Cut")]
-        private void OnCut()
+        public override void OnCut()
         {
             string Indent = "     ";
             string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;

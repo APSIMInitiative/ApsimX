@@ -12,15 +12,22 @@ namespace Models.PMF
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
     {
-        #region Class Dependency Links
-        public Function ThermalTime { get; set; }
+        #region Links
         [Link]
         Leaf Leaf = null;
         [Link]
         private Phenology Phenology = null;
         #endregion
 
-        #region Class Parameter Function Links
+        #region Parameters
+        [Description("The stage name that leaves get initialised.")]
+        public string InitialiseStage { get; set; }
+
+        [Description("Number of mainstem units per plant")]
+        [Units("/plant")]
+        public double PrimaryBudNo {get; set;}
+
+        public Function ThermalTime { get; set; }
         public Function MainStemPrimordiaInitiationRate { get; set; }
         public Function MainStemNodeAppearanceRate { get; set; }
         public Function MainStemFinalNodeNumber { get; set; }
@@ -29,30 +36,13 @@ namespace Models.PMF
         public Function ShadeInducedBranchMortality { get; set; }
         public Function DroughtInducedBranchMortality { get; set; }
         public Function PlantMortality { get; set; }
-
         #endregion
 
-        #region Class Parameter Fields
-        
-        [Description("The stage name that leaves get initialised.")]
-        public string InitialiseStage = "";
-        #endregion
-
-        #region Class Properties
-        //Population state variables
-        
+        #region States
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
-
-        [Description("Number of mainstem units per plant")]
-        [Units("/plant")]
-        public double PrimaryBudNo = 1;
-        [XmlIgnore]
-        [Description("Number of mainstems per meter")]
-        [Units("/m2")]
-        public double MainStemPopn { get { return Population * PrimaryBudNo; } }
 
         [XmlIgnore]
         [Description("Number of stems per meter including main and branch stems")]
@@ -74,6 +64,42 @@ namespace Models.PMF
         [Description("Number of leaves appeared per plant including all main stem and branch leaves")]
         public double PlantTotalNodeNo { get; set; }
 
+        //Utility Variables
+        [XmlIgnore]
+        public double ProportionBranchMortality { get; set; }
+        [XmlIgnore]
+        public double ProportionPlantMortality { get; set; }
+        [XmlIgnore]
+        public int MaximumNodeNumber { get; set; }
+        [XmlIgnore]
+        public double DeltaNodeNumber { get; set; }
+
+        public void Clear()
+        {
+            Population = 0;
+            TotalStemPopn = 0;
+            MainStemPrimordiaNo = 0;
+            MainStemNodeNo = 0;
+            PlantTotalNodeNo = 0;
+            ProportionBranchMortality = 0;
+            ProportionPlantMortality = 0;
+            DeltaNodeNumber = 0;
+        }
+
+        #endregion
+
+        #region Outputs
+        [XmlIgnore]
+        [Description("Number of mainstems per meter")]
+        [Units("/m2")]
+        public double MainStemPopn { get { return Population * PrimaryBudNo; } }
+        
+        [Description("Number of leaves yet to appear")]
+        public double RemainingNodeNo { get { return MainStemFinalNodeNo - MainStemNodeNo; } }
+
+        [Units("mm")]
+        public double Height { get { return HeightModel.Value; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
+
         [XmlIgnore]
         [Units("/PrimaryBud")]
         [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
@@ -82,7 +108,7 @@ namespace Models.PMF
         [XmlIgnore]
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
         public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.Value; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
-        
+
         [Units("0-1")]
         [Description("Relative progress toward final leaf")]
         public double RelativeNodeApperance
@@ -96,21 +122,6 @@ namespace Models.PMF
             }
         }
         
-        [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNo - MainStemNodeNo; } }
-
-        //Utility Variables
-        [Units("mm")]
-        //public double Height { get; set; }
-        public double Height { get { return HeightModel.Value; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
-        [XmlIgnore]
-        public double ProportionBranchMortality { get; set; }
-        [XmlIgnore]
-        public double ProportionPlantMortality { get; set; }
-        [XmlIgnore]
-        public int MaximumNodeNumber { get; set; }
-        [XmlIgnore]
-        public double DeltaNodeNumber { get; set; }
         #endregion
 
         #region Top level timestep Functions
@@ -191,28 +202,27 @@ namespace Models.PMF
         #endregion
 
         #region Event Handlers
-        public void Clear()
-        {
-            MainStemNodeNo = 0;
-            MainStemPrimordiaNo = 0;
-            TotalStemPopn = 0;
-        }
+
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            Clear();
             string initial = "yes";
             MainStemFinalNodeNumber.UpdateVariables(initial);
             MaximumNodeNumber = (int) MainStemFinalNodeNumber.Value;
         }
-        [EventSubscribe("Sow")]
         public void OnSow(SowPlant2Type Sow)
         {
+            Clear();
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             PrimaryBudNo = Sow.BudNumber;
             Population = Sow.Population;
             TotalStemPopn = Population * PrimaryBudNo;
-
+        }
+        public void OnPlantEnding()
+        {
+            Clear();
         }
         #endregion
     }

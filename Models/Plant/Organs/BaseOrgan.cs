@@ -72,9 +72,19 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double NSupplyUptake { get { return NSupply.Uptake; } }
 
+        protected virtual void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
+        }
+
         // Methods that can be called from manager
-        public override void OnSow(SowPlant2Type SowData) { }
+        public override void OnSow(SowPlant2Type SowData) { Clear(); }
         public override void OnHarvest() { }
-        public override void OnEndCrop() { }
+        public override void OnEndCrop() 
+        {
+            Clear();
+        }
+        public override void OnCut() { }
     }
 }

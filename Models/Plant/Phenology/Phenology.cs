@@ -16,16 +16,23 @@ namespace Models.PMF.Phen
     }
     public class Phenology: Model
     {
+        #region Links
         [Link]
-        Summary Summary = null;
-        public delegate void PhaseChangedDelegate(PhaseChangedType Data);
+        private Summary Summary = null;
 
+        [Link]
+        private Clock Clock = null;
+        #endregion
+
+        #region Events
+        public delegate void PhaseChangedDelegate(PhaseChangedType Data);
         public event PhaseChangedDelegate PhaseChanged;
-        
         public event NullTypeDelegate GrowthStage;
+        #endregion
+
+        #region Parameters
         public Function RewindDueToBiomassRemoved { get; set; }
         public Function AboveGroundPeriod { get; set; }
-
         public Function StageCode { get; set; }
 
         [XmlArrayItem(typeof(EmergingPhase))]
@@ -36,35 +43,43 @@ namespace Models.PMF.Phen
         [XmlArrayItem(typeof(LeafAppearancePhase))]
         [XmlArrayItem(typeof(LeafDeathPhase))]
         public List<Phase> Phases { get; set; }
+        #endregion
 
-       
+        #region States
         private int CurrentPhaseIndex;
         private double _AccumulatedTT = 0;
-        
-        public double AccumulatedTT
-        {
-            get { return _AccumulatedTT; }
-        }
         private string CurrentlyOnFirstDayOfPhase = "";
         private bool JustInitialised = true;
-
-        
         private double FractionBiomassRemoved = 0;
+        private DateTime SowDate;
 
+        [XmlIgnore]
         /// <summary>
         /// A one based stage number.
         /// </summary>
-        
-        [XmlIgnore]
-        public double Stage = 1;
+        public double Stage { get; set;}
 
-        //[Input]
-        //public DateTime Today;
-        [Link]
-        Clock Clock = null;
+        public void Clear()
+        {
+            Stage = 1;
+            _AccumulatedTT = 0;
+            Phases.Clear();
+            JustInitialised = true;
+            SowDate = Clock.Today;
+            CurrentlyOnFirstDayOfPhase = "";
+            CurrentPhaseIndex = 0;
+            FractionBiomassRemoved = 0;
+            foreach (object ChildObject in this.Models)
+            {
+                Phase Child = ChildObject as Phase;
+                if (Child != null)
+                    Phases.Add(Child);
+            }
+        }
 
-        private DateTime SowDate;
+        #endregion
 
+        #region Outputs
         /// <summary>
         /// This property is used to retrieve or set the current phase name.
         /// </summary>
@@ -112,32 +127,6 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Phenology() { }
-
-        /* HEB  redundant functions public double JuvenileDevelopmentIndex
-         {
-             get
-             {
-                 if (FacultativeVernalisationPhase != null)
-                     return FacultativeVernalisationPhase.JuvenileDevelopmentIndex;
-                 else
-                     return 0;
-             }
-         }
-         public double AccumulatedVernalisation
-         {
-             get
-             {
-                 if (VernalisationSIRIUS != null)
-                     return VernalisationSIRIUS.AccumulatedVernalisation;
-                 else
-                     return 0;
-             }
-         }*/
-
         public int DaysAfterSowing
         {
             get
@@ -149,20 +138,27 @@ namespace Models.PMF.Phen
             }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Phenology() { }
+
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            Phases.Clear();
-            JustInitialised = true;
-            SowDate = Clock.Today;
-            CurrentlyOnFirstDayOfPhase = "";
-            CurrentPhaseIndex = 0;
-            foreach (object ChildObject in this.Models)
-            {
-                Phase Child = ChildObject as Phase;
-                if (Child != null)
-                    Phases.Add(Child);
-            }
+            Clear();
+        }
+
+        public void OnSow()
+        {
+            Clear();
+        }
+
+        public void OnPlantEnding()
+        {
+            Clear();
         }
 
         /// <summary>

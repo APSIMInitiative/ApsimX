@@ -10,24 +10,36 @@ namespace Models.PMF.Organs
 {
     public class Root : BaseOrgan, BelowGround
     {
-        #region Parameter Input Classes
-        
-        [XmlIgnore]
-        public Biomass[] LayerLive {get; set; }
-        [XmlIgnore]
-        public Biomass[] LayerDead { get; set; }
-
-        private SowPlant2Type SowingInfo = null;
+        #region Links
         [Link]
         Plant Plant = null;
-        public Function NitrogenDemandSwitch { get; set; }
-        public Function SenescenceRate { get; set; }
-        [Link(IsOptional = true)]
+        
+        [Link]
         Structure Structure = null;
-        public Function TemperatureEffect { get; set; }
-        public Function RootFrontVelocity { get; set; }
+
         [Link]
         Arbitrator Arbitrator = null;
+
+        [Link]
+        Soils.SoilWater SoilWat = null;
+
+        [Link]
+        Soils.SoilNitrogen SoilN = null;
+
+        [Link]
+        Soils.Soil Soil = null;
+        #endregion
+        
+        #region Parameters
+        public double InitialDM { get; set; }
+        public double SpecificRootLength { get; set; }
+        public double KNO3 { get; set; }
+        public double KNH4 { get; set; }
+
+        public Function NitrogenDemandSwitch { get; set; }
+        public Function SenescenceRate { get; set; }
+        public Function TemperatureEffect { get; set; }
+        public Function RootFrontVelocity { get; set; }
         public Function PartitionFraction { get; set; }
         public Function MaximumNConc { get; set; }
         public Function MaxDailyNUptake { get; set; }
@@ -35,62 +47,57 @@ namespace Models.PMF.Organs
         public Function KLModifier { get; set; }
         #endregion
 
-        #region Class Fields
-        const double kgha2gsm = 0.1;
+        #region States
+        private const double kgha2gsm = 0.1;
+        private SowPlant2Type SowingInfo = null;
         private double[] SWSupply = null;
         private double[] Uptake = null;
         private double[] DeltaNH4;
         private double[] DeltaNO3;
-        private bool isGrowing { get { return (Plant.SowingData != null && Plant.SowingData.Depth < this.Depth); } }
         private double _SenescenceRate = 0;
         private double _Nuptake = 0;
+
+        [XmlIgnore]
+        public Biomass[] LayerLive { get; set; }
+        [XmlIgnore]
+        public Biomass[] LayerDead { get; set; }
+        [XmlIgnore]
         public double Length { get; set; }
-        [Link]
-        Soils.SoilWater SoilWat = null;
-        [Link]
-        Soils.SoilNitrogen SoilN = null;
-        [Link]
-        Soils.Soil Soil = null;
-        
-        public double InitialDM = 0;
-        public double SpecificRootLength = 0;
-        public double KNO3 = 0;
-        public double KNH4 = 0;
-        
+
         [XmlIgnore]
         [Units("mm")]
-        public double Depth = 0;
+        public double Depth { get; set; }
+
+        protected override void Clear()
+        {
+            base.Clear();
+            SowingInfo = null;
+            SWSupply = null;
+            Uptake = null;
+            DeltaNH4 = null;
+            DeltaNO3 = null;
+            _SenescenceRate = 0;
+            _Nuptake = 0;
+
+            if (LayerLive == null || LayerLive.Length == 0)
+            {
+                LayerLive = new Biomass[SoilWat.dlayer.Length];
+                LayerDead = new Biomass[SoilWat.dlayer.Length];
+                for (int i = 0; i < SoilWat.dlayer.Length; i++)
+                {
+                    LayerLive[i] = new Biomass();
+                    LayerDead[i] = new Biomass();
+                }
+            }
+            DeltaNO3 = new double[SoilWat.dlayer.Length];
+            DeltaNH4 = new double[SoilWat.dlayer.Length];
+        }
+
         #endregion
         
         #region Class Properties
-        //public override Biomass Live
-        //{
-        //    get
-        //    {
-        //        Biomass Biomass = new Biomass();
-        //        for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
-        //            Biomass = Biomass + LayerLive[layer];
-        //        return Biomass;
-        //    }
-        //    set
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
-        //public override Biomass Dead
-        //{
-        //    get
-        //    {
-        //        Biomass Biomass = new Biomass();
-        //        for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
-        //            Biomass = Biomass + LayerLive[layer];
-        //        return Biomass;
-        //    }
-        //    set
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
+        private bool isGrowing { get { return (Plant.InGround && Plant.SowingData.Depth < this.Depth); } }
+        
         [Units("kg/ha")]
         public double NUptake
         {
@@ -277,22 +284,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-           if (LayerLive == null || LayerLive.Length == 0)
-            {
-                LayerLive = new Biomass[SoilWat.dlayer.Length];
-                LayerDead = new Biomass[SoilWat.dlayer.Length];
-                for (int i = 0; i < SoilWat.dlayer.Length; i++)
-                {
-                    LayerLive[i] = new Biomass();
-                    LayerDead[i] = new Biomass();
-                }
-            }
-            DeltaNO3 = new double[SoilWat.dlayer.Length];
-            DeltaNH4 = new double[SoilWat.dlayer.Length];
+            Clear();
         }
 
         public override void OnSow(SowPlant2Type Sow)
         {
+            base.OnSow(Sow);
+
             SowingInfo = Sow;
         }
         public override void OnEndCrop()
@@ -323,6 +321,7 @@ namespace Models.PMF.Organs
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
 
+            base.OnEndCrop();
         }
         #endregion
 
@@ -623,8 +622,6 @@ namespace Models.PMF.Organs
         
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
-
-
 
     }
 }

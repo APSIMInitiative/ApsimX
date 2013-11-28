@@ -87,11 +87,10 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Initialise all state variables.
         /// </summary>
-        private void Clear()
+        protected override void Clear()
         {
             Leaves = new List<LeafCohort>();
         }
-
 
         #endregion
 
@@ -1178,12 +1177,6 @@ namespace Models.PMF.Organs
         public event NewCanopyDelegate NewCanopy;
         public event NullTypeDelegate NewLeaf;
 
-        [EventSubscribe("OnInitialised")]
-        private void OnInitialised(object sender, EventArgs e)
-        {
-            Clear();
-        }
-
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
@@ -1236,8 +1229,7 @@ namespace Models.PMF.Organs
 
         }
 
-        [EventSubscribe("Cut")]
-        private void OnCut()
+        public override void OnCut()
         {
             //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
             string Indent = "     ";

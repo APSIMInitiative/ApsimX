@@ -1836,9 +1836,9 @@ namespace Models.SurfaceOM
         /// <param name="i"></param>
         private void surfom_read_type_specific_constants(string surfom_type, int i, out double pot_decomp_rate)
         {
-
-
             ResidueType thistype = ResidueTypes.getResidue(surfom_type);
+            if (thistype == null)
+                throw new ApsimXException(FullPath, "Cannot find residue type description for '" + surfom_type + "'");
 
             c.C_fract[i] = bound(thistype.fraction_C, 0, 1);
             c.po4ppm[i] = bound(thistype.po4ppm, 0, 1000);
