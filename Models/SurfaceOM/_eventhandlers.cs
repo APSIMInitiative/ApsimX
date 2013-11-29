@@ -90,7 +90,7 @@ namespace Models.SurfaceOM
             surfom_Process();
             //catch (Exception e) { }
 
-            if (Today.DayOfYear == 300)
+            if (Clock.Today.DayOfYear == 300)
                 return;
         }
 

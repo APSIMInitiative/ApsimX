@@ -116,9 +116,14 @@ public class simpleSoilTemp
         _tav = tav;
         _amp = amp;
 
+        double ave_temp = (maxt + mint) * 0.5;
+        clear();
+    }
+
+    public void clear()
+    {
         // need to initialise some values for surf_temp, repeat the value of ave_temp for the first day (RCichota: why not tav?)
         surf_temp = new double[MaxDaysInYear];
-        double ave_temp = (maxt + mint) * 0.5;
         for (int day = 0; day < MaxDaysInYear; day++)
             surf_temp[day] = ave_temp;
     }

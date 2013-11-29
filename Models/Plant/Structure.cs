@@ -220,10 +220,6 @@ namespace Models.PMF
             Population = Sow.Population;
             TotalStemPopn = Population * PrimaryBudNo;
         }
-        public void OnPlantEnding()
-        {
-            Clear();
-        }
         #endregion
     }
 

@@ -4113,6 +4113,10 @@ namespace Models.Soils
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            soilwat2_zero_variables();
+            soilwat2_zero_daily_variables();
+            solutes = null;
+            num_solutes = 0;
 
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;

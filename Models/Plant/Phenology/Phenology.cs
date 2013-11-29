@@ -159,11 +159,6 @@ namespace Models.PMF.Phen
             Clear();
         }
 
-        public void OnPlantEnding()
-        {
-            Clear();
-        }
-
         /// <summary>
         /// Look for a particular phase and return it's index or -1 if not found.
         /// </summary>

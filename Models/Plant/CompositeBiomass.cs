@@ -47,6 +47,15 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>
+        /// Clear ourselves.
+        /// </summary>
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
         [XmlIgnore]
         [Units("g/m^2")]
         override public double NonStructuralN
@@ -95,12 +104,6 @@ namespace Models.PMF
             set { throw new Exception("Cannot set MetabolicWt in CompositeBiomass"); }
         }
 
-        override public void Clear()
-        {
-            // This is called in OnCut - for now do nothing.
-        }
-
-        
         [Units("g/m^2")]
         override public double Wt
         {

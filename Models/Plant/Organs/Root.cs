@@ -76,6 +76,8 @@ namespace Models.PMF.Organs
             DeltaNO3 = null;
             _SenescenceRate = 0;
             _Nuptake = 0;
+            Length = 0;
+            Depth = 0;
 
             if (LayerLive == null || LayerLive.Length == 0)
             {

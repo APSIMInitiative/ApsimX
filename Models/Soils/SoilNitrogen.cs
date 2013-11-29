@@ -161,6 +161,11 @@ namespace Models.Soils
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            Patch = new List<soilCNPatch>();
+            soilCNPatch newPatch = new soilCNPatch(this);
+            Patch.Add(newPatch);
+            Patch[0].RelativeArea = 1.0;
+            Patch[0].PatchName = "base";
 
             // Variable handling when using APSIMX
             initDone = false;
@@ -175,6 +180,8 @@ namespace Models.Soils
             salb = Soil.SoilWater.Salb;
             no3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
+            num_residues = 0;
+            Tsoil = null;
 
             fbiom = Soil.SoilOrganicMatter.FBiom;
             finert = Soil.SoilOrganicMatter.FInert;

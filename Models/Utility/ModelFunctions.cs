@@ -261,9 +261,9 @@ namespace Utility
         public static IVariable[] States(Model model)
         {
             List<IVariable> variables = new List<IVariable>();
-            foreach (FieldInfo field in model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
             {
-                if (!field.FieldType.IsSubclassOf(typeof(Model)))
+                if (field.DeclaringType != typeof(Model) && field.FieldType != typeof(Model) && !field.FieldType.IsSubclassOf(typeof(Model)))
                     variables.Add(new VariableField(model, field));
             }
 

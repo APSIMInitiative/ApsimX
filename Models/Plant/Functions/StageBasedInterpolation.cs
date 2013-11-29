@@ -13,16 +13,24 @@ namespace Models.PMF.Functions
         [Link]
         Phenology Phenology = null;
 
-        public string[] Stages = null;
-
-        int[] StageCodes = null;
-
+        // Parameters
+        public string[] Stages { get; set; }
         public double[] Codes { get; set; }
+
+        // States
+        private int[] StageCodes = null;
 
         [XmlIgnore]
         public bool Proportional = true;
 
-
+        /// <summary>
+        /// Initialise ourselves.
+        /// </summary>
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+            StageCodes = null;
+        }
         
         public override double Value
         {

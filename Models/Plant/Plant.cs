@@ -198,14 +198,16 @@ namespace Models.PMF
             // tell all our children about endcrop
             foreach (Organ Child in Organs)
                 Child.OnEndCrop();
-            Structure.OnPlantEnding();
-            Phenology.OnPlantEnding();
             Clear();
         }
 
         private void Clear()
         {
             SowingData = null;
+            WaterSupplyDemandRatio = 0;
+            Structure.Clear();
+            Phenology.Clear();
+            Arbitrator.Clear();
         }
 
         /// <summary>

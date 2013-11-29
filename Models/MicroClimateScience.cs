@@ -261,20 +261,20 @@ namespace Models
         private void EnergyTerms()
         {
             sumRs = 0.0;
-            albedo = 0.0;
+            _albedo = 0.0;
             emissivity = 0.0;
 
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    albedo += Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Albedo;
+                    _albedo += Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Albedo;
                     emissivity += Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Emissivity;
                     sumRs += ComponentData[j].Rs[i];
                 }
             }
 
-            albedo += (1.0 - Utility.Math.Divide(sumRs, radn, 0.0)) * soil_albedo;
+            _albedo += (1.0 - Utility.Math.Divide(sumRs, radn, 0.0)) * soil_albedo;
             emissivity += (1.0 - Utility.Math.Divide(sumRs, radn, 0.0)) * soil_emissivity;
         }
 

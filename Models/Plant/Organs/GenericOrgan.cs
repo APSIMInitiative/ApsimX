@@ -62,6 +62,7 @@ namespace Models.PMF.Organs
             NonStructuralDMDemand = 0;
             InitialWt = 0;
             InitStutFraction = 1;
+            LiveFWt = 0;
         }
         #endregion
 

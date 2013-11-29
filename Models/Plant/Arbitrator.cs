@@ -150,6 +150,13 @@ namespace Models.PMF
 
         #endregion
 
+        public void Clear()
+        {
+            DM = null;
+            N = null;
+        }
+
+
         public void DoDMArbitration(List<Organ> Organs)
         {
             //Work out how much each organ will grow in the absence of nutrient stress, and how much DM they can supply.

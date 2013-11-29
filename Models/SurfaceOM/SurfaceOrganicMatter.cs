@@ -334,7 +334,6 @@ namespace Models.SurfaceOM
             //Get_real_var(unknown_module, "eos", "(mm)", g.eos, numvals, 0.0, 100.0);
             //Get_real_array(unknown_module, "dlayer", max_layer, "(mm)",g.dlayer, numvals, 1.0, 10000.0);
 
-            Today = Clock.Today;
             g.eos = SoilWater.eos;
             g.dlayer = Soil.Thickness;
 

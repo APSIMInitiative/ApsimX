@@ -149,10 +149,6 @@ namespace Models.SurfaceOM
         [Units("")]
         double[] labile_p = null;
 
-        //int today { set { Today = DateUtility.JulianDayNumberToDateTime(value); } get { return DateUtility.dateTimeToJulianDayNumber(Today); } }
-        DateTime Today;
-
-
         /*
         [Input(true)]
         [Units("")]

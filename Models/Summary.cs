@@ -301,6 +301,8 @@ namespace Models
         /// </summary>
         private static string FormatValue(object value)
         {
+            if (value == null)
+                return "null";
             if (value is double || value is float)
                 return String.Format("{0:F3}", value);
             else if (value is DateTime)

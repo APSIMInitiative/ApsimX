@@ -117,6 +117,8 @@ namespace Models
         [Link]
         WeatherFile Weather = null;
 
+        private double _albedo = 0;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -279,12 +281,12 @@ namespace Models
 
         public double net_radn
         {
-            get { return radn * (1.0 - albedo) + netLongWave; }
+            get { return radn * (1.0 - _albedo) + netLongWave; }
         }
 
         public double net_rs
         {
-            get { return radn * (1.0 - albedo); }
+            get { return radn * (1.0 - _albedo); }
         }
 
         public double net_rl
@@ -458,9 +460,20 @@ namespace Models
         private void OnInitialised(object sender, EventArgs e)
         {
             foreach (ComponentDataStruct c in ComponentData)
-            {
                 Clear(c);
-            }
+            _albedo = albedo;
+            windspeed_checked = false;
+            netLongWave = 0;
+            sumRs = 0;
+            averageT = 0;
+            sunshineHours = 0;
+            fractionClearSky = 0;
+            dayLength = 0;
+            dayLengthLight = 0;
+            numLayers = 0;
+            DeltaZ = new double[-1 + 1];
+            layerKtot = new double[-1 + 1];
+            layerLAIsum = new double[-1 + 1];
         }
 
 
@@ -802,7 +815,7 @@ namespace Models
 
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
-                double Rflux = Rin * 1000000.0 / (dayLength * hr2s) * (1.0 - albedo);
+                double Rflux = Rin * 1000000.0 / (dayLength * hr2s) * (1.0 - _albedo);
                 double Rint = 0.0;
 
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
@@ -904,7 +917,7 @@ namespace Models
                 }
             }
 
-            double netRadiation = ((1.0 - albedo) * sumRs + sumRl + sumRsoil) * 1000000.0;
+            double netRadiation = ((1.0 - _albedo) * sumRs + sumRl + sumRsoil) * 1000000.0;
             // MJ/J
             netRadiation = Math.Max(0.0, netRadiation);
             double freeEvapGc = freeEvapGa * 1000000.0;
@@ -918,7 +931,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    netRadiation = 1000000.0 * ((1.0 - albedo) * ComponentData[j].Rs[i] + ComponentData[j].Rl[i] + ComponentData[j].Rsoil[i]);
+                    netRadiation = 1000000.0 * ((1.0 - _albedo) * ComponentData[j].Rs[i] + ComponentData[j].Rl[i] + ComponentData[j].Rsoil[i]);
                     // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
