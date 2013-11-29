@@ -14,6 +14,7 @@ namespace Models.Core
     {
         //private Model BaseModel = null;
         private Model _DefaultModel = null;
+        private string _Name = null;
 
         // Cache the models list - this dramatically speeds up runtime!
         private List<Model> AllModels = null;
@@ -21,7 +22,21 @@ namespace Models.Core
         /// <summary>
         /// Get or set the name of the model
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (_Name == null)
+                    return this.GetType().Name;
+                else
+                    return _Name;
+            }
+            set
+            {
+                _Name = value;
+            }
+        }
+
 
         /// <summary>
         /// Get or set the parent of the model.

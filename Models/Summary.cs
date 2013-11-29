@@ -182,16 +182,15 @@ namespace Models
             {
                 Model[] models = simulation.FindAll();
                 foreach (Model model in models)
-                {
-                    WriteModelProperties(report, model);
-                }
+                    WriteModelProperties(report, model, html, StateVariables);
             }
         }
 
         /// <summary>
-        /// Write all properties of the specified model to the specified TextWriter.
+        /// Write all properties of the specified model to the specified TextWriter. Retruns true if something
+        /// was written.
         /// </summary>
-        private void WriteModelProperties(TextWriter report, Model model)
+        public static bool WriteModelProperties(TextWriter report, Model model, bool html, bool stateVariables)
         {
             string modelName = model.FullPath;
 
@@ -201,11 +200,11 @@ namespace Models
 
             DataTable table = new DataTable();
 
-            IVariable[] properties;
-            if (StateVariables)
-                properties = Utility.ModelFunctions.States(model);
-            else
-                properties = Utility.ModelFunctions.Parameters(model);
+            List<IVariable> properties = new List<IVariable>();
+            properties.AddRange(Utility.ModelFunctions.Parameters(model));
+
+            if (stateVariables)
+                properties.AddRange(Utility.ModelFunctions.States(model));
 
             foreach (IVariable property in properties)
             {
@@ -252,17 +251,31 @@ namespace Models
                 }
             }
 
+            bool somethingWritten = false;
             if (propertyTable.Rows.Count > 0 || table.Rows.Count > 0)
+            {
                 WriteHeading(report, modelName, html);
+                somethingWritten = true;
+            }
 
             // write out properties
             if (propertyTable.Rows.Count > 0)
+            {
                 WriteTable(report, propertyTable, html, false, "PropertyTable");
+                somethingWritten = true;
+            }
 
             // write out table.
             if (table.Rows.Count > 0)
+            {
                 WriteTable(report, table, html, true, "ApsimTable");
+                somethingWritten = true;
+            }
 
+            if (somethingWritten)
+                report.WriteLine(divider);
+
+            return somethingWritten;
         }
 
         /// <summary>
@@ -286,7 +299,7 @@ namespace Models
         /// <summary>
         /// Format the specified value into a string and return the string.
         /// </summary>
-        private string FormatValue(object value)
+        private static string FormatValue(object value)
         {
             if (value is double || value is float)
                 return String.Format("{0:F3}", value);
@@ -299,7 +312,7 @@ namespace Models
         /// <summary>
         /// Write the specified heading to the TextWriter.
         /// </summary>
-        private void WriteHeading(TextWriter writer, string heading, bool html)
+        private static void WriteHeading(TextWriter writer, string heading, bool html)
         {
             if (html)
                 writer.WriteLine("<h2>" + heading + "</h2>");
@@ -310,7 +323,7 @@ namespace Models
         /// <summary>
         /// Write the specfieid table to the TextWriter.
         /// </summary>
-        private void WriteTable(TextWriter report, DataTable table, bool html, bool includeHeadings, string className)
+        private static void WriteTable(TextWriter report, DataTable table, bool html, bool includeHeadings, string className)
         {
             if (html)
             {
@@ -353,7 +366,6 @@ namespace Models
             else
             {
                 report.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
-                report.WriteLine(divider);
             }
 
         }

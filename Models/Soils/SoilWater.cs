@@ -4753,15 +4753,9 @@ namespace Models.Soils
         {
             tillage_types = new Dictionary<string, float[]>();
 
-#if (APSIMX == true)
             foreach (System.Xml.XmlNode xnc in Nodes)
                 if (xnc.NodeType == System.Xml.XmlNodeType.Element)
                     tillage_types.Add(xnc.Name, strToArr(xnc.FirstChild.Value));
-#else
-            foreach (System.Xml.XmlNode xnc in xe.ChildNodes)
-                if (xnc.NodeType == System.Xml.XmlNodeType.Element)
-                    tillage_types.Add(xnc.Name, strToArr(xnc.FirstChild.Value));
-#endif
         }
 
         public TillageType GetTillageData(string name)

@@ -46,6 +46,7 @@ namespace Models.Core
         [XmlElement(typeof(Summary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(WeatherFile))]
+        [XmlElement(typeof(Log))]
         public List<Model> Children { get; set; }
 
          /// <summary>

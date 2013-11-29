@@ -885,7 +885,6 @@
         <Name>Potato</Name>
         <CropType>Potato</CropType>
         <Phenology>
-          <Name />
           <StageCode xsi:type="StageBasedInterpolation">
             <Name>StageCode</Name>
             <Stages>

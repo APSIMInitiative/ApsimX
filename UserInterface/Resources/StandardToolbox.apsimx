@@ -566,6 +566,9 @@
         <Y>WeatherFile.MaxT</Y>
       </Series>
     </Graph>
+    <Log>
+      <Name>Log</Name>
+    </Log>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
