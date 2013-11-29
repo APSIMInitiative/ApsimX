@@ -15,10 +15,8 @@ namespace Models.PMF.Phen
         Structure Structure = null;
 
         private double CohortNoAtStart;
-        bool First = true;
-
-        public double RemainingLeaves = 0;
-
+        private bool First = true;
+        private double RemainingLeaves = 0;
         private double FractionCompleteYesterday = 0;
 
         /// <summary>
@@ -26,8 +24,11 @@ namespace Models.PMF.Phen
         /// </summary>
         public override void ResetPhase()
         {
-            _TTinPhase = 0;
+            base.ResetPhase();
             CohortNoAtStart = 0;
+            RemainingLeaves = 0;
+            FractionCompleteYesterday = 0;
+            First = true;
         }
 
         /// <summary>

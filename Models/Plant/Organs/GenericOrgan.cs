@@ -48,7 +48,7 @@ namespace Models.PMF.Organs
         protected double InitialWt = 0;
         private double InitStutFraction = 1;
 
-        protected override void Clear()
+        public override void Clear()
         {
             base.Clear();
             SenescenceRate = 0;

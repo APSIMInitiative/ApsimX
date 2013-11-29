@@ -7,25 +7,19 @@ namespace Models.PMF.Phen
 {
     public class EmergingPhase : GenericPhase
     {
-        public double ShootLag = 0;
-        public double ShootRate = 0;
+        [Link]
+        Plant Plant = null;
 
-        private double SowDepth;
-
-        [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
-        {
-            SowDepth = Sow.Depth;
-        }
+        public double ShootLag { get; set; }
+        public double ShootRate { get; set; }
 
         /// <summary>
         /// Return the target to caller. Can be overridden by derived classes.
         /// </summary>
         protected override double CalcTarget()
         {
-            return ShootLag + SowDepth * ShootRate;
+            return ShootLag + Plant.SowingData.Depth * ShootRate;
         }
-
 
     }
 }

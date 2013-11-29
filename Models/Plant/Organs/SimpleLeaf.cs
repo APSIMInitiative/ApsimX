@@ -236,17 +236,20 @@ namespace Models.PMF.Organs
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
         {
-            Boolean found = false;
-            int i = 0;
-            while (!found && (i != CWB.Canopy.Length))
+            if (Plant.InGround)
             {
-                if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
+                Boolean found = false;
+                int i = 0;
+                while (!found && (i != CWB.Canopy.Length))
                 {
-                    PEP = CWB.Canopy[i].PotentialEp;
-                    found = true;
+                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
+                    {
+                        PEP = CWB.Canopy[i].PotentialEp;
+                        found = true;
+                    }
+                    else
+                        i++;
                 }
-                else
-                    i++;
             }
         }
         private void PublishNewPotentialGrowth()

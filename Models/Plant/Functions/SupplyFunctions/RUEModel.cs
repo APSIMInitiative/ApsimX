@@ -91,7 +91,8 @@ namespace Models.PMF.Functions.SupplyFunctions
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
-            PublishNewPotentialGrowth();
+            if (Plant.InGround)
+                PublishNewPotentialGrowth();
         }
     }
 }

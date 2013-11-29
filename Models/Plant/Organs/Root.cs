@@ -49,7 +49,6 @@ namespace Models.PMF.Organs
 
         #region States
         private const double kgha2gsm = 0.1;
-        private SowPlant2Type SowingInfo = null;
         private double[] SWSupply = null;
         private double[] Uptake = null;
         private double[] DeltaNH4;
@@ -68,10 +67,9 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get; set; }
 
-        protected override void Clear()
+        public override void Clear()
         {
             base.Clear();
-            SowingInfo = null;
             SWSupply = null;
             Uptake = null;
             DeltaNH4 = null;
@@ -89,6 +87,16 @@ namespace Models.PMF.Organs
                     LayerDead[i] = new Biomass();
                 }
             }
+            else
+            {
+                for (int i = 0; i < SoilWat.dlayer.Length; i++)
+                {
+                    LayerLive[i].Clear();
+                    LayerDead[i].Clear();
+                }
+            }
+
+
             DeltaNO3 = new double[SoilWat.dlayer.Length];
             DeltaNH4 = new double[SoilWat.dlayer.Length];
         }
@@ -151,10 +159,7 @@ namespace Models.PMF.Organs
             {
                 LayerLive[0].StructuralWt = (Structure == null) ? InitialDM : InitialDM * Structure.Population;
                 LayerLive[0].StructuralN = (Structure == null) ? InitialDM * MaxNconc : InitialDM * MaxNconc * Structure.Population;
-                if (SowingInfo.Depth <= 0)
-                    throw new Exception("No sowing depth info provided");
-
-                Depth = SowingInfo.Depth;
+                Depth = Plant.SowingData.Depth;
             }
 
             Length = 0;
@@ -287,12 +292,6 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        public override void OnSow(SowPlant2Type Sow)
-        {
-            base.OnSow(Sow);
-
-            SowingInfo = Sow;
-        }
         public override void OnEndCrop()
         {
             FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[SoilWat.dlayer.Length];

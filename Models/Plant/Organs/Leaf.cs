@@ -87,9 +87,11 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Initialise all state variables.
         /// </summary>
-        protected override void Clear()
+        public override void Clear()
         {
             Leaves = new List<LeafCohort>();
+            WaterDemand = 0;
+            WaterAllocation = 0;
         }
 
         #endregion
@@ -1193,6 +1195,7 @@ namespace Models.PMF.Organs
 
         public override void OnSow(SowPlant2Type Sow)
         {
+            Clear();
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             MaxCover = Sow.MaxCover;
@@ -1201,17 +1204,20 @@ namespace Models.PMF.Organs
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
         {
-            Boolean found = false;
-            int i = 0;
-            while (!found && (i != CWB.Canopy.Length))
+            if (Plant.InGround)
             {
-                if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
+                Boolean found = false;
+                int i = 0;
+                while (!found && (i != CWB.Canopy.Length))
                 {
-                    WaterDemand = CWB.Canopy[i].PotentialEp;
-                    found = true;
+                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
+                    {
+                        WaterDemand = CWB.Canopy[i].PotentialEp;
+                        found = true;
+                    }
+                    else
+                        i++;
                 }
-                else
-                    i++;
             }
         }
 

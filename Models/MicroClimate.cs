@@ -388,13 +388,38 @@ namespace Models
             int senderIdx = FindComponentIndex(newCrop.Name);
 
             // If sender is unknown, add it to the list
-            if (senderIdx < 0)
-            {
-                ComponentData.Add(new ComponentDataStruct());
-                senderIdx = ComponentData.Count - 1;
-                ComponentData[senderIdx].Name = newCrop.Name.ToLower();
-            }
+            if (senderIdx == -1)
+                throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
+            ComponentData[senderIdx].Name = newCrop.Name.ToLower();
             ComponentData[senderIdx].Type = newCrop.CropType;
+            Clear(ComponentData[senderIdx]);
+        }
+
+        private void Clear(ComponentDataStruct c)
+        {
+            c.CoverGreen = 0;
+            c.CoverTot = 0;
+            c.Depth = 0;
+            c.Frgr = 0;
+            c.Height = 0;
+            c.K = 0;
+            c.Ktot = 0;
+            c.LAI = 0;
+            c.LAItot = 0;
+            Util.ZeroArray(c.layerLAI);
+            Util.ZeroArray(c.layerLAItot);
+            Util.ZeroArray(c.Ftot);
+            Util.ZeroArray(c.Fgreen);
+            Util.ZeroArray(c.Rs);
+            Util.ZeroArray(c.Rl);
+            Util.ZeroArray(c.Rsoil);
+            Util.ZeroArray(c.Gc);
+            Util.ZeroArray(c.Ga);
+            Util.ZeroArray(c.PET);
+            Util.ZeroArray(c.PETr);
+            Util.ZeroArray(c.PETa);
+            Util.ZeroArray(c.Omega);
+            Util.ZeroArray(c.interception);
         }
 
         [EventSubscribe("NewCanopy")]
@@ -432,6 +457,10 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            foreach (ComponentDataStruct c in ComponentData)
+            {
+                Clear(c);
+            }
         }
 
 
@@ -589,7 +618,7 @@ namespace Models
         {
             for (int i = 0; i <= ComponentData.Count - 1; i++)
             {
-                if (ComponentData[i].Name.Equals(name, StringComparison.CurrentCulture))
+                if (ComponentData[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return i;
                 }

@@ -26,6 +26,11 @@ namespace Models.PMF.Phen
         /// </summary>
         public override double FractionComplete { get { return 0.0; } }
 
+        public override void ResetPhase()
+        {
+            base.ResetPhase();
+            _CumulativeValue = 0;
+        }
     }
 }
 

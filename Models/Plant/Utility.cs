@@ -54,8 +54,9 @@ namespace Models.PMF
 
         public static void ZeroArray(double[] Arr)
         {
-            for (int i = 0; i < Arr.Length; i++)
-                Arr[i] = 0;
+            if (Arr != null)
+                for (int i = 0; i < Arr.Length; i++)
+                    Arr[i] = 0;
         }
         /// <summary>
         /// Find the first element of an array where a given value

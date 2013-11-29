@@ -14,9 +14,15 @@ namespace Models.PMF.Phen
         [Link]
         Structure Structure = null;
 
-        private double DeadNodeNoAtStart;
-        bool First = true;
+        private double DeadNodeNoAtStart = 0;
+        private bool First = true;
 
+        public override void ResetPhase()
+        {
+            base.ResetPhase();
+            DeadNodeNoAtStart = 0;
+            First = true;
+        }
         /// <summary>
         /// Do our timestep development
         /// </summary>

@@ -72,7 +72,7 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double NSupplyUptake { get { return NSupply.Uptake; } }
 
-        protected virtual void Clear()
+        public override void Clear()
         {
             Live.Clear();
             Dead.Clear();

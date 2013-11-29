@@ -89,6 +89,7 @@ namespace Models.PMF.Organs
 
         #region Top Level Time-step  and event Functions
         //Plant actions
+        abstract public void Clear();
         virtual public void DoWaterUptake(double Demand) { }
         virtual public void DoPotentialDM() { }
         virtual public void DoPotentialNutrient() { }

@@ -13,6 +13,10 @@ namespace Models.PMF.Phen
 
         [Link]
         Structure Structure = null;
+
+        [Link]
+        Plant Plant = null;
+
         public Function ThermalTime { get; set; }
         public Function PhotoperiodFunction { get; set; }
         public Function Vrn1rate { get; set; }
@@ -81,56 +85,59 @@ namespace Models.PMF.Phen
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
-            if (Phenology.CurrentPhaseName == "Emerging")
-                DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this
-            else
-                DeltaHaunStage = Structure.DeltaNodeNumber;
-
-            //Pre-Vernalisation lag, determine the repression of Vrn4
-            if (IsPreVernalised == false)
+            if (Plant.InGround)
             {
-                Vrn4 -= Vrn1rate.Value * DeltaHaunStage;
-                Vrn4 = Math.Max(Vrn4, 0.0);
-                if (Vrn4 == 0.0)
-                    IsPreVernalised = true;
-            }
+                if (Phenology.CurrentPhaseName == "Emerging")
+                    DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this
+                else
+                    DeltaHaunStage = Structure.DeltaNodeNumber;
 
-            //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
-            if ((IsPreVernalised) && (IsVernalised == false))
-            {
-                Vrn1 += Vrn1rate.Value * DeltaHaunStage;
-                Vrn1 = Math.Min(1.0, Vrn1);
-            }
-
-            //Update Vernalisation target to reflect photoperiod conditions and determine Vernalisation status
-            if ((IsVernalised == false) && (Vrn1Target <= 1.0))
-            {
-                if (Structure.MainStemNodeNo >= 1.1)
+                //Pre-Vernalisation lag, determine the repression of Vrn4
+                if (IsPreVernalised == false)
                 {
-                    Vrn2 += Vrn2rate.Value * DeltaHaunStage;
-                    Vrn1Target = Math.Min(1.0, BaseVrn1Target + Vrn2);
+                    Vrn4 -= Vrn1rate.Value * DeltaHaunStage;
+                    Vrn4 = Math.Max(Vrn4, 0.0);
+                    if (Vrn4 == 0.0)
+                        IsPreVernalised = true;
                 }
-                if (Vrn1 >= Vrn1Target)
-                    IsVernalised = true;
-            }
-            //If Vernalisation is complete begin expressing Vrn3
-            if ((IsVernalised) && (IsReproductive == false))
-            {
-                Vrn3 += Vrn3rate.Value * DeltaHaunStage;
-                Vrn3 = Math.Min(1.0, Vrn3);
-            }
 
-            //Set timings of floral initiation, terminal spiklet and FLN in response to Vrn3 expression
-            if ((Vrn3 >= 0.3) && (IsInduced == false))
-            {
-                IsInduced = true;
-                FIHS = Structure.MainStemNodeNo;
-            }
-            if ((Vrn3 >= 1.0) && (IsReproductive == false))
-            {
-                IsReproductive = true;
-                TSHS = Structure.MainStemNodeNo + 1.0;
-                FLN = 2.86 + 1.1 * TSHS;
+                //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
+                if ((IsPreVernalised) && (IsVernalised == false))
+                {
+                    Vrn1 += Vrn1rate.Value * DeltaHaunStage;
+                    Vrn1 = Math.Min(1.0, Vrn1);
+                }
+
+                //Update Vernalisation target to reflect photoperiod conditions and determine Vernalisation status
+                if ((IsVernalised == false) && (Vrn1Target <= 1.0))
+                {
+                    if (Structure.MainStemNodeNo >= 1.1)
+                    {
+                        Vrn2 += Vrn2rate.Value * DeltaHaunStage;
+                        Vrn1Target = Math.Min(1.0, BaseVrn1Target + Vrn2);
+                    }
+                    if (Vrn1 >= Vrn1Target)
+                        IsVernalised = true;
+                }
+                //If Vernalisation is complete begin expressing Vrn3
+                if ((IsVernalised) && (IsReproductive == false))
+                {
+                    Vrn3 += Vrn3rate.Value * DeltaHaunStage;
+                    Vrn3 = Math.Min(1.0, Vrn3);
+                }
+
+                //Set timings of floral initiation, terminal spiklet and FLN in response to Vrn3 expression
+                if ((Vrn3 >= 0.3) && (IsInduced == false))
+                {
+                    IsInduced = true;
+                    FIHS = Structure.MainStemNodeNo;
+                }
+                if ((Vrn3 >= 1.0) && (IsReproductive == false))
+                {
+                    IsReproductive = true;
+                    TSHS = Structure.MainStemNodeNo + 1.0;
+                    FLN = 2.86 + 1.1 * TSHS;
+                }
             }
         }
     }

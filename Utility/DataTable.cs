@@ -441,7 +441,7 @@ namespace Utility
                 value = (D.ToShortDateString());
             }
             else if (obj is float || obj is double)
-                value = string.Format("{0:N3}", obj);
+                value = string.Format("{0:F3}", obj);
             else 
                 value = obj.ToString();
 

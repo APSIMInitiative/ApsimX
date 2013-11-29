@@ -200,6 +200,11 @@ namespace Models.PMF
                 Child.OnEndCrop();
             Structure.OnPlantEnding();
             Phenology.OnPlantEnding();
+            Clear();
+        }
+
+        private void Clear()
+        {
             SowingData = null;
         }
 
@@ -281,6 +286,17 @@ namespace Models.PMF
         public event EventHandler Cutting;
         public event EventHandler PlantEnding;
         public event BiomassRemovedDelegate BiomassRemoved;
+
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+            Clear();
+            foreach (Organ o in Organs)
+            {
+                o.Clear();
+            }
+        }
+
 
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)

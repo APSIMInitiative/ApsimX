@@ -71,6 +71,7 @@ namespace Models.PMF.Phen
         private void OnInitialised(object sender, EventArgs e) { ResetPhase(); }
         public virtual void ResetPhase()
         {
+            _TTForToday = 0;
             _TTinPhase = 0;
             PropOfDayUnused = 0;
         }

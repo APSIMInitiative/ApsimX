@@ -73,7 +73,10 @@ namespace Models.PMF.Phen
             {
                 Phase Child = ChildObject as Phase;
                 if (Child != null)
+                {
                     Phases.Add(Child);
+                    Child.ResetPhase();
+                }
             }
         }
 
