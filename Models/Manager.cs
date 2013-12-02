@@ -25,6 +25,7 @@ namespace Models
         // Publics
        // [XmlIgnore]
         public Model Script { get; set; }
+
         public string Code
         {
             get
