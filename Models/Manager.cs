@@ -23,7 +23,7 @@ namespace Models
         private Zone Zone = null;
 
         // Publics
-       // [XmlIgnore]
+        [XmlIgnore]
         public Model Script { get; set; }
 
         public string Code
