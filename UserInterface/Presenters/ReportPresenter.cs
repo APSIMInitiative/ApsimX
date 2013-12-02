@@ -5,6 +5,7 @@ using System.Text;
 using Models;
 using UserInterface.Views;
 using System.Reflection;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -55,21 +56,9 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in Utility.ModelFunctions.PublicFieldsAndProperties(o))
                 {
-                    if (Property.Name == "Models")
-                    {
-                        List<object> Models = Property.GetValue(o, null) as List<object>;
-                        if (Models != null)
-                        {
-                            foreach (object Model in Models)
-                            {
-                                e.Items.Add(Utility.Reflection.Name(Model));
-                            }
-                        }
-                    }
-                    else
-                        e.Items.Add(Property.Name);
+                    e.Items.Add(Property.Name);
                 }
             }
         }

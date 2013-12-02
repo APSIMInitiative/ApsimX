@@ -132,7 +132,7 @@ namespace Utility
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             // If user clicks a '.' then display contextlist.
-            if (e.KeyCode == Keys.OemPeriod && ContextItemsNeeded != null)
+            if (e.KeyCode == Keys.OemPeriod && e.Shift == false && ContextItemsNeeded != null)
             {
                 TextBox.ActiveTextAreaControl.TextArea.InsertChar('.');
                 ShowCompletionWindow();
