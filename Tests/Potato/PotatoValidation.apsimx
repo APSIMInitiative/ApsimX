@@ -48,26 +48,103 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].DayLength</string>
-          <string>[WeatherFile].MaxT</string>
-          <string>[WeatherFile].MinT</string>
-          <string>[WeatherFile].Radn</string>
-          <string>[WeatherFile].Rain</string>
-          <string>[SoilWater].sw_dep</string>
-          <string>[SoilNitrogen].no3</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
-          <string>[Plant].Phenology.StageCode.Value</string>
-          <string>[Plant].Structure.Population</string>
-          <string>[Plant].Leaf.LAI</string>
-          <string>[Plant].Leaf.CoverGreen</string>
-          <string>[Plant].Leaf.Live.Wt</string>
-          <string>[Plant].Stem.Live.Wt</string>
-          <string>[Plant].Tuber.Live.Wt</string>
-          <string>[Plant].Root.Live.Wt</string>
-          <string>[Plant].Leaf.Live.N</string>
-          <string>[Plant].Stem.Live.N</string>
-          <string>[Plant].Tuber.Live.N</string>
-          <string>[Plant].Root.Live.N</string>
+          <string>[ExtraVariables].AccumTtemerg</string>
+            <string>[Plant].AccumPlantN</string>
+              <string>[ExtraVariables].AccumMineralisation</string>
+              <string>[ExtraVariables].AccumDenit</string>
+              <string>[ExtraVariables].AccumFert</string>
+              <string>[ExtraVariables].AccumLeach</string>
+              <string>[ExtraVariables].AccumDetach</string>
+              <string>[ExtraVariables].DeltaSoilOMN</string>
+              <string>[ExtraVariables].DeltaSurfaceOMN</string>
+              <string>[ExtraVariables].DeltaSoilMineralN</string>
+              <string>[ExtraVariables].RootNSupplyUptake</string> 
+			  <string>[MicroClimate].eo</string>
+              <string>[MicroClimate].es</string>
+			  <string>[ExtraVariables].sw_dep</string>
+              <string>[ExtraVariables].dul_dep</string>
+            <string>[SoilWater].drain</string>
+              <string>[SoilWater].runoff</string>
+              <string>[ExtraVariables].outflow_lat</string>
+              <string>[SoilWater].pond</string>
+              <string>[ExtraVariables].AccumEO</string>
+              <string>[ExtraVariables].AccumEP</string>
+              <string>[ExtraVariables].AccumES</string>
+              <string>[ExtraVariables].AccumDrainage</string>
+              <string>[ExtraVariables].AccumRunoff</string>
+              <string>[ExtraVariables].AccumRainfall</string>
+              <string>[ExtraVariables].AccumIrrigation</string>
+              <string>[ExtraVariables].AccumOutflowLat</string>
+              <string>[ExtraVariables].SoilWaterDeficit</string>
+              <string>[Plant].AboveGroundWt</string>
+              <string>[Plant].BelowGroundWt</string>
+              <string>[Plant].TotalWt</string>
+              <string>[Plant].Leaf.DeadWt</string>
+              <string>[Plant].Leaf.LiveWt</string>
+              <string>[Plant].Stem.DeadWt</string>
+              <string>[Plant].Stem.LiveWt</string>
+              <string>[Plant].Tuber.DeadWt</string>
+              <string>[Plant].Tuber.LiveWt</string>
+              <string>[Plant].Root.DeadWt</string>
+              <string>[Plant].Root.LiveWt</string>
+              <string>[Plant].AboveGroundN</string>
+              <string>[Plant].BelowGroundN</string>
+              <string>[Plant].TotalN</string>
+              <string>[Plant].TotalLiveN</string>
+              <string>[Plant].TotalDeadN</string>
+              <string>[Plant].Leaf.DeadN</string>
+              <string>[Plant].Leaf.LiveN</string>
+              <string>[Plant].Stem.DeadN</string>
+              <string>[Plant].Stem.LiveN</string>
+              <string>[Plant].Tuber.DeadN</string>
+              <string>[Plant].Tuber.LiveN</string>
+              <string>[Plant].RootLiveN</string>
+              <string>[Plant].RootDeadN</string>
+              <string>[Plant].LeafLiveNConc</string>
+              <string>[Plant].LeafDeadNConc</string>
+              <string>[Plant].StemLiveNConc</string>
+              <string>[Plant].TuberLiveNConc</string>
+              <string>[Plant].RootLiveNConc</string>
+              <string>[Plant].RootWaterSupply</string>
+              <string>[Plant].RootWaterUptake</string>
+              <string>[Plant].LeafTranspiration</string>
+              <string>[Plant].LeafWaterDemand</string>
+              <string>[Plant].Root.Depth</string>
+              <string>[Plant].Leaf.Cover_green</string>
+              <string>[Plant].Leaf.Cover_tot</string>
+              <string>[Plant].Leaf.Cover_dead</string>
+              <string>[Plant].Leaf.LAI</string>
+              <string>[Plant].Leaf.LAIDead</string>
+              <string>[Plant].Height</string>
+              <string>[Plant].Leaf.Fn</string>
+              <string>[Plant].Leaf.Fw</string>
+              <string>[Plant].Leaf.Photosynthesis.Ft.Value</string>
+              <string>[Plant].Leaf.Photosynthesis.Fvpd.Value</string>
+              <string>[Plant].Structure.PlantTotalNodeNo</string>
+              <string>[Plant].Structure.TotalStemPopn</string>
+              <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
+              <string>[Plant].Leaf.ExpandingCohortNo</string>
+              <string>[Plant].Leaf.AppearedCohortNo</string>
+              <string>[Plant].Leaf.DeadCohortNo</string>
+              <string>[Plant].Structure.MainStemNodeNo</string>
+              <string>[Plant].Leaf.SenescingCohortNo</string>
+              <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
+              <string>[Plant].Leaf.MinimumNConc.Value</string>
+              <string>[Plant].Stem.MinimumNConc.Value</string>
+              <string>[Plant].Tuber.MinimumNConc.Value</string>
+              <string>[Plant].Root.MinimumNConc.Value</string>
+              <string>[Plant].Leaf.MaximumNConc.Value</string>
+              <string>[Plant].Stem.MaximumNConc.Value</string>
+              <string>[Plant].Tuber.MaximumNConc.Value</string>
+              <string>[Plant].Root.MaximumNConc.Value</string>
+              <string>[Plant].TotalLiveWt</string>
+              <string>[Plant].Stem.LiveStructuralWt</string>
+              <string>[Plant].Stem.LiveNonStructuralWt</string>
+              <string>[Plant].Leaf.SpecificArea</string>
+              <string>[Plant].TotalDeadWt</string>
+              <string>[Plant].Leaf.ExpandedCohortNo</string>
+              <string>[Plant].Leaf.ExpandedNodeNo</string>
+              
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -2275,7 +2352,113 @@
           <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
         </Script>
       </Manager>
-    </Zone>
+      <Manager>
+        <Name>ExtraVariables</Name>
+        <Code>
+        using System;
+        using Models.Core;
+		using System.Collections.Generic;
+        using System.Text;
+        using Models.PMF;
+        using Models.Soils;
+        namespace Models
+        {
+ public class Script : Model
+{      
+[Link] Clock Clock;
+[Link] Soils.SoilNitrogen SoilN;
+[Link] Soil.SoilWater SoilWat;
+[Link] SurfaceOrganicMatter SOM;
+[Link] Fertiliser Fertiliser;
+[Link] Irrigation Irrigation;
+[Link] MicroClimate MicroC;
+[Link] Plant Plant;          
+[Link] WeatherFile Met;     
+               
+public int SimDay = 1;
+
+public double AccumPlantN = 0;
+public double AccumMineralisation = 0;
+public double AccumDenit = 0;
+public double AccumFert = 0;
+public double AccumLeach = 0;
+public double AccumDetach = 0;
+public double DeltaSoilOMN = 0;
+public double DeltaSurfaceOMN = 0;
+public double DeltaSoilMineralN = 0;
+
+public double AccumEO = 0;
+public double AccumEP = 0;
+public double AccumES = 0;
+public double AccumDrainage = 0;
+public double AccumRunoff = 0;
+public double AccumOutflowLat = 0;
+public double AccumIrrigation = 0;
+public double AccumRainfall = 0;
+public double SoilWaterDeficit = 0;
+
+public double AccumTtemerg = 0;
+
+public double  InitialSoilOMN = 0;
+public double  InitialSurfaceOMN = 0;
+public double   InitialMineralN =0;
+			   
+ EventSubscribe("StartOfDay")]
+ private void OnStartOfDay(object sender, EventArgs e)
+ {
+			if (simday = 1)
+				{
+                  for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+                  { 
+                   InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
+                   InitialSurfaceOMN += SOM.surfaceom_n;
+                   InitialMineralN += SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]
+                  }
+                 }
+
+//!!!!!! Nitrogen balance components !!!!!!
+//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+AccumPlantN =  AccumPlantN - [Plant].Root.Nuptake;
+AccumFert = AccumFert + Fertiliser.Amount;
+DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+AccumDetach = 0; //plant2 doesn't detach yet
+AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
+   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+    { 
+     AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
+     AccumDenit = AccumDenit - SoilN.dnit[layer] ;
+     DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
+     DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+     }
+
+//!!!!!! Water balance components !!!!!!
+//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+AccumEO = AccumEO - MicroCeo;
+AccumEP = AccumEP - [Plant].Leaf.Transpiration;
+AccumES = AccumES - SoilWat.es;
+AccumDrainage = AccumDrainage - SoilWat.drain;
+AccumRunoff = AccumRunoff - SoilWat.runoff;
+AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
+AccumRainfall = Accumrainfall + Met.rain;
+   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+    {
+     AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
+     SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
+    ]
+
+!!!!!! Thermal time calculation !!!!!!
+!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+if ([Plant].Phenology.StageCodeValue >= 3)
+AccumTtemerg = AccumTtemerg + [Plant].Phenology.ThermalTime.Value
+			   }
+            }
+        }
+				</Code>
+        <Script>
+        </Script>
+      </Manager>
+   
+	</Zone>
     <Input>
       <Name>Input</Name>
       <FileName>TestObserved.txt</FileName>
