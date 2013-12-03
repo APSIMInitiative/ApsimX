@@ -49,7 +49,9 @@
         <Variables>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumTtemerg</string>
-              <string>[Plant].AccumPlantN</string>
+              <string>[Plant].Phenology.CurrentPhaseName</string>
+			  <string>[Plant].Phenology.StageCode.Value</string>
+			  <string>[Plant].AccumPlantN</string>
               <string>[ExtraVariables].Script.AccumMineralisation</string>
               <string>[ExtraVariables].Script.AccumDenit</string>
               <string>[ExtraVariables].Script.AccumFert</string>
@@ -2408,7 +2410,7 @@ public double   InitialMineralN =0;
  {
 			if (simday = 1)
 				{
-                  for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
+                  for (int layer = 0; layer = SoilN.deepest_layer; layer++)
                   { 
                    InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
                    InitialSurfaceOMN += SOM.surfaceom_n;
@@ -2423,7 +2425,7 @@ AccumFert = AccumFert + Fertiliser.Amount;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
-   for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
+   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
     { 
      AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
      AccumDenit = AccumDenit - SoilN.dnit[layer] ;
@@ -2440,7 +2442,7 @@ AccumDrainage = AccumDrainage - SoilWat.drain;
 AccumRunoff = AccumRunoff - SoilWat.runoff;
 AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
 AccumRainfall = Accumrainfall + Met.rain;
-   for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
+   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
     {
      AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
      SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
