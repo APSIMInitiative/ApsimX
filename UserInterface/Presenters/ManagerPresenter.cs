@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
             ManagerView = View as IManagerView;
             this.CommandHistory = CommandHistory;
 
-            PropertyPresenter.Attach(Manager.Model, ManagerView.GridView, CommandHistory);
+            PropertyPresenter.Attach(Manager.Script, ManagerView.GridView, CommandHistory);
 
             ManagerView.Editor.Text = Manager.Code;
             ManagerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -46,13 +46,13 @@ namespace UserInterface.Presenters
         void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
         {
             object o = null;
-            if (Manager.Model != null)
+            if (Manager.Script != null)
             {
 
                 // If no dot was specified then the object name may be refering to a [Link] in the script.
                 if (!e.ObjectName.Contains("."))
                 {
-                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Model);
+                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Script);
                     if (o == null)
                     {
                         // Not a [Link] so look for the object within scope
@@ -82,7 +82,7 @@ namespace UserInterface.Presenters
             CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
             CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            PropertyPresenter.PopulateGrid(Manager.Model);
+            PropertyPresenter.PopulateGrid(Manager.Script);
         }
 
         /// <summary>

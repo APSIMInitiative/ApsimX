@@ -23,8 +23,9 @@ namespace Models
         private Zone Zone = null;
 
         // Publics
-       // [XmlIgnore]
-        public Model Model { get; set; }
+        [XmlIgnore]
+        public Model Script { get; set; }
+
         public string Code
         {
             get
@@ -64,13 +65,13 @@ namespace Models
             {
                 CompileScript();
                 XmlSerializer serial = new XmlSerializer(ScriptType);
-                Model = serial.Deserialize(reader) as Model;
+                Script = serial.Deserialize(reader) as Model;
             }
             catch (Exception)
             {
                 if (reader.Name == "Script")
                     reader.ReadInnerXml();
-                Model = null;
+                Script = null;
             }
 
             // Tell reader we're done with the Manager deserialisation.
@@ -98,14 +99,14 @@ namespace Models
             writer.WriteString(Name);
             writer.WriteEndElement();
             writer.WriteStartElement("Code");
-            writer.WriteString(Code);
+            writer.WriteCData(Code);
             writer.WriteEndElement();
 
             // Serialise the model.
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
-            XmlSerializer serial = new XmlSerializer(Model.GetType());
-            serial.Serialize(writer, Model, ns);
+            XmlSerializer serial = new XmlSerializer(Script.GetType());
+            serial.Serialize(writer, Script, ns);
         }
 
         #endregion
@@ -127,15 +128,15 @@ namespace Models
             if (HasDeserialised)
             {
                 string scriptXml = null;
-                if (Model != null)
+                if (Script != null)
                 {
                     // First serialise the existing model.
                     XmlSerializer serial = new XmlSerializer(ScriptType);
-                    scriptXml = Utility.Xml.Serialise(Model, true);
+                    scriptXml = Utility.Xml.Serialise(Script, true);
 
                     // Get rid of old script model.
-                    this.RemoveModel(Model);
-                    Model = null;
+                    this.RemoveModel(Script);
+                    Script = null;
                 }
 
                 // Compile the script
@@ -149,12 +150,12 @@ namespace Models
                         doc.LoadXml(scriptXml);
 
                         XmlSerializer serial = new XmlSerializer(ScriptType);
-                        Model = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                        Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
                     }
                     else
-                        Model = Activator.CreateInstance(ScriptType) as Model;
+                        Script = Activator.CreateInstance(ScriptType) as Model;
 
-                    this.AddModel(Model, true);
+                    this.AddModel(Script, true);
                 }
                 catch (Exception)
                 {

@@ -269,6 +269,20 @@ namespace Utility
 
             return variables.ToArray();
         }
+
+        /// <summary>
+        /// Return a list of all parameters (that are not references to child models). Never returns null. Can
+        /// return an empty array. A parameter is a class property that is public and read/writtable
+        /// </summary>
+        public static IVariable[] PublicFieldsAndProperties(object model)
+        {
+            List<IVariable> allProperties = new List<IVariable>();
+            foreach (PropertyInfo property in model.GetType().UnderlyingSystemType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                allProperties.Add(new VariableProperty(model, property));
+            foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(BindingFlags.Instance | BindingFlags.Public))
+                allProperties.Add(new VariableField(model, field));
+            return allProperties.ToArray();
+        }
         
         #endregion
     }
