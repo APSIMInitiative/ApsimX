@@ -47,35 +47,35 @@
       <Report>
         <Name>Report</Name>
         <Variables>
-          <string>[Clock].Today</string>
-          <string>[ExtraVariables].AccumTtemerg</string>
-            <string>[Plant].AccumPlantN</string>
-              <string>[ExtraVariables].AccumMineralisation</string>
-              <string>[ExtraVariables].AccumDenit</string>
-              <string>[ExtraVariables].AccumFert</string>
-              <string>[ExtraVariables].AccumLeach</string>
-              <string>[ExtraVariables].AccumDetach</string>
-              <string>[ExtraVariables].DeltaSoilOMN</string>
-              <string>[ExtraVariables].DeltaSurfaceOMN</string>
-              <string>[ExtraVariables].DeltaSoilMineralN</string>
-              <string>[ExtraVariables].RootNSupplyUptake</string> 
+              <string>[Clock].Today</string>
+              <string>[ExtraVariables].Script.AccumTtemerg</string>
+              <string>[Plant].AccumPlantN</string>
+              <string>[ExtraVariables].Script.AccumMineralisation</string>
+              <string>[ExtraVariables].Script.AccumDenit</string>
+              <string>[ExtraVariables].Script.AccumFert</string>
+              <string>[ExtraVariables].Script.AccumLeach</string>
+              <string>[ExtraVariables].Script.AccumDetach</string>
+              <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+              <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+              <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+              <string>[ExtraVariables].Script.RootNSupplyUptake</string> 
 			  <string>[MicroClimate].eo</string>
               <string>[MicroClimate].es</string>
-			  <string>[ExtraVariables].sw_dep</string>
-              <string>[ExtraVariables].dul_dep</string>
-            <string>[SoilWater].drain</string>
+			  <string>[ExtraVariables].Script.sw_dep</string>
+              <string>[ExtraVariables].Script.dul_dep</string>
+              <string>[SoilWater].drain</string>
               <string>[SoilWater].runoff</string>
-              <string>[ExtraVariables].outflow_lat</string>
+              <string>[ExtraVariables].Script.outflow_lat</string>
               <string>[SoilWater].pond</string>
-              <string>[ExtraVariables].AccumEO</string>
-              <string>[ExtraVariables].AccumEP</string>
-              <string>[ExtraVariables].AccumES</string>
-              <string>[ExtraVariables].AccumDrainage</string>
-              <string>[ExtraVariables].AccumRunoff</string>
-              <string>[ExtraVariables].AccumRainfall</string>
-              <string>[ExtraVariables].AccumIrrigation</string>
-              <string>[ExtraVariables].AccumOutflowLat</string>
-              <string>[ExtraVariables].SoilWaterDeficit</string>
+              <string>[ExtraVariables].Script.AccumEO</string>
+              <string>[ExtraVariables].Script.AccumEP</string>
+              <string>[ExtraVariables].Script.AccumES</string>
+              <string>[ExtraVariables].Script.AccumDrainage</string>
+              <string>[ExtraVariables].Script.AccumRunoff</string>
+              <string>[ExtraVariables].Script.AccumRainfall</string>
+              <string>[ExtraVariables].Script.AccumIrrigation</string>
+              <string>[ExtraVariables].Script.AccumOutflowLat</string>
+              <string>[ExtraVariables].Script.SoilWaterDeficit</string>
               <string>[Plant].AboveGroundWt</string>
               <string>[Plant].BelowGroundWt</string>
               <string>[Plant].TotalWt</string>
@@ -2408,7 +2408,7 @@ public double   InitialMineralN =0;
  {
 			if (simday = 1)
 				{
-                  for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+                  for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
                   { 
                    InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
                    InitialSurfaceOMN += SOM.surfaceom_n;
@@ -2423,7 +2423,7 @@ AccumFert = AccumFert + Fertiliser.Amount;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+   for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
     { 
      AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
      AccumDenit = AccumDenit - SoilN.dnit[layer] ;
@@ -2440,7 +2440,7 @@ AccumDrainage = AccumDrainage - SoilWat.drain;
 AccumRunoff = AccumRunoff - SoilWat.runoff;
 AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
 AccumRainfall = Accumrainfall + Met.rain;
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+   for (int layer = 0; layer <= SoilN.deepest_layer; layer++)
     {
      AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
      SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
