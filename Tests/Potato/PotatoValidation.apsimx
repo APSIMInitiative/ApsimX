@@ -2369,8 +2369,8 @@
 {      
 [Link] Clock Clock;
 [Link] Soils.SoilNitrogen SoilN;
-[Link] Soil.SoilWater SoilWat;
-[Link] SurfaceOrganicMatter SOM;
+[Link] Soils.SoilWater SoilWat;
+[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Fertiliser Fertiliser;
 [Link] Irrigation Irrigation;
 [Link] MicroClimate MicroC;
@@ -2405,57 +2405,57 @@ public double  InitialSoilOMN = 0;
 public double  InitialSurfaceOMN = 0;
 public double   InitialMineralN =0;
 			   
- EventSubscribe("StartOfDay")]
+ [EventSubscribe("StartOfDay")]
  private void OnStartOfDay(object sender, EventArgs e)
  {
-			if (simday = 1)
+			if (SimDay == 1)
 				{
-                  for (int layer = 0; layer = SoilN.deepest_layer; layer++)
-                  { 
-                   InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
-                   InitialSurfaceOMN += SOM.surfaceom_n;
-                   InitialMineralN += SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]
-                  }
+                 // for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+                 // { 
+                 //  InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
+                 //  InitialSurfaceOMN += SOM.surfaceom_n;
+                 //  InitialMineralN += SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer];
+                 // }
                  }
 
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumPlantN =  AccumPlantN - [Plant].Root.Nuptake;
-AccumFert = AccumFert + Fertiliser.Amount;
+//AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
+//AccumFert = AccumFert + Fertiliser.Amount;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
-AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
-    { 
-     AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
-     AccumDenit = AccumDenit - SoilN.dnit[layer] ;
-     DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
-     DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
-     }
+//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
+   //for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+   // { 
+   //  AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
+   //  AccumDenit = AccumDenit - SoilN.dnit[layer] ;
+   //  DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
+   //  DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+    //}
 
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO = AccumEO - MicroCeo;
-AccumEP = AccumEP - [Plant].Leaf.Transpiration;
-AccumES = AccumES - SoilWat.es;
-AccumDrainage = AccumDrainage - SoilWat.drain;
-AccumRunoff = AccumRunoff - SoilWat.runoff;
-AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
-AccumRainfall = Accumrainfall + Met.rain;
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
-    {
-     AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
-     SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
-    ]
+//AccumEO = AccumEO - MicroC.eo;
+//AccumEP = AccumEP - Plant.Leaf.Transpiration;
+//AccumES = AccumES - SoilWat.es;
+//AccumDrainage = AccumDrainage - SoilWat.drain;
+//AccumRunoff = AccumRunoff - SoilWat.runoff;
+//AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
+//AccumRainfall = Accumrainfall + Met.rain;
+   //for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+    //{
+    // AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
+     //SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
+    //}
 
-!!!!!! Thermal time calculation !!!!!!
-!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-if ([Plant].Phenology.StageCodeValue >= 3)
-AccumTtemerg = AccumTtemerg + [Plant].Phenology.ThermalTime.Value
+//!!!!!! Thermal time calculation !!!!!!
+//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+//if (Plant.Phenology.StageCode.Value >= 3)
+//AccumTtemerg = AccumTtemerg + Plant.Phenology.ThermalTime.Value;
 			   }
             }
         }
-				</Code>
+	   </Code>
         <Script>
         </Script>
       </Manager>
