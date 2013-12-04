@@ -1382,7 +1382,7 @@ namespace Models.Soils
         int num_solutes = 0;
 
         //IRRIGATION
-        private double irrigation;       //! irrigation (mm)                                                 
+        public double irrigation;       //! irrigation (mm)                                                 
 
         //r double pond_evap;
         //r double pond;

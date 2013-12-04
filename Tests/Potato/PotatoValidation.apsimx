@@ -51,7 +51,7 @@
           <string>[ExtraVariables].Script.AccumTtemerg</string>
           <string>[Plant].Phenology.CurrentPhaseName</string>
           <string>[Plant].Phenology.StageCode.Value</string>
-          <string>[Plant].AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumPlantN</string>
           <string>[ExtraVariables].Script.AccumMineralisation</string>
           <string>[ExtraVariables].Script.AccumDenit</string>
           <string>[ExtraVariables].Script.AccumFert</string>
@@ -60,11 +60,11 @@
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[ExtraVariables].Script.RootNSupplyUptake</string>
-          <string>[MicroClimate].eo</string>
-          <string>[MicroClimate].es</string>
-          <string>[ExtraVariables].Script.sw_dep</string>
-          <string>[ExtraVariables].Script.dul_dep</string>
+          <string>[Plant].Root.NSupplyUptake</string>
+          <string>[SoilWater].eo</string>
+          <string>[SoilWater].es</string>
+          <string>[ExtraVariables].Script.SWC</string>
+          <string>[ExtraVariables].Script.DUL</string>
           <string>[SoilWater].drain</string>
           <string>[SoilWater].runoff</string>
           <string>[ExtraVariables].Script.outflow_lat</string>
@@ -146,6 +146,8 @@
           <string>[Plant].TotalDeadWt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
           <string>[Plant].Leaf.ExpandedNodeNo</string>
+          <string />
+          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -321,6 +323,7 @@
             <double>0</double>
             <double>0</double>
           </outflow_lat>
+          <irrigation>0</irrigation>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>0</CN2Bare>
@@ -498,14 +501,6 @@
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
           <N2N2O_parmB>0</N2N2O_parmB>
-          <dlayer>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </dlayer>
           <soiltype>standard</soiltype>
           <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
           <profile_reduction>no</profile_reduction>
@@ -953,6 +948,106 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2801,10 +2896,9 @@
 [Link] Soils.SoilNitrogen SoilN;
 [Link] Soils.SoilWater SoilWat;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-//[Link] Fertiliser Fertiliser;
-//[Link] Irrigation Irrigation;
 [Link] Plant Plant;          
-[Link] WeatherFile Met;     
+[Link] WeatherFile Met;   
+[Link] Fertiliser Fert;  
                
 public int SimDay = 1;
 
@@ -2832,51 +2926,55 @@ public double AccumTtemerg = 0;
 
 public double  InitialSoilOMN = 0;
 public double  InitialSurfaceOMN = 0;
-public double   InitialMineralN =0;
+public double  InitialMineralN = 0;
+
+public double SWC = 0;
+public double DUL = 0;
 			   
  [EventSubscribe("StartOfDay")]
  private void OnStartOfDay(object sender, EventArgs e)
  {
 	int layers = SoilWat.dlayer.Length;
     if (SimDay == 1)
-				{
-                 double[] Biom = new double[layers];
-                 for (int layer = 0; layer < layers; layer++)
-                  { 
-                   InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-                   InitialSurfaceOMN += SOM.surfaceom_n;
-                 //  InitialMineralN += SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer];
-                  }
-                 }
+	{
+      for (int layer = 0; layer < layers; layer++)
+      { 
+      InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
+      InitialSurfaceOMN += SOM.surfaceom_n;
+      InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
+      }
+    }
 
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
-//AccumFert = AccumFert + Fertiliser.Amount;
+//AccumFert += Fertiliser.FertiliserApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 //AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
    for (int layer = 0; layer < layers; layer++)
     { 
-   //  AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
-   //  AccumDenit = AccumDenit - SoilN.dnit[layer] ;
-   //  DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
-   //  DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+    AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
+    AccumDenit -= SoilN.dnit[layer] ;
+    DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
+    DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
     }
 
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO = AccumEO - SoilWat.eo;
+AccumEO -= SoilWat.eo;
 //AccumEP = AccumEP - Plant.Leaf.Transpiration;
-AccumES = AccumES - SoilWat.es;
-AccumDrainage = AccumDrainage - SoilWat.drain;
-AccumRunoff = AccumRunoff - SoilWat.runoff;
-//AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
-AccumRainfall = AccumRainfall + Met.Rain;
+AccumES -= SoilWat.es;
+AccumDrainage -= SoilWat.drain;
+AccumRunoff -= SoilWat.runoff;
+AccumIrrigation += SoilWat.irrigation;
+AccumRainfall += Met.Rain;
    for (int layer = 0; layer < layers; layer++)
    {
-     AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
-     SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
+     SWC += SoilWat.sw_dep[layer];
+     DUL += SoilWat.dul_dep[layer];
+     AccumOutflowLat -= SoilWat.outflow_lat[layer];
+     SoilWaterDeficit =  (SWC - DUL);
    }
 
 //!!!!!! Thermal time calculation !!!!!!
@@ -2891,27 +2989,29 @@ AccumRainfall = AccumRainfall + Met.Rain;
           <Name>Script</Name>
           <SimDay>1</SimDay>
           <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>0</AccumMineralisation>
+          <AccumMineralisation>710.53273188275136</AccumMineralisation>
           <AccumDenit>0</AccumDenit>
           <AccumFert>0</AccumFert>
           <AccumLeach>0</AccumLeach>
           <AccumDetach>0</AccumDetach>
-          <DeltaSoilOMN>0</DeltaSoilOMN>
-          <DeltaSurfaceOMN>-9345.5787726974813</DeltaSurfaceOMN>
-          <DeltaSoilMineralN>0</DeltaSoilMineralN>
-          <AccumEO>-23423.973576538032</AccumEO>
+          <DeltaSoilOMN>-53190295.745424315</DeltaSoilOMN>
+          <DeltaSurfaceOMN>-26479.946614283021</DeltaSurfaceOMN>
+          <DeltaSoilMineralN>-871145.95165043</DeltaSoilMineralN>
+          <AccumEO>-31735.897887589559</AccumEO>
           <AccumEP>0</AccumEP>
-          <AccumES>-4324.6310349647183</AccumES>
-          <AccumDrainage>-1042.8675484648006</AccumDrainage>
+          <AccumES>-5462.7024292051274</AccumES>
+          <AccumDrainage>-1332.552978593912</AccumDrainage>
           <AccumRunoff>0</AccumRunoff>
           <AccumOutflowLat>0</AccumOutflowLat>
-          <AccumIrrigation>0</AccumIrrigation>
-          <AccumRainfall>7151.4000598937273</AccumRainfall>
-          <SoilWaterDeficit>-15.168093275635982</SoilWaterDeficit>
+          <AccumIrrigation>400</AccumIrrigation>
+          <AccumRainfall>9864.0000826120377</AccumRainfall>
+          <SoilWaterDeficit>93243.218764861</SoilWaterDeficit>
           <AccumTtemerg>0</AccumTtemerg>
-          <InitialSoilOMN>8183349.2723797355</InitialSoilOMN>
-          <InitialSurfaceOMN>9346.0188226830214</InitialSurfaceOMN>
-          <InitialMineralN>0</InitialMineralN>
+          <InitialSoilOMN>53191770.270468213</InitialSoilOMN>
+          <InitialSurfaceOMN>26480.386664268561</InitialSurfaceOMN>
+          <InitialMineralN>871148.44106044015</InitialMineralN>
+          <SWC>0</SWC>
+          <DUL>0</DUL>
         </Script>
       </Manager>
     </Zone>

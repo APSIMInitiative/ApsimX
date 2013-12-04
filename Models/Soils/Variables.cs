@@ -2181,7 +2181,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Net N mineralised in soil")]
-        double[] dlt_n_min
+        public double[] dlt_n_min
         {
             get
             {
@@ -2199,7 +2199,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Net N mineralisation from residue decomposition")]
-        double[] dlt_n_min_res
+        public double[] dlt_n_min_res
         {
             get
             {
@@ -2505,7 +2505,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("N converted by denitrification")]
-        double[] dnit
+        public double[] dnit
         {
             get
             {
