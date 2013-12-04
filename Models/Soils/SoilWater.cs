@@ -390,7 +390,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Total es")]
-        private double es                      //! total es
+        public double es                      //! total es
         { get { return Utility.Math.Sum(es_layers); } }
 
 
@@ -441,7 +441,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Drainage rate from bottom layer")]
-        private double drain;            //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
+        public double drain;            //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
 
         [Units("mm")]
@@ -451,7 +451,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Runoff")]
-        private double runoff;           //! runoff (mm)
+        public double runoff;           //! runoff (mm)
 
 
         [Units("mm")]
@@ -993,7 +993,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Lateral outflow")]
-        private double[] outflow_lat;   //! outflowing lateral water   //lateral outflow
+        public double[] outflow_lat;   //! outflowing lateral water   //lateral outflow
         //end
 
 
