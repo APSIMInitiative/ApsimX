@@ -4159,6 +4159,8 @@ namespace Models.Soils
                 for (int i = 0; i < dlayer.Length; i++)
                     SWCON[i] = 0.3;
             }
+            inflow_lat = null;
+
             //Save State
             soilwat2_save_state();
 

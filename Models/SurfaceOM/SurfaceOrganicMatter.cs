@@ -225,9 +225,7 @@ namespace Models.SurfaceOM
         public SurfaceOrganicMatter()
             : base()
         {
-            g = new SurfaceOMGlobals();
-            p = new SurfaceOMParameters();
-            c = new SurfaceOMConstants();
+
         }
 
 
@@ -2122,17 +2120,6 @@ namespace Models.SurfaceOM
 
         private void Main(string action, string data_string)
         { }
-
-        //====================================================================
-        //do first stage initialisation stuff.
-        //====================================================================
-        private void doInit1()
-        {
-            //doRegistrations(id);
-            //surfom_zero_all_globals();
-            surfom_zero_variables();
-            //surfom_zero_event_data();
-        }
 
         //====================================================================
         //This routine is the event handler for all events;

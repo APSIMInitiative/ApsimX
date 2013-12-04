@@ -1,4 +1,4 @@
-﻿namespace Models.Core
+﻿namespace Utility
 {
     using System;
     using System.Reflection;
@@ -8,33 +8,53 @@
     /// This abstract base class encapsulates the interface for a variable from a Model.
     /// source code.
     /// </summary>
-    public interface IVariable
+    public abstract class IVariable
     {
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        string Name { get;}
+        public abstract string Name { get; }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        object Value { get;}
+        public abstract object Value { get; }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        object DefaultValue { get;}
+        public abstract object DefaultValue { get; }
 
         /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
-        string Description { get;}
+        public abstract string Description { get; }
 
         /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
-        string Units { get; }
+        public abstract string Units { get; }
 
+        /// <summary>
+        /// If the variable is an array then returns the type of the elements in the array.
+        /// Returns null if variable is not an array.
+        /// </summary>
+        public Type ArrayType
+        {
+            get
+            {
+                Type[] arguments = Value.GetType().GetGenericArguments();
+                if (Value.GetType().GetInterface("IList") != null &&
+                    arguments != null && arguments.Length > 0)
+                    return arguments[0];
+                else
+                    return null;
+            }
+        }
+
+        public virtual bool IsParameter { get { return false; } }
+        public virtual bool IsState { get { return false; } }
+        public virtual bool IsModel { get { return false; } }
     }
 
     /// <summary>
@@ -57,19 +77,18 @@
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
-                if (Obj is Model) return (Obj as Model).Name;
-                else throw new ApsimXException("", "Cannot get the name of object with type '" + Obj.GetType().Name + "' in VariableObject class");
+                return Reflection.GetValueOfFieldOrProperty("Name", Obj) as string;
             }
         }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object Value
+        public override object Value
         {
             get
             {
@@ -80,16 +99,11 @@
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object DefaultValue
+        public override object DefaultValue
         {
             get
             {
-                if (Obj is Model)
-                {
-                    Model model = (Obj as Model);
-                    return model.DefaultModel;
-                }
-                else
+              
                     throw new NotImplementedException();
             }
         }
@@ -97,7 +111,7 @@
         /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
-        public string Description
+        public override string Description
         {
             get
             {
@@ -108,7 +122,7 @@
         /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
-        public string Units
+        public override string Units
         {
             get
             {
@@ -134,7 +148,7 @@
         public VariableField(object model, FieldInfo fieldInfo)
         {
             if (model == null || fieldInfo == null)
-                throw new ApsimXException("", "Cannot create an instance of class VariableField with a null model or fieldInfo");
+                throw new Exception("Cannot create an instance of class VariableField with a null model or fieldInfo");
             Obj = model;
             FieldInfo = fieldInfo;
         }
@@ -142,7 +156,7 @@
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public string Name 
+        public override string Name 
         { 
             get 
             {
@@ -158,26 +172,23 @@
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object Value { get { return FieldInfo.GetValue(Obj); } }
+        public override object Value { get { return FieldInfo.GetValue(Obj); } }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object DefaultValue 
+        public override object DefaultValue 
         { 
             get 
-            { 
-                if (Obj is Model)
-                    return FieldInfo.GetValue((Obj as Model).DefaultModel); 
-                else
-                    throw new ApsimXException("", "Cannot return a default value for object type '" + Obj.GetType().Name + "' in VariableField class");
+            {
+                throw new NotImplementedException();
             } 
         }
 
         /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
-        public string Description
+        public override string Description
         {
             get
             {
@@ -191,7 +202,7 @@
         /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
-        public string Units
+        public override string Units
         {
             get
             {
@@ -202,6 +213,18 @@
             }
         }
 
+        public override bool IsState
+        {
+            get
+            {
+                bool ignoreProperty = FieldInfo.DeclaringType == typeof(Model);
+                ignoreProperty |= FieldInfo.FieldType == typeof(Model);
+                ignoreProperty |= FieldInfo.FieldType.IsSubclassOf(typeof(Model));
+                ignoreProperty |= Utility.Reflection.GetAttribute(FieldInfo, typeof(Link), false) != null;
+                ignoreProperty |= FieldInfo.Name.Contains("BackingField");
+                return !ignoreProperty;
+            }
+        }
     }
 
 
@@ -229,17 +252,17 @@
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public string Name { get { return PropertyInfo.Name; } }
+        public override string Name { get { return PropertyInfo.Name; } }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object Value { get { return PropertyInfo.GetValue(Obj, null); } }
+        public override  object Value { get { return PropertyInfo.GetValue(Obj, null); } }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public object DefaultValue
+        public override  object DefaultValue
         {
             get
             {
@@ -253,7 +276,7 @@
         /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
-        public string Description
+        public override string Description
         {
             get
             {
@@ -267,7 +290,7 @@
         /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
-        public string Units
+        public override string Units
         {
             get
             {
@@ -277,6 +300,43 @@
                 return null;
             }
         }
+
+
+        public override bool IsParameter
+        {
+            get
+            {
+                Attribute XmlIgnore = Utility.Reflection.GetAttribute(PropertyInfo, typeof(System.Xml.Serialization.XmlIgnoreAttribute), true);
+
+                MethodInfo[] accessors = PropertyInfo.GetAccessors();
+                if (accessors.Length == 2 && accessors[0].IsPublic && accessors[1].IsPublic)
+                {
+                    bool ignoreProperty = XmlIgnore != null;                                     // No [XmlIgnore]
+                    ignoreProperty |= IsModel;
+                    return !ignoreProperty;
+                }
+                else
+                    return false; // not a public property.
+            }
+        }
+
+        public override bool IsModel
+        {
+            get
+            {
+                if (PropertyInfo.PropertyType.GetInterface("IList") != null && PropertyInfo.PropertyType.FullName.Contains("Models."))
+                    return true;
+
+                else if (PropertyInfo.PropertyType.Name == "Model" || PropertyInfo.PropertyType.IsSubclassOf(typeof(Model)))
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+
+        
+
 
     }
 

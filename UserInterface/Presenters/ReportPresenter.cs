@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (IVariable Property in Utility.ModelFunctions.PublicFieldsAndProperties(o))
+                foreach (Utility.IVariable Property in Utility.ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                 {
                     e.Items.Add(Property.Name);
                 }

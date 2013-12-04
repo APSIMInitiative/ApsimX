@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Models
 {
@@ -194,106 +195,18 @@ namespace Models
         {
             string modelName = model.FullPath;
 
-            DataTable propertyTable = new DataTable();
-            propertyTable.Columns.Add("Property name", typeof(string));
-            propertyTable.Columns.Add("Value", typeof(object));
+            DataTable[] tables = Utility.DataTableSerialiser.Serialise(model, stateVariables);
 
-            DataTable table = new DataTable();
-
-            List<IVariable> properties = new List<IVariable>();
-            properties.AddRange(Utility.ModelFunctions.Parameters(model));
-
-            if (stateVariables)
-                properties.AddRange(Utility.ModelFunctions.States(model));
-
-            foreach (IVariable property in properties)
-            {
-                if (property.Name != "Name" && property.Name != "Parent")
-                {
-                    object value = property.Value;
-                    if (value != null)
-                    {
-                        string propertyName = property.Name;
-
-                        // look for a description attribute.
-                        if (property.Description != null)
-                            propertyName = property.Description;
-
-                        // look for units
-                        if (property.Units != null)
-                            propertyName += property.Units;
-                        propertyName += ":";
-
-                        // If an array was found then put values into table.
-                        if (value.GetType().IsArray)
-                        {
-                            Array array = value as Array;
-                            if (array != null && array.Length > 0)
-                            {
-                                List<string> tableValues = new List<string>();
-
-                                foreach (object Value in array)
-                                    tableValues.Add(FormatValue(Value));
-
-                                if (table.Rows.Count == 0 || table.Rows.Count == tableValues.Count)
-                                    Utility.DataTable.AddColumn(table, propertyName, tableValues.ToArray());
-                            }
-                        }
-
-                        // Write out a code block
-                        else if (value.ToString().Contains("\n"))
-                            WriteCodeBlock(report, html, value, propertyName);
-
-                        // Write out a normal property.
-                        else
-                            propertyTable.Rows.Add(new object[] { propertyName, value });
-                    }
-                }
-            }
-
-            bool somethingWritten = false;
-            if (propertyTable.Rows.Count > 0 || table.Rows.Count > 0)
+            if (tables != null && tables.Length > 0)
             {
                 WriteHeading(report, modelName, html);
-                somethingWritten = true;
+                foreach (DataTable table in tables)
+                    WriteTable(report, table, html, true, modelName);
+                if (!html)
+                    report.WriteLine(divider);
+                return true;
             }
-
-            // write out properties
-            if (propertyTable.Rows.Count > 0)
-            {
-                WriteTable(report, propertyTable, html, false, "PropertyTable");
-                somethingWritten = true;
-            }
-
-            // write out table.
-            if (table.Rows.Count > 0)
-            {
-                WriteTable(report, table, html, true, "ApsimTable");
-                somethingWritten = true;
-            }
-
-            if (somethingWritten)
-                report.WriteLine(divider);
-
-            return somethingWritten;
-        }
-
-        /// <summary>
-        /// Write the specified value as a code block to the specified TextWriter.
-        /// </summary>
-        private static void WriteCodeBlock(TextWriter report, bool html, object value, string propertyName)
-        {
-            // the value has <cr><lf> - write out manually 
-            if (html)
-            {
-                report.WriteLine("<p>" + propertyName + "</p>");
-                report.WriteLine("<code><pre>" + value.ToString().Replace("\n", "<br/>") + "</pre></code>");
-            }
-            else
-            {
-                report.WriteLine(propertyName);
-                report.WriteLine(value.ToString());
-            }
+            return false;
         }
 
         /// <summary>
@@ -351,6 +264,8 @@ namespace Models
                         string st = FormatValue(row[col]);
                         if (st.Contains("\n"))
                             st = st.Replace("\n", "<br/>");
+                        if (col.Ordinal == 1 && table.Rows.Count == 1 && table.Rows[0][0].ToString() == "Code:")
+                            st = "<code><pre>" + st + "</pre></code>";  // manager code
                         if (st.Contains("WARNING:"))
                             report.WriteLine("<p class=\"Warning\">");
                         else if (st.Contains("ERROR:"))
