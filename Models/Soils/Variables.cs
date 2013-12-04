@@ -2545,7 +2545,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Nitrogen in FOM")]
-        double[] fom_n
+        public double[] fom_n
         {
             get
             {
@@ -2617,7 +2617,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil humic nitrogen")]
-        double[] hum_n
+        public double[] hum_n
         {
             get
             {
@@ -2635,7 +2635,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil biomass nitrogen")]
-        double[] biom_n
+        public double[] biom_n
         {
             get
             {
