@@ -2481,9 +2481,6 @@
       <Name>Input</Name>
       <FileName>TestObserved.txt</FileName>
     </Input>
-    <Log>
-      <Name>Log</Name>
-    </Log>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
