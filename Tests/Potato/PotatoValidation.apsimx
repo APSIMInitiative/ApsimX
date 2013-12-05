@@ -2349,7 +2349,7 @@
               </DMRetranslocationFactor>
               <ShadeInducedSenescenceRate xsi:type="LinearInterpolationFunction">
                 <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Leaf].CohortCurrentRank.CoverAbove</XProperty>
+                <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
