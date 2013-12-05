@@ -47,106 +47,107 @@
       <Report>
         <Name>Report</Name>
         <Variables>
-              <string>[Clock].Today</string>
-              <string>[ExtraVariables].Script.AccumTtemerg</string>
-              <string>[Plant].Phenology.CurrentPhaseName</string>
-			  <string>[Plant].Phenology.StageCode.Value</string>
-			  <string>[Plant].AccumPlantN</string>
-              <string>[ExtraVariables].Script.AccumMineralisation</string>
-              <string>[ExtraVariables].Script.AccumDenit</string>
-              <string>[ExtraVariables].Script.AccumFert</string>
-              <string>[ExtraVariables].Script.AccumLeach</string>
-              <string>[ExtraVariables].Script.AccumDetach</string>
-              <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-              <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-              <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-              <string>[ExtraVariables].Script.RootNSupplyUptake</string> 
-			  <string>[MicroClimate].eo</string>
-              <string>[MicroClimate].es</string>
-			  <string>[ExtraVariables].Script.sw_dep</string>
-              <string>[ExtraVariables].Script.dul_dep</string>
-              <string>[SoilWater].drain</string>
-              <string>[SoilWater].runoff</string>
-              <string>[ExtraVariables].Script.outflow_lat</string>
-              <string>[SoilWater].pond</string>
-              <string>[ExtraVariables].Script.AccumEO</string>
-              <string>[ExtraVariables].Script.AccumEP</string>
-              <string>[ExtraVariables].Script.AccumES</string>
-              <string>[ExtraVariables].Script.AccumDrainage</string>
-              <string>[ExtraVariables].Script.AccumRunoff</string>
-              <string>[ExtraVariables].Script.AccumRainfall</string>
-              <string>[ExtraVariables].Script.AccumIrrigation</string>
-              <string>[ExtraVariables].Script.AccumOutflowLat</string>
-              <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-              <string>[Plant].AboveGroundWt</string>
-              <string>[Plant].BelowGroundWt</string>
-              <string>[Plant].TotalWt</string>
-              <string>[Plant].Leaf.DeadWt</string>
-              <string>[Plant].Leaf.LiveWt</string>
-              <string>[Plant].Stem.DeadWt</string>
-              <string>[Plant].Stem.LiveWt</string>
-              <string>[Plant].Tuber.DeadWt</string>
-              <string>[Plant].Tuber.LiveWt</string>
-              <string>[Plant].Root.DeadWt</string>
-              <string>[Plant].Root.LiveWt</string>
-              <string>[Plant].AboveGroundN</string>
-              <string>[Plant].BelowGroundN</string>
-              <string>[Plant].TotalN</string>
-              <string>[Plant].TotalLiveN</string>
-              <string>[Plant].TotalDeadN</string>
-              <string>[Plant].Leaf.DeadN</string>
-              <string>[Plant].Leaf.LiveN</string>
-              <string>[Plant].Stem.DeadN</string>
-              <string>[Plant].Stem.LiveN</string>
-              <string>[Plant].Tuber.DeadN</string>
-              <string>[Plant].Tuber.LiveN</string>
-              <string>[Plant].RootLiveN</string>
-              <string>[Plant].RootDeadN</string>
-              <string>[Plant].LeafLiveNConc</string>
-              <string>[Plant].LeafDeadNConc</string>
-              <string>[Plant].StemLiveNConc</string>
-              <string>[Plant].TuberLiveNConc</string>
-              <string>[Plant].RootLiveNConc</string>
-              <string>[Plant].RootWaterSupply</string>
-              <string>[Plant].RootWaterUptake</string>
-              <string>[Plant].LeafTranspiration</string>
-              <string>[Plant].LeafWaterDemand</string>
-              <string>[Plant].Root.Depth</string>
-              <string>[Plant].Leaf.Cover_green</string>
-              <string>[Plant].Leaf.Cover_tot</string>
-              <string>[Plant].Leaf.Cover_dead</string>
-              <string>[Plant].Leaf.LAI</string>
-              <string>[Plant].Leaf.LAIDead</string>
-              <string>[Plant].Height</string>
-              <string>[Plant].Leaf.Fn</string>
-              <string>[Plant].Leaf.Fw</string>
-              <string>[Plant].Leaf.Photosynthesis.Ft.Value</string>
-              <string>[Plant].Leaf.Photosynthesis.Fvpd.Value</string>
-              <string>[Plant].Structure.PlantTotalNodeNo</string>
-              <string>[Plant].Structure.TotalStemPopn</string>
-              <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
-              <string>[Plant].Leaf.ExpandingCohortNo</string>
-              <string>[Plant].Leaf.AppearedCohortNo</string>
-              <string>[Plant].Leaf.DeadCohortNo</string>
-              <string>[Plant].Structure.MainStemNodeNo</string>
-              <string>[Plant].Leaf.SenescingCohortNo</string>
-              <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
-              <string>[Plant].Leaf.MinimumNConc.Value</string>
-              <string>[Plant].Stem.MinimumNConc.Value</string>
-              <string>[Plant].Tuber.MinimumNConc.Value</string>
-              <string>[Plant].Root.MinimumNConc.Value</string>
-              <string>[Plant].Leaf.MaximumNConc.Value</string>
-              <string>[Plant].Stem.MaximumNConc.Value</string>
-              <string>[Plant].Tuber.MaximumNConc.Value</string>
-              <string>[Plant].Root.MaximumNConc.Value</string>
-              <string>[Plant].TotalLiveWt</string>
-              <string>[Plant].Stem.LiveStructuralWt</string>
-              <string>[Plant].Stem.LiveNonStructuralWt</string>
-              <string>[Plant].Leaf.SpecificArea</string>
-              <string>[Plant].TotalDeadWt</string>
-              <string>[Plant].Leaf.ExpandedCohortNo</string>
-              <string>[Plant].Leaf.ExpandedNodeNo</string>
-              
+          <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.AccumTtemerg</string>
+          <string>[Plant].Phenology.CurrentPhaseName</string>
+          <string>[Plant].Phenology.StageCode.Value</string>
+          <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumMineralisation</string>
+          <string>[ExtraVariables].Script.AccumDenit</string>
+          <string>[ExtraVariables].Script.AccumFert</string>
+          <string>[ExtraVariables].Script.AccumLeach</string>
+          <string>[ExtraVariables].Script.AccumDetach</string>
+          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+          <string>[Plant].Root.NSupplyUptake</string>
+          <string>[SoilWater].eo</string>
+          <string>[SoilWater].es</string>
+          <string>[ExtraVariables].Script.SWC</string>
+          <string>[ExtraVariables].Script.DUL</string>
+          <string>[SoilWater].drain</string>
+          <string>[SoilWater].runoff</string>
+          <string>[ExtraVariables].Script.outflow_lat</string>
+          <string>[SoilWater].pond</string>
+          <string>[ExtraVariables].Script.AccumEO</string>
+          <string>[ExtraVariables].Script.AccumEP</string>
+          <string>[ExtraVariables].Script.AccumES</string>
+          <string>[ExtraVariables].Script.AccumDrainage</string>
+          <string>[ExtraVariables].Script.AccumRunoff</string>
+          <string>[ExtraVariables].Script.AccumRainfall</string>
+          <string>[ExtraVariables].Script.AccumIrrigation</string>
+          <string>[ExtraVariables].Script.AccumOutflowLat</string>
+          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[Plant].AboveGroundWt</string>
+          <string>[Plant].BelowGroundWt</string>
+          <string>[Plant].TotalWt</string>
+          <string>[Plant].Leaf.DeadWt</string>
+          <string>[Plant].Leaf.LiveWt</string>
+          <string>[Plant].Stem.DeadWt</string>
+          <string>[Plant].Stem.LiveWt</string>
+          <string>[Plant].Tuber.DeadWt</string>
+          <string>[Plant].Tuber.LiveWt</string>
+          <string>[Plant].Root.DeadWt</string>
+          <string>[Plant].Root.LiveWt</string>
+          <string>[Plant].AboveGroundN</string>
+          <string>[Plant].BelowGroundN</string>
+          <string>[Plant].TotalN</string>
+          <string>[Plant].TotalLiveN</string>
+          <string>[Plant].TotalDeadN</string>
+          <string>[Plant].Leaf.DeadN</string>
+          <string>[Plant].Leaf.LiveN</string>
+          <string>[Plant].Stem.DeadN</string>
+          <string>[Plant].Stem.LiveN</string>
+          <string>[Plant].Tuber.DeadN</string>
+          <string>[Plant].Tuber.LiveN</string>
+          <string>[Plant].RootLiveN</string>
+          <string>[Plant].RootDeadN</string>
+          <string>[Plant].LeafLiveNConc</string>
+          <string>[Plant].LeafDeadNConc</string>
+          <string>[Plant].StemLiveNConc</string>
+          <string>[Plant].TuberLiveNConc</string>
+          <string>[Plant].RootLiveNConc</string>
+          <string>[Plant].RootWaterSupply</string>
+          <string>[Plant].RootWaterUptake</string>
+          <string>[Plant].LeafTranspiration</string>
+          <string>[Plant].LeafWaterDemand</string>
+          <string>[Plant].Root.Depth</string>
+          <string>[Plant].Leaf.Cover_green</string>
+          <string>[Plant].Leaf.Cover_tot</string>
+          <string>[Plant].Leaf.Cover_dead</string>
+          <string>[Plant].Leaf.LAI</string>
+          <string>[Plant].Leaf.LAIDead</string>
+          <string>[Plant].Height</string>
+          <string>[Plant].Leaf.Fn</string>
+          <string>[Plant].Leaf.Fw</string>
+          <string>[Plant].Leaf.Photosynthesis.Ft.Value</string>
+          <string>[Plant].Leaf.Photosynthesis.Fvpd.Value</string>
+          <string>[Plant].Structure.PlantTotalNodeNo</string>
+          <string>[Plant].Structure.TotalStemPopn</string>
+          <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
+          <string>[Plant].Leaf.ExpandingCohortNo</string>
+          <string>[Plant].Leaf.AppearedCohortNo</string>
+          <string>[Plant].Leaf.DeadCohortNo</string>
+          <string>[Plant].Structure.MainStemNodeNo</string>
+          <string>[Plant].Leaf.SenescingCohortNo</string>
+          <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
+          <string>[Plant].Leaf.MinimumNConc.Value</string>
+          <string>[Plant].Stem.MinimumNConc.Value</string>
+          <string>[Plant].Tuber.MinimumNConc.Value</string>
+          <string>[Plant].Root.MinimumNConc.Value</string>
+          <string>[Plant].Leaf.MaximumNConc.Value</string>
+          <string>[Plant].Stem.MaximumNConc.Value</string>
+          <string>[Plant].Tuber.MaximumNConc.Value</string>
+          <string>[Plant].Root.MaximumNConc.Value</string>
+          <string>[Plant].TotalLiveWt</string>
+          <string>[Plant].Stem.LiveStructuralWt</string>
+          <string>[Plant].Stem.LiveNonStructuralWt</string>
+          <string>[Plant].Leaf.SpecificArea</string>
+          <string>[Plant].TotalDeadWt</string>
+          <string>[Plant].Leaf.ExpandedCohortNo</string>
+          <string>[Plant].Leaf.ExpandedNodeNo</string>
+          <string />
+          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -304,6 +305,8 @@
           <catchment_area>0</catchment_area>
           <eo>0.59443006759149886</eo>
           <eos>0.59443006759149886</eos>
+          <drain>0</drain>
+          <runoff>0</runoff>
           <bd>
             <double>1.2</double>
             <double>1.2</double>
@@ -312,6 +315,15 @@
             <double>1.2</double>
             <double>1.2</double>
           </bd>
+          <outflow_lat>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </outflow_lat>
+          <irrigation>0</irrigation>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>0</CN2Bare>
@@ -936,6 +948,506 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2214,7 +2726,7 @@
       </Graph>
       <Manager>
         <Name>PotatoSowingRule</Name>
-        <Code>
+        <Code><![CDATA[
         using System;
         using Models.Core;
         using Models.PMF;
@@ -2261,7 +2773,7 @@
 			   }
             }
         }
-				</Code>
+				]]></Code>
         <Script>
           <Name>Script</Name>
           <RowSpace>280</RowSpace>
@@ -2274,7 +2786,7 @@
       </Manager>
       <Manager>
         <Name>IrrigationRule</Name>
-        <Code>
+        <Code><![CDATA[
         using System;
         using Models.Core;
         using Models.PMF;
@@ -2289,12 +2801,17 @@
                public double ApplicationAmount {get; set;} 
                [Description("Date irrigation is applied")]
                public DateTime ApplicationDate {get; set;}
+			   public double IrrigationApplied = 0;
 			   
 			   [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
+				IrrigationApplied = 0;
 				if (Clock.Today.Date.Equals(ApplicationDate))
+                    {
                     Irrigation.Apply(Amount:ApplicationAmount);
+                    IrrigationApplied = ApplicationAmount;
+                    }
                   //Irrigation.Apply(Amount:a, Depth:b, Efficiency:c, willRunoff:"d");
                   //a is a double and can be represented by a variable name or a number representing the amount (mm) of irrigation to apply
 			      //b is an optional double and can be represented by a variable name or a number representing the depth (mm) at which irrigation is applied
@@ -2306,16 +2823,17 @@
 			   }
             }
         }
-				</Code>
+				]]></Code>
         <Script>
           <Name>Script</Name>
+          <IrrigationApplied>0</IrrigationApplied>
           <ApplicationAmount>100</ApplicationAmount>
           <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
         </Script>
       </Manager>
       <Manager>
         <Name>FertiliserRule</Name>
-        <Code>
+        <Code><![CDATA[
         using System;
         using Models.Core;
         using Models.PMF;
@@ -2332,12 +2850,17 @@
                public Fertiliser.Types FertType {get; set;}//= "NO3_N";
                [Description("Date of fertiliser application")]
                public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
-
+               public double NitrogenApplied = 0;
+               
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
+               NitrogenApplied = 0;
                if (Clock.Today.Date.Equals(ApplicationDate))
+                    {
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
+                    NitrogenApplied = ApplicationAmount;
+                    }
 			      //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
 			      //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
 			      //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
@@ -2346,9 +2869,10 @@
 			   }
             }
         }
-				</Code>
+				]]></Code>
         <Script>
           <Name>Script</Name>
+          <NitrogenApplied>0</NitrogenApplied>
           <ApplicationAmount>500</ApplicationAmount>
           <FertType>NO3N</FertType>
           <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
@@ -2356,26 +2880,25 @@
       </Manager>
       <Manager>
         <Name>ExtraVariables</Name>
-        <Code>
+        <Code><![CDATA[
         using System;
         using Models.Core;
 		using System.Collections.Generic;
         using System.Text;
         using Models.PMF;
         using Models.Soils;
+        using Models;
         namespace Models
         {
  public class Script : Model
 {      
 [Link] Clock Clock;
 [Link] Soils.SoilNitrogen SoilN;
-[Link] Soil.SoilWater SoilWat;
-[Link] SurfaceOrganicMatter SOM;
-[Link] Fertiliser Fertiliser;
-[Link] Irrigation Irrigation;
-[Link] MicroClimate MicroC;
+[Link] Soils.SoilWater SoilWat;
+[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant Plant;          
-[Link] WeatherFile Met;     
+[Link] WeatherFile Met;   
+[Link] Fertiliser Fert;  
                
 public int SimDay = 1;
 
@@ -2403,64 +2926,95 @@ public double AccumTtemerg = 0;
 
 public double  InitialSoilOMN = 0;
 public double  InitialSurfaceOMN = 0;
-public double   InitialMineralN =0;
+public double  InitialMineralN = 0;
+
+public double SWC = 0;
+public double DUL = 0;
 			   
- EventSubscribe("StartOfDay")]
+ [EventSubscribe("StartOfDay")]
  private void OnStartOfDay(object sender, EventArgs e)
  {
-			if (simday = 1)
-				{
-                  for (int layer = 0; layer = SoilN.deepest_layer; layer++)
-                  { 
-                   InitialSoilOMN += SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer];
-                   InitialSurfaceOMN += SOM.surfaceom_n;
-                   InitialMineralN += SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]
-                  }
-                 }
+	int layers = SoilWat.dlayer.Length;
+    if (SimDay == 1)
+	{
+      for (int layer = 0; layer < layers; layer++)
+      { 
+      InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
+      InitialSurfaceOMN += SOM.surfaceom_n;
+      InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
+      }
+    }
 
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumPlantN =  AccumPlantN - [Plant].Root.Nuptake;
-AccumFert = AccumFert + Fertiliser.Amount;
+//AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
+//AccumFert += Fertiliser.FertiliserApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
-AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
+//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
+   for (int layer = 0; layer < layers; layer++)
     { 
-     AccumMineralisation = AccumMineralisation + SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer];
-     AccumDenit = AccumDenit - SoilN.dnit[layer] ;
-     DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
-     DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
-     }
+    AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
+    AccumDenit -= SoilN.dnit[layer] ;
+    DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
+    DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+    }
 
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO = AccumEO - MicroCeo;
-AccumEP = AccumEP - [Plant].Leaf.Transpiration;
-AccumES = AccumES - SoilWat.es;
-AccumDrainage = AccumDrainage - SoilWat.drain;
-AccumRunoff = AccumRunoff - SoilWat.runoff;
-AccumIrrigation = AccumIrrigation + Irrigation.Ammount;
-AccumRainfall = Accumrainfall + Met.rain;
-   for (int layer = 0; layer = SoilN.deepest_layer; layer++)
-    {
-     AccumOutflowLat = AccumOutflowLat - SoilWat.outflow_lat[layer];
-     SoilWaterDeficit =  SoilWat.sw_dep[layer] - SoilWat.dul_dep[layer];
-    ]
+AccumEO -= SoilWat.eo;
+//AccumEP = AccumEP - Plant.Leaf.Transpiration;
+AccumES -= SoilWat.es;
+AccumDrainage -= SoilWat.drain;
+AccumRunoff -= SoilWat.runoff;
+AccumIrrigation += SoilWat.irrigation;
+AccumRainfall += Met.Rain;
+   for (int layer = 0; layer < layers; layer++)
+   {
+     SWC += SoilWat.sw_dep[layer];
+     DUL += SoilWat.dul_dep[layer];
+     AccumOutflowLat -= SoilWat.outflow_lat[layer];
+     SoilWaterDeficit =  (SWC - DUL);
+   }
 
-!!!!!! Thermal time calculation !!!!!!
-!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-if ([Plant].Phenology.StageCodeValue >= 3)
-AccumTtemerg = AccumTtemerg + [Plant].Phenology.ThermalTime.Value
+//!!!!!! Thermal time calculation !!!!!!
+//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+//if (Plant.Phenology.StageCode.Value >= 3)
+//AccumTtemerg = AccumTtemerg + Plant.Phenology.ThermalTime.Value;
 			   }
             }
         }
-				</Code>
+	   ]]></Code>
         <Script>
+          <Name>Script</Name>
+          <SimDay>1</SimDay>
+          <AccumPlantN>0</AccumPlantN>
+          <AccumMineralisation>710.53273188275136</AccumMineralisation>
+          <AccumDenit>0</AccumDenit>
+          <AccumFert>0</AccumFert>
+          <AccumLeach>0</AccumLeach>
+          <AccumDetach>0</AccumDetach>
+          <DeltaSoilOMN>-53190295.745424315</DeltaSoilOMN>
+          <DeltaSurfaceOMN>-26479.946614283021</DeltaSurfaceOMN>
+          <DeltaSoilMineralN>-871145.95165043</DeltaSoilMineralN>
+          <AccumEO>-31735.897887589559</AccumEO>
+          <AccumEP>0</AccumEP>
+          <AccumES>-5462.7024292051274</AccumES>
+          <AccumDrainage>-1332.552978593912</AccumDrainage>
+          <AccumRunoff>0</AccumRunoff>
+          <AccumOutflowLat>0</AccumOutflowLat>
+          <AccumIrrigation>400</AccumIrrigation>
+          <AccumRainfall>9864.0000826120377</AccumRainfall>
+          <SoilWaterDeficit>93243.218764861</SoilWaterDeficit>
+          <AccumTtemerg>0</AccumTtemerg>
+          <InitialSoilOMN>53191770.270468213</InitialSoilOMN>
+          <InitialSurfaceOMN>26480.386664268561</InitialSurfaceOMN>
+          <InitialMineralN>871148.44106044015</InitialMineralN>
+          <SWC>0</SWC>
+          <DUL>0</DUL>
         </Script>
       </Manager>
-   
-	</Zone>
+    </Zone>
     <Input>
       <Name>Input</Name>
       <FileName>TestObserved.txt</FileName>
