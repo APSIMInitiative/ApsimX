@@ -556,6 +556,7 @@ namespace Models.PMF.Organs
         }
         public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
         {
+            Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
                 CohortPopulation = Structure.TotalStemPopn;
