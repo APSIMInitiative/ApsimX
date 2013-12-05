@@ -12,6 +12,7 @@ using System.Xml;
 using Models.Soils;
 using System.Reflection;
 using System.Diagnostics;
+using System.Media;
 using Models;
 
 
@@ -187,7 +188,14 @@ namespace UserInterface.Presenters
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
             C.Do(null);
             if (C.ok)
+            {
                 ExplorerView.AddStatusMessage("Simulation complete", Color.LightGreen);
+                if (DateTime.Now.Month == 12)
+                {
+                    SoundPlayer player = new SoundPlayer(Properties.Resources.notes);
+                    player.Play();
+                }
+            }
             else
                 ExplorerView.AddStatusMessage("Simulation complete with errors", Color.Red);
 

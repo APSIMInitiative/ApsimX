@@ -1924,7 +1924,7 @@
               </DMRetranslocationFactor>
               <ShadeInducedSenescenceRate xsi:type="LinearInterpolationFunction">
                 <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Leaf].CohortCurrentRank.CoverAbove</XProperty>
+                <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
@@ -2326,12 +2326,10 @@
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }//= new DateTime(2003, 11, 10, 0, 0, 0);
 
-               private double PlantPopulation = 0;
-
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
-				PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
+				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date.Equals(SowingDate))
                     Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);

@@ -433,6 +433,12 @@
   <ItemGroup>
     <None Include="Resources\bug_red.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\notes.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notes.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
