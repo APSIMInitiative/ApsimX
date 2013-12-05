@@ -42,7 +42,14 @@ namespace Models.SurfaceOM
         }
 
         [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e) { OnReset(); }
+        private void OnInitialised(object sender, EventArgs e) 
+        {
+            g = new SurfaceOMGlobals();
+            p = new SurfaceOMParameters();
+            c = new SurfaceOMConstants();
+            surfom_zero_variables();
+            OnReset(); 
+        }
 
         [EventSubscribe("Reset")]
         private void OnReset() { initialised = true; surfom_Reset(); }

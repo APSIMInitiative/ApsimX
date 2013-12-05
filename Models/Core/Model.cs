@@ -181,14 +181,14 @@ namespace Models.Core
 
 
 
-        private Dictionary<string, IVariable> VariableCache = new Dictionary<string, IVariable>();
+        private Dictionary<string, Utility.IVariable> VariableCache = new Dictionary<string, Utility.IVariable>();
 
         /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
         public object Get(string namePath)
         {
-            IVariable variable = FindVariable(namePath);
+            Utility.IVariable variable = FindVariable(namePath);
             if (variable == null)
                 return null;
             else
@@ -289,7 +289,7 @@ namespace Models.Core
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        private IVariable FindVariable(string namePath)
+        private Utility.IVariable FindVariable(string namePath)
         {
             if (VariableCache.ContainsKey(namePath))
                 return VariableCache[namePath];
@@ -347,11 +347,11 @@ namespace Models.Core
             }
 
             // Now we can create our return variable.
-            IVariable variable;
+            Utility.IVariable variable;
             if (propertyInfo == null)
-                variable = new VariableObject(obj);
+                variable = new Utility.VariableObject(obj);
             else
-                variable = new VariableProperty(obj, propertyInfo);
+                variable = new Utility.VariableProperty(obj, propertyInfo);
 
             VariableCache[originalNamePath] = variable;
             return variable;

@@ -106,11 +106,11 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Return the 
         /// </summary>
-        public LeafCohort CohortCurrentRank
+        public double CohortCurrentRankCoverAbove
         {
             get
             {
-                return Leaves[CurrentRank-1];
+                return Leaves[CurrentRank-1].CoverAbove;
             }
         }
 

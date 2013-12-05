@@ -1219,7 +1219,7 @@ namespace Models.Soils
         /// Soil layers' thichness (mm)
         /// </summary>
         [Units("mm")]
-        private double[] dlayer;
+        public double[] dlayer;
 
         /// <summary>
         /// Soil bulk density for each layer (g/cm3)
@@ -2181,7 +2181,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Net N mineralised in soil")]
-        double[] dlt_n_min
+        public double[] dlt_n_min
         {
             get
             {
@@ -2199,7 +2199,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Net N mineralisation from residue decomposition")]
-        double[] dlt_n_min_res
+        public double[] dlt_n_min_res
         {
             get
             {
@@ -2505,7 +2505,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("N converted by denitrification")]
-        double[] dnit
+        public double[] dnit
         {
             get
             {
@@ -2545,7 +2545,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Nitrogen in FOM")]
-        double[] fom_n
+        public double[] fom_n
         {
             get
             {
@@ -2617,7 +2617,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil humic nitrogen")]
-        double[] hum_n
+        public double[] hum_n
         {
             get
             {
@@ -2635,7 +2635,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Soil biomass nitrogen")]
-        double[] biom_n
+        public double[] biom_n
         {
             get
             {
