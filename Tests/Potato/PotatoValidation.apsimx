@@ -48,7 +48,6 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[ExtraVariables].Script.Test</string>
           <string>[ExtraVariables].Script.AccumTtemerg</string>
           <string>[Plant].Phenology.CurrentPhaseName</string>
           <string>[Plant].Phenology.StageCode.Value</string>
@@ -147,6 +146,7 @@
           <string>[Plant].TotalDeadWt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
           <string>[Plant].Leaf.ExpandedNodeNo</string>
+          <string />
           <string />
           <string />
           <string />
@@ -698,56 +698,56 @@
           <Name>potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>2.8976931571960449</LAItot>
+          <LAItot>2.8966138362884521</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.0832594633102417</CoverTot>
-          <Ktot>0.030005124296522946</Ktot>
-          <K>0.79999996510750848</K>
-          <Height>0.17407555</Height>
-          <Depth>0.17407555</Depth>
+          <CoverTot>0.083229780197143555</CoverTot>
+          <Ktot>0.030005126448261209</Ktot>
+          <K>0.799999986630263</K>
+          <Height>0.17383759000000001</Height>
+          <Depth>0.17383759000000001</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <Frgr>0.949999988079071</Frgr>
           <layerLAI>
-            <double>1.9285454982309602E-05</double>
+            <double>1.928960409713909E-05</double>
           </layerLAI>
           <layerLAItot>
-            <double>2.8976931571960449</double>
+            <double>2.8966138362884521</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
           </Ftot>
           <Fgreen>
-            <double>6.6554510557533249E-06</double>
+            <double>6.6593633764643048E-06</double>
           </Fgreen>
           <Rs>
-            <double>0.27480114524850485</double>
+            <double>0.27470319097669638</double>
           </Rs>
           <Rl>
-            <double>-0.0520426411071154</double>
+            <double>-0.052024090241877825</double>
           </Rl>
           <Rsoil>
-            <double>-0.027480114524850486</double>
+            <double>-0.02747031909766964</double>
           </Rsoil>
           <Gc>
             <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0.016082100570729542</double>
+            <double>0.016074308443018485</double>
           </Ga>
           <PET>
-            <double>0.02058475154866905</double>
+            <double>0.020584655481070184</double>
           </PET>
           <PETr>
-            <double>0.00038244483573377462</double>
+            <double>0.00038249006560023947</double>
           </PETr>
           <PETa>
-            <double>0.020202306712935277</double>
+            <double>0.020202165415469944</double>
           </PETa>
           <Omega>
-            <double>0.014106062864078707</double>
+            <double>0.014112804368217571</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -969,6 +969,56 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2675,7 +2725,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020584750920534134</WaterDemand>
+            <WaterDemand>0.020584655925631523</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -3046,8 +3096,7 @@
 [Link] WeatherFile Met;   
 [Link] Fertiliser Fert;  
                
-public double Test = 0;
-public int SimDay = 1;
+public bool InitialDay = true;
 
 public double AccumPlantN = 0;
 public double AccumMineralisation = 0;
@@ -3082,24 +3131,51 @@ public double OutFlowLat = 0;
 [EventSubscribe("Initialised")]
 private void OnInitialised(object sender, EventArgs e)
 {
-Test = 3;
-AccumTtemerg = 0;
+InitialDay = true;
+AccumPlantN = 0;
 AccumMineralisation = 0;
+AccumDenit = 0;
+AccumFert = 0;
+AccumLeach = 0;
+AccumDetach = 0;
+DeltaSoilOMN = 0;
+DeltaSurfaceOMN = 0;
+DeltaSoilMineralN = 0;
+
+AccumEO = 0;
+AccumEP = 0;
+AccumES = 0;
+AccumDrainage = 0;
+AccumRunoff = 0;
+AccumOutflowLat = 0;
+AccumIrrigation = 0;
+AccumRainfall = 0;
+SoilWaterDeficit = 0;
+
+AccumTtemerg = 0;
+
+InitialSoilOMN = 0;
+InitialSurfaceOMN = 0;
+InitialMineralN = 0;
+
+SWC = 0;
+DUL = 0;
+OutFlowLat = 0;
 }	   
+
 [EventSubscribe("StartOfDay")]
 private void OnStartOfDay(object sender, EventArgs e)
 {
-	Test = Test + 1;
-	AccumMineralisation += 10;
 	int layers = SoilWat.dlayer.Length;
-    if (SimDay == 1)
+    if (InitialDay)
 	{
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-      InitialSurfaceOMN += SOM.surfaceom_n;
+      InitialSurfaceOMN += SOM.surfaceom_n; //(double)this.Get("SOM.surfaceom_n");
       InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
       }
+      InitialDay = false;
     }
 
 //!!!!!! Nitrogen balance components !!!!!!
@@ -3111,7 +3187,7 @@ AccumDetach = 0; //plant2 doesn't detach yet
 //AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += 10;//(SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
+    AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
     AccumDenit -= SoilN.dnit[layer] ;
     DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
     DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
@@ -3147,31 +3223,30 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
 	   ]]></Code>
         <Script>
           <Name>Script</Name>
-          <Test>437</Test>
-          <SimDay>1</SimDay>
+          <InitialDay>false</InitialDay>
           <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>30380</AccumMineralisation>
+          <AccumMineralisation>157.89616264061189</AccumMineralisation>
           <AccumDenit>0</AccumDenit>
           <AccumFert>0</AccumFert>
           <AccumLeach>0</AccumLeach>
           <AccumDetach>0</AccumDetach>
-          <DeltaSoilOMN>-167757185.55873686</DeltaSoilOMN>
-          <DeltaSurfaceOMN>-70094.701120137121</DeltaSurfaceOMN>
-          <DeltaSoilMineralN>-3231721.7519645314</DeltaSoilMineralN>
-          <AccumEO>-52893.955719406942</AccumEO>
+          <DeltaSoilOMN>-17417.180928918533</DeltaSoilOMN>
+          <DeltaSurfaceOMN>-11.5599500144599</DeltaSurfaceOMN>
+          <DeltaSoilMineralN>-98.871100404718064</DeltaSoilMineralN>
+          <AccumEO>-1511.2049265486644</AccumEO>
           <AccumEP>0</AccumEP>
-          <AccumES>-8193.6506218264512</AccumES>
-          <AccumDrainage>-2027.7980109037794</AccumDrainage>
+          <AccumES>-227.55388412473363</AccumES>
+          <AccumDrainage>-57.937086025822239</AccumDrainage>
           <AccumRunoff>0</AccumRunoff>
           <AccumOutflowLat>0</AccumOutflowLat>
-          <AccumIrrigation>2000</AccumIrrigation>
-          <AccumRainfall>16768.800140440464</AccumRainfall>
-          <SoilWaterDeficit>-110.10314673611009</SoilWaterDeficit>
+          <AccumIrrigation>100</AccumIrrigation>
+          <AccumRainfall>493.20000413060188</AccumRainfall>
+          <SoilWaterDeficit>-110.10140489249852</SoilWaterDeficit>
           <AccumTtemerg>3788.24160442946</AccumTtemerg>
-          <InitialSoilOMN>167758660.08378077</InitialSoilOMN>
-          <InitialSurfaceOMN>70095.141170122661</InitialSurfaceOMN>
-          <InitialMineralN>3231724.2408592105</InitialMineralN>
-          <SWC>342.89685326388991</SWC>
+          <InitialSoilOMN>18891.70597281654</InitialSoilOMN>
+          <InitialSurfaceOMN>12</InitialSurfaceOMN>
+          <InitialMineralN>101.36</InitialMineralN>
+          <SWC>342.89859510750148</SWC>
           <DUL>453</DUL>
           <OutFlowLat>0</OutFlowLat>
         </Script>
