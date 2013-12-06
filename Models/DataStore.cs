@@ -340,7 +340,7 @@ namespace Models
 
                 return Connection.ExecuteQuery(sql);
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 return null;
             }
