@@ -3257,7 +3257,7 @@ private void OnStartOfDay(object sender, EventArgs e)
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
-AccumPlantN =+ (double)this.Get("Plant.Root.Nuptake");
+//AccumPlantN =+ (double)this.Get("Plant.Root.Nuptake");
 //AccumFert += Fertiliser.FertiliserApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
