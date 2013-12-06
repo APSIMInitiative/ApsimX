@@ -34,6 +34,7 @@ namespace Models.PMF.Phen
         public Function RewindDueToBiomassRemoved { get; set; }
         public Function AboveGroundPeriod { get; set; }
         public Function StageCode { get; set; }
+        public Function ThermalTime { get; set; } 
 
         [XmlArrayItem(typeof(EmergingPhase))]
         [XmlArrayItem(typeof(EndPhase))]

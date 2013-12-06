@@ -71,9 +71,9 @@ namespace Models.Core
             Utility.ModelFunctions.ResolveLinks(this);
 
             // Connect all events for the simulations we're about to run.
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+            //foreach (object Model in Models)
+            //    if (Model is Simulation)
+            //        Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
 
             // Initialise all simulations.
             foreach (object Model in Models)
@@ -119,7 +119,7 @@ namespace Models.Core
             // Disconnect all events for the simulations we just ran.
             foreach (object Model in Models)
                 if (Model is Simulation)
-                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+                    Utility.ModelFunctions.DisconnectEventsInAllModels(Model as Simulation);
             return ok;
         }
 

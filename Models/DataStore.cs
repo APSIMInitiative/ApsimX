@@ -66,13 +66,12 @@ namespace Models
                 Connection.ExecuteNonQuery("BEGIN");
 
                 // Create a simulations table.
-                string[] Names = { "ID", "Name" };
-                Type[] Types = { typeof(int), typeof(string) };
-                Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                if (!TableExists("Simulations"))
+                    Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
 
                 // Create a properties table.
-                Names = new string[] { "ComponentName", "Name", "Value" };
-                Types = new Type[] { typeof(string), typeof(string), typeof(string) };
+                string[] Names = new string[] { "ComponentName", "Name", "Value" };
+                Type[] Types = new Type[] { typeof(string), typeof(string), typeof(string) };
                 CreateTable("Properties", Names, Types);
 
                 // Create a Messages table.
@@ -168,7 +167,8 @@ namespace Models
                 cmd += ",[" + names[i] + "] " + columnType;
             }
             cmd += ")";
-            Connection.ExecuteNonQuery(cmd);
+            if (!TableExists(tableName))
+                Connection.ExecuteNonQuery(cmd);
 
             List<string> allNames = new List<string>();
             allNames.Add("SimulationID");

@@ -26,6 +26,9 @@ namespace ModelTests
             FileStream F = new FileStream("Test.apsimx", FileMode.Create);
             F.Write(Properties.Resources.TestFile, 0, Properties.Resources.TestFile.Length);
             F.Close();
+            FileStream W = new FileStream("Goondiwindi.met", FileMode.Create);
+            W.Write(Properties.Resources.Goondiwindi, 0, Properties.Resources.Goondiwindi.Length);
+            W.Close();
             S = Simulations.Read("Test.apsimx");
         }
 
@@ -262,9 +265,31 @@ namespace ModelTests
             // Test the absolute path version of get.
             Assert.AreEqual(S.Get(".Simulations.Name"), "Simulations");
         }
+        [TestMethod]
+        public void WeatherSummary()
+        {
+            Simulation Sim = S.Models[0] as Simulation;
+            Assert.AreEqual(Sim.Models[0].Name, "WeatherFile");
 
-
+            foreach (Model model in Sim.Models)
+            {
+                if (model.GetType() == typeof(WeatherFile))
+                {
+                    WeatherFile wtr = model as WeatherFile;
+                    Assert.AreNotEqual(wtr.GetAllData(), null, "Weather file stream");
+                    Assert.AreEqual(wtr.Amp, 15.96, "TAMP");
+                    Assert.AreEqual(wtr.Tav, 19.86, "TAV");
+                    // for the first day
+                    Assert.AreEqual(wtr.DayLength, 14.7821247010713, 0.0001, "Day length");
+                    // check yearly and monthly aggregations
+                    double[] yrtotal, avmonth;
+                    wtr.YearlyRainfall(out yrtotal, out avmonth);
+                    Assert.AreEqual(yrtotal[0], 420, 0.001, "Yearly 1 totals");
+                    Assert.AreEqual(yrtotal[49], 586.1, 0.001, "Yearly 50 totals");
+                    Assert.AreEqual(avmonth[0], 79.7, 0.001, "LTAV1 Monthly");
+                    Assert.AreEqual(avmonth[11], 62.8259, 0.001, "LTAV12 Monthly");
+                }
+            }
+        }
     }
-
-
 }

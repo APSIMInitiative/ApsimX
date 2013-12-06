@@ -461,7 +461,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Surface water ponding depth")]
-        private double pond;           //! surface water ponding depth
+        public double pond;           //! surface water ponding depth
 
         //Soilwat2Globals
 

@@ -65,6 +65,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Goondiwindi.met" />
     <None Include="Resources\Test3.apsimxForUnitTest" />
     <Shadow Include="Test References\Model.accessor" />
   </ItemGroup>
