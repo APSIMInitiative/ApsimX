@@ -32,6 +32,7 @@ namespace Models
         [XmlAnyElement]
         public XmlElement[] elements { get; set; }
 
+        [XmlIgnore]
         public string Code
         {
             get
@@ -44,6 +45,35 @@ namespace Models
                 RebuildScriptModel();
             }
         }
+
+        [XmlText]
+        [XmlElement("Code")]
+        public XmlNode[] CodeCData
+        {
+            get
+            {
+                XmlDocument dummy = new XmlDocument();
+                return new XmlNode[] { dummy.CreateCDataSection(Code) };
+            }
+            set
+            {
+                if (value == null)
+                {
+                    Code = null;
+                    return;
+                }
+
+                if (value.Length != 1)
+                {
+                    throw new InvalidOperationException(
+                        String.Format(
+                            "Invalid array length {0}", value.Length));
+                }
+
+                Code = value[0].Value;
+            }
+        }
+
         public string[] ParameterNames { get; set; }
         public string[] ParameterValues { get; set; }
 

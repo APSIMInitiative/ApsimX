@@ -112,8 +112,8 @@ namespace Models.PMF
         
         private BiomassArbitrationType DM = null;
         private BiomassArbitrationType N = null;
-        private BiomassArbitrationType P = null;
-        private BiomassArbitrationType K = null;
+        //private BiomassArbitrationType P = null;
+        //private BiomassArbitrationType K = null;
 
         
         public double DMSupply

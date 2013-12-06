@@ -346,7 +346,7 @@ namespace Models.PMF.OldPlant
                 double[] nh4gsm = Utility.Math.Multiply_Value(SoilN.nh4, Conversions.kg2gm / Conversions.ha2sm);
 
                 (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
-                                                 SoilWat.bd, SoilWat.dlayer, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
+                                                 Soil.BD, SoilWat.dlayer, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
                                                  ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
             }
             else

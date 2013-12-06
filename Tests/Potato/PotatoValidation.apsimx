@@ -25,7 +25,6 @@
       <Area>0</Area>
       <Irrigation>
         <Name>Irrigation</Name>
-        <IrrigationApplied>100</IrrigationApplied>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -293,7 +292,7 @@
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
           <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
+          <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
@@ -309,25 +308,9 @@
           <catchment_area>0</catchment_area>
           <eo>0.59443006759149886</eo>
           <eos>0.59443006759149886</eos>
-          <drain>0</drain>
+          <drain>0.28392549432640096</drain>
           <runoff>0</runoff>
           <pond>0</pond>
-          <bd>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-          </bd>
-          <outflow_lat>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </outflow_lat>
           <irrigation>0</irrigation>
           <eo_source />
           <max_pond>0</max_pond>
@@ -335,14 +318,6 @@
           <CNRed>-9E-05</CNRed>
           <CNCov>0</CNCov>
           <WaterTable>NaN</WaterTable>
-          <dlayer>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </dlayer>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -367,30 +342,6 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <sat_dep>
-            <double>50</double>
-            <double>100</double>
-            <double>132</double>
-            <double>138</double>
-            <double>132</double>
-            <double>132</double>
-          </sat_dep>
-          <dul_dep>
-            <double>33</double>
-            <double>66</double>
-            <double>93</double>
-            <double>81</double>
-            <double>90</double>
-            <double>90</double>
-          </dul_dep>
-          <ll15_dep>
-            <double>16</double>
-            <double>32</double>
-            <double>45</double>
-            <double>39</double>
-            <double>45</double>
-            <double>45</double>
-          </ll15_dep>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -506,6 +457,14 @@
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
           <N2N2O_parmB>0</N2N2O_parmB>
+          <dlayer>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </dlayer>
           <soiltype>standard</soiltype>
           <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
           <profile_reduction>no</profile_reduction>
@@ -698,56 +657,52 @@
           <Name>potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>2.8966138362884521</LAItot>
+          <LAItot>0</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.083229780197143555</CoverTot>
-          <Ktot>0.030005126448261209</Ktot>
-          <K>0.799999986630263</K>
-          <Height>0.17383759000000001</Height>
-          <Depth>0.17383759000000001</Depth>
+          <CoverTot>0</CoverTot>
+          <Ktot>0</Ktot>
+          <K>0</K>
+          <Height>0</Height>
+          <Depth>0</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <Frgr>0.949999988079071</Frgr>
-          <layerLAI>
-            <double>1.928960409713909E-05</double>
-          </layerLAI>
-          <layerLAItot>
-            <double>2.8966138362884521</double>
-          </layerLAItot>
+          <Frgr>0</Frgr>
+          <layerLAI />
+          <layerLAItot />
           <Ftot>
-            <double>1</double>
+            <double>0</double>
           </Ftot>
           <Fgreen>
-            <double>6.6593633764643048E-06</double>
+            <double>0</double>
           </Fgreen>
           <Rs>
-            <double>0.27470319097669638</double>
+            <double>0</double>
           </Rs>
           <Rl>
-            <double>-0.052024090241877825</double>
+            <double>0</double>
           </Rl>
           <Rsoil>
-            <double>-0.02747031909766964</double>
+            <double>0</double>
           </Rsoil>
           <Gc>
-            <double>0.0001</double>
+            <double>0</double>
           </Gc>
           <Ga>
-            <double>0.016074308443018485</double>
+            <double>0</double>
           </Ga>
           <PET>
-            <double>0.020584655481070184</double>
+            <double>0</double>
           </PET>
           <PETr>
-            <double>0.00038249006560023947</double>
+            <double>0</double>
           </PETr>
           <PETa>
-            <double>0.020202165415469944</double>
+            <double>0</double>
           </PETa>
           <Omega>
-            <double>0.014112804368217571</double>
+            <double>0</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -756,17 +711,6 @@
       </MicroClimate>
       <Plant>
         <Name>Potato</Name>
-        <SowingData>
-          <Cultivar>RussetBurbank</Cultivar>
-          <Population>4.6382189239332092</Population>
-          <Depth>150</Depth>
-          <RowSpacing>150</RowSpacing>
-          <MaxCover>1</MaxCover>
-          <BudNumber>2.2</BudNumber>
-          <CropClass>Plant</CropClass>
-          <SkipRow>0</SkipRow>
-          <SkipPlant>0</SkipPlant>
-        </SowingData>
         <CropType>Potato</CropType>
         <Phenology>
           <Name>Phenology</Name>
@@ -969,6 +913,31 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2800,7 +2769,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020584655925631523</WaterDemand>
+            <WaterDemand>0</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -2997,6 +2966,15 @@
       </Graph>
       <Manager>
         <Name>PotatoSowingRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <RowSpace>280</RowSpace>
+          <RowWidth>770</RowWidth>
+          <PlantingDepth>150</PlantingDepth>
+          <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
+          <CultivarName>RussetBurbank</CultivarName>
+          <SowingDate>2003-11-10T00:00:00</SowingDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -3045,18 +3023,15 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <RowSpace>280</RowSpace>
-          <RowWidth>770</RowWidth>
-          <PlantingDepth>150</PlantingDepth>
-          <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-          <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>2003-11-10T00:00:00</SowingDate>
-        </Script>
       </Manager>
       <Manager>
         <Name>IrrigationRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <IrrigationApplied>0</IrrigationApplied>
+          <ApplicationAmount>100</ApplicationAmount>
+          <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -3095,15 +3070,16 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <IrrigationApplied>0</IrrigationApplied>
-          <ApplicationAmount>100</ApplicationAmount>
-          <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
-        </Script>
       </Manager>
       <Manager>
         <Name>FertiliserRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <NitrogenApplied>0</NitrogenApplied>
+          <ApplicationAmount>500</ApplicationAmount>
+          <FertType>NO3N</FertType>
+          <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -3141,16 +3117,38 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <NitrogenApplied>0</NitrogenApplied>
-          <ApplicationAmount>500</ApplicationAmount>
-          <FertType>NO3N</FertType>
-          <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
-        </Script>
       </Manager>
       <Manager>
         <Name>ExtraVariables</Name>
+        <Script>
+          <Name>Script</Name>
+          <InitialDay>false</InitialDay>
+          <AccumPlantN>0</AccumPlantN>
+          <AccumMineralisation>78.9480813203057</AccumMineralisation>
+          <AccumDenit>0</AccumDenit>
+          <AccumFert>0</AccumFert>
+          <AccumLeach>0</AccumLeach>
+          <AccumDetach>0</AccumDetach>
+          <DeltaSoilOMN>-17417.180928918533</DeltaSoilOMN>
+          <DeltaSurfaceOMN>-11.5599500144599</DeltaSurfaceOMN>
+          <DeltaSoilMineralN>-98.871100404718064</DeltaSoilMineralN>
+          <AccumEO>-755.8996783081277</AccumEO>
+          <AccumEP>0</AccumEP>
+          <AccumES>0</AccumES>
+          <AccumDrainage>0</AccumDrainage>
+          <AccumRunoff>0</AccumRunoff>
+          <AccumOutflowLat>0</AccumOutflowLat>
+          <AccumIrrigation>100</AccumIrrigation>
+          <AccumRainfall>246.60000206530094</AccumRainfall>
+          <SoilWaterDeficit>-110.10140489249852</SoilWaterDeficit>
+          <AccumTtemerg>1894.1208022147289</AccumTtemerg>
+          <InitialSoilOMN>18891.70597281654</InitialSoilOMN>
+          <InitialSurfaceOMN>12</InitialSurfaceOMN>
+          <InitialMineralN>101.36</InitialMineralN>
+          <SWC>342.89859510750148</SWC>
+          <DUL>453</DUL>
+          <OutFlowLat>0</OutFlowLat>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -3298,35 +3296,6 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
 }
 }
 	   ]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <InitialDay>false</InitialDay>
-          <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>78.9480813203057</AccumMineralisation>
-          <AccumDenit>0</AccumDenit>
-          <AccumFert>0</AccumFert>
-          <AccumLeach>0</AccumLeach>
-          <AccumDetach>0</AccumDetach>
-          <DeltaSoilOMN>-17417.180928918533</DeltaSoilOMN>
-          <DeltaSurfaceOMN>-11.5599500144599</DeltaSurfaceOMN>
-          <DeltaSoilMineralN>-98.871100404718064</DeltaSoilMineralN>
-          <AccumEO>-755.8996783081277</AccumEO>
-          <AccumEP>0</AccumEP>
-          <AccumES>0</AccumES>
-          <AccumDrainage>0</AccumDrainage>
-          <AccumRunoff>0</AccumRunoff>
-          <AccumOutflowLat>0</AccumOutflowLat>
-          <AccumIrrigation>100</AccumIrrigation>
-          <AccumRainfall>246.60000206530094</AccumRainfall>
-          <SoilWaterDeficit>-110.10140489249852</SoilWaterDeficit>
-          <AccumTtemerg>1894.1208022147289</AccumTtemerg>
-          <InitialSoilOMN>18891.70597281654</InitialSoilOMN>
-          <InitialSurfaceOMN>12</InitialSurfaceOMN>
-          <InitialMineralN>101.36</InitialMineralN>
-          <SWC>342.89859510750148</SWC>
-          <DUL>453</DUL>
-          <OutFlowLat>0</OutFlowLat>
-        </Script>
       </Manager>
       <Graph>
         <Name>N balance components</Name>
