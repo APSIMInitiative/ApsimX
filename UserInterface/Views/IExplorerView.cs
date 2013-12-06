@@ -167,7 +167,7 @@ namespace UserInterface.Views
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>
-        void AddStatusMessage(string Message, Color BackColour);
+        void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
 
         /// <summary>
         /// A helper function that asks user for a SaveAs name and returns their new choice.

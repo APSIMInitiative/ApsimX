@@ -10,7 +10,7 @@ namespace Models
 
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : Model, IXmlSerializable
+    public class Manager : Model
     {
         // Privates
         private Assembly CompiledAssembly;
@@ -22,9 +22,15 @@ namespace Models
         [Link]
         private Zone Zone = null;
 
+        [Link]
+        private ISummary Summary = null;
+
         // Publics
         [XmlIgnore]
         public Model Script { get; set; }
+
+        [XmlAnyElement]
+        public XmlElement[] elements { get; set; }
 
         public string Code
         {
@@ -43,81 +49,31 @@ namespace Models
 
         public Zone ParentZone { get { return Zone; } }
 
-        #region XmlSerializable methods
         /// <summary>
-        /// Return our schema - needed for IXmlSerializable.
-        /// </summary>
-        public XmlSchema GetSchema() { return null; }
-
-        /// <summary>
-        /// Read XML from specified reader. Called during Deserialisation.
-        /// </summary>
-        public virtual void ReadXml(XmlReader reader)
-        {
-            reader.Read();
-            Name = reader.ReadString();
-            reader.Read();
-            Code = reader.ReadString();
-            reader.Read();
-
-            // Deserialise to a model.
-            try
-            {
-                CompileScript();
-                XmlSerializer serial = new XmlSerializer(ScriptType);
-                Script = serial.Deserialize(reader) as Model;
-            }
-            catch (Exception)
-            {
-                if (reader.Name == "Script")
-                    reader.ReadInnerXml();
-                Script = null;
-            }
-
-            // Tell reader we're done with the Manager deserialisation.
-            reader.ReadEndElement();
-
-            HasDeserialised = true;
-        }
-
-        private void CompileScript()
-        {
-            CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code);
-
-            // Go look for our class name.
-            ScriptType = CompiledAssembly.GetType("Models.Script");
-            if (ScriptType == null)
-                throw new Exception("Cannot find a public class called Script");
-        }
-
-        /// <summary>
-        /// Write this point to the specified XmlWriter
-        /// </summary>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("Name");
-            writer.WriteString(Name);
-            writer.WriteEndElement();
-            writer.WriteStartElement("Code");
-            writer.WriteCData(Code);
-            writer.WriteEndElement();
-
-            // Serialise the model.
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            XmlSerializer serial = new XmlSerializer(Script.GetType());
-            serial.Serialize(writer, Script, ns);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Initialisation
+        /// The model has been loaded.
         /// </summary>
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            //RebuildScriptModel();
+            HasDeserialised = true;
+
+            // Compile the script.
+            CompileScript();
+
+            // Look for a script node.
+            XmlNode scriptNode;
+            if (elements.Length > 0 && elements[0].Name == "Script")
+                scriptNode = elements[0];
+            else
+            {
+                XmlDocument doc = new XmlDocument();
+                scriptNode = doc.CreateElement("Script");
+            }
+            if (ScriptType != null)
+            {
+                XmlSerializer serial = new XmlSerializer(ScriptType);
+                Script = serial.Deserialize(new XmlNodeReader(scriptNode)) as Model;
+            }
         }
 
         /// <summary>
@@ -144,25 +100,45 @@ namespace Models
                 {
                     CompileScript();
 
-                    if (scriptXml != null)
+                    if (ScriptType != null)
                     {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(scriptXml);
+                        if (scriptXml != null)
+                        {
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(scriptXml);
 
-                        XmlSerializer serial = new XmlSerializer(ScriptType);
-                        Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                            XmlSerializer serial = new XmlSerializer(ScriptType);
+                            Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                        }
+                        else
+                            Script = Activator.CreateInstance(ScriptType) as Model;
+
+                        this.AddModel(Script, true);
                     }
-                    else
-                        Script = Activator.CreateInstance(ScriptType) as Model;
-
-                    this.AddModel(Script, true);
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
-                    // Probably a compile error.
-                    
+                    Summary.WriteWarning(FullPath, err.Message);
                 }
             }
+        }
+
+        private void CompileScript()
+        {
+            try
+            {
+                CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code);
+                // Go look for our class name.
+                ScriptType = CompiledAssembly.GetType("Models.Script");
+                if (ScriptType == null)
+                    Summary.WriteWarning(FullPath, "Cannot find a public class called Script");
+                Summary.WriteMessage(FullPath, "Script compiled ok");
+            }
+            catch (Exception err)
+            {
+                Summary.WriteWarning(FullPath, err.Message);
+            }
+            
         }
     }
 }

@@ -98,7 +98,7 @@ namespace UserInterface.Views
         public ExplorerView()
         {
             InitializeComponent();
-            StatusPanel.Visible = false;
+            StatusWindow.Visible = false;
         }
 
         /// <summary>
@@ -288,11 +288,23 @@ namespace UserInterface.Views
         /// Add a status message to the explorer window
         /// </summary>
         /// <param name="Message"></param>
-        public void AddStatusMessage(string Message, Color BackColour)
+        public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
         {
-            StatusPanel.Visible = Message != null;
-            StatusLabel.BackColor = BackColour;
-            StatusLabel.Text = Message;
+            if (!Message.EndsWith("\n"))
+                Message = Message + "\n";
+            StatusWindow.Visible = Message != null;
+            StatusWindow.Select(0, 0);
+
+            if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                StatusWindow.SelectionColor = Color.Red;
+            else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                StatusWindow.SelectionColor = Color.Brown;
+            else
+                StatusWindow.SelectionColor = Color.Blue;
+
+            StatusWindow.SelectedText = Message;
+            //StatusWindow.Select(0, Message.Length);
+
             Application.DoEvents();
         }
 
@@ -567,7 +579,6 @@ namespace UserInterface.Views
                 }); 
         }
 
-
         /// <summary>
         /// Ensure that a right mouse click selects the node also
         /// </summary>
@@ -575,6 +586,12 @@ namespace UserInterface.Views
         {
         	TreeView.SelectedNode = e.Node; 
         }
+
+        private void OnCloseStatusWindowClick(object sender, EventArgs e)
+        {
+            StatusWindow.Visible = false;
+        }
+
     }
 }
 

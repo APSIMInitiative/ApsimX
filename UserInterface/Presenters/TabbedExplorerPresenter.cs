@@ -46,29 +46,6 @@ namespace UserInterface.Presenters
             byte[] b = Properties.Resources.ResourceManager.GetObject("StandardToolBox") as byte[];
             StreamReader SR = new StreamReader(new MemoryStream(b));
             OpenApsimXFromMemoryInTab("Standard toolbox", SR.ReadToEnd());
-
-
-
-            //if (ListView.SelectedItems[0].Text.Contains("standard toolbox"))
-            //{
-                
-            //}
-            //else if (ListView.SelectedItems[0].Text.Contains("graph toolbox"))
-            //{
-            //    byte[] b = Properties.Resources.ResourceManager.GetObject("GraphToolbox") as byte[];
-            //    StreamReader SR = new StreamReader(new MemoryStream(b));
-            //    ApplicationCommands.OpenApsimXFromMemoryInTab("Graph toolbox", SR.ReadToEnd());
-            //}
-            //else if (ListView.SelectedItems[0].Text.Contains("management toolbox"))
-            //{
-            //    byte[] b = Properties.Resources.ResourceManager.GetObject("ManagementToolbox") as byte[];
-            //    StreamReader SR = new StreamReader(new MemoryStream(b));
-            //    ApplicationCommands.OpenApsimXFromMemoryInTab("Management toolbox", SR.ReadToEnd());
-            //}
-            //else if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-            //    ApplicationCommands.OpenApsimXFileInTab(OpenFileDialog.FileName);
-
-            //ApplicationCommands.AddStartTab();
         }
 
 
@@ -84,7 +61,6 @@ namespace UserInterface.Presenters
                 Console.WriteLine(FileName);
 
                 Simulations simulations = Simulations.Read(FileName);
-
                 Presenter.Attach(simulations, ExplorerView, null);
 
                 View.AddTab(FileName, Properties.Resources.apsim_logo32, ExplorerView, true);
@@ -105,15 +81,6 @@ namespace UserInterface.Presenters
 
             View.AddTab(Name, Properties.Resources.apsim_logo32, ExplorerView, true);
         }
-
-        ///// Change the text of the tab.
-        ///// </summary>
-        //void ChangeCurrentTabText(string NewTabName)
-        //{
-        //    MainForm.CurrentTabText = NewTabName;
-        //}
-
-
 
     }
 }

@@ -43,19 +43,42 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Create a simulations object by reading the specified filename
+        /// </summary>
         public static Simulations Read(string FileName)
         {
             Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
             simulations.FileName = FileName;
-            Utility.ModelFunctions.ResolveLinks(simulations);
+
             return simulations;
         }
 
+        /// <summary>
+        /// Create a simulations object by reading from the specified xml node
+        /// </summary>
         public static Simulations Read(XmlNode xmlNode)
         {
             Simulations simulations = Utility.Xml.Deserialise(xmlNode) as Simulations;
-            Utility.ModelFunctions.ResolveLinks(simulations);
             return simulations;
+        }
+
+        /// <summary>
+        /// Resolve all links in all models.
+        /// </summary>
+        public void Initialise()
+        {
+            Utility.ModelFunctions.ResolveLinks(this);
+
+            // Connect all events for the simulations we're about to run.
+            foreach (object Model in Models)
+                if (Model is Simulation)
+                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+
+            // Initialise all simulations.
+            foreach (object Model in Models)
+                if (Model is Simulation)
+                    (Model as Simulation).Initialise();
         }
 
         /// <summary>
