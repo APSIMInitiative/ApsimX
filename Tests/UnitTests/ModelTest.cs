@@ -30,6 +30,7 @@ namespace ModelTests
             W.Write(Properties.Resources.Goondiwindi, 0, Properties.Resources.Goondiwindi.Length);
             W.Close();
             S = Simulations.Read("Test.apsimx");
+            S.Initialise();
         }
 
 
