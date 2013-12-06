@@ -48,6 +48,7 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.Test</string>
           <string>[ExtraVariables].Script.AccumTtemerg</string>
           <string>[Plant].Phenology.CurrentPhaseName</string>
           <string>[Plant].Phenology.StageCode.Value</string>
@@ -146,6 +147,7 @@
           <string>[Plant].TotalDeadWt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
           <string>[Plant].Leaf.ExpandedNodeNo</string>
+          <string />
           <string />
           <string />
           <string />
@@ -504,14 +506,6 @@
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
           <N2N2O_parmB>0</N2N2O_parmB>
-          <dlayer>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </dlayer>
           <soiltype>standard</soiltype>
           <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
           <profile_reduction>no</profile_reduction>
@@ -704,56 +698,56 @@
           <Name>potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>2.6575930118560791</LAItot>
+          <LAItot>2.8976931571960449</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.076632343232631683</CoverTot>
-          <Ktot>0.030005834575486477</Ktot>
-          <K>0.79999995485155817</K>
-          <Height>0.17518294</Height>
-          <Depth>0.17518294</Depth>
+          <CoverTot>0.0832594633102417</CoverTot>
+          <Ktot>0.030005124296522946</Ktot>
+          <K>0.79999996510750848</K>
+          <Height>0.17407555</Height>
+          <Depth>0.17407555</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <Frgr>0.949999988079071</Frgr>
           <layerLAI>
-            <double>2.0132003555772826E-05</double>
+            <double>1.9285454982309602E-05</double>
           </layerLAI>
           <layerLAItot>
-            <double>2.6575930118560791</double>
+            <double>2.8976931571960449</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
           </Ftot>
           <Fgreen>
-            <double>7.5752771270693973E-06</double>
+            <double>6.6554510557533249E-06</double>
           </Fgreen>
           <Rs>
-            <double>0.25293396047846528</double>
+            <double>0.27480114524850485</double>
           </Rs>
           <Rl>
-            <double>-0.047901369978201352</double>
+            <double>-0.0520426411071154</double>
           </Rl>
           <Rsoil>
-            <double>-0.025293396047846528</double>
+            <double>-0.027480114524850486</double>
           </Rsoil>
           <Gc>
             <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0.0161182942529486</double>
+            <double>0.016082100570729542</double>
           </Ga>
           <PET>
-            <double>0.02055396924673945</double>
+            <double>0.02058475154866905</double>
           </PET>
           <PETr>
-            <double>0.00035100798594874487</double>
+            <double>0.00038244483573377462</double>
           </PETr>
           <PETa>
-            <double>0.020202961260790707</double>
+            <double>0.020202306712935277</double>
           </PETa>
           <Omega>
-            <double>0.014074833477301589</double>
+            <double>0.014106062864078707</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -975,6 +969,31 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2656,7 +2675,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020553968846797943</WaterDemand>
+            <WaterDemand>0.020584750920534134</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -3027,6 +3046,7 @@
 [Link] WeatherFile Met;   
 [Link] Fertiliser Fert;  
                
+public double Test = 0;
 public int SimDay = 1;
 
 public double AccumPlantN = 0;
@@ -3058,10 +3078,19 @@ public double  InitialMineralN = 0;
 public double SWC = 0;
 public double DUL = 0;
 public double OutFlowLat = 0;
-			   
- [EventSubscribe("StartOfDay")]
- private void OnStartOfDay(object sender, EventArgs e)
- {
+
+[EventSubscribe("Initialised")]
+private void OnInitialised(object sender, EventArgs e)
+{
+Test = 3;
+AccumTtemerg = 0;
+AccumMineralisation = 0;
+}	   
+[EventSubscribe("StartOfDay")]
+private void OnStartOfDay(object sender, EventArgs e)
+{
+	Test = Test + 1;
+	AccumMineralisation += 10;
 	int layers = SoilWat.dlayer.Length;
     if (SimDay == 1)
 	{
@@ -3082,7 +3111,7 @@ AccumDetach = 0; //plant2 doesn't detach yet
 //AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
+    AccumMineralisation += 10;//(SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
     AccumDenit -= SoilN.dnit[layer] ;
     DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
     DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
@@ -3105,47 +3134,231 @@ OutFlowLat = 0;
      SWC += SoilWat.sw_dep[layer];
      DUL += SoilWat.dul_dep[layer];
      OutFlowLat = SoilWat.outflow_lat[layer];
-}
+   }
 AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 if (Plant.Phenology.StageCode.Value >= 3)
 AccumTtemerg += Plant.Phenology.ThermalTime.Value;
-			   }
-            }
-        }
+}
+}
+}
 	   ]]></Code>
         <Script>
           <Name>Script</Name>
+          <Test>437</Test>
           <SimDay>1</SimDay>
           <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>1578.9616264060926</AccumMineralisation>
+          <AccumMineralisation>30380</AccumMineralisation>
           <AccumDenit>0</AccumDenit>
           <AccumFert>0</AccumFert>
           <AccumLeach>0</AccumLeach>
           <AccumDetach>0</AccumDetach>
-          <DeltaSoilOMN>-98198716.743512228</DeltaSoilOMN>
-          <DeltaSurfaceOMN>-43614.31445586856</DeltaSurfaceOMN>
-          <DeltaSoilMineralN>-1742294.3927108648</DeltaSoilMineralN>
-          <AccumEO>-40047.822198641356</AccumEO>
+          <DeltaSoilOMN>-167757185.55873686</DeltaSoilOMN>
+          <DeltaSurfaceOMN>-70094.701120137121</DeltaSurfaceOMN>
+          <DeltaSoilMineralN>-3231721.7519645314</DeltaSoilMineralN>
+          <AccumEO>-52893.955719406942</AccumEO>
           <AccumEP>0</AccumEP>
-          <AccumES>-6600.7738234455364</AccumES>
-          <AccumDrainage>-1622.2384087230234</AccumDrainage>
+          <AccumES>-8193.6506218264512</AccumES>
+          <AccumDrainage>-2027.7980109037794</AccumDrainage>
           <AccumRunoff>0</AccumRunoff>
           <AccumOutflowLat>0</AccumOutflowLat>
-          <AccumIrrigation>1000</AccumIrrigation>
-          <AccumRainfall>12576.600105330348</AccumRainfall>
-          <SoilWaterDeficit>-109.94879241500053</SoilWaterDeficit>
+          <AccumIrrigation>2000</AccumIrrigation>
+          <AccumRainfall>16768.800140440464</AccumRainfall>
+          <SoilWaterDeficit>-110.10314673611009</SoilWaterDeficit>
           <AccumTtemerg>3788.24160442946</AccumTtemerg>
-          <InitialSoilOMN>98200191.268556133</InitialSoilOMN>
-          <InitialSurfaceOMN>43614.7545058541</InitialSurfaceOMN>
-          <InitialMineralN>1742296.8821208749</InitialMineralN>
-          <SWC>343.05120758499947</SWC>
+          <InitialSoilOMN>167758660.08378077</InitialSoilOMN>
+          <InitialSurfaceOMN>70095.141170122661</InitialSurfaceOMN>
+          <InitialMineralN>3231724.2408592105</InitialMineralN>
+          <SWC>342.89685326388991</SWC>
           <DUL>453</DUL>
           <OutFlowLat>0</OutFlowLat>
         </Script>
       </Manager>
+      <Graph>
+        <Name>N balance components</Name>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Title>X axis title 2</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Left</Type>
+          <Title>Y axis title</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumPlantN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumMineralisation</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388353</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumDenit</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744193</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumFert</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumFert</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumLeach</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSoilOMN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8372224</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSurfaceOMN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSoilMineralN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777152</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
+          </Y>
+        </Series>
+      </Graph>
     </Zone>
     <Input>
       <Name>Input</Name>
