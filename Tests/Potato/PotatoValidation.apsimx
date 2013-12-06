@@ -1869,6 +1869,56 @@
                 <Value>1</Value>
               </Target>
             </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
           </Phases>
         </Phenology>
         <Arbitrator>
@@ -3172,7 +3222,8 @@ private void OnStartOfDay(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-      InitialSurfaceOMN += SOM.surfaceom_n; //(double)this.Get("SOM.surfaceom_n");
+      InitialSurfaceOMN += SOM.surfaceom_n;
+      //InitialSurfaceOMN += (double)this.Get("SOM.surfaceom_n");
       InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
       }
       InitialDay = false;
@@ -3225,7 +3276,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <Name>Script</Name>
           <InitialDay>false</InitialDay>
           <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>157.89616264061189</AccumMineralisation>
+          <AccumMineralisation>78.9480813203057</AccumMineralisation>
           <AccumDenit>0</AccumDenit>
           <AccumFert>0</AccumFert>
           <AccumLeach>0</AccumLeach>
@@ -3233,16 +3284,16 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <DeltaSoilOMN>-17417.180928918533</DeltaSoilOMN>
           <DeltaSurfaceOMN>-11.5599500144599</DeltaSurfaceOMN>
           <DeltaSoilMineralN>-98.871100404718064</DeltaSoilMineralN>
-          <AccumEO>-1511.2049265486644</AccumEO>
+          <AccumEO>-755.8996783081277</AccumEO>
           <AccumEP>0</AccumEP>
-          <AccumES>-227.55388412473363</AccumES>
-          <AccumDrainage>-57.937086025822239</AccumDrainage>
+          <AccumES>0</AccumES>
+          <AccumDrainage>0</AccumDrainage>
           <AccumRunoff>0</AccumRunoff>
           <AccumOutflowLat>0</AccumOutflowLat>
           <AccumIrrigation>100</AccumIrrigation>
-          <AccumRainfall>493.20000413060188</AccumRainfall>
+          <AccumRainfall>246.60000206530094</AccumRainfall>
           <SoilWaterDeficit>-110.10140489249852</SoilWaterDeficit>
-          <AccumTtemerg>3788.24160442946</AccumTtemerg>
+          <AccumTtemerg>1894.1208022147289</AccumTtemerg>
           <InitialSoilOMN>18891.70597281654</InitialSoilOMN>
           <InitialSurfaceOMN>12</InitialSurfaceOMN>
           <InitialMineralN>101.36</InitialMineralN>
