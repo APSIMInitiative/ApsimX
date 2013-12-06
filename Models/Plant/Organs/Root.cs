@@ -275,9 +275,9 @@ namespace Models.PMF.Organs
                     double swaf = 0;
                     swaf = (SoilWat.sw_dep[layer] - SoilWat.ll15_dep[layer]) / (SoilWat.dul_dep[layer] - SoilWat.ll15_dep[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    no3ppm[layer] = SoilN.no3[layer] * (100.0 / (SoilWat.bd[layer] * SoilWat.dlayer[layer]));
+                    no3ppm[layer] = SoilN.no3[layer] * (100.0 / (Soil.BD[layer] * SoilWat.dlayer[layer]));
                     NO3Supply[layer] = SoilN.no3[layer] * KNO3 * no3ppm[layer] * swaf;
-                    nh4ppm[layer] = SoilN.nh4[layer] * (100.0 / (SoilWat.bd[layer] * SoilWat.dlayer[layer]));
+                    nh4ppm[layer] = SoilN.nh4[layer] * (100.0 / (Soil.BD[layer] * SoilWat.dlayer[layer]));
                     NH4Supply[layer] = SoilN.nh4[layer] * KNH4 * nh4ppm[layer] * swaf;
                 }
                 else

@@ -182,14 +182,15 @@ namespace UserInterface.Presenters
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
-        	ExplorerView.AddStatusMessage("Simulation running...", Color.LightYellow);
+        	ExplorerView.ShowMessage("Simulation running...", DataStore.ErrorLevel.Information);
 
             Simulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Simulation;
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
+
             C.Do(null);
             if (C.ok)
             {
-                ExplorerView.AddStatusMessage("Simulation complete", Color.LightGreen);
+                ExplorerView.ShowMessage("Simulation complete", DataStore.ErrorLevel.Information);
                 if (DateTime.Now.Month == 12)
                 {
                     SoundPlayer player = new SoundPlayer(Properties.Resources.notes);
@@ -197,8 +198,7 @@ namespace UserInterface.Presenters
                 }
             }
             else
-                ExplorerView.AddStatusMessage("Simulation complete with errors", Color.Red);
-
+                ExplorerView.ShowMessage("Simulation complete with errors", DataStore.ErrorLevel.Error);
         }
 
         /// <summary>

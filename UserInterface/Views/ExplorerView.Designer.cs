@@ -35,12 +35,14 @@
             this.TreeView = new System.Windows.Forms.TreeView();
             this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TreeImageList = new System.Windows.Forms.ImageList(this.components);
-            this.StatusPanel = new System.Windows.Forms.Panel();
-            this.StatusLabel = new System.Windows.Forms.Label();
+            this.StatusWindow = new System.Windows.Forms.RichTextBox();
+            this.StatusWindowPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.splitter2 = new System.Windows.Forms.Splitter();
             this.Panel.SuspendLayout();
-            this.StatusPanel.SuspendLayout();
+            this.StatusWindowPopup.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panel
@@ -49,7 +51,8 @@
             this.Panel.Controls.Add(this.RightHandPanel);
             this.Panel.Controls.Add(this.splitter1);
             this.Panel.Controls.Add(this.TreeView);
-            this.Panel.Controls.Add(this.StatusPanel);
+            this.Panel.Controls.Add(this.splitter2);
+            this.Panel.Controls.Add(this.StatusWindow);
             this.Panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Panel.Location = new System.Drawing.Point(0, 0);
@@ -62,7 +65,7 @@
             this.RightHandPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RightHandPanel.Location = new System.Drawing.Point(203, 0);
             this.RightHandPanel.Name = "RightHandPanel";
-            this.RightHandPanel.Size = new System.Drawing.Size(397, 563);
+            this.RightHandPanel.Size = new System.Drawing.Size(397, 501);
             this.RightHandPanel.TabIndex = 10;
             // 
             // splitter1
@@ -72,7 +75,7 @@
             this.splitter1.Location = new System.Drawing.Point(197, 0);
             this.splitter1.MinExtra = 0;
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(6, 563);
+            this.splitter1.Size = new System.Drawing.Size(6, 501);
             this.splitter1.TabIndex = 9;
             this.splitter1.TabStop = false;
             this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMoved);
@@ -91,7 +94,7 @@
             this.TreeView.Location = new System.Drawing.Point(0, 0);
             this.TreeView.Name = "TreeView";
             this.TreeView.SelectedImageIndex = 0;
-            this.TreeView.Size = new System.Drawing.Size(197, 563);
+            this.TreeView.Size = new System.Drawing.Size(197, 501);
             this.TreeView.TabIndex = 8;
             this.TreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnBeforeLabelEdit);
             this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
@@ -115,27 +118,33 @@
             this.TreeImageList.ImageSize = new System.Drawing.Size(16, 16);
             this.TreeImageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // StatusPanel
+            // StatusWindow
             // 
-            this.StatusPanel.Controls.Add(this.StatusLabel);
-            this.StatusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.StatusPanel.Location = new System.Drawing.Point(0, 563);
-            this.StatusPanel.Name = "StatusPanel";
-            this.StatusPanel.Size = new System.Drawing.Size(600, 37);
-            this.StatusPanel.TabIndex = 0;
+            this.StatusWindow.BackColor = System.Drawing.SystemColors.Info;
+            this.StatusWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.StatusWindow.ContextMenuStrip = this.StatusWindowPopup;
+            this.StatusWindow.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.StatusWindow.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusWindow.Location = new System.Drawing.Point(0, 504);
+            this.StatusWindow.Name = "StatusWindow";
+            this.StatusWindow.ReadOnly = true;
+            this.StatusWindow.Size = new System.Drawing.Size(600, 96);
+            this.StatusWindow.TabIndex = 0;
+            this.StatusWindow.Text = "";
             // 
-            // StatusLabel
+            // StatusWindowPopup
             // 
-            this.StatusLabel.BackColor = System.Drawing.SystemColors.Info;
-            this.StatusLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StatusLabel.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.StatusLabel.Location = new System.Drawing.Point(0, 0);
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(600, 37);
-            this.StatusLabel.TabIndex = 0;
-            this.StatusLabel.Text = "label1";
-            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.StatusWindowPopup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeToolStripMenuItem});
+            this.StatusWindowPopup.Name = "StatusWindowPopup";
+            this.StatusWindowPopup.Size = new System.Drawing.Size(104, 26);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.OnCloseStatusWindowClick);
             // 
             // ToolStrip
             // 
@@ -151,6 +160,15 @@
             this.SaveFileDialog.DefaultExt = "apsimx";
             this.SaveFileDialog.Filter = "*.apsimx|*.apsimx";
             // 
+            // splitter2
+            // 
+            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter2.Location = new System.Drawing.Point(0, 501);
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(600, 3);
+            this.splitter2.TabIndex = 11;
+            this.splitter2.TabStop = false;
+            // 
             // ExplorerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -162,9 +180,10 @@
             this.Size = new System.Drawing.Size(600, 600);
             this.Load += new System.EventHandler(this.OnLoad);
             this.Panel.ResumeLayout(false);
-            this.StatusPanel.ResumeLayout(false);
+            this.StatusWindowPopup.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -175,10 +194,12 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.TreeView TreeView;
         private System.Windows.Forms.ContextMenuStrip PopupMenu;
-        private System.Windows.Forms.Panel StatusPanel;
-        private System.Windows.Forms.Label StatusLabel;
         private System.Windows.Forms.ToolStrip ToolStrip;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog;
+        private System.Windows.Forms.RichTextBox StatusWindow;
+        private System.Windows.Forms.ContextMenuStrip StatusWindowPopup;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.Splitter splitter2;
 
 
 

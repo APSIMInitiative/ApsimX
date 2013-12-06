@@ -63,6 +63,11 @@ namespace Models.Core
             return ok;
         }
 
+        public void Initialise()
+        {
+            if (Initialised != null)
+                Initialised(this, new EventArgs());
+        }
         /// <summary>
         /// Simulation is being initialised.
         /// </summary>

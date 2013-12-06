@@ -522,6 +522,7 @@ namespace Models.Soils
 
 
         private double[] _dlayer = null;
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
         [Description("Thickness of soil layer")]
@@ -829,6 +830,7 @@ namespace Models.Soils
         [Description("Saturated conductivity")]
         private double[] ks = null;        //! saturated conductivity (mm/d)
 
+        [XmlIgnore]
         [Bounds(Lower = 0.01, Upper = 3.0)]
         [Units("g/cm^3")]
         [Description("Bulk density of soil")]
@@ -843,6 +845,7 @@ namespace Models.Soils
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
+        [XmlIgnore]
         public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sat_dep; }
@@ -862,6 +865,7 @@ namespace Models.Soils
         private double[] _dul_dep;
         [Units("mm")]
         [Description("dul * dlayer")]
+        [XmlIgnore]
         public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
             get { return _dul_dep; }
@@ -907,6 +911,7 @@ namespace Models.Soils
         private double[] _ll15_dep;
         [Units("mm")]
         [Description("ll15 * dlayer")]
+        [XmlIgnore]
         public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
             get { return _ll15_dep; }
@@ -993,6 +998,7 @@ namespace Models.Soils
 
         [Units("mm")]
         [Description("Lateral outflow")]
+        [XmlIgnore]
         public double[] outflow_lat;   //! outflowing lateral water   //lateral outflow
         //end
 

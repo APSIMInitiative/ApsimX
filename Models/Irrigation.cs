@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -15,6 +16,7 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         // Output variables.
+        [XmlIgnore]
         public double IrrigationApplied { get; set; }
 
         // Events we're going to send.

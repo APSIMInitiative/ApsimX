@@ -8,6 +8,7 @@ using Models.Core;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
+using Models;
 
 namespace UserInterface.Presenters
 {
@@ -41,6 +42,8 @@ namespace UserInterface.Presenters
         private ExplorerActions ExplorerActions;
         private IPresenter CurrentRightHandPresenter;
         private bool AdvancedMode = false;
+        private DataStore store = null;
+
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
 
@@ -70,6 +73,14 @@ namespace UserInterface.Presenters
             this.View.Rename += OnRename;
 
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
+
+
+            DataStore store = ApsimXFile.Get("DataStore") as DataStore;
+            if (store == null)
+                throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
+
+            store.MessageWritten += OnMessageWritten;
+            ApsimXFile.Initialise();
         }
 
         /// <summary>
@@ -87,12 +98,29 @@ namespace UserInterface.Presenters
             View.Drop -= OnDrop;
             View.Rename -= OnRename;
             CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
+            store.MessageWritten -= OnMessageWritten;
         }
 
+        /// <summary>
+        /// Toggle advanced mode.
+        /// </summary>
         public void ToggleAdvancedMode()
         {
             AdvancedMode = !AdvancedMode;
             View.InvalidateNode(".Simulations", GetNodeDescription(ApsimXFile));
+        }
+
+        /// <summary>
+        /// A message has been written - echo to our view.
+        /// </summary>
+        void OnMessageWritten(object sender, DataStore.MessageArg e)
+        {
+            string message;
+            message = String.Format("{0}: message from {2} on simulation date {1}\n{3}", new object[] {DateTime.Now,
+                                                                                         e.SimulationDateTime.ToShortDateString(),
+                                                                                         e.FullPath,
+                                                                                         Utility.String.IndentText(e.Message, 6)});
+            View.ShowMessage(message, e.ErrorLevel);
         }
 
         #region Events from view

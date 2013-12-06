@@ -14,12 +14,23 @@ namespace Models
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
     {
+        public class MessageArg : EventArgs
+        {
+            public DateTime SimulationDateTime;
+            public string SimulationName;
+            public string FullPath;
+            public string Message;
+            public ErrorLevel ErrorLevel;
+        }
+
         private Utility.SQLite Connection = null;
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
         private string Filename;
 
         public enum ErrorLevel { Information, Warning, Error };
+
+        public event EventHandler<MessageArg> MessageWritten;
 
         // Parameters
         public bool AutoCreateReport { get; set; }
@@ -50,6 +61,27 @@ namespace Models
                     throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename);
+
+                Connection.ExecuteNonQuery("PRAGMA synchronous=OFF");
+                Connection.ExecuteNonQuery("BEGIN");
+
+                // Create a simulations table.
+                if (!TableExists("Simulations"))
+                    Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+
+                // Create a properties table.
+                string[] Names = new string[] { "ComponentName", "Name", "Value" };
+                Type[] Types = new Type[] { typeof(string), typeof(string), typeof(string) };
+                CreateTable("Properties", Names, Types);
+
+                // Create a Messages table.
+                // NB: MessageType values:
+                //     1 = Information
+                //     2 = Warning
+                //     3 = Fatal
+                Names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
+                Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
+                CreateTable("Messages", Names, Types);
             }
         }
 
@@ -87,28 +119,6 @@ namespace Models
                 File.Delete(Filename);
 
             Connect();
-
-            Connection.ExecuteNonQuery("PRAGMA synchronous=OFF");
-            Connection.ExecuteNonQuery("BEGIN");
-            
-            // Create a simulations table.
-            string[] Names = {"ID", "Name"};
-            Type[] Types = { typeof(int), typeof(string) };
-            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-
-            // Create a properties table.
-            Names = new string[] { "ComponentName", "Name", "Value" };
-            Types = new Type[] { typeof(string), typeof(string), typeof(string) };
-            CreateTable("Properties", Names, Types);
-
-            // Create a Messages table.
-            // NB: MessageType values:
-            //     1 = Information
-            //     2 = Warning
-            //     3 = Fatal
-            Names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
-            Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
-            CreateTable("Messages", Names, Types);
         }
 
         /// <summary>
@@ -157,7 +167,8 @@ namespace Models
                 cmd += ",[" + names[i] + "] " + columnType;
             }
             cmd += ")";
-            Connection.ExecuteNonQuery(cmd);
+            if (!TableExists(tableName))
+                Connection.ExecuteNonQuery(cmd);
 
             List<string> allNames = new List<string>();
             allNames.Add("SimulationID");
@@ -197,6 +208,8 @@ namespace Models
         /// </summary>
         public void WriteProperty(string simulationName, string name, string value)
         {
+            Connect();
+
             StackTrace st = new StackTrace(true);
             MethodInfo callingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
             string componentName = callingMethod.DeclaringType.FullName;
@@ -218,8 +231,19 @@ namespace Models
         /// </summary>
         public void WriteMessage(string simulationName, DateTime date, string componentName, string message, ErrorLevel type)
         {
+            Connect();
             WriteToTable("Messages", new object[] { GetSimulationID(simulationName), 
                                                       componentName, date, message, Convert.ToInt32(type, System.Globalization.CultureInfo.InvariantCulture) });
+            if (MessageWritten != null)
+            {
+                MessageArg arg = new MessageArg();
+                arg.SimulationName = simulationName;
+                arg.SimulationDateTime = date;
+                arg.Message = message;
+                arg.FullPath = componentName;
+                arg.ErrorLevel = type;
+                MessageWritten(this, arg);
+            }
         }
 
         /// <summary>
@@ -307,12 +331,19 @@ namespace Models
             Connect();
             if (!TableExists("Simulations"))
                 return null;
-            int simulationID = GetSimulationID(simulationName);
-            string sql = string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                                       "SELECT * FROM {0} WHERE SimulationID = {1}",
-                                       new object[] {tableName, simulationID});
-                       
-            return Connection.ExecuteQuery(sql);
+            try
+            {
+                int simulationID = GetSimulationID(simulationName);
+                string sql = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                           "SELECT * FROM {0} WHERE SimulationID = {1}",
+                                           new object[] { tableName, simulationID });
+
+                return Connection.ExecuteQuery(sql);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

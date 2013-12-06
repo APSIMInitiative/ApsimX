@@ -1219,7 +1219,7 @@ namespace Models.Soils
         /// Soil layers' thichness (mm)
         /// </summary>
         [Units("mm")]
-        public double[] dlayer;
+        private double[] dlayer;
 
         /// <summary>
         /// Soil bulk density for each layer (g/cm3)

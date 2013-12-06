@@ -208,9 +208,14 @@ namespace Utility
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
                                                                         BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
             {
-                if (field.IsDefined(typeof(Link), false))
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
                 {
-                    object linkedObject = model.Find(field.FieldType);
+                    object linkedObject;
+                    if (link.NamePath != null)
+                        linkedObject= model.Find(link.NamePath);
+                    else
+                        linkedObject = model.Find(field.FieldType);
                     if (linkedObject != null)
                         field.SetValue(model, linkedObject);
                     else
