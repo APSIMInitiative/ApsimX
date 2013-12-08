@@ -77,50 +77,50 @@
           <string>[ExtraVariables].Script.AccumIrrigation</string>
           <string>[ExtraVariables].Script.AccumOutflowLat</string>
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[Plant].AboveGroundWt</string>
-          <string>[Plant].BelowGroundWt</string>
-          <string>[Plant].TotalWt</string>
-          <string>[Plant].Leaf.DeadWt</string>
-          <string>[Plant].Leaf.LiveWt</string>
-          <string>[Plant].Stem.DeadWt</string>
-          <string>[Plant].Stem.LiveWt</string>
-          <string>[Plant].Tuber.DeadWt</string>
-          <string>[Plant].Tuber.LiveWt</string>
-          <string>[Plant].Root.DeadWt</string>
-          <string>[Plant].Root.LiveWt</string>
-          <string>[Plant].AboveGroundN</string>
-          <string>[Plant].BelowGroundN</string>
-          <string>[Plant].TotalN</string>
-          <string>[Plant].TotalLiveN</string>
-          <string>[Plant].TotalDeadN</string>
-          <string>[Plant].Leaf.DeadN</string>
-          <string>[Plant].Leaf.LiveN</string>
-          <string>[Plant].Stem.DeadN</string>
-          <string>[Plant].Stem.LiveN</string>
-          <string>[Plant].Tuber.DeadN</string>
-          <string>[Plant].Tuber.LiveN</string>
-          <string>[Plant].RootLiveN</string>
-          <string>[Plant].RootDeadN</string>
-          <string>[Plant].LeafLiveNConc</string>
-          <string>[Plant].LeafDeadNConc</string>
-          <string>[Plant].StemLiveNConc</string>
-          <string>[Plant].TuberLiveNConc</string>
-          <string>[Plant].RootLiveNConc</string>
-          <string>[Plant].RootWaterSupply</string>
-          <string>[Plant].RootWaterUptake</string>
-          <string>[Plant].LeafTranspiration</string>
-          <string>[Plant].LeafWaterDemand</string>
+          <string>[Plant].Summariser.AboveGround.Wt</string>
+          <string>[Plant].Summariser.BelowGround.Wt</string>
+          <string>[Plant].Summariser.Total.Wt</string>
+          <string>[Plant].Leaf.Dead.Wt</string>
+          <string>[Plant].Leaf.Live.Wt</string>
+          <string>[Plant].Stem.Dead.Wt</string>
+          <string>[Plant].Stem.Live.Wt</string>
+          <string>[Plant].Tuber.Dead.Wt</string>
+          <string>[Plant].Tuber.Live.Wt</string>
+          <string>[Plant].Root.Dead.Wt</string>
+          <string>[Plant].Root.Live.Wt</string>
+          <string>[Plant].Summariser.AboveGround.N</string>
+          <string>[Plant].Summariser.BelowGround.N</string>
+          <string>[Plant].Summariser.Total.N</string>
+          <string>[Plant].Summariser.TotalLive.N</string>
+          <string>[Plant].Summariser.TotalDead.N</string>
+          <string>[Plant].Leaf.Dead.N</string>
+          <string>[Plant].Leaf.Live.N</string>
+          <string>[Plant].Stem.Dead.N</string>
+          <string>[Plant].Stem.Live.N</string>
+          <string>[Plant].Tuber.Dead.N</string>
+          <string>[Plant].Tuber.Live.N</string>
+          <string>[Plant].Root.Live.N</string>
+          <string>[Plant].Root.Dead.N</string>
+          <string>[Plant].Leaf.Live.NConc</string>
+          <string>[Plant].Leaf.Dead.NConc</string>
+          <string>[Plant].Stem.Live.NConc</string>
+          <string>[Plant].Tuber.Live.NConc</string>
+          <string>[Plant].Root.Live.NConc</string>
+          <string>[Plant].Root.WaterSupply</string>
+          <string>[Plant].Root.WaterUptake</string>
+          <string>[Plant].Leaf.Transpiration</string>
+          <string>[Plant].Leaf.WaterDemand</string>
           <string>[Plant].Root.Depth</string>
-          <string>[Plant].Leaf.Cover_green</string>
-          <string>[Plant].Leaf.Cover_tot</string>
-          <string>[Plant].Leaf.Cover_dead</string>
+          <string>[Plant].Leaf.CoverGreen</string>
+          <string>[Plant].Leaf.CoverTotal</string>
+          <string>[Plant].Leaf.CoverDead</string>
           <string>[Plant].Leaf.LAI</string>
           <string>[Plant].Leaf.LAIDead</string>
-          <string>[Plant].Height</string>
+          <string>[Plant].Structure.Height</string>
           <string>[Plant].Leaf.Fn</string>
           <string>[Plant].Leaf.Fw</string>
-          <string>[Plant].Leaf.Photosynthesis.Ft.Value</string>
-          <string>[Plant].Leaf.Photosynthesis.Fvpd.Value</string>
+          <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
+          <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
           <string>[Plant].Structure.PlantTotalNodeNo</string>
           <string>[Plant].Structure.TotalStemPopn</string>
           <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
@@ -130,21 +130,30 @@
           <string>[Plant].Structure.MainStemNodeNo</string>
           <string>[Plant].Leaf.SenescingCohortNo</string>
           <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
-          <string>[Plant].Leaf.MinimumNConc.Value</string>
+          <string>[Plant].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
           <string>[Plant].Stem.MinimumNConc.Value</string>
           <string>[Plant].Tuber.MinimumNConc.Value</string>
           <string>[Plant].Root.MinimumNConc.Value</string>
-          <string>[Plant].Leaf.MaximumNConc.Value</string>
+          <string>[Plant].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
           <string>[Plant].Stem.MaximumNConc.Value</string>
           <string>[Plant].Tuber.MaximumNConc.Value</string>
           <string>[Plant].Root.MaximumNConc.Value</string>
-          <string>[Plant].TotalLiveWt</string>
-          <string>[Plant].Stem.LiveStructuralWt</string>
-          <string>[Plant].Stem.LiveNonStructuralWt</string>
+          <string>[Plant].Summariser.TotalLive.Wt</string>
+          <string>[Plant].Stem.Live.StructuralWt</string>
+          <string>[Plant].Stem.Live.NonStructuralWt</string>
           <string>[Plant].Leaf.SpecificArea</string>
-          <string>[Plant].TotalDeadWt</string>
+          <string>[Plant].Summariser.TotalDead.Wt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
-          <string>[Plant].Leaf.ExpandedNodeNo</string>
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
+          <string />
           <string />
           <string />
           <string />
@@ -649,13 +658,13 @@
           <Name>potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>2.5979795455932617</LAItot>
+          <LAItot>2.44547963142395</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0.0749795064330101</CoverTot>
-          <Ktot>0.030000000053803485</Ktot>
+          <CoverTot>0.070737846195697784</CoverTot>
+          <Ktot>0.0300000007332331</Ktot>
           <K>0</K>
-          <Height>0.08069521</Height>
-          <Depth>0.08069521</Depth>
+          <Height>0.08676488</Height>
+          <Depth>0.08676488</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
@@ -665,7 +674,7 @@
             <double>0</double>
           </layerLAI>
           <layerLAItot>
-            <double>2.5979795455932617</double>
+            <double>2.44547963142395</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
@@ -674,31 +683,31 @@
             <double>0</double>
           </Fgreen>
           <Rs>
-            <double>0.24743236765363186</double>
+            <double>0.23343488907275933</double>
           </Rs>
           <Rl>
-            <double>-0.046859462308415742</double>
+            <double>-0.044208579054162464</double>
           </Rl>
           <Rsoil>
-            <double>-0.024743236765363188</double>
+            <double>-0.023343488907275934</double>
           </Rsoil>
           <Gc>
             <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0.012439092124263985</double>
+            <double>0.012728071910170479</double>
           </Ga>
           <PET>
-            <double>0.020560277104758426</double>
+            <double>0.020534221492096449</double>
           </PET>
           <PETr>
-            <double>0.0004429772309487793</double>
+            <double>0.00040843385550181445</double>
           </PETr>
           <PETa>
-            <double>0.020117299873809648</double>
+            <double>0.020125787636594634</double>
           </PETa>
           <Omega>
-            <double>0.018162241177859507</double>
+            <double>0.017757205635591172</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -710,7 +719,7 @@
         <SowingData>
           <Cultivar>RusssetBurbank</Cultivar>
           <Population>4.6</Population>
-          <Depth>150</Depth>
+          <Depth>120</Depth>
           <RowSpacing>150</RowSpacing>
           <MaxCover>1</MaxCover>
           <BudNumber>2.2</BudNumber>
@@ -945,6 +954,81 @@
                 <Value>1</Value>
               </Target>
             </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
           </Phases>
         </Phenology>
         <Arbitrator>
@@ -1132,6 +1216,24 @@
               <string>[Tuber].Dead</string>
             </Propertys>
           </Total>
+          <TotalLive xsi:type="CompositeBiomass">
+            <Name>CompositeBiomass</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Stem].Live</string>
+              <string>[Root].Live</string>
+              <string>[Tuber].Live</string>
+            </Propertys>
+          </TotalLive>
+          <TotalDead xsi:type="CompositeBiomass">
+            <Name>CompositeBiomass</Name>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </TotalDead>
         </Summariser>
         <Organs>
           <GenericAboveGroundOrgan>
@@ -1801,7 +1903,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020560277625918388</WaterDemand>
+            <WaterDemand>0.020534221082925797</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>

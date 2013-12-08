@@ -296,7 +296,7 @@ namespace Models.PMF.Organs
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
         [Units("0-1")]
-        public double CoverTot { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
 
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
@@ -1265,7 +1265,7 @@ namespace Models.PMF.Organs
                 Canopy.height = (float)Structure.Height;
                 Canopy.depth = (float)Structure.Height;
                 Canopy.cover = (float)CoverGreen;
-                Canopy.cover_tot = (float)CoverTot;
+                Canopy.cover_tot = (float)CoverTotal;
                 NewCanopy.Invoke(Canopy);
             }
         }
