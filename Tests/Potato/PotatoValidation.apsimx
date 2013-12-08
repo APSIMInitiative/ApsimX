@@ -16,7 +16,7 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>false</html>
+      <html>true</html>
       <AutoCreate>false</AutoCreate>
       <StateVariables>false</StateVariables>
     </Summary>
@@ -292,7 +292,7 @@
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
           <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
+          <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
@@ -308,7 +308,7 @@
           <catchment_area>0</catchment_area>
           <eo>0.59443006759149886</eo>
           <eos>0.59443006759149886</eos>
-          <drain>0.28392549432640096</drain>
+          <drain>0</drain>
           <runoff>0</runoff>
           <pond>0</pond>
           <irrigation>0</irrigation>
@@ -457,14 +457,6 @@
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
           <N2N2O_parmB>0</N2N2O_parmB>
-          <dlayer>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </dlayer>
           <soiltype>standard</soiltype>
           <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
           <profile_reduction>no</profile_reduction>
@@ -657,52 +649,56 @@
           <Name>potato</Name>
           <Type>Potato</Type>
           <LAI>0</LAI>
-          <LAItot>0</LAItot>
+          <LAItot>2.5979795455932617</LAItot>
           <CoverGreen>0</CoverGreen>
-          <CoverTot>0</CoverTot>
-          <Ktot>0</Ktot>
+          <CoverTot>0.0749795064330101</CoverTot>
+          <Ktot>0.030000000053803485</Ktot>
           <K>0</K>
-          <Height>0</Height>
-          <Depth>0</Depth>
+          <Height>0.08069521</Height>
+          <Depth>0.08069521</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <Frgr>0</Frgr>
-          <layerLAI />
-          <layerLAItot />
-          <Ftot>
+          <Frgr>0.949999988079071</Frgr>
+          <layerLAI>
             <double>0</double>
+          </layerLAI>
+          <layerLAItot>
+            <double>2.5979795455932617</double>
+          </layerLAItot>
+          <Ftot>
+            <double>1</double>
           </Ftot>
           <Fgreen>
             <double>0</double>
           </Fgreen>
           <Rs>
-            <double>0</double>
+            <double>0.24743236765363186</double>
           </Rs>
           <Rl>
-            <double>0</double>
+            <double>-0.046859462308415742</double>
           </Rl>
           <Rsoil>
-            <double>0</double>
+            <double>-0.024743236765363188</double>
           </Rsoil>
           <Gc>
-            <double>0</double>
+            <double>0.0001</double>
           </Gc>
           <Ga>
-            <double>0</double>
+            <double>0.012439092124263985</double>
           </Ga>
           <PET>
-            <double>0</double>
+            <double>0.020560277104758426</double>
           </PET>
           <PETr>
-            <double>0</double>
+            <double>0.0004429772309487793</double>
           </PETr>
           <PETa>
-            <double>0</double>
+            <double>0.020117299873809648</double>
           </PETa>
           <Omega>
-            <double>0</double>
+            <double>0.018162241177859507</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -711,6 +707,17 @@
       </MicroClimate>
       <Plant>
         <Name>Potato</Name>
+        <SowingData>
+          <Cultivar>RusssetBurbank</Cultivar>
+          <Population>4.6</Population>
+          <Depth>150</Depth>
+          <RowSpacing>150</RowSpacing>
+          <MaxCover>1</MaxCover>
+          <BudNumber>2.2</BudNumber>
+          <CropClass>Plant</CropClass>
+          <SkipRow>0</SkipRow>
+          <SkipPlant>0</SkipPlant>
+        </SowingData>
         <CropType>Potato</CropType>
         <Phenology>
           <Name>Phenology</Name>
@@ -913,981 +920,6 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -2769,7 +1801,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0</WaterDemand>
+            <WaterDemand>0.020560277625918388</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -3000,12 +2032,10 @@
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }//= new DateTime(2003, 11, 10, 0, 0, 0);
 
-               private double PlantPopulation = 0;
-
                [EventSubscribe("StartOfDay")]
                private void OnStartOfDay(object sender, EventArgs e)
                {
-				PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
+				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date.Equals(SowingDate))
                     Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
@@ -3019,100 +2049,6 @@
                 //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
                 //if (Clock.Today.DayOfYear == 30)
                 //   Plant.EndCrop();
-			   }
-            }
-        }
-				]]></Code>
-      </Manager>
-      <Manager>
-        <Name>IrrigationRule</Name>
-        <Script>
-          <Name>Script</Name>
-          <IrrigationApplied>0</IrrigationApplied>
-          <ApplicationAmount>100</ApplicationAmount>
-          <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
-        </Script>
-        <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-            public class Script : Model
-            {      
-               [Link] Irrigation Irrigation;
-               [Link] Clock Clock;
-			
-			   [Description("Amount of water to apply")]
-               public double ApplicationAmount {get; set;} 
-               [Description("Date irrigation is applied")]
-               public DateTime ApplicationDate {get; set;}
-			   public double IrrigationApplied = 0;
-			   
-			   [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
-               {
-				IrrigationApplied = 0;
-				if (Clock.Today.Date.Equals(ApplicationDate))
-                    {
-                    Irrigation.Apply(Amount:ApplicationAmount);
-                    IrrigationApplied = ApplicationAmount;
-                    }
-                  //Irrigation.Apply(Amount:a, Depth:b, Efficiency:c, willRunoff:"d");
-                  //a is a double and can be represented by a variable name or a number representing the amount (mm) of irrigation to apply
-			      //b is an optional double and can be represented by a variable name or a number representing the depth (mm) at which irrigation is applied
-			      //if b is omitted a default value of 0 is used (irrigation is applied to the surface by defalt)
-			      //c is an optional double and can be represented by a varialbe name or a number representing the efficiency (0-1) with which irrigation is applied
-			      //if c is omitted a default of 1 is used (irrigation efficiency is 100% by defalt)
-			      //d is a optional boolen and can be represented by text strings "true" or "false" determining if irrigation water will runoff or not
-			      //if d is omitted a default of false is used (irrigation won't run off by defalt)
-			   }
-            }
-        }
-				]]></Code>
-      </Manager>
-      <Manager>
-        <Name>FertiliserRule</Name>
-        <Script>
-          <Name>Script</Name>
-          <NitrogenApplied>0</NitrogenApplied>
-          <ApplicationAmount>500</ApplicationAmount>
-          <FertType>NO3N</FertType>
-          <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
-        </Script>
-        <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-            public class Script : Model
-            {      
-               [Link] Fertiliser Fertiliser;
-               [Link] Clock Clock;
-
-               [Description("Amount (kg/ha) of fertiliser to apply")]
-               public double ApplicationAmount {get; set;} //= 500;
-               [Description("Type of fertiliser to apply")]
-               public Fertiliser.Types FertType {get; set;}//= "NO3_N";
-               [Description("Date of fertiliser application")]
-               public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
-               public double NitrogenApplied = 0;
-               
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
-               {
-               NitrogenApplied = 0;
-               if (Clock.Today.Date.Equals(ApplicationDate))
-                    {
-                    Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
-                    NitrogenApplied = ApplicationAmount;
-                    }
-			      //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
-			      //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
-			      //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
-			      //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
-			      //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
 			   }
             }
         }
@@ -3480,6 +2416,57 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           </Y>
         </Series>
       </Graph>
+      <Operations>
+        <Name>Operations</Name>
+        <Operation>
+          <Date>2003-10-20T00:00:00</Date>
+          <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-10-20T00:00:00</Date>
+          <Action>Potato.Sow(Population:4.6, Cultivar:"RusssetBurbank", Depth:120, BudNumber:2.2);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-25T00:00:00</Date>
+          <Action>Fertiliser.Apply(69, Fertiliser.Types.UreaN,0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-26T00:00:00</Date>
+          <Action>Irrigation.Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-04T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-16T00:00:00</Date>
+          <Action>Irrigation.Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-22T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-30T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-08T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-21T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-31T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-02-27T00:00:00</Date>
+          <Action>Irrigation.Apply(25);</Action>
+        </Operation>
+      </Operations>
     </Zone>
     <Input>
       <Name>Input</Name>

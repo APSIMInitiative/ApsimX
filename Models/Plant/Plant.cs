@@ -139,6 +139,8 @@ namespace Models.PMF
                 Child.OnSow(SowingData);
             Structure.OnSow(SowingData);
             Phenology.OnSow();
+
+            Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
 
         /// <summary>

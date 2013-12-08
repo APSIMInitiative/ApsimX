@@ -30,7 +30,7 @@ namespace Models
         [Units("kg/ha")]
         public double FertiliserApplied { get; private set; }
 
-        public enum Types { NO3N, NH4N, Urea };
+        public enum Types { Urea, DAP, MAP, UreaN, NO3N, NH4N, NH4NO3N, NH4SO4N };
 
         /// <summary>
         /// Apply fertiliser.
