@@ -28,8 +28,7 @@ namespace Models
         /// </summary>
         private class VariableMember
         {
-            private MemberInfo Info;
-            private object Model;
+            private Report Report;
             private string FullName;
             private List<string> _Names = new List<string>();
             private List<Type> _Types = new List<Type>();
@@ -39,11 +38,10 @@ namespace Models
             /// <summary>
             /// Constructor
             /// </summary>
-            public VariableMember(string FullName, MemberInfo Info, object Model)
+            public VariableMember(string FullName, Report report)
             {
                 this.FullName = FullName;
-                this.Info = Info;
-                this.Model = Model;
+                this.Report = report;
             }
 
             /// <summary>
@@ -52,15 +50,9 @@ namespace Models
             public void Analyse()
             {
                 // Work out the type of data we're dealing with.
-                Type T = null;
-                if (Info is PropertyInfo)
-                    T = (Info as PropertyInfo).PropertyType;
-                else if (Info is FieldInfo)
-                    T = (Info as FieldInfo).FieldType;
+                Type T = DetermineType();
 
-                if (T != null && _Values.Count > 0)
-                {
-                    if (T.IsArray)
+                if (T != null && _Values.Count > 0 && T.IsArray)
                     {
                         // Array - calculate the maximum number of array elements and analyse each array element
                         // on row 0 for a name and type.
@@ -74,11 +66,20 @@ namespace Models
                                 AnalyseValue(Heading, Arr.GetValue(Col));
                         }
                     }
-                    else
-                    {
-                        AnalyseValue(FullName, _Values[0]);
-                    }
-                }
+                else
+                    AnalyseValue(FullName, _Values[0]);
+            }
+
+            /// <summary>
+            /// Go through values and determine the type of data.
+            /// </summary>
+            /// <returns></returns>
+            private Type DetermineType()
+            {
+                foreach (object value in _Values)
+                    if (value != null)
+                        return value.GetType();
+                return null;
             }
 
             /// <summary>
@@ -100,15 +101,9 @@ namespace Models
                 List<object> AllValues = new List<object>();
 
                 // Work out the type of data we're dealing with.
-                Type T = null;
-                if (Info is PropertyInfo)
-                    T = (Info as PropertyInfo).PropertyType;
-                else if (Info is FieldInfo)
-                    T = (Info as FieldInfo).FieldType;
+                Type T = DetermineType();
 
-                if (T != null)
-                {
-                    if (T.IsArray)
+                if (T != null && T.IsArray)
                     {
                         // Add required columns
                         Array Arr = _Values[Row] as Array;
@@ -119,11 +114,8 @@ namespace Models
                                 AddValueToList(AllValues, Row, Heading, Arr.GetValue(Col));
                         }
                     }
-                    else
-                    {
-                        AddValueToList(AllValues, Row, FullName, _Values[Row]);
-                    }
-                }
+                else
+                    AddValueToList(AllValues, Row, FullName, _Values[Row]);
                 return AllValues.ToArray();
             }
 
@@ -137,18 +129,11 @@ namespace Models
             /// </summary>
             public void StoreValue()
             {
-                object Value = null;
-                if (Info != null && Model != null)
+                object Value = Report.Get(FullName);
+                if (Value != null && Value.GetType().IsArray)
                 {
-                    if (Info is FieldInfo)
-                        Value = (Info as FieldInfo).GetValue(Model);
-                    else if (Info is PropertyInfo)
-                        Value = (Info as PropertyInfo).GetValue(Model, null);
-                    if (Value.GetType().IsArray)
-                    {
-                        Array A = Value as Array;
-                        Value = A.Clone();
-                    }
+                    Array A = Value as Array;
+                    Value = A.Clone();
                 }
                 _Values.Add(Value);
             }
@@ -161,27 +146,35 @@ namespace Models
             {
                 string cleanName = Name.Replace("[", "").Replace("]", "");
 
-                Type T = Value.GetType();
-
-                // Scalar
-                if (T == typeof(DateTime) || T == typeof(string) || !T.IsClass)
+                if (Value == null)
                 {
-                    // Built in type.
                     _Names.Add(cleanName);
-                    _Types.Add(T);
+                    _Types.Add(null);
                 }
                 else
                 {
-                    // class or struct.
-                    foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                    Type T = Value.GetType();
+
+                    // Scalar
+                    if (T == typeof(DateTime) || T == typeof(string) || !T.IsClass)
                     {
-                        _Names.Add(cleanName + "." + Property.Name);
-                        _Types.Add(Property.PropertyType);
+                        // Built in type.
+                        _Names.Add(cleanName);
+                        _Types.Add(T);
                     }
-                    foreach (FieldInfo Field in Model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+                    else
                     {
-                        _Names.Add(cleanName + "." + Field.Name);
-                        _Types.Add(Field.FieldType);
+                        // class or struct.
+                        foreach (PropertyInfo Property in T.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            _Names.Add(cleanName + "." + Property.Name);
+                            _Types.Add(Property.PropertyType);
+                        }
+                        foreach (FieldInfo Field in T.GetFields(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            _Names.Add(cleanName + "." + Field.Name);
+                            _Types.Add(Field.FieldType);
+                        }
                     }
                 }
             }
@@ -192,24 +185,29 @@ namespace Models
             /// </summary>
             private void AddValueToList(List<object> AllValues, int Row, string Name, object Value)
             {
-                Type T = Value.GetType();
-
-                // Scalar
-                if (T == typeof(DateTime) || T == typeof(string) || !T.IsClass)
-                {
-                    // Built in type.
+                if (Value == null)
                     AllValues.Add(Value);
-                }
                 else
                 {
-                    // class or struct.
-                    foreach (PropertyInfo Property in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                    Type T = Value.GetType();
+
+                    // Scalar
+                    if (T == typeof(DateTime) || T == typeof(string) || !T.IsClass)
                     {
-                        AllValues.Add(Property.GetValue(Value, null));
+                        // Built in type.
+                        AllValues.Add(Value);
                     }
-                    foreach (FieldInfo Field in Model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+                    else
                     {
-                        AllValues.Add(Field.GetValue(Value));
+                        // class or struct.
+                        foreach (PropertyInfo Property in T.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            AllValues.Add(Property.GetValue(Value, null));
+                        }
+                        foreach (FieldInfo Field in T.GetFields(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            AllValues.Add(Field.GetValue(Value));
+                        }
                     }
                 }
             }
@@ -291,18 +289,8 @@ namespace Models
             List<Type> Types = new List<Type>();
             foreach (string FullVariableName in Variables)
             {
-                string ParentName = Utility.String.ParentName(FullVariableName);
-                string VariableName = Utility.String.ChildName(FullVariableName);
-                object Parent = Paddock.Get(ParentName);
-
-                MemberInfo FoundMember = null;
-                if (Parent != null)
-                {
-                    MemberInfo[] Info = Parent.GetType().GetMember(VariableName);
-                    if (Info.Length > 0)
-                        FoundMember = Info[0];
-                }
-                Members.Add(new VariableMember(FullVariableName, FoundMember, Parent));
+                if (FullVariableName != "")
+                    Members.Add(new VariableMember(FullVariableName, this));
             }
         }
 

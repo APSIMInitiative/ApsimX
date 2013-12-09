@@ -424,10 +424,10 @@ namespace Models.Soils
         [Description("time after which 2nd-stage soil evaporation begins")]
         private double t;                        //! time after 2nd-stage soil evaporation begins (d)
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Effective potential evapotranspiration")]
-        public double eo;                       //! effective potential evapotranspiration (mm)
+        public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
 
         [Units("mm")]
@@ -438,30 +438,31 @@ namespace Models.Soils
         [Description("New cn2 after modification for crop cover & residue cover")]
         private double cn2_new;                  //! New cn2  after modification for crop cover & residue cover
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Drainage rate from bottom layer")]
-        public double drain;            //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
+        public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
 
+        [XmlIgnore]
         [Units("mm")]
         [Description("Infiltration")]
-        private double infiltration;     //! infiltration (mm)
+        private double infiltration { get; set; }     //! infiltration (mm)
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Runoff")]
-        public double runoff;           //! runoff (mm)
-
-
+        public double runoff { get; set; }           //! runoff (mm)
+         
+        [XmlIgnore]
         [Units("mm")]
         [Description("Evaporation from the surface of the pond")]
         private double pond_evap;      //! evaporation from the surface of the pond (mm)
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Surface water ponding depth")]
-        public double pond;           //! surface water ponding depth
+        public double pond { get; set; }           //! surface water ponding depth
 
         //Soilwat2Globals
 

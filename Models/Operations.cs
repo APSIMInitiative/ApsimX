@@ -44,6 +44,8 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            if (Model != null)
+                RemoveModel(Model);
             // Writes some c# code which then gets compiled to an assembly and added as a model.
             string classHeader = "using System;\r\n" +
                                  "using Models.Core;\r\n" +

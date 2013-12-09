@@ -144,22 +144,6 @@
           <string>[Plant].Leaf.SpecificArea</string>
           <string>[Plant].Summariser.TotalDead.Wt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -2195,6 +2179,7 @@
         using Models.PMF;
         using Models.Soils;
         using Models;
+        using System.Xml.Serialization;
         namespace Models
         {
  public class Script : Model
@@ -2229,7 +2214,8 @@ public double AccumIrrigation = 0;
 public double AccumRainfall = 0;
 public double SoilWaterDeficit = 0;
 
-public double AccumTtemerg = 0;
+[XmlIgnore]
+public double AccumTtemerg { get; set; }
 
 public double  InitialSoilOMN = 0;
 public double  InitialSurfaceOMN = 0;

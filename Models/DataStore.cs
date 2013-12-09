@@ -153,7 +153,9 @@ namespace Models
             for (int i = 0; i < names.Length; i++)
             {
                 string columnType = null;
-                if (types[i].ToString() == "System.DateTime")
+                if (types[i] == null)
+                    columnType = "integer";
+                else if (types[i].ToString() == "System.DateTime")
                     columnType = "date";
                 else if (types[i].ToString() == "System.Int32")
                     columnType = "integer";

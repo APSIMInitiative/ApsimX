@@ -70,10 +70,9 @@ namespace Models.Core
         {
             Utility.ModelFunctions.ResolveLinks(this);
 
-            // Connect all events for the simulations we're about to run.
-            //foreach (object Model in Models)
-            //    if (Model is Simulation)
-            //        Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+            foreach (object Model in Models)
+                if (Model is Simulation)
+                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
 
             // Initialise all simulations.
             foreach (object Model in Models)
@@ -98,9 +97,9 @@ namespace Models.Core
         public bool Run()
         {
             // Connect all events for the simulations we're about to run.
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+            //foreach (object Model in Models)
+            //    if (Model is Simulation)
+            //        Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
 
             // Invoke the AllCommencing event.
             if (AllCommencing != null)
@@ -117,9 +116,9 @@ namespace Models.Core
                 AllCompleted(this, new EventArgs());
 
             // Disconnect all events for the simulations we just ran.
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    Utility.ModelFunctions.DisconnectEventsInAllModels(Model as Simulation);
+            //foreach (object Model in Models)
+            //    if (Model is Simulation)
+            //        Utility.ModelFunctions.DisconnectEventsInAllModels(Model as Simulation);
             return ok;
         }
 
@@ -128,7 +127,7 @@ namespace Models.Core
         /// </summary>
         public bool Run(Simulation Sim)
         {
-            Utility.ModelFunctions.ConnectEventsInAllModels(Sim);
+            //Utility.ModelFunctions.ConnectEventsInAllModels(Sim);
 
             if (AllCommencing != null)
                 AllCommencing(this, new EventArgs());
@@ -139,7 +138,7 @@ namespace Models.Core
             if (AllCompleted != null)
                 AllCompleted(this, new EventArgs());
 
-            Utility.ModelFunctions.DisconnectEventsInAllModels(Sim);
+            //Utility.ModelFunctions.DisconnectEventsInAllModels(Sim);
 
             return ok;
         }
