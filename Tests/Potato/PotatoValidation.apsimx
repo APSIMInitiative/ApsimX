@@ -2104,10 +2104,10 @@
           <Name>Script</Name>
           <RowSpace>280</RowSpace>
           <RowWidth>770</RowWidth>
-          <PlantingDepth>150</PlantingDepth>
+          <PlantingDepth>120</PlantingDepth>
           <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
           <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>2003-11-10T00:00:00</SowingDate>
+          <SowingDate>2003-10-20T00:00:00</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
@@ -2139,7 +2139,7 @@
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
-				if (Clock.Today.Date.Equals(SowingDate))
+				if (Clock.Today.Date == SowingDate)
                     Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
                 //Plant.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
