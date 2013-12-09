@@ -249,6 +249,8 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            UnsubscribeAllEventHandlers();
+
             foreach (string Event in Events)
             {
                 string ComponentName = Utility.String.ParentName(Event, '.');
@@ -327,6 +329,11 @@ namespace Models
                 Members = null;
             }
 
+            UnsubscribeAllEventHandlers();
+        }
+
+        private void UnsubscribeAllEventHandlers()
+        {
             // Unsubscribe to all events.
             foreach (string Event in Events)
             {
