@@ -103,6 +103,7 @@ namespace UserInterface.Views
             EnsureAxisExists(YAxisPosition, YColumnName);
 
             GetAxis(AxisPosition.Bottom).MinorTickSize = 0;
+            GetAxis(AxisPosition.Bottom).StartPosition = 0;
             GetAxis(AxisPosition.Left).ShowMinorTicks = true;
             //horizontal grid
             GetAxis(AxisPosition.Left).MajorGridlineStyle = LineStyle.Solid;
@@ -117,9 +118,10 @@ namespace UserInterface.Views
                 P.Y = Data[i];
                 Points.Add(P);
             }
+            
             newSeries.ItemsSource = Points;
             newSeries.FillColor = OxyColor.FromRgb(64, 191, 255);
-            newSeries.ColumnWidth = 0.05;   //% of axis width
+            newSeries.ColumnWidth = 0.045;   //% of axis width
             plot1.Model.Series.Add(newSeries);
         }
         /// <summary>

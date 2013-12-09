@@ -111,7 +111,8 @@ namespace Models.SurfaceOM
 
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
-            if (value + double.Epsilon < lower || value - double.Epsilon > upper)
+       
+            if  (Utility.Math.IsLessThan(value, lower) || Utility.Math.IsGreaterThan(value, upper))
                 Summary.WriteWarning(FullPath, String.Format(apsim_bounds_warning_error, vname, lower, value, upper));
         }
 
