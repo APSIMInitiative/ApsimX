@@ -127,7 +127,8 @@ namespace Models
         [EventSubscribe("AllCompleted")]
         private void OnAllCompleted(object sender, EventArgs e)
         {
-            Connection.ExecuteNonQuery("COMMIT");
+            if (Connection != null)
+                Connection.ExecuteNonQuery("COMMIT");
             if (AutoCreateReport)
                 WriteOutputFile();
         }

@@ -149,7 +149,15 @@ namespace Models.Core
         private Simulations() { }
 
 
+        public void Close()
+        {
+            foreach (object Model in Models)
+                if (Model is Simulation)
+                    (Model as Simulation).Close();
 
+            if (AllCompleted != null)
+                AllCompleted(this, null);
+        }
         
 
     }

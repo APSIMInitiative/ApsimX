@@ -90,6 +90,12 @@ namespace Models.Core
             Summary.WriteProperty("Hierarchy", Hierarchy);
         }
 
+        public void Close()
+        {
+            if (Completed != null)
+                Completed.Invoke(this, new EventArgs());
+        }
+
 
     }
 

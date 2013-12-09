@@ -12,20 +12,16 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
-    <Summary>
+    <NullSummary>
       <Name>Summary</Name>
-    </Summary>
+    </NullSummary>
     <Zone>
       <Name>Field1</Name>
       <Report>
         <Name>Field1Report</Name>
         <Variables>
-          <string>Today</string>
-          <string>maxt</string>
-          <string>CurrentPhaseName</string>
         </Variables>
         <Events>
-          <string>Clock.EndOfDay</string>
         </Events> 
       </Report>
     </Zone>
@@ -73,9 +69,9 @@
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
-    <Summary>
+    <NullSummary>
       <Name>Summary</Name>
-    </Summary>
+    </NullSummary>
     <Zone>
       <Name>Field2</Name>
       <Graph>

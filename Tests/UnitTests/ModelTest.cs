@@ -37,7 +37,9 @@ namespace ModelTests
         [TestCleanup]
         public void Cleanup()
         {
+            S.Close();
             File.Delete("Test.apsimx");
+            File.Delete("Goondiwindi.met");
         }
 
         /// <summary>

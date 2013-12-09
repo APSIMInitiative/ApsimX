@@ -44,6 +44,7 @@ namespace Models.Core
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Report))]
         [XmlElement(typeof(Summary))]
+        [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(WeatherFile))]
         [XmlElement(typeof(Log))]

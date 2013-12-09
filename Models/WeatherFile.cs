@@ -244,7 +244,7 @@ namespace Models
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
         [EventSubscribe("Completed")]
-        public void OnCompleted(object sender, EventArgs e)
+        private void OnCompleted(object sender, EventArgs e)
         {
             Clock.Tick -= OnTick;
            // Simulation.Completed -= OnCompleted;

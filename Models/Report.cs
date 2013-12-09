@@ -341,9 +341,11 @@ namespace Models
                 string EventName = Utility.String.ChildName(Event, '.');
 
                 object Component = Paddock.Get(ComponentName);
-                EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-
-                ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
+                if (Component != null)
+                {
+                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
+                    ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
+                }
             }
         }
 
