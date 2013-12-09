@@ -60,7 +60,7 @@ namespace Models.Graph
                 else if (DataStore != null && SimulationName != null && TableName != null && FieldName != null)
                 {
                     System.Data.DataTable DataSource = DataStore.GetData(SimulationName, TableName);
-                    if (DataSource != null && FieldName != null)
+                    if (DataSource != null && FieldName != null && DataSource.Columns[FieldName] != null)
                     {
                         if (DataSource.Columns[FieldName].DataType == typeof(DateTime))
                             return Utility.DataTable.GetColumnAsDates(DataSource, FieldName);

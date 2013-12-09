@@ -12,6 +12,8 @@ namespace Models.PMF
         public Biomass AboveGround { get; set; }
         public Biomass BelowGround { get; set; }
         public Biomass Total { get; set; }
+        public Biomass TotalLive { get; set; }
+        public Biomass TotalDead { get; set; }
 
         [Link]
         Summary Summary = null;
