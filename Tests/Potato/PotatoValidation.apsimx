@@ -2592,13 +2592,6 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Structure.Population</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
       <ColumnNames>Plant.Leaf.LAI</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
@@ -2664,13 +2657,6 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
       <Type>Tolerance</Type>
       <ColumnNames>Plant.Root.Live.N</ColumnNames>
       <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
     </Test>
   </Tests>
 </Simulations>
