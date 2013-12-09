@@ -37,6 +37,10 @@ namespace Utility
         {
             return value1 - value2 > tolerance;
         }
+        public static bool IsLessThan(double value1, double value2)
+            {
+            return value2 - value1 > tolerance;
+            }
         public static double RoundToZero(double value, double tolerance)
         {
             return (System.Math.Abs(value) <= tolerance) ? 0.0 : value;
