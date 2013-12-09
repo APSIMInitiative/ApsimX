@@ -53,10 +53,11 @@ namespace Utility
         /// </summary>
         private void MovePointsToItems()
         {
+            double HalfBarWidth = XDataRange() * ColumnWidth / 2.0;
+
             Items.Clear();
             foreach (DataPoint P in ItemsSource)
             {
-                double HalfBarWidth = XDataRange * ColumnWidth / 2.0;
                 double x0 = P.X - HalfBarWidth;
                 double x1 = P.X + HalfBarWidth;
                 Items.Add(new RectangleBarItem(x0, 0.0, x1, P.Y));
@@ -66,21 +67,19 @@ namespace Utility
         /// <summary>
         /// Calculate the range of X data i.e. max - min.
         /// </summary>
-        private double XDataRange
+        private double XDataRange()
         {
-            get
+            double range = 0;
+
+            double Minimum = double.MaxValue;
+            double Maximum = double.MinValue;
+            foreach (DataPoint P in ItemsSource)
             {
-                if (Items.Count == 0)
-                    return 0;
-                double Minimum = double.MaxValue;
-                double Maximum = double.MinValue;
-                foreach (DataPoint P in ItemsSource)
-                {
-                    Minimum = System.Math.Min(Minimum, P.X);
-                    Maximum = System.Math.Max(Maximum, P.X);
-                }
-                return Maximum - Minimum;
+                Minimum = System.Math.Min(Minimum, P.X);
+                Maximum = System.Math.Max(Maximum, P.X);
+                range = Maximum - Minimum;
             }
+            return range;
         }
     }
 }
