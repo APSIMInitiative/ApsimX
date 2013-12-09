@@ -124,9 +124,9 @@ namespace ModelTests
             Soil soil = zone2.Models[1] as Soil;
 
             // Test for ensuring we can remove a model from a Zone.
-            Assert.IsTrue(Sim.RemoveModel(Sim.Models[0]));
+            Assert.IsTrue(Sim.RemoveModel(Sim.Models[1]));
             Assert.AreEqual(Sim.Models.Length, 4);
-            Assert.AreEqual(Sim.Models[0].Name, "Clock");
+            Assert.AreEqual(Sim.Models[0].Name, "WeatherFile");
 
             // Test for ensuring we can add a model to a simple model reference property of a class.
             Assert.IsNotNull(soil.Water);
