@@ -76,6 +76,7 @@ namespace Models.PMF
         public Arbitrator Arbitrator { get; set; }
         public Structure Structure { get; set; }
         public Summariser Summariser { get; set; }
+        [XmlIgnore]
         public SowPlant2Type SowingData;
 
 

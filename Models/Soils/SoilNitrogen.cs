@@ -182,6 +182,7 @@ namespace Models.Soils
             nh4ppm = Soil.NH4;
             num_residues = 0;
             Tsoil = null;
+            simpleST = null;
 
             fbiom = Soil.SoilOrganicMatter.FBiom;
             finert = Soil.SoilOrganicMatter.FInert;
@@ -204,15 +205,8 @@ namespace Models.Soils
             // perform initial calculations and setup
             InitCalc();
 
-            // initialise soil temperature
-            if (!use_external_st)
-                simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-
             // notifify apsim about solutes
             AdvertiseMySolutes();
-
-            // print SoilN report
-            WriteSummaryReport();
         }
 
         /// <summary>
@@ -256,9 +250,6 @@ namespace Models.Soils
             // get the changes of state and publish (let other component to know)
             DeltaState();
 
-            // print SoilN report
-            WriteSummaryReport();
-
             inReset = false;
         }
 
@@ -268,25 +259,12 @@ namespace Models.Soils
         private void CheckParams()
         {
 
-            Summary.WriteMessage(FullPath, "        - Reading/checking parameters");
-
             SoilCNParameterSet = SoilCNParameterSet.Trim();
             NPartitionApproach = NPartitionApproach.Trim();
-
-            Summary.WriteMessage(FullPath, "           - Using " + SoilCNParameterSet + " soil mineralisation specification");
 
             // check whether soil temperature is present. If not, check whether the basic params for simpleSoilTemp have been supplied
             if (AllowsimpleSoilTemp)
                 use_external_st = (ave_soil_temp != null);
-            if (!use_external_st)
-            {
-                if (MetFile.Latitude == -999.0)
-                    throw new Exception("Value for latitude was not supplied");
-                if (MetFile.Tav == -999.0)
-                    throw new Exception("Value for TAV was not supplied");
-                if (MetFile.Amp == -999.0)
-                    throw new Exception("Value for AMP was not supplied");
-            }
 
             // check whether ph is supplied, use a default if not - might be better to throw an exception?
             use_external_ph = (ph != null);
@@ -486,25 +464,6 @@ namespace Models.Soils
             SendExternalMassFlowC(dltC);
         }
 
-        /// <summary>
-        /// Write report on summaryfile about setup and status of SoilNitrogen
-        /// </summary>
-        private void WriteSummaryReport()
-        {
-
-            string myMessage = "";
-            if (use_external_st)
-                myMessage = "   - Soil temperature supplied by apsim";
-            else
-                myMessage = "   - Soil temperature calculated internally";
-            Summary.WriteMessage(FullPath, "        " + myMessage);
-            if (use_external_ph)
-                myMessage = "   - Soil pH supplied by apsim";
-            else
-                myMessage = "   - Soil pH was not supplied, default value will be used";
-            Summary.WriteMessage(FullPath, "        " + myMessage);
-        }
-
         #endregion
 
         #region Process events handlers and methods
@@ -526,7 +485,13 @@ namespace Models.Soils
             if (use_external_st)
                 Tsoil = ave_soil_temp;
             else
+            {
+                // initialise soil temperature
+                if (simpleST == null)
+                    simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
+
                 Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
+            }
 
             // calculate C and N processes
             //    - Assesses potential decomposition of surface residues;
@@ -632,14 +597,6 @@ namespace Models.Soils
         #endregion
 
         #region Frequent and sporadic processes
-
-        /// <summary>
-        /// Write SoilNitrogen summary report to summaryfile
-        /// </summary>
-        public void SumReport()
-        {
-            WriteSummaryReport();
-        }
 
         /// <summary>
         /// Partition the given FOM C and N into fractions in each layer (one FOM)

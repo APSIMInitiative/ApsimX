@@ -10,10 +10,10 @@ namespace UserInterface
 {
     public partial class MainForm : Form
     {
-        /// <summary>
-        /// Public access to the settings
-        /// </summary>
         private Utility.Configuration Configuration;
+        private TabbedExplorerPresenter Presenter1;
+        private TabbedExplorerPresenter Presenter2;
+
         /// <summary>
         /// Construcotr
         /// </summary>
@@ -24,10 +24,10 @@ namespace UserInterface
 
             Configuration = new Utility.Configuration();
             
-            TabbedExplorerPresenter Presenter1 = new TabbedExplorerPresenter();
+            Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
 
-            TabbedExplorerPresenter Presenter2 = new TabbedExplorerPresenter();
+            Presenter2 = new TabbedExplorerPresenter();
             Presenter2.Attach(tabbedExplorerView2);
 
             SplitContainer.Panel2Collapsed = true;
@@ -55,10 +55,11 @@ namespace UserInterface
             }
             base.Dispose(disposing);
         }
+        
         /// <summary>
         /// Read the previous main form sizing values from the configuration file.
         /// </summary>
-        private void MainForm_Load(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             SuspendLayout();
 
@@ -75,6 +76,15 @@ namespace UserInterface
 
             ResumeLayout();
         }
+
+        /// <summary>
+        /// User wants to close the form.
+        /// </summary>
+        private void OnClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !Presenter1.AllowClose() || !Presenter2.AllowClose();
+        }
+
     }
      
 }

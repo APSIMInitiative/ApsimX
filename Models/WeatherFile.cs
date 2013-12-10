@@ -16,8 +16,6 @@ namespace Models
         // Links
         [Link] private Clock Clock = null;
         [Link] private Simulations Simulations = null;
-        //[Link] private Simulation Simulation = null;
-        [Link] private ISummary Summary = null;
 
         // Privates
         private Utility.ApsimTextFile WtrFile = null;
@@ -45,7 +43,7 @@ namespace Models
             get
             {
                 string FullFileName = FileName;
-                if (Path.GetFullPath(FileName) != FileName)
+                if (Simulations.FileName != null && Path.GetFullPath(FileName) != FileName)
                     FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
                 return FullFileName;
             }
@@ -208,9 +206,6 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            Summary.WriteProperty("Weather file name", FileName);
-            if (!OpenDataFile())
-                throw new ApsimXException(this.FullPath, "Cannot find weather file '" + FileName + "'");
             DoSeek = true; 
         }
 
@@ -222,6 +217,9 @@ namespace Models
         {
             if (DoSeek)
             {
+                if (!OpenDataFile())
+                    throw new ApsimXException(this.FullPath, "Cannot find weather file '" + FileName + "'");
+
                 DoSeek = false;
                 WtrFile.SeekToDate(Clock.Today);
             }
@@ -244,12 +242,15 @@ namespace Models
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
         [EventSubscribe("Completed")]
-        public void OnCompleted(object sender, EventArgs e)
+        private void OnCompleted(object sender, EventArgs e)
         {
             Clock.Tick -= OnTick;
            // Simulation.Completed -= OnCompleted;
-            WtrFile.Close();
-            WtrFile = null;
+            if (WtrFile != null)
+            {
+                WtrFile.Close();
+                WtrFile = null;
+            }
         }
         //=====================================================================
         /// <summary>

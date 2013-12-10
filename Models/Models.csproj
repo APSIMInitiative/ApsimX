@@ -104,6 +104,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="Core\ApsimXException.cs" />
+    <Compile Include="NullSummary.cs" />
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />

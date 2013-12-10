@@ -226,7 +226,8 @@ namespace Models.PMF.Phen
                 else
                     return Phases[CurrentPhaseIndex];
             }
-            set
+                    
+            private set
             {
                 string OldPhaseName = CurrentPhase.Name;
 

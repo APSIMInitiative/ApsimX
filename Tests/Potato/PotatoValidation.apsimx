@@ -144,22 +144,6 @@
           <string>[Plant].Leaf.SpecificArea</string>
           <string>[Plant].Summariser.TotalDead.Wt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -315,12 +299,6 @@
           <slope>0</slope>
           <discharge_width>0</discharge_width>
           <catchment_area>0</catchment_area>
-          <eo>0.59443006759149886</eo>
-          <eos>0.59443006759149886</eos>
-          <drain>0</drain>
-          <runoff>0</runoff>
-          <pond>0</pond>
-          <irrigation>0</irrigation>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>0</CN2Bare>
@@ -657,76 +635,14 @@
         <ComponentData>
           <Name>potato</Name>
           <Type>Potato</Type>
-          <LAI>0</LAI>
-          <LAItot>2.44547963142395</LAItot>
-          <CoverGreen>0</CoverGreen>
-          <CoverTot>0.070737846195697784</CoverTot>
-          <Ktot>0.0300000007332331</Ktot>
-          <K>0</K>
-          <Height>0.08676488</Height>
-          <Depth>0.08676488</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <Frgr>0.949999988079071</Frgr>
-          <layerLAI>
-            <double>0</double>
-          </layerLAI>
-          <layerLAItot>
-            <double>2.44547963142395</double>
-          </layerLAItot>
-          <Ftot>
-            <double>1</double>
-          </Ftot>
-          <Fgreen>
-            <double>0</double>
-          </Fgreen>
-          <Rs>
-            <double>0.23343488907275933</double>
-          </Rs>
-          <Rl>
-            <double>-0.044208579054162464</double>
-          </Rl>
-          <Rsoil>
-            <double>-0.023343488907275934</double>
-          </Rsoil>
-          <Gc>
-            <double>0.0001</double>
-          </Gc>
-          <Ga>
-            <double>0.012728071910170479</double>
-          </Ga>
-          <PET>
-            <double>0.020534221492096449</double>
-          </PET>
-          <PETr>
-            <double>0.00040843385550181445</double>
-          </PETr>
-          <PETa>
-            <double>0.020125787636594634</double>
-          </PETa>
-          <Omega>
-            <double>0.017757205635591172</double>
-          </Omega>
-          <interception>
-            <double>0</double>
-          </interception>
         </ComponentData>
       </MicroClimate>
       <Plant>
         <Name>Potato</Name>
-        <SowingData>
-          <Cultivar>RusssetBurbank</Cultivar>
-          <Population>4.6</Population>
-          <Depth>120</Depth>
-          <RowSpacing>150</RowSpacing>
-          <MaxCover>1</MaxCover>
-          <BudNumber>2.2</BudNumber>
-          <CropClass>Plant</CropClass>
-          <SkipRow>0</SkipRow>
-          <SkipPlant>0</SkipPlant>
-        </SowingData>
         <CropType>Potato</CropType>
         <Phenology>
           <Name>Phenology</Name>
@@ -929,106 +845,6 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
           </Phases>
         </Phenology>
         <Arbitrator>
@@ -1903,7 +1719,6 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020534221082925797</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -2195,6 +2010,7 @@
         using Models.PMF;
         using Models.Soils;
         using Models;
+        using System.Xml.Serialization;
         namespace Models
         {
  public class Script : Model
@@ -2229,7 +2045,8 @@ public double AccumIrrigation = 0;
 public double AccumRainfall = 0;
 public double SoilWaterDeficit = 0;
 
-public double AccumTtemerg = 0;
+[XmlIgnore]
+public double AccumTtemerg { get; set; }
 
 public double  InitialSoilOMN = 0;
 public double  InitialSurfaceOMN = 0;

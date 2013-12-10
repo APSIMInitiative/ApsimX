@@ -26,8 +26,11 @@ namespace Models
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            string fileName = Path.ChangeExtension(Simulations.FileName, ".log");
-            Writer = new StreamWriter(fileName);
+            if (Simulations.FileName != null)
+            {
+                string fileName = Path.ChangeExtension(Simulations.FileName, ".log");
+                Writer = new StreamWriter(fileName);
+            }
         }
 
         /// <summary>

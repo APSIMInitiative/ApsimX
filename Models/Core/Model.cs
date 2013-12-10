@@ -234,8 +234,9 @@ namespace Models.Core
             if (!wasAdded)
                 throw new ApsimXException(FullPath, "Cannot add model: " + model.Name + " to parent model: " + Name);
 
-            // Invalidate the AllModels list.
+            // Invalidate the AllModels list and clear variable caches.
             AllModels = null;
+            ClearAllCacheInScope();
             if (Parent != null)  // Only go in here if the model has been initialised.
             {
                 Utility.ModelFunctions.ConnectEventsInModel(model);
@@ -256,7 +257,7 @@ namespace Models.Core
             // Need to find where in the object to store this model.
             foreach (PropertyInfo property in ModelPropertyInfos())
             {
-                if (property.PropertyType == model.GetType())
+                if (property.PropertyType.IsAssignableFrom(model.GetType()))
                 {
                     property.SetValue(this, null, null);
                     removed = true;
@@ -282,6 +283,9 @@ namespace Models.Core
             {
                 // Detach this model from all events.
                 Utility.ModelFunctions.DisconnectEventsInModel(model);
+
+                // Clear the variable caches.
+                ClearAllCacheInScope();
             }
             return removed;
         }
@@ -400,14 +404,28 @@ namespace Models.Core
             {
                 if (property.GetType().IsClass && property.CanWrite && property.Name != "Parent")
                 {
-                    if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
-                        allModelProperties.Add(property);
+                    MethodInfo[] accessors = property.GetAccessors();
+                    if (accessors.Length == 2 && accessors[0].IsPublic && accessors[1].IsPublic)
+                    {
+                        if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
+                            allModelProperties.Add(property);
 
-                    else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
-                        allModelProperties.Add(property);
+                        else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
+                            allModelProperties.Add(property);
+                    }
                 }
             }
             return allModelProperties.ToArray();
+        }
+
+        /// <summary>
+        /// Clear all variable caches
+        /// </summary>
+        private void ClearAllCacheInScope()
+        {
+            VariableCache.Clear();
+            foreach (Model model in FindAll())
+                model.VariableCache.Clear();
         }
     }
 }

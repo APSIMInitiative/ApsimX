@@ -86,24 +86,8 @@ namespace Models
         private void OnInitialised(object sender, EventArgs e)
         {
             HasDeserialised = true;
+            RebuildScriptModel();
 
-            // Compile the script.
-            CompileScript();
-
-            // Look for a script node.
-            XmlNode scriptNode;
-            if (elements.Length > 0 && elements[0].Name == "Script")
-                scriptNode = elements[0];
-            else
-            {
-                XmlDocument doc = new XmlDocument();
-                scriptNode = doc.CreateElement("Script");
-            }
-            if (ScriptType != null)
-            {
-                XmlSerializer serial = new XmlSerializer(ScriptType);
-                Script = serial.Deserialize(new XmlNodeReader(scriptNode)) as Model;
-            }
         }
 
         /// <summary>
@@ -132,18 +116,31 @@ namespace Models
 
                     if (ScriptType != null)
                     {
-                        if (scriptXml != null)
+                        if (elements.Length > 0 || scriptXml != null)
                         {
-                            XmlDocument doc = new XmlDocument();
-                            doc.LoadXml(scriptXml);
+                            XmlElement scriptNode;
+
+                            if (scriptXml != null)
+                            {
+                                XmlDocument doc = new XmlDocument();
+                                doc.LoadXml(scriptXml);
+                                scriptNode = doc.DocumentElement;
+                            }
+                            else
+                                scriptNode = elements[0];
 
                             XmlSerializer serial = new XmlSerializer(ScriptType);
-                            Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                            Script = serial.Deserialize(new XmlNodeReader(scriptNode)) as Model;
                         }
                         else
                             Script = Activator.CreateInstance(ScriptType) as Model;
 
                         this.AddModel(Script, true);
+
+                        // Call the OnInitialised if present.
+                        MethodInfo OnInitialised = Script.GetType().GetMethod("OnInitialised", BindingFlags.Instance | BindingFlags.NonPublic);
+                        if (OnInitialised != null)
+                            OnInitialised.Invoke(Script, new object[] { this, null });
                     }
                 }
                 catch (Exception err)
