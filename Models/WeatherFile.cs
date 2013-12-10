@@ -246,8 +246,11 @@ namespace Models
         {
             Clock.Tick -= OnTick;
            // Simulation.Completed -= OnCompleted;
-            WtrFile.Close();
-            WtrFile = null;
+            if (WtrFile != null)
+            {
+                WtrFile.Close();
+                WtrFile = null;
+            }
         }
         //=====================================================================
         /// <summary>
