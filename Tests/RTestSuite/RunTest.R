@@ -12,8 +12,8 @@ args <- commandArgs(TRUE)
 #  stop("Usage: rscript RunTest.R <path to .apsimx>")
 
 args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
-dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
-connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
+#dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
+#connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
 
 source("Tests/RTestSuite/tests.R")
 
@@ -89,6 +89,6 @@ for (ind in c(1:length(groupdf))){
 print(results)
 #disabled for infrastructure testing
 #sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-odbcCloseAll()
+#odbcCloseAll()
 
 if (all(results) == FALSE) stop("One or more tests failed.")

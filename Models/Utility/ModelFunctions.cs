@@ -219,7 +219,7 @@ namespace Utility
                     if (linkedObject != null)
                         field.SetValue(model, linkedObject);
                     else
-                        throw new ApsimXException(model.FullPath, "Cannot resolve [Link] " + field.ToString() + ". Model type is " + model.GetType().FullName);
+                        throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() + "' in class '" + model.GetType().FullName + "'");
                 }
             }
 

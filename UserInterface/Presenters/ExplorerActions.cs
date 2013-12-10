@@ -52,7 +52,14 @@ namespace UserInterface.Presenters
         [MainMenuName("Save")]
         public void OnSaveClick(object sender, EventArgs e)
         {
-            ExplorerPresenter.ApsimXFile.Write(ExplorerPresenter.ApsimXFile.FileName);
+            try
+            {
+                ExplorerPresenter.ApsimXFile.Write(ExplorerPresenter.ApsimXFile.FileName);
+            }
+            catch (Exception err)
+            {
+                ExplorerView.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
@@ -64,8 +71,15 @@ namespace UserInterface.Presenters
             string NewFileName = ExplorerView.SaveAs(ExplorerPresenter.ApsimXFile.FileName);
             if (NewFileName != null)
             {
-                ExplorerPresenter.ApsimXFile.Write(NewFileName);
-                ExplorerView.ChangeTabText(Path.GetFileNameWithoutExtension(NewFileName));
+                try
+                {
+                    ExplorerPresenter.ApsimXFile.Write(NewFileName);
+                    ExplorerView.ChangeTabText(Path.GetFileNameWithoutExtension(NewFileName));
+                }
+                catch (Exception err)
+                {
+                    ExplorerView.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                }
             }
         }
 

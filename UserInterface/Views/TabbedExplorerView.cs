@@ -24,6 +24,11 @@ namespace UserInterface.Views
         /// Ask user for a filename.
         /// </summary>
         string AskUserForFileName();
+
+        /// <summary>
+        /// Show an error message to caller.
+        /// </summary>
+        void ShowError(string message);
     }
 
 
@@ -205,6 +210,14 @@ namespace UserInterface.Views
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
                 return OpenFileDialog.FileName;
             return null;
+        }
+
+        /// <summary>
+        /// Show an error message to caller.
+        /// </summary>
+        public void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

@@ -31,10 +31,6 @@ namespace Models
         {
         }
 
-        public void WriteProperty(string Name, string Value)
-        {
-        }
-
         public string GetSummary(string apsimSummaryImageFileName)
         {
             return null;

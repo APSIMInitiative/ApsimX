@@ -85,9 +85,17 @@ namespace Models.Core
         /// </summary>
         public void Write(string FileName)
         {
-            StreamWriter Out = new StreamWriter(FileName);
+            string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
+            StreamWriter Out = new StreamWriter(tempFileName);
             Out.Write(Utility.Xml.Serialise(this, true));
             Out.Close();
+
+            // If we get this far without an exception then copy the tempfilename over our filename,
+            // creating a backup (.bak) in the process.
+            string bakFileName = FileName + ".bak";
+            File.Delete(bakFileName);
+            File.Move(FileName, bakFileName);
+            File.Move(tempFileName, FileName);
             this.FileName = FileName;
         }
 

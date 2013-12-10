@@ -12,6 +12,8 @@ namespace UserInterface.Presenters
     class TabbedExplorerPresenter
     {
         private ITabbedExplorerView View;
+        private List<ExplorerPresenter> Presenters = new List<ExplorerPresenter>();
+
         public void Attach(object View)
         {
             this.View = View as ITabbedExplorerView;
@@ -48,7 +50,17 @@ namespace UserInterface.Presenters
             OpenApsimXFromMemoryInTab("Standard toolbox", SR.ReadToEnd());
         }
 
-
+        /// <summary>
+        /// Allow the for to close?
+        /// </summary>
+        public bool AllowClose()
+        {
+            bool ok = true;
+            foreach (ExplorerPresenter presenter in Presenters)
+                ok = presenter.Save() && ok;
+            return ok;
+        }
+        
         /// <summary>
         /// Open an .apsimx file into the current tab.
         /// </summary>
@@ -58,12 +70,18 @@ namespace UserInterface.Presenters
             {
                 ExplorerView ExplorerView = new ExplorerView();
                 ExplorerPresenter Presenter = new ExplorerPresenter();
-                Console.WriteLine(FileName);
+                Presenters.Add(Presenter);
 
-                Simulations simulations = Simulations.Read(FileName);
-                Presenter.Attach(simulations, ExplorerView, null);
-
-                View.AddTab(FileName, Properties.Resources.apsim_logo32, ExplorerView, true);
+                try
+                {
+                    Simulations simulations = Simulations.Read(FileName);
+                    Presenter.Attach(simulations, ExplorerView, null);
+                    View.AddTab(FileName, Properties.Resources.apsim_logo32, ExplorerView, true);
+                }
+                catch (Exception err)
+                {
+                    this.View.ShowError(err.Message);
+                }
             }
         }
 
