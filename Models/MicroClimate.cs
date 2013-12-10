@@ -392,7 +392,7 @@ namespace Models
             // If sender is unknown, add it to the list
             if (senderIdx == -1)
                 throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
-            ComponentData[senderIdx].Name = newCrop.Name.ToLower();
+            ComponentData[senderIdx].Name = newCrop.Name;
             ComponentData[senderIdx].Type = newCrop.CropType;
             Clear(ComponentData[senderIdx]);
         }
