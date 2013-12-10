@@ -955,6 +955,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        [XmlIgnore]
         [Units("mm")]
         public override double WaterDemand { get; set; }
         [XmlIgnore]

@@ -518,32 +518,55 @@ namespace Models
         {
             public string Name;
             public string Type;
+            [XmlIgnore]
             public double LAI;
+            [XmlIgnore]
             public double LAItot;
+            [XmlIgnore]
             public double CoverGreen;
+            [XmlIgnore]
             public double CoverTot;
+            [XmlIgnore]
             public double Ktot;
+            [XmlIgnore]
             public double K;
+            [XmlIgnore]
             public double Height;
+            [XmlIgnore]
             public double Depth;
             public double Albedo = 0.26;
             public double Emissivity = 0.96;
             public double Gsmax = 0.011;
             public double R50 = 200;
+            [XmlIgnore]
             public double Frgr;
+            [XmlIgnore]
             public double[] layerLAI;
+            [XmlIgnore]
             public double[] layerLAItot;
+            [XmlIgnore]
             public double[] Ftot;
+            [XmlIgnore]
             public double[] Fgreen;
+            [XmlIgnore]
             public double[] Rs;
+            [XmlIgnore]
             public double[] Rl;
+            [XmlIgnore]
             public double[] Rsoil;
+            [XmlIgnore]
             public double[] Gc;
+            [XmlIgnore]
             public double[] Ga;
+            [XmlIgnore]
             public double[] PET;
+            [XmlIgnore]
             public double[] PETr;
+            [XmlIgnore]
             public double[] PETa;
+            [XmlIgnore]
             public double[] Omega;
+            [XmlIgnore]
             public double[] interception;
         }
 

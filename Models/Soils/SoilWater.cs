@@ -430,6 +430,7 @@ namespace Models.Soils
         public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
 
+        [XmlIgnore]
         [Units("mm")]
         [Description("Pot sevap after modification for green cover & residue wt")]
         public double eos;                      //! pot sevap after modification for green cover & residue wt
@@ -1389,6 +1390,7 @@ namespace Models.Soils
         int num_solutes = 0;
 
         //IRRIGATION
+        [XmlIgnore]
         public double irrigation;       //! irrigation (mm)                                                 
 
         //r double pond_evap;
@@ -1442,10 +1444,6 @@ namespace Models.Soils
 
             //Settable Params
             //! ie day**-1 for each soil layer
-            _cn2_bare = 0.0;                         //! curve number input used to calculate daily g_runoff
-            _cn_cov = 0.0;                           //! cover at which c_cn_red occurs
-            _cn_red = 0.0;                           //! maximum reduction in p_cn2_bare due to cover
-
             _max_pond = 0.0;                         //! maximum allowable surface storage (ponding) mm
 
             numvals_sw = 0;                         //! number of values returned for sw
@@ -1514,8 +1512,6 @@ namespace Models.Soils
             _eo_source = "";                        //! system variable name of external eo source
 
             real_eo = 0.0;                          //! eo determined before any ponded water is evaporated (mm)
-
-            irrigation_layer = 0;                   //! trickle irrigation input layer
         }
 
 
