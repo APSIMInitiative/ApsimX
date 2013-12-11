@@ -205,7 +205,7 @@ namespace Models.PMF.Organs
         public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
 
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsSenescing"), Structure.MainStemFinalNodeNo); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNo); } }
 
         [Units("/plant")]
         [Description("Number of appeared leaves per plant that have appeared but not yet fully senesced on each plant")]
