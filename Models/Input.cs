@@ -14,6 +14,7 @@ namespace Models
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model

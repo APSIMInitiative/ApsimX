@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
     public class PhotoperiodFunction : Function
     {

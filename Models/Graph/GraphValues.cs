@@ -13,6 +13,7 @@ namespace Models.Graph
     /// from a DataStore. The second uses reflection to pull values from a property in an object.
     /// e.g. Soil.sw
     /// </summary>
+    [Serializable]
     public class GraphValues : Model
     {
         // These three properties are needed to talk to a DataStore.

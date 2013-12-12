@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the maximum value of all childern functions")]
     public class MaximumFunction : Function
     {

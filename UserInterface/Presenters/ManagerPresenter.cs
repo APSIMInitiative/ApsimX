@@ -56,12 +56,12 @@ namespace UserInterface.Presenters
                     if (o == null)
                     {
                         // Not a [Link] so look for the object within scope
-                        o = Manager.ParentZone.Find(e.ObjectName);
+                        o = Manager.Find(e.ObjectName);
                     }
                 }
                 // If still not found then try a specific get for the object.
                 if (o == null)
-                    o = Manager.ParentZone.Get(e.ObjectName);
+                    o = Manager.Get(e.ObjectName);
 
                 // If found then loop through all properties and add to the items list.
                 if (o != null)

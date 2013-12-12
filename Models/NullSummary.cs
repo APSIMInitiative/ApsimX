@@ -15,6 +15,7 @@ namespace Models
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    [Serializable]
     public class NullSummary : Model, ISummary
     {
 

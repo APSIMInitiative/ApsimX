@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     [Description("Leaf Class")]
     public class Leaf : BaseOrgan, AboveGround
     {
@@ -27,6 +28,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Structures
+        [Serializable]
         public class InitialLeafValues : Model
         {
             public Function MaxArea { get; set; }

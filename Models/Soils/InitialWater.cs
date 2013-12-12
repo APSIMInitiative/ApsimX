@@ -3,6 +3,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class InitialWater : Model
     {
         public enum PercentMethodEnum { FilledFromTop, EvenlyDistributed };

@@ -7,6 +7,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class SoilCrop : Model
     {
         [Units("mm/mm")]

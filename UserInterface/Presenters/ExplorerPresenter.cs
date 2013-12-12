@@ -6,6 +6,7 @@ using UserInterface.Views;
 using Models.Core;
 using System.Runtime.Serialization;
 using Models;
+using System.Collections.Generic;
 
 namespace UserInterface.Presenters
 {
@@ -183,22 +184,29 @@ namespace UserInterface.Presenters
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo Method in typeof(ExplorerActions).GetMethods())
             {
-                ContextModelType ContextModelType = Utility.Reflection.GetAttribute(Method, typeof(ContextModelType), false) as ContextModelType;
                 ContextMenuName ContextMenuName = Utility.Reflection.GetAttribute(Method, typeof(ContextMenuName), false) as ContextMenuName;
-                if (ContextMenuName != null &&
-                    (ContextModelType == null || ContextModelType.ModelType == SelectedModel.GetType()))
+                if (ContextMenuName != null)
                 {
-                    MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
-                    Desc.Name = ContextMenuName.MenuName;
-                    Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
+                    // Get a list of allowed types.
+                    List<Type> allowedMenuTypes = new List<Type>();
+                    foreach (ContextModelType contextModelType in Utility.Reflection.GetAttributes(Method, typeof(ContextModelType), false))
+                        allowedMenuTypes.Add(contextModelType.ModelType);
 
-                    EventHandler Handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), ExplorerActions, Method);
-                    Desc.OnClick = Handler;
 
-                    if (Desc.Name == "Advanced mode")
-                        Desc.Checked = AdvancedMode;
+                    if (allowedMenuTypes.Count == 0 || allowedMenuTypes.Contains(SelectedModel.GetType()))
+                    {
+                        MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
+                        Desc.Name = ContextMenuName.MenuName;
+                        Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
 
-                    e.Descriptions.Add(Desc);
+                        EventHandler Handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), ExplorerActions, Method);
+                        Desc.OnClick = Handler;
+
+                        if (Desc.Name == "Advanced mode")
+                            Desc.Checked = AdvancedMode;
+
+                        e.Descriptions.Add(Desc);
+                    }
                 }
             }
         }

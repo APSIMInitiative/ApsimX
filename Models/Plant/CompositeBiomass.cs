@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    [Serializable]
     public class CompositeBiomass : Biomass
     {
 

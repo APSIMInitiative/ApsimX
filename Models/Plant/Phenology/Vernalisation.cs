@@ -5,6 +5,7 @@ using System;
 namespace Models.PMF.Phen
 {
 
+    [Serializable]
     public class Vernalisation
     {
         [Link]

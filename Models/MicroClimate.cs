@@ -107,6 +107,7 @@ namespace Models
     /// to VB via the converter in SharpDevelop.
     /// Ported back to C# by Dean Holzworth
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public partial class MicroClimate : Model
@@ -514,6 +515,7 @@ namespace Models
         #endregion
         #region "Various class variables"
 
+        [Serializable]
         public class ComponentDataStruct
         {
             public string Name;

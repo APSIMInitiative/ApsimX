@@ -45,7 +45,8 @@ namespace Models.PMF.Organs
     }
     #endregion
 
-    abstract public class Organ: Model
+    [Serializable]
+    abstract public class Organ : Model
     {
         #region Links to other models or compontnets
         public virtual Biomass Live { get; set; }

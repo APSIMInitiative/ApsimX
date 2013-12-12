@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
         [Link]

@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the Minimum value of all children functions")]
     public class MinimumFunction : Function
     {

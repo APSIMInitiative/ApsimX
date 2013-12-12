@@ -9,12 +9,14 @@ using System.Xml;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     public class PhaseChangedType
     {
         public String OldPhaseName = "";
         public String NewPhaseName = "";
     }
-    public class Phenology: Model
+    [Serializable]
+    public class Phenology : Model
     {
         #region Links
         [Link]

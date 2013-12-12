@@ -8,6 +8,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class LayerStructure : Model
     {
         public double[] Thickness { get; set; }

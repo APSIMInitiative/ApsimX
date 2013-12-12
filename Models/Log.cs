@@ -10,6 +10,7 @@ namespace Models
     /// <summary>
     /// A low level log component that writes state / parameter variables to a text file.
     /// </summary>
+    [Serializable]
     public class Log : Model
     {
         [Link]

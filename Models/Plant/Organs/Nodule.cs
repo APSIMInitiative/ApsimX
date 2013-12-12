@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class Nodule : GenericOrgan, BelowGround
     {
         #region Paramater Input Classes

@@ -9,6 +9,7 @@ using System.Collections;
 
 namespace Models
 {
+    [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary

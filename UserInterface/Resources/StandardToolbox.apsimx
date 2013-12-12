@@ -598,14 +598,9 @@
         <Y>WeatherFile.MaxT</Y>
       </Series>
     </Graph>
-    <Log>
-      <Name>Log</Name>
-    </Log>
+    <Log />
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-  </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-  </Tests>
+  <DataStore />
+  <Tests />
+  <Creator />
 </Simulations>

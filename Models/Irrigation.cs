@@ -10,6 +10,7 @@ namespace Models
     /// <summary>
     /// Irrigation class.
     /// </summary>
+    [Serializable]
     public class Irrigation : Model
     {
         // Links

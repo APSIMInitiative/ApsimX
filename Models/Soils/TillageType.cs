@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class TillageType : Model
     {
         public double f_incorp { get; set; }

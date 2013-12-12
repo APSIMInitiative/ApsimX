@@ -8,9 +8,11 @@ using Models.Core;
 using Models;
 using System.Xml.Serialization;
 using Models.PMF;
+using System.Runtime.Serialization;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class NewProfileType
     {
         public double[] dlayer;
@@ -29,6 +31,7 @@ namespace Models.Soils
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
     ///</summary>
+    [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilWater : Model
@@ -1371,6 +1374,7 @@ namespace Models.Soils
 
         //SOLUTES
         //OnNewSolute
+        [Serializable]
         private class Solute
         {
             public string name = "";        // Name of the solute
@@ -4738,40 +4742,47 @@ namespace Models.Soils
 
     }
 
+    [Serializable]
     public class SoilWatTillageType
     {
-        Dictionary<string, float[]> tillage_types;
+       // Dictionary<string, float[]> tillage_types;
 
-        protected float[] strToArr(string str)
-        {
-            string[] temp = str.Split(new char[] { ' ', '\t', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            float[] result = new float[temp.Length];
+       // protected float[] strToArr(string str)
+       // {
+       //     string[] temp = str.Split(new char[] { ' ', '\t', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+       //     float[] result = new float[temp.Length];
 
-            for (int i = 0; i < result.Length; i++)
-                result[i] = float.Parse(temp[i]);
+       //     for (int i = 0; i < result.Length; i++)
+       //         result[i] = float.Parse(temp[i]);
 
-            return result;
-        }
+       //     return result;
+       // }
 
-        public System.Xml.XmlNode xe = null;
+       // public System.Xml.XmlNode xe = null;
 
-        [XmlAnyElement]
-        public System.Xml.XmlElement[] Nodes = null;
+       // [XmlAnyElement]
+       // public System.Xml.XmlElement[] Nodes = null;
 
-        public void OnInitialised(object sender, EventArgs e)
-        {
-            tillage_types = new Dictionary<string, float[]>();
+       // public void OnInitialised(object sender, EventArgs e)
+       // {
+       //     tillage_types = new Dictionary<string, float[]>();
 
-            foreach (System.Xml.XmlNode xnc in Nodes)
-                if (xnc.NodeType == System.Xml.XmlNodeType.Element)
-                    tillage_types.Add(xnc.Name, strToArr(xnc.FirstChild.Value));
-        }
+       //     foreach (System.Xml.XmlNode xnc in Nodes)
+       //         if (xnc.NodeType == System.Xml.XmlNodeType.Element)
+       //             tillage_types.Add(xnc.Name, strToArr(xnc.FirstChild.Value));
+       // }
 
         public TillageType GetTillageData(string name)
         {
-            throw new NotImplementedException("SoilWatTillageType not implemented");
-        //    return tillage_types.ContainsKey(name) ? new TillageType() { type = name, cn_red = tillage_types[name][0], cn_rain = tillage_types[name][1] } : null;
+       //     throw new NotImplementedException("SoilWatTillageType not implemented");
+       // //    return tillage_types.ContainsKey(name) ? new TillageType() { type = name, cn_red = tillage_types[name][0], cn_rain = tillage_types[name][1] } : null;
+            return null;
         }
+
+       // public void GetObjectData(SerializationInfo info, StreamingContext context)
+       // {
+       //     throw new NotImplementedException();
+       // }
     }
 
 }

@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the age (in years) of the crop")]
     public class AgeCalculatorFunction : Function
     {

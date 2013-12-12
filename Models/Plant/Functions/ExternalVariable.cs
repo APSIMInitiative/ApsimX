@@ -12,6 +12,7 @@ namespace Models.PMF.Functions
     /// Note: This should be merged with the variable function when naming convention
     /// to refer to internal and external variable is standardized. FIXME
     /// </summary>
+    [Serializable]
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     public class ExternalVariable : Function
     {

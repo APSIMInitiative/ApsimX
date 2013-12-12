@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("returns the temperature of the surface soil layer")]
     public class SoilTemperatureFunction : Function
     {

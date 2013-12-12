@@ -37,9 +37,9 @@ namespace UserInterface.Views
         void SetCellEditor(int Col, int Row, object Obj);
 
         /// <summary>
-        /// Set the specified column to auto size.
+        /// Set the specified column size. A value of -1 indicates auto sizing.
         /// </summary>
-        void SetColumnAutoSize(int Col);
+        void SetColumnSize(int Col, int size=-1);
 
         /// <summary>
         /// Set the specified column's alignment (left/right)
@@ -110,10 +110,15 @@ namespace UserInterface.Views
         /// </summary>
         object GetCellValue(int Col, int Row);
 
+        /// <summary>
+        /// Returns true if the grid row is empty.
+        /// </summary>
+        bool RowIsEmpty(int rowIndex);
     }
 
     public partial class GridView : UserControl, IGridView
     {
+        private bool UserEditingCell = false;
         private object ValueBeforeEdit;
         private DataTable Data;
 
@@ -310,16 +315,18 @@ namespace UserInterface.Views
         public bool ReadOnly { get { return Grid.ReadOnly; } set { Grid.ReadOnly = value; } }
 
         /// <summary>
-        /// Set the specified column to auto size.
+        /// Set the specified column size. A value of -1 indicates auto sizing.
         /// </summary>
-        public void SetColumnAutoSize(int Col)
+        public void SetColumnSize(int Col, int size = -1)
         {
-          Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-          //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
-          int w = Grid.Columns[Col].Width + 20;
-          Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-          Grid.Columns[Col].Width = w;
-
+            if (size == -1)
+            {
+                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                size = Grid.Columns[Col].Width + 20;
+            }
+            //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
+            Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Grid.Columns[Col].Width = size;
         }
 
         /// <summary>
@@ -435,7 +442,19 @@ namespace UserInterface.Views
         /// </summary>
         public void OnCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
+            UserEditingCell = true;
             ValueBeforeEdit = Grid[e.ColumnIndex, e.RowIndex].Value;
+        }
+
+        /// <summary>
+        /// Returns true if the grid row is empty.
+        /// </summary>
+        public bool RowIsEmpty(int rowIndex)
+        {
+            foreach (DataGridViewColumn column in Grid.Columns)
+                if (Grid[column.Index, rowIndex].Value != null)
+                    return false;
+            return true;
         }
 
         /// <summary>
@@ -443,10 +462,11 @@ namespace UserInterface.Views
         /// </summary>
         private void OnCellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (ValueBeforeEdit != null)
+            if (UserEditingCell)
             {
                 object OldValue = ValueBeforeEdit;
                 ValueBeforeEdit = null;
+                UserEditingCell = false;
 
                 // Make sure our table has enough rows.
                 object NewValue = Grid[e.ColumnIndex, e.RowIndex].Value;

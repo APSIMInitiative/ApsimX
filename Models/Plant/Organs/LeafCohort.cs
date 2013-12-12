@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class LeafCohort : Model
     {
         #region Paramater Input Classes

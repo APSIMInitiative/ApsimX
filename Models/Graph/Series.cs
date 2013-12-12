@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 namespace Models.Graph
 {
+    [Serializable]
     public class Series : Model
     {
 

@@ -11,6 +11,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     //FIXME  This class finds this ambigious.  [Description("Evaluate a mathematical expression using the EvaluateExpression dll. Obs: Expression can contain variable names from Plant2")]
+    [Serializable]
     public class ExpressionFunction : Function
     {
         public string Expression = "";

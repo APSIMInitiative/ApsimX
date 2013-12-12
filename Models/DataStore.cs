@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace Models
 {
+    [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
@@ -23,8 +24,11 @@ namespace Models
             public ErrorLevel ErrorLevel;
         }
 
+        [NonSerialized]
         private Utility.SQLite Connection = null;
+        [NonSerialized]
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
+        [NonSerialized]
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
         private string Filename;
 

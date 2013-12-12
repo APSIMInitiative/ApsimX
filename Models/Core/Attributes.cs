@@ -92,7 +92,7 @@ namespace Models.Core
         public ContextMenuName(string MenuName) { this.MenuName = MenuName; }
     }
 
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ContextModelType : System.Attribute
     {
         public Type ModelType { get; set; }

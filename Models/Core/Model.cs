@@ -10,13 +10,16 @@ namespace Models.Core
     /// <summary>
     /// Base class for all models in ApsimX.
     /// </summary>
+    [Serializable]
     public class Model
     {
         //private Model BaseModel = null;
         private Model _DefaultModel = null;
         private string _Name = null;
+        private Dictionary<string, Utility.IVariable> VariableCache = new Dictionary<string, Utility.IVariable>();
 
         // Cache the models list - this dramatically speeds up runtime!
+        [NonSerialized]
         private List<Model> AllModels = null;
 
         /// <summary>
@@ -181,8 +184,6 @@ namespace Models.Core
 
 
 
-        private Dictionary<string, Utility.IVariable> VariableCache = new Dictionary<string, Utility.IVariable>();
-
         /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
@@ -198,7 +199,7 @@ namespace Models.Core
         /// <summary>
         /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
-        public virtual void AddModel(Model model, bool resolveLinks)
+        public virtual void AddModel(Model model)
         {
             model.Parent = this;
 
@@ -237,11 +238,8 @@ namespace Models.Core
             // Invalidate the AllModels list and clear variable caches.
             AllModels = null;
             ClearAllCacheInScope();
-            if (Parent != null)  // Only go in here if the model has been initialised.
-            {
-                Utility.ModelFunctions.ConnectEventsInModel(model);
-                Utility.ModelFunctions.ResolveLinks(model);
-            }
+            Utility.ModelFunctions.ConnectEventsInModel(model);
+            Utility.ModelFunctions.ResolveLinks(model);
         }
 
         /// <summary>
@@ -295,6 +293,8 @@ namespace Models.Core
         /// </summary>
         private Utility.IVariable FindVariable(string namePath)
         {
+            if (VariableCache == null)
+                VariableCache = new Dictionary<string, Utility.IVariable>();
             if (VariableCache.ContainsKey(namePath))
                 return VariableCache[namePath];
 
@@ -424,8 +424,12 @@ namespace Models.Core
         private void ClearAllCacheInScope()
         {
             VariableCache.Clear();
+            AllModels = null;
             foreach (Model model in FindAll())
+            {
                 model.VariableCache.Clear();
+                model.AllModels = null;
+            }
         }
     }
 }

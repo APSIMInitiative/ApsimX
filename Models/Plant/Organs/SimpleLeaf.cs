@@ -7,6 +7,7 @@ using Models.PMF.Functions.SupplyFunctions;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class SimpleLeaf : BaseOrgan, AboveGround
     {
         [Link]

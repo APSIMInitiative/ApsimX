@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    [Serializable]
     public class Operation
     {
         public DateTime Date { get; set; }
@@ -29,10 +30,14 @@ namespace Models
     /// <summary>
     /// This class encapsulates an operations schedule.
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.OperationsView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     public class Operations : Model
     {
+        // Links
+        [Link] Simulations Simulations = null;
+
         // Parameter
         [XmlElement("Operation")]
         public List<Operation> Schedule { get; set; }
@@ -102,14 +107,16 @@ namespace Models
             code.Write(classFooter);
 
             // Go look for our class name.
-            Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(code.ToString());
+            string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
+                                       Name) + ".dll";
+            Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(code.ToString(), assemblyFileName);
             Type ScriptType = CompiledAssembly.GetType("Models.OperationsScript");
             if (ScriptType == null)
                 throw new ApsimXException(FullPath, "Cannot find a public class called OperationsScript");
 
             Model = Activator.CreateInstance(ScriptType) as Model;
             Model.Name = "OperationsScript";
-            AddModel(Model, true);
+            AddModel(Model);
         }
 
 

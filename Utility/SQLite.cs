@@ -22,6 +22,7 @@ namespace Utility
         }
     }
 
+    [Serializable]
     public class SQLite
     {
         const int SQLITE_OK = 0;
@@ -86,7 +87,9 @@ namespace Utility
         public static extern int sqlite3_reset(IntPtr Query);
         #endregion
 
+        [NonSerialized]
         private IntPtr _db; //pointer to SQLite database
+        [NonSerialized]
         private bool _open; //whether or not the database is open
 
         /// <summary>

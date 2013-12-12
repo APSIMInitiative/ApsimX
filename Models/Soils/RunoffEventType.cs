@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class RunoffEventType
     {
         public double runoff;

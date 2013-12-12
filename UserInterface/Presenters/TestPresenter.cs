@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
                 Grid.SetCellEditor(3, Row, Dummy);
             }
 
-            Grid.SetColumnAutoSize(2);
+            Grid.SetColumnSize(2);
         }
 
         /// <summary>

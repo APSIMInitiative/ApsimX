@@ -7,12 +7,14 @@ using System.Collections.Generic;
 
 namespace Models
 {
+    [Serializable]
     public class FertiliserType : Model
     {
         public double FractionNO3 { get; set;}
         public double FractionNH4 { get; set;}
         public double FractionUrea { get; set;}
     }
+        [Serializable]
 
     public class Fertiliser : Model
     {

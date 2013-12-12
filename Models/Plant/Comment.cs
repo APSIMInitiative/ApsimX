@@ -4,6 +4,7 @@ namespace Models.PMF
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 
+    [Serializable]
     public class Comment : Attribute
     {
         public double MaxVal;

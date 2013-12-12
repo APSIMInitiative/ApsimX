@@ -633,7 +633,7 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
         <ComponentData>
-          <Name>potato</Name>
+          <Name>Potato</Name>
           <Type>Potato</Type>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
@@ -2022,6 +2022,7 @@
 [Link] Plant Plant;          
 [Link] WeatherFile Met;   
 [Link] Fertiliser Fert;  
+[Link] Summary Summary;
                
 public bool InitialDay = true;
 
@@ -2110,7 +2111,8 @@ private void OnStartOfDay(object sender, EventArgs e)
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
-//AccumPlantN =+ (double)this.Get("Plant.Root.Nuptake");
+
+AccumPlantN += (double)this.Get("[Plant].Root.NUptake");
 //AccumFert += Fertiliser.FertiliserApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet

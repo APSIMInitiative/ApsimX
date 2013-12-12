@@ -14,7 +14,6 @@ namespace Models.Soils
     /// <summary>
     /// This partial class contains most of the variables and input properties of SoilNitrogen
     /// </summary>
-
     public partial class SoilNitrogen
     {
 
@@ -3450,6 +3449,7 @@ namespace Models.Soils
         /// <summary>
         /// List with patch ids to merge
         /// </summary>
+        [Serializable]
         private struct PatchIDs
         {
 
@@ -3466,6 +3466,7 @@ namespace Models.Soils
         /// <summary>
         /// The parameters to compute a exponential type function (used for example for temperature factor)
         /// </summary>
+        [Serializable]
         private struct BentStickData
         {
             // this is a bending stick type data
@@ -3487,6 +3488,7 @@ namespace Models.Soils
         /// <summary>
         /// Lists of x and y values used to describe certain a 'broken stick' function (e.g. moisture factor)
         /// </summary>
+        [Serializable]
         private struct BrokenStickData
         {
             /// <summary>

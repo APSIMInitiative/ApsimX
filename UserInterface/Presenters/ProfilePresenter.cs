@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
                 ParentZone = this.Model.Find(typeof(Zone)) as Zone;
                 if (ParentZone != null)
                 {
-                    ParentZone.AddModel(g, true);
+                    ParentZone.AddModel(g);
                     this.View.ShowGraph(true);
                     GraphPresenter = new GraphPresenter();
                     GraphPresenter.Attach(g, this.View.Graph, CommandHistory);
