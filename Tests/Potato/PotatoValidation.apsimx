@@ -2048,6 +2048,9 @@
 [XmlIgnore] public double  InitialSoilOMN { get; set; }
 [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
 [XmlIgnore] public double  InitialMineralN { get; set; }
+[XmlIgnore] public double  MineralN { get; set; }
+[XmlIgnore] public double  OrganicN { get; set; }
+
 
 [XmlIgnore] public double SWC { get; set; }
 [XmlIgnore] public double DUL { get; set; }
@@ -2079,13 +2082,10 @@ SoilWaterDeficit = 0;
 
 AccumTtemerg = 0;
 
-InitialSoilOMN = 0;
-InitialSurfaceOMN = 0;
-InitialMineralN = 0;
-
+MineralN = 0;
+OrganicN = 0;
 SWC = 0;
 DUL = 0;
-OutFlowLat = 0;
 }	   
 
 [EventSubscribe("StartOfDay")]
@@ -2093,12 +2093,11 @@ private void OnStartOfDay(object sender, EventArgs e)
 {
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
+	InitialSurfaceOMN = SOM.surfaceom_n;
 	{
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-      InitialSurfaceOMN += SOM.surfaceom_n;
-      //InitialSurfaceOMN += (double)this.Get("SOM.surfaceom_n");
       InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
       }
       InitialDay = false;
@@ -2106,32 +2105,34 @@ private void OnStartOfDay(object sender, EventArgs e)
 
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-//AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
-//AccumPlantN =+ (double)this.Get("Plant.Root.Nuptake");
-//AccumFert += Fertiliser.FertiliserApplied;
+AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
+//AccumFert += (double)this.Get("[Fertiliser].NitrogenApplied"); //returns zero
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
-//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
+//double MineralN = 0;
+//double OrganicN = 0;
+//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
-    AccumDenit -= SoilN.dnit[layer] ;
-    DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
-    DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+   // AccumDenit -= (double)this.Get("[SoilNitrogen].dnit["+layer+"]");
+    OrganicN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
+    MineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
     }
-
+DeltaSoilOMN = OrganicN - InitialSoilOMN;
+DeltaSoilMineralN = MineralN - InitialMineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= SoilWat.eo;
-//AccumEP = AccumEP - Plant.Leaf.Transpiration;
-AccumES -= SoilWat.es;
-AccumDrainage -= SoilWat.drain;
-AccumRunoff -= SoilWat.runoff;
-AccumIrrigation += SoilWat.irrigation;
+AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
+//AccumES -= SoilWat.es;  //returns zero
+//AccumDrainage -= SoilWat.drain; //Returns zero
+//AccumRunoff -= SoilWat.runoff; //Returns zero
+//AccumIrrigation += SoilWat.irrigation; //Returns zero
 AccumRainfall += Met.Rain;
 SWC = 0;
 DUL = 0;
-OutFlowLat = 0;
+double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += SoilWat.sw_dep[layer];
