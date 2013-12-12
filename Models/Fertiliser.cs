@@ -30,7 +30,7 @@ namespace Models
 
         [XmlIgnore]
         [Units("kg/ha")]
-        public double FertiliserApplied { get; private set; }
+        public double AmountApplied { get; private set; }
 
         public enum Types { Urea, DAP, MAP, UreaN, NO3N, NH4N, NH4NO3N, NH4SO4N };
 
@@ -70,7 +70,7 @@ namespace Models
                     NitrogenChanges.DeltaUrea[layer] = Amount * fertiliserType.FractionUrea;
                 }
 
-                FertiliserApplied = Amount;
+                AmountApplied = Amount;
                 NitrogenChanged.Invoke(NitrogenChanges);
                 Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
             }
@@ -82,7 +82,7 @@ namespace Models
         [EventSubscribe("Tick")]
         private void OnTick(object sender, EventArgs e)
         {
-            FertiliserApplied = 0;
+            AmountApplied = 0;
         }
 
         /// <summary>

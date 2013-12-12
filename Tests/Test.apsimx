@@ -2189,21 +2189,6 @@
       <FileName>TestObserved.txt</FileName>
     </Input>
   </Simulation>
-  <Creator>
-    <Name>Factorial</Name>
-    <Descriptions>
-      <Description>
-        <Name>SowDate1</Name>
-        <Base>.Simulations.Test</Base>
-        <Actions>
-          <ActionSpecifier>
-            <Action>Set</Action>
-            <Path>.Simulations.Test.Field.PotatoSowingRule.Script.SowingDate</Path>
-          </ActionSpecifier>
-        </Actions>
-      </Description>
-    </Descriptions>
-  </Creator>
   <DataStore>
     <Name>DataStore</Name>
     <AutoCreateReport>true</AutoCreateReport>

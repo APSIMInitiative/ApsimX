@@ -35,9 +35,6 @@ namespace Models
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     public class Operations : Model
     {
-        // Links
-        [Link] Simulations Simulations = null;
-
         // Parameter
         [XmlElement("Operation")]
         public List<Operation> Schedule { get; set; }
@@ -107,9 +104,7 @@ namespace Models
             code.Write(classFooter);
 
             // Go look for our class name.
-            string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
-                                       Name) + ".dll";
-            Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(code.ToString(), assemblyFileName);
+            Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(code.ToString(), null);
             Type ScriptType = CompiledAssembly.GetType("Models.OperationsScript");
             if (ScriptType == null)
                 throw new ApsimXException(FullPath, "Cannot find a public class called OperationsScript");

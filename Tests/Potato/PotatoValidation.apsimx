@@ -1930,6 +1930,7 @@
         using Models.PMF;
         namespace Models
         {
+           [Serializable] 
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
@@ -2013,7 +2014,8 @@
         using System.Xml.Serialization;
         namespace Models
         {
- public class Script : Model
+[Serializable] 
+public class Script : Model
 {      
 [Link] Clock Clock;
 [Link] Soils.SoilNitrogen SoilN;
@@ -2026,36 +2028,36 @@
                
 public bool InitialDay = true;
 
-public double AccumPlantN = 0;
-public double AccumMineralisation = 0;
-public double AccumDenit = 0;
-public double AccumFert = 0;
-public double AccumLeach = 0;
-public double AccumDetach = 0;
-public double DeltaSoilOMN = 0;
-public double DeltaSurfaceOMN = 0;
-public double DeltaSoilMineralN = 0;
+public double AccumPlantN { get; set; }
+public double AccumMineralisation { get; set; }
+public double AccumDenit { get; set; }
+public double AccumFert { get; set; }
+public double AccumLeach { get; set; }
+public double AccumDetach { get; set; }
+public double DeltaSoilOMN { get; set; }
+public double DeltaSurfaceOMN { get; set; }
+public double DeltaSoilMineralN { get; set; }
 
-public double AccumEO = 0;
-public double AccumEP = 0;
-public double AccumES = 0;
-public double AccumDrainage = 0;
-public double AccumRunoff = 0;
-public double AccumOutflowLat = 0;
-public double AccumIrrigation = 0;
-public double AccumRainfall = 0;
-public double SoilWaterDeficit = 0;
+public double AccumEO { get; set; }
+public double AccumEP { get; set; }
+public double AccumES { get; set; }
+public double AccumDrainage { get; set; }
+public double AccumRunoff { get; set; }
+public double AccumOutflowLat { get; set; }
+public double AccumIrrigation { get; set; }
+public double AccumRainfall { get; set; }
+public double SoilWaterDeficit { get; set; }
 
 [XmlIgnore]
 public double AccumTtemerg { get; set; }
 
-public double  InitialSoilOMN = 0;
-public double  InitialSurfaceOMN = 0;
-public double  InitialMineralN = 0;
+public double  InitialSoilOMN { get; set; }
+public double  InitialSurfaceOMN { get; set; }
+public double  InitialMineralN { get; set; }
 
-public double SWC = 0;
-public double DUL = 0;
-public double OutFlowLat = 0;
+public double SWC { get; set; }
+public double DUL { get; set; }
+public double OutFlowLat { get; set; }
 
 [EventSubscribe("Initialised")]
 private void OnInitialised(object sender, EventArgs e)
@@ -2113,7 +2115,7 @@ private void OnStartOfDay(object sender, EventArgs e)
 //AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
 
 AccumPlantN += (double)this.Get("[Plant].Root.NUptake");
-//AccumFert += Fertiliser.FertiliserApplied;
+AccumFert += Fert.AmountApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 //AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
@@ -2128,7 +2130,7 @@ AccumDetach = 0; //plant2 doesn't detach yet
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= SoilWat.eo;
-//AccumEP = AccumEP - Plant.Leaf.Transpiration;
+AccumEP = AccumEP - (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= SoilWat.es;
 AccumDrainage -= SoilWat.drain;
 AccumRunoff -= SoilWat.runoff;
