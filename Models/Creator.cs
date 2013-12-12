@@ -63,9 +63,7 @@ namespace Models
                 foreach (Description.ActionSpecifier action in description.Actions)
                 {
                     if (action.Path != null && action.Value != null)
-                    {
-
-                    }
+                        this.Set(action.Path, action.Value);
                 }
 
                 newModels.Add(newModel);
@@ -73,6 +71,8 @@ namespace Models
 
             return newModels.ToArray();
         }
+
+
 
         /// <summary>
         /// All simulations have finished running - get rid of any that we created.

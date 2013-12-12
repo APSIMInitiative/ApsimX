@@ -30,7 +30,7 @@ namespace Models
 
         [XmlIgnore]
         [Units("kg/ha")]
-        public double AmountApplied { get; private set; }
+        public double NitrogenApplied { get ; private set; }
 
         public enum Types { Urea, DAP, MAP, UreaN, NO3N, NH4N, NH4NO3N, NH4SO4N };
 
@@ -58,31 +58,39 @@ namespace Models
                 {
                     NitrogenChanges.DeltaNO3 = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaNO3[layer] = Amount * fertiliserType.FractionNO3;
+                    NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
                     NitrogenChanges.DeltaNH4 = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaNH4[layer] = Amount * fertiliserType.FractionNH4;
+                    NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
                     NitrogenChanges.DeltaUrea = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaUrea[layer] = Amount * fertiliserType.FractionUrea;
+                    NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
 
-                AmountApplied = Amount;
                 NitrogenChanged.Invoke(NitrogenChanges);
                 Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
             }
         }
 
         /// <summary>
-        /// Tick event handler from Clock.
+        /// prepare event handler from Clock.
         /// </summary>
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnPrepare(object sender, EventArgs e)
         {
-            AmountApplied = 0;
+            NitrogenApplied = 0;
+        }
+
+        [EventSubscribe("Initialised")]
+        private void OnInitialised(object sender, EventArgs e)
+        {
+            NitrogenApplied = 0;
         }
 
         /// <summary>
