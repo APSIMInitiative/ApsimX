@@ -197,6 +197,14 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Set the value of a variable.
+        /// </summary>
+        public void Set(string namePath, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
         public virtual void AddModel(Model model)

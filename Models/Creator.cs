@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -26,6 +27,10 @@ namespace Models
                 public enum ActionEnum { Set };
                 public ActionEnum Action { get; set; }
                 public string Path { get; set; }
+                [XmlElement(typeof(DateTime))]
+                [XmlElement(typeof(double))]
+                [XmlElement(typeof(int))]
+                [XmlElement(typeof(string))]
                 public object Value { get; set; }
             }
 
@@ -46,12 +51,23 @@ namespace Models
         public Model[] Create()
         {
             newModels.Clear();
-            foreach (Description model in Descriptions)
+            foreach (Description description in Descriptions)
             {
-                Simulation baseModel = this.Get(model.Base) as Simulation;
+                Simulation baseModel = this.Get(description.Base) as Simulation;
                 Simulation newModel = Utility.Reflection.Clone<Simulation>(baseModel);
-                newModel.Name = model.Name;
                 Utility.ModelFunctions.DisconnectEventsInAllModels(newModel);
+
+                newModel.Name = description.Name;
+                
+                // Apply all actions.
+                foreach (Description.ActionSpecifier action in description.Actions)
+                {
+                    if (action.Path != null && action.Value != null)
+                    {
+
+                    }
+                }
+
                 newModels.Add(newModel);
             }
 

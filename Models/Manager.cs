@@ -135,6 +135,9 @@ namespace Models
                     {
                         XmlSerializer serial = new XmlSerializer(ScriptType);
                         Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
+
+                        // setup the elementsAsXml for BinaryFormatter.Serialization.
+                        elementsAsXml = elements[0].OuterXml;
                     }
 
                     // If this manager model has been binary deserialised, the use the "elementsAsXml" member
@@ -153,6 +156,7 @@ namespace Models
 
                     if (Script != null)
                         AddModel(Script);
+
 
                     // Call the OnInitialised if present.
                     MethodInfo OnInitialised = Script.GetType().GetMethod("OnInitialised", BindingFlags.Instance | BindingFlags.NonPublic);

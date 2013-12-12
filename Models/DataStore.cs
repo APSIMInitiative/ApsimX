@@ -34,6 +34,7 @@ namespace Models
 
         public enum ErrorLevel { Information, Warning, Error };
 
+        [field: NonSerialized]
         public event EventHandler<MessageArg> MessageWritten;
 
         // Parameters
@@ -181,7 +182,8 @@ namespace Models
             allNames.Add("SimulationID");
             allNames.AddRange(names);
             IntPtr query = PrepareInsertIntoTable(tableName, allNames.ToArray());
-            TableInsertQueries.Add(tableName, query);
+            if (!TableInsertQueries.ContainsKey(tableName))
+                TableInsertQueries.Add(tableName, query);
         }
 
         /// <summary>

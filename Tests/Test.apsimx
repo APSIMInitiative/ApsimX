@@ -2287,4 +2287,20 @@
       <Parameters />
     </Test>
   </Tests>
+  <Creator>
+    <Name>Factorial</Name>
+    <Descriptions>
+      <Description>
+        <Name>SowDate1</Name>
+        <Base>.Simulations.Test</Base>
+        <Actions>
+          <ActionSpecifier>
+            <Action>Set</Action>
+            <Path>.Simulations.Test.Field.PotatoSowingRule.Script.SowingDate</Path>
+            <dateTime>2013-12-01T00:00:00</dateTime>
+          </ActionSpecifier>
+        </Actions>
+      </Description>
+    </Descriptions>
+  </Creator>
 </Simulations>

@@ -187,6 +187,11 @@ namespace Models.Core
                         {
                             simulations.Add(model as Simulation);
                             this.AddModel(model as Simulation);
+
+                            // We don't want the event connections added by "this.AddModel". Remove
+                            // them and then connect all events in all models.
+                            Utility.ModelFunctions.DisconnectEventsInAllModels(model);
+                            Utility.ModelFunctions.ConnectEventsInAllModels(model);
                         }
                     }
 
