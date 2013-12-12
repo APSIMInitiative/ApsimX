@@ -299,11 +299,7 @@
           <slope>0</slope>
           <discharge_width>0</discharge_width>
           <catchment_area>0</catchment_area>
-          <eo>0.59443006759149886</eo>
           <eos>0.59443006759149886</eos>
-          <drain>0</drain>
-          <runoff>0</runoff>
-          <pond>0</pond>
           <irrigation>0</irrigation>
           <eo_source />
           <max_pond>0</max_pond>
@@ -641,57 +637,57 @@
         <ComponentData>
           <Name>potato</Name>
           <Type>Potato</Type>
-          <LAI>0</LAI>
-          <LAItot>2.44547963142395</LAItot>
-          <CoverGreen>0</CoverGreen>
-          <CoverTot>0.070737846195697784</CoverTot>
-          <Ktot>0.0300000007332331</Ktot>
-          <K>0</K>
-          <Height>0.08676488</Height>
-          <Depth>0.08676488</Depth>
+          <LAI>0.032363194972276688</LAI>
+          <LAItot>0.3029627799987793</LAItot>
+          <CoverGreen>0.025558268651366234</CoverGreen>
+          <CoverTot>0.03343675285577774</CoverTot>
+          <Ktot>0.11734692296458774</Ktot>
+          <K>0.80000002291982042</K>
+          <Height>0.02951625</Height>
+          <Depth>0.02951625</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <Frgr>0.949999988079071</Frgr>
           <layerLAI>
-            <double>0</double>
+            <double>0.034364461898803711</double>
           </layerLAI>
           <layerLAItot>
-            <double>2.44547963142395</double>
+            <double>0.30293723940849304</double>
           </layerLAItot>
           <Ftot>
             <double>1</double>
           </Ftot>
           <Fgreen>
-            <double>0</double>
+            <double>0.11343756207029158</double>
           </Fgreen>
           <Rs>
-            <double>0.23343488907275933</double>
+            <double>0.11525024493399538</double>
           </Rs>
           <Rl>
-            <double>-0.044208579054162464</double>
+            <double>-0.021826426993901693</double>
           </Rl>
           <Rsoil>
-            <double>-0.023343488907275934</double>
+            <double>-0.011525024493399538</double>
           </Rsoil>
           <Gc>
-            <double>0.0001</double>
+            <double>0.00012983382680793537</double>
           </Gc>
           <Ga>
-            <double>0.012728071910170479</double>
+            <double>0.0092616432054739121</double>
           </Ga>
           <PET>
-            <double>0.020534221492096449</double>
+            <double>0.026116642283502113</double>
           </PET>
           <PETr>
-            <double>0.00040843385550181445</double>
+            <double>0.0003535172940603746</double>
           </PETr>
           <PETa>
-            <double>0.020125787636594634</double>
+            <double>0.025763124989441739</double>
           </PETa>
           <Omega>
-            <double>0.017757205635591172</double>
+            <double>0.031248598797603562</double>
           </Omega>
           <interception>
             <double>0</double>
@@ -701,9 +697,9 @@
       <Plant>
         <Name>Potato</Name>
         <SowingData>
-          <Cultivar>RusssetBurbank</Cultivar>
-          <Population>4.6</Population>
-          <Depth>120</Depth>
+          <Cultivar>RussetBurbank</Cultivar>
+          <Population>4.6382189239332092</Population>
+          <Depth>150</Depth>
           <RowSpacing>150</RowSpacing>
           <MaxCover>1</MaxCover>
           <BudNumber>2.2</BudNumber>
@@ -913,6 +909,31 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+              <ThermalTime xsi:type="AirTemperatureFunction">
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </ThermalTime>
+              <Target xsi:type="Constant">
+                <Name>Constant</Name>
+                <Value>1</Value>
+              </Target>
+            </GenericPhase>
             <GenericPhase>
               <Name>Dormant</Name>
               <Start>Planting</Start>
@@ -1887,7 +1908,7 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0.020534221082925797</WaterDemand>
+            <WaterDemand>0.026116643100976944</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -2123,7 +2144,7 @@
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
-				if (Clock.Today.Date.Equals(SowingDate))
+				if (Equals(Clock.Today.Date, SowingDate))
                     Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
                 //Plant.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
@@ -2509,10 +2530,6 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
         <Operation>
           <Date>2003-10-20T00:00:00</Date>
           <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-10-20T00:00:00</Date>
-          <Action>Potato.Sow(Population:4.6, Cultivar:"RusssetBurbank", Depth:120, BudNumber:2.2);</Action>
         </Operation>
         <Operation>
           <Date>2003-11-25T00:00:00</Date>
