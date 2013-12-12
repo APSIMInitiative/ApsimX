@@ -2048,9 +2048,6 @@
 [XmlIgnore] public double  InitialSoilOMN { get; set; }
 [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
 [XmlIgnore] public double  InitialMineralN { get; set; }
-[XmlIgnore] public double  MineralN { get; set; }
-[XmlIgnore] public double  OrganicN { get; set; }
-
 
 [XmlIgnore] public double SWC { get; set; }
 [XmlIgnore] public double DUL { get; set; }
@@ -2082,8 +2079,6 @@ SoilWaterDeficit = 0;
 
 AccumTtemerg = 0;
 
-MineralN = 0;
-OrganicN = 0;
 SWC = 0;
 DUL = 0;
 }	   
@@ -2093,9 +2088,9 @@ private void OnStartOfDay(object sender, EventArgs e)
 {
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
-	InitialSurfaceOMN = SOM.surfaceom_n;
 	{
-      for (int layer = 0; layer < layers; layer++)
+      InitialSurfaceOMN = SOM.surfaceom_n;
+	  for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
       InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
@@ -2109,8 +2104,8 @@ AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 //AccumFert += (double)this.Get("[Fertiliser].NitrogenApplied"); //returns zero
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
-//double MineralN = 0;
-//double OrganicN = 0;
+double MineralN = 0;
+double OrganicN = 0;
 //AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
