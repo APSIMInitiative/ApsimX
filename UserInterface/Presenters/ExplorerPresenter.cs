@@ -1,13 +1,10 @@
 ﻿using UserInterface.Commands;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using UserInterface.Views;
 using Models.Core;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Xml;
 using Models;
 
 namespace UserInterface.Presenters
@@ -80,7 +77,15 @@ namespace UserInterface.Presenters
                 throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
 
             store.MessageWritten += OnMessageWritten;
-            ApsimXFile.Initialise();
+            try
+            {
+                ApsimXFile.Initialise();
+            }
+            catch (Exception err)
+            {
+                this.View.ShowMessage("Cannot open file due to error:\n" + err.Message, DataStore.ErrorLevel.Error);
+            }
+
         }
 
         /// <summary>
@@ -108,6 +113,23 @@ namespace UserInterface.Presenters
         {
             AdvancedMode = !AdvancedMode;
             View.InvalidateNode(".Simulations", GetNodeDescription(ApsimXFile));
+        }
+
+        /// <summary>
+        /// Called by TabbedExplorerPresenter to do a save. Return true if all ok.
+        /// </summary>
+        public bool Save()
+        {
+            try
+            {
+                ApsimXFile.Write(ApsimXFile.FileName);
+                return true;
+            }
+            catch (Exception err)
+            {
+                View.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                return false;
+            }
         }
 
         /// <summary>

@@ -33,7 +33,7 @@
           <string>[WeatherFile].Rain</string>
         </Variables>
         <Events>
-          <string>Clock.EndOfDay</string>
+          <string>[Clock].EndOfDay</string>
         </Events>
       </Report>
       <Fertiliser>
@@ -94,10 +94,6 @@
       </Irrigation>
       <Operations>
         <Name>Operations</Name>
-        <Operation>
-          <Date>1940-01-02T00:00:00</Date>
-          <Action>Fertiliser.Apply(100, 0, "NO3N");</Action>
-        </Operation>
       </Operations>
       <Soil>
         <Name>Soil</Name>

@@ -62,14 +62,6 @@ namespace Models
         }
 
         /// <summary>
-        /// Write a property to the summary.
-        /// </summary>
-        public void WriteProperty(string Name, string Value)
-        {
-            DataStore.WriteProperty(Simulation.Name, Name, Value);
-        }
-
-        /// <summary>
         /// A property that the presenter will use to get the summary.
         /// </summary>
         public string GetSummary(string apsimSummaryImageFileName)

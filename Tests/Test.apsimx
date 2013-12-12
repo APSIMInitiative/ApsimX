@@ -25,7 +25,6 @@
       <Area>0</Area>
       <Irrigation>
         <Name>Irrigation</Name>
-        <IrrigationApplied>100</IrrigationApplied>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -352,40 +351,12 @@
           <slope>0</slope>
           <discharge_width>0</discharge_width>
           <catchment_area>0</catchment_area>
-          <eo>0.62622613399195615</eo>
-          <eos>0.62622613399195615</eos>
-          <bd>
-            <double>1.02</double>
-            <double>1.03</double>
-            <double>1.02</double>
-            <double>1.02</double>
-            <double>1.06</double>
-            <double>1.11</double>
-            <double>1.12</double>
-            <double>1.15</double>
-            <double>1.18</double>
-            <double>1.2</double>
-            <double>1.25</double>
-          </bd>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
           <WaterTable>NaN</WaterTable>
-          <dlayer>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </dlayer>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -425,45 +396,6 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <sat_dep>
-            <double>88.5</double>
-            <double>87</double>
-            <double>177</double>
-            <double>174</double>
-            <double>170.99999999999997</double>
-            <double>165</double>
-            <double>165</double>
-            <double>159</double>
-            <double>156</double>
-            <double>153</double>
-            <double>147</double>
-          </sat_dep>
-          <dul_dep>
-            <double>81</double>
-            <double>79.5</double>
-            <double>162</double>
-            <double>162</double>
-            <double>156</double>
-            <double>150</double>
-            <double>150</double>
-            <double>144</double>
-            <double>141</double>
-            <double>138</double>
-            <double>132</double>
-          </dul_dep>
-          <ll15_dep>
-            <double>43.5</double>
-            <double>43.5</double>
-            <double>87</double>
-            <double>87</double>
-            <double>90</double>
-            <double>93</double>
-            <double>96</double>
-            <double>99</double>
-            <double>102.00000000000001</double>
-            <double>105</double>
-            <double>108</double>
-          </ll15_dep>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -828,61 +760,10 @@
         <ComponentData>
           <Name>Potato</Name>
           <Type>Potato</Type>
-          <LAI>0</LAI>
-          <LAItot>5.7501530647277832</LAItot>
-          <CoverGreen>0</CoverGreen>
-          <CoverTot>0.1584455817937851</CoverTot>
-          <Ktot>0.03000000128696699</Ktot>
-          <K>0</K>
-          <Height>0.20600931</Height>
-          <Depth>0.20600931</Depth>
           <Albedo>0.26</Albedo>
           <Emissivity>0.96</Emissivity>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <Frgr>0.949999988079071</Frgr>
-          <layerLAI>
-            <double>0</double>
-          </layerLAI>
-          <layerLAItot>
-            <double>5.7501530647277832</double>
-          </layerLAItot>
-          <Ftot>
-            <double>1</double>
-          </Ftot>
-          <Fgreen>
-            <double>0</double>
-          </Fgreen>
-          <Rs>
-            <double>0.52287041236421672</double>
-          </Rs>
-          <Rl>
-            <double>-0.090567657712774974</double>
-          </Rl>
-          <Rsoil>
-            <double>-0.052287041236421673</double>
-          </Rsoil>
-          <Gc>
-            <double>0.0001</double>
-          </Gc>
-          <Ga>
-            <double>0.01708462337676328</double>
-          </Ga>
-          <PET>
-            <double>0.036440532052432847</double>
-          </PET>
-          <PETr>
-            <double>0.00071732733952490214</double>
-          </PETr>
-          <PETa>
-            <double>0.035723204712907942</double>
-          </PETa>
-          <Omega>
-            <double>0.013289321605835002</double>
-          </Omega>
-          <interception>
-            <double>0</double>
-          </interception>
         </ComponentData>
       </MicroClimate>
       <Plant>
@@ -1073,181 +954,6 @@
                 </XYPairs>
               </ThermalTime>
             </EndPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <Target xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </Target>
-            </GenericPhase>
           </Phases>
         </Phenology>
         <Arbitrator>
@@ -2104,7 +1810,6 @@
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </CohortArrayDead>
             <KDead>0.03</KDead>
-            <WaterDemand>0</WaterDemand>
           </Leaf>
           <GenericAboveGroundOrgan>
             <Name>Stem</Name>
@@ -2301,6 +2006,15 @@
       </Graph>
       <Manager>
         <Name>PotatoSowingRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <RowSpace>280</RowSpace>
+          <RowWidth>770</RowWidth>
+          <PlantingDepth>150</PlantingDepth>
+          <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
+          <CultivarName>RussetBurbank</CultivarName>
+          <SowingDate>2003-11-10T00:00:00</SowingDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -2347,18 +2061,14 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <RowSpace>280</RowSpace>
-          <RowWidth>770</RowWidth>
-          <PlantingDepth>150</PlantingDepth>
-          <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-          <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>2003-11-10T00:00:00</SowingDate>
-        </Script>
       </Manager>
       <Manager>
         <Name>IrrigationRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <ApplicationAmount>100</ApplicationAmount>
+          <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -2392,14 +2102,15 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <ApplicationAmount>100</ApplicationAmount>
-          <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
-        </Script>
       </Manager>
       <Manager>
         <Name>FertiliserRule</Name>
+        <Script>
+          <Name>Script</Name>
+          <ApplicationAmount>500</ApplicationAmount>
+          <FertType>NO3N</FertType>
+          <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+        </Script>
         <Code><![CDATA[
         using System;
         using Models.Core;
@@ -2432,12 +2143,6 @@
             }
         }
 				]]></Code>
-        <Script>
-          <Name>Script</Name>
-          <ApplicationAmount>500</ApplicationAmount>
-          <FertType>NO3N</FertType>
-          <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
-        </Script>
       </Manager>
       <Graph>
         <Name>SoilNitrogen</Name>

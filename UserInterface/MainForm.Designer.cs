@@ -19,9 +19,9 @@ namespace UserInterface
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
-            this.tabbedExplorerView1 = new TabbedExplorerView();
-            this.tabbedExplorerView2 = new TabbedExplorerView();
-            //((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
+            this.tabbedExplorerView1 = new Views.TabbedExplorerView();
+            this.tabbedExplorerView2 = new Views.TabbedExplorerView();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.Panel1.SuspendLayout();
             this.SplitContainer.Panel2.SuspendLayout();
             this.SplitContainer.SuspendLayout();
@@ -73,10 +73,11 @@ namespace UserInterface
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "MainForm";
             this.Text = "ApsimX";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.SplitContainer.Panel1.ResumeLayout(false);
             this.SplitContainer.Panel2.ResumeLayout(false);
-            //((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
             this.SplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 

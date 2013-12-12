@@ -36,8 +36,6 @@ namespace Models
         private void OnInitialised(object sender, EventArgs e)
         {
             Today = StartDate;
-            Summary.WriteProperty("Start date", StartDate.ToString());
-            Summary.WriteProperty("End date", EndDate.ToString());
         }
 
         /// <summary>

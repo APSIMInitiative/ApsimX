@@ -18,11 +18,6 @@
         void WriteError(string Message);
 
         /// <summary>
-        /// Write a property to the summary.
-        /// </summary>
-        void WriteProperty(string Name, string Value);
-
-        /// <summary>
         /// Return the html for the summary file.
         /// </summary>
         string GetSummary(string apsimSummaryImageFileName);

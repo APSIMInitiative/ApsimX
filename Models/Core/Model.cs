@@ -404,11 +404,15 @@ namespace Models.Core
             {
                 if (property.GetType().IsClass && property.CanWrite && property.Name != "Parent")
                 {
-                    if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
-                        allModelProperties.Add(property);
+                    MethodInfo[] accessors = property.GetAccessors();
+                    if (accessors.Length == 2 && accessors[0].IsPublic && accessors[1].IsPublic)
+                    {
+                        if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
+                            allModelProperties.Add(property);
 
-                    else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
-                        allModelProperties.Add(property);
+                        else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
+                            allModelProperties.Add(property);
+                    }
                 }
             }
             return allModelProperties.ToArray();

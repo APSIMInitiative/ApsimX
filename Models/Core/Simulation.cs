@@ -68,27 +68,6 @@ namespace Models.Core
             if (Initialised != null)
                 Initialised(this, new EventArgs());
         }
-        /// <summary>
-        /// Simulation is being initialised.
-        /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
-        {
-            string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Summary.WriteProperty("Version", Version);
-            string Hierarchy = "";
-            foreach (object Child in Models)
-            {
-                Hierarchy += " |- " + Child.GetType().Name + "\r\n";
-                if (Child is Zone)
-                {
-                    Zone Area = Child as Zone;
-                    foreach (object AreaChild in Area.Models)
-                        Hierarchy += "    |- " + AreaChild.GetType().Name + "\r\n";
-                }
-            }
-            Summary.WriteProperty("Hierarchy", Hierarchy);
-        }
 
         public void Close()
         {
