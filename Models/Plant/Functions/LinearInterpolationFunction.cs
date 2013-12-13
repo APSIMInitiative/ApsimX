@@ -8,6 +8,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("returns a y value that corresponds to the position of the value of XProperty in the specified xy matrix")]
     public class LinearInterpolationFunction : Function
     {

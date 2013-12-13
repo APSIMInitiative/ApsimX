@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.Soils
 {
+    [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Analysis : Model

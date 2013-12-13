@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 namespace Models.SurfaceOM
 {
 
+    [Serializable]
     public class ResidueTypes
     {
         [XmlElement("ResidueType")]
@@ -25,6 +26,7 @@ namespace Models.SurfaceOM
             return null;
         }
     }
+        [Serializable]
 
     public class ResidueType : Model
     {
@@ -40,6 +42,7 @@ namespace Models.SurfaceOM
         public double[] fr_n { get; set; }
         public double[] fr_p { get; set; }
     }
+        [Serializable]
 
     public class TillageTypes : Model
     {
@@ -55,7 +58,6 @@ namespace Models.SurfaceOM
             return null;
         }
     }
-
     public partial class SurfaceOrganicMatter
     {
         const double acceptableErr = 1e-4;

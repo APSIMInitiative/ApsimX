@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [XmlInclude(typeof(AccumulateFunction))]
     [XmlInclude(typeof(AddFunction))]
     [XmlInclude(typeof(AgeCalculatorFunction))]

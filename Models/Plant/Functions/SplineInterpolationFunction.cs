@@ -8,6 +8,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("returns a y value that is interpolated between given XY pairs using cubic Hermite splines")]
     public class SplineInterpolationFunction : Function
     {

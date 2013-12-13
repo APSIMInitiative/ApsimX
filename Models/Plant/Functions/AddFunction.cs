@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Add the values of all child functions")]
     public class AddFunction : Function
     {

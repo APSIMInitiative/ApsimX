@@ -18,6 +18,7 @@ namespace Models.Soils
     /// method. Mapping will occur to achieve this if necessary.
     /// To obtain the "raw", unmapped, values use the child classes e.g. SoilWater, Analysis and Sample.
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Soil : ModelCollection

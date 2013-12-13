@@ -11,7 +11,6 @@ namespace Models.Soils
     /// <summary>
     /// This partial class contains the SoilCN patch class
     /// </summary>
-
     public partial class SoilNitrogen
     {
 
@@ -21,6 +20,7 @@ namespace Models.Soils
         /// <remarks>
         /// It can instanciated many times, thus describing several patches (soil variability)
         /// </remarks>
+        [Serializable]
         class soilCNPatch
         {
 

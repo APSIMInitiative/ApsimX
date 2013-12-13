@@ -7,6 +7,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]

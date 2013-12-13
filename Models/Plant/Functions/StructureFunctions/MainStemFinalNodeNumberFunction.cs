@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions.StructureFunctions
 {
+    [Serializable]
     [Description("This Function determines final leaf number for a crop.  If no childern are present final leaf number will be the same as primordia number, increasing at the same rate and reaching a fixed value when primordia initiation stops or when maximum leaf number is reached.  However, if a child function called 'FinalLeafNumber' is present that function will determine the increase and fixing of final leaf number")]
     public class MainStemFinalNodeNumberFunction : Function
     {

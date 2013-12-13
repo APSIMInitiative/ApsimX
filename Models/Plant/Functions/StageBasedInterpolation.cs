@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("A value is linearly interpolated between phenological growth stages")]
     public class StageBasedInterpolation : Function
     {

@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     public class GerminatingPhase : Phase
     {
         [Link]

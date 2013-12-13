@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace Models
 {
+    [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
@@ -23,13 +24,17 @@ namespace Models
             public ErrorLevel ErrorLevel;
         }
 
+        [NonSerialized]
         private Utility.SQLite Connection = null;
+        [NonSerialized]
         private Dictionary<string, IntPtr> TableInsertQueries = new Dictionary<string, IntPtr>();
+        [NonSerialized]
         private Dictionary<string, int> SimulationIDs = new Dictionary<string, int>();
         private string Filename;
 
         public enum ErrorLevel { Information, Warning, Error };
 
+        [field: NonSerialized]
         public event EventHandler<MessageArg> MessageWritten;
 
         // Parameters
@@ -177,7 +182,8 @@ namespace Models
             allNames.Add("SimulationID");
             allNames.AddRange(names);
             IntPtr query = PrepareInsertIntoTable(tableName, allNames.ToArray());
-            TableInsertQueries.Add(tableName, query);
+            if (!TableInsertQueries.ContainsKey(tableName))
+                TableInsertQueries.Add(tableName, query);
         }
 
         /// <summary>

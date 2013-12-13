@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace Models.Core
 {
+    [Serializable]
     public class Simulation : Zone
     {
 

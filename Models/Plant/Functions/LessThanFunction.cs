@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     /// <summary>
     /// FIXME: This can be generalised to a IF function 
     /// </summary>
+    [Serializable]
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
     public class LessThanFunction : Function
     {

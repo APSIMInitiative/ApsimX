@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     public class VernalisationCW
     {
         [Link]

@@ -7,6 +7,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF
 {
+    [Serializable]
     public class Summariser : Model
     {
         public Biomass AboveGround { get; set; }

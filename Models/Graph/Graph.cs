@@ -7,6 +7,7 @@ namespace Models.Graph
 {
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
+    [Serializable]
     public class Graph : Model
     {
         [Link] private DataStore _DataStore = null;

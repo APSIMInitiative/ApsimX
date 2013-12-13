@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    [Serializable]
     public class Test
     {
         public enum TestType { FailOutput, AllPos, GreaterThan, LessThan, Between, Mean, Tolerance };
@@ -19,6 +20,7 @@ namespace Models
 
     }
 
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.TestPresenter")]
     public class Tests : Model

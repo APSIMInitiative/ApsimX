@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
     public class SubtractFunction : Function
     {

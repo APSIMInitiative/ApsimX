@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
     {

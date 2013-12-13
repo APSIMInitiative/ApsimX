@@ -144,6 +144,8 @@
           <string>[Plant].Leaf.SpecificArea</string>
           <string>[Plant].Summariser.TotalDead.Wt</string>
           <string>[Plant].Leaf.ExpandedCohortNo</string>
+          <string />
+          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -1930,6 +1932,7 @@
         using Models.PMF;
         namespace Models
         {
+           [Serializable] 
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
@@ -1964,7 +1967,7 @@
                 //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
                 //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
                 //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-               }
+			   }
             }
         }
 				]]></Code>
@@ -2011,7 +2014,8 @@
         using System.Xml.Serialization;
         namespace Models
         {
- public class Script : Model
+[Serializable] 
+public class Script : Model
 {      
 [Link] Clock Clock;
 [Link] Soils.SoilNitrogen SoilN;
@@ -2079,13 +2083,8 @@ SoilWaterDeficit = 0;
 
 AccumTtemerg = 0;
 
-InitialSoilOMN = 0;
-InitialSurfaceOMN = 0;
-InitialMineralN = 0;
-
 SWC = 0;
 DUL = 0;
-OutFlowLat = 0;
 }	   
 
 [EventSubscribe("StartOfDay")]
@@ -2094,11 +2093,10 @@ private void OnStartOfDay(object sender, EventArgs e)
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
 	{
+      InitialSurfaceOMN = SOM.surfaceom_n;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-      InitialSurfaceOMN += SOM.surfaceom_n;
-      //InitialSurfaceOMN += (double)this.Get("SOM.surfaceom_n");
       InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
       }
       InitialDay = false;
@@ -2106,32 +2104,34 @@ private void OnStartOfDay(object sender, EventArgs e)
 
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-//AccumPlantN =  AccumPlantN - Plant.Root.Nuptake;
-//AccumPlantN =+ (double)this.Get("Plant.Root.Nuptake");
-//AccumFert += Fertiliser.FertiliserApplied;
+AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
+AccumFert += Fert.NitrogenApplied; //returns zero
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
-//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; 
+double MineralN = 0;
+double OrganicN = 0;
+//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
-    AccumDenit -= SoilN.dnit[layer] ;
-    DeltaSoilOMN = (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]) - InitialSoilOMN;
-    DeltaSoilMineralN = (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]) - InitialMineralN;
+    AccumDenit -= Utility.Math.Sum(SoilN.dnit);
+    OrganicN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
+    MineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
     }
-
+DeltaSoilOMN = OrganicN - InitialSoilOMN;
+DeltaSoilMineralN = MineralN - InitialMineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= SoilWat.eo;
-//AccumEP = AccumEP - Plant.Leaf.Transpiration;
-AccumES -= SoilWat.es;
-AccumDrainage -= SoilWat.drain;
-AccumRunoff -= SoilWat.runoff;
-AccumIrrigation += SoilWat.irrigation;
+AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
+AccumES -= SoilWat.es;  //returns zero
+//AccumDrainage -= SoilWat.drain; //Returns zero
+//AccumRunoff -= SoilWat.runoff; //Returns zero
+//AccumIrrigation += SoilWat.irrigation; //Returns zero
 AccumRainfall += Met.Rain;
 SWC = 0;
 DUL = 0;
-OutFlowLat = 0;
+double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += SoilWat.sw_dep[layer];
@@ -2146,6 +2146,8 @@ if (Plant.Phenology.StageCode.Value >= 3)
 AccumTtemerg += Plant.Phenology.ThermalTime.Value;
 }
 }
+
+
 }
 	   ]]></Code>
       </Manager>
@@ -2558,6 +2560,412 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>NBalanceComponents</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Nitrogen (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumPlantN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumFertiliser</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumFert</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumDnit</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumMineralisation</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumLeach</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSoilOMN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSurfaceOMN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388544</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>DeltaSoilMineralN</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-12582784</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>WaterBalanceComponents</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Nitrogen (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Pond</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>SoilWater.pond</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumEO</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumEO</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumEP</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumEP</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumES</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumES</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumDrainage</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumRunoff</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumRainfall</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388544</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumIrrigation</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-12582784</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>AccumLatOutFlow</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>SoilWaterDeficit</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777056</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
           </Y>
         </Series>
       </Graph>

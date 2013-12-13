@@ -10,6 +10,7 @@ using System.Reflection;
 namespace Models
 {
 
+    [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
     public class Report : Model

@@ -9,6 +9,7 @@ namespace Models
     /// <summary>
     /// Reads in met data and makes it available for other components.
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     public class WeatherFile : Model 
@@ -77,6 +78,7 @@ namespace Models
             }
         }
         // Events
+        [Serializable]
         public struct NewMetType
         {
             public double today;
@@ -244,8 +246,6 @@ namespace Models
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            Clock.Tick -= OnTick;
-           // Simulation.Completed -= OnCompleted;
             if (WtrFile != null)
             {
                 WtrFile.Close();

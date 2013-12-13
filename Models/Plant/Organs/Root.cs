@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class Root : BaseOrgan, BelowGround
     {
         #region Links

@@ -193,6 +193,8 @@ namespace UserInterface.Presenters
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
         [ContextModelType(typeof(Simulation))]
+        [ContextModelType(typeof(Simulations))]
+        [ContextModelType(typeof(Creator))]
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
