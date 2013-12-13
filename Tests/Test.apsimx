@@ -2296,11 +2296,79 @@
         <Actions>
           <ActionSpecifier>
             <Action>Set</Action>
-            <Path>.Simulations.Test.Field.PotatoSowingRule.Script.SowingDate</Path>
-            <dateTime>2013-12-01T00:00:00</dateTime>
+            <Path>[Simulation].Field.PotatoSowingRule.Script.SowingDate</Path>
+            <dateTime>2003-12-01T00:00:00</dateTime>
+          </ActionSpecifier>
+        </Actions>
+      </Description>
+      <Description>
+        <Name>SowDate2</Name>
+        <Base>.Simulations.Test</Base>
+        <Actions>
+          <ActionSpecifier>
+            <Action>Set</Action>
+            <Path>[Simulation].Field.PotatoSowingRule.Script.SowingDate</Path>
+            <dateTime>2003-12-13T00:00:00</dateTime>
           </ActionSpecifier>
         </Actions>
       </Description>
     </Descriptions>
   </Creator>
+  <Graph>
+    <Name>Graph</Name>
+    <Axis>
+      <Name>Axis</Name>
+      <Type>Bottom</Type>
+      <Title>X axis title 2</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Name>Axis</Name>
+      <Type>Left</Type>
+      <Title>Y axis title</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Name>Series</Name>
+      <Title>SowDate1 LAI</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>None</Marker>
+      <X>
+        <Name>GraphValues</Name>
+        <SimulationName>SowDate1</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <Name>GraphValues</Name>
+        <SimulationName>SowDate1</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Plant.Leaf.LAI</FieldName>
+      </Y>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Title>SowDate2 LAI</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <Marker>None</Marker>
+      <X>
+        <Name>GraphValues</Name>
+        <SimulationName>SowDate2</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <Name>GraphValues</Name>
+        <SimulationName>SowDate2</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Plant.Leaf.LAI</FieldName>
+      </Y>
+    </Series>
+  </Graph>
 </Simulations>

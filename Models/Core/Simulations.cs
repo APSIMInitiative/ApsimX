@@ -182,19 +182,8 @@ namespace Models.Core
                 else if (Model is Creator)
                 {
                     foreach (Model model in (Model as Creator).Create())
-                    {
                         if (model is Simulation)
-                        {
                             simulations.Add(model as Simulation);
-                            this.AddModel(model as Simulation);
-
-                            // We don't want the event connections added by "this.AddModel". Remove
-                            // them and then connect all events in all models.
-                            Utility.ModelFunctions.DisconnectEventsInAllModels(model);
-                            Utility.ModelFunctions.ConnectEventsInAllModels(model);
-                        }
-                    }
-
                 }
             }
             return simulations.ToArray();

@@ -201,7 +201,11 @@ namespace Models.Core
         /// </summary>
         public void Set(string namePath, object value)
         {
-            throw new NotImplementedException();
+            Utility.IVariable variable = FindVariable(namePath);
+            if (variable == null)
+                throw new ApsimXException(FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
+            else
+                variable.Value = value;
         }
 
         /// <summary>

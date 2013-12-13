@@ -329,6 +329,36 @@ namespace Utility
                 stream.Seek(0, SeekOrigin.Begin);
                 return (T)formatter.Deserialize(stream);
             }
-        }    
+        }
+
+        /// <summary>
+        /// Binary serialise the object and return the resulting stream.
+        /// </summary>
+        public static Stream BinarySerialise(object source)
+        {
+            if (source == null)
+                return null;
+
+            if (!source.GetType().IsSerializable)
+                throw new ArgumentException("The type must be serializable.", "source");
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            formatter.Serialize(stream, source);
+            return stream;
+        }
+
+        /// <summary>
+        /// Binary deserialise the specified stream and return the resulting object
+        /// </summary>
+        public static object BinaryDeserialise(Stream stream)
+        {
+            if (stream == null)
+                return null;
+
+            IFormatter formatter = new BinaryFormatter();
+            return formatter.Deserialize(stream);
+        }
+
     }
 }

@@ -34,11 +34,21 @@ namespace UserInterface.Presenters
             foreach (Model modelInScope in Creator.FindAll())
             {
                 if (modelInScope is Simulation)
-                    SimulationNames.Add(modelInScope.Name);
+                    SimulationNames.Add(modelInScope.FullPath);
                 ModelNames.Add(modelInScope.FullPath);
 
-                foreach (Utility.IVariable variable in Utility.ModelFunctions.Parameters(modelInScope))
-                    VariableNames.Add(modelInScope.FullPath + "." + variable.Name);
+                if (!(modelInScope is Simulations))
+                {
+                    foreach (Utility.IVariable variable in Utility.ModelFunctions.Parameters(modelInScope))
+                    {
+                        string[] modelNameBits = modelInScope.FullPath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string simulationName = modelNameBits[1];
+
+                        string variableName = modelInScope.FullPath + "." + variable.Name;
+                        variableName = variableName.Replace(".Simulations." + simulationName, "[Simulation]");
+                        VariableNames.Add(variableName);
+                    }
+                }
             }
             
             PopulateGrid();
@@ -82,7 +92,7 @@ namespace UserInterface.Presenters
                 }
             }
             Grid.SetColumnSize(0, 100);
-            Grid.SetColumnSize(1, 100);
+            Grid.SetColumnSize(1, 200);
             Grid.SetColumnSize(2, 100);
             Grid.SetColumnSize(3, 400);
             Grid.SetColumnSize(4, 100);
@@ -98,7 +108,7 @@ namespace UserInterface.Presenters
             table.Columns.Add("Base", typeof(string));
             table.Columns.Add("Action", typeof(string));
             table.Columns.Add("Path", typeof(string));
-            table.Columns.Add("Value", typeof(string));
+            table.Columns.Add("Value", typeof(object));
 
             if (Creator.Descriptions != null)
                 foreach (Creator.Description description in Creator.Descriptions)
@@ -107,10 +117,11 @@ namespace UserInterface.Presenters
 
                     row[0] = description.Name;
                     row[1] = description.Base;
+                    table.Rows.Add(row);
+
                     if (description.Actions != null && description.Actions.Count > 0)
                     {
                         DescriptionActionToDataRow(description.Actions[0], row);
-                        table.Rows.Add(row);
 
                         for (int i = 1; i < description.Actions.Count; i++)
                         {
@@ -157,8 +168,13 @@ namespace UserInterface.Presenters
                     object path = Grid.GetCellValue(3, rowIndex);
                     object value = Grid.GetCellValue(4, rowIndex);
 
+                    // For some reason the grid returns "" rather than nulls for actionName, path and value.
+                    // Convert "" to nulls.
+                    if (actionName != null && actionName.ToString() == "") actionName = null;
+                    if (path != null && path.ToString() == "")       path = null;
+                    if (value != null && value.ToString() == "")      value = null;
 
-                    int descriptionIndex = Row;
+                    int descriptionIndex = rowIndex;
                     //if (previousName != null && newModelName != null && newModelName != previousName)
                     //{
                     //    descriptionIndex++;
@@ -176,9 +192,12 @@ namespace UserInterface.Presenters
                         descriptions[descriptionIndex].Base = baseName.ToString();
 
                     // Add an action if we have an actionName or a Path or a Value
-                    Creator.Description.ActionSpecifier action = new Creator.Description.ActionSpecifier();
+                    Creator.Description.ActionSpecifier action = null;
                     if (actionName != null || path != null || value != null)
+                    {
+                        action = new Creator.Description.ActionSpecifier();
                         descriptions[descriptionIndex].Actions.Add(action);
+                    }
 
                     // Set the action
                     if (actionName != null)
