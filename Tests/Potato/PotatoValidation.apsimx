@@ -2023,7 +2023,8 @@ public class Script : Model
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant Plant;          
 [Link] WeatherFile Met;   
-[Link] Fertiliser Fert;  
+[Link] Fertiliser Fert;
+[Link] Irrigation Irrig;  
                
 [XmlIgnore] public bool InitialDay { get; set; }
 
@@ -2105,7 +2106,7 @@ private void OnEndOfDay(object sender, EventArgs e)
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
-AccumFert += Fert.NitrogenApplied; //returns zero
+AccumFert += Fert.NitrogenApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 double MineralN = 0;
@@ -2120,14 +2121,15 @@ double OrganicN = 0;
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
+
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= SoilWat.eo;
 AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= SoilWat.es;  //returns zero
-AccumDrainage -= SoilWat.drain; //Returns zero
-AccumRunoff -= SoilWat.runoff; //Returns zero
-//AccumIrrigation += SoilWat.irrigation; //Returns zero
+AccumES -= SoilWat.es; 
+AccumDrainage -= SoilWat.drain; 
+AccumRunoff -= SoilWat.runoff; 
+AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
 DUL = 0;
@@ -2140,14 +2142,17 @@ double OutFlowLat = 0;
    }
 AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
+}
+
+[EventSubscribe("StartOfDay")]
+private void OnStartOfDay(object sender, EventArgs e)
+{
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 if (Plant.Phenology.StageCode.Value >= 3)
 AccumTtemerg += Plant.Phenology.ThermalTime.Value;
 }
 }
-
-
 }
 	   ]]></Code>
       </Manager>

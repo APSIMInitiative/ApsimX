@@ -60,6 +60,9 @@ namespace Models.PMF.Organs
         #region Parameters
         // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
         // in the XML. No need for it to be in leaf.
+        
+        // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
+        // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
         [XmlElement("InitialLeaf")]
         public List<LeafCohort> InitialLeaves { get; set; }
@@ -84,18 +87,16 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States
+        
         private List<LeafCohort> Leaves = new List<LeafCohort>();
 
         /// <summary>
         /// Initialise all state variables.
         /// </summary>
-        public override void Clear()
-        {
-            Leaves = new List<LeafCohort>();
-            WaterDemand = 0;
-            WaterAllocation = 0;
-        }
-
+        public double CurrentExpandingLeaf = 0;
+        public double StartFractionExpanded = 0;
+        public double FractionNextleafExpanded = 0;
+        public double _ExpandedNodeNo = 0;
         #endregion
 
         #region Outputs
@@ -180,10 +181,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                foreach (LeafCohort L in Leaves)
-                    if (!L.IsFullyExpanded)
-                        return ExpandedCohortNo + L.FractionExpanded;
-                return 0;
+                //HamishB  I have had to change this back because it was not returning the correct values
+                //foreach (LeafCohort L in Leaves)
+                //    if (!L.IsFullyExpanded)
+                //        return ExpandedCohortNo + L.FractionExpanded;
+                return _ExpandedNodeNo;
             }
         }
 
@@ -628,9 +630,29 @@ namespace Models.PMF.Organs
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
-           
+            
+            bool NextExpandingLeaf = false;
             foreach (LeafCohort L in Leaves)
+            {
                 L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
+                if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
+                {
+                    NextExpandingLeaf = true;
+                    if (CurrentExpandingLeaf != L.Rank)
+                    {
+                        CurrentExpandingLeaf = L.Rank;
+                        StartFractionExpanded = L.FractionExpanded;
+                    }
+                    FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
+                }
+            }
+            _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
+        }
+        public override void Clear()
+        {
+            Leaves = new List<LeafCohort>();
+            WaterDemand = 0;
+            WaterAllocation = 0;
         }
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
