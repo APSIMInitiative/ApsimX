@@ -20,6 +20,7 @@ namespace Utility
     // ---------------------------------------------
     // A simple type for encapsulating a constant
     // ---------------------------------------------
+    [Serializable]
     class ApsimConstant
     {
         public ApsimConstant(string name, string val, string units, string comm)
@@ -40,6 +41,7 @@ namespace Utility
     /// This class encapsulates an APSIM input file providing methods for
     /// reading data.
     /// </summary>
+    [Serializable]
     class ApsimTextFile
     {
         private string _FileName;

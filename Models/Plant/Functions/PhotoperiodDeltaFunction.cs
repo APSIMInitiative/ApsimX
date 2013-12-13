@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
     public class PhotoperiodDeltaFunction : Function
     {

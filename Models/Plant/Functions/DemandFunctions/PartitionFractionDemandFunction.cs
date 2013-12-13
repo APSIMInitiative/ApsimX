@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions.DemandFunctions
 {
+    [Serializable]
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function returns the specified proportion of total DM supply.  The organ may not get this proportion if the sum of demands from other organs exceeds DM supply")]
     public class PartitionFractionDemandFunction : Function
     {

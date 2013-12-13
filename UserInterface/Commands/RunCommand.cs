@@ -21,7 +21,7 @@ namespace UserInterface.Commands
         public void Do(CommandHistory CommandHistory)
         {
             if (Simulation == null)
-                Simulations.Run();
+                ok = Simulations.Run();
             else
                 ok = Simulations.Run(Simulation);
         }

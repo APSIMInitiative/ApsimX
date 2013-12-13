@@ -68,6 +68,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\CreatorPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
@@ -438,6 +439,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\notes.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_exchange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Creator16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,6 +8,7 @@
     /// This abstract base class encapsulates the interface for a variable from a Model.
     /// source code.
     /// </summary>
+    [Serializable]
     public abstract class IVariable
     {
         /// <summary>
@@ -62,6 +63,7 @@
     /// of the property, the value in the base model and the default value as definned in the 
     /// source code.
     /// </summary>
+    [Serializable]
     public class VariableObject : IVariable
     {
         private object Obj;
@@ -137,6 +139,7 @@
     /// of the property, the value in the base model and the default value as definned in the 
     /// source code.
     /// </summary>
+    [Serializable]
     public class VariableField : IVariable
     {
         private object Obj;
@@ -233,6 +236,7 @@
     /// of the property, the value in the base model and the default value as definned in the 
     /// source code.
     /// </summary>
+    [Serializable]
     public class VariableProperty : IVariable
     {
         private object Obj;

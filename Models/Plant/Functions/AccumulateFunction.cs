@@ -7,6 +7,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
     public class AccumulateFunction : Function
     {

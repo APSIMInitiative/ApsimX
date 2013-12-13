@@ -9,6 +9,7 @@ using Models.Core;
 namespace Models.Soils
 {
 
+    [Serializable]
     public class FOMType
     {
         public double amount;
@@ -17,10 +18,12 @@ namespace Models.Soils
         public double P;
         public double AshAlk;
     }
+    [Serializable]
     public class FOMPoolType
     {
         public FOMPoolLayerType[] Layer;
     }
+    [Serializable]
     public class FOMPoolLayerType
     {
         public double thickness;
@@ -29,17 +32,20 @@ namespace Models.Soils
         public double po4;
         public FOMType[] Pool;
     }
+    [Serializable]
     public class FOMLayerType
     {
         public string Type = "";
         public FOMLayerLayerType[] Layer;
     }
+    [Serializable]
     public class SurfaceOrganicMatterDecompPoolType
     {
         public string Name = "";
         public string OrganicMatterType = "";
         public FOMType FOM;
     }
+    [Serializable]
     public class SurfaceOrganicMatterDecompType
     {
 
@@ -116,6 +122,7 @@ namespace Models.Soils
     /// instances to be initialised, modified inputs to handle the partitioning of incoming N, also modified outputs to sum up the pools from the 
     /// several instances (patches)
     /// </summary>
+    [Serializable]
     public partial class SoilNitrogen : Model
     {
 
@@ -968,12 +975,5 @@ namespace Models.Soils
 
         #endregion
     }
-
-
-    public class SoilTypeDefinition
-    {
-        protected XmlNode SoilTypeDefinitionXML;
-    }
-
 
 }

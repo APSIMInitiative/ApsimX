@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    [Serializable]
     [XmlInclude(typeof(CompositeBiomass))]
     public class Biomass: Model
     {

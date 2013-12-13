@@ -87,8 +87,8 @@ namespace UserInterface.Presenters
         {
             for (int i = 0; i < Properties.Count; i++)
                 Grid.SetCellEditor(1, i, Properties[i].Value);
-            Grid.SetColumnAutoSize(0);
-            Grid.SetColumnAutoSize(1);
+            Grid.SetColumnSize(0);
+            Grid.SetColumnSize(1);
             
             Grid.SetColumnReadOnly(0, true);
         }

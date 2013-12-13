@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class GenericOrgan : BaseOrgan
     {
         #region Class Dependency Links and Structures

@@ -6,6 +6,7 @@ using Models.PMF.Organs;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     public class LeafDeathPhase : Phase
     {
         [Link]

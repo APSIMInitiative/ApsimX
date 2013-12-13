@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
     public class SigmoidFunction : Function
     {

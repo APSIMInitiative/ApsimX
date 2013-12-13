@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     class PhaseJumpFunction
     {
         public Phenology Phenology { get; set; }

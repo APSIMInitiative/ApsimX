@@ -4,6 +4,7 @@ using Models.Core;
 
 namespace Models
 {
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [AllowDropOn("Simulation")]

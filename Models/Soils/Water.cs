@@ -8,6 +8,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Water : Model

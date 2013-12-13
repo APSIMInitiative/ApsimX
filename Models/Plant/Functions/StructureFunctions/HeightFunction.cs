@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions.StructureFunctions
 {
+    [Serializable]
     [Description("Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress)")]
     public class HeightFunction : Function
     {

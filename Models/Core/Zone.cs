@@ -16,6 +16,7 @@ namespace Models.Core
     /// </summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [Serializable]
     public class Zone : ModelCollection
     {
         /// <summary>
@@ -48,14 +49,15 @@ namespace Models.Core
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(WeatherFile))]
         [XmlElement(typeof(Log))]
+        [XmlElement(typeof(Creator))]
         public List<Model> Children { get; set; }
 
          /// <summary>
         /// Add a model to the Models collection. Will throw if model cannot be added.
         /// </summary>
-        public override void AddModel(Model model, bool resolveLinks)
+        public override void AddModel(Model model)
         {
-            base.AddModel(model, resolveLinks);
+            base.AddModel(model);
             EnsureNameIsUnique(model);
         }
 

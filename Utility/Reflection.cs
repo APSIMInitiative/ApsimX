@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.CodeDom.Compiler;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Utility
 {
@@ -185,6 +188,20 @@ namespace Utility
             return Attributes.ToArray();
         }
 
+        /// <summary>
+        /// Gets 0 or more attributes of the specified type.
+        /// </summary>
+        /// <returns>Returns the attributes or string[0] if none found.</returns>
+        public static Attribute[] GetAttributes(MemberInfo T, Type AttributeTypeToFind, bool LookInBaseClasses)
+        {
+            List<Attribute> Attributes = new List<Attribute>();
+            foreach (Attribute A in T.GetCustomAttributes(LookInBaseClasses))
+            {
+                if (A.GetType() == AttributeTypeToFind)
+                    Attributes.Add(A);
+            }
+            return Attributes.ToArray();
+        }
 
         /// <summary>
         /// Returns the name of the specified object if it has a public name property
@@ -239,7 +256,7 @@ namespace Utility
             return null;
         }
 
-        public static Assembly CompileTextToAssembly(string Code)
+        public static Assembly CompileTextToAssembly(string Code, string assemblyFileName)
         {
             bool VB = Code.IndexOf("Imports System") != -1;
             string Language;
@@ -254,8 +271,9 @@ namespace Utility
                 if (Provider != null)
                 {
                     CompilerParameters Params = new CompilerParameters();
-                    Params.GenerateInMemory = true;      //Assembly is created in memory
-                    Params.TempFiles = new TempFileCollection(System.IO.Path.GetTempPath(), false);
+                    Params.GenerateInMemory = false;      //Assembly is created in memory
+                    if (assemblyFileName != null)
+                        Params.OutputAssembly = assemblyFileName;
                     Params.TreatWarningsAsErrors = false;
                     Params.WarningLevel = 2;
                     Params.ReferencedAssemblies.Add("System.dll");
@@ -283,5 +301,34 @@ namespace Utility
             }
             throw new Exception("Cannot compile manager script to an assembly");
         }
+
+        /// <summary>
+        /// Perform a deep Copy of the object.
+        /// </summary>
+        /// <typeparam name="T">The type of object being copied.</typeparam>
+        /// <param name="source">The object instance to copy.</param>
+        /// <returns>The copied object.</returns>
+        public static T Clone<T>(T source)
+        {
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("The type must be serializable.", "source");
+            }
+
+            // Don't serialize a null object, simply return the default for that object
+            if (Object.ReferenceEquals(source, null))
+            {
+                return default(T);
+            }
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
+        }    
     }
 }

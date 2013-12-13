@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     public class EndPhase : Phase
     {
         private double _CumulativeValue;

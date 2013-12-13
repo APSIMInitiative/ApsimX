@@ -8,6 +8,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     public class Zadok
     {
         [Link]

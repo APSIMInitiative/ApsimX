@@ -9,7 +9,8 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
-    public class ArrayBiomass: Model
+    [Serializable]
+    public class ArrayBiomass : Model
     {
         public string[] Propertys = null;
 

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    [Serializable]
     public class Arbitrator : Model
     {
         #region Class Members
@@ -32,6 +33,7 @@ namespace Models.PMF
             throw new NotImplementedException();
         }
 
+        [Serializable]
         public class BiomassArbitrationType
         {
             //Biomass Demand Variables

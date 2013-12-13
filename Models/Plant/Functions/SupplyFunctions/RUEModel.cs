@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    [Serializable]
     public class RUEModel : Model
     {
         [Link]

@@ -5,6 +5,7 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class GenericBelowGroundOrgan : GenericOrgan, BelowGround
     {
         #region Event handlers

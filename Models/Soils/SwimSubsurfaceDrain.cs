@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class SwimSubsurfaceDrain : Model
     {
         [Description("Depth of subsurface drain (mm)")]

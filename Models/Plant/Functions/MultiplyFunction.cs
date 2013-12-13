@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     /// <summary>
     /// Multiplies the values of the children of this node
     /// </summary>
+    [Serializable]
     [Description("Returns the product of all childern function values")]
     public class MultiplyFunction : Function
     {

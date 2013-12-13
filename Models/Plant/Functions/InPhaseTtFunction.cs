@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
 {
     [Description("Returns the thermal time accumulation from the current phase in phenology")]
 
+    [Serializable]
     public class InPhaseTtFunction : Function
     {
         [Link]

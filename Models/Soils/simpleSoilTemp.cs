@@ -8,6 +8,7 @@ using System.Xml;
 /// Calculates the average soil temperature at the centre of each layer, based on the soil temperature model of EPIC (Williams et al 1984)
 /// This code was separated from old SoilN - tidied up but not updated (RCichota, sep/2012)
 /// </summary>
+[Serializable]
 public class simpleSoilTemp
 {
 

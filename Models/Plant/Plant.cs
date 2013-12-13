@@ -43,6 +43,7 @@ namespace Models.PMF
     public delegate void NullTypeDelegate();
     public delegate void NewCropDelegate(NewCropType Data);
     public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
+    [Serializable]
     public class SowPlant2Type
     {
         public String Cultivar = "";
@@ -69,7 +70,8 @@ namespace Models.PMF
         public String sender = "";
         public String crop_type = "";
     }
-    public class Plant: Model
+    [Serializable]
+    public class Plant : Model
     {
         public string CropType { get; set; }
         public Phenology Phenology { get; set; }

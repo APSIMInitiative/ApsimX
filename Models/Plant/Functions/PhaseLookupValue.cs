@@ -6,6 +6,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
     public class PhaseLookupValue : Function
     {

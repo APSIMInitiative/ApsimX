@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Phen
 {
+    [Serializable]
     abstract public class Phase : Model
     {
         public string Start;

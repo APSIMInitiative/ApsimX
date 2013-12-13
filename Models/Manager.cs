@@ -4,47 +4,29 @@ using System.Reflection;
 using System.Xml.Serialization;
 using Models.Core;
 using System.Xml.Schema;
+using System.Runtime.Serialization;
+using System.IO;
 
 namespace Models
 {
-
+    [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : Model
+    public class Manager : Model//, ISerializable
     {
-        // Privates
-        private Assembly CompiledAssembly;
+        // ----------------- Privates
         private string _Code;
-        private Type ScriptType;
         private bool HasDeserialised = false;
+        private string elementsAsXml = null;
+        [NonSerialized] private Model _Script;
+        [NonSerialized] private XmlElement[] _elements;
 
-        // Links
-        [Link]
-        private Zone Zone = null;
+        // ----------------- Links
+        [Link] private ISummary Summary = null;
 
-        [Link]
-        private ISummary Summary = null;
-
-        // Publics
-        [XmlIgnore]
-        public Model Script { get; set; }
-
+        // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
-        public XmlElement[] elements { get; set; }
-
-        [XmlIgnore]
-        public string Code
-        {
-            get
-            {
-                return _Code;
-            }
-            set
-            {
-                _Code = value;
-                RebuildScriptModel();
-            }
-        }
+        public XmlElement[] elements { get { return _elements; } set { _elements = value; } }
 
         [XmlText]
         [XmlElement("Code")]
@@ -74,10 +56,25 @@ namespace Models
             }
         }
 
-        public string[] ParameterNames { get; set; }
-        public string[] ParameterValues { get; set; }
+        // ----------------- Outputs
+        [XmlIgnore]
+        public Model Script { get { return _Script; } set { _Script = value; } }
 
-        public Zone ParentZone { get { return Zone; } }
+        [XmlIgnore]
+        public string Code
+        {
+            get
+            {
+                return _Code;
+            }
+            set
+            {
+                _Code = value;
+                RebuildScriptModel();
+            }
+        }
+
+
 
         /// <summary>
         /// The model has been loaded.
@@ -87,7 +84,6 @@ namespace Models
         {
             HasDeserialised = true;
             RebuildScriptModel();
-
         }
 
         /// <summary>
@@ -97,51 +93,75 @@ namespace Models
         {
             if (HasDeserialised)
             {
-                string scriptXml = null;
+                // If a script model already exists, then serialise it so that we capture the current state,
+                // and then create a new script model using those values.
+                string currentState = null;
                 if (Script != null)
                 {
-                    // First serialise the existing model.
-                    XmlSerializer serial = new XmlSerializer(ScriptType);
-                    scriptXml = Utility.Xml.Serialise(Script, true);
-
-                    // Get rid of old script model.
-                    this.RemoveModel(Script);
-                    Script = null;
+                    XmlSerializer oldSerial = new XmlSerializer(Script.GetType());
+                    currentState = Utility.Xml.Serialise(Script, true);
+                    
+                    RemoveModel(Script);
+                    //GC.Collect(); 
+                    //GC.WaitForPendingFinalizers();
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
                 }
 
-                // Compile the script
                 try
                 {
-                    CompileScript();
+                    // Try compiling the script
+                    //string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
+                    //                                       Name) + ".dll";
+                    Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                    Summary.WriteMessage(FullPath, "Script compiled ok");
 
-                    if (ScriptType != null)
+                    // Look for a "class Script" - throw if not found.
+                    Type ScriptType = CompiledAssembly.GetType("Models.Script");
+                    if (ScriptType == null)
+                        throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
+
+                    // If a script model already exists, then serialise it so that we capture the current state,
+                    // and then create a new script model using those values.
+                    if (currentState != null)
                     {
-                        if (elements.Length > 0 || scriptXml != null)
-                        {
-                            XmlElement scriptNode;
-
-                            if (scriptXml != null)
-                            {
-                                XmlDocument doc = new XmlDocument();
-                                doc.LoadXml(scriptXml);
-                                scriptNode = doc.DocumentElement;
-                            }
-                            else
-                                scriptNode = elements[0];
-
-                            XmlSerializer serial = new XmlSerializer(ScriptType);
-                            Script = serial.Deserialize(new XmlNodeReader(scriptNode)) as Model;
-                        }
-                        else
-                            Script = Activator.CreateInstance(ScriptType) as Model;
-
-                        this.AddModel(Script, true);
-
-                        // Call the OnInitialised if present.
-                        MethodInfo OnInitialised = Script.GetType().GetMethod("OnInitialised", BindingFlags.Instance | BindingFlags.NonPublic);
-                        if (OnInitialised != null)
-                            OnInitialised.Invoke(Script, new object[] { this, null });
+                        XmlSerializer newSerial = new XmlSerializer(ScriptType);
+                        Script = newSerial.Deserialize(new StringReader(currentState)) as Model;
                     }
+
+                    // If this manager model has been XML deserialised, then use the "elements" member to 
+                    // create a new script model.
+                    else if (elements != null && elements.Length > 0)
+                    {
+                        XmlSerializer serial = new XmlSerializer(ScriptType);
+                        Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
+
+                        // setup the elementsAsXml for BinaryFormatter.Serialization.
+                        elementsAsXml = elements[0].OuterXml;
+                    }
+
+                    // If this manager model has been binary deserialised, the use the "elementsAsXml" member
+                    // to create a new script model.
+                    else if (elementsAsXml != "" && elementsAsXml != null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(elementsAsXml);
+                        XmlSerializer serial = new XmlSerializer(ScriptType);
+                        Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                    }
+
+                    // Nothing else was specified so just create a default script model.
+                    else
+                        Script = Activator.CreateInstance(ScriptType) as Model;
+
+                    if (Script != null)
+                        AddModel(Script);
+
+
+                    // Call the OnInitialised if present.
+                    MethodInfo OnInitialised = Script.GetType().GetMethod("OnInitialised", BindingFlags.Instance | BindingFlags.NonPublic);
+                    if (OnInitialised != null)
+                        OnInitialised.Invoke(Script, new object[] { this, null });
                 }
                 catch (Exception err)
                 {
@@ -150,22 +170,42 @@ namespace Models
             }
         }
 
-        private void CompileScript()
-        {
-            try
-            {
-                CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code);
-                // Go look for our class name.
-                ScriptType = CompiledAssembly.GetType("Models.Script");
-                if (ScriptType == null)
-                    Summary.WriteWarning(FullPath, "Cannot find a public class called Script");
-                Summary.WriteMessage(FullPath, "Script compiled ok");
-            }
-            catch (Exception err)
-            {
-                Summary.WriteWarning(FullPath, err.Message);
-            }
-            
-        }
+        //private void AddScriptModel(Model Script)
+        //{
+        //    Script.Parent = this;
+        //    Utility.ModelFunctions.ConnectEventsInModel(Script);
+        //    Utility.ModelFunctions.ResolveLinks(Script);
+        //}
+
+        //private void RemoveScriptModel(Model Script)
+        //{
+        //    Script.Parent = null;
+        //    Utility.ModelFunctions.DisconnectEventsInModel(Script);
+        //}
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        //public Manager() { }
+
+        ///// <summary>
+        ///// Constructor called by BinaryFormatter.Deserialize
+        ///// </summary>
+        //protected Manager(SerializationInfo info, StreamingContext context)
+        //{
+        //    _Code = info.GetString("Code");
+        //    elementsAsXml = info.GetString("ScriptXML");
+        //}
+
+        ///// <summary>
+        ///// Method called by BinaryFormatter.Serialize
+        ///// </summary>
+        //public void GetObjectData(SerializationInfo info, StreamingContext context)
+        //{
+        //    if (Script != null)
+        //        Utility.ModelFunctions.DisconnectEventsInModel(Script);
+        //    info.AddValue("Code", _Code);
+        //    info.AddValue("ScriptXML", elementsAsXml);
+        //}
     }
 }

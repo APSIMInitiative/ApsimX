@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A * B * exp(x * C)")]
     public class ExponentialFunction : Function
     {

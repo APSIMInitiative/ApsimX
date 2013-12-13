@@ -8,6 +8,7 @@ using Models.Soils;
 
 namespace Models.PMF.Organs
 {
+    [Serializable]
     public class SimpleRoot : BaseOrgan // FIXME HEB This was inheriting from organ but changed to base organ to fix bug. Need to check collatoral impacts
     {
         [Link]

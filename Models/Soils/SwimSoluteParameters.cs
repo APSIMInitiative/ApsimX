@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    [Serializable]
     public class SwimSoluteParameters : Model
     {
         [Description("Dispersivity - dis ((cm^2/h)/(cm/h)^p)")]

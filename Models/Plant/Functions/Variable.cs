@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns the value of a nominated internal Plant2 numerical variable")]
     public class VariableReference : Function
     {

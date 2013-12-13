@@ -9,6 +9,7 @@ using Models.PMF;
 
 namespace Models.SurfaceOM
 {
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public partial class SurfaceOrganicMatter : Model
@@ -43,6 +44,7 @@ namespace Models.SurfaceOM
         //             dean"s datatypes.f90 generator cannot yet properly generate the;
         //             type definition from datatypes.interface for a structures within a;
         //             structure.
+        [Serializable]
         class OMFractionType
         {
             public double amount;
@@ -60,7 +62,7 @@ namespace Models.SurfaceOM
                 AshAlk = 0;
             }
         }
-
+        [Serializable]
         class SurfOrganicMatterType
         {
             public string name;
@@ -95,7 +97,7 @@ namespace Models.SurfaceOM
                 OrganicMatterType = type;
             }
         }
-
+        [Serializable]
         class SurfaceOMGlobals
         {
             public List<SurfOrganicMatterType> SurfOM;
@@ -141,6 +143,7 @@ namespace Models.SurfaceOM
 
         }
 
+        [Serializable]
         class SurfaceOMParameters
         {
 
@@ -156,6 +159,7 @@ namespace Models.SurfaceOM
             }
         }
 
+        [Serializable]
         class SurfaceOMConstants
         {
             public string[] fom_types;

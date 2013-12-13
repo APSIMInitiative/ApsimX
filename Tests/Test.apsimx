@@ -16,7 +16,7 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>false</html>
+      <html>true</html>
       <AutoCreate>false</AutoCreate>
       <StateVariables>false</StateVariables>
     </Summary>
@@ -2021,11 +2021,13 @@
         using Models.PMF;
         namespace Models
         {
+           
+           [Serializable] 
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
                [Link] Plant Plant;
-               [Link] Clock Clock;
+               [Link] Clock Clock; 
 
                [Description("Spacing (mm) between plants within rows")]
                public double RowSpace { get; set; }//= 280;
@@ -2075,6 +2077,7 @@
         using Models.PMF;
         namespace Models
         {
+            [Serializable]
             public class Script : Model
             {      
                [Link] Irrigation Irrigation;
@@ -2117,6 +2120,7 @@
         using Models.PMF;
         namespace Models
         {
+            [Serializable]
             public class Script : Model
             {      
                [Link] Fertiliser Fertiliser;
@@ -2283,4 +2287,20 @@
       <Parameters />
     </Test>
   </Tests>
+  <Creator>
+    <Name>Factorial</Name>
+    <Descriptions>
+      <Description>
+        <Name>SowDate1</Name>
+        <Base>.Simulations.Test</Base>
+        <Actions>
+          <ActionSpecifier>
+            <Action>Set</Action>
+            <Path>.Simulations.Test.Field.PotatoSowingRule.Script.SowingDate</Path>
+            <dateTime>2013-12-01T00:00:00</dateTime>
+          </ActionSpecifier>
+        </Actions>
+      </Description>
+    </Descriptions>
+  </Creator>
 </Simulations>

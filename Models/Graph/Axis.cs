@@ -1,7 +1,9 @@
 ﻿using Models.Core;
+using System;
 
 namespace Models.Graph
 {
+    [Serializable]
     public class Axis : Model
     {
         public enum AxisType { Left, Top, Right, Bottom };

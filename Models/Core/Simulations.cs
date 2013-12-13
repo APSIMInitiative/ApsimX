@@ -13,6 +13,7 @@ namespace Models.Core
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
+    [Serializable]
     public class Simulations : Zone
     {
         private string _FileName;
@@ -115,9 +116,8 @@ namespace Models.Core
 
             // Run all simulations
             bool ok = true;
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    ok = (Model as Simulation).Run() && ok;
+            foreach (Simulation simulation in FindAllSimulations())
+                ok = simulation.Run() && ok;
 
             // Invoke the AllCompleted event.
             if (AllCompleted != null)
@@ -156,7 +156,9 @@ namespace Models.Core
         /// </summary>
         private Simulations() { }
 
-
+        /// <summary>
+        /// Close the simulation
+        /// </summary>
         public void Close()
         {
             foreach (object Model in Models)
@@ -166,7 +168,37 @@ namespace Models.Core
             if (AllCompleted != null)
                 AllCompleted(this, null);
         }
-        
+
+        /// <summary>
+        /// Find all simulations.
+        /// </summary>
+        public Simulation[] FindAllSimulations()
+        {
+            List<Simulation> simulations = new List<Simulation>();
+            foreach (object Model in FindAll())
+            {
+                if (Model is Simulation)
+                    simulations.Add(Model as Simulation);
+                else if (Model is Creator)
+                {
+                    foreach (Model model in (Model as Creator).Create())
+                    {
+                        if (model is Simulation)
+                        {
+                            simulations.Add(model as Simulation);
+                            this.AddModel(model as Simulation);
+
+                            // We don't want the event connections added by "this.AddModel". Remove
+                            // them and then connect all events in all models.
+                            Utility.ModelFunctions.DisconnectEventsInAllModels(model);
+                            Utility.ModelFunctions.ConnectEventsInAllModels(model);
+                        }
+                    }
+
+                }
+            }
+            return simulations.ToArray();
+        }
 
     }
 }

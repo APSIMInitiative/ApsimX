@@ -6,6 +6,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    [Serializable]
     [Description("Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.")]
     public class PhaseBasedSwitch : Function
     {
