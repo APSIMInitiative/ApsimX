@@ -95,7 +95,8 @@ namespace Models.Core
             // creating a backup (.bak) in the process.
             string bakFileName = FileName + ".bak";
             File.Delete(bakFileName);
-            File.Move(FileName, bakFileName);
+            if (File.Exists(FileName)) 
+                File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
         }
@@ -182,19 +183,8 @@ namespace Models.Core
                 else if (Model is Creator)
                 {
                     foreach (Model model in (Model as Creator).Create())
-                    {
                         if (model is Simulation)
-                        {
                             simulations.Add(model as Simulation);
-                            this.AddModel(model as Simulation);
-
-                            // We don't want the event connections added by "this.AddModel". Remove
-                            // them and then connect all events in all models.
-                            Utility.ModelFunctions.DisconnectEventsInAllModels(model);
-                            Utility.ModelFunctions.ConnectEventsInAllModels(model);
-                        }
-                    }
-
                 }
             }
             return simulations.ToArray();

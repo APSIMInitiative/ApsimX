@@ -508,6 +508,7 @@ namespace UserInterface.Views
 
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
+                    UserEditingCell = true;
                     ValueBeforeEdit = Grid[e.ColumnIndex, e.RowIndex].Value;
                     Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
                 }

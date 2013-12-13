@@ -17,6 +17,7 @@ namespace Models
     public class Creator : Model
     {   
         private List<Model> newModels = new List<Model>();
+        [Link] Simulations Simulations = null;
 
         [Serializable]
         public class Description
@@ -50,23 +51,41 @@ namespace Models
         /// </summary>
         public Model[] Create()
         {
+            // Create all simulations.
             newModels.Clear();
             foreach (Description description in Descriptions)
             {
                 Simulation baseModel = this.Get(description.Base) as Simulation;
                 Simulation newModel = Utility.Reflection.Clone<Simulation>(baseModel);
-                Utility.ModelFunctions.DisconnectEventsInAllModels(newModel);
-
                 newModel.Name = description.Name;
-                
-                // Apply all actions.
-                foreach (Description.ActionSpecifier action in description.Actions)
+                newModels.Add(newModel);
+            }
+
+            // Setup all simulations.
+            for (int i = 0; i < newModels.Count; i++)
+            {
+                if (newModels[i] is Simulation)
                 {
-                    if (action.Path != null && action.Value != null)
-                        this.Set(action.Path, action.Value);
+                    Simulations.AddModel(newModels[i]);
+
+                    // We don't want the event connections added by the line above "Simulations.AddModel". Remove
+                    // them and then connect all events in all models.
+                    Utility.ModelFunctions.DisconnectEventsInAllModels(newModels[i]);
+                    Utility.ModelFunctions.ConnectEventsInAllModels(newModels[i]);
+
+                    // Need to initialise now because Manager modules won't have created their Script child
+                    // modules yet.
+                    (newModels[i] as Simulation).Initialise();
                 }
 
-                newModels.Add(newModel);
+                // Apply all actions.
+                foreach (Description.ActionSpecifier action in Descriptions[i].Actions)
+                {
+                    if (action.Path != null && action.Value != null)
+                        newModels[i].Set(action.Path, action.Value);
+                }
+
+
             }
 
             return newModels.ToArray();

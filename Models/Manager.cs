@@ -102,10 +102,6 @@ namespace Models
                     currentState = Utility.Xml.Serialise(Script, true);
                     
                     RemoveModel(Script);
-                    //GC.Collect(); 
-                    //GC.WaitForPendingFinalizers();
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
                 }
 
                 try
