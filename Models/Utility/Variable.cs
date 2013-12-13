@@ -19,7 +19,7 @@
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public abstract object Value { get; }
+        public abstract object Value { get; set; }
 
         /// <summary>
         /// Returns the value of the property.
@@ -95,6 +95,10 @@
             get
             {
                 return Obj;
+            }
+            set
+            {
+                Obj = value;
             }
         }
 
@@ -175,7 +179,17 @@
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public override object Value { get { return FieldInfo.GetValue(Obj); } }
+        public override object Value 
+        { 
+            get 
+            { 
+                return FieldInfo.GetValue(Obj); 
+            }
+            set
+            {
+                FieldInfo.SetValue(Obj, value);
+            }
+        }
 
         /// <summary>
         /// Returns the value of the property.
@@ -261,7 +275,17 @@
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public override  object Value { get { return PropertyInfo.GetValue(Obj, null); } }
+        public override  object Value 
+        { 
+            get 
+            { 
+                return PropertyInfo.GetValue(Obj, null); 
+            }
+            set
+            {
+                PropertyInfo.SetValue(Obj, value, null);
+            }
+        }
 
         /// <summary>
         /// Returns the value of the property.

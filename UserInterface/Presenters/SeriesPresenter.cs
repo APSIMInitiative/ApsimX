@@ -283,7 +283,8 @@ namespace UserInterface.Presenters
                 string TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
                 SeriesView.DataGrid.DataSource = DataStore.GetData(SimulationName, TableName);
             }
-            SeriesView.DataGrid.SetNumericFormat("N3");
+            if (SeriesView.DataGrid.DataSource != null)
+                SeriesView.DataGrid.SetNumericFormat("N3");
         }
 
         /// <summary>
