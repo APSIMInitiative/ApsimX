@@ -2087,8 +2087,8 @@ SWC = 0;
 DUL = 0;
 }	   
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("EndOfDay")]
+private void OnEndOfDay(object sender, EventArgs e)
 {
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
@@ -2125,8 +2125,8 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 AccumEO -= SoilWat.eo;
 AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= SoilWat.es;  //returns zero
-//AccumDrainage -= SoilWat.drain; //Returns zero
-//AccumRunoff -= SoilWat.runoff; //Returns zero
+AccumDrainage -= SoilWat.drain; //Returns zero
+AccumRunoff -= SoilWat.runoff; //Returns zero
 //AccumIrrigation += SoilWat.irrigation; //Returns zero
 AccumRainfall += Met.Rain;
 SWC = 0;
