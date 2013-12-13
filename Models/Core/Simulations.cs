@@ -95,7 +95,8 @@ namespace Models.Core
             // creating a backup (.bak) in the process.
             string bakFileName = FileName + ".bak";
             File.Delete(bakFileName);
-            File.Move(FileName, bakFileName);
+            if (File.Exists(FileName)) 
+                File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
         }
