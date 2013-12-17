@@ -308,12 +308,12 @@
           <potHydrol_parmB>0</potHydrol_parmB>
           <potHydrol_parmC>0</potHydrol_parmC>
           <potHydrol_parmD>0</potHydrol_parmD>
-          <nitrification_pot>0</nitrification_pot>
-          <nh4_at_half_pot>0</nh4_at_half_pot>
-          <dnit_rate_coeff>0</dnit_rate_coeff>
+          <nitrification_pot>40</nitrification_pot>
+          <nh4_at_half_pot>90</nh4_at_half_pot>
+          <dnit_rate_coeff>25.1</dnit_rate_coeff>
           <dnit_nitrf_loss>0</dnit_nitrf_loss>
           <dnit_k1>0</dnit_k1>
-          <dnit_wf_power>0</dnit_wf_power>
+          <dnit_wf_power>1</dnit_wf_power>
           <actC_parmB>0</actC_parmB>
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
