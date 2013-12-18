@@ -311,7 +311,32 @@
           <nitrification_pot>40</nitrification_pot>
           <nh4_at_half_pot>90</nh4_at_half_pot>
           <dnit_rate_coeff>25.1</dnit_rate_coeff>
-          <dnit_nitrf_loss>0</dnit_nitrf_loss>
+          <pHf_nit_pH>
+  		   <double>4.5</double> 
+		   <double>6.0</double>
+           <double>8.0</double>
+           <double>9.0</double>
+    	  </pHf_nit_pH>
+          <pHf_nit_values>
+		   <double>0.0</double>
+           <double>1.0</double>
+           <double>1.0</double>
+           <double>0.0</double>
+          </pHf_nit_values>
+		  <wfnit_index>
+		   <double>0.0</double>
+           <double>.25</double>
+           <double>1.0</double>
+           <double>2.0</double>
+          </wfnit_index>
+          <wfnit_values>
+		   <double>0.0</double>
+           <double>1.0</double>
+           <double>1.0</double>
+		   <double>0.0</double>
+		  </wfnit_values>
+         
+		  <dnit_nitrf_loss>0</dnit_nitrf_loss>
           <dnit_k1>0</dnit_k1>
           <dnit_wf_power>1</dnit_wf_power>
           <actC_parmB>0</actC_parmB>
