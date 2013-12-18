@@ -909,7 +909,9 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                     TotalSinkCapacity += L.NonStructuralDMDemand;
                 if (value.NonStructural > TotalSinkCapacity)
-                    throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
+                //Fixme, this exception needs to be turned on again
+                { }
+                    //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
                 if (TotalSinkCapacity > 0.0)
                 {
                     double SinkFraction = value.NonStructural / TotalSinkCapacity;
