@@ -1143,7 +1143,7 @@ namespace Models.Soils
 
         //[Input(IsOptional = true)]
         [Units("mm")]
-        private double residueinterception = 0.0;     //residue interception loss (mm)
+        public double residueinterception = 0.0;     //residue interception loss (mm)
 
         //end of soilwat2_get_environ_variables()
 

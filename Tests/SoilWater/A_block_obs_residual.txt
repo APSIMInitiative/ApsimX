@@ -1,0 +1,4 @@
+Title dd/mm/yyyy surfaceom_wt surfaceom_cover surfaceom_wterror surfaceom_covererror
+() () (kg/ha) (%) (std_dev) (std_dev)
+Standing_stubble_treatment_a 25/08/2010 2026.0 0.239 * 0.154
+Mown_stubble_treatment_b 26/08/2010 4323.0 0.863 * 0.022
