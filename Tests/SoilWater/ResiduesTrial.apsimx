@@ -217,7 +217,6 @@
           <slope>0</slope>
           <discharge_width>0</discharge_width>
           <catchment_area>0</catchment_area>
-          <residueinterception>0</residueinterception>
           <eo_source />
           <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
