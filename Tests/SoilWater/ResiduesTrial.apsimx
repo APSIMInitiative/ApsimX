@@ -972,10 +972,6 @@ SoilWat.residueinterception = Interception_today;
 	   ]]></Code>
       </Manager>
     </Zone>
-    <Input>
-      <Name>Input</Name>
-      <FileName>a_block_obs_soilwater.txt</FileName>
-    </Input>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
