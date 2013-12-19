@@ -1142,6 +1142,7 @@ namespace Models.Soils
         //used in runoff(as part of TotalInterception parameter) and in infilitration
 
         //[Input(IsOptional = true)]
+        [XmlIgnore]
         [Units("mm")]
         public double residueinterception = 0.0;     //residue interception loss (mm)
 

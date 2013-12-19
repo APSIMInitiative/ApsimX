@@ -990,70 +990,77 @@ SoilWat.residueinterception = Interception_today;
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.LAI</ColumnNames>
+      <ColumnNames>SurfaceOrganicMatter.surfaceom_cover</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
+      <ColumnNames>SurfaceOrganicMatter.surfaceom_wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(2)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(3)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.Wt</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(4)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.N</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(5)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.N</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(6)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.N</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(7)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.N</ColumnNames>
+      <ColumnNames>SoilWater.sw_dep(8)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>SoilWater.sw_dep(9)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
