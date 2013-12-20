@@ -9,6 +9,7 @@ using Models;
 using System.Xml.Serialization;
 using Models.PMF;
 using System.Runtime.Serialization;
+using Models.SurfaceOM;
 
 namespace Models.Soils
 {
@@ -50,6 +51,9 @@ namespace Models.Soils
         private Soil Soil = null;
 
         [Link] ISummary Summary = null;
+
+        [Link]
+        SurfaceOrganicMatter SurfaceOM = null;
 
         #endregion
 
@@ -1108,9 +1112,10 @@ namespace Models.Soils
 
         //taken from soilwat2_get_residue_variables()
 
+        //Removed because can address dirrectly from surfaceOM
         //[Input(IsOptional = true)]
-        [Units("0-1")]
-        private double surfaceom_cover = 0.0;
+        //[Units("0-1")]
+        //private double surfaceom_cover = 0.0;
 
         //end of soilwat2_get_residue_variables()
 
@@ -1804,8 +1809,9 @@ namespace Models.Soils
                 }
                 else
                 {
-                    SummerU = _u;
-                    WinterU = _u;
+                    //Hamish  Commented this out because was overwriting parameters from xml with default parameters from source code
+                    //SummerU = _u;
+                    //WinterU = _u;
                 }
 
                 //cona - can either use (one value for summer and winter) or two different values.
@@ -1824,8 +1830,9 @@ namespace Models.Soils
                 }
                 else
                 {
-                    SummerCona = _cona;
-                    WinterCona = _cona;
+                    //Hamish  Commented this out because was overwriting parameters from xml with default parameters from source code
+                    //SummerCona = _cona;
+                    //WinterCona = _cona;
                 }
 
                 //summer and winter default dates.
@@ -2426,7 +2433,7 @@ namespace Models.Soils
 
             //! add cover known to affect runoff
             //!    ie residue with canopy shading residue         
-            cover_surface_runoff = add_cover(cover_surface_crop, surfaceom_cover);
+            cover_surface_runoff = add_cover(cover_surface_crop, SurfaceOM.surfaceom_cover);
         }
 
 
@@ -2748,7 +2755,7 @@ namespace Models.Soils
             //   ! BUT taking into account that residue can be a mix of
             //   ! residues from various crop types <dms june 95>
 
-            if (surfaceom_cover >= 1.0)
+            if (SurfaceOM.surfaceom_cover >= 1.0)
             {
                 //! We test for 100% to avoid log function failure.
                 //! The algorithm applied here approaches 0 as cover approaches
@@ -2765,7 +2772,7 @@ namespace Models.Soils
                 //!    [DM. Silburn unpublished data, June 95 ]
                 //!    <temporary value - will reproduce Adams et al 75 effect>
                 //!     c%A_to_evap_fact = 0.00022 / 0.0005 = 0.44
-                eos_residue_fract = Math.Pow((1.0 - surfaceom_cover), A_to_evap_fact);
+                eos_residue_fract = Math.Pow((1.0 - SurfaceOM.surfaceom_cover), A_to_evap_fact);
             }
 
             //! Reduce potential soil evap under canopy to that under residue (mulch)
