@@ -455,7 +455,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         [Description("Infiltration")]
-        private double infiltration { get; set; }     //! infiltration (mm)
+        public double infiltration { get; set; }     //! infiltration (mm)
 
         [XmlIgnore]
         [Units("mm")]
@@ -630,11 +630,11 @@ namespace Models.Soils
             }
         }
 
-
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Drained upper limit soil water content for each soil layer")]
-        private double[] dul       //! drained upper limit soil water content for each soil layer 
+        public double[] dul       //! drained upper limit soil water content for each soil layer 
         {
             get
             {
@@ -725,8 +725,9 @@ namespace Models.Soils
 #else
         [Units("0-1")]
 #endif
+        [XmlIgnore]
         [Description("15 bar lower limit of extractable soil water for each soil layer")]
-        private double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
+        public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
             get
             {
@@ -972,10 +973,10 @@ namespace Models.Soils
             }
         }
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)")]
-        private double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
+        public double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
 
         [Units("mm")]
@@ -983,9 +984,10 @@ namespace Models.Soils
         private double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
 
+        [XmlIgnore]
         [Units("mm")]
         [Description("flow_water[layer] = flux[layer] - flow[layer]")]
-        private double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
+        public double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
         {
             get
             {
@@ -4258,12 +4260,12 @@ namespace Models.Soils
 
             if (irrigation_will_runoff)
             {
-                soilwat2_runoff(rain, runon, (interception + residueinterception), ref runoff_pot);
+                soilwat2_runoff((rain+ irrigation), runon, (interception + residueinterception), ref runoff_pot);
             }
             else
             {
                 //calculate runoff but allow irrigations to runoff just like rain.
-                soilwat2_runoff((rain + irrigation), runon, (interception + residueinterception), ref runoff_pot);
+                soilwat2_runoff(rain, runon, (interception + residueinterception), ref runoff_pot);
             }
 
 
@@ -4501,9 +4503,9 @@ namespace Models.Soils
             {
                 irrigation_will_runoff = false;
                 String warningText;
-                warningText = "In the irrigation 'apply' command in the line above, 'will_runoff' was set to 0 not 1" + "\n"
+                warningText = "In the irrigation 'apply' command in the line above, 'will_runoff' was set to false" + "\n"
                 + "If irrigation depth > 0 (mm), " + "\n"
-                 + "then you can not choose to have irrigation runoff like rain as well. ('will_runoff = 1')" + "\n"
+                 + "then you can not choose to have irrigation runoff like rain as well. ('will_runoff = true')" + "\n"
                  + "ie. Subsurface irrigations can not runoff like rain does. (Only surface irrigation can)" + "\n"
                  + "nb. Subsurface irrigations will cause runoff if ponding occurs though.";
                 IssueWarning(warningText);
