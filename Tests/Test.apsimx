@@ -750,8 +750,6 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <soil_heat>-0.32999999523162843</soil_heat>
-        <dryleaffraction>1</dryleaffraction>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -1448,6 +1446,10 @@
                 <string>[Leaf].CohortDead</string>
               </Propertys>
             </Dead>
+            <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
+            <StartFractionExpanded>0.86262315376711707</StartFractionExpanded>
+            <FractionNextleafExpanded>0.89989693128355064</FractionNextleafExpanded>
+            <_ExpandedNodeNo>34.89989693128355</_ExpandedNodeNo>
             <MaxCover>1</MaxCover>
             <InitialLeaf>
               <Name>LeafCohort</Name>
@@ -2180,6 +2182,101 @@
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilNitrogen.no3(1)</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Graph</Name>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Left</Type>
+          <Title>Depth (mm)</Title>
+          <Inverted>true</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].AirDry</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].DUL</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].SW</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].SAT</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil].LL15</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <FieldName>[Soil]l.DepthMidPoints</FieldName>
           </Y>
         </Series>
       </Graph>
