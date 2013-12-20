@@ -766,14 +766,6 @@
           <string>[SoilWater].ll15_dep</string>
           <string>[SoilWater].dul_dep</string>
           <string>[SoilWater].drain</string>
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
-          <string />
         </Variables>
         <Events>
           <string>[Clock].EndOfDay</string>
@@ -991,69 +983,6 @@ SoilWat.residueinterception = Interception_today;
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>SurfaceOrganicMatter.surfaceom_wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(2)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(3)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(4)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(5)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(6)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(7)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(8)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(9)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
