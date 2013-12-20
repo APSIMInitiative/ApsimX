@@ -983,13 +983,6 @@ SoilWat.residueinterception = Interception_today;
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
       <ColumnNames>SurfaceOrganicMatter.surfaceom_cover</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
