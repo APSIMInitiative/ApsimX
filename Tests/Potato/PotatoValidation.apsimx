@@ -23,134 +23,6 @@
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
-      <Irrigation>
-        <Name>Irrigation</Name>
-      </Irrigation>
-      <Fertiliser>
-        <Name>Fertiliser</Name>
-        <Definitions>
-          <FertiliserType>
-            <Name>UreaN</Name>
-            <FractionNO3>0</FractionNO3>
-            <FractionNH4>0</FractionNH4>
-            <FractionUrea>1</FractionUrea>
-          </FertiliserType>
-          <FertiliserType>
-            <Name>NO3N</Name>
-            <FractionNO3>1</FractionNO3>
-            <FractionNH4>0</FractionNH4>
-            <FractionUrea>0</FractionUrea>
-          </FertiliserType>
-        </Definitions>
-      </Fertiliser>
-      <Report>
-        <Name>Report</Name>
-        <Variables>
-          <string>[Clock].Today</string>
-          <string>[ExtraVariables].Script.AccumTtemerg</string>
-          <string>[Plant].Phenology.CurrentPhaseName</string>
-          <string>[Plant].Phenology.StageCode.Value</string>
-          <string>[ExtraVariables].Script.AccumPlantN</string>
-          <string>[ExtraVariables].Script.AccumMineralisation</string>
-          <string>[ExtraVariables].Script.AccumDenit</string>
-          <string>[ExtraVariables].Script.AccumFert</string>
-          <string>[ExtraVariables].Script.AccumLeach</string>
-          <string>[ExtraVariables].Script.AccumDetach</string>
-          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[Plant].Root.NSupplyUptake</string>
-          <string>[SoilWater].eo</string>
-          <string>[SoilWater].es</string>
-          <string>[ExtraVariables].Script.SWC</string>
-          <string>[ExtraVariables].Script.DUL</string>
-          <string>[SoilWater].drain</string>
-          <string>[SoilWater].runoff</string>
-          <string>[ExtraVariables].Script.OutFlowLat</string>
-          <string>[SoilWater].pond</string>
-          <string>[ExtraVariables].Script.AccumEO</string>
-          <string>[ExtraVariables].Script.AccumEP</string>
-          <string>[ExtraVariables].Script.AccumES</string>
-          <string>[ExtraVariables].Script.AccumDrainage</string>
-          <string>[ExtraVariables].Script.AccumRunoff</string>
-          <string>[ExtraVariables].Script.AccumRainfall</string>
-          <string>[ExtraVariables].Script.AccumIrrigation</string>
-          <string>[ExtraVariables].Script.AccumOutflowLat</string>
-          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[Plant].Summariser.AboveGround.Wt</string>
-          <string>[Plant].Summariser.BelowGround.Wt</string>
-          <string>[Plant].Summariser.Total.Wt</string>
-          <string>[Plant].Leaf.Dead.Wt</string>
-          <string>[Plant].Leaf.Live.Wt</string>
-          <string>[Plant].Stem.Dead.Wt</string>
-          <string>[Plant].Stem.Live.Wt</string>
-          <string>[Plant].Tuber.Dead.Wt</string>
-          <string>[Plant].Tuber.Live.Wt</string>
-          <string>[Plant].Root.Dead.Wt</string>
-          <string>[Plant].Root.Live.Wt</string>
-          <string>[Plant].Summariser.AboveGround.N</string>
-          <string>[Plant].Summariser.BelowGround.N</string>
-          <string>[Plant].Summariser.Total.N</string>
-          <string>[Plant].Summariser.TotalLive.N</string>
-          <string>[Plant].Summariser.TotalDead.N</string>
-          <string>[Plant].Leaf.Dead.N</string>
-          <string>[Plant].Leaf.Live.N</string>
-          <string>[Plant].Stem.Dead.N</string>
-          <string>[Plant].Stem.Live.N</string>
-          <string>[Plant].Tuber.Dead.N</string>
-          <string>[Plant].Tuber.Live.N</string>
-          <string>[Plant].Root.Live.N</string>
-          <string>[Plant].Root.Dead.N</string>
-          <string>[Plant].Leaf.Live.NConc</string>
-          <string>[Plant].Leaf.Dead.NConc</string>
-          <string>[Plant].Stem.Live.NConc</string>
-          <string>[Plant].Tuber.Live.NConc</string>
-          <string>[Plant].Root.Live.NConc</string>
-          <string>[Plant].Root.WaterSupply</string>
-          <string>[Plant].Root.WaterUptake</string>
-          <string>[Plant].Leaf.Transpiration</string>
-          <string>[Plant].Leaf.WaterDemand</string>
-          <string>[Plant].Root.Depth</string>
-          <string>[Plant].Leaf.CoverGreen</string>
-          <string>[Plant].Leaf.CoverTotal</string>
-          <string>[Plant].Leaf.CoverDead</string>
-          <string>[Plant].Leaf.LAI</string>
-          <string>[Plant].Leaf.LAIDead</string>
-          <string>[Plant].Structure.Height</string>
-          <string>[Plant].Leaf.Fn</string>
-          <string>[Plant].Leaf.Fw</string>
-          <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
-          <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
-          <string>[Plant].Structure.PlantTotalNodeNo</string>
-          <string>[Plant].Structure.TotalStemPopn</string>
-          <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
-          <string>[Plant].Leaf.ExpandingCohortNo</string>
-          <string>[Plant].Leaf.AppearedCohortNo</string>
-          <string>[Plant].Leaf.DeadCohortNo</string>
-          <string>[Plant].Structure.MainStemNodeNo</string>
-          <string>[Plant].Leaf.SenescingCohortNo</string>
-          <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
-          <string>[Plant].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-          <string>[Plant].Stem.MinimumNConc.Value</string>
-          <string>[Plant].Tuber.MinimumNConc.Value</string>
-          <string>[Plant].Root.MinimumNConc.Value</string>
-          <string>[Plant].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-          <string>[Plant].Stem.MaximumNConc.Value</string>
-          <string>[Plant].Tuber.MaximumNConc.Value</string>
-          <string>[Plant].Root.MaximumNConc.Value</string>
-          <string>[Plant].Summariser.TotalLive.Wt</string>
-          <string>[Plant].Stem.Live.StructuralWt</string>
-          <string>[Plant].Stem.Live.NonStructuralWt</string>
-          <string>[Plant].Leaf.SpecificArea</string>
-          <string>[Plant].Summariser.TotalDead.Wt</string>
-          <string>[Plant].Leaf.ExpandedCohortNo</string>
-          <string />
-          <string />
-        </Variables>
-        <Events>
-          <string>[Clock].EndOfDay</string>
-        </Events>
-      </Report>
       <Soil>
         <Name>Templeton</Name>
         <RecordNumber>0</RecordNumber>
@@ -289,11 +161,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
-          <SummerCona>3</SummerCona>
-          <SummerU>6</SummerU>
+          <SummerCona>4.4</SummerCona>
+          <SummerU>9</SummerU>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>3</WinterCona>
-          <WinterU>6</WinterU>
+          <WinterCona>4.4</WinterCona>
+          <WinterU>9</WinterU>
           <WinterDate>1-Apr</WinterDate>
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35.4</DiffusSlope>
@@ -436,12 +308,36 @@
           <potHydrol_parmB>0</potHydrol_parmB>
           <potHydrol_parmC>0</potHydrol_parmC>
           <potHydrol_parmD>0</potHydrol_parmD>
-          <nitrification_pot>0</nitrification_pot>
-          <nh4_at_half_pot>0</nh4_at_half_pot>
-          <dnit_rate_coeff>0</dnit_rate_coeff>
+          <nitrification_pot>40</nitrification_pot>
+          <nh4_at_half_pot>90</nh4_at_half_pot>
+          <wfnit_index>
+            <double>0</double>
+            <double>0.25</double>
+            <double>1</double>
+            <double>2</double>
+          </wfnit_index>
+          <wfnit_values>
+            <double>0</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+          </wfnit_values>
+          <pHf_nit_pH>
+            <double>4.5</double>
+            <double>6</double>
+            <double>8</double>
+            <double>9</double>
+          </pHf_nit_pH>
+          <pHf_nit_values>
+            <double>0</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+          </pHf_nit_values>
+          <dnit_rate_coeff>25.1</dnit_rate_coeff>
           <dnit_nitrf_loss>0</dnit_nitrf_loss>
           <dnit_k1>0</dnit_k1>
-          <dnit_wf_power>0</dnit_wf_power>
+          <dnit_wf_power>1</dnit_wf_power>
           <actC_parmB>0</actC_parmB>
           <actC_parmA>0</actC_parmA>
           <N2N2O_parmA>0</N2N2O_parmA>
@@ -562,6 +458,26 @@
           <PHUnits>Water</PHUnits>
         </Sample>
       </Soil>
+      <Irrigation>
+        <Name>Irrigation</Name>
+      </Irrigation>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+        <Definitions>
+          <FertiliserType>
+            <Name>UreaN</Name>
+            <FractionNO3>0</FractionNO3>
+            <FractionNH4>0</FractionNH4>
+            <FractionUrea>1</FractionUrea>
+          </FertiliserType>
+          <FertiliserType>
+            <Name>NO3N</Name>
+            <FractionNO3>1</FractionNO3>
+            <FractionNH4>0</FractionNH4>
+            <FractionUrea>0</FractionUrea>
+          </FertiliserType>
+        </Definitions>
+      </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
         <crit_residue_wt>2000</crit_residue_wt>
@@ -584,7 +500,7 @@
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
             <no3ppm>10</no3ppm>
-            <specific_area>0.0001</specific_area>
+            <specific_area>0.0005</specific_area>
             <cf_contrib>1</cf_contrib>
             <pot_decomp_rate>0.1</pot_decomp_rate>
             <fr_c>
@@ -1359,6 +1275,10 @@
                 <string>[Leaf].CohortDead</string>
               </Propertys>
             </Dead>
+            <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
+            <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
+            <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
+            <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
             <MaxCover>1</MaxCover>
             <InitialLeaf>
               <Name>LeafCohort</Name>
@@ -1782,139 +1702,6 @@
           </GenericAboveGroundOrgan>
         </Organs>
       </Plant>
-      <Graph>
-        <Name>SoilWater</Name>
-        <Axis>
-          <Name>Axis 1</Name>
-          <Type>Left</Type>
-          <Title>Soil water (mm)</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Name>Axis</Name>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Name>Series</Name>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>SoilWater.sw_dep(1)</FieldName>
-          </Y>
-        </Series>
-      </Graph>
-      <Graph>
-        <Name>Biomass</Name>
-        <Axis>
-          <Name>Axis 1</Name>
-          <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Name>Axis</Name>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Name>Series</Name>
-          <Title>Leaf</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.Live.Wt</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Stem</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16760704</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Stem.Live.Wt</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Tuber</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Tuber.Live.Wt</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Root</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Root.Live.Wt</FieldName>
-          </Y>
-        </Series>
-      </Graph>
       <Manager>
         <Name>PotatoSowingRule</Name>
         <Script>
@@ -2023,7 +1810,8 @@ public class Script : Model
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant Plant;          
 [Link] WeatherFile Met;   
-[Link] Fertiliser Fert;  
+[Link] Fertiliser Fert;
+[Link] Irrigation Irrig;  
                
 [XmlIgnore] public bool InitialDay { get; set; }
 
@@ -2036,6 +1824,7 @@ public class Script : Model
 [XmlIgnore] public double DeltaSoilOMN { get; set; }
 [XmlIgnore] public double DeltaSurfaceOMN { get; set; }
 [XmlIgnore] public double DeltaSoilMineralN { get; set; }
+[XmlIgnore] public double SoilNitrogenContent { get; set; }
 
 [XmlIgnore] public double AccumEO { get; set; }
 [XmlIgnore] public double AccumEP { get; set; }
@@ -2070,6 +1859,7 @@ AccumDetach = 0;
 DeltaSoilOMN = 0;
 DeltaSurfaceOMN = 0;
 DeltaSoilMineralN = 0;
+SoilNitrogenContent = 0;
 
 AccumEO = 0;
 AccumEP = 0;
@@ -2087,8 +1877,8 @@ SWC = 0;
 DUL = 0;
 }	   
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("EndOfDay")]
+private void OnEndOfDay(object sender, EventArgs e)
 {
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
@@ -2105,7 +1895,7 @@ private void OnStartOfDay(object sender, EventArgs e)
 //!!!!!! Nitrogen balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
-AccumFert += Fert.NitrogenApplied; //returns zero
+AccumFert += Fert.NitrogenApplied;
 DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 double MineralN = 0;
@@ -2120,14 +1910,15 @@ double OrganicN = 0;
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
+SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= SoilWat.eo;
 AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= SoilWat.es;  //returns zero
-//AccumDrainage -= SoilWat.drain; //Returns zero
-//AccumRunoff -= SoilWat.runoff; //Returns zero
-//AccumIrrigation += SoilWat.irrigation; //Returns zero
+AccumES -= SoilWat.es; 
+AccumDrainage -= SoilWat.drain; 
+AccumRunoff -= SoilWat.runoff; 
+AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
 DUL = 0;
@@ -2140,17 +1931,179 @@ double OutFlowLat = 0;
    }
 AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
+}
+
+[EventSubscribe("StartOfDay")]
+private void OnStartOfDay(object sender, EventArgs e)
+{
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 if (Plant.Phenology.StageCode.Value >= 3)
 AccumTtemerg += Plant.Phenology.ThermalTime.Value;
 }
 }
-
-
 }
 	   ]]></Code>
       </Manager>
+      <Operations>
+        <Name>Operations</Name>
+        <Operation>
+          <Date>2003-10-20T00:00:00</Date>
+          <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-25T00:00:00</Date>
+          <Action>Fertiliser.Apply(69, Fertiliser.Types.UreaN,0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-26T00:00:00</Date>
+          <Action>Irrigation.Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-04T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-16T00:00:00</Date>
+          <Action>Irrigation.Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-22T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-30T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-08T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-21T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-31T00:00:00</Date>
+          <Action>Irrigation.Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-02-27T00:00:00</Date>
+          <Action>Irrigation.Apply(25);</Action>
+        </Operation>
+      </Operations>
+      <Report>
+        <Name>Report</Name>
+        <Variables>
+          <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.AccumTtemerg</string>
+          <string>[Plant].Phenology.CurrentPhaseName</string>
+          <string>[Plant].Phenology.StageCode.Value</string>
+          <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumMineralisation</string>
+          <string>[ExtraVariables].Script.AccumDenit</string>
+          <string>[ExtraVariables].Script.AccumFert</string>
+          <string>[ExtraVariables].Script.AccumLeach</string>
+          <string>[ExtraVariables].Script.AccumDetach</string>
+          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+          <string>[Plant].Root.NSupplyUptake</string>
+          <string>[SoilWater].eo</string>
+          <string>[SoilWater].es</string>
+          <string>[ExtraVariables].Script.SWC</string>
+          <string>[ExtraVariables].Script.DUL</string>
+          <string>[SoilWater].drain</string>
+          <string>[SoilWater].runoff</string>
+          <string>[ExtraVariables].Script.OutFlowLat</string>
+          <string>[SoilWater].pond</string>
+          <string>[ExtraVariables].Script.AccumEO</string>
+          <string>[ExtraVariables].Script.AccumEP</string>
+          <string>[ExtraVariables].Script.AccumES</string>
+          <string>[ExtraVariables].Script.AccumDrainage</string>
+          <string>[ExtraVariables].Script.AccumRunoff</string>
+          <string>[ExtraVariables].Script.AccumRainfall</string>
+          <string>[ExtraVariables].Script.AccumIrrigation</string>
+          <string>[ExtraVariables].Script.AccumOutflowLat</string>
+          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[Plant].Summariser.AboveGround.Wt</string>
+          <string>[Plant].Summariser.BelowGround.Wt</string>
+          <string>[Plant].Summariser.Total.Wt</string>
+          <string>[Plant].Leaf.Dead.Wt</string>
+          <string>[Plant].Leaf.Live.Wt</string>
+          <string>[Plant].Stem.Dead.Wt</string>
+          <string>[Plant].Stem.Live.Wt</string>
+          <string>[Plant].Tuber.Dead.Wt</string>
+          <string>[Plant].Tuber.Live.Wt</string>
+          <string>[Plant].Root.Dead.Wt</string>
+          <string>[Plant].Root.Live.Wt</string>
+          <string>[Plant].Summariser.AboveGround.N</string>
+          <string>[Plant].Summariser.BelowGround.N</string>
+          <string>[Plant].Summariser.Total.N</string>
+          <string>[Plant].Summariser.TotalLive.N</string>
+          <string>[Plant].Summariser.TotalDead.N</string>
+          <string>[Plant].Leaf.Dead.N</string>
+          <string>[Plant].Leaf.Live.N</string>
+          <string>[Plant].Stem.Dead.N</string>
+          <string>[Plant].Stem.Live.N</string>
+          <string>[Plant].Tuber.Dead.N</string>
+          <string>[Plant].Tuber.Live.N</string>
+          <string>[Plant].Root.Live.N</string>
+          <string>[Plant].Root.Dead.N</string>
+          <string>[Plant].Leaf.Live.NConc</string>
+          <string>[Plant].Leaf.Dead.NConc</string>
+          <string>[Plant].Stem.Live.NConc</string>
+          <string>[Plant].Tuber.Live.NConc</string>
+          <string>[Plant].Root.Live.NConc</string>
+          <string>[Plant].Root.WaterSupply</string>
+          <string>[Plant].Root.WaterUptake</string>
+          <string>[Plant].Leaf.Transpiration</string>
+          <string>[Plant].Leaf.WaterDemand</string>
+          <string>[Plant].Root.Depth</string>
+          <string>[Plant].Leaf.CoverGreen</string>
+          <string>[Plant].Leaf.CoverTotal</string>
+          <string>[Plant].Leaf.CoverDead</string>
+          <string>[Plant].Leaf.LAI</string>
+          <string>[Plant].Leaf.LAIDead</string>
+          <string>[Plant].Structure.Height</string>
+          <string>[Plant].Leaf.Fn</string>
+          <string>[Plant].Leaf.Fw</string>
+          <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
+          <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
+          <string>[Plant].Structure.PlantTotalNodeNo</string>
+          <string>[Plant].Structure.TotalStemPopn</string>
+          <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
+          <string>[Plant].Leaf.ExpandingCohortNo</string>
+          <string>[Plant].Leaf.AppearedCohortNo</string>
+          <string>[Plant].Leaf.DeadCohortNo</string>
+          <string>[Plant].Structure.MainStemNodeNo</string>
+          <string>[Plant].Leaf.SenescingCohortNo</string>
+          <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
+          <string>[Plant].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+          <string>[Plant].Stem.MinimumNConc.Value</string>
+          <string>[Plant].Tuber.MinimumNConc.Value</string>
+          <string>[Plant].Root.MinimumNConc.Value</string>
+          <string>[Plant].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+          <string>[Plant].Stem.MaximumNConc.Value</string>
+          <string>[Plant].Tuber.MaximumNConc.Value</string>
+          <string>[Plant].Root.MaximumNConc.Value</string>
+          <string>[Plant].Summariser.TotalLive.Wt</string>
+          <string>[Plant].Stem.Live.StructuralWt</string>
+          <string>[Plant].Stem.Live.NonStructuralWt</string>
+          <string>[Plant].Leaf.SpecificArea</string>
+          <string>[Plant].Summariser.TotalDead.Wt</string>
+          <string>[Plant].Leaf.ExpandedCohortNo</string>
+          <string>[SoilWater].sw_dep</string>
+          <string>[SoilNitrogen].no3</string>
+          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+          <string>[Plant].Arbitrator.NDemand</string>
+          <string />
+          <string />
+        </Variables>
+        <Events>
+          <string>[Clock].EndOfDay</string>
+        </Events>
+      </Report>
       <Graph>
         <Name>N balance components</Name>
         <Axis>
@@ -2162,7 +2115,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
         <Axis>
           <Name>Axis</Name>
           <Type>Left</Type>
-          <Title>Y axis title</Title>
+          <Title>N (kg/ha)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Series>
@@ -2334,423 +2287,12 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           </Y>
         </Series>
       </Graph>
-      <Operations>
-        <Name>Operations</Name>
-        <Operation>
-          <Date>2003-10-20T00:00:00</Date>
-          <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-25T00:00:00</Date>
-          <Action>Fertiliser.Apply(69, Fertiliser.Types.UreaN,0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-26T00:00:00</Date>
-          <Action>Irrigation.Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-04T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-16T00:00:00</Date>
-          <Action>Irrigation.Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-22T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-30T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-08T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-21T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-31T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-02-27T00:00:00</Date>
-          <Action>Irrigation.Apply(25);</Action>
-        </Operation>
-      </Operations>
-      <Graph>
-        <Name>LeafCohorts</Name>
-        <Axis>
-          <Name>Axis 1</Name>
-          <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Name>Axis</Name>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Name>Series</Name>
-          <Title>Senescing Cohorts</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Total Stem Popn</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Structure.TotalStemPopn</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Expanding Nodes</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>TotalNodes</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Dead Cohorts</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Appeared Cohorts</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32704</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Green leaves</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>Expanded Cohorts</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-12582784</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
-          </Y>
-        </Series>
-      </Graph>
-      <Graph>
-        <Name>NBalanceComponents</Name>
-        <Axis>
-          <Name>Axis 1</Name>
-          <Type>Left</Type>
-          <Title>Nitrogen (kg/ha)</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Name>Axis</Name>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Name>Series</Name>
-          <Title>AccumPlantN</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>AccumFertiliser</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumFert</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>AccumDnit</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>AccumMineralisation</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>AccumLeach</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>DeltaSoilOMN</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>DeltaSurfaceOMN</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388544</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Name>Series</Name>
-          <Title>DeltaSoilMineralN</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-12582784</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <Name>GraphValues</Name>
-            <SimulationName>Test</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
-          </Y>
-        </Series>
-      </Graph>
       <Graph>
         <Name>WaterBalanceComponents</Name>
         <Axis>
           <Name>Axis 1</Name>
           <Type>Left</Type>
-          <Title>Nitrogen (kg/ha)</Title>
+          <Title>Water (mm)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Axis>
@@ -2966,6 +2508,1156 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Plant Biomass components</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388480</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Dead.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Step</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Dead.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Dead.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root Dead</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Dead.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Above Ground Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8372160</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Below Ground Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777088</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.BelowGround.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Total Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.Total.Wt</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Plant Nitrogen components</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Nitrogen (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Live.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Live.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Live.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Live.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388480</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Dead.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Step</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Dead.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Dead.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root Dead</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Dead.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Above Ground Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8372160</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.AboveGround.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Below Ground Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777088</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.BelowGround.N</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Total Wt</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Summariser.Total.N</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Stress factors</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Stress factors (0-1)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Photosynthesis.FT.Value</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Fn</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Fw</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Photosynthesis.FVPD.Value</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Water supply and demand</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777088</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.WaterSupply</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.WaterUptake</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.WaterDemand</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Transpiration</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>SoilWater.eo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Depth</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Structure.Height</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Canopy structure</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Cover Dead</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.CoverDead</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Cover Green</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.CoverGreen</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>CoverTotal</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.CoverTotal</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>LAI</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.LAI</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>LAI Dead</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.LAIDead</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>LeafCohorts</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Senescing Cohorts</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Total Stem Popn</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Structure.TotalStemPopn</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Expanding Nodes</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65281</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>TotalNodes</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Dead Cohorts</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Appeared Cohorts</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Green leaves</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Expanded Cohorts</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-12582784</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
+          </Y>
+        </Series>
+      </Graph>
+      <Graph>
+        <Name>Nitrogen %</Name>
+        <Axis>
+          <Name>Axis 1</Name>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Name>Axis</Name>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Name>Series</Name>
+          <Title>Leaf</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Leaf.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Stem</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Stem.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Tuber</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Tuber.Live.Wt</FieldName>
+          </Y>
+        </Series>
+        <Series>
+          <Name>Series</Name>
+          <Title>Root</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <Name>GraphValues</Name>
+            <SimulationName>Test</SimulationName>
+            <TableName>Report</TableName>
+            <FieldName>Plant.Root.Live.Wt</FieldName>
           </Y>
         </Series>
       </Graph>
