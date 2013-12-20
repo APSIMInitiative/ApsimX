@@ -164,6 +164,12 @@ namespace UserInterface.Views
         void AddRightHandView(UserControl Control);
 
         /// <summary>
+        /// Ask about saving.
+        /// </summary>
+        /// <returns>-1, 0, 1</returns>
+        Int32 AskToSave();
+
+        /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>

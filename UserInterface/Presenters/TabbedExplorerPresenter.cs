@@ -56,8 +56,10 @@ namespace UserInterface.Presenters
         public bool AllowClose()
         {
             bool ok = true;
+
             foreach (ExplorerPresenter presenter in Presenters)
                 ok = presenter.Save() && ok;
+
             return ok;
         }
         
