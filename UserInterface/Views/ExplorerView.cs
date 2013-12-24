@@ -400,7 +400,7 @@ namespace UserInterface.Views
             // Remove unwanted nodes if necessary.
             while (Args.Descriptions.Count < Nodes.Count)
             {
-                Console.WriteLine("Removing ndoes");
+                Console.WriteLine("Removing nodes");
                 Nodes.RemoveAt(0);
             }
 

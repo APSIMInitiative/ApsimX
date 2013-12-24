@@ -159,9 +159,9 @@ namespace UserInterface.Presenters
                     ExplorerPresenter.CommandHistory.Add(Cmd, true);
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                // invalid xml from clipboard.
+                Console.WriteLine(exception.Message); // invalid xml from clipboard.
             }
         }
 
@@ -206,7 +206,7 @@ namespace UserInterface.Presenters
             C.Do(null);
             if (C.ok)
             {
-                ExplorerView.ShowMessage("Simulation complete", DataStore.ErrorLevel.Information);
+                ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
                 if (DateTime.Now.Month == 12)
                 {
                     SoundPlayer player = new SoundPlayer(Properties.Resources.notes);
@@ -214,7 +214,7 @@ namespace UserInterface.Presenters
                 }
             }
             else
-                ExplorerView.ShowMessage("Simulation complete with errors", DataStore.ErrorLevel.Error);
+                ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete with errors", DataStore.ErrorLevel.Error);
         }
 
         /// <summary>

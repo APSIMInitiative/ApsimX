@@ -34,8 +34,24 @@ namespace UserInterface.Commands
                 XmlDocument Doc = new XmlDocument();
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
+                FromModel.Parent = ToParent;
                 ToParent.AddModel(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+
+                // need to resolve all the links and event handlers for the pasted simulation/model
+                Utility.ModelFunctions.ResolveLinks((Model)FromModel);
+
+                // ensure the simulation has all the events connected and models initialised
+                Model sim = FromModel;
+                while ((sim != null) && !(sim is Simulation))
+                    sim = (Model)sim.Parent;
+
+                if (sim != null)
+                {
+                    Utility.ModelFunctions.ConnectEventsInAllModels(sim);
+                    ((Simulation)sim).Initialise();
+                }
+
                 ModelAdded = true;
             }
             catch (Exception)
