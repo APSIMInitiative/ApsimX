@@ -609,6 +609,11 @@ namespace UserInterface.Views
             StatusWindow.Visible = false;
         }
 
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StatusWindow.Clear();
+        }
+
     }
 }
 
