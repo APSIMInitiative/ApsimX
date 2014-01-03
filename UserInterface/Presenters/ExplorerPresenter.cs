@@ -78,6 +78,9 @@ namespace UserInterface.Presenters
             if (store == null)
                 throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
 
+            // this handler is attached here and is broken when Simulations.DisconnectAllEvents() is called.
+            // The subsequent call to ConnectAllEvents() will not reconnect this so there needs to be 
+            // another mechanism for this reattachment. NH
             store.MessageWritten += OnMessageWritten;
             try
             {

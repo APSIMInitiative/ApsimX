@@ -38,24 +38,30 @@ namespace UserInterface.Commands
                 ToParent.AddModel(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
 
-                // need to resolve all the links and event handlers for the pasted simulation/model
-                Utility.ModelFunctions.ResolveLinks((Model)FromModel);
+                // ensure the simulations have all the events connected and links resolved
+                Model sims = FromModel;
+                while ((sims != null) && !(sims is Simulations))
+                    sims = (Model)sims.Parent;
 
-                // ensure the simulation has all the events connected and models initialised
+                ((Simulations)sims).ResolveAllLinks();
+                ((Simulations)sims).DisconnectAllEvents();
+                ((Simulations)sims).ConnectAllEvents();
+
+                // initialise the simulation
                 Model sim = FromModel;
                 while ((sim != null) && !(sim is Simulation))
                     sim = (Model)sim.Parent;
 
                 if (sim != null)
                 {
-                    Utility.ModelFunctions.ConnectEventsInAllModels(sim);
                     ((Simulation)sim).Initialise();
                 }
 
                 ModelAdded = true;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                Console.WriteLine(exp.Message);
                 ModelAdded = false;
             }
 

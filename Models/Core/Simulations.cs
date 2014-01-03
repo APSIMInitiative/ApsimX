@@ -69,18 +69,49 @@ namespace Models.Core
         /// </summary>
         public void Initialise()
         {
-            Utility.ModelFunctions.ResolveLinks(this);
-
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
-
-            // Initialise all simulations.
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    (Model as Simulation).Initialise();
+            ResolveAllLinks();
+            ConnectAllEvents(); // required for Initialised() calls
+            InitialiseAllSimulations();
         }
 
+        public void InitialiseAllSimulations()
+        {
+            foreach (object aModel in Models)
+            {
+                if (aModel is Simulation)
+                {
+                    (aModel as Simulation).Initialise();
+                }
+            }
+        }
+
+        public void ResolveAllLinks()
+        {
+            Utility.ModelFunctions.ResolveLinks(this);
+        }
+
+        public void ConnectAllEvents()
+        {
+            foreach (object aModel in Models)
+            {
+                if (aModel is Simulation)
+                {
+                    (aModel as Simulation).ConnectAllEvents();
+                }
+            }
+        }
+
+        public void DisconnectAllEvents()
+        {
+            foreach (object aModel in Models)
+            {
+                if (aModel is Simulation)
+                {
+                    (aModel as Simulation).DisconnectAllEvents();
+                }
+            }
+        }
+        
         /// <summary>
         /// Write the specified simulation set to the specified filename
         /// </summary>
@@ -107,9 +138,8 @@ namespace Models.Core
         public bool Run()
         {
             // Connect all events for the simulations we're about to run.
-            //foreach (object Model in Models)
-            //    if (Model is Simulation)
-            //        Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
+//            DisconnectAllEvents();  // cleanup any remaining
+//            ConnectAllEvents();
 
             // Invoke the AllCommencing event.
             if (AllCommencing != null)
@@ -124,10 +154,6 @@ namespace Models.Core
             if (AllCompleted != null)
                 AllCompleted(this, new EventArgs());
 
-            // Disconnect all events for the simulations we just ran.
-            //foreach (object Model in Models)
-            //    if (Model is Simulation)
-            //        Utility.ModelFunctions.DisconnectEventsInAllModels(Model as Simulation);
             return ok;
         }
 
@@ -136,18 +162,16 @@ namespace Models.Core
         /// </summary>
         public bool Run(Simulation Sim)
         {
-            //Utility.ModelFunctions.ConnectEventsInAllModels(Sim);
-
             if (AllCommencing != null)
                 AllCommencing(this, new EventArgs());
 
-            Simulation Simulation = Sim as Simulation;
-            bool ok = Simulation.Run();
+            Simulation simulation = Sim as Simulation;
+//            simulation.DisconnectAllEvents();  // cleanup any remaining
+//            simulation.ConnectAllEvents();
+            bool ok = simulation.Run();
 
             if (AllCompleted != null)
                 AllCompleted(this, new EventArgs());
-
-            //Utility.ModelFunctions.DisconnectEventsInAllModels(Sim);
 
             return ok;
         }

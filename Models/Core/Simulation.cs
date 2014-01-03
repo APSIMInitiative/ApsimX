@@ -35,16 +35,21 @@ namespace Models.Core
         /// </summary>
         public bool Run()
         {
-            bool ok;
+            bool ok = false;
             try
             {
                 if (Initialised != null)
+                {
                     Initialised(this, new EventArgs());
+                }
 
                 if (Commenced != null)
+                {
                     Commenced.Invoke(this, new EventArgs());
-
-                ok = true;
+                    ok = true;
+                }
+                else
+                    Summary.WriteError("Cannot invoke Commenced!");
             }
             catch (Exception err)
             {
@@ -59,7 +64,10 @@ namespace Models.Core
             }
 
             if (Completed != null)
+            {
                 Completed.Invoke(this, new EventArgs());
+                ok &= true;
+            }
 
             return ok;
         }
@@ -76,7 +84,20 @@ namespace Models.Core
                 Completed.Invoke(this, new EventArgs());
         }
 
+        public void ConnectAllEvents()
+        {
+            Utility.ModelFunctions.ConnectEventsInAllModels(this);
+        }
 
+        public void DisconnectAllEvents()
+        {
+            Utility.ModelFunctions.DisconnectEventsInAllModels(this);
+        }
+
+        public void ResolveLinks()
+        {
+            Utility.ModelFunctions.ResolveLinks(this);
+        }
     }
 
 }

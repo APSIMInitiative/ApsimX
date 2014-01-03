@@ -70,8 +70,8 @@ namespace Models
 
                     // We don't want the event connections added by the line above "Simulations.AddModel". Remove
                     // them and then connect all events in all models.
-                    Utility.ModelFunctions.DisconnectEventsInAllModels(newModels[i]);
-                    Utility.ModelFunctions.ConnectEventsInAllModels(newModels[i]);
+                    (newModels[i] as Simulation).DisconnectAllEvents();
+                    (newModels[i] as Simulation).ConnectAllEvents();
 
                     // Need to initialise now because Manager modules won't have created their Script child
                     // modules yet.
