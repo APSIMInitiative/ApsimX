@@ -1,6 +1,7 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 #setwd("c:\\ApsimX\\ApsimX") # for testing only
+
 library("XML")
 library("RSQLite")
 library("RODBC")
@@ -8,12 +9,12 @@ library("RODBC")
 args <- commandArgs(TRUE)
 #args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "Windows_NT", 500) # for testing only 
 
-#if(length(args) == 0)
-#  stop("Usage: rscript RunTest.R <path to .apsimx>")
+if(length(args) == 0)
+  stop("Usage: rscript RunTest.R <path to .apsimx>")
 
 args[1] <- ifelse(is.na(unlist(strsplit(args[1], ".apsimx", fixed = TRUE))), args[1], unlist(strsplit(args[1], ".apsimx", fixed = TRUE)))
-#dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
-#connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
+dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
+connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
 
 source("Tests/RTestSuite/tests.R")
 
@@ -87,12 +88,9 @@ for (ind in c(1:length(groupdf))){
   }
 }
 print(results)
-<<<<<<< Updated upstream
-#disabled for infrastructure testing
-#sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-#odbcCloseAll()
-=======
+
+sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
 odbcCloseAll()
->>>>>>> Stashed changes
+
 
 if (all(results) == FALSE) stop("One or more tests failed.")
