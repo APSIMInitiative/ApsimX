@@ -37,7 +37,6 @@ Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   output <- cbind(output, paste(params, collapse=","))
   names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
   buildRecord <<- rbind(buildRecord, output)  
- # print(head(output, n=10))
   return(passed)
 }
 

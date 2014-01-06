@@ -87,8 +87,12 @@ for (ind in c(1:length(groupdf))){
   }
 }
 print(results)
+<<<<<<< Updated upstream
 #disabled for infrastructure testing
 #sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
 #odbcCloseAll()
+=======
+odbcCloseAll()
+>>>>>>> Stashed changes
 
 if (all(results) == FALSE) stop("One or more tests failed.")
