@@ -207,11 +207,16 @@ namespace UserInterface.Presenters
             if (C.ok)
             {
                 ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
+                SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)
                 {
-                    SoundPlayer player = new SoundPlayer(Properties.Resources.notes);
-                    player.Play();
+                    player.Stream = Properties.Resources.notes;
                 }
+                else
+                {
+                    player.Stream = Properties.Resources.success;
+                }
+                player.Play();
             }
             else
                 ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete with errors", DataStore.ErrorLevel.Error);
