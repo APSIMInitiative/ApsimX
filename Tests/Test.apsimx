@@ -2015,7 +2015,7 @@
           <PlantingDepth>150</PlantingDepth>
           <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
           <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>2003-11-10T00:00:00</SowingDate>
+          <SowingDate>2002-11-10T00:00:00</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
