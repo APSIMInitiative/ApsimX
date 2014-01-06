@@ -2112,7 +2112,7 @@
         <Name>FertiliserRule</Name>
         <Script>
           <Name>Script</Name>
-          <ApplicationAmount>500</ApplicationAmount>
+          <ApplicationAmount>00</ApplicationAmount>
           <FertType>NO3N</FertType>
           <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
         </Script>
