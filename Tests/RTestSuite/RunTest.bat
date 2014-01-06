@@ -1,7 +1,6 @@
 @echo off
 
-rem Go back to the ApsimX root directory.
-cd ..\..
-
-"C:\Program Files\R\R-3.0.1\bin\Rscript.exe" Tests\RTestSuite\RunTest.R %1 
-pause
+for /R Tests %%A in (*.apsimx) do (
+  "C:\Program Files\R\R-3.0.1\bin\x64\RScript" Tests\RTestSuite\RunTest.R "%%~dpnA" %OS% %BUILD_NUMBER%
+  if ERRORLEVEL == 1 (echo exit 1)
+)
