@@ -17,6 +17,7 @@ source("Tests/RTestSuite/tests.R")
 files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE)
 
 for (fileNumber in 1:length(files)){
+  print(files[fileNumber])
   dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
   connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
   
