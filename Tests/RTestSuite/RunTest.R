@@ -7,7 +7,7 @@ library("RSQLite")
 library("RODBC")
 
 args <- commandArgs(TRUE)
-#args <- c("C:\\ApsimX\\ApsimX\\Tests\\Test.apsimx", "Windows_NT", 500) # for testing only 
+#args <- c("Windows_NT", 500) # for testing only 
 
 if(length(args) == 0)
   stop("Usage: rscript RunTest.R <path to .apsimx>")
@@ -92,7 +92,7 @@ for (fileNumber in 1:length(files)){
   }
   print(results)
   
-#  sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+  sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
   odbcCloseAll()
 }
 
