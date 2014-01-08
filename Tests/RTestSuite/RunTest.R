@@ -94,7 +94,7 @@ for (fileNumber in 1:length(files)){
   }
   print(results)
   
-  #sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+  sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
   odbcCloseAll()
 }
 
