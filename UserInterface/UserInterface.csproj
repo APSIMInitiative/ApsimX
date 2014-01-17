@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -69,6 +70,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Presenters\CreatorPresenter.cs" />
+    <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
@@ -92,6 +94,12 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\MemoView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MemoView.Designer.cs">
+      <DependentUpon>MemoView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\SummaryView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,6 +211,9 @@
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MemoView.resx">
+      <DependentUpon>MemoView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SummaryView.resx">
       <DependentUpon>SummaryView.cs</DependentUpon>
@@ -447,6 +458,7 @@
     <None Include="Resources\Creator16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
