@@ -50,6 +50,7 @@ namespace Models.Core
         [XmlElement(typeof(WeatherFile))]
         [XmlElement(typeof(Log))]
         [XmlElement(typeof(Creator))]
+        [XmlElement(typeof(Memo))]
         public List<Model> Children { get; set; }
 
          /// <summary>
