@@ -33,6 +33,7 @@ namespace Models.Core
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
+        [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
         [XmlElement(typeof(Models.Soils.Soil))]
         [XmlElement(typeof(Models.SurfaceOM.SurfaceOrganicMatter))]
         [XmlElement(typeof(Clock))]
