@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{79CB308E-BC40-48CE-A2FD-06869D31320C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importer", "Models\Importer\Importer.csproj", "{075F2644-F14E-4010-BA52-35E4B0011835}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ApsimX.vsmdi
@@ -57,6 +59,16 @@ Global
 		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|x86.ActiveCfg = Release|Any CPU
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|x86.ActiveCfg = Debug|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|x86.Build.0 = Debug|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|Any CPU.ActiveCfg = Release|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|Mixed Platforms.Build.0 = Release|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|x86.ActiveCfg = Release|x86
+		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
