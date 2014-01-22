@@ -31,8 +31,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialise everything
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public void OnCommencing()
         {
             CumulativeVD = 0;
         }

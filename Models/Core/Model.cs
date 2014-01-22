@@ -138,7 +138,8 @@ namespace Models.Core
 
         /// <summary>
         /// Return a list of all models in scope. If a Type is specified then only those models
-        /// of that type will be returned. Never returns null. May return an empty array.
+        /// of that type will be returned. Never returns null. May return an empty array. Does not
+        /// return models outside of a simulation.
         /// </summary>
         public Model[] FindAll(Type modelType = null)
         {
@@ -147,39 +148,34 @@ namespace Models.Core
             if (!typeof(Zone).IsAssignableFrom(this.GetType()))
                 m = LocateParent(typeof(Zone));
 
-            // Get a list of children (resursively) of this zone.
-            List<Model> modelsInScope = m.ModelsRecursively(modelType);
-
-            modelsInScope.Add(m);
-
-            // Add in the children of the zone(s) above.
-            while (m.Parent != null)
+            if (m != null)
             {
-                m = m.Parent;
-                if (m is Simulations)
+                // Get a list of children (resursively) of this zone.
+                List<Model> modelsInScope = m.ModelsRecursively(modelType);
+
+                modelsInScope.Add(m);
+
+                // Add in the children of the zone(s) above.
+                while (m.Parent != null && !(m.Parent is Simulations))
                 {
-                    foreach (Model child in m.Models)
-                    {
-                        if (child.GetType() != typeof(Simulation))
-                            modelsInScope.Add(child);
-                    }
+                    m = m.Parent;
+                   
+                    modelsInScope.AddRange(m.Models);
                     modelsInScope.Add(m);
                 }
-                else
-                    modelsInScope.AddRange(m.Models);
-                modelsInScope.Add(m);
-            }
 
-            if (modelType != null)
-            {
-                List<Model> modelsOfCorrectType = new List<Model>();
-                foreach (Model model in modelsInScope)
-                    if (modelType.IsAssignableFrom(model.GetType()))
-                        modelsOfCorrectType.Add(model);
-                return modelsOfCorrectType.Distinct().ToArray();
+                if (modelType != null)
+                {
+                    List<Model> modelsOfCorrectType = new List<Model>();
+                    foreach (Model model in modelsInScope)
+                        if (modelType.IsAssignableFrom(model.GetType()))
+                            modelsOfCorrectType.Add(model);
+                    return modelsOfCorrectType.Distinct().ToArray();
+                }
+                else
+                    return modelsInScope.Distinct().ToArray();
             }
-            else
-                return modelsInScope.Distinct().ToArray();
+            return new Model[0];
         }
 
 
@@ -300,6 +296,10 @@ namespace Models.Core
             return removed;
         }
 
+        public virtual void OnLoaded()             { }
+        public virtual void OnCommencing()         { }
+        public virtual void OnCompleted()          { }
+        
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
@@ -443,5 +443,6 @@ namespace Models.Core
                 model.AllModels = null;
             }
         }
+   
     }
 }

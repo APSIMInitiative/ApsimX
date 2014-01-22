@@ -8,7 +8,7 @@
     <ProjectGuid>{A3E10705-F2BB-4182-A19C-7F63222584DF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Model</RootNamespace>
+    <RootNamespace>Models</RootNamespace>
     <AssemblyName>Model</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -104,7 +104,10 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="Core\ApsimXException.cs" />
-    <Compile Include="Creator.cs" />
+    <Compile Include="Factorial\Factor.cs" />
+    <Compile Include="Factorial\Experiment.cs" />
+    <Compile Include="Factorial\Factors.cs" />
+    <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="NullSummary.cs" />
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />

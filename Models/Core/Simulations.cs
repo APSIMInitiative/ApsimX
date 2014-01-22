@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using Models.Factorial;
 
 namespace Models.Core
 {
@@ -49,36 +50,23 @@ namespace Models.Core
         /// </summary>
         public static Simulations Read(string FileName)
         {
+            
+            // Deserialise
             Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
+
+            // Set the filename
             simulations.FileName = FileName;
 
+            // Resolve links.
+            Utility.ModelFunctions.ResolveLinks(simulations);
+
+            // Connect all events.
+            Utility.ModelFunctions.ConnectEventsInAllModels(simulations);
+
+            // Call OnLoaded in all models.
+            Utility.ModelFunctions.CallOnLoaded(simulations);
+
             return simulations;
-        }
-
-        /// <summary>
-        /// Create a simulations object by reading from the specified xml node
-        /// </summary>
-        public static Simulations Read(XmlNode xmlNode)
-        {
-            Simulations simulations = Utility.Xml.Deserialise(xmlNode) as Simulations;
-            return simulations;
-        }
-
-        /// <summary>
-        /// Resolve all links in all models.
-        /// </summary>
-        public void Initialise()
-        {
-            Utility.ModelFunctions.ResolveLinks(this);
-
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
-
-            // Initialise all simulations.
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    (Model as Simulation).Initialise();
         }
 
         /// <summary>
@@ -106,50 +94,36 @@ namespace Models.Core
         /// </summary>
         public bool Run()
         {
-            // Connect all events for the simulations we're about to run.
-            //foreach (object Model in Models)
-            //    if (Model is Simulation)
-            //        Utility.ModelFunctions.ConnectEventsInAllModels(Model as Simulation);
-
-            // Invoke the AllCommencing event.
-            if (AllCommencing != null)
-                AllCommencing(this, new EventArgs());
-
-            // Run all simulations
-            bool ok = true;
-            foreach (Simulation simulation in FindAllSimulations())
-                ok = simulation.Run() && ok;
-
-            // Invoke the AllCompleted event.
-            if (AllCompleted != null)
-                AllCompleted(this, new EventArgs());
-
-            // Disconnect all events for the simulations we just ran.
-            //foreach (object Model in Models)
-            //    if (Model is Simulation)
-            //        Utility.ModelFunctions.DisconnectEventsInAllModels(Model as Simulation);
-            return ok;
+            return Run(FindAllSimulationsToRun());
         }
 
         /// <summary>
         /// Run the specified simulation. Return true if it ran ok.
         /// </summary>
-        public bool Run(Simulation Sim)
+        public bool Run(Simulation simulation)
         {
-            //Utility.ModelFunctions.ConnectEventsInAllModels(Sim);
+            return Run(new Simulation[1] { simulation });
+        }
 
+        /// <summary>
+        /// Run the specified simulations
+        /// </summary>
+        private bool Run(Simulation[] simulations)
+        {
+            // Invoke the AllCommencing event.
             if (AllCommencing != null)
                 AllCommencing(this, new EventArgs());
 
-            Simulation Simulation = Sim as Simulation;
-            bool ok = Simulation.Run();
+            // Run all simulations
+            bool allok = true;
+            foreach (Simulation simulation in simulations)
+                allok = simulation.Run() && allok;
 
+            // Invoke the AllCompleted event.
             if (AllCompleted != null)
                 AllCompleted(this, new EventArgs());
 
-            //Utility.ModelFunctions.DisconnectEventsInAllModels(Sim);
-
-            return ok;
+            return allok;
         }
 
         /// <summary>
@@ -158,37 +132,49 @@ namespace Models.Core
         private Simulations() { }
 
         /// <summary>
-        /// Close the simulation
+        /// Find all simulations.
         /// </summary>
-        public void Close()
+        public Simulation[] FindAllSimulationsToRun()
         {
-            foreach (object Model in Models)
-                if (Model is Simulation)
-                    (Model as Simulation).Close();
+            List<Simulation> simulations = new List<Simulation>();
+            // Look for simulations.
+            foreach (Model Model in FindAll(typeof(Simulation)))
+            {
+                // An experiment can have a base simulation - don't return that to caller.
+                if (!(Model.Parent is Experiment))
+                    simulations.Add(Model as Simulation);
+            }
 
-            if (AllCompleted != null)
-                AllCompleted(this, null);
+            // Look for experiments and get them to create their simulations.
+            foreach (Experiment experiment in FindAll(typeof(Experiment)))
+                simulations.AddRange(experiment.Create());
+
+            return simulations.ToArray();
         }
 
         /// <summary>
-        /// Find all simulations.
+        /// Find all simulation names that are going to be run.
         /// </summary>
-        public Simulation[] FindAllSimulations()
+        /// <returns></returns>
+        public string[] FindAllSimulationNames()
         {
-            List<Simulation> simulations = new List<Simulation>();
-            foreach (object Model in FindAll())
+            List<string> simulations = new List<string>();
+            // Look for simulations.
+            foreach (Model Model in FindAll(typeof(Simulation)))
             {
-                if (Model is Simulation)
-                    simulations.Add(Model as Simulation);
-                else if (Model is Creator)
-                {
-                    foreach (Model model in (Model as Creator).Create())
-                        if (model is Simulation)
-                            simulations.Add(model as Simulation);
-                }
+                // An experiment can have a base simulation - don't return that to caller.
+                if (!(Model.Parent is Experiment))
+                    simulations.Add(Model.Name);
             }
+
+            // Look for experiments and get them to create their simulations.
+            foreach (Experiment experiment in FindAll(typeof(Experiment)))
+                simulations.AddRange(experiment.Names());
+
             return simulations.ToArray();
+
         }
+
 
     }
 }

@@ -68,7 +68,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
-    <Compile Include="Presenters\CreatorPresenter.cs" />
+    <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
@@ -92,6 +92,12 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\FactorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\FactorView.Designer.cs">
+      <DependentUpon>FactorView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\SummaryView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,6 +209,9 @@
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FactorView.resx">
+      <DependentUpon>FactorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SummaryView.resx">
       <DependentUpon>SummaryView.cs</DependentUpon>
@@ -445,6 +454,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Creator16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Microscope.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Factorial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cube_molecule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Factor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\element.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\element_edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

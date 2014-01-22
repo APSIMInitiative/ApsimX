@@ -49,7 +49,7 @@ namespace Models.Core
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(WeatherFile))]
         [XmlElement(typeof(Log))]
-        [XmlElement(typeof(Creator))]
+        [XmlElement(typeof(Models.Factorial.Experiment))]
         public List<Model> Children { get; set; }
 
          /// <summary>

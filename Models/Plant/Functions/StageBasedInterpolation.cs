@@ -27,8 +27,7 @@ namespace Models.PMF.Functions
         /// <summary>
         /// Initialise ourselves.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             StageCodes = null;
         }

@@ -2185,9 +2185,10 @@
       </Graph>
     </Zone>
     <Input>
-      <Name>Input</Name>
+      <Name>Observed</Name>
       <FileName>TestObserved.txt</FileName>
     </Input>
+    <FileName>C:\Users\hol353\ApsimX\Tests\Test.apsimx</FileName>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -2287,33 +2288,6 @@
       <Parameters />
     </Test>
   </Tests>
-  <Creator>
-    <Name>Factorial</Name>
-    <Descriptions>
-      <Description>
-        <Name>SowDate1</Name>
-        <Base>.Simulations.Test</Base>
-        <Actions>
-          <ActionSpecifier>
-            <Action>Set</Action>
-            <Path>[Simulation].Field.PotatoSowingRule.Script.SowingDate</Path>
-            <dateTime>2003-12-01T00:00:00</dateTime>
-          </ActionSpecifier>
-        </Actions>
-      </Description>
-      <Description>
-        <Name>SowDate2</Name>
-        <Base>.Simulations.Test</Base>
-        <Actions>
-          <ActionSpecifier>
-            <Action>Set</Action>
-            <Path>[Simulation].Field.PotatoSowingRule.Script.SowingDate</Path>
-            <dateTime>2003-12-13T00:00:00</dateTime>
-          </ActionSpecifier>
-        </Actions>
-      </Description>
-    </Descriptions>
-  </Creator>
   <Graph>
     <Name>Graph</Name>
     <Axis>
@@ -2330,44 +2304,44 @@
     </Axis>
     <Series>
       <Name>Series</Name>
-      <Title>SowDate1 LAI</Title>
+      <Title>Soil water top layer</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
+      <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate1</SimulationName>
+        <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate1</SimulationName>
+        <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.LAI</FieldName>
+        <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
     </Series>
     <Series>
       <Name>Series</Name>
-      <Title>SowDate2 LAI</Title>
-      <Type>Line</Type>
+      <Title>Observed data</Title>
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16711936</ColourArgb>
-      <Marker>None</Marker>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate2</SimulationName>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
+        <SimulationName>Test</SimulationName>
+        <TableName>Observed</TableName>
+        <FieldName>Date</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate2</SimulationName>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.LAI</FieldName>
+        <SimulationName>Test</SimulationName>
+        <TableName>Observed</TableName>
+        <FieldName>sw(1)</FieldName>
       </Y>
     </Series>
   </Graph>

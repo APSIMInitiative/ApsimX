@@ -14,7 +14,7 @@ namespace Models
     public class Log : Model
     {
         [Link]
-        Simulations Simulations = null;
+        Simulation Simulation = null;
 
         [Link]
         Clock Clock = null;
@@ -24,12 +24,11 @@ namespace Models
         /// <summary>
         /// Initialise the model.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
-            if (Simulations.FileName != null)
+            if (Simulation.FileName != null)
             {
-                string fileName = Path.ChangeExtension(Simulations.FileName, ".log");
+                string fileName = Path.ChangeExtension(Simulation.FileName, ".log");
                 Writer = new StreamWriter(fileName);
             }
         }
@@ -37,8 +36,7 @@ namespace Models
         /// <summary>
         /// Simulation has completed.
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        public override void OnCompleted()
         {
             Writer.Close();
         }

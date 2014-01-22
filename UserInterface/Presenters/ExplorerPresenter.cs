@@ -7,6 +7,7 @@ using Models.Core;
 using System.Runtime.Serialization;
 using Models;
 using System.Collections.Generic;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
@@ -73,20 +74,11 @@ namespace UserInterface.Presenters
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
 
 
-            DataStore store = ApsimXFile.Get("DataStore") as DataStore;
+            store = ApsimXFile.Get("DataStore") as DataStore;
             if (store == null)
                 throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
 
-            store.MessageWritten += OnMessageWritten;
-            try
-            {
-                ApsimXFile.Initialise();
-            }
-            catch (Exception err)
-            {
-                this.View.ShowMessage("Cannot open file due to error:\n" + err.Message, DataStore.ErrorLevel.Error);
-            }
-
+            WriteMessagesFromDataStore();
         }
 
         /// <summary>
@@ -104,7 +96,6 @@ namespace UserInterface.Presenters
             View.Drop -= OnDrop;
             View.Rename -= OnRename;
             CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
-            store.MessageWritten -= OnMessageWritten;
         }
 
         /// <summary>
@@ -134,16 +125,32 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// A message has been written - echo to our view.
+        /// Write all error messages from the datastore to the window.
         /// </summary>
-        void OnMessageWritten(object sender, DataStore.MessageArg e)
+        void WriteMessagesFromDataStore()
         {
-            string message;
-            message = String.Format("{0}: message from {2} on simulation date {1}\n{3}", new object[] {DateTime.Now,
-                                                                                         e.SimulationDateTime.ToShortDateString(),
-                                                                                         e.FullPath,
-                                                                                         Utility.String.IndentText(e.Message, 6)});
-            View.ShowMessage(message, e.ErrorLevel);
+            DataTable messageTable = store.GetData("*", "Messages");
+            if (messageTable != null)
+            {
+                foreach (DataRow messageRow in messageTable.Rows)
+                {
+                    if (Convert.ToInt32(messageRow["MessageType"]) == 2)
+                    {
+                        DateTime date = (DateTime)messageRow["Date"];
+                        string message;
+                        if (date.Ticks == 0)
+                            message = String.Format("{0}:\n{1}", new object[] {
+                                messageRow["ComponentName"].ToString(),
+                                messageRow["Message"].ToString()});
+                        else
+                            message = String.Format("{0} - {1}:\n{2}", new object[] {
+                                                   date.ToShortDateString(),
+                                                   messageRow["ComponentName"].ToString(),
+                                                   messageRow["Message"].ToString()});
+                        View.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    }
+                }
+            }
         }
 
         #region Events from view

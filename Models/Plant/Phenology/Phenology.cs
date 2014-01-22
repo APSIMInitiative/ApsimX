@@ -151,8 +151,7 @@ namespace Models.PMF.Phen
         /// </summary>
         public Phenology() { }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Clear();
         }
@@ -182,7 +181,7 @@ namespace Models.PMF.Phen
         {
             // If this is the first time through here then setup some variables.
             if (Phases == null || Phases.Count == 0)
-                OnInitialised(null, null);
+                OnCommencing();
 
             CurrentlyOnFirstDayOfPhase = "";
             if (JustInitialised)

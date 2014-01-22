@@ -137,6 +137,34 @@ namespace UserInterface.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Experiment16 {
+            get {
+                object obj = ResourceManager.GetObject("Experiment16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Factor16 {
+            get {
+                object obj = ResourceManager.GetObject("Factor16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Factors16 {
+            get {
+                object obj = ResourceManager.GetObject("Factors16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FactorValue16 {
+            get {
+                object obj = ResourceManager.GetObject("FactorValue16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Fertiliser16 {
             get {
                 object obj = ResourceManager.GetObject("Fertiliser16", resourceCulture);

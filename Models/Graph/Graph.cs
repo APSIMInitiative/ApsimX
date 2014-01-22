@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Models.Graph
 {
@@ -10,7 +11,8 @@ namespace Models.Graph
     [Serializable]
     public class Graph : Model
     {
-        [Link] private DataStore _DataStore = null;
+        [NonSerialized] private DataStore _DataStore = null;
+        [Link] private Simulation Simulation = null;
 
         public string Title {get; set;}
 
@@ -20,13 +22,22 @@ namespace Models.Graph
         [XmlElement("Series")]
         public List<Series> Series { get; set; }
 
-        /// <summary>
-        /// Return a list of visible datasets.
-        /// </summary>
+        ~Graph()
+        {
+            if (_DataStore != null)
+                _DataStore.Disconnect();
+            _DataStore = null;
+        }
+
         public DataStore DataStore
         {
             get
             {
+                if (_DataStore == null)
+                {
+                    _DataStore = new DataStore();
+                    _DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+                }
                 return _DataStore;
             }
         }

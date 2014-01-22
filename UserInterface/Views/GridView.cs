@@ -474,10 +474,10 @@ namespace UserInterface.Views
                     DataSource.Rows.Add(DataSource.NewRow());
 
                 // Put the new value into the table on the correct row.
-                DataSource.Rows[e.RowIndex][e.ColumnIndex] = NewValue;
+                if (DataSource != null)
+                    DataSource.Rows[e.RowIndex][e.ColumnIndex] = NewValue;
 
                 if (CellValueChanged != null && ValueBeforeEdit != NewValue)
-
                     CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);
             }
         }

@@ -15,15 +15,6 @@ namespace Models
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
     {
-        public class MessageArg : EventArgs
-        {
-            public DateTime SimulationDateTime;
-            public string SimulationName;
-            public string FullPath;
-            public string Message;
-            public ErrorLevel ErrorLevel;
-        }
-
         [NonSerialized]
         private Utility.SQLite Connection = null;
         [NonSerialized]
@@ -33,9 +24,6 @@ namespace Models
         private string Filename;
 
         public enum ErrorLevel { Information, Warning, Error };
-
-        [field: NonSerialized]
-        public event EventHandler<MessageArg> MessageWritten;
 
         // Parameters
         public bool AutoCreateReport { get; set; }
@@ -52,40 +40,55 @@ namespace Models
             Disconnect();
         }
 
-        /// <summary>
-        /// Connect to the SQLite database.
-        /// </summary>
-        public void Connect(bool baseline = false)
+        public void Connect()
         {
             if (Connection == null)
             {
-                Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
-                if (baseline)
-                    Filename += ".baseline";
+                Models.Core.Model RootModel = this;
+                while (RootModel.Parent != null)
+                    RootModel = RootModel.Parent;
+
+                if (RootModel != null && RootModel is Models.Core.Simulations)
+                {
+                    Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
+                    Connect(Path.ChangeExtension(simulations.FileName, ".db"));
+                }
+                else
+                    throw new ApsimXException("DataStore", "Cannot determine the filename of the datastore.");
+            }
+        }
+
+
+        /// <summary>
+        /// Connect to the SQLite database.
+        /// </summary>
+        public void Connect(string fileName)
+        {
+            if (Connection == null)
+            {
+                SimulationIDs = new Dictionary<string, int>();
+                TableInsertQueries = new Dictionary<string, IntPtr>();
+
+                Filename = fileName;
                 if (Filename == null || Filename.Length == 0)
                     throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename);
 
-                Connection.ExecuteNonQuery("PRAGMA synchronous=OFF");
-                Connection.ExecuteNonQuery("BEGIN");
+                // Connection.ExecuteNonQuery("PRAGMA synchronous=OFF");
+                // Connection.ExecuteNonQuery("BEGIN");
 
-                // Create a simulations table.
+                // Create a simulations table if not present.
                 if (!TableExists("Simulations"))
                     Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
 
-                // Create a properties table.
-                string[] Names = new string[] { "ComponentName", "Name", "Value" };
-                Type[] Types = new Type[] { typeof(string), typeof(string), typeof(string) };
-                CreateTable("Properties", Names, Types);
-
-                // Create a Messages table.
+                // Create a Messages table if not present.
                 // NB: MessageType values:
                 //     1 = Information
                 //     2 = Warning
                 //     3 = Fatal
-                Names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
-                Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
+                string[] Names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
+                Type[] Types = new Type[] { typeof(string), typeof(DateTime), typeof(string), typeof(int) };
                 CreateTable("Messages", Names, Types);
             }
         }
@@ -99,31 +102,23 @@ namespace Models
             {
                 foreach (KeyValuePair<string, IntPtr> Table in TableInsertQueries)
                     Connection.Finalize(Table.Value);
-                if (Connection.IsOpen)
-                {
-                    //Connection.ExecuteNonQuery("COMMIT");
-                    Connection.CloseDatabase();
-                }
                 Connection = null;
-                TableInsertQueries.Clear();
+                SimulationIDs = null;
+                TableInsertQueries = null;
+
+
             }
         }
-        
+
         /// <summary>
         /// Initialise this data store.
         /// </summary>
         [EventSubscribe("AllCommencing")]
         private void OnAllCommencing(object sender, EventArgs e)
         {
-            SimulationIDs.Clear();
-
-            if (Connection != null)
-                Disconnect();
-            string Filename = System.IO.Path.ChangeExtension(Simulations.FileName, ".db");
-            if (File.Exists(Filename))
-                File.Delete(Filename);
-
-            Connect();
+            Connect(Path.ChangeExtension(Simulations.FileName, ".db"));
+            RemoveUnwantedSimulations();
+            Disconnect();
         }
 
         /// <summary>
@@ -132,10 +127,30 @@ namespace Models
         [EventSubscribe("AllCompleted")]
         private void OnAllCompleted(object sender, EventArgs e)
         {
-            if (Connection != null)
-                Connection.ExecuteNonQuery("COMMIT");
             if (AutoCreateReport)
                 WriteOutputFile();
+        }
+
+        /// <summary>
+        /// Remove all unwanted simulations from the database.
+        /// </summary>
+        public void RemoveUnwantedSimulations()
+        {
+            string[] simulationNamesToKeep = Simulations.FindAllSimulationNames();
+            foreach (string simulationNameInDB in SimulationNames)
+            {
+                if (!simulationNamesToKeep.Contains(simulationNameInDB))
+                {
+                    int id = GetSimulationID(simulationNameInDB);
+
+                    Connection.ExecuteNonQuery("DELETE FROM Simulations WHERE ID = " + id.ToString());
+                    foreach (string tableName in TableNames)
+                    {
+                        // delete this simulation
+                        Connection.ExecuteNonQuery("DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString());
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -212,20 +227,6 @@ namespace Models
                 WriteToTable(simulationName, tableName, values);
             }
         }
-        /// <summary>
-        /// Write a property to the DataStore.
-        /// </summary>
-        public void WriteProperty(string simulationName, string name, string value)
-        {
-            Connect();
-
-            StackTrace st = new StackTrace(true);
-            MethodInfo callingMethod = st.GetFrame(1).GetMethod() as MethodInfo;
-            string componentName = callingMethod.DeclaringType.FullName;
-
-            WriteToTable("Properties", new object[] { GetSimulationID(simulationName), 
-                                                      componentName, name, value });
-        }
 
         /// <summary>
         /// Write a message to the DataStore.
@@ -243,16 +244,6 @@ namespace Models
             Connect();
             WriteToTable("Messages", new object[] { GetSimulationID(simulationName), 
                                                       componentName, date, message, Convert.ToInt32(type, System.Globalization.CultureInfo.InvariantCulture) });
-            if (MessageWritten != null)
-            {
-                MessageArg arg = new MessageArg();
-                arg.SimulationName = simulationName;
-                arg.SimulationDateTime = date;
-                arg.Message = message;
-                arg.FullPath = componentName;
-                arg.ErrorLevel = type;
-                MessageWritten(this, arg);
-            }
         }
 
         /// <summary>
@@ -292,6 +283,8 @@ namespace Models
                 try
                 {
                     DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
+                    if (table == null)
+                        return new string[0];
                     return Utility.DataTable.GetColumnAsStrings(table, "Name");
                 }
                 catch (Utility.SQLiteException )
@@ -333,7 +326,8 @@ namespace Models
         }
 
         /// <summary>
-        /// Return all data from the specified simulation and table name.
+        /// Return all data from the specified simulation and table name. If simulatinName = "*"
+        /// the all simulation data will be returned.
         /// </summary>
         public DataTable GetData(string simulationName, string tableName)
         {
@@ -342,10 +336,12 @@ namespace Models
                 return null;
             try
             {
-                int simulationID = GetSimulationID(simulationName);
-                string sql = string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                                           "SELECT * FROM {0} WHERE SimulationID = {1}",
-                                           new object[] { tableName, simulationID });
+                string sql = "SELECT * FROM " + tableName;
+                if (simulationName != "*")
+                {
+                    int simulationID = GetSimulationID(simulationName);
+                    sql += " WHERE SimulationID = " + simulationID.ToString();
+                }
 
                 return Connection.ExecuteQuery(sql);
             }
@@ -365,28 +361,74 @@ namespace Models
         }
 
         /// <summary>
+        /// Return all data from the specified simulation and table name.
+        /// </summary>
+        public void RunQueryWithNoReturnData(string sql)
+        {
+            Connect();
+            Connection.ExecuteNonQuery(sql);
+        }
+
+        /// <summary>
+        /// Remove all rows from the specified table for the specified simulation
+        /// </summary>
+        public void DeleteOldContentInTable(string simulationName, string tableName)
+        {
+            if (TableExists(tableName))
+            {
+                int id = GetSimulationID(simulationName);
+                string sql = "DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString();
+                RunQueryWithNoReturnData(sql);
+            }
+        }
+
+        /// <summary>
         /// Write all outputs to a text file (.csv)
         /// </summary>
         public void WriteOutputFile()
         {
+            string originalFileName = Filename;
+            
             // Write baseline .csv
-            Disconnect();
-            Connect(baseline: true);
+            string baselineFileName = Path.ChangeExtension(Filename, ".db.baseline");
+            Connect(baselineFileName);
             StreamWriter report = new StreamWriter(Filename + ".csv");
             WriteAllTables(report);
             report.Close();
+            Disconnect();
             
             // Write normal .csv
-            Disconnect();
-            Connect(baseline: false);
-            report = new StreamWriter(Filename + ".csv");
+            Connect(originalFileName);
+            report = new StreamWriter(originalFileName + ".csv");
             WriteAllTables(report);
             report.Close();
+            Disconnect();
         }
 
-
-
         #region Privates
+
+        /// <summary>
+        /// Return the simulation id (from the simulations table) for the specified name.
+        /// If this name doesn't exist in the table then append a new row to the table and 
+        /// returns its id.
+        /// </summary>
+        private int GetSimulationID(string simulationName)
+        {
+            if (SimulationIDs.ContainsKey(simulationName))
+                return SimulationIDs[simulationName];
+
+            if (!TableExists("Simulations"))
+                return -1;
+
+            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            if (ID == -1)
+            {
+                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
+                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            }
+            SimulationIDs.Add(simulationName, ID);
+            return ID;
+        }
 
         /// <summary>
         /// Create a text report from tables in this data store.
@@ -421,29 +463,6 @@ namespace Models
                 }
             }
             report.WriteLine();
-        }
-
-        /// <summary>
-        /// Return the simulation id (from the simulations table) for the specified name.
-        /// If this name doesn't exist in the table then append a new row to the table and 
-        /// returns its id.
-        /// </summary>
-        private int GetSimulationID(string simulationName)
-        {
-            if (SimulationIDs.ContainsKey(simulationName))
-                return SimulationIDs[simulationName];
-
-            if (!TableExists("Simulations"))
-                return -1;
-
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-            if (ID == -1)
-            {
-                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-            }
-            SimulationIDs.Add(simulationName, ID);
-            return ID;
         }
 
         /// <summary>

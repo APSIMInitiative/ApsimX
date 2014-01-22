@@ -76,8 +76,7 @@ namespace Models.PMF.Phen
         public double BaseVrn1Target = 0.74;
 
         //Event procedures
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public void OnCommencing()
         {
             Vrn4 = 1.0;
             Vrn1Target = 0.74;

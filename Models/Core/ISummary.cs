@@ -15,7 +15,7 @@
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        void WriteError(string Message);
+        void WriteError(string FullPath, string Message);
 
         /// <summary>
         /// Return the html for the summary file.

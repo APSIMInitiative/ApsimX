@@ -230,7 +230,6 @@ namespace Models
 
         
         // Links.
-        [Link] private DataStore DataStore = null;
         [Link] private Zone Paddock = null;
         [Link] private Simulation Simulation = null;
 
@@ -247,8 +246,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             UnsubscribeAllEventHandlers();
 
@@ -300,12 +298,17 @@ namespace Models
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        public override void OnCompleted()
         {
+            // Get rid of old data in .db
+            DataStore DataStore = new DataStore();
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+            DataStore.DeleteOldContentInTable(Simulation.Name, Name);
+            
             // Write and store a table in the DataStore
             if (Members != null && Members.Count > 0)
             {
+                
                 List<string> AllNames = new List<string>();
                 List<Type> AllTypes = new List<Type>();
                 foreach (VariableMember Variable in Members)
@@ -328,9 +331,11 @@ namespace Models
                 }
                 Members.Clear();
                 Members = null;
+
             }
 
             UnsubscribeAllEventHandlers();
+            DataStore.Disconnect();
         }
 
         private void UnsubscribeAllEventHandlers()

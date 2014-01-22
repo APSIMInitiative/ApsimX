@@ -30,14 +30,14 @@ namespace ModelTests
             W.Write(Properties.Resources.Goondiwindi, 0, Properties.Resources.Goondiwindi.Length);
             W.Close();
             S = Simulations.Read("Test.apsimx");
-            S.Initialise();
+            Utility.ModelFunctions.CallOnCommencing(S);
         }
 
 
         [TestCleanup]
         public void Cleanup()
         {
-            S.Close();
+            Utility.ModelFunctions.CallOnCompleted(S);
             File.Delete("Test.apsimx");
             File.Delete("Goondiwindi.met");
         }

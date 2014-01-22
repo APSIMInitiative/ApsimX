@@ -10,15 +10,8 @@ namespace Models.Core
     [Serializable]
     public class Simulation : Zone
     {
-
-
         // Private links
         [Link] private ISummary Summary = null;
-
-        /// <summary>
-        /// This event will be invoked when the simulation is initialised.
-        /// </summary>
-        public event EventHandler Initialised;
 
         /// <summary>
         /// To commence the simulation, this event will be invoked.
@@ -26,9 +19,22 @@ namespace Models.Core
         public event EventHandler Commenced;
 
         /// <summary>
-        /// This event will be invoked when the simulation has completed.
+        /// Return the filename that this simulation sits in.
         /// </summary>
-        public event EventHandler Completed;
+        public string FileName
+        {
+            get
+            {
+                Model RootModel = this;
+                while (RootModel.Parent != null)
+                    RootModel = RootModel.Parent;
+                if (RootModel != null)
+                    return (RootModel as Simulations).FileName;
+                else
+                    return null;
+            }
+        }
+
 
         /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
@@ -38,8 +44,7 @@ namespace Models.Core
             bool ok;
             try
             {
-                if (Initialised != null)
-                    Initialised(this, new EventArgs());
+                Utility.ModelFunctions.CallOnCommencing(this);
 
                 if (Commenced != null)
                     Commenced.Invoke(this, new EventArgs());
@@ -53,29 +58,15 @@ namespace Models.Core
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
                     Msg += "\r\n" + err.StackTrace;
-                Summary.WriteError(Msg);
+                Summary.WriteError(FullPath, Msg);
 
                 ok = false;
             }
 
-            if (Completed != null)
-                Completed.Invoke(this, new EventArgs());
+            Utility.ModelFunctions.CallOnCompleted(this);
 
             return ok;
         }
-
-        public void Initialise()
-        {
-            if (Initialised != null)
-                Initialised(this, new EventArgs());
-        }
-
-        public void Close()
-        {
-            if (Completed != null)
-                Completed.Invoke(this, new EventArgs());
-        }
-
 
     }
 

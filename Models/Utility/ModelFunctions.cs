@@ -234,6 +234,45 @@ namespace Utility
         }
         #endregion
 
+        #region Initialise functions
+
+        public struct LoadError
+        {
+            public string FullPath;
+            public string Message;
+        }
+
+        /// <summary>
+        /// Call OnLoaded in the specified model and all child models.
+        /// </summary>
+        public static void CallOnLoaded(Model model)
+        {
+            model.OnLoaded();
+            foreach (Model child in model.Models)
+                CallOnLoaded(child);
+        }
+
+        /// <summary>
+        /// Call OnCommencing in the specified model and all child models.
+        /// </summary>
+        public static void CallOnCommencing(Model model)
+        {
+            model.OnCommencing();
+            foreach (Model child in model.Models)
+                CallOnCommencing(child);        
+        }
+
+        /// <summary>
+        /// Call OnCompleted in the specified model and all child models.
+        /// </summary>
+        public static void CallOnCompleted(Model model)
+        {
+            model.OnCompleted();
+            foreach (Model child in model.Models)
+                CallOnCompleted(child);
+        }
+        #endregion
+
         #region Parameter functions
 
         /// <summary>

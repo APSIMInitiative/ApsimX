@@ -19,9 +19,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model
     {
-        [Link] DataStore DataStore = null;
         [Link] Simulation Simulation = null;
-        [Link] Simulations Simulations = null;
 
         public string FileName { get; set; }
 
@@ -33,7 +31,7 @@ namespace Models
             {
                 string FullFileName = FileName;
                 if (Path.GetFullPath(FileName) != FileName)
-                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
+                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
                 return FullFileName;
             }
             set
@@ -41,18 +39,24 @@ namespace Models
                 FileName = value;
 
                 // try and convert to path relative to the Simulations.FileName.
-                FileName = FileName.Replace(Path.GetDirectoryName(Simulations.FileName) + @"\", "");
+                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
             }
         }
 
-        [EventSubscribe("AllCompleted")]
-        private void AllCompleted(object sender, EventArgs e)
+        public override void OnCompleted()
         {
-            if (DataStore == null)
-                throw new ApsimXException(this.FullPath, "Cannot find data store.");
-
             if (FileName != null && File.Exists(FullFileName))
-                DataStore.CreateTable(Simulation.Name, this.Name, GetTable());
+            {
+                DataStore dataStore = new DataStore();
+                dataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+                if (dataStore.TableNames.Contains(Name))
+                {
+                    // delete the old data.
+                    dataStore.DeleteOldContentInTable(Simulation.Name, Name);
+                }
+                dataStore.CreateTable(Simulation.Name, this.Name, GetTable());
+                dataStore.Disconnect();
+            }
         }
 
         /// <summary>

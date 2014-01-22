@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Media;
 using Models;
+using Models.Factorial;
 
 
 namespace UserInterface.Presenters
@@ -194,7 +195,7 @@ namespace UserInterface.Presenters
         /// </summary>
         [ContextModelType(typeof(Simulation))]
         [ContextModelType(typeof(Simulations))]
-        [ContextModelType(typeof(Creator))]
+        [ContextModelType(typeof(Experiment))]
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {

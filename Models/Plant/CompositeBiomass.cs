@@ -51,8 +51,7 @@ namespace Models.PMF
         /// <summary>
         /// Clear ourselves.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Clear();
         }

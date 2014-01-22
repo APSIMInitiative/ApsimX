@@ -28,7 +28,7 @@ namespace Models
         {
         }
 
-        public void WriteError(string Message)
+        public void WriteError(string FullPath, string Message)
         {
         }
 

@@ -16,7 +16,7 @@ namespace Models
     {
         // Links
         [Link] private Clock Clock = null;
-        [Link] private Simulations Simulations = null;
+        [Link] private Simulation Simulation = null;
 
         // Privates
         private Utility.ApsimTextFile WtrFile = null;
@@ -44,8 +44,8 @@ namespace Models
             get
             {
                 string FullFileName = FileName;
-                if (Simulations.FileName != null && Path.GetFullPath(FileName) != FileName)
-                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName), FileName);
+                if (Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
                 return FullFileName;
             }
             set
@@ -53,7 +53,7 @@ namespace Models
                 FileName = value;
                
                 // try and convert to path relative to the Simulations.FileName.
-                FileName = FileName.Replace(Path.GetDirectoryName(Simulations.FileName) + @"\", "");
+                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
             }
         }
 
@@ -205,8 +205,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             DoSeek = true; 
         }
@@ -243,8 +242,7 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        public override void OnCompleted()
         {
             if (WtrFile != null)
             {

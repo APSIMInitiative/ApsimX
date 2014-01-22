@@ -26,8 +26,7 @@ namespace Models.PMF.Functions
 
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             AccumulatedValue = 0;
         }
