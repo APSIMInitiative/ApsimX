@@ -1,7 +1,7 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
-#setwd("c:\\ApsimX\\ApsimX\\Tests") # for testing only
+#setwd("c:\\ApsimX") # for testing only
 
 library("XML")
 library("RSQLite")
