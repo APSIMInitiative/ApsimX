@@ -26,22 +26,27 @@ namespace Models.PMF.Slurp
         [Link]
         Soils.SoilNitrogen SoilN = null;
 
+        [Description ("Cover Green")]
+        public double cover_green { get; set; }
+        [Description("Root Depth")]
+        public double RootDepth { get; set; }
+        [Description("Leaf Mass")]
+        public double LeafMass { get; set; }
+        [Description("kl")]
+        public double[] kl { get; set; }
+        [Description("LAI")]
+        public double LAI { get; set; }
+
         public string Crop_Type = "Slurp";
         private double PEP;
         private double EP;
-        public double cover_green;
-        public double RootDepth;
         private double FW;
         private double FWexpan;
-        public double LAI;
-        [Description("Leaf Mass")]
-        public double LeafMass;
         private double Ndemand = 0.0;
         private double RootMass;
         private double RootN;
         private double[] NUptake;
         private double[] PotSWUptake;
-        public double[] kl;
         private double[] SWUptake;
         private double[] PotNUptake;
         private double[] bd = null;

@@ -27,6 +27,7 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
+          <string>[WeatherFile].MaxT</string>		  
           <string>[SoilWater].sw_dep</string>
           <string>[SoilNitrogen].no3</string>
           <string />
@@ -731,6 +732,23 @@
         <Name>Slurp</Name>
         <plant_status>out</plant_status>
         <Crop_Type>Slurp</Crop_Type>
+        <cover_green>0.5</cover_green>
+        <RootDepth>500</RootDepth>
+        <LeafMass>1</LeafMass>
+        <kl>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+          <double>0.5</double>
+        </kl>
+        <LAI>1</LAI>
         <LeafN>1</LeafN>
       </Slurp>
     </Zone>
@@ -1511,4 +1529,14 @@
       </Y>
     </Series>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>Slurp</SimulationName>
+      <TableName>Report</TableName>
+      <Type>AllPos</Type>
+      <ColumnNames>WeatherFile.MaxT</ColumnNames>
+      <Parameters />
+    </Test>
+  </Tests>
 </Simulations>
