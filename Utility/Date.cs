@@ -289,9 +289,22 @@ namespace Utility
             if (m.Success)
                 return System.String.Format("{0}-{1,02:d2}-{2,02:d2}", m.Groups[3].Value, Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[1].Value));
             else
-                return "2000-01-01";    // default??
+                return "0001-01-01";    // default??
         }
 
+        /// <summary>
+        /// Convert a dd/mm/yyyy to DateTime
+        /// </summary>
+        /// <param name="dmy">[d]d/[m]m/yyyy</param>
+        /// <returns>The date</returns>
+        public static DateTime DMYtoDate(string dmy)
+        {
+            Match m = rxDMY.Match(dmy);
+            if (m.Success)
+                return new DateTime(Convert.ToInt32(m.Groups[3].Value), Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[1].Value));
+            else
+                return new DateTime();    // default??
+        }
 
     }
 }
