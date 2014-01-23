@@ -51,8 +51,7 @@ namespace Models.PMF.Slurp
 
 
         // The following event handler will be called once at the beginning of the simulation
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void  OnCommencing()
         {
             cover_green = 0.5;
             RootDepth = 500;

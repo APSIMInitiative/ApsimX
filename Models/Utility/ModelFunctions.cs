@@ -49,7 +49,7 @@ namespace Utility
 
             foreach (EventPublisher publisher in FindEventPublishers(null, modelsInScope))
             {
-                foreach (EventSubscriber subscriber in FindEventSubscribers(publisher.Name, modelsInScope))
+                foreach (EventSubscriber subscriber in FindEventSubscribers(publisher))
                 {
                     // connect subscriber to the event.
                     Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
@@ -80,7 +80,7 @@ namespace Utility
             // Go through all events in the specified model and attach them to subscribers.
             foreach (EventPublisher publisher in FindEventPublishers(null, model))
             {
-                foreach (EventSubscriber subscriber in FindEventSubscribers(publisher.Name, modelsInScope))
+                foreach (EventSubscriber subscriber in FindEventSubscribers(publisher))
                 {
                     // connect subscriber to the event.
                     Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
@@ -140,11 +140,11 @@ namespace Utility
         /// Look through and return all models in scope for event subscribers with the specified event name.
         /// If eventName is null then all will be returned.
         /// </summary>
-        private static List<EventSubscriber> FindEventSubscribers(string eventName, Model[] modelsInScope)
+        private static List<EventSubscriber> FindEventSubscribers(EventPublisher publisher)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in modelsInScope)
-                subscribers.AddRange(FindEventSubscribers(eventName, model));
+            foreach (Model model in publisher.Model.FindAll())
+                subscribers.AddRange(FindEventSubscribers(publisher.Name, model));
             return subscribers;
 
         }

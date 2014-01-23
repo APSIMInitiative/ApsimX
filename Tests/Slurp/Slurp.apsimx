@@ -27,7 +27,7 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].MaxT</string>		  
+          <string>[WeatherFile].MaxT</string>
           <string>[SoilWater].sw_dep</string>
           <string>[SoilNitrogen].no3</string>
           <string />
