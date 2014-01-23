@@ -294,8 +294,7 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Clear();
             foreach (Organ o in Organs)

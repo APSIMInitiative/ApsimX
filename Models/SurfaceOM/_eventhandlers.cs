@@ -41,8 +41,7 @@ namespace Models.SurfaceOM
             surfom_add_surfom(data);
         }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e) 
+        public override void OnCommencing()
         {
             g = new SurfaceOMGlobals();
             p = new SurfaceOMParameters();

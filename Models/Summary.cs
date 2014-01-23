@@ -16,11 +16,10 @@ namespace Models
     {
         // Privates
         private const string divider = "------------------------------------------------------------------------------";
+        [NonSerialized] private DataStore DataStore = null;
 
         // Links
-        [Link] private DataStore DataStore = null;
         [Link] private Simulation Simulation = null;
-        [Link] private Simulations Simulations = null;
         [Link] private Clock Clock = null;
 
         // Parameters
@@ -28,14 +27,31 @@ namespace Models
         public bool AutoCreate { get; set; }
         public bool StateVariables { get; set; }
 
+        public override void OnLoaded()
+        {
+            DataStore = new DataStore();
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+        }
+
+        public override void OnCommencing()
+        {
+            if (DataStore == null)
+            {
+                DataStore = new DataStore();
+                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+            }
+            DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
+        }
+
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        [EventSubscribe("AllCompleted")]
-        private void OnAllCompleted(object sender, EventArgs e)
+        public override void OnCompleted()
         {
             if (AutoCreate)
                 CreateReportFile(false);
+            DataStore.Disconnect();
+            DataStore = null;
         }
 
         /// <summary>
@@ -57,7 +73,7 @@ namespace Models
         /// <summary>
         /// Write an error message to the summary
         /// </summary>
-        public void WriteError(string Message)
+        public void WriteError(string FullPath, string Message)
         {
             DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Error);
         }
@@ -79,9 +95,9 @@ namespace Models
         {
             StreamWriter report;
             if (baseline)
-                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".baseline.csv"));
+                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".baseline.csv"));
             else
-                report = new StreamWriter(Path.ChangeExtension(Simulations.FileName, ".csv"));
+                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".csv"));
             WriteSummary(report, Simulation.Name, null);
         }
 
@@ -92,6 +108,9 @@ namespace Models
         /// </summary>
         public void WriteSummary(TextWriter report, string simulationName, string apsimSummaryImageFileName)
         {
+            DataStore = new DataStore();
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+
             if (html)
             {
                 report.WriteLine("<!DOCTYPE html>");
@@ -132,6 +151,8 @@ namespace Models
                 report.WriteLine("</body>");
                 report.WriteLine("</html>");
             }
+            DataStore.Disconnect();
+            DataStore = null;
         }
 
         /// <summary>
@@ -139,9 +160,10 @@ namespace Models
         /// </summary>
         private DataTable GetMessageTable(string simulationName)
         {
+
             DataTable messageTable = new DataTable();
             DataTable messages = DataStore.GetData(simulationName, "Messages");
-            if (messages.Rows.Count > 0)
+            if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
                 messageTable.Columns.Add("Model", typeof(string));
@@ -171,10 +193,9 @@ namespace Models
         {
             DataTable propertyTable = new DataTable();
 
-            Simulation simulation = Simulations.Get(simulationName) as Simulation;
-            if (simulation != null)
+            if (Simulation != null)
             {
-                Model[] models = simulation.FindAll();
+                Model[] models = Simulation.FindAll();
                 foreach (Model model in models)
                     WriteModelProperties(report, model, html, StateVariables);
             }

@@ -478,8 +478,7 @@ namespace Models
             ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
         }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             foreach (ComponentDataStruct c in ComponentData)
                 Clear(c);

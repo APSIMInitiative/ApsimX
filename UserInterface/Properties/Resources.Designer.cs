@@ -170,9 +170,34 @@ namespace UserInterface.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
+        internal static System.Drawing.Bitmap Experiment16 {
+            get {
+                object obj = ResourceManager.GetObject("Experiment16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Factor16 {
+            get {
+                object obj = ResourceManager.GetObject("Factor16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Factors16 {
+            get {
+                object obj = ResourceManager.GetObject("Factors16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FactorValue16 {
+            get {
+                object obj = ResourceManager.GetObject("FactorValue16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Fertiliser16 {
             get {
                 object obj = ResourceManager.GetObject("Fertiliser16", resourceCulture);
@@ -596,9 +621,8 @@ namespace UserInterface.Properties {
         ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
         ///          &lt;ColourArgb&gt;-65536&lt;/ColourArgb&gt;
-        ///          &lt;Marker&gt;None&lt;/Marker&gt;
-        ///          &lt;X&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///          &lt;Marker&gt;None&lt;/Marker&gt;        ///          &lt;X&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {

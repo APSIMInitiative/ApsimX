@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Models.Graph
 {
@@ -10,7 +11,7 @@ namespace Models.Graph
     [Serializable]
     public class Graph : Model
     {
-        [Link] private DataStore _DataStore = null;
+        [NonSerialized] private DataStore _DataStore = null;
 
         public string Title {get; set;}
 
@@ -20,13 +21,31 @@ namespace Models.Graph
         [XmlElement("Series")]
         public List<Series> Series { get; set; }
 
-        /// <summary>
-        /// Return a list of visible datasets.
-        /// </summary>
+        ~Graph()
+        {
+            if (_DataStore != null)
+                _DataStore.Disconnect();
+            _DataStore = null;
+        }
+
         public DataStore DataStore
         {
             get
             {
+                if (_DataStore == null)
+                {
+                    // Find root component.
+                    Model rootComponent = this;
+                    while (rootComponent.Parent != null)
+                        rootComponent = rootComponent.Parent;
+
+                    if (rootComponent == null || !(rootComponent is Simulations))
+                        throw new Exception("Cannot find root component");
+
+                    Simulations simulations = rootComponent as Simulations;
+                    _DataStore = new DataStore();
+                    _DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"));
+                }
                 return _DataStore;
             }
         }

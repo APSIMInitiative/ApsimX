@@ -136,8 +136,12 @@ namespace Utility
             //prepare the statement
             IntPtr stmHandle = Prepare(query);
 
-            if (sqlite3_step(stmHandle) != SQLITE_DONE)
-                throw new SQLiteException("Could not execute SQL statement.");
+            int code = sqlite3_step(stmHandle);
+            if (code != SQLITE_DONE)
+            {
+                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
+                throw new SQLiteException(errorMessage);
+            }
 
             Finalize(stmHandle);
         }
@@ -266,8 +270,12 @@ namespace Utility
         /// </param>
         public void Finalize(IntPtr stmHandle)
         {
-            if (sqlite3_finalize(stmHandle) != SQLITE_OK)
-                throw new SQLiteException("Could not finalize SQL statement.");
+            int code = sqlite3_finalize(stmHandle);
+            if (code != SQLITE_OK)
+            {
+                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
+                throw new SQLiteException(errorMessage);
+            }
         }
 
         /// <summary>

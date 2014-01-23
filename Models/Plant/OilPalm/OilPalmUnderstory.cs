@@ -50,8 +50,7 @@ namespace Models.PMF.OilPalm
         double NFixation = 0.0;
 
         // The following event handler will be called once at the beginning of the simulation
-        [EventSubscribe("Initilised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[SoilWat.ll15_dep.Length];

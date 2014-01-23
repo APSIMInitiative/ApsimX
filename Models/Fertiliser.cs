@@ -87,8 +87,7 @@ namespace Models
             NitrogenApplied = 0;
         }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             NitrogenApplied = 0;
         }

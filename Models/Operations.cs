@@ -43,8 +43,7 @@ namespace Models
         public Model Model { get; set;}
 
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             if (Model != null)
                 RemoveModel(Model);

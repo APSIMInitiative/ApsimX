@@ -360,8 +360,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Growth = new Biomass();
             Senescing = new Biomass();

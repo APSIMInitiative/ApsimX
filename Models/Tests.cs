@@ -25,11 +25,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.TestPresenter")]
     public class Tests : Model
     {
-        [Link] private DataStore _DataStore = null;
-
         [XmlElement("Test")]
         public Test[] AllTests { get; set; }
-
-        public DataStore DataStore { get { return _DataStore; } }
     }
 }

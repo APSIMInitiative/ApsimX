@@ -13,8 +13,13 @@ using Models.Soils;
 using System.Reflection;
 using System.Diagnostics;
 using System.Media;
+<<<<<<< HEAD
 using Models;
 using Microsoft.Win32;
+=======
+using Models;
+using Models.Factorial;
+>>>>>>> 7ac9074216cee0ac4792807a19bf0531ab9169bc
 
 
 namespace UserInterface.Presenters
@@ -195,7 +200,8 @@ namespace UserInterface.Presenters
         /// </summary>
         [ContextModelType(typeof(Simulation))]
         [ContextModelType(typeof(Simulations))]
-        [ContextModelType(typeof(Creator))]
+        [ContextModelType(typeof(Experiment))]
+        [ContextModelType(typeof(Folder))]
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
@@ -207,7 +213,10 @@ namespace UserInterface.Presenters
             C.Do(null);
             if (C.ok)
             {
-                ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
+                if (Simulation != null)
+                    ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
+                else
+                    ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)
                 {
@@ -217,8 +226,8 @@ namespace UserInterface.Presenters
                 {
                     player.Stream = Properties.Resources.success;
                 }
-                player.Play();
-            }
+                    player.Play();
+                }
             else
                 ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete with errors", DataStore.ErrorLevel.Error);
         }
@@ -256,6 +265,7 @@ namespace UserInterface.Presenters
         [ContextModelType(typeof(Tests))]
         [ContextMenuName("Run Tests")]
         public void RunTests(object Sender, EventArgs e)
+<<<<<<< HEAD
         {
 
             RegistryKey regKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"Software\R-core\R", false) ;
@@ -290,6 +300,19 @@ namespace UserInterface.Presenters
             {
                 ExplorerView.ShowMessage("Could not find R installation.", DataStore.ErrorLevel.Warning);
             }
+=======
+        {
+            string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimxFolder = Path.Combine(binFolder, "..");
+            string scriptFileName = Path.Combine(new string[] {binFolder, 
+                                                       "..", 
+                                                       "Tests", 
+                                                       "RTestSuite",
+                                                       "RunTest.Bat"});
+            string workingFolder = apsimxFolder;
+            Process process = Utility.Process.RunProcess(scriptFileName, ExplorerPresenter.ApsimXFile.FileName, workingFolder);
+            string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
+>>>>>>> 7ac9074216cee0ac4792807a19bf0531ab9169bc
         }
         #endregion
     }

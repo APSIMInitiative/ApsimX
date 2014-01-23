@@ -4127,8 +4127,7 @@ namespace Models.Soils
         #region Clock Event Handlers
 
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             soilwat2_zero_variables();
             soilwat2_zero_daily_variables();

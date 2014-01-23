@@ -68,8 +68,8 @@ namespace Models.PMF.Phen
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }
         abstract public double FractionComplete { get; }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e) { ResetPhase(); }
+        public override void OnCommencing()
+        { ResetPhase(); }
         public virtual void ResetPhase()
         {
             _TTForToday = 0;

@@ -43,9 +43,9 @@ namespace UserInterface.Commands
                 while ((sims != null) && !(sims is Simulations))
                     sims = (Model)sims.Parent;
 
-                ((Simulations)sims).ResolveAllLinks();
-                ((Simulations)sims).DisconnectAllEvents();
-                ((Simulations)sims).ConnectAllEvents();
+                Utility.ModelFunctions.ResolveLinks(sims);
+                Utility.ModelFunctions.DisconnectEventsInAllModels(sims);
+                Utility.ModelFunctions.ConnectEventsInAllModels(sims);
 
                 // initialise the simulation
                 Model sim = FromModel;
@@ -54,7 +54,8 @@ namespace UserInterface.Commands
 
                 if (sim != null)
                 {
-                    ((Simulation)sim).Initialise();
+                    sim.OnLoaded();
+                    sim.OnCommencing();
                 }
 
                 ModelAdded = true;

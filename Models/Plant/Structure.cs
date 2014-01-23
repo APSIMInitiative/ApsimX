@@ -204,8 +204,7 @@ namespace Models.PMF
 
         #region Event Handlers
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Clear();
             string initial = "yes";

@@ -2,6 +2,7 @@
 using System.Data;
 using UserInterface.Views;
 using Models;
+using System.IO;
 
 namespace UserInterface.Presenters
 {
@@ -10,6 +11,7 @@ namespace UserInterface.Presenters
         private IGridView Grid;
         private Tests Tests;
         private CommandHistory CommandHistory;
+        private DataStore DataStore = null;
 
         /// <summary>
         /// Attach the model to the view.
@@ -19,6 +21,17 @@ namespace UserInterface.Presenters
             Grid = View as IGridView;
             this.Tests = Model as Tests;
             this.CommandHistory = CommandHistory;
+
+            Models.Core.Model RootModel = Tests;
+            while (RootModel.Parent != null)
+                RootModel = RootModel.Parent;
+
+            if (RootModel != null && RootModel is Models.Core.Simulations)
+            {
+                Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
+                DataStore = new Models.DataStore();
+                DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"));
+            }
 
             PopulateGrid();
             Grid.CellValueChanged += OnCellValueChanged;
@@ -32,6 +45,8 @@ namespace UserInterface.Presenters
         {
             Grid.CellValueChanged -= OnCellValueChanged;
             CommandHistory.ModelChanged -= OnModelChanged;
+            DataStore.Disconnect();
+            DataStore = null;
         }
 
         /// <summary>
@@ -61,7 +76,7 @@ namespace UserInterface.Presenters
         private void PopulateComboItemsInRow(int Row)
         {
             DataTable Table = Grid.DataSource;
-            Grid.SetCellEditor(0, Row, Tests.DataStore.SimulationNames);
+            Grid.SetCellEditor(0, Row, DataStore.SimulationNames);
 
             string[] TableNames = new string[0];
             string[] ColumnNames = new string[0];
@@ -71,10 +86,10 @@ namespace UserInterface.Presenters
                 string SimulationName = Table.Rows[Row][0].ToString();
                 if (SimulationName != "")
                 {
-                    TableNames = Tests.DataStore.TableNames;
+                    TableNames = DataStore.TableNames;
                     string TableName = Table.Rows[Row][1].ToString();
                     if (TableName != "")
-                        ColumnNames = Utility.DataTable.GetColumnNames(Tests.DataStore.GetData(SimulationName, TableName));
+                        ColumnNames = Utility.DataTable.GetColumnNames(DataStore.GetData(SimulationName, TableName));
                 }
             }
 

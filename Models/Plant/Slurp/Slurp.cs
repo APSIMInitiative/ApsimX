@@ -18,10 +18,6 @@ namespace Models.PMF.Slurp
     {
         public string plant_status = "out";
         [Link]
-        Clock Clock = null;
-        [Link]
-        WeatherFile MetData = null;
-        [Link]
         Soils.SoilWater SoilWat = null;
         [Link]
         Soils.SoilNitrogen SoilN = null;
@@ -56,19 +52,18 @@ namespace Models.PMF.Slurp
         private double FW;
         private double FWexpan;
         private double Ndemand = 0.0;
-        private double RootMass;
+        private double RootMass = 0.0;
         private double RootN;
-        private double[] NUptake;
-        private double[] PotSWUptake;
+        private double[] NUptake = null;
+        private double[] PotSWUptake = null;
         private double[] SWUptake;
-        private double[] PotNUptake;
+        private double[] PotNUptake = null;
         private double[] bd = null;
         private Function RootNConcentration { get; set; }
         private Function KNO3 { get; set; }
 
         // The following event handler will be called once at the beginning of the simulation
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void  OnCommencing()
         {
             kl = new double[SoilWat.sw_dep.Length];
             PotSWUptake = new double[kl.Length];

@@ -165,8 +165,7 @@ namespace Models.Soils
         /// <summary>
         /// Performs the initial checks and setup
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);

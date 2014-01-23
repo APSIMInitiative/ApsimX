@@ -19,8 +19,7 @@ namespace Models.PMF.Functions
 
         public Function PostEventValue { get; set; }
 
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnCommencing()
         {
             //Fixme, this needs to be fixed to respond to change and reset events
             //MyPaddock.Subscribe(SetEvent, OnSetEvent);

@@ -12,19 +12,14 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : Model//, ISerializable
+    public class Manager : Model 
     {
-
         // ----------------- Privates
         private string _Code;
         private bool HasDeserialised = false;
         private string elementsAsXml = null;
-        [NonSerialized] private Model _Script;
+        private Model _Script;
         [NonSerialized] private XmlElement[] _elements;
-        // store the details of the compilation for this instance
-        [NonSerialized] private string AssemblyFile = "";
-        [NonSerialized] private Assembly CompiledAssembly = null;
-        [NonSerialized] private string CompiledCode = "";
 
         // ----------------- Links
         [Link] private ISummary Summary = null;
@@ -84,17 +79,17 @@ namespace Models
         /// <summary>
         /// The model has been loaded.
         /// </summary>
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        public override void OnLoaded()
         {
             HasDeserialised = true;
-            RebuildScriptModel();
+            if (Script == null)
+                RebuildScriptModel();
         }
 
         /// <summary>
-        /// Rebuild the script model.
+        /// Rebuild the script model and return error message if script cannot be compiled.
         /// </summary>
-        public void RebuildScriptModel()
+        public string RebuildScriptModel()
         {
             if (HasDeserialised)
             {
@@ -105,31 +100,16 @@ namespace Models
                 {
                     XmlSerializer oldSerial = new XmlSerializer(Script.GetType());
                     currentState = Utility.Xml.Serialise(Script, true);
-
+                    
                     RemoveModel(Script);
                 }
 
                 try
                 {
-                    // determine if the script needs to be recompiled
-                    if ( (CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0) )
-                    {
-                        // Try compiling the script, firstly finding a unique dll name for it
-                        string tmpFile = Path.GetTempFileName();
-                        AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
-                        while (File.Exists(AssemblyFile))
-                        {
-                            File.Delete(tmpFile);   // cleanup
-                            tmpFile = Path.GetTempFileName();
-                            AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
-                        }
-                        File.Delete(tmpFile);   // cleanup
-                        
-                        CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, AssemblyFile);
-                        
-                        Summary.WriteMessage(FullPath, "Script compiled ok");
-                        CompiledCode = _Code;
-                    }
+                    // Try compiling the script
+                    //string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
+                    //                                       Name) + ".dll";
+                    Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
 
                     // Look for a "class Script" - throw if not found.
                     Type ScriptType = CompiledAssembly.GetType("Models.Script");
@@ -174,53 +154,14 @@ namespace Models
 
 
                     // Call the OnInitialised if present.
-                    MethodInfo OnInitialised = Script.GetType().GetMethod("OnInitialised", BindingFlags.Instance | BindingFlags.NonPublic);
-                    if (OnInitialised != null)
-                        OnInitialised.Invoke(Script, new object[] { this, null });
+                    Script.OnLoaded();
                 }
                 catch (Exception err)
                 {
-                    Summary.WriteWarning(FullPath, err.Message);
+                    Summary.WriteError(FullPath, err.Message);
                 }
             }
+            return null;
         }
-
-        //private void AddScriptModel(Model Script)
-        //{
-        //    Script.Parent = this;
-        //    Utility.ModelFunctions.ConnectEventsInModel(Script);
-        //    Utility.ModelFunctions.ResolveLinks(Script);
-        //}
-
-        //private void RemoveScriptModel(Model Script)
-        //{
-        //    Script.Parent = null;
-        //    Utility.ModelFunctions.DisconnectEventsInModel(Script);
-        //}
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        //public Manager() { }
-
-        ///// <summary>
-        ///// Constructor called by BinaryFormatter.Deserialize
-        ///// </summary>
-        //protected Manager(SerializationInfo info, StreamingContext context)
-        //{
-        //    _Code = info.GetString("Code");
-        //    elementsAsXml = info.GetString("ScriptXML");
-        //}
-
-        ///// <summary>
-        ///// Method called by BinaryFormatter.Serialize
-        ///// </summary>
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    if (Script != null)
-        //        Utility.ModelFunctions.DisconnectEventsInModel(Script);
-        //    info.AddValue("Code", _Code);
-        //    info.AddValue("ScriptXML", elementsAsXml);
-        //}
     }
 }

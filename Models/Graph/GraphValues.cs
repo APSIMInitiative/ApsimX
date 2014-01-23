@@ -35,7 +35,12 @@ namespace Models.Graph
         {
            get
            {
-               return Find(typeof(DataStore)) as DataStore;
+               if (Parent != null && Parent.Parent != null && Parent.Parent is Graph)
+               {
+                   Graph graph = Parent.Parent as Graph;
+                   return graph.DataStore;
+               }
+               return null;
            }
         }
 
