@@ -35,6 +35,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.CreateButton = new System.Windows.Forms.Button();
             this.AutoCreateCheckBox = new System.Windows.Forms.CheckBox();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -66,11 +67,11 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.Grid.DefaultCellStyle = dataGridViewCellStyle1;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Grid.Location = new System.Drawing.Point(0, 136);
+            this.Grid.Location = new System.Drawing.Point(0, 139);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
             this.Grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.Grid.Size = new System.Drawing.Size(465, 352);
+            this.Grid.Size = new System.Drawing.Size(465, 349);
             this.Grid.TabIndex = 2;
             // 
             // panel1
@@ -106,11 +107,21 @@
             this.AutoCreateCheckBox.UseVisualStyleBackColor = true;
             this.AutoCreateCheckBox.CheckedChanged += new System.EventHandler(this.OnAutoCreateCheckBoxChanged);
             // 
+            // splitter1
+            // 
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 136);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(465, 3);
+            this.splitter1.TabIndex = 4;
+            this.splitter1.TabStop = false;
+            // 
             // DataStoreView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.Grid);
+            this.Controls.Add(this.splitter1);
             this.Controls.Add(this.TableList);
             this.Controls.Add(this.panel1);
             this.Name = "DataStoreView";
@@ -130,5 +141,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button CreateButton;
         private System.Windows.Forms.CheckBox AutoCreateCheckBox;
+        private System.Windows.Forms.Splitter splitter1;
     }
 }

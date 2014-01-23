@@ -254,7 +254,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.ToggleAdvancedMode();
         }
 
-         /// <summary>
+        /// <summary>
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
         [ContextModelType(typeof(Tests))]
@@ -272,6 +272,20 @@ namespace UserInterface.Presenters
             Process process = Utility.Process.RunProcess(scriptFileName, ExplorerPresenter.ApsimXFile.FileName, workingFolder);
             string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
         }
+
+        [ContextModelType(typeof(Factor))]
+        [ContextMenuName("Insert factor value")]
+        public void InsertFactorValue(object Sender, EventArgs e)
+        {
+            ModelCollection Factor = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Factor;
+            if (Factor != null)
+            {
+                AddModelCommand Cmd = new AddModelCommand("<FactorValue/>", Factor);
+                ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            }
+        }
+        
+        
         #endregion
 
 

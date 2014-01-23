@@ -235,6 +235,7 @@ namespace Models.Core
                             property.SetValue(this, value, null);
                         }
                         value.Add(model);
+                        EnsureNameIsUnique(model);
                         wasAdded = true;
                         break;
                     }
@@ -443,6 +444,27 @@ namespace Models.Core
                 model.AllModels = null;
             }
         }
-   
+
+        /// <summary>
+        /// If the specified model has a settable name property then ensure it has a unique name.
+        /// Otherwise don't do anything.
+        /// </summary>
+        protected string EnsureNameIsUnique(object Model)
+        {
+            string OriginalName = Utility.Reflection.Name(Model);
+            string NewName = OriginalName;
+            int Counter = 0;
+            object Child = Models.FirstOrDefault(m => m.Name == NewName);
+            while (Child != null && Child != Model && Counter < 10000)
+            {
+                Counter++;
+                NewName = OriginalName + Counter.ToString();
+                Child = Models.FirstOrDefault(m => m.Name == NewName);
+            }
+            if (Counter == 1000)
+                throw new Exception("Cannot create a unique name for model: " + OriginalName);
+            Utility.Reflection.SetName(Model, NewName);
+            return NewName;
+        }
     }
 }

@@ -9,6 +9,10 @@ namespace UserInterface.Views
     interface IMemoView
     {
         event EventHandler<EditorArgs> MemoUpdate;
+        string MemoText { get; set; }
+        string[] MemoLines { get; set; }
+        bool ReadOnly { get; set; }
+        string LabelText { get; set; }
     }
 
     /// <summary>
@@ -31,6 +35,34 @@ namespace UserInterface.Views
             get { return richTextBox1.Text; }
             set { richTextBox1.Text = value; }
         }
+
+        /// <summary>
+        /// Set or get the lines of the richedit
+        /// </summary>
+        public string[] MemoLines
+        {
+            get { return richTextBox1.Lines; }
+            set { richTextBox1.Lines = value; }
+        }
+
+        /// <summary>
+        /// Get or set the readonly name of the richedit.
+        /// </summary>
+        public bool ReadOnly 
+        {
+            get { return richTextBox1.ReadOnly; }
+            set { richTextBox1.ReadOnly = value; }
+        }
+
+        /// <summary>
+        /// Get or set the label text.
+        /// </summary>
+        public string LabelText 
+        {
+            get { return label1.Text; }
+            set { label1.Text = value; }
+        }
+
 
         /// <summary>
         /// The memo has been updated and now send the changed text to the model.

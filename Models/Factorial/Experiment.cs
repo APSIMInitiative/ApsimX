@@ -11,6 +11,8 @@ namespace Models.Factorial
     /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.MemoView")]
+    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     public class Experiment : ModelCollection
     {
         public Factors Factors { get; set; }
@@ -21,16 +23,18 @@ namespace Models.Factorial
         /// </summary>
         public Simulation[] Create()
         {
-            List<Simulation> simulations = new List<Simulation>();
+            List<List<FactorValue>> allCombinations = AllCombinations();
 
-            Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Simulation);
-            newSimulation.Name = "";
-            for (int factorValueI = 0; factorValueI < Factors.factors[0].FactorValues.Count; factorValueI++)
+            List<Simulation> simulations = new List<Simulation>();
+            foreach (List<FactorValue> combination in allCombinations)
             {
-                CreatePermutation(0, factorValueI, newSimulation, simulations);
-                simulations.Add(newSimulation);
-                newSimulation = Utility.Reflection.Clone<Simulation>(Simulation);
+                Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Simulation);
                 newSimulation.Name = "";
+
+                foreach (FactorValue value in combination)
+                    value.ApplyToSimulation(newSimulation);
+
+                simulations.Add(newSimulation);
             }
 
             return simulations.ToArray();
@@ -39,55 +43,71 @@ namespace Models.Factorial
 
 
 
-        internal string[] Names()
-        {
-            List<string> simulationNames = new List<string>();
 
-            string simulationName = "";
-            for (int factorValueI = 0; factorValueI < Factors.factors[0].FactorValues.Count; factorValueI++)
+
+        public string[] Names()
+        {
+            List<List<FactorValue>> allCombinations = AllCombinations();
+
+            List<string> names = new List<string>();
+            foreach (List<FactorValue> combination in allCombinations)
             {
-                NamePermutation(0, factorValueI, ref simulationName, simulationNames);
-                simulationNames.Add(simulationName);
-                simulationName = "";
+                string newSimulationName = "";
+
+                foreach (FactorValue value in combination)
+                    value.AddToName(ref newSimulationName);
+
+                names.Add(newSimulationName);
             }
 
-            return simulationNames.ToArray();
+            return names.ToArray();
         }
 
 
-
-        private void CreatePermutation(int factorI, int factorValueI, Simulation newSimulation, List<Simulation> allSimulations)
+        private List<List<FactorValue>> AllCombinations()
         {
-            Factors.factors[factorI].ApplyToSimulation(newSimulation, factorValueI);
-
-            for (int factorJ = factorI + 1; factorJ < Factors.factors.Count; factorJ++)
+            // Create a list of list of factorValuse so that we can do permutations of them.
+            List<List<FactorValue>> allValues = new List<List<FactorValue>>();
+            foreach (Factor factor in Factors.factors)
             {
-                for (int factorValueJ = 0; factorValueJ < Factors.factors[factorJ].FactorValues.Count; factorValueJ++)
-                {
-                    CreatePermutation(factorJ, factorValueJ, newSimulation, allSimulations);
-                    allSimulations.Add(newSimulation);
-                    newSimulation = Utility.Reflection.Clone<Simulation>(Simulation);
-                    newSimulation.Name = "";
-                }
+                List<FactorValue> values = new List<FactorValue>();
+                foreach (FactorValue factorValue in factor.FactorValues)
+                    values.Add(factorValue);
+                allValues.Add(values);
             }
 
+            List<List<FactorValue>> allCombinations = AllCombinationsOf<FactorValue>(allValues.ToArray());
+            return allCombinations;
         }
 
-        private void NamePermutation(int factorI, int factorValueI, ref string simulationName, List<string> simulationNames)
+        /// <summary>
+        /// http://stackoverflow.com/questions/545703/combination-of-listlistint
+        /// </summary>
+        private static List<List<T>> AllCombinationsOf<T>(params List<T>[] sets)
         {
-            Factors.factors[factorI].AddToName(ref simulationName, factorValueI);
+            // need array bounds checking etc for production
+            var combinations = new List<List<T>>();
 
-            for (int factorJ = factorI + 1; factorJ < Factors.factors.Count; factorJ++)
-            {
-                for (int factorValueJ = 0; factorValueJ < Factors.factors[factorJ].FactorValues.Count; factorValueJ++)
-                {
-                    NamePermutation(factorJ, factorValueJ, ref simulationName, simulationNames);
-                    simulationNames.Add(simulationName);
-                    simulationName = "";
-                }
-            }
+            // prime the data
+            foreach (var value in sets[0])
+                combinations.Add(new List<T> { value });
 
+            foreach (var set in sets.Skip(1))
+                combinations = AddExtraSet(combinations, set);
+
+            return combinations;
         }
+
+        private static List<List<T>> AddExtraSet<T>
+             (List<List<T>> combinations, List<T> set)
+        {
+            var newCombinations = from value in set
+                                  from combination in combinations
+                                  select new List<T>(combination) { value };
+
+            return newCombinations.ToList();
+        }
+
     }
 
      

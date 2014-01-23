@@ -19,6 +19,29 @@
           <Name>2003-12-20</Name>
         </FactorValue>
       </Factor>
+      <Factor>
+        <Name>Fertiliser</Name>
+        <Paths>
+          <string>[FertiliserRule].Script.ApplicationAmount</string>
+          <string />
+          <string />
+        </Paths>
+        <FactorValue>
+          <Name>0</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>20</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>60</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>80</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>100</Name>
+        </FactorValue>
+      </Factor>
     </Factors>
     <Simulation>
       <Name>Base</Name>

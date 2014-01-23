@@ -70,6 +70,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
+    <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
