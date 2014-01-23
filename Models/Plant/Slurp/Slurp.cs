@@ -27,7 +27,7 @@ namespace Models.PMF.Slurp
         Soils.SoilNitrogen SoilN = null;
 
         [Description ("Cover Green")]
-        public double cover_green { get; set; }
+        public double CoverGreen { get; set; }
         [Description("Root Depth")]
         public double RootDepth { get; set; }
         [Description("Leaf Mass")]
@@ -36,8 +36,21 @@ namespace Models.PMF.Slurp
         public double[] kl { get; set; }
         [Description("LAI")]
         public double LAI { get; set; }
+        [Description("Total LAI")]
+        public double LAItot { get; set; }
+        [Description("Total Cover")]
+        public double CoverTot { get; set; }
+        [Description("Height")]
+        public double Height { get; set; }
+        [Description("Depth")]
+        public double Depth { get; set; }
+        
+        public string CropType = "Slurp";
 
-        public string Crop_Type = "Slurp";
+        public event EventHandler StartSlurp;
+        public event NewCanopyDelegate NewCanopy;
+        public event NewPotentialGrowthDelegate NewPotentialGrowth;
+
         private double PEP;
         private double EP;
         private double FW;
@@ -53,31 +66,50 @@ namespace Models.PMF.Slurp
         private Function RootNConcentration { get; set; }
         private Function KNO3 { get; set; }
 
-
         // The following event handler will be called once at the beginning of the simulation
         [EventSubscribe("Initialised")]
         private void OnInitialised(object sender, EventArgs e)
         {
-            cover_green = 0.5;
-            RootDepth = 500;
             kl = new double[SoilWat.sw_dep.Length];
             PotSWUptake = new double[kl.Length];
             SWUptake = new double[kl.Length];
             for (int i = 0; i < kl.Length; i++)
                 kl[i] = 0.5;
-            LAI = 1;
-            LeafMass = 1;
+
+            // Invoke a sowing event. Needed for MicroClimate
+            if (StartSlurp != null)
+                StartSlurp.Invoke(this, new EventArgs());
+
+            //Send a NewCanopy event to MicroClimate
+            NewCanopyType NewCanopyType = new NewCanopyType();
+            NewCanopyType.cover = CoverGreen;
+            NewCanopyType.cover_tot = CoverTot;
+            NewCanopyType.depth = Depth;
+            NewCanopyType.height = Height;
+            NewCanopyType.lai = LAI;
+            NewCanopyType.lai_tot = LAItot;
+            NewCanopyType.sender = "Slurp";
+            if (NewCanopy != null)
+                NewCanopy.Invoke(NewCanopyType);
         }
 
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)
         {
             DoWaterBalance();
+            //TODO: n balance
+
+            //for MicroClimate
+            NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
+            NewPotentialGrowthData.frgr = 1;
+            NewPotentialGrowthData.sender = Name;
+            if (NewPotentialGrowth != null)
+                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
         }
 
         private void DoWaterBalance()
         {
-            PEP = SoilWat.eo * cover_green;
+            PEP = SoilWat.eo * CoverGreen;
 
             for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl[j] * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
