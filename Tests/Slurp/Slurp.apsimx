@@ -701,39 +701,12 @@
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
-      <MicroClimate>
-        <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
-        <ComponentData>
-          <Name>Potato</Name>
-          <Type>Potato</Type>
-          <Albedo>0.26</Albedo>
-          <Emissivity>0.96</Emissivity>
-          <Gsmax>0.011</Gsmax>
-          <R50>200</R50>
-        </ComponentData>
-      </MicroClimate>
       <Slurp>
         <Name>Slurp</Name>
         <plant_status>out</plant_status>
-        <Crop_Type>Slurp</Crop_Type>
-        <cover_green>0.5</cover_green>
-        <RootDepth>500</RootDepth>
+        <CropType>Slurp</CropType>
+        <CoverGreen>0.5</CoverGreen>
+        <RootDepth>200</RootDepth>
         <LeafMass>1</LeafMass>
         <kl>
           <double>0.5</double>
@@ -748,8 +721,12 @@
           <double>0.5</double>
           <double>0.5</double>
         </kl>
-        <LAI>1</LAI>
-        <LeafN>1</LeafN>
+        <LAI>2</LAI>
+        <LAItot>2</LAItot>
+        <CoverTot>0.5</CoverTot>
+        <Height>800</Height>
+        <Depth>100</Depth>
+        <LeafN>2</LeafN>
       </Slurp>
     </Zone>
   </Simulation>
@@ -1500,32 +1477,22 @@
     </Axis>
     <Series>
       <Name>Series</Name>
-      <Title>Minimum temperature</Title>
       <Type>Line</Type>
-      <XAxis>Left</XAxis>
+      <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>0</ColourArgb>
+      <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
+        <SimulationName>Slurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-      </Y>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Title>Series 2</Title>
-      <Type>Line</Type>
-      <XAxis>Left</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>0</ColourArgb>
-      <Marker>None</Marker>
-      <X>
-        <Name>GraphValues</Name>
-      </X>
-      <Y>
-        <Name>GraphValues</Name>
+        <SimulationName>Slurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
     </Series>
   </Graph>

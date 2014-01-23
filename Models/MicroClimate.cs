@@ -8,6 +8,7 @@ using System.Text;
 using Models.Core;
 using Models;
 using Models.PMF;
+using Models.PMF.Slurp;
 using System.Xml.Serialization;
 
 namespace Models
@@ -397,6 +398,24 @@ namespace Models
                 throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
             ComponentData[senderIdx].Name = newCrop.Name;
             ComponentData[senderIdx].Type = newCrop.CropType;
+            Clear(ComponentData[senderIdx]);
+        }
+
+        /// <summary>
+        /// Register presence of slurp
+        /// </summary>
+        [EventSubscribe("StartSlurp")]
+        private void OnStartSlurp(object sender, EventArgs e)
+        {
+            Slurp newSlurp = sender as Slurp;
+
+            int senderIdx = FindComponentIndex(newSlurp.Name);
+
+            // If sender is unknown, add it to the list
+            if (senderIdx == -1)
+                throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for Slurp");
+            ComponentData[senderIdx].Name = newSlurp.Name;
+            ComponentData[senderIdx].Type = newSlurp.CropType;
             Clear(ComponentData[senderIdx]);
         }
 
