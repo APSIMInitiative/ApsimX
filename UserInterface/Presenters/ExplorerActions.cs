@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Media;
 using Models;
+using Microsoft.Win32;
 using Models.Factorial;
 
 
@@ -261,6 +262,40 @@ namespace UserInterface.Presenters
         [ContextMenuName("Run Tests")]
         public void RunTests(object Sender, EventArgs e)
         {
+
+            RegistryKey regKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"Software\R-core\R", false);
+            if (regKey != null)
+            {
+                //will need to make this work on 32bit machines
+                string rpath = (string)regKey.GetValue("InstallPath", "");
+                rpath += "\\Bin\\x64\\rscript.exe";
+
+                string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string scriptFileName = Path.Combine(new string[] {binFolder, 
+                                                       "..", 
+                                                       "Tests", 
+                                                       "RTestSuite",
+                                                       "RunTest.R"});
+                string workingFolder = Path.Combine(new string[] { binFolder, ".." });
+
+                Process p = new Process();
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.WorkingDirectory = workingFolder;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.FileName = rpath;
+                p.StartInfo.Arguments = "\"" + scriptFileName + "\" " + "\"" + ExplorerPresenter.ApsimXFile.FileName + "\"";
+                p.Start();
+                p.WaitForExit();
+                ExplorerView.ShowMessage(p.StandardOutput.ReadToEnd(), DataStore.ErrorLevel.Information);
+                ExplorerView.ShowMessage(p.StandardError.ReadToEnd(), DataStore.ErrorLevel.Warning);
+            }
+            else
+            {
+                ExplorerView.ShowMessage("Could not find R installation.", DataStore.ErrorLevel.Warning);
+            }
+            {
             string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimxFolder = Path.Combine(binFolder, "..");
             string scriptFileName = Path.Combine(new string[] {binFolder, 
@@ -271,6 +306,7 @@ namespace UserInterface.Presenters
             string workingFolder = apsimxFolder;
             Process process = Utility.Process.RunProcess(scriptFileName, ExplorerPresenter.ApsimXFile.FileName, workingFolder);
             string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
+            }
         }
 
         [ContextModelType(typeof(Factor))]
@@ -287,8 +323,6 @@ namespace UserInterface.Presenters
         
         
         #endregion
-
-
-
     }
 }
+
