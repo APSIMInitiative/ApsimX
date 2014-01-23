@@ -52,14 +52,13 @@ namespace ModelTests
                 string[] directories = Directory.GetDirectories(directory, "Bin");
                 if (directories.Length == 1)
                 {
-                    directory = directories[0];
-                    break;
+                    string[] files = Directory.GetFiles(directories[0], "sqlite3.dll");
+                    if (files.Length == 1)
+                        return files[0];
                 }
                 directory = Path.GetDirectoryName(directory); // parent directory
             }
-            if (directory == null)
-                throw new Exception("Cannot find apsimx bin directory");
-            return Path.Combine(directory, "sqlite3.dll");
+            throw new Exception("Cannot find apsimx bin directory");
         }
 
         [TestCleanup]

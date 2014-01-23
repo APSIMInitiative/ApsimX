@@ -13,10 +13,10 @@
           <string />
         </Paths>
         <FactorValue>
-          <Name>2003-11-01T00:00:00</Name>
+          <Name>2003-11-01</Name>
         </FactorValue>
         <FactorValue>
-          <Name>2003-12-20T00:00:00</Name>
+          <Name>2003-12-20</Name>
         </FactorValue>
       </Factor>
     </Factors>
@@ -2238,13 +2238,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate: 2003-11-01T00:00:00</SimulationName>
+        <SimulationName>SowDate 2003-11-01</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate: 2003-11-01T00:00:00</SimulationName>
+        <SimulationName>SowDate 2003-11-01</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.LAI</FieldName>
       </Y>
@@ -2259,16 +2259,33 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate: 2003-12-20T00:00:00</SimulationName>
+        <SimulationName>SowDate 2003-12-20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate: 2003-12-20T00:00:00</SimulationName>
+        <SimulationName>SowDate 2003-12-20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.LAI</FieldName>
       </Y>
     </Series>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>SowDate 2003-11-01</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
 </Simulations>

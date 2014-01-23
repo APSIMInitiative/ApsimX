@@ -32,7 +32,7 @@ namespace Models.Factorial
 
         public void AddToName(ref string simulationName, int factorValueI)
         {
-            simulationName += Name + ": " + FactorValues[factorValueI].Name; // append the right most path bit.
+            simulationName += Name + " " + FactorValues[factorValueI].Name; // append the right most path bit.
         }
     }
 }
