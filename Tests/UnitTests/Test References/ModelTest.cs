@@ -33,6 +33,8 @@ namespace ModelTests
             W.Close();
             S = Simulations.Read("Test.apsimx");
 
+            //Assembly.GetExecutingAssembly()
+
             string sqliteSourceFileName = FindSqlite3DLL();
 
             sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
@@ -45,11 +47,19 @@ namespace ModelTests
         private string FindSqlite3DLL()
         {
             string directory = Directory.GetCurrentDirectory();
-            while (directory != null && Path.GetFileName(directory) != "ApsimX")
+            while (directory != null)
+            {
+                string[] directories = Directory.GetDirectories(directory, "Bin");
+                if (directories.Length == 1)
+                {
+                    directory = directories[0];
+                    break;
+                }
                 directory = Path.GetDirectoryName(directory); // parent directory
+            }
             if (directory == null)
                 throw new Exception("Cannot find apsimx bin directory");
-            return Path.Combine(directory, "Bin", "sqlite3.dll");
+            return Path.Combine(directory, "sqlite3.dll");
         }
 
         [TestCleanup]

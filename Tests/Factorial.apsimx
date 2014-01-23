@@ -2271,21 +2271,4 @@
       </Y>
     </Series>
   </Graph>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>SowDate: 2003-11-01T00:00:00</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SowDate: 2003-12-20T00:00:00</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
 </Simulations>
