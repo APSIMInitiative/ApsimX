@@ -602,5 +602,13 @@
   </Simulation>
   <DataStore />
   <Tests />
-  <Creator />
+  <Experiment>
+    <Factors>
+      <Factor>
+        
+      </Factor>
+    </Factors>
+  </Experiment>
+  <Folder />
+  <Memo />
 </Simulations>

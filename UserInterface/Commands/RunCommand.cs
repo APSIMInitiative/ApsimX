@@ -5,14 +5,14 @@ namespace UserInterface.Commands
 {
     class RunCommand : ICommand
     {
-        private Simulation Simulation;
+        private Model ModelClicked;
         private Simulations Simulations;
         public bool ok { get; set; }
 
-        public RunCommand(Simulations Simulations, Simulation Simulation)
+        public RunCommand(Simulations Simulations, Model Simulation)
         {
             this.Simulations = Simulations;
-            this.Simulation = Simulation;
+            this.ModelClicked = Simulation;
         }
 
         /// <summary>
@@ -20,10 +20,10 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            if (Simulation == null)
+            if (ModelClicked == null)
                 ok = Simulations.Run();
             else
-                ok = Simulations.Run(Simulation);
+                ok = Simulations.Run(ModelClicked);
         }
 
         /// <summary>

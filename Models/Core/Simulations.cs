@@ -94,15 +94,18 @@ namespace Models.Core
         /// </summary>
         public bool Run()
         {
-            return Run(FindAllSimulationsToRun());
+            return Run(FindAllSimulationsToRun(this));
         }
 
         /// <summary>
         /// Run the specified simulation. Return true if it ran ok.
         /// </summary>
-        public bool Run(Simulation simulation)
+        public bool Run(Model simulationOrFolder)
         {
-            return Run(new Simulation[1] { simulation });
+            if (simulationOrFolder is Folder)
+                return Run(FindAllSimulationsToRun(simulationOrFolder));
+            else
+                return Run(new Simulation[1] { simulationOrFolder as Simulation });
         }
 
         /// <summary>
@@ -132,13 +135,13 @@ namespace Models.Core
         private Simulations() { }
 
         /// <summary>
-        /// Find all simulations.
+        /// Find all simulations under the specified parent model.
         /// </summary>
-        public Simulation[] FindAllSimulationsToRun()
+        public static Simulation[] FindAllSimulationsToRun(Model parent)
         {
             List<Simulation> simulations = new List<Simulation>();
             // Look for simulations.
-            foreach (Model Model in FindAll(typeof(Simulation)))
+            foreach (Model Model in parent.FindAll(typeof(Simulation)))
             {
                 // An experiment can have a base simulation - don't return that to caller.
                 if (!(Model.Parent is Experiment))
@@ -146,7 +149,7 @@ namespace Models.Core
             }
 
             // Look for experiments and get them to create their simulations.
-            foreach (Experiment experiment in FindAll(typeof(Experiment)))
+            foreach (Experiment experiment in parent.FindAll(typeof(Experiment)))
                 simulations.AddRange(experiment.Create());
 
             return simulations.ToArray();

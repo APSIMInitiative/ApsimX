@@ -12,7 +12,6 @@ namespace Models.Graph
     public class Graph : Model
     {
         [NonSerialized] private DataStore _DataStore = null;
-        [Link] private Simulation Simulation = null;
 
         public string Title {get; set;}
 
@@ -35,8 +34,17 @@ namespace Models.Graph
             {
                 if (_DataStore == null)
                 {
+                    // Find root component.
+                    Model rootComponent = this;
+                    while (rootComponent.Parent != null)
+                        rootComponent = rootComponent.Parent;
+
+                    if (rootComponent == null || !(rootComponent is Simulations))
+                        throw new Exception("Cannot find root component");
+
+                    Simulations simulations = rootComponent as Simulations;
                     _DataStore = new DataStore();
-                    _DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+                    _DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"));
                 }
                 return _DataStore;
             }

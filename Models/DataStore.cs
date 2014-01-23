@@ -53,8 +53,6 @@ namespace Models
                     Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
                     Connect(Path.ChangeExtension(simulations.FileName, ".db"));
                 }
-                else
-                    throw new ApsimXException("DataStore", "Cannot determine the filename of the datastore.");
             }
         }
 
@@ -332,7 +330,7 @@ namespace Models
         public DataTable GetData(string simulationName, string tableName)
         {
             Connect();
-            if (!TableExists("Simulations"))
+            if (Connection == null || !TableExists("Simulations"))
                 return null;
             try
             {

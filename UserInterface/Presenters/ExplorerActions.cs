@@ -196,6 +196,7 @@ namespace UserInterface.Presenters
         [ContextModelType(typeof(Simulation))]
         [ContextModelType(typeof(Simulations))]
         [ContextModelType(typeof(Experiment))]
+        [ContextModelType(typeof(Folder))]
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {

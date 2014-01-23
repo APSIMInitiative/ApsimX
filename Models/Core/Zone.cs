@@ -52,6 +52,7 @@ namespace Models.Core
         [XmlElement(typeof(Log))]
         [XmlElement(typeof(Models.Factorial.Experiment))]
         [XmlElement(typeof(Memo))]
+        [XmlElement(typeof(Folder))]
         public List<Model> Children { get; set; }
 
          /// <summary>
