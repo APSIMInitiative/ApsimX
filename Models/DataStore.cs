@@ -439,24 +439,27 @@ namespace Models
                 if (tableName != "Messages" && tableName != "Properties")
                 {
                     DataTable firstRowOfTable = RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
-                    string fieldNamesString = "";
-                    for (int i = 1; i < firstRowOfTable.Columns.Count; i++)
+                    if (firstRowOfTable != null)
                     {
-                        if (i > 1)
-                            fieldNamesString += ", ";
-                        fieldNamesString += "[" + firstRowOfTable.Columns[i].ColumnName + "]";
-                    }
+                        string fieldNamesString = "";
+                        for (int i = 1; i < firstRowOfTable.Columns.Count; i++)
+                        {
+                            if (i > 1)
+                                fieldNamesString += ", ";
+                            fieldNamesString += "[" + firstRowOfTable.Columns[i].ColumnName + "]";
+                        }
 
-                    string sql = String.Format("SELECT Name, {0} FROM Simulations, {1} " +
-                                               "WHERE Simulations.ID = {1}.SimulationID",
-                                               fieldNamesString, tableName);
-                    DataTable data = RunQuery(sql);
-                    if (data.Rows.Count > 0)
-                    {
+                        string sql = String.Format("SELECT Name, {0} FROM Simulations, {1} " +
+                                                   "WHERE Simulations.ID = {1}.SimulationID",
+                                                   fieldNamesString, tableName);
+                        DataTable data = RunQuery(sql);
+                        if (data != null && data.Rows.Count > 0)
+                        {
 
-                        report.WriteLine("TABLE: " + tableName);
+                            report.WriteLine("TABLE: " + tableName);
 
-                        report.Write(Utility.DataTable.DataTableToCSV(data, 0));
+                            report.Write(Utility.DataTable.DataTableToCSV(data, 0));
+                        }
                     }
                 }
             }
