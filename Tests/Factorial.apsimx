@@ -768,8 +768,6 @@
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <soil_heat>-0.32999999523162843</soil_heat>
-          <dryleaffraction>1</dryleaffraction>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -1466,6 +1464,10 @@
                   <string>[Leaf].CohortDead</string>
                 </Propertys>
               </Dead>
+              <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
+              <StartFractionExpanded>0</StartFractionExpanded>
+              <FractionNextleafExpanded>0</FractionNextleafExpanded>
+              <_ExpandedNodeNo>0</_ExpandedNodeNo>
               <MaxCover>1</MaxCover>
               <InitialLeaf>
                 <Name>LeafCohort</Name>
@@ -2212,100 +2214,6 @@
     <Name>DataStore</Name>
     <AutoCreateReport>true</AutoCreateReport>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Structure.Population</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.LAI</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
-    </Test>
-  </Tests>
   <Graph>
     <Name>Graph</Name>
     <Axis>
@@ -2363,4 +2271,21 @@
       </Y>
     </Series>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>SowDate: 2003-11-01T00:00:00</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate: 2003-12-20T00:00:00</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
 </Simulations>

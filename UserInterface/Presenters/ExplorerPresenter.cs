@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using UserInterface.Views;
 using Models.Core;
 using System.Runtime.Serialization;
+using System.IO;
 using Models;
 using System.Collections.Generic;
 using System.Data;
@@ -112,16 +113,35 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool Save()
         {
+            bool result = true;
             try
             {
+                // need to test is ApsimXFile has changed and only prompt when changes have occured.
+                // serialise ApsimXFile to buffer
+                string newSim = Utility.Xml.Serialise(ApsimXFile, true);
+                StreamReader simStream = new StreamReader(ApsimXFile.FileName);
+                string origSim = simStream.ReadToEnd(); // read original file to buffer2
+                simStream.Close();
+
+                Int32 choice = 1;                           // no save
+                if (String.Compare(newSim, origSim) != 0)   // do comparison
+                {
+                    choice = View.AskToSave(); 
+                }
+                if (choice == -1)                           // cancel
+                    result = false;
+                else if (choice == 0)                       // save
+                {
                 ApsimXFile.Write(ApsimXFile.FileName);
-                return true;
+                    result = true;
+            }
             }
             catch (Exception err)
             {
                 View.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
-                return false;
+                result = false;
             }
+            return result;
         }
 
         /// <summary>

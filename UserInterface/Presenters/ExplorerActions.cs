@@ -160,9 +160,9 @@ namespace UserInterface.Presenters
                     ExplorerPresenter.CommandHistory.Add(Cmd, true);
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                // invalid xml from clipboard.
+                Console.WriteLine(exception.Message); // invalid xml from clipboard.
             }
         }
 
@@ -207,15 +207,23 @@ namespace UserInterface.Presenters
             C.Do(null);
             if (C.ok)
             {
-                ExplorerView.ShowMessage("Simulation complete", DataStore.ErrorLevel.Information);
+                if (Simulation != null)
+                    ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
+                else
+                    ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
+                SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)
                 {
-                    SoundPlayer player = new SoundPlayer(Properties.Resources.notes);
+                    player.Stream = Properties.Resources.notes;
+                }
+                else
+                {
+                    player.Stream = Properties.Resources.success;
+                }
                     player.Play();
                 }
-            }
             else
-                ExplorerView.ShowMessage("Simulation complete with errors", DataStore.ErrorLevel.Error);
+                ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete with errors", DataStore.ErrorLevel.Error);
         }
 
         /// <summary>
@@ -253,12 +261,13 @@ namespace UserInterface.Presenters
         public void RunTests(object Sender, EventArgs e)
         {
             string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimxFolder = Path.Combine(binFolder, "..");
             string scriptFileName = Path.Combine(new string[] {binFolder, 
                                                        "..", 
                                                        "Tests", 
                                                        "RTestSuite",
                                                        "RunTest.Bat"});
-            string workingFolder = Path.GetDirectoryName(scriptFileName);
+            string workingFolder = apsimxFolder;
             Process process = Utility.Process.RunProcess(scriptFileName, ExplorerPresenter.ApsimXFile.FileName, workingFolder);
             string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
         }

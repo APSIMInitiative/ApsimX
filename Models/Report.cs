@@ -336,6 +336,7 @@ namespace Models
 
             UnsubscribeAllEventHandlers();
             DataStore.Disconnect();
+            DataStore = null;
         }
 
         private void UnsubscribeAllEventHandlers()

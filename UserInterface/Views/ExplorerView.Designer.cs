@@ -35,12 +35,13 @@
             this.TreeView = new System.Windows.Forms.TreeView();
             this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TreeImageList = new System.Windows.Forms.ImageList(this.components);
+            this.splitter2 = new System.Windows.Forms.Splitter();
             this.StatusWindow = new System.Windows.Forms.RichTextBox();
             this.StatusWindowPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.splitter2 = new System.Windows.Forms.Splitter();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Panel.SuspendLayout();
             this.StatusWindowPopup.SuspendLayout();
             this.SuspendLayout();
@@ -118,6 +119,15 @@
             this.TreeImageList.ImageSize = new System.Drawing.Size(16, 16);
             this.TreeImageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // splitter2
+            // 
+            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter2.Location = new System.Drawing.Point(0, 501);
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(600, 3);
+            this.splitter2.TabIndex = 11;
+            this.splitter2.TabStop = false;
+            // 
             // StatusWindow
             // 
             this.StatusWindow.BackColor = System.Drawing.SystemColors.Info;
@@ -135,14 +145,15 @@
             // StatusWindowPopup
             // 
             this.StatusWindowPopup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeToolStripMenuItem});
+            this.closeToolStripMenuItem,
+            this.clearToolStripMenuItem});
             this.StatusWindowPopup.Name = "StatusWindowPopup";
-            this.StatusWindowPopup.Size = new System.Drawing.Size(104, 26);
+            this.StatusWindowPopup.Size = new System.Drawing.Size(153, 70);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.OnCloseStatusWindowClick);
             // 
@@ -160,14 +171,12 @@
             this.SaveFileDialog.DefaultExt = "apsimx";
             this.SaveFileDialog.Filter = "*.apsimx|*.apsimx";
             // 
-            // splitter2
+            // clearToolStripMenuItem
             // 
-            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 501);
-            this.splitter2.Name = "splitter2";
-            this.splitter2.Size = new System.Drawing.Size(600, 3);
-            this.splitter2.TabIndex = 11;
-            this.splitter2.TabStop = false;
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // ExplorerView
             // 
@@ -200,6 +209,7 @@
         private System.Windows.Forms.ContextMenuStrip StatusWindowPopup;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.Splitter splitter2;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
 
 
 

@@ -34,12 +34,35 @@ namespace UserInterface.Commands
                 XmlDocument Doc = new XmlDocument();
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
+                FromModel.Parent = ToParent;
                 ToParent.AddModel(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+
+                // ensure the simulations have all the events connected and links resolved
+                Model sims = FromModel;
+                while ((sims != null) && !(sims is Simulations))
+                    sims = (Model)sims.Parent;
+
+                Utility.ModelFunctions.ResolveLinks(sims);
+                Utility.ModelFunctions.DisconnectEventsInAllModels(sims);
+                Utility.ModelFunctions.ConnectEventsInAllModels(sims);
+
+                // initialise the simulation
+                Model sim = FromModel;
+                while ((sim != null) && !(sim is Simulation))
+                    sim = (Model)sim.Parent;
+
+                if (sim != null)
+                {
+                    sim.OnLoaded();
+                    sim.OnCommencing();
+                }
+
                 ModelAdded = true;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                Console.WriteLine(exp.Message);
                 ModelAdded = false;
             }
 

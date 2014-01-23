@@ -714,8 +714,9 @@ namespace Utility
                 //    OnSerialised.Invoke(ReturnObj, null);
                 return ReturnObj;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                Console.WriteLine(exp.Message);
                 return null;  // most likely invalid xml.
             }
         }

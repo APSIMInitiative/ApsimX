@@ -51,7 +51,7 @@ namespace Models
             set
             {
                 FileName = value;
-               
+                WtrFile = null; // ensure it is reopened
                 // try and convert to path relative to the Simulations.FileName.
                 FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
             }
@@ -180,21 +180,25 @@ namespace Models
         {
             if (System.IO.File.Exists(FullFileName))
             {
-                WtrFile = new Utility.ApsimTextFile();
-                WtrFile.Open(FullFileName);
-                MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
-                MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
-                RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
-                RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
-                if (MaxTIndex == -1)
-                    throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
-                if (MinTIndex == -1)
-                    throw new Exception("Cannot find MinT in weather file: " + FullFileName);
-                if (RadnIndex == -1)
-                    throw new Exception("Cannot find Radn in weather file: " + FullFileName);
-                if (RainIndex == -1)
-                    throw new Exception("Cannot find Rain in weather file: " + FullFileName);
-
+                if (WtrFile == null)
+                {
+                    WtrFile = new Utility.ApsimTextFile();
+                    WtrFile.Open(FullFileName);
+                    MaxTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Maxt");
+                    MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
+                    RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
+                    RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
+                    if (MaxTIndex == -1)
+                        throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
+                    if (MinTIndex == -1)
+                        throw new Exception("Cannot find MinT in weather file: " + FullFileName);
+                    if (RadnIndex == -1)
+                        throw new Exception("Cannot find Radn in weather file: " + FullFileName);
+                    if (RainIndex == -1)
+                        throw new Exception("Cannot find Rain in weather file: " + FullFileName);
+                }
+                else
+                    WtrFile.SeekToDate(WtrFile.FirstDate);
                 return true;
             }
             else

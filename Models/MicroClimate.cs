@@ -295,8 +295,10 @@ namespace Models
             get { return netLongWave; }
         }
 
+        [XmlIgnore]
         public double soil_heat = 0.0;
 
+        [XmlIgnore]
         public double dryleaffraction = 0.0;
 
         public KeyValueArrayType gsmax_array

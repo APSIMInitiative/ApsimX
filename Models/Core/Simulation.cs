@@ -41,15 +41,18 @@ namespace Models.Core
         /// </summary>
         public bool Run()
         {
-            bool ok;
+            bool ok = false;
             try
             {
                 Utility.ModelFunctions.CallOnCommencing(this);
-
+                
                 if (Commenced != null)
+                {
                     Commenced.Invoke(this, new EventArgs());
-
-                ok = true;
+                    ok = true;
+                }
+                else
+                    Summary.WriteError(FullPath, "Cannot invoke Commenced!");
             }
             catch (Exception err)
             {
@@ -64,10 +67,15 @@ namespace Models.Core
             }
 
             Utility.ModelFunctions.CallOnCompleted(this);
+            ok &= true;
 
             return ok;
         }
 
+        public void ResolveLinks()
+        {
+            Utility.ModelFunctions.ResolveLinks(this);
+        }
     }
 
 }

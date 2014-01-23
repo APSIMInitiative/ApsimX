@@ -285,6 +285,23 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Ask the user if they wish to save the simulation.
+        /// </summary>
+        /// <returns>Choice for saving the simulation</returns>
+        public Int32 AskToSave()
+        {
+            TabPage Page = Parent as TabPage;
+            DialogResult result = MessageBox.Show("Do you want to save changes for " + Page.Text + " ?", "Save changes", MessageBoxButtons.YesNoCancel);
+            switch (result)
+            {
+                case DialogResult.Cancel: return -1;
+                case DialogResult.Yes: return 0;
+                case DialogResult.No: return 1;
+                default: return -1;
+            }
+        }
+
+        /// <summary>
         /// Add a status message to the explorer window
         /// </summary>
         /// <param name="Message"></param>
@@ -383,7 +400,7 @@ namespace UserInterface.Views
             // Remove unwanted nodes if necessary.
             while (Args.Descriptions.Count < Nodes.Count)
             {
-                Console.WriteLine("Removing ndoes");
+                Console.WriteLine("Removing nodes");
                 Nodes.RemoveAt(0);
             }
 
@@ -590,6 +607,11 @@ namespace UserInterface.Views
         private void OnCloseStatusWindowClick(object sender, EventArgs e)
         {
             StatusWindow.Visible = false;
+        }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StatusWindow.Clear();
         }
 
     }

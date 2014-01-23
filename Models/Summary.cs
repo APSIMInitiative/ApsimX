@@ -163,7 +163,7 @@ namespace Models
 
             DataTable messageTable = new DataTable();
             DataTable messages = DataStore.GetData(simulationName, "Messages");
-            if (messages.Rows.Count > 0)
+            if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
                 messageTable.Columns.Add("Model", typeof(string));

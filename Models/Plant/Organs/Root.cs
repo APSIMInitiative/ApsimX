@@ -590,7 +590,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double WaterUptake
         {
-            get { return -Utility.Math.Sum(Uptake); }
+            get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
         }
         #endregion
 
