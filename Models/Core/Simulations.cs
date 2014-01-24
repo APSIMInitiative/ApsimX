@@ -155,8 +155,12 @@ namespace Models.Core
 
                 // Look for simulations.
                 foreach (Model model in children)
-                    if (model is Simulation)
+                {
+                    if (model is Experiment)
+                        simulations.AddRange((model as Experiment).Create());
+                    else if (model is Simulation && !(model.Parent is Experiment))
                         simulations.Add(model as Simulation);
+                }
             }
 
             return simulations.ToArray();

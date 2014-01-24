@@ -1489,10 +1489,10 @@
                   <string>[Leaf].CohortDead</string>
                 </Propertys>
               </Dead>
-              <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
-              <StartFractionExpanded>0</StartFractionExpanded>
-              <FractionNextleafExpanded>0</FractionNextleafExpanded>
-              <_ExpandedNodeNo>0</_ExpandedNodeNo>
+              <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
+              <StartFractionExpanded>0.86262315376711707</StartFractionExpanded>
+              <FractionNextleafExpanded>0.89989693128355064</FractionNextleafExpanded>
+              <_ExpandedNodeNo>34.89989693128355</_ExpandedNodeNo>
               <MaxCover>1</MaxCover>
               <InitialLeaf>
                 <Name>LeafCohort</Name>
@@ -3691,10 +3691,10 @@
                   <string>[Leaf].CohortDead</string>
                 </Propertys>
               </Dead>
-              <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
-              <StartFractionExpanded>0</StartFractionExpanded>
-              <FractionNextleafExpanded>0</FractionNextleafExpanded>
-              <_ExpandedNodeNo>0</_ExpandedNodeNo>
+              <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
+              <StartFractionExpanded>0.86262315376711707</StartFractionExpanded>
+              <FractionNextleafExpanded>0.89989693128355064</FractionNextleafExpanded>
+              <_ExpandedNodeNo>34.89989693128355</_ExpandedNodeNo>
               <MaxCover>1</MaxCover>
               <InitialLeaf>
                 <Name>LeafCohort</Name>
@@ -4461,13 +4461,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 0</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 0</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4482,13 +4482,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 20</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 20</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4503,13 +4503,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 60</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-11-01, Fertiliser 60</SimulationName>
+        <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4524,13 +4524,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 0</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 0</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4545,13 +4545,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 20</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 20</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4566,13 +4566,13 @@
       <Marker>None</Marker>
       <X>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 60</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
         <Name>GraphValues</Name>
-        <SimulationName>SowDate 2003-12-20, Fertiliser 60</SimulationName>
+        <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
@@ -4581,7 +4581,14 @@
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>SowDate 2003-11-01</SimulationName>
+      <SimulationName>Fertiliser 0</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Fertiliser 20</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
