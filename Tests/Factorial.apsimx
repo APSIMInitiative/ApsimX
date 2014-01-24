@@ -2297,11 +2297,18 @@
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>SowDate 2003-11-01</SimulationName>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
+      <Type>AllPos</Type>
+      <ColumnNames>WeatherFile.MaxT</ColumnNames>
       <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>AllPos</Type>
+      <ColumnNames>WeatherFile.DayLength</ColumnNames>
+      <Parameters />
     </Test>
   </Tests>
 </Simulations>

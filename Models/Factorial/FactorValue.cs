@@ -55,7 +55,7 @@ namespace Models.Factorial
         public void AddToName(ref string simulationName)
         {
             if (simulationName.Length > 0)
-                simulationName += ", ";
+                simulationName += ": ";
             simulationName += ParentFactor.Name + " " + Name;
         }
     }
