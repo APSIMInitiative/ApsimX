@@ -604,46 +604,31 @@
           <Name>Sample</Name>
           <Date />
           <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
+            <double>100</double>
+            <double>200</double>
             <double>300</double>
             <double>300</double>
             <double>300</double>
             <double>300</double>
           </Thickness>
           <NO3>
-            <double>1116.5030034479878</double>
-            <double>2.10100111398159</double>
-            <double>2.10100111398159</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
+            <double>40</double>
+            <double>30</double>
+            <double>14</double>
+            <double>14</double>
+            <double>1.38</double>
+            <double>1.38</double>
           </NO3>
           <NH4>
-            <double>0.599004378686979</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
           </NH4>
-          <NO3Units>ppm</NO3Units>
-          <NH4Units>ppm</NH4Units>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
           <SWUnits>Volumetric</SWUnits>
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
@@ -666,7 +651,7 @@
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
           <ResidueType>
-            <Name>Potato</Name>
+            <Name>Slurp</Name>
             <fraction_C>0.08</fraction_C>
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
@@ -695,8 +680,8 @@
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
-        <PoolName>Potato</PoolName>
-        <type>Potato</type>
+        <PoolName>Slurp</PoolName>
+        <type>Slurp</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
@@ -728,6 +713,33 @@
         <Depth>100</Depth>
         <LeafN>2</LeafN>
       </Slurp>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.29366217672824863</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+        <ComponentData>
+          <Name>Slurp</Name>
+          <Type>Slurp</Type>
+          <Albedo>0.26</Albedo>
+          <Emissivity>0.96</Emissivity>
+          <Gsmax>0.011</Gsmax>
+          <R50>200</R50>
+        </ComponentData>
+      </MicroClimate>
     </Zone>
   </Simulation>
   <DataStore>
@@ -1335,46 +1347,31 @@
           <Name>Sample</Name>
           <Date />
           <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
+            <double>100</double>
+            <double>200</double>
             <double>300</double>
             <double>300</double>
             <double>300</double>
             <double>300</double>
           </Thickness>
           <NO3>
-            <double>1116.5030034479878</double>
-            <double>2.10100111398159</double>
-            <double>2.10100111398159</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
+            <double>40</double>
+            <double>30</double>
+            <double>14</double>
+            <double>14</double>
+            <double>1.38</double>
+            <double>1.38</double>
           </NO3>
           <NH4>
-            <double>0.599004378686979</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
           </NH4>
-          <NO3Units>ppm</NO3Units>
-          <NH4Units>ppm</NH4Units>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
           <SWUnits>Volumetric</SWUnits>
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
@@ -1397,7 +1394,7 @@
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
           <ResidueType>
-            <Name>Potato</Name>
+            <Name>Slurp</Name>
             <fraction_C>0.08</fraction_C>
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
@@ -1426,43 +1423,16 @@
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
-        <PoolName>Potato</PoolName>
-        <type>Potato</type>
+        <PoolName>Slurp</PoolName>
+        <type>Slurp</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
-      <MicroClimate>
-        <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
-        <ComponentData>
-          <Name>Potato</Name>
-          <Type>Potato</Type>
-          <Albedo>0.26</Albedo>
-          <Emissivity>0.96</Emissivity>
-          <Gsmax>0.011</Gsmax>
-          <R50>200</R50>
-        </ComponentData>
-      </MicroClimate>
     </Zone>
   </Simulation>
   <Graph>
-    <Name>Graph</Name>
+    <Name>soil water (1)</Name>
     <Axis>
       <Name>Axis</Name>
       <Type>Bottom</Type>
@@ -1495,15 +1465,99 @@
         <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
     </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <X>
+        <Name>GraphValues</Name>
+        <SimulationName>NoSlurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <Name>GraphValues</Name>
+        <SimulationName>NoSlurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>SoilWater.sw_dep(1)</FieldName>
+      </Y>
+    </Series>
   </Graph>
   <Tests>
     <Name>Tests</Name>
     <Test>
       <SimulationName>Slurp</SimulationName>
       <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
+      <Type>Tolerance</Type>
+      <ColumnNames>SoilWater.sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Slurp</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>SoilNitrogen.no3(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
     </Test>
   </Tests>
+  <Graph>
+    <Name>no3(1)</Name>
+    <Axis>
+      <Name>Axis</Name>
+      <Type>Bottom</Type>
+      <Title>X axis title 2</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Name>Axis</Name>
+      <Type>Left</Type>
+      <Title>Y axis title</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Name>Series</Name>
+      <Title>Slurp</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <X>
+        <Name>GraphValues</Name>
+        <SimulationName>Slurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <Name>GraphValues</Name>
+        <SimulationName>Slurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>SoilNitrogen.no3(1)</FieldName>
+      </Y>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Title>NoSlurp</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16760704</ColourArgb>
+      <Marker>None</Marker>
+      <X>
+        <Name>GraphValues</Name>
+        <SimulationName>NoSlurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <Name>GraphValues</Name>
+        <SimulationName>NoSlurp</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>SoilNitrogen.no3(1)</FieldName>
+      </Y>
+    </Series>
+  </Graph>
 </Simulations>

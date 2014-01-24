@@ -20,6 +20,8 @@ namespace Models.PMF.Slurp
         [Link]
         Soils.SoilWater SoilWat = null;
         [Link]
+        Water water = null;
+        [Link]
         Soils.SoilNitrogen SoilN = null;
 
         [Description ("Cover Green")]
@@ -59,18 +61,21 @@ namespace Models.PMF.Slurp
         private double[] SWUptake;
         private double[] PotNUptake = null;
         private double[] bd = null;
-        private Function RootNConcentration { get; set; }
-        private Function KNO3 { get; set; }
+        private double RootNConcentration;
+        private double KNO3;
 
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnCommencing()
         {
             kl = new double[SoilWat.sw_dep.Length];
             PotSWUptake = new double[kl.Length];
+            PotNUptake = new double[kl.Length];
             SWUptake = new double[kl.Length];
+            NUptake = new double[kl.Length];
             for (int i = 0; i < kl.Length; i++)
                 kl[i] = 0.5;
 
+            bd = (double[])water.Get("BD");
             // Invoke a sowing event. Needed for MicroClimate
             if (StartSlurp != null)
                 StartSlurp.Invoke(this, new EventArgs());
@@ -92,7 +97,7 @@ namespace Models.PMF.Slurp
         private void OnProcess(object sender, EventArgs e)
         {
             DoWaterBalance();
-            //TODO: n balance
+            DoNBalance();
 
             //for MicroClimate
             NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
@@ -138,7 +143,7 @@ namespace Models.PMF.Slurp
         {
             double StartN = PlantN;
 
-            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration.Value / 100.0 - RootN)) * 10.0;  // kg/ha
+            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration / 100.0 - RootN)) * 10.0;  // kg/ha
             double LeafNDemand = Math.Max(0.0, (LeafMass * LeafNConc / 100 - LeafN)) * 10.0;  // kg/ha 
 
             Ndemand = LeafNDemand + RootNDemand;  //kg/ha
@@ -150,7 +155,7 @@ namespace Models.PMF.Slurp
                 swaf = (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]) / (SoilWat.dul_dep[j] - SoilWat.ll15_dep[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = SoilN.no3[j] * (100.0 / (bd[j] * SoilWat.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * SoilN.no3[j] * swaf);
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3 * SoilN.no3[j] * swaf);
             }
 
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
@@ -177,7 +182,7 @@ namespace Models.PMF.Slurp
             double TotNDef = 1e-20;
             for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
             {
-                RootNDef[j] = Math.Max(0.0, RootMass * RootNConcentration.Value / 100.0 - RootN);
+                RootNDef[j] = Math.Max(0.0, RootMass * RootNConcentration / 100.0 - RootN);
                 TotNDef += RootNDef[j];
             }
             for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
