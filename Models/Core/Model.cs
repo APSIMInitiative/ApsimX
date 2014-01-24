@@ -355,12 +355,14 @@ namespace Models.Core
 
                 if (localObj != null)
                     obj = localObj;
-                else
+                else if (obj != null)
                 {
                     propertyInfo = obj.GetType().GetProperty(pathBit);
                     if (propertyInfo == null)
                         return null;
                 }
+                else
+                    return null;
             }
 
             // Now we can create our return variable.

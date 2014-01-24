@@ -203,14 +203,14 @@ namespace UserInterface.Presenters
         {
         	ExplorerView.ShowMessage("Simulation running...", DataStore.ErrorLevel.Information);
 
-            Simulation Simulation = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Simulation;
-            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Simulation);
+            Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node);
 
             C.Do(null);
             if (C.ok)
             {
-                if (Simulation != null)
-                    ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete", DataStore.ErrorLevel.Information);
+                if (Node != null)
+                    ExplorerView.ShowMessage("Simulation " + Node.Name + " complete", DataStore.ErrorLevel.Information);
                 else
                     ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
                 SoundPlayer player = new SoundPlayer();
@@ -225,7 +225,7 @@ namespace UserInterface.Presenters
                     player.Play();
                 }
             else
-                ExplorerView.ShowMessage("Simulation " + Simulation.Name + " complete with errors", DataStore.ErrorLevel.Error);
+                ExplorerView.ShowMessage("Simulation " + Node.Name + " complete with errors", DataStore.ErrorLevel.Error);
         }
 
         /// <summary>

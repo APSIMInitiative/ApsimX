@@ -56,6 +56,7 @@ namespace Models.Core
 
             // Set the filename
             simulations.FileName = FileName;
+            simulations.SetFileNameInAllSimulatoins();
 
             // Resolve links.
             Utility.ModelFunctions.ResolveLinks(simulations);
@@ -102,10 +103,10 @@ namespace Models.Core
         /// </summary>
         public bool Run(Model simulationOrFolder)
         {
-            if (simulationOrFolder is Folder)
-                return Run(FindAllSimulationsToRun(simulationOrFolder));
-            else
+            if (simulationOrFolder is Simulation)
                 return Run(new Simulation[1] { simulationOrFolder as Simulation });
+            else
+                return Run(FindAllSimulationsToRun(simulationOrFolder));
         }
 
         /// <summary>
@@ -120,7 +121,10 @@ namespace Models.Core
             // Run all simulations
             bool allok = true;
             foreach (Simulation simulation in simulations)
+            {
+                simulation.FileName = FileName;
                 allok = simulation.Run() && allok;
+            }
 
             // Invoke the AllCompleted event.
             if (AllCompleted != null)
@@ -140,19 +144,32 @@ namespace Models.Core
         public static Simulation[] FindAllSimulationsToRun(Model parent)
         {
             List<Simulation> simulations = new List<Simulation>();
-            // Look for simulations.
-            foreach (Model Model in parent.FindAll(typeof(Simulation)))
+
+            if (parent is Experiment)
+                simulations.AddRange((parent as Experiment).Create());
+            else
             {
-                // An experiment can have a base simulation - don't return that to caller.
-                if (!(Model.Parent is Experiment))
-                    simulations.Add(Model as Simulation);
+                // Get a list of all child models under parent.
+                List<Model> children = new List<Model>();
+                FindChildren(parent, children);
+
+                // Look for simulations.
+                foreach (Model model in children)
+                    if (model is Simulation)
+                        simulations.Add(model as Simulation);
             }
 
-            // Look for experiments and get them to create their simulations.
-            foreach (Experiment experiment in parent.FindAll(typeof(Experiment)))
-                simulations.AddRange(experiment.Create());
-
             return simulations.ToArray();
+        }
+
+        /// <summary>
+        /// Find all children under the specified parent model.
+        /// </summary>
+        private static void FindChildren(Model parent, List<Model> children)
+        {
+            children.AddRange(parent.Models);
+            foreach (Model child in parent.Models)
+                FindChildren(child, children);
         }
 
         /// <summary>
@@ -176,6 +193,15 @@ namespace Models.Core
 
             return simulations.ToArray();
 
+        }
+
+        /// <summary>
+        /// Look through all models. For each simulation found set the filename.
+        /// </summary>
+        private void SetFileNameInAllSimulatoins()
+        {
+            foreach (Simulation simulation in FindAll(typeof(Simulation)))
+                simulation.FileName = FileName;
         }
 
 
