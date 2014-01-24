@@ -54,18 +54,22 @@ namespace Models.Core
             // Deserialise
             Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
 
-            // Set the filename
-            simulations.FileName = FileName;
+            if (simulations != null)
+            {
+                // Set the filename
+                simulations.FileName = FileName;
 
-            // Resolve links.
-            Utility.ModelFunctions.ResolveLinks(simulations);
+                // Resolve links.
+                Utility.ModelFunctions.ResolveLinks(simulations);
 
-            // Connect all events.
-            Utility.ModelFunctions.ConnectEventsInAllModels(simulations);
+                // Connect all events.
+                Utility.ModelFunctions.ConnectEventsInAllModels(simulations);
 
-            // Call OnLoaded in all models.
-            Utility.ModelFunctions.CallOnLoaded(simulations);
-
+                // Call OnLoaded in all models.
+                Utility.ModelFunctions.CallOnLoaded(simulations);
+            }
+            else
+                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
             return simulations;
         }
 
