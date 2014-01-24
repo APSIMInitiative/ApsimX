@@ -114,13 +114,13 @@ namespace Importer
                 }
                 catch (Exception exp)
                 {
-                    throw new Exception("Cannot create the Simulations object from the input : Error - " + exp.Message);
+                    throw new Exception("Cannot create the Simulations object from the input : Error - " + exp.Message + "\n");
                 }
                 File.Delete(xfile);
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message);
+                throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message + "\n");
             }
             return newSimulations;
         }
@@ -221,6 +221,10 @@ namespace Importer
                 {
                     newNode = ImportAnalysis(compNode, destParent, newNode);
                 }
+                else if (compNode.Name == "SoilCrop")
+                {
+                    newNode = ImportSoilCrop(compNode, destParent, newNode);
+                }
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.Name(compNode));
@@ -248,9 +252,29 @@ namespace Importer
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.Message);
+                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.Message + "\n");
             }
             return newNode; 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="compNode"></param>
+        /// <param name="destParent"></param>
+        /// <param name="newNode"></param>
+        /// <returns></returns>
+        private XmlNode ImportSoilCrop(XmlNode compNode, XmlNode destParent, XmlNode newNode)
+        {
+            Models.Soils.SoilCrop mycrop = new Models.Soils.SoilCrop();
+
+            mycrop.LL = GetChildDoubles(compNode, "LL", 0);
+            mycrop.KL = GetChildDoubles(compNode, "KL", 0);
+            mycrop.XF = GetChildDoubles(compNode, "XF", 0);
+
+            newNode = ImportObject(destParent, newNode, mycrop, Utility.Xml.Name(compNode));
+
+            return newNode;
         }
 
         /// <summary>
@@ -437,6 +461,8 @@ namespace Importer
             CopyNodeAndValueArray(childNode, newNode, "DUL", "DUL");
             childNode = Utility.Xml.Find(compNode, "SAT");
             CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
+
+            AddChildComponents(compNode, newNode);
 
             return newNode;
         }
