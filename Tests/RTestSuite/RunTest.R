@@ -84,8 +84,19 @@ for (fileNumber in 1:length(files)){
             #get columns to run them on
                cols <- unlist(strsplit(currentSimGroup[4, 1], ","))
                cols <- gsub("[()]", "\\.", cols) # replace ( and ) with . to handle R's renaming of these characters
-               simOutput    <- subset(readSimOutput,      select=unlist(cols))
+               
+               tryCatch({
+                   simOutput    <- subset(readSimOutput, select=unlist(cols))
+               }, error = function(err) {
+                   print(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep=""))
+               });
+               
+               tryCatch({
                simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
+               }, error = function(err) {
+                 print(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
+                             "]. Do you need to update the baseline?", sep=""))
+               });
                   
             # retrieve the test name
             func <- match.fun(tests[i])
