@@ -83,6 +83,7 @@ for (fileNumber in 1:length(files)){
           for (i in c(1:length(tests))) {    
             #get columns to run them on
                cols <- unlist(strsplit(currentSimGroup[4, 1], ","))
+               cols <- gsub("[()]", "\\.", cols) # replace ( and ) with . to handle R's renaming of these characters
                simOutput    <- subset(readSimOutput,      select=unlist(cols))
                simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
                   
