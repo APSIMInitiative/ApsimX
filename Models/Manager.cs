@@ -20,6 +20,10 @@ namespace Models
         private string elementsAsXml = null;
         private Model _Script;
         [NonSerialized] private XmlElement[] _elements;
+        // store the details of the compilation for this instance
+        [NonSerialized] private string AssemblyFile = "";
+        [NonSerialized] private Assembly CompiledAssembly = null;
+        [NonSerialized] private string CompiledCode = "";
 
         // ----------------- Links
         [Link] private ISummary Summary = null;
@@ -106,10 +110,25 @@ namespace Models
 
                 try
                 {
-                    // Try compiling the script
-                    //string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
-                    //                                       Name) + ".dll";
-                    Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                    // determine if the script needs to be recompiled
+                    if ( (CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0) )
+                    {
+                        // Try compiling the script, firstly finding a unique dll name for it
+                        string tmpFile = Path.GetTempFileName();
+                        AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
+                        while (File.Exists(AssemblyFile))
+                        {
+                            File.Delete(tmpFile);   // cleanup
+                            tmpFile = Path.GetTempFileName();
+                            AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
+                        }
+                        File.Delete(tmpFile);   // cleanup
+                        
+                        CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, AssemblyFile);
+                        
+                        Summary.WriteMessage(FullPath, "Script compiled ok");
+                        CompiledCode = _Code;
+                    }
 
                     // Look for a "class Script" - throw if not found.
                     Type ScriptType = CompiledAssembly.GetType("Models.Script");
