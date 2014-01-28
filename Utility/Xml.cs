@@ -23,7 +23,22 @@ namespace Utility
                 SetAttribute(NewNode, "name", Name);
             return NewNode;
         }
-        public static string Name(XmlNode Node)
+
+        /// <summary>
+        /// Return the the value from the <code> <Name></Name> </code> element child of aNode.
+        /// </summary>
+        /// <param name="aNode">The base node</param>
+        /// <returns>The value from the child called "Name"</returns>
+        public static string NameElement(XmlNode aNode)
+        {
+            XmlNode nameNode = Utility.Xml.Find(aNode, "Name");
+            if ( (nameNode != null) && (nameNode.InnerText.Length > 0) )
+                return nameNode.InnerText;
+            else
+                return Type(aNode);
+        }
+
+        public static string NameAttr(XmlNode Node)
         {
             // --------------------------------------
             // Return the name attribute or if not 
@@ -36,9 +51,9 @@ namespace Utility
             else
                 return value;
         }
-        public static void SetName(XmlNode Node, string Name)
+        public static void SetNameAttr(XmlNode Node, string Name)
         {
-            if (Name != Utility.Xml.Name(Node))
+            if (Name != Utility.Xml.NameAttr(Node))
                 SetAttribute(Node, "name", Name);
         }
         public static string Type(XmlNode Node)
@@ -79,6 +94,24 @@ namespace Utility
                 return Node.ParentNode;
         }
 
+        /// <summary>
+        /// Return the full path of the node using the <code> <Name></Name> </code> element values.
+        /// </summary>
+        /// <param name="Node">Child node</param>
+        /// <returns>The path name /RootNode/ParentNode/ChildNode</returns>
+        public static string FullPathUsingName(XmlNode Node)
+        {
+            StringBuilder path = new StringBuilder();
+            XmlNode LocalData = Node;
+            do
+            {
+                path.Insert(0, Delimiter);
+                path.Insert(0, NameElement(LocalData));
+            } while ((LocalData = Parent(LocalData)) != null);
+
+            return path.ToString();
+        }
+
         public static string FullPath(XmlNode Node)
         {
             // --------------------------------------------------------
@@ -90,7 +123,7 @@ namespace Utility
             do
             {
                 FullPath.Insert(0, Delimiter);
-                FullPath.Insert(0, Name(LocalData));
+                FullPath.Insert(0, NameAttr(LocalData));
             } while ((LocalData = Parent(LocalData)) != null);
             return FullPath.ToString();
         }
@@ -131,7 +164,7 @@ namespace Utility
                     RootName = NamePath.Substring(1, Pos - 1);
                     NamePath = NamePath.Substring(Pos + 1);
                 }
-                if (RootName.ToLower() != Name(Node).ToLower())
+                if (RootName.ToLower() != NameAttr(Node).ToLower())
                     return null;
                 if (NamePath == "")
                     return Node;
@@ -159,7 +192,7 @@ namespace Utility
             {
                 foreach (XmlNode Child in Node.ChildNodes)
                 {
-                    if (Name(Child).ToLower() == ChildName.ToLower())
+                    if (NameAttr(Child).ToLower() == ChildName.ToLower())
                     {
                         if (Remainder == "")
                             return Child;
@@ -218,7 +251,7 @@ namespace Utility
         }
         public static XmlNode FindRecursively(XmlNode Node, string Name)
         {
-            if (Utility.Xml.Name(Node).ToLower() == Name.ToLower())
+            if (Utility.Xml.NameAttr(Node).ToLower() == Name.ToLower())
                 return Node;
             foreach (XmlNode Child in Node.ChildNodes)
             {
@@ -230,7 +263,7 @@ namespace Utility
         }
         public static void FindAllRecursively(XmlNode Node, string Name, ref List<XmlNode> Nodes)
         {
-            if (Utility.Xml.Name(Node).ToLower() == Name.ToLower())
+            if (Utility.Xml.NameAttr(Node).ToLower() == Name.ToLower())
                 Nodes.Add(Node);
             foreach (XmlNode Child in Node.ChildNodes)
                 FindAllRecursively(Child, Name, ref Nodes);
@@ -251,7 +284,7 @@ namespace Utility
             // ----------------------------------------------------
             foreach (XmlNode Child in Node.ChildNodes)
             {
-                if (Name(Child).ToLower() == NameFilter.ToLower() && Type(Child).ToLower() == TypeFilter.ToLower())
+                if (NameAttr(Child).ToLower() == NameFilter.ToLower() && Type(Child).ToLower() == TypeFilter.ToLower())
                     return Child;
             }
             return null;
@@ -301,7 +334,7 @@ namespace Utility
                 foreach (XmlNode Child in Node.ChildNodes)
                 {
                     if (Child.Name != "#text" && Child.Name != "#comment" && Child.Name != "#cdata-section" &&
-                        NameFilter == "" || Name(Child).ToLower() == NameFilter.ToLower())
+                        NameFilter == "" || NameAttr(Child).ToLower() == NameFilter.ToLower())
                         MatchingChildren.Add(Child);
                 }
             }
@@ -312,7 +345,7 @@ namespace Utility
             List<XmlNode> Children = ChildNodes(Node, TypeFilter);
             string[] Names = new string[Children.Count];
             for (int i = 0; i != Children.Count; i++)
-                Names[i] = Name(Children[i]);
+                Names[i] = NameAttr(Children[i]);
             return Names;
         }
         public static string Value(XmlNode Child, string NamePath)
@@ -455,14 +488,14 @@ namespace Utility
             // -------------------------------------------------------------
             // Make sure the node's name is unique amongst it's siblings.
             // -------------------------------------------------------------
-            string BaseName = Name(Node);
+            string BaseName = NameAttr(Node);
             string UniqueChildName = BaseName;
             for (int i = 1; i != 10000; i++)
             {
                 int Count = 0;
                 foreach (XmlNode Sibling in Node.ParentNode.ChildNodes)
                 {
-                    if (Name(Sibling).ToLower() == UniqueChildName.ToLower())
+                    if (NameAttr(Sibling).ToLower() == UniqueChildName.ToLower())
                         Count++;
                 }
                 if (Count == 1)
@@ -470,7 +503,7 @@ namespace Utility
                 UniqueChildName = BaseName + i.ToString();
                 SetAttribute(Node, "name", UniqueChildName);
             }
-            throw new Exception("Cannot find a unique name for child: " + Name(Node));
+            throw new Exception("Cannot find a unique name for child: " + NameAttr(Node));
         }
         public static void EnsureNumberOfChildren(XmlNode Node, string ChildType, string ChildName, int NumChildren)
         {
@@ -500,7 +533,7 @@ namespace Utility
             {
                 XmlNode yNode = (XmlNode)y;
                 XmlNode xNode = (XmlNode)x;
-                return ((new CaseInsensitiveComparer()).Compare(Name(xNode), Name(yNode)));
+                return ((new CaseInsensitiveComparer()).Compare(NameAttr(xNode), NameAttr(yNode)));
             }
 
         }
@@ -538,7 +571,7 @@ namespace Utility
 
             foreach (XmlNode Child in Node.ChildNodes)
             {
-                if (Name(Child).ToLower() == ChildNameToMatch.ToLower())
+                if (NameAttr(Child).ToLower() == ChildNameToMatch.ToLower())
                 {
                     if (PosDelimiter == -1)
                         return Child;
@@ -585,7 +618,7 @@ namespace Utility
                 {
                     if (Array.IndexOf(SequentialNodeTypes, Child1.Name) == -1)
                     {
-                        XmlNode Child2 = Utility.Xml.ChildByNameAndType(Node2, Utility.Xml.Name(Child1), Child1.Name);
+                        XmlNode Child2 = Utility.Xml.ChildByNameAndType(Node2, Utility.Xml.NameAttr(Child1), Child1.Name);
                         if (Child2 == null)
                             return false;
                         if (!Utility.Xml.IsEqual(Child1, Child2))
