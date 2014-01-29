@@ -29,6 +29,8 @@ namespace UserInterface.Views
         /// Show an error message to caller.
         /// </summary>
         void ShowError(string message);
+
+        Int32 TabWidth { get; }
     }
 
 
@@ -218,6 +220,12 @@ namespace UserInterface.Views
         public void ShowError(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public Int32 TabWidth 
+        {
+            get { return TabControl.Width; }
+            
         }
     }
 

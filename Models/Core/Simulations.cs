@@ -18,6 +18,7 @@ namespace Models.Core
     public class Simulations : Zone
     {
         private string _FileName;
+        public Int32 ExplorerWidth { get; set; }
 
         /// <summary>
         /// Invoked when all simulations are about to commence.

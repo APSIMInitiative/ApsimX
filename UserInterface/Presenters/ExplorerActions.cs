@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ExplorerPresenter.ApsimXFile.Write(ExplorerPresenter.ApsimXFile.FileName);
+                ExplorerPresenter.WriteSimulation();
             }
             catch (Exception err)
             {

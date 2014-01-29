@@ -47,6 +47,12 @@ namespace UserInterface.Presenters
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
 
+        public Int32 TreeWidth 
+        {
+            get { return this.View.TreeWidth; }
+            set { this.View.TreeWidth = value; }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -74,12 +80,11 @@ namespace UserInterface.Presenters
 
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
 
-
             store = ApsimXFile.Get("DataStore") as DataStore;
             if (store == null)
                 throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
 
-            WriteMessagesFromDataStore();
+            WriteMessagesFromDataStore(); 
         }
 
         /// <summary>
@@ -134,7 +139,7 @@ namespace UserInterface.Presenters
                         result = false;
                     else if (choice == 0)                       // save
                     {
-                        ApsimXFile.Write(ApsimXFile.FileName);
+                        WriteSimulation();
                         result = true;
                     }
                 }
@@ -145,6 +150,15 @@ namespace UserInterface.Presenters
                 result = false;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Do the actual write to the file
+        /// </summary>
+        public void WriteSimulation()
+        {
+            ApsimXFile.ExplorerWidth = TreeWidth;
+            ApsimXFile.Write(ApsimXFile.FileName);
         }
 
         /// <summary>
