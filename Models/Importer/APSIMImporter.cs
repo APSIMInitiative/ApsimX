@@ -8,6 +8,7 @@ namespace Importer
     using System.Xml;
     using System.Text.RegularExpressions;
     using Models.Core;
+    using ApsimFile;
 
     /// <summary>
     /// This is a worker class for the import process that converts
@@ -91,11 +92,20 @@ namespace Importer
 
             try
             {
+                // initialise the configuration for ApsimFile
+                Configuration.SetApsimDir(ApsimPath);
+                PlugIns.LoadAll();
+
+                // open and resolve all the links
+                ApsimFile infile = new ApsimFile(filename);
+                string concretexml = infile.RootComponent.FullXMLNoShortCuts();
+
                 //open the .apsim file
-                StreamReader xmlReader = new StreamReader(filename);
+                //StreamReader xmlReader = new StreamReader(filename);
                 XmlDocument doc = new XmlDocument();
-                doc.LoadXml(xmlReader.ReadToEnd());
-                xmlReader.Close();
+                //doc.LoadXml(xmlReader.ReadToEnd());
+                doc.LoadXml(concretexml);
+                //xmlReader.Close();
 
                 //create new apsimx document
                 XmlNode newNode;
@@ -146,7 +156,6 @@ namespace Importer
             }
         }
 
-        // *********** shortcut components need to follow paths to their owners to get the correct information *************
         /// <summary>
         /// Add a component to the xml tree. Customised for each component type
         /// found in the source.
@@ -634,7 +643,7 @@ namespace Importer
             code.Append("\t\t[Link] Clock TimeClock;\n"); 
 
             List<XmlNode> nodes = new List<XmlNode>();
-            Utility.Xml.FindAllRecursively(compNode, "script", ref nodes);
+            Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
                 // find the event
@@ -659,6 +668,12 @@ namespace Importer
                         code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
                         code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
                     }
+                    else
+                    {
+                        // use the StartOfDay as a default when the event name is unknown
+                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
+                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)  /* unknown event type found here */ \n");
+                    }
                     code.Append("\t\t{\n");
                     code.Append("\t\t\t/*\n");
                     code.Append("\t\t\t\t" + textNode.InnerText + "\n");
@@ -672,8 +687,34 @@ namespace Importer
 
             // import this object into the new xml document
             newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+
+            
+            // some Manager components have Memo children. For ApsimX the import
+            // will just put them as the next sibling of the Manager rather
+            // than as a child of the Manager.
+            destParent = ImportManagerMemos(compNode, destParent);
             
             return newNode;
+        }
+
+        /// <summary>
+        /// Import any memo children.
+        /// </summary>
+        /// <param name="compNode">The Manager component node</param>
+        /// <param name="destParent">The parent (folder) node of the Manager.</param>
+        /// <returns></returns>
+        private XmlNode ImportManagerMemos(XmlNode compNode, XmlNode destParent)
+        {
+            XmlNode child = compNode.FirstChild;
+            while (child != null)
+            {
+                if (child.Name == "memo")
+                {
+                    AddComponent(child, ref destParent);
+                }
+                child = child.NextSibling;
+            }
+            return destParent;
         }
 
         /// <summary>
@@ -691,6 +732,11 @@ namespace Importer
 
             // import this object into the new xml document
             newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+
+            // some Manager components have Memo children. For ApsimX the import
+            // will just put them as the next sibling of the Manager rather
+            // than as a child of the Manager.
+            destParent = ImportManagerMemos(compNode, destParent);
 
             return newNode;
         }
