@@ -44,7 +44,7 @@ namespace Models
             get
             {
                 string FullFileName = FileName;
-                if (FileName != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                if (FileName != null && Simulation != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
                     FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
                 return FullFileName;
             }

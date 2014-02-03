@@ -42,6 +42,7 @@ namespace ModelTests
                 File.Copy(sqliteSourceFileName, sqliteFileName);
 
             Utility.ModelFunctions.CallOnCommencing(S);
+            Utility.ModelFunctions.ResolveLinks(S);
         }
 
         private string FindSqlite3DLL()

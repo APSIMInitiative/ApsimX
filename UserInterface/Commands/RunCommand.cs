@@ -20,7 +20,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            if (ModelClicked == null)
+            if (ModelClicked == null || ModelClicked is Simulations)
                 ok = Simulations.Run();
             else
                 ok = Simulations.Run(ModelClicked);

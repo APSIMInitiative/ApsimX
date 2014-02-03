@@ -321,14 +321,28 @@ namespace Utility
                 return default(T);
             }
 
+            // If source is a Model then get rid of it's parent as we don't want to serialise that.
+            Models.Core.Model parent = null;
+            if (source is Models.Core.Model)
+            {
+                Models.Core.Model model = source as Models.Core.Model;
+                parent = model.Parent;
+                model.Parent = null;
+            }
+
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             using (stream)
             {
                 formatter.Serialize(stream, source);
                 stream.Seek(0, SeekOrigin.Begin);
-                return (T)formatter.Deserialize(stream);
+                T returnObject = (T)formatter.Deserialize(stream);
+
+                if (parent != null)
+                    (source as Models.Core.Model).Parent = parent;
+                return returnObject;
             }
+
         }
 
         /// <summary>
