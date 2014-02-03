@@ -7,13 +7,13 @@ using System.Xml.Serialization;
 namespace Models.Factorial
 {
     [AllowDropOn("Factor")]
-    public class FactorValue : Model
+    public class FactorValue : ModelCollection
     {
         private List<string> FactorPaths;
         private string FactorName;
 
-        [XmlElement("FactorValue")]
-        public List<FactorValue> FactorValues { get; set; }
+        [XmlElement("Value")]
+        public List<Model> Values { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -65,27 +65,76 @@ namespace Models.Factorial
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
         {
-            if (FactorPaths.Count >= 1)
+            if (FactorPaths.Count > 1 && FactorPaths.Count != Values.Count)
+                throw new ApsimXException(FullPath, "The number of factor paths does not match the number of factor values");
+
+            if (FactorPaths.Count == 1)
             {
-                object originalValue = newSimulation.Get(FactorPaths[0]);
-                object newValue;
-                if (originalValue is DateTime)
-                    newValue = DateTime.Parse(Name);
-                else if (originalValue is float)
-                    newValue = Convert.ToSingle(Name);
-                else if (originalValue is double)
-                    newValue = Convert.ToDouble(Name);
-                else if (originalValue is int)
-                    newValue = Convert.ToInt32(Name);
-                else if (originalValue is string)
-                    newValue = Convert.ToString(Name);
+                if (Values != null && Values.Count > 1)
+                    throw new ApsimXException(FullPath, "One factor path was specified with multiple child factor values.");
+
+                if (Values == null || Values.Count == 0)
+                    ApplyNameAsValue(newSimulation, FactorPaths[0], Name);
                 else
-                    newValue = Name;
-                newSimulation.Set(FactorPaths[0], newValue);
-                string newSimulationName = newSimulation.Name;
-                AddToName(ref newSimulationName);
-                newSimulation.Name = newSimulationName;
+                    ApplyModelReplacement(newSimulation, FactorPaths[0], Values[0]);
             }
+            else if (Values != null)
+            {
+                // Multiple child factor values specified - apply each one.
+                for (int i = 0; i != FactorPaths.Count; i++)
+                {
+                    if (Values[i] is FactorValue)
+                    {
+                        FactorValue factorValue = Values[i] as FactorValue;
+                        if (factorValue != null)
+                            ApplyNameAsValue(newSimulation, FactorPaths[i], factorValue.Name);
+                        else
+                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Values[0]);
+                    }
+                    else
+                        ApplyModelReplacement(newSimulation, FactorPaths[i], Values[i]);
+
+                    
+                }
+            }
+
+            string newSimulationName = newSimulation.Name;
+            AddToName(ref newSimulationName);
+            newSimulation.Name = newSimulationName;
+        }
+
+        /// <summary>
+        /// Use the name of this object as a value to insert into the specified 'newSimulation'
+        /// </summary>
+        private void ApplyNameAsValue(Simulation newSimulation, string path, string name)
+        {
+            object originalValue = newSimulation.Get(path);
+            object newValue;
+            if (originalValue is DateTime)
+                newValue = DateTime.Parse(name);
+            else if (originalValue is float)
+                newValue = Convert.ToSingle(name);
+            else if (originalValue is double)
+                newValue = Convert.ToDouble(name);
+            else if (originalValue is int)
+                newValue = Convert.ToInt32(name);
+            else if (originalValue is string)
+                newValue = Convert.ToString(name);
+            else
+                newValue = name;
+            newSimulation.Set(path, newValue);
+        }
+
+        /// <summary>
+        /// Replace the object specified by 'path' in 'newSimulation' with the specified 'value'
+        /// </summary>
+        private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
+        {
+            Model modelToReplace = newSimulation.Get(path) as Model;
+            if (modelToReplace == null)
+                throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
+
+            modelToReplace.Parent.ReplaceModel(modelToReplace, value);
         }
 
         /// <summary>

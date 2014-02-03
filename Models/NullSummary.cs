@@ -28,10 +28,6 @@ namespace Models
         {
         }
 
-        public void WriteError(string FullPath, string Message)
-        {
-        }
-
         public string GetSummary(string apsimSummaryImageFileName)
         {
             return null;

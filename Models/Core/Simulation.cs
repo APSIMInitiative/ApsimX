@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace Models.Core
 {
@@ -12,7 +13,7 @@ namespace Models.Core
     public class Simulation : Zone
     {
         // Private links
-        [Link] private ISummary Summary = null;
+        [Link] private Clock Clock = null;
 
         /// <summary>
         /// To commence the simulation, this event will be invoked.
@@ -33,38 +34,42 @@ namespace Models.Core
             bool ok = false;
             try
             {
+                Utility.ModelFunctions.ConnectEventsInAllModels(this);
+                Utility.ModelFunctions.ResolveLinks(this);
                 Utility.ModelFunctions.CallOnCommencing(this);
-                
+
                 if (Commenced != null)
                 {
                     Commenced.Invoke(this, new EventArgs());
                     ok = true;
                 }
                 else
-                    Summary.WriteError(FullPath, "Cannot invoke Commenced!");
+                    throw new ApsimXException(FullPath, "Cannot invoke Commenced");
             }
-            catch (Exception err)
+            catch (ApsimXException err)
             {
+                DataStore store = new DataStore();
+                store.Connect(Path.ChangeExtension(FileName, ".db"));
+
                 string Msg = err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
                     Msg += "\r\n" + err.StackTrace;
-                Summary.WriteError(FullPath, Msg);
+
+                store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
 
                 ok = false;
             }
 
             Utility.ModelFunctions.CallOnCompleted(this);
+            Utility.ModelFunctions.UnresolveLinks(this);
+            Utility.ModelFunctions.DisconnectEventsInAllModels(this);
             ok &= true;
 
             return ok;
         }
-
-        public void ResolveLinks()
-        {
-            Utility.ModelFunctions.ResolveLinks(this);
-        }
     }
+
 
 }

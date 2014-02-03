@@ -232,6 +232,28 @@ namespace Utility
                 ResolveLinks(child);
             }
         }
+
+        /// <summary>
+        /// Recursively unresolve (set to null) all [Link] fields. A link must be private. 
+        /// </summary>
+        public static void UnresolveLinks(Model model)
+        {
+            // Go looking for private [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+            {
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
+                    field.SetValue(model, null);
+            }
+
+            foreach (Model child in model.Models)
+            {
+                // Tell child to resolve its links.
+                ResolveLinks(child);
+            }
+        }
+
         #endregion
 
         #region Initialise functions
@@ -245,11 +267,18 @@ namespace Utility
         /// <summary>
         /// Call OnLoaded in the specified model and all child models.
         /// </summary>
-        public static void CallOnLoaded(Model model)
+        public static void CallOnLoaded(Model model, List<ApsimXException> errors)
         {
-            model.OnLoaded();
+            try
+            {
+                model.OnLoaded();
+            }
+            catch (ApsimXException err)
+            {
+                errors.Add(err);
+            }
             foreach (Model child in model.Models)
-                CallOnLoaded(child);
+                CallOnLoaded(child, errors);
         }
 
         /// <summary>

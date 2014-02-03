@@ -2,7 +2,7 @@
 
 namespace Models.Core
 {
-    class ApsimXException : Exception
+    public class ApsimXException : Exception
     {
         public string ModelFullPath { get; set; }
         public ApsimXException(string modelFullPath, string message)

@@ -46,6 +46,12 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// A list of all exceptions thrown during the creation and loading of the simulation.
+        /// </summary>
+        [XmlIgnore]
+        public List<ApsimXException> LoadErrors { get; private set; }
+
+        /// <summary>
         /// Create a simulations object by reading the specified filename
         /// </summary>
         public static Simulations Read(string FileName)
@@ -58,17 +64,17 @@ namespace Models.Core
             simulations.FileName = FileName;
             simulations.SetFileNameInAllSimulatoins();
 
-            // Resolve links.
-            Utility.ModelFunctions.ResolveLinks(simulations);
-
-            // Connect all events.
-            Utility.ModelFunctions.ConnectEventsInAllModels(simulations);
+            // Parent all models.
+            ParentAllModels(simulations);
 
             // Call OnLoaded in all models.
-            Utility.ModelFunctions.CallOnLoaded(simulations);
+            List<ApsimXException> errors = new List<ApsimXException>();
+            Utility.ModelFunctions.CallOnLoaded(simulations, errors);
+            simulations.LoadErrors = errors;
 
             return simulations;
         }
+
 
         /// <summary>
         /// Write the specified simulation set to the specified filename
@@ -206,6 +212,18 @@ namespace Models.Core
         {
             foreach (Simulation simulation in FindAll(typeof(Simulation)))
                 simulation.FileName = FileName;
+        }
+
+        /// <summary>
+        /// Recursively go through all child models are correctly set their parent field.
+        /// </summary>
+        private static void ParentAllModels(Model parent)
+        {
+            foreach (Model child in parent.Models)
+            {
+                child.Parent = parent;
+                ParentAllModels(child);
+            }
         }
 
 

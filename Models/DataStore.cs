@@ -172,24 +172,15 @@ namespace Models
             for (int i = 0; i < names.Length; i++)
             {
                 string columnType = null;
-                if (types[i] == null)
-                    columnType = "integer";
-                else if (types[i].ToString() == "System.DateTime")
-                    columnType = "date";
-                else if (types[i].ToString() == "System.Int32")
-                    columnType = "integer";
-                else if (types[i].ToString() == "System.Single")
-                    columnType = "real";
-                else if (types[i].ToString() == "System.Double")
-                    columnType = "real";
-                else
-                    columnType = "char(50)";
+                columnType = GetSQLColumnType(types[i]);
 
                 cmd += ",[" + names[i] + "] " + columnType;
             }
             cmd += ")";
             if (!TableExists(tableName))
                 Connection.ExecuteNonQuery(cmd);
+            else
+                AddMissingColumnsToTable(tableName, names, types);
 
             List<string> allNames = new List<string>();
             allNames.Add("SimulationID");
@@ -197,6 +188,25 @@ namespace Models
             IntPtr query = PrepareInsertIntoTable(tableName, allNames.ToArray());
             if (!TableInsertQueries.ContainsKey(tableName))
                 TableInsertQueries.Add(tableName, query);
+        }
+
+        /// <summary>
+        /// Convert the specified type to a SQL type.
+        /// </summary>
+        private static string GetSQLColumnType(Type type)
+        {
+            if (type == null)
+                return "integer";
+            else if (type.ToString() == "System.DateTime")
+                return "date";
+            else if (type.ToString() == "System.Int32")
+                return "integer";
+            else if (type.ToString() == "System.Single")
+                return "real";
+            else if (type.ToString() == "System.Double")
+                return "real";
+            else
+                return "char(50)";
         }
 
         /// <summary>
@@ -467,6 +477,25 @@ namespace Models
         }
 
         /// <summary>
+        /// Go through the specified names and add them to the specified table if they are not 
+        /// already there.
+        /// </summary>
+        private void AddMissingColumnsToTable(string tableName, string[] names, Type[] types)
+        {
+            List<string> columnNames = Connection.GetColumnNames(tableName);
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (!columnNames.Contains(names[i]))
+                {
+                    string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
+                    sql += names[i] + "] " + GetSQLColumnType(types[i]);
+                    Connection.ExecuteNonQuery(sql);    
+                }
+            }
+        }
+
+        /// <summary>
         ///  Go prepare an insert into query and return the query.
         /// </summary>
         private IntPtr PrepareInsertIntoTable(string tableName, string[] names)
@@ -492,6 +521,8 @@ namespace Models
         }
 
         #endregion
+
+
 
 
 

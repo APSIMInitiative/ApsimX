@@ -13,11 +13,6 @@
         void WriteWarning(string FullPath, string Message);
 
         /// <summary>
-        /// Write a message to the summary
-        /// </summary>
-        void WriteError(string FullPath, string Message);
-
-        /// <summary>
         /// Return the html for the summary file.
         /// </summary>
         string GetSummary(string apsimSummaryImageFileName);

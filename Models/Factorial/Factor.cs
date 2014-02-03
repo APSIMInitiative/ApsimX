@@ -16,8 +16,10 @@ namespace Models.Factorial
     {
         public List<string> Paths { get; set; }
 
-        [XmlElement("FactorValue")]
+        [XmlElement("Value")]
         public List<FactorValue> FactorValues { get; set; }
 
+
+        //public Model Child { get; set; }
     }
 }

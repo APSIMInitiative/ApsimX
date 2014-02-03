@@ -44,7 +44,7 @@ namespace Models
             get
             {
                 string FullFileName = FileName;
-                if (Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                if (FileName != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
                     FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
                 return FullFileName;
             }
@@ -53,7 +53,8 @@ namespace Models
                 FileName = value;
                 WtrFile = null; // ensure it is reopened
                 // try and convert to path relative to the Simulations.FileName.
-                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
+                if (FileName != null)
+                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
             }
         }
 

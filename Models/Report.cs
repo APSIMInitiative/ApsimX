@@ -240,9 +240,6 @@ namespace Models
         public string[] Variables {get; set;}
         public string[] Events { get; set; }
 
-        // The user interface would like to know our paddock
-        public Zone ParentZone { get { return Paddock; } }
-
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>

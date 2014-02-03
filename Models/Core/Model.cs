@@ -247,8 +247,58 @@ namespace Models.Core
             // Invalidate the AllModels list and clear variable caches.
             AllModels = null;
             ClearAllCacheInScope();
-            Utility.ModelFunctions.ConnectEventsInModel(model);
-            Utility.ModelFunctions.ResolveLinks(model);
+        }
+
+        /// <summary>
+        /// Replace the specified child model with the specified newChild
+        /// </summary>
+        public bool ReplaceModel(Model childToReplace, Model newChild)
+        {
+            // Need to find where in the object to store this model.
+            bool wasReplaced = false;
+            foreach (PropertyInfo property in ModelPropertyInfos())
+            {
+                if (property.PropertyType.IsAssignableFrom(childToReplace.GetType()))
+                {
+                    // Simple reference to a model.
+                    property.SetValue(this, childToReplace, null);
+                    wasReplaced = true;
+                    break;
+                }
+                else if (property.PropertyType.GetInterface("IList") != null)
+                {
+                    Type[] arguments = property.PropertyType.GetGenericArguments();
+                    if (arguments.Length > 0 && arguments[0].IsAssignableFrom(childToReplace.GetType()))
+                    {
+                        // List<T>
+                        IList<Model> value = property.GetValue(this, null) as IList<Model>;
+                        if (value != null)
+                        {
+                            int i = value.IndexOf(childToReplace);
+                            if (i != -1)
+                            {
+                                // Name and parent the model we're adding.
+                                newChild.Parent = childToReplace.Parent;
+                                newChild.Name = value[i].Name;
+
+                                value.RemoveAt(i);
+
+                                // Add in the new model.
+                                value.Insert(i, newChild);
+                                wasReplaced = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            if (!wasReplaced)
+                throw new ApsimXException(FullPath, "Cannot replace model: " + childToReplace.Name + " in parent model: " + Name);
+
+            // Invalidate the AllModels list and clear variable caches.
+            AllModels = null;
+            ClearAllCacheInScope();
+            return wasReplaced;
         }
 
         /// <summary>
@@ -288,9 +338,6 @@ namespace Models.Core
 
             if (removed)
             {
-                // Detach this model from all events.
-                Utility.ModelFunctions.DisconnectEventsInModel(model);
-
                 // Clear the variable caches.
                 ClearAllCacheInScope();
             }

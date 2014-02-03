@@ -78,9 +78,9 @@ namespace UserInterface.Presenters
             store = ApsimXFile.Get("DataStore") as DataStore;
             if (store == null)
                 throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
-
-            WriteMessagesFromDataStore();
+            WriteLoadErrors();
         }
+
 
         /// <summary>
         /// Detach the model from the view.
@@ -172,6 +172,21 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
+        /// <summary>
+        /// Write all errors thrown during the loading of the .apsimx file.
+        /// </summary>
+        private void WriteLoadErrors()
+        {
+            foreach (ApsimXException err in ApsimXFile.LoadErrors)
+            {
+                string message = String.Format("{0}:\n{1}", new object[] {
+                                               err.ModelFullPath,
+                                               err.Message});
+                View.ShowMessage(message, DataStore.ErrorLevel.Error);
+            }
+        }
+
 
         #region Events from view
 

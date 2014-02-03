@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Report.ParentZone.Get(e.ObjectName);
+            object o = Report.Get(e.ObjectName);
 
             if (o != null)
             {
@@ -68,7 +68,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnNeedEventNames(object Sender, Utility.NeedContextItems e)
         {
-            object o = Report.ParentZone.Get(e.ObjectName);
+            object o = Report.Get(e.ObjectName);
 
             if (o != null)
             {

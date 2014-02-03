@@ -203,29 +203,36 @@ namespace UserInterface.Presenters
         {
         	ExplorerView.ShowMessage("Simulation running...", DataStore.ErrorLevel.Information);
 
-            Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
-            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node);
-
-            C.Do(null);
-            if (C.ok)
+            try
             {
-                if (Node != null)
-                    ExplorerView.ShowMessage("Simulation " + Node.Name + " complete", DataStore.ErrorLevel.Information);
-                else
-                    ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
-                SoundPlayer player = new SoundPlayer();
-                if (DateTime.Now.Month == 12)
+                Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+                RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node);
+
+                C.Do(null);
+                if (C.ok)
                 {
-                    player.Stream = Properties.Resources.notes;
-                }
-                else
-                {
-                    player.Stream = Properties.Resources.success;
-                }
+                    if (Node != null)
+                        ExplorerView.ShowMessage("Simulation " + Node.Name + " complete", DataStore.ErrorLevel.Information);
+                    else
+                        ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
+                    SoundPlayer player = new SoundPlayer();
+                    if (DateTime.Now.Month == 12)
+                    {
+                        player.Stream = Properties.Resources.notes;
+                    }
+                    else
+                    {
+                        player.Stream = Properties.Resources.success;
+                    }
                     player.Play();
                 }
-            else
-                ExplorerView.ShowMessage("Simulation " + Node.Name + " complete with errors", DataStore.ErrorLevel.Error);
+                else
+                    ExplorerView.ShowMessage("Simulation " + Node.Name + " complete with errors", DataStore.ErrorLevel.Error);
+            }
+            catch (ApsimXException err)
+            {
+                ExplorerView.ShowMessage(err.ModelFullPath + ": " + err.Message, DataStore.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
@@ -310,10 +317,11 @@ namespace UserInterface.Presenters
         }
 
         [ContextModelType(typeof(Factor))]
-        [ContextMenuName("Insert factor value")]
-        public void InsertFactorValue(object Sender, EventArgs e)
+        [ContextModelType(typeof(FactorValue))]
+        [ContextMenuName("Add factor value")]
+        public void AddFactorValue(object Sender, EventArgs e)
         {
-            ModelCollection Factor = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Factor;
+            ModelCollection Factor = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
             if (Factor != null)
             {
                 AddModelCommand Cmd = new AddModelCommand("<FactorValue/>", Factor);

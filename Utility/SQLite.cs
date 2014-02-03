@@ -322,6 +322,31 @@ namespace Utility
             sqlite3_reset(Query);
         }
 
+        /// <summary>
+        /// Return a list of column names.
+        /// </summary>
+        public List<string> GetColumnNames(string tableName)
+        {
+            string sql = "select * from "+tableName+" LIMIT 0";
+
+            //prepare the statement
+            IntPtr stmHandle = Prepare(sql);
+
+            //get the number of returned columns
+            int columnCount = sqlite3_column_count(stmHandle);
+
+            List<string> columnNames = new List<string>();
+            for(int i = 1; i <= columnCount; i++)
+            {
+                string columnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
+                columnNames.Add(columnName);    
+            }
+
+            Finalize(stmHandle);
+            return columnNames;
+        }
+
+
 
     }
 
