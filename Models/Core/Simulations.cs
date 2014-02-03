@@ -18,6 +18,7 @@ namespace Models.Core
     public class Simulations : Zone
     {
         private string _FileName;
+        public Int32 ExplorerWidth { get; set; }
 
         /// <summary>
         /// Invoked when all simulations are about to commence.
@@ -60,18 +61,21 @@ namespace Models.Core
             // Deserialise
             Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
 
-            // Set the filename
-            simulations.FileName = FileName;
-            simulations.SetFileNameInAllSimulatoins();
+            if (simulations != null)
+            {
+                // Set the filename
+                simulations.FileName = FileName;
 
-            // Parent all models.
-            ParentAllModels(simulations);
+                // Parent all models.
+                ParentAllModels(simulations);
 
-            // Call OnLoaded in all models.
-            List<ApsimXException> errors = new List<ApsimXException>();
-            Utility.ModelFunctions.CallOnLoaded(simulations, errors);
-            simulations.LoadErrors = errors;
-
+                // Call OnLoaded in all models.
+                List<ApsimXException> errors = new List<ApsimXException>();
+                Utility.ModelFunctions.CallOnLoaded(simulations, errors);
+                simulations.LoadErrors = errors;
+            }
+            else
+                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
             return simulations;
         }
 
@@ -109,10 +113,10 @@ namespace Models.Core
         /// </summary>
         public bool Run(Model simulationOrFolder)
         {
-            if (simulationOrFolder is Simulation)
-                return Run(new Simulation[1] { simulationOrFolder as Simulation });
-            else
+            if (simulationOrFolder is Folder)
                 return Run(FindAllSimulationsToRun(simulationOrFolder));
+            else
+                return Run(new Simulation[1] { simulationOrFolder as Simulation });
         }
 
         /// <summary>
@@ -127,10 +131,7 @@ namespace Models.Core
             // Run all simulations
             bool allok = true;
             foreach (Simulation simulation in simulations)
-            {
-                simulation.FileName = FileName;
                 allok = simulation.Run() && allok;
-            }
 
             // Invoke the AllCompleted event.
             if (AllCompleted != null)
@@ -150,36 +151,19 @@ namespace Models.Core
         public static Simulation[] FindAllSimulationsToRun(Model parent)
         {
             List<Simulation> simulations = new List<Simulation>();
-
-            if (parent is Experiment)
-                simulations.AddRange((parent as Experiment).Create());
-            else
+            // Look for simulations.
+            foreach (Model Model in parent.FindAll(typeof(Simulation)))
             {
-                // Get a list of all child models under parent.
-                List<Model> children = new List<Model>();
-                FindChildren(parent, children);
-
-                // Look for simulations.
-                foreach (Model model in children)
-                {
-                    if (model is Experiment)
-                        simulations.AddRange((model as Experiment).Create());
-                    else if (model is Simulation && !(model.Parent is Experiment))
-                        simulations.Add(model as Simulation);
-                }
+                // An experiment can have a base simulation - don't return that to caller.
+                if (!(Model.Parent is Experiment))
+                    simulations.Add(Model as Simulation);
             }
 
-            return simulations.ToArray();
-        }
+            // Look for experiments and get them to create their simulations.
+            foreach (Experiment experiment in parent.FindAll(typeof(Experiment)))
+                simulations.AddRange(experiment.Create());
 
-        /// <summary>
-        /// Find all children under the specified parent model.
-        /// </summary>
-        private static void FindChildren(Model parent, List<Model> children)
-        {
-            children.AddRange(parent.Models);
-            foreach (Model child in parent.Models)
-                FindChildren(child, children);
+            return simulations.ToArray();
         }
 
         /// <summary>
@@ -206,15 +190,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Look through all models. For each simulation found set the filename.
-        /// </summary>
-        private void SetFileNameInAllSimulatoins()
-        {
-            foreach (Simulation simulation in FindAll(typeof(Simulation)))
-                simulation.FileName = FileName;
-        }
-
-        /// <summary>
         /// Recursively go through all child models are correctly set their parent field.
         /// </summary>
         private static void ParentAllModels(Model parent)
@@ -225,7 +200,6 @@ namespace Models.Core
                 ParentAllModels(child);
             }
         }
-
 
     }
 }

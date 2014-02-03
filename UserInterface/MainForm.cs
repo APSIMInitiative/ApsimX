@@ -15,7 +15,7 @@ namespace UserInterface
         private TabbedExplorerPresenter Presenter2;
 
         /// <summary>
-        /// Construcotr
+        /// Constructor
         /// </summary>
         public MainForm()
         {

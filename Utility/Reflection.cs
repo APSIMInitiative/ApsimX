@@ -325,18 +325,9 @@ namespace Utility
             Stream stream = new MemoryStream();
             using (stream)
             {
-                // Disconnect the simulation from the experiment. If we don't do this then 
-                // the clone will clone everything.
-                Models.Core.Model parent = (source as Models.Core.Model).Parent;
-                if (source is Models.Core.Model)
-                    (source as Models.Core.Model).Parent = null;
                 formatter.Serialize(stream, source);
                 stream.Seek(0, SeekOrigin.Begin);
-                T returnObj = (T)formatter.Deserialize(stream);
-
-                if (source is Models.Core.Model)
-                    (source as Models.Core.Model).Parent = parent;
-                return returnObj;
+                return (T)formatter.Deserialize(stream);
             }
         }
 

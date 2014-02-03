@@ -91,7 +91,6 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<NodeRenameArgs> Rename;
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -614,6 +613,14 @@ namespace UserInterface.Views
             StatusWindow.Clear();
         }
 
+        /// <summary>
+        /// The Simulation tree width
+        /// </summary>
+        public Int32 TreeWidth
+        {
+            get { return TreeView.Width; }
+            set { TreeView.Width = value; }
+        }
     }
 }
 

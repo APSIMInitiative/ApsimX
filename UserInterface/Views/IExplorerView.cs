@@ -190,6 +190,7 @@ namespace UserInterface.Views
         /// </summary>
         void ToggleSecondExplorerViewVisible();
 
+        Int32 TreeWidth { get; set; }
     }
 
 

@@ -42,9 +42,9 @@ namespace Models.Factorial
 
 
 
-        /// <summary>
-        /// Return a list of simulation names.
-        /// </summary>
+
+
+
         public string[] Names()
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
@@ -63,9 +63,7 @@ namespace Models.Factorial
             return names.ToArray();
         }
 
-        /// <summary>
-        /// Return a list of list of factorvalue objects for all permutations.
-        /// </summary>
+
         private List<List<FactorValue>> AllCombinations()
         {
             // Create a list of list of factorValuse so that we can do permutations of them.
@@ -74,7 +72,7 @@ namespace Models.Factorial
             {
                 List<FactorValue> values = new List<FactorValue>();
                 foreach (FactorValue factorValue in factor.FactorValues)
-                    values.AddRange(factorValue.CreateValues());
+                    values.Add(factorValue);
                 allValues.Add(values);
             }
 
@@ -83,7 +81,7 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// From: http://stackoverflow.com/questions/545703/combination-of-listlistint
+        /// http://stackoverflow.com/questions/545703/combination-of-listlistint
         /// </summary>
         private static List<List<T>> AllCombinationsOf<T>(params List<T>[] sets)
         {

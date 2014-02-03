@@ -3394,16 +3394,213 @@
     <Test>
       <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
+      <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Parameters>305</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>0</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>354</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>0</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>305</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>20</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>354</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>20</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>305</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>60</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>354</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>60</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>305</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>80</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>354</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>80</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 100</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>305</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-11-01: Fertiliser 100</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>100</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 100</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
+      <Parameters>354</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SowDate 2003-12-20: Fertiliser 100</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>100</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Fertiliser 0</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>0</Parameters>
     </Test>
     <Test>
       <SimulationName>Fertiliser 20</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>20</Parameters>
     </Test>
+    <Test>
+      <SimulationName>Fertiliser 40</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>40</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Fertiliser 60</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>60</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Fertiliser 80</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>80</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Fertiliser 100</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
+      <Parameters>100</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Operations 0N</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>
+      <Parameters>0</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Operations 50N</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>
+      <Parameters>50</Parameters>
+    </Test>
+   <!--  <Test>
+      <SimulationName>Location Dalby</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>Clock.Today.Year</ColumnNames>
+      <Parameters>1988</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Location Goondiwindi</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>Clock.Today.Year</ColumnNames>
+      <Parameters>1940</Parameters>
+    </Test> -->
   </Tests>
+  <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

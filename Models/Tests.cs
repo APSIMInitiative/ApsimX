@@ -10,7 +10,7 @@ namespace Models
     [Serializable]
     public class Test
     {
-        public enum TestType { FailOutput, AllPos, GreaterThan, LessThan, Between, Mean, Tolerance };
+        public enum TestType { FailOutput, AllPos, GreaterThan, LessThan, Between, Mean, Tolerance, EqualTo };
 
         public string SimulationName { get; set; }
         public string TableName { get; set; }

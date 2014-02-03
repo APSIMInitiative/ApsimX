@@ -4,7 +4,6 @@ using Models;
 using System.Diagnostics;
 using System.Xml;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System.IO;
 
 namespace Models.Core
@@ -23,8 +22,20 @@ namespace Models.Core
         /// <summary>
         /// Return the filename that this simulation sits in.
         /// </summary>
-        [XmlIgnore]
-        public string FileName { get; set; }
+        public string FileName
+        {
+            get
+            {
+                Model RootModel = this;
+                while (RootModel.Parent != null)
+                    RootModel = RootModel.Parent;
+                if (RootModel != null)
+                    return (RootModel as Simulations).FileName;
+                else
+                    return null;
+            }
+        }
+
 
         /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.

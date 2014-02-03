@@ -402,14 +402,12 @@ namespace Models.Core
 
                 if (localObj != null)
                     obj = localObj;
-                else if (obj != null)
+                else
                 {
                     propertyInfo = obj.GetType().GetProperty(pathBit);
                     if (propertyInfo == null)
                         return null;
                 }
-                else
-                    return null;
             }
 
             // Now we can create our return variable.

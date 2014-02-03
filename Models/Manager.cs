@@ -20,6 +20,13 @@ namespace Models
         private string elementsAsXml = null;
         private Model _Script;
         [NonSerialized] private XmlElement[] _elements;
+        // store the details of the compilation for this instance
+        [NonSerialized] private string AssemblyFile = "";
+        [NonSerialized] private Assembly CompiledAssembly = null;
+        [NonSerialized] private string CompiledCode = "";
+
+        // ----------------- Links
+        [Link] private ISummary Summary = null;
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
@@ -97,59 +104,73 @@ namespace Models
                 {
                     XmlSerializer oldSerial = new XmlSerializer(Script.GetType());
                     currentState = Utility.Xml.Serialise(Script, true);
-
+                    
                     RemoveModel(Script);
                 }
 
-                // Try compiling the script
-                //string assemblyFileName = Path.Combine(Path.GetDirectoryName(Simulations.FileName),
-                //                                       Name) + ".dll";
-                Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                    // determine if the script needs to be recompiled
+                    if ( (CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0) )
+                    {
+                        // Try compiling the script, firstly finding a unique dll name for it
+                        string tmpFile = Path.GetTempFileName();
+                        AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
+                        while (File.Exists(AssemblyFile))
+                        {
+                            File.Delete(tmpFile);   // cleanup
+                            tmpFile = Path.GetTempFileName();
+                            AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
+                        }
+                        File.Delete(tmpFile);   // cleanup
+                        
+                        CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, AssemblyFile);
+                        
+                        CompiledCode = _Code;
+                    }
 
-                // Look for a "class Script" - throw if not found.
-                Type ScriptType = CompiledAssembly.GetType("Models.Script");
-                if (ScriptType == null)
-                    throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
+                    // Look for a "class Script" - throw if not found.
+                    Type ScriptType = CompiledAssembly.GetType("Models.Script");
+                    if (ScriptType == null)
+                        throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
 
-                // If a script model already exists, then serialise it so that we capture the current state,
-                // and then create a new script model using those values.
-                if (currentState != null)
-                {
-                    XmlSerializer newSerial = new XmlSerializer(ScriptType);
-                    Script = newSerial.Deserialize(new StringReader(currentState)) as Model;
-                }
+                    // If a script model already exists, then serialise it so that we capture the current state,
+                    // and then create a new script model using those values.
+                    if (currentState != null)
+                    {
+                        XmlSerializer newSerial = new XmlSerializer(ScriptType);
+                        Script = newSerial.Deserialize(new StringReader(currentState)) as Model;
+                    }
 
-                // If this manager model has been XML deserialised, then use the "elements" member to 
-                // create a new script model.
-                else if (elements != null && elements.Length > 0)
-                {
-                    XmlSerializer serial = new XmlSerializer(ScriptType);
-                    Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
+                    // If this manager model has been XML deserialised, then use the "elements" member to 
+                    // create a new script model.
+                    else if (elements != null && elements.Length > 0)
+                    {
+                        XmlSerializer serial = new XmlSerializer(ScriptType);
+                        Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
 
-                    // setup the elementsAsXml for BinaryFormatter.Serialization.
-                    elementsAsXml = elements[0].OuterXml;
-                }
+                        // setup the elementsAsXml for BinaryFormatter.Serialization.
+                        elementsAsXml = elements[0].OuterXml;
+                    }
 
-                // If this manager model has been binary deserialised, the use the "elementsAsXml" member
-                // to create a new script model.
-                else if (elementsAsXml != "" && elementsAsXml != null)
-                {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(elementsAsXml);
-                    XmlSerializer serial = new XmlSerializer(ScriptType);
-                    Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
-                }
+                    // If this manager model has been binary deserialised, the use the "elementsAsXml" member
+                    // to create a new script model.
+                    else if (elementsAsXml != "" && elementsAsXml != null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(elementsAsXml);
+                        XmlSerializer serial = new XmlSerializer(ScriptType);
+                        Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                    }
 
-                // Nothing else was specified so just create a default script model.
-                else
-                    Script = Activator.CreateInstance(ScriptType) as Model;
+                    // Nothing else was specified so just create a default script model.
+                    else
+                        Script = Activator.CreateInstance(ScriptType) as Model;
 
-                if (Script != null)
-                    AddModel(Script);
+                    if (Script != null)
+                        AddModel(Script);
 
 
-                // Call the OnInitialised if present.
-                Script.OnLoaded();
+                    // Call the OnInitialised if present.
+                    Script.OnLoaded();
             }
             return null;
         }

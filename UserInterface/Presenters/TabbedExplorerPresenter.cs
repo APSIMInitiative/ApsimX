@@ -58,7 +58,9 @@ namespace UserInterface.Presenters
             bool ok = true;
 
             foreach (ExplorerPresenter presenter in Presenters)
+            {
                 ok = presenter.Save() && ok;
+            }
 
             return ok;
         }
@@ -73,12 +75,16 @@ namespace UserInterface.Presenters
                 ExplorerView ExplorerView = new ExplorerView();
                 ExplorerPresenter Presenter = new ExplorerPresenter();
                 Presenters.Add(Presenter);
-
                 try
                 {
                     Simulations simulations = Simulations.Read(FileName);
                     Presenter.Attach(simulations, ExplorerView, null);
                     View.AddTab(FileName, Properties.Resources.apsim_logo32, ExplorerView, true);
+                    // restore the simulation tree width on the form
+                    if (simulations.ExplorerWidth == 0)
+                        Presenter.TreeWidth = 250;
+                    else
+                        Presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, View.TabWidth - 20); // ?
                 }
                 catch (Exception err)
                 {

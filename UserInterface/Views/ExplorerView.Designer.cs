@@ -39,9 +39,9 @@
             this.StatusWindow = new System.Windows.Forms.RichTextBox();
             this.StatusWindowPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Panel.SuspendLayout();
             this.StatusWindowPopup.SuspendLayout();
             this.SuspendLayout();
@@ -148,14 +148,21 @@
             this.closeToolStripMenuItem,
             this.clearToolStripMenuItem});
             this.StatusWindowPopup.Name = "StatusWindowPopup";
-            this.StatusWindowPopup.Size = new System.Drawing.Size(153, 70);
+            this.StatusWindowPopup.Size = new System.Drawing.Size(104, 48);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.OnCloseStatusWindowClick);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // ToolStrip
             // 
@@ -170,13 +177,6 @@
             // 
             this.SaveFileDialog.DefaultExt = "apsimx";
             this.SaveFileDialog.Filter = "*.apsimx|*.apsimx";
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // ExplorerView
             // 

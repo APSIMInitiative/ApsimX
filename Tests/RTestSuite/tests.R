@@ -117,3 +117,16 @@ Tolerance <- function (x, func, params, baseData, ...) {
     }  
    ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
   }
+  
+############# EqualTo ############
+# Return true if each value in x is equal to
+# corresponding value in baseData
+# @Param x: multi  - list
+# @Param func:string - name of the calling test
+# @Param params - unused
+# @baseData: vector - reference data
+##################################
+EqualTo <- function (x, func, params, baseData, ...) {
+   output <- x == baseData
+   ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
+  }

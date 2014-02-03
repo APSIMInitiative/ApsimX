@@ -8,6 +8,7 @@ namespace Importer
     using System.Xml;
     using System.Text.RegularExpressions;
     using Models.Core;
+    using ApsimFile;
 
     /// <summary>
     /// This is a worker class for the import process that converts
@@ -22,6 +23,12 @@ namespace Importer
     /// </summary>
     public class APSIMImporter
     {
+        /// <summary>
+        /// Used as flags during importation of a paddock
+        /// </summary>
+        private bool SurfOMExists = false;
+        private bool SoilWaterExists = false;
+
         /// <summary>
         /// Original path that is substituted for %apsim%
         /// </summary>
@@ -85,11 +92,20 @@ namespace Importer
 
             try
             {
+                // initialise the configuration for ApsimFile
+                Configuration.SetApsimDir(ApsimPath);
+                PlugIns.LoadAll();
+
+                // open and resolve all the links
+                ApsimFile infile = new ApsimFile(filename);
+                string concretexml = infile.RootComponent.FullXMLNoShortCuts();
+
                 //open the .apsim file
-                StreamReader xmlReader = new StreamReader(filename);
+                //StreamReader xmlReader = new StreamReader(filename);
                 XmlDocument doc = new XmlDocument();
-                doc.LoadXml(xmlReader.ReadToEnd());
-                xmlReader.Close();
+                //doc.LoadXml(xmlReader.ReadToEnd());
+                doc.LoadXml(concretexml);
+                //xmlReader.Close();
 
                 //create new apsimx document
                 XmlNode newNode;
@@ -114,13 +130,13 @@ namespace Importer
                 }
                 catch (Exception exp)
                 {
-                    throw new Exception("Cannot create the Simulations object from the input : Error - " + exp.Message);
+                    throw new Exception("Cannot create the Simulations object from the input : Error - " + exp.Message + "\n");
                 }
                 File.Delete(xfile);
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message);
+                throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message + "\n");
             }
             return newSimulations;
         }
@@ -140,7 +156,6 @@ namespace Importer
             }
         }
 
-        // *********** shortcut components need to follow paths to their owners to get the correct information *************
         /// <summary>
         /// Add a component to the xml tree. Customised for each component type
         /// found in the source.
@@ -155,12 +170,12 @@ namespace Importer
             {
                 if (compNode.Name == "simulation")
                 {
-                    XmlNode newSim = AddCompNode(destParent, "Simulation", Utility.Xml.Name(compNode));
+                    XmlNode newSim = AddCompNode(destParent, "Simulation", Utility.Xml.NameAttr(compNode));
                     AddChildComponents(compNode, newSim);
                 }
                 if (compNode.Name == "folder")
                 {
-                    XmlNode newFolder = AddCompNode(destParent, "Folder", Utility.Xml.Name(compNode));
+                    XmlNode newFolder = AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(compNode));
                     AddChildComponents(compNode, newFolder);
                 }
                 if (compNode.Name == "clock")
@@ -189,7 +204,7 @@ namespace Importer
                 }
                 else if (compNode.Name == "summaryfile")
                 {
-                    newNode = AddCompNode(destParent, "Summary", Utility.Xml.Name(compNode));
+                    newNode = AddCompNode(destParent, "Summary", Utility.Xml.NameAttr(compNode));
                     XmlNode childNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("html"));
                     childNode.InnerText = "true";
                 }
@@ -208,6 +223,7 @@ namespace Importer
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
                     newNode = ImportSoilWater(compNode, destParent, newNode);
+                    SoilWaterExists = (newNode != null);
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -221,18 +237,39 @@ namespace Importer
                 {
                     newNode = ImportAnalysis(compNode, destParent, newNode);
                 }
+                else if (compNode.Name == "SoilCrop")
+                {
+                    newNode = ImportSoilCrop(compNode, destParent, newNode);
+                }
                 else if (compNode.Name == "area")
                 {
-                    newNode = AddCompNode(destParent, "Zone", Utility.Xml.Name(compNode));
+                    newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    SurfOMExists = false;
+                    SoilWaterExists = false;
                     AddChildComponents(compNode, newNode);
+                    if (SoilWaterExists && !SurfOMExists)   // if it contains a soilwater then
+                    {
+                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newNode));
+                        Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
+
+                        mysom.PoolName = "wheat_stubble";
+                        mysom.type = "wheat";
+                        mysom.mass = "0";
+                        mysom.cnr = "80";
+                        mysom.cpr = "0";
+                        mysom.standing_fraction = "0.0";
+
+                        newNode = ImportObject(newNode, newNode, mysom, "SurfaceOrganicMatter");
+                    }
                 }
                 else if (compNode.Name == "surfaceom")
                 {
                     newNode = ImportSurfaceOM(compNode, destParent, newNode);
+                    SurfOMExists = (newNode != null);
                 }
                 else if (compNode.Name == "memo")
                 {
-                    newNode = AddCompNode(destParent, "Memo", Utility.Xml.Name(compNode));
+                    newNode = AddCompNode(destParent, "Memo", Utility.Xml.NameAttr(compNode));
                     XmlNode memoTextNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("MemoText"));
                     memoTextNode.InnerText = compNode.InnerText;
                 }
@@ -248,9 +285,29 @@ namespace Importer
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.Message);
+                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.Message + "\n");
             }
             return newNode; 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="compNode"></param>
+        /// <param name="destParent"></param>
+        /// <param name="newNode"></param>
+        /// <returns></returns>
+        private XmlNode ImportSoilCrop(XmlNode compNode, XmlNode destParent, XmlNode newNode)
+        {
+            Models.Soils.SoilCrop mycrop = new Models.Soils.SoilCrop();
+
+            mycrop.LL = GetChildDoubles(compNode, "LL", 0);
+            mycrop.KL = GetChildDoubles(compNode, "KL", 0);
+            mycrop.XF = GetChildDoubles(compNode, "XF", 0);
+
+            newNode = ImportObject(destParent, newNode, mycrop, Utility.Xml.NameAttr(compNode));
+
+            return newNode;
         }
 
         /// <summary>
@@ -271,7 +328,7 @@ namespace Importer
             mysom.cpr       = GetInnerText(compNode, "cpr");
             mysom.standing_fraction = GetInnerText(compNode, "standing_fraction");
 
-            newNode = ImportObject(destParent, newNode, mysom, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, mysom, Utility.Xml.NameAttr(compNode));
 
             return newNode;
         }
@@ -289,7 +346,7 @@ namespace Importer
 
             // set any values here
 
-            newNode = ImportObject(destParent, newNode, mygraph, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, mygraph, Utility.Xml.NameAttr(compNode));
 
             return newNode;
         }
@@ -303,10 +360,20 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportInitialWater(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "InitialWater", Utility.Xml.Name(compNode));
+            Models.Soils.InitialWater mywater = new Models.Soils.InitialWater();
 
-            CopyNodeAndValue(compNode, newNode, "FractionFull", "FractionFull");
-            CopyNodeAndValue(compNode, newNode, "PercentMethod", "PercentMethod");
+            mywater.FractionFull = GetChildDouble(compNode, "FractionFull", 1.0);
+            string method = GetInnerText(compNode, "PercentMethod");
+            if (method.Length < 1)
+                mywater.PercentMethod = Models.Soils.InitialWater.PercentMethodEnum.FilledFromTop;
+            else
+            {
+                Models.Soils.InitialWater.PercentMethodEnum methodValue = (Models.Soils.InitialWater.PercentMethodEnum)Enum.Parse(typeof(Models.Soils.InitialWater.PercentMethodEnum), method);
+                if (Enum.IsDefined(typeof(Models.Soils.InitialWater.PercentMethodEnum), methodValue))
+                    mywater.PercentMethod = methodValue;
+            }
+
+            newNode = ImportObject(destParent, newNode, mywater, Utility.Xml.NameAttr(compNode));
 
             return newNode;
         }
@@ -320,7 +387,7 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportAnalysis(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "Analysis", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "Analysis", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
             // thickness array
@@ -341,7 +408,7 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportSOM(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
             // thickness array
@@ -385,7 +452,7 @@ namespace Importer
             mysoilwater.SWCON       = GetChildDoubles(compNode, "SWCON", 0);
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mysoilwater, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, mysoilwater, Utility.Xml.NameAttr(compNode));
 
             return newNode;
         }
@@ -418,7 +485,7 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportWater(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "Water", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "Water", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
             // thickness array
@@ -438,6 +505,8 @@ namespace Importer
             childNode = Utility.Xml.Find(compNode, "SAT");
             CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
 
+            AddChildComponents(compNode, newNode);
+
             return newNode;
         }
 
@@ -450,7 +519,7 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportSample(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "Sample", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "Sample", Utility.Xml.NameAttr(compNode));
             
             string date = GetInnerText(compNode, "Date");
             XmlNode dateNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("Date"));
@@ -488,7 +557,7 @@ namespace Importer
             // import this object into the new xml document
             //newNode = ImportObject(destParent, newNode, mysoil, Utility.Xml.Name(compNode));
 
-            newNode = AddCompNode(destParent, "Soil", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "Soil", Utility.Xml.NameAttr(compNode));
 
             CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType");
             CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName");
@@ -549,7 +618,7 @@ namespace Importer
             }
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, myreport, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, myreport, Utility.Xml.NameAttr(compNode));
 
             return newNode;
         }
@@ -571,10 +640,10 @@ namespace Importer
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock TimeClock\n"); 
+            code.Append("\t\t[Link] Clock TimeClock;\n"); 
 
             List<XmlNode> nodes = new List<XmlNode>();
-            Utility.Xml.FindAllRecursively(compNode, "script", ref nodes);
+            Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
                 // find the event
@@ -584,20 +653,26 @@ namespace Importer
                 XmlNode textNode = Utility.Xml.Find(script, "text");
                 if ((textNode != null) && (textNode.InnerText.Length > 0))
                 {
-                    if (eventNode.InnerText == "init")
+                    if (eventNode.InnerText.ToLower() == "init")
                     {
                         code.Append("\t\t[EventSubscribe(\"Initialised\")]\n");
                         code.Append("\t\tprivate void OnInitialised(object sender, EventArgs e)\n");
                     }
-                    else if (eventNode.InnerText == "start_of_day")
+                    else if (eventNode.InnerText.ToLower() == "start_of_day")
                     {
                         code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
                         code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
                     }
-                    else if (eventNode.InnerText == "end_of_day")
+                    else if (eventNode.InnerText.ToLower() == "end_of_day")
                     {
                         code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
                         code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                    }
+                    else
+                    {
+                        // use the StartOfDay as a default when the event name is unknown
+                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
+                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)  /* unknown event type found here */ \n");
                     }
                     code.Append("\t\t{\n");
                     code.Append("\t\t\t/*\n");
@@ -611,9 +686,35 @@ namespace Importer
             mymanager.Code = code.ToString();   
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+
+            
+            // some Manager components have Memo children. For ApsimX the import
+            // will just put them as the next sibling of the Manager rather
+            // than as a child of the Manager.
+            destParent = ImportManagerMemos(compNode, destParent);
             
             return newNode;
+        }
+
+        /// <summary>
+        /// Import any memo children.
+        /// </summary>
+        /// <param name="compNode">The Manager component node</param>
+        /// <param name="destParent">The parent (folder) node of the Manager.</param>
+        /// <returns></returns>
+        private XmlNode ImportManagerMemos(XmlNode compNode, XmlNode destParent)
+        {
+            XmlNode child = compNode.FirstChild;
+            while (child != null)
+            {
+                if (child.Name == "memo")
+                {
+                    AddComponent(child, ref destParent);
+                }
+                child = child.NextSibling;
+            }
+            return destParent;
         }
 
         /// <summary>
@@ -630,7 +731,12 @@ namespace Importer
             // copy code here
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+
+            // some Manager components have Memo children. For ApsimX the import
+            // will just put them as the next sibling of the Manager rather
+            // than as a child of the Manager.
+            destParent = ImportManagerMemos(compNode, destParent);
 
             return newNode;
         }
@@ -644,7 +750,7 @@ namespace Importer
         /// <returns>The new component node</returns>
         private XmlNode ImportMetFile(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "WeatherFile", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "WeatherFile", Utility.Xml.NameAttr(compNode));
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
             string metfilepath = GetInnerText(compNode, "filename");
@@ -682,14 +788,14 @@ namespace Importer
             myclock.EndDate   = Utility.Date.DMYtoDate(endDate);
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, myclock, Utility.Xml.Name(compNode));
+            newNode = ImportObject(destParent, newNode, myclock, Utility.Xml.NameAttr(compNode));
  
             return newNode;
         }
 
         private XmlNode ImportOperations(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "Operations", Utility.Xml.Name(compNode));
+            newNode = AddCompNode(destParent, "Operations", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
             
