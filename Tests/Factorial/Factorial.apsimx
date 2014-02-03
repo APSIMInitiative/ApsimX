@@ -45,7 +45,7 @@
       <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>..\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -878,7 +878,7 @@
       <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>..\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -1670,7 +1670,7 @@
       <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>..\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -2439,7 +2439,7 @@
           </Value>
           <Value xsi:type="WeatherFile">
             <Name>WeatherFile</Name>
-            <FileName>C:\Users\hol353\ApsimX\Tests\WeatherFiles\Dalby.met</FileName>
+            <FileName>..\WeatherFiles\Dalby.met</FileName>
           </Value>
         </Value>
         <Value>
@@ -2452,7 +2452,7 @@
           </Value>
           <Value xsi:type="WeatherFile">
             <Name>WeatherFile</Name>
-            <FileName>C:\Users\hol353\ApsimX\Tests\WeatherFiles\Goond.met</FileName>
+            <FileName>..\WeatherFiles\Goond.met</FileName>
           </Value>
         </Value>
       </Factor>
@@ -2462,7 +2462,7 @@
       <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>..\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>

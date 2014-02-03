@@ -7,7 +7,7 @@
     <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>lincoln.met</FileName>
+      <FileName>..\WeatherFiles\lincoln.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
