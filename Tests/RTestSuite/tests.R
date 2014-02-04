@@ -127,6 +127,6 @@ Tolerance <- function (x, func, params, baseData, ...) {
 # @baseData: vector - reference data
 ##################################
 EqualTo <- function (x, func, params, baseData, ...) {
-   output <- x == baseData
+   output <- x == params[1]
    ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
   }
