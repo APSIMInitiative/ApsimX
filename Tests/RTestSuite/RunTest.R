@@ -55,7 +55,8 @@ for (fileNumber in 1:length(files)){
     {
       #connect to simulator output and baseline data if available
       db <- dbConnect(SQLite(), dbname = dbName)
-      dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
+      if(file.exists(paste(dbName, ".baseline", sep="")))
+          dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
       
       #get report ID and extract relevant info from table
       simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
@@ -67,17 +68,24 @@ for (fileNumber in 1:length(files)){
             stop(paste("Error: No data returned for simulation: ", simsToTest[sim]))
           
           #do the same thing for baseline data
-          readSimOutputBase <- dbReadTable(dbBase, "Report")
-          readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]                        
+          if(file.exists(paste(dbName, ".baseline", sep=""))){
+            readSimOutputBase <- dbReadTable(dbBase, "Report")
+            readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]
+          }
+          else
+            readSimOutputBase <- NA
+          
           
           # redirect result to temp var so we dont have it appearing in output
           junk <- dbDisconnect(db)
-          junk <- dbDisconnect(dbBase)
+          if (!is.na(readSimOutputBase))
+            junk <- dbDisconnect(dbBase)
           rm(junk)
           
           # drop Date column if it exists
           readSimOutput     <- readSimOutput[,     -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
-          readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
+          if (!is.na(readSimOutputBase))
+              readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
                               
           #get tests to run
           tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
@@ -94,12 +102,13 @@ for (fileNumber in 1:length(files)){
                    print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
                })
                
-               tryCatch({
-               simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
-               }, error = function(err) {
-                 print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
-                             "]. Do you need to update the baseline?", sep="")))
-               })
+               if(!is.na(readSimOutputBase))
+                 tryCatch({
+                   simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
+                   }, error = function(err) {
+                     print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
+                                 "]. Do you need to update the baseline?", sep="")))
+                   })
                   
             # retrieve the test name
             func <- match.fun(tests[i])
