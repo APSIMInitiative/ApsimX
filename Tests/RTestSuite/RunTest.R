@@ -22,14 +22,16 @@ ifelse(length(args) == 1, files <- args[1], files <- list.files(path="Tests", pa
 buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 
                           BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
 
+results <- -1
+
 for (fileNumber in 1:length(files)){
-  print(files[fileNumber])
+  print(noquote(files[fileNumber]))
   if(length(args) > 1){
     dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
     connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
   } 
 
-
+  time <- proc.time()
   # read tests from .apsimx
   doc <- xmlTreeParse(files[fileNumber], useInternalNodes=TRUE)
   group <- getNodeSet(doc, "/Simulations/Tests/Test")
@@ -89,37 +91,37 @@ for (fileNumber in 1:length(files)){
                tryCatch({
                    simOutput    <- subset(readSimOutput, select=unlist(cols))
                }, error = function(err) {
-                   print(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep=""))
+                   print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
                })
                
                tryCatch({
                simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
                }, error = function(err) {
-                 print(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
-                             "]. Do you need to update the baseline?", sep=""))
+                 print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
+                             "]. Do you need to update the baseline?", sep="")))
                })
                   
             # retrieve the test name
             func <- match.fun(tests[i])
             #unpack parameters - TODO: catch error when invalid
             params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
+
             #run each test
-            ifelse(i == 1,      
+            ifelse(results == -1,      
               results <- func(simOutput, tests, params, simOutputBase),
               results <- c(results, func(simOutput, tests, params, simOutputBase)))
-            print(paste(tests, results[i], cols, sep=" ")) 
+            print(noquote(paste(tests, tail(results,1), cols, sep=" ")))
            }
       }, error = function(err) {
         #print(paste("Could not find Report table for ", dbName, sep=""))
-        print(err)
+        print(noquote(err))
         haveTestsPassed <<- FALSE
-        print(haveTestsPassed)
       }) 
       if(inherits(possibleError, "error")) next
       }
   }
   if(exists("results"))
-    print(results)
+    print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
  
   if (length(args) > 1){
       # this line does the save to the external database. comment out to stop this happening for testing
@@ -128,6 +130,5 @@ for (fileNumber in 1:length(files)){
   odbcCloseAll()
 }
 
-write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing
-
+#write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing
 if (all(results) == FALSE | haveTestsPassed == FALSE) stop("One or more tests failed.")

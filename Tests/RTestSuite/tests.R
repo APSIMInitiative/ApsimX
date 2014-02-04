@@ -36,7 +36,9 @@ Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   output <- cbind(args[2], output)
   output <- cbind(output, paste(params, collapse=","))
   names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
-  buildRecord <<- rbind(buildRecord, output)  
+  buildRecord <<- rbind(buildRecord, output)
+  if (!passed)
+    haveTestsPassed <<- FALSE
   return(passed)
 }
 

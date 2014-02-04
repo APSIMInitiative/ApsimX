@@ -3585,7 +3585,7 @@
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>
-      <Parameters>50</Parameters>
+      <Parameters>0</Parameters>
     </Test>
    <!--  <Test>
       <SimulationName>Location Dalby</SimulationName>
