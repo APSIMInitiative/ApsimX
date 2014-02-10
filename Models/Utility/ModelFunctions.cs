@@ -5,8 +5,85 @@ using System.Text;
 using Models.Core;
 using System.Reflection;
 using System.Collections;
+using System.IO;
 namespace Utility
 {
+
+    public class TempFileNames
+    {
+        private string SimulationFileName;
+        private Model Model;
+        private string Extension;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TempFileNames(string simulationFileName, Model model, string extension)
+        {
+            SimulationFileName = simulationFileName;
+            Model = model;
+            Extension = extension;
+            Cleanup();
+        }
+
+        /// <summary>
+        /// Return a unique temporary filename that is predictable so that we can
+        /// remove them easily.
+        /// </summary>
+        private string UniqueTempFileNameBase
+        {
+            get
+            {
+                string fileName = SimulationFileName + Model.FullPath;
+                fileName = fileName.Replace(@"/", "");
+                fileName = fileName.Replace(@"\", "");
+                fileName = fileName.Replace(@".", "");
+                fileName = fileName.Replace(@":", "");
+                return System.IO.Path.Combine(System.IO.Path.GetTempPath(), fileName);
+            }
+        }
+
+        /// <summary>
+        /// Get rid of all temporary files.
+        /// </summary>
+        private void Cleanup()
+        {
+            string baseFileName = UniqueTempFileNameBase;
+            int counter = 1;
+            bool finished = false; 
+            do
+            {
+                string tempFileName = baseFileName + counter.ToString() + ".dll";
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+                else
+                    finished = true;
+                counter++;
+            }
+            while (!finished);
+        }
+
+        /// <summary>
+        /// Return a unique filename that is specific to this manager module. 'extension'
+        /// should contain a '.'
+        /// </summary>
+        /// <returns></returns>
+        public string GetUniqueFileName()
+        {
+            string baseFileName = UniqueTempFileNameBase;
+            int counter = 1;
+            do
+            {
+                string tempFileName = baseFileName + counter.ToString() + Extension;
+                if (!File.Exists(tempFileName))
+                    return tempFileName;
+                counter++;
+            }
+            while (counter < 1000);
+            throw new ApsimXException(Model.FullPath, "Cannot create a unique, temporary filename.");
+        }
+
+    }
 
 
     /// <summary>
@@ -14,6 +91,9 @@ namespace Utility
     /// </summary>
     public class ModelFunctions
     {
+
+
+
 
 
         #region Parameter functions

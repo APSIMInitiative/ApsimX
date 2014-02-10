@@ -19,11 +19,17 @@ namespace Models
         private bool HasDeserialised = false;
         private string elementsAsXml = null;
         private Model _Script;
-        [NonSerialized] private XmlElement[] _elements;
+        [NonSerialized]
+        private Utility.TempFileNames TemporaryFiles = null;
+        [NonSerialized]
+        private XmlElement[] _elements;
         // store the details of the compilation for this instance
-        [NonSerialized] private string AssemblyFile = "";
-        [NonSerialized] private Assembly CompiledAssembly = null;
-        [NonSerialized] private string CompiledCode = "";
+        [NonSerialized]
+        private string AssemblyFile = "";
+        [NonSerialized]
+        private Assembly CompiledAssembly = null;
+        [NonSerialized]
+        private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
@@ -75,13 +81,14 @@ namespace Models
             }
         }
 
-
-
         /// <summary>
         /// The model has been loaded.
         /// </summary>
         public override void OnLoaded()
         {
+            // Cleanup after last build.
+            TemporaryFiles = new Utility.TempFileNames(Simulation.FileName, this, ".dll");
+
             HasDeserialised = true;
             if (Script == null)
                 RebuildScriptModel();
@@ -107,79 +114,127 @@ namespace Models
                     Script.Parent = null;
                     Script = null;
                 }
+                
+                // determine if the script needs to be recompiled
+                if ((CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0))
+                {
+                    CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, TemporaryFiles.GetUniqueFileName());
+                    CompiledCode = _Code;
+                }
 
-                    // determine if the script needs to be recompiled
-                    if ( (CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0) )
-                    {
-                        // Try compiling the script, firstly finding a unique dll name for it
-                        string tmpFile = Path.GetTempFileName();
-                        AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
-                        while (File.Exists(AssemblyFile))
-                        {
-                            File.Delete(tmpFile);   // cleanup
-                            tmpFile = Path.GetTempFileName();
-                            AssemblyFile = Path.ChangeExtension(tmpFile, ".dll");
-                        }
-                        File.Delete(tmpFile);   // cleanup
-                        
-                        CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, AssemblyFile);
-                        
-                        CompiledCode = _Code;
-                    }
+                // Look for a "class Script" - throw if not found.
+                Type ScriptType = CompiledAssembly.GetType("Models.Script");
+                if (ScriptType == null)
+                    throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
 
-                    // Look for a "class Script" - throw if not found.
-                    Type ScriptType = CompiledAssembly.GetType("Models.Script");
-                    if (ScriptType == null)
-                        throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
+                // If a script model already exists, then serialise it so that we capture the current state,
+                // and then create a new script model using those values.
+                if (currentState != null)
+                {
+                    XmlSerializer newSerial = new XmlSerializer(ScriptType);
+                    Script = newSerial.Deserialize(new StringReader(currentState)) as Model;
+                }
 
-                    // If a script model already exists, then serialise it so that we capture the current state,
-                    // and then create a new script model using those values.
-                    if (currentState != null)
-                    {
-                        XmlSerializer newSerial = new XmlSerializer(ScriptType);
-                        Script = newSerial.Deserialize(new StringReader(currentState)) as Model;
-                    }
+                // If this manager model has been XML deserialised, then use the "elements" member to 
+                // create a new script model.
+                else if (elements != null && elements.Length > 0)
+                {
+                    XmlSerializer serial = new XmlSerializer(ScriptType);
+                    Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
 
-                    // If this manager model has been XML deserialised, then use the "elements" member to 
-                    // create a new script model.
-                    else if (elements != null && elements.Length > 0)
-                    {
-                        XmlSerializer serial = new XmlSerializer(ScriptType);
-                        Script = serial.Deserialize(new XmlNodeReader(elements[0])) as Model;
+                    // setup the elementsAsXml for BinaryFormatter.Serialization.
+                    elementsAsXml = elements[0].OuterXml;
+                }
 
-                        // setup the elementsAsXml for BinaryFormatter.Serialization.
-                        elementsAsXml = elements[0].OuterXml;
-                    }
+                // If this manager model has been binary deserialised, the use the "elementsAsXml" member
+                // to create a new script model.
+                else if (elementsAsXml != "" && elementsAsXml != null)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(elementsAsXml);
+                    XmlSerializer serial = new XmlSerializer(ScriptType);
+                    Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
+                }
 
-                    // If this manager model has been binary deserialised, the use the "elementsAsXml" member
-                    // to create a new script model.
-                    else if (elementsAsXml != "" && elementsAsXml != null)
-                    {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(elementsAsXml);
-                        XmlSerializer serial = new XmlSerializer(ScriptType);
-                        Script = serial.Deserialize(new XmlNodeReader(doc.DocumentElement)) as Model;
-                    }
+                // Nothing else was specified so just create a default script model.
+                else
+                    Script = Activator.CreateInstance(ScriptType) as Model;
 
-                    // Nothing else was specified so just create a default script model.
-                    else
-                        Script = Activator.CreateInstance(ScriptType) as Model;
-
-                    if (Script != null)
-                    {
-                        Script.Parent = this;
-                        // Need to reconnect all events and links in all models in simulation because
-                        // some may want to connect or link to this new script.
-                        Model.ConnectEventPublishers(Script);
-                        Model.ConnectEventSubscribers(Script);
-                        Model.ResolveLinks(Script);
-                    }
+                if (Script != null)
+                {
+                    Script.Parent = this;
+                    // Need to reconnect all events and links in all models in simulation because
+                    // some may want to connect or link to this new script.
+                    Model.ConnectEventPublishers(Script);
+                    Model.ConnectEventSubscribers(Script);
+                    Model.ResolveLinks(Script);
+                }
 
 
-                    // Call the OnInitialised if present.
-                    Script.OnLoaded();
+                // Call the OnInitialised if present.
+                Script.OnLoaded();
             }
             return null;
         }
+
+
+
+        /// <summary>
+        /// Return a unique temporary .dll filename that is predictable so that we can
+        /// remove .dlls from previous runs.
+        /// </summary>
+        private string UniqueTempFileNameBase
+        {
+            get
+            {
+                string fileName = Simulation.FileName + FullPath;
+                fileName = fileName.Replace(@"/", "");
+                fileName = fileName.Replace(@"\", "");
+                fileName = fileName.Replace(@".", "");
+                fileName = fileName.Replace(@":", "");
+                return Path.Combine(Path.GetTempPath(), fileName);
+            }
+        }
+
+        /// <summary>
+        /// Get rid of the temporary .dll file.
+        /// </summary>
+        private void CleanupPreviousBuilds()
+        {
+            string baseFileName = UniqueTempFileNameBase;
+            int counter = 1;
+            bool finished = false;
+            do
+            {
+                string tempFileName = baseFileName + counter.ToString() + ".dll";
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+                else
+                    finished = true;
+                counter++;
+            }
+            while (!finished);
+        }
+
+        /// <summary>
+        /// Return a unique filename that is specific to this manager module.
+        /// </summary>
+        /// <returns></returns>
+        private string GetUniqueAssemblyFileName()
+        {
+            string baseFileName = UniqueTempFileNameBase;
+            int counter = 1;
+            do
+            {
+                string tempFileName = baseFileName + counter.ToString() + ".dll";
+                if (!File.Exists(tempFileName))
+                    return tempFileName;
+                counter++;
+            }
+            while (counter < 1000);
+            throw new ApsimXException(FullPath, "Cannot create a unique, temporary filename while trying to compile script code");
+        }
+
+
     }
 }
