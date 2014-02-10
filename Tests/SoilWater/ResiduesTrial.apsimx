@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <Area>0</Area>
   <Simulation>
     <Name>Test</Name>
-    <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -22,18 +20,8 @@
     </Summary>
     <Zone>
       <Name>Field</Name>
-      <Area>0</Area>
       <Soil>
         <Name>Templeton</Name>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Sedementary</SoilType>
-        <LocalName>Lincoln</LocalName>
-        <Site />
-        <NearestTown />
-        <Region />
-        <NaturalVegetation />
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
         <Water>
           <Name>Water</Name>
           <Thickness>
@@ -620,6 +608,15 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <RecordNumber>0</RecordNumber>
+        <SoilType>Sedementary</SoilType>
+        <LocalName>Lincoln</LocalName>
+        <Site />
+        <NearestTown />
+        <Region />
+        <NaturalVegetation />
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
       </Soil>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -774,18 +771,15 @@
       <Graph>
         <Name>Graph</Name>
         <Axis>
-          <Name>Axis</Name>
           <Type>Left</Type>
           <Title>Depth (mm)</Title>
           <Inverted>true</Inverted>
         </Axis>
         <Axis>
-          <Name>Axis</Name>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
         </Axis>
         <Series>
-          <Name>Series</Name>
           <Title>SWC20cm</Title>
           <Type>Line</Type>
           <XAxis>Bottom</XAxis>
@@ -793,20 +787,17 @@
           <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
           <X>
-            <Name>GraphValues</Name>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <Name>GraphValues</Name>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilWater.sw_dep(1)</FieldName>
           </Y>
         </Series>
         <Series>
-          <Name>Series</Name>
           <Title>Obs SWC 20cm</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
@@ -814,13 +805,11 @@
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
           <X>
-            <Name>GraphValues</Name>
             <SimulationName>Test</SimulationName>
             <TableName>Input</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <Name>GraphValues</Name>
             <SimulationName>Test</SimulationName>
             <TableName>Input</TableName>
             <FieldName>sw_dep(1)</FieldName>
@@ -963,7 +952,9 @@ SoilWat.residueinterception = Interception_today;
 }
 	   ]]></Code>
       </Manager>
+      <Area>0</Area>
     </Zone>
+    <Area>0</Area>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -986,4 +977,6 @@ SoilWat.residueinterception = Interception_today;
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
+  <Area>0</Area>
+  <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

@@ -36,7 +36,9 @@ Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
   output <- cbind(args[2], output)
   output <- cbind(output, paste(params, collapse=","))
   names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
-  buildRecord <<- rbind(buildRecord, output)  
+  buildRecord <<- rbind(buildRecord, output)
+  if (!passed)
+    haveTestsPassed <<- FALSE
   return(passed)
 }
 
@@ -59,7 +61,7 @@ AllPos <- function(x, func, ...) {
 ##################################
 GreaterThan <- function (x, func, params, ...) {
   output <- x > params[1]
-  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func, params), Output(x, FALSE, output, func, params))
 }
 
 ############# LessThan ############
@@ -70,7 +72,7 @@ GreaterThan <- function (x, func, params, ...) {
 ##################################
 LessThan <- function (x, func, params, ...) {
   output <- x < params[1]
-  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func, params), Output(x, FALSE, output, func, params))
 }
 
 ############# Between ############
@@ -82,7 +84,7 @@ LessThan <- function (x, func, params, ...) {
 ##################################
 Between <- function (x, func, params, ...) {
   output <- x >= params[1] &  x <= params[2]
-  ifelse(all(output), Output(x, TRUE, output, func), Output(x, FALSE, output, func))
+  ifelse(all(output), Output(x, TRUE, output, func, params), Output(x, FALSE, output, func, params))
 }
 
 ############# Mean ############
@@ -96,7 +98,7 @@ Mean <- function (x, func, params, ...) {
   x <- unlist(x)
   output <- mean(x) <= params[2] + params[2] * params[1] / 100 &
             mean(x) >= params[2] - params[2] * params[1] / 100
-  ifelse(output, Output(x, TRUE, output, func), Output(x, FALSE, output, func))
+  ifelse(output, Output(x, TRUE, output, func, params), Output(x, FALSE, output, func, params))
 }
 
 ############# Tolerance ############
@@ -108,6 +110,8 @@ Mean <- function (x, func, params, ...) {
 # @baseData: vector - reference data
 ##################################
 Tolerance <- function (x, func, params, baseData, ...) {
+  if (is.na(baseData))
+    stop("Tolerance test requires a baseline and one was not found.")
   if (params[1]) {
       output <- abs(x) <= abs(baseData) + abs(baseData) * params[2] / 100 &
                 abs(x) >= abs(baseData) - abs(baseData) * params[2] / 100
@@ -127,6 +131,6 @@ Tolerance <- function (x, func, params, baseData, ...) {
 # @baseData: vector - reference data
 ##################################
 EqualTo <- function (x, func, params, baseData, ...) {
-   output <- x == baseData
-   ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
+   output <- x == params[1]
+   ifelse(all(output), Output(x, TRUE, output, func, params), Output(x, FALSE, output, func, params))
   }

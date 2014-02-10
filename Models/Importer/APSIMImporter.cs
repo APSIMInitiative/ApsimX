@@ -173,18 +173,22 @@ namespace Importer
                     XmlNode newSim = AddCompNode(destParent, "Simulation", Utility.Xml.NameAttr(compNode));
                     AddChildComponents(compNode, newSim);
                 }
-                if (compNode.Name == "folder")
+                else if (compNode.Name == "folder")
                 {
                     XmlNode newFolder = AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(compNode));
                     AddChildComponents(compNode, newFolder);
                 }
-                if (compNode.Name == "clock")
+                else if (compNode.Name == "clock")
                 {
                     newNode = ImportClock(compNode, destParent, newNode);
                 }
                 else if (compNode.Name == "metfile")
                 {
                     newNode = ImportMetFile(compNode, destParent, newNode);
+                }
+                else if (compNode.Name == "micromet")
+                {
+                    newNode = ImportMicromet(compNode, destParent, newNode);
                 }
                 else if (compNode.Name == "manager")
                 {
@@ -279,8 +283,18 @@ namespace Importer
                 }
                 else
                 {
-                    //String newElement = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
-                    //newNode = AddCompNode(destParent, newElement, Utility.Xml.Name(compNode));
+                    // all other components not listed above will be handled by this
+                    // code and some test used to try to determine what type of object it is
+                    XmlNode ApsimToSim = Types.Instance.ApsimToSim(compNode.Name);
+                    if (ApsimToSim != null)
+                    {
+                        // make some guesses about the type of component to add
+                        string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
+                        if (Types.Instance.IsCrop(compNode.Name))
+                            classname = "Plant";
+
+                        newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                    }
                 }
             }
             catch (Exception exp)
@@ -289,6 +303,28 @@ namespace Importer
             }
             return newNode; 
         }
+
+        /// <summary>
+        /// Import a micromet component
+        /// </summary>
+        /// <param name="compNode"></param>
+        /// <param name="destParent"></param>
+        /// <param name="newNode"></param>
+        /// <returns></returns>
+        private XmlNode ImportMicromet(XmlNode compNode, XmlNode destParent, XmlNode newNode)
+        {
+            Models.MicroClimate mymicro = new Models.MicroClimate();
+
+            mymicro.soil_albedo = GetChildDouble(compNode, "soilalbedo", 0);
+            mymicro.a_interception = GetChildDouble(compNode, "a_interception", 0);
+            mymicro.b_interception = GetChildDouble(compNode, "b_interception", 0);
+            mymicro.c_interception = GetChildDouble(compNode, "c_interception", 0);
+            mymicro.d_interception = GetChildDouble(compNode, "d_interception", 0);
+
+            newNode = ImportObject(destParent, newNode, mymicro, Utility.Xml.NameAttr(compNode));
+
+            return newNode;
+        }     
 
         /// <summary>
         /// 

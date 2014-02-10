@@ -1601,9 +1601,9 @@
             <Area>300</Area>
           </LeafCohort>
           <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
-          <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
-          <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
-          <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
+          <StartFractionExpanded>0.86695459952544862</StartFractionExpanded>
+          <FractionNextleafExpanded>0.96677524412252014</FractionNextleafExpanded>
+          <_ExpandedNodeNo>34.966775244122523</_ExpandedNodeNo>
           <MaxCover>1</MaxCover>
           <KDead>0.03</KDead>
         </Leaf>
