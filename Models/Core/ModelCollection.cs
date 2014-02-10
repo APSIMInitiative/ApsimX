@@ -10,7 +10,7 @@ namespace Models.Core
     public abstract class ModelCollection : Model
     {
         /// <summary>
-        /// A list of child models.
+        /// A list of child models.   
         /// </summary>
         [XmlElement(typeof(Simulation))]
         [XmlElement(typeof(Simulations))]
