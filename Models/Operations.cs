@@ -49,22 +49,15 @@ namespace Models
         public Model Model { get; set;}
 
         /// <summary>
-        /// The model has been loaded.
-        /// </summary>
-        public override void OnLoaded()
-        {
-            // Cleanup after last build.
-            TemporaryFiles = new Utility.TempFileNames(Simulation.FileName, this, ".dll");
-        }
-
-        /// <summary>
         /// Simulation is commencing.
         /// </summary>
         public override void OnCommencing()
         {
+            if (TemporaryFiles == null)
+                TemporaryFiles = new Utility.TempFileNames(Simulation.FileName, this, ".dll");
+
             if (ScheduleHasChanged())
             {
-
 
                 if (Model != null)
                     RemoveModel(Model);
