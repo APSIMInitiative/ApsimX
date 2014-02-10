@@ -70,16 +70,17 @@ namespace Models.Core
                 // Parent all models.
                 ParentAllModels(simulations);
 
+                // Connect events and resolve links.
+                simulations.AllModels.ForEach(ConnectEventPublishers);
+                simulations.AllModels.ForEach(ResolveLinks);
+
                 // Call OnLoaded in all models.
-                List<ApsimXException> errors = new List<ApsimXException>();
-                Utility.ModelFunctions.CallOnLoaded(simulations, errors);
-                simulations.LoadErrors = errors;
+                simulations.AllModels.ForEach(CallOnLoaded);
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
             return simulations;
         }
-
 
         /// <summary>
         /// Write the specified simulation set to the specified filename
@@ -158,14 +159,14 @@ namespace Models.Core
 
             if (parent is Experiment)
                 simulations.AddRange((parent as Experiment).Create());
-            else
+            else if (parent is Simulation)
+                simulations.Add(parent as Simulation);
+            else if (parent is ModelCollection)
             {
-                // Get a list of all child models under parent.
-                List<Model> children = new List<Model>();
-                FindChildren(parent, children);
+                ModelCollection modelCollection = parent as ModelCollection;
 
                 // Look for simulations.
-                foreach (Model model in children)
+                foreach (Model model in modelCollection.AllModels)
                 {
                     if (model is Experiment)
                         simulations.AddRange((model as Experiment).Create());
@@ -173,18 +174,7 @@ namespace Models.Core
                         simulations.Add(model as Simulation);
                 }
             }
-
             return simulations.ToArray();
-        }
-
-        /// <summary>
-        /// Find all children under the specified parent model.
-        /// </summary>
-        private static void FindChildren(Model parent, List<Model> children)
-        {
-            children.AddRange(parent.Models);
-            foreach (Model child in parent.Models)
-                FindChildren(child, children);
         }
 
         /// <summary>
@@ -215,19 +205,20 @@ namespace Models.Core
         /// </summary>
         private void SetFileNameInAllSimulatoins()
         {
-            foreach (Simulation simulation in FindAll(typeof(Simulation)))
+            foreach (Simulation simulation in AllModelsMatching(typeof(Simulation)))
                 simulation.FileName = FileName;
         }
 
         /// <summary>
         /// Recursively go through all child models are correctly set their parent field.
         /// </summary>
-        private static void ParentAllModels(Model parent)
+        private static void ParentAllModels(ModelCollection parent)
         {
             foreach (Model child in parent.Models)
             {
                 child.Parent = parent;
-                ParentAllModels(child);
+                if (child is ModelCollection)
+                    ParentAllModels(child as ModelCollection);
             }
         }
 

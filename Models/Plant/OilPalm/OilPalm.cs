@@ -101,35 +101,35 @@ namespace Models.PMF.OilPalm
         //Component MySoilWat;
         //Component MySoilN;
 
-        public Function FrondAppRate { get; set; }
-        public Function RelativeDevelopmentalRate { get; set; }
-        public Function FrondMaxArea { get; set; }
-        public Function DirectExtinctionCoeff { get; set; }
-        public Function DiffuseExtinctionCoeff { get; set; }
-        public Function ExpandingFronds { get; set; }
-        public Function InitialFrondNumber { get; set; }
-       public Function RUE { get; set; }
-         public Function RootFrontVelocity { get; set; }
-        public Function RootSenescenceRate { get; set; }
-        public Function SpecificLeafArea { get; set; }
-         public Function SpecificLeafAreaMax { get; set; }
-       public Function RootFraction { get; set; }
-        public Function BunchSizeMax { get; set; }
-        public Function FemaleFlowerFraction { get; set; }
-        public Function FFFStressImpact { get; set; }
-        public Function StemToFrondFraction { get; set; }
-        public Function FlowerAbortionFraction { get; set; }
-        public Function BunchFailureFraction { get; set; }
-        public Function KNO3 { get; set; }
-         public Function StemNConcentration { get; set; }
-        public Function BunchNConcentration { get; set; }
-       public Function RootNConcentration { get; set; }
-        public Function BunchOilConversionFactor { get; set; }
-        public Function RipeBunchWaterContent { get; set; }
-        public Function HarvestFrondNumber { get; set; }
-        public Function FrondMaximumNConcentration { get; set; }
-        public Function FrondCriticalNConcentration { get; set; }
-        public Function FrondMinimumNConcentration { get; set; }
+        [Link] Function FrondAppRate = null;
+        [Link] Function RelativeDevelopmentalRate = null;
+        [Link] Function FrondMaxArea = null;
+        [Link] Function DirectExtinctionCoeff = null;
+        [Link] Function DiffuseExtinctionCoeff = null;
+        [Link] Function ExpandingFronds = null;
+        [Link] Function InitialFrondNumber = null;
+        [Link] Function RUE = null;
+        [Link] Function RootFrontVelocity = null;
+        [Link] Function RootSenescenceRate = null;
+        [Link] Function SpecificLeafArea = null;
+        [Link] Function SpecificLeafAreaMax = null;
+        [Link] Function RootFraction = null;
+        [Link] Function BunchSizeMax = null;
+        [Link] Function FemaleFlowerFraction = null;
+        [Link] Function FFFStressImpact = null;
+        [Link] Function StemToFrondFraction = null;
+        [Link] Function FlowerAbortionFraction = null;
+        [Link] Function BunchFailureFraction = null;
+        [Link] Function KNO3 = null;
+        [Link] Function StemNConcentration = null;
+        [Link] Function BunchNConcentration = null;
+        [Link] Function RootNConcentration = null;
+        [Link] Function BunchOilConversionFactor = null;
+        [Link] Function RipeBunchWaterContent = null;
+        [Link] Function HarvestFrondNumber = null;
+        [Link] Function FrondMaximumNConcentration = null;
+        [Link] Function FrondCriticalNConcentration = null;
+        [Link] Function FrondMinimumNConcentration = null;
 
 
         

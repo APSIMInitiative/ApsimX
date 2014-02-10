@@ -19,8 +19,6 @@ namespace Models
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model
     {
-        [Link] Simulation Simulation = null;
-
         public string FileName { get; set; }
 
         // A property providing a full file name. The user interface uses this.

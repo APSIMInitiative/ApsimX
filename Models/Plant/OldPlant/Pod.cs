@@ -18,18 +18,17 @@ namespace Models.PMF.OldPlant
         [Link]
         Environment Environment = null;
 
-        public Function TE { get; set; }
 
         [Link]
         Grain Grain = null;
 
-        public Function FractionGrainInPod { get; set; }
-
-        public Function NConcentrationCritical { get; set; }
-
-        public Function NConcentrationMinimum { get; set; }
-
-        public Function NConcentrationMaximum { get; set; }
+        [Link] Function TE = null;
+        [Link] Function FractionGrainInPod = null;
+        [Link] Function NConcentrationCritical = null;
+        [Link] Function NConcentrationMinimum = null;
+        [Link] Function NConcentrationMaximum = null;
+        [Link] Function GrowthStructuralFractionStage = null;
+        [Link] Function DMSenescenceFraction = null;
 
         [Link]
         Plant15 Plant = null;
@@ -37,9 +36,6 @@ namespace Models.PMF.OldPlant
         [Link]
         CompositeBiomass TotalLive = null;
 
-        public Function GrowthStructuralFractionStage { get; set; }
-
-        public Function DMSenescenceFraction { get; set; }
 
         [Link]
         Population1 Population = null;

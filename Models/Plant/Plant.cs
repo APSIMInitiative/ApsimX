@@ -71,31 +71,19 @@ namespace Models.PMF
         public String crop_type = "";
     }
     [Serializable]
-    public class Plant : Model
+    public class Plant : ModelCollection
     {
         public string CropType { get; set; }
-        public Phenology Phenology { get; set; }
-        public Arbitrator Arbitrator { get; set; }
-        public Structure Structure { get; set; }
-        public Summariser Summariser { get; set; }
+        [Link] public Phenology Phenology = null;
+        [Link] public Arbitrator Arbitrator = null;
+        [Link] public Structure Structure = null;
+
         [XmlIgnore]
         public SowPlant2Type SowingData;
 
+        [XmlIgnore]
+        public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
 
-        [XmlArrayItem(typeof(BelowGroundOrgan))]
-        [XmlArrayItem(typeof(GenericAboveGroundOrgan))]
-        [XmlArrayItem(typeof(GenericBelowGroundOrgan))]
-        [XmlArrayItem(typeof(GenericOrgan))]
-        [XmlArrayItem(typeof(HIReproductiveOrgan))]
-        [XmlArrayItem(typeof(Leaf))]
-        [XmlArrayItem(typeof(Nodule))]
-        [XmlArrayItem(typeof(ReproductiveOrgan))]
-        [XmlArrayItem(typeof(ReserveOrgan))]
-        [XmlArrayItem(typeof(Root))]
-        [XmlArrayItem(typeof(RootSWIM))]
-        [XmlArrayItem(typeof(SimpleLeaf))]
-        [XmlArrayItem(typeof(SimpleRoot))]
-        public List<Organ> Organs { get; set; }
 
         #region Links
         [Link]

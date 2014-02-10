@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     [Description("Add the values of all child functions")]
     public class AddFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         public override double Value
         {

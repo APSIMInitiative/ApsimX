@@ -18,11 +18,11 @@ namespace Models.PMF.Phen
         [Link]
         Plant Plant = null;
 
-        public Function ThermalTime { get; set; }
-        public Function PhotoperiodFunction { get; set; }
-        public Function Vrn1rate { get; set; }
-        public Function Vrn2rate { get; set; }
-        public Function Vrn3rate { get; set; }
+        //[Link] Function ThermalTime = null;
+        //[Link] Function PhotoperiodFunction = null;
+        [Link] Function Vrn1rate = null;
+        [Link] Function Vrn2rate = null;
+        [Link] Function Vrn3rate = null;
 
         
         public double AccumulatedVernalisation = 0;

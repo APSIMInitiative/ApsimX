@@ -67,7 +67,7 @@ namespace Models
                                 AnalyseValue(Heading, Arr.GetValue(Col));
                         }
                     }
-                else
+                else if (_Values.Count > 0)
                     AnalyseValue(FullName, _Values[0]);
             }
 
@@ -115,7 +115,7 @@ namespace Models
                                 AddValueToList(AllValues, Row, Heading, Arr.GetValue(Col));
                         }
                     }
-                else
+                else if (_Values.Count > 0)
                     AddValueToList(AllValues, Row, FullName, _Values[Row]);
                 return AllValues.ToArray();
             }
@@ -228,16 +228,11 @@ namespace Models
             }
         }
 
-        
-        // Links.
-        [Link] private Zone Paddock = null;
-        [Link] private Simulation Simulation = null;
-
         // privates
         private List<VariableMember> Members = null;
 
         // Properties read in.
-        public string[] Variables {get; set;}
+        public new string[] Variables {get; set;}
         public string[] Events { get; set; }
 
         /// <summary>
@@ -254,7 +249,7 @@ namespace Models
 
                 if (ComponentName == null)
                     throw new Exception("Invalid syntax for reporting event: " + Event);
-                object Component = Paddock.Get(ComponentName);
+                object Component = Get(ComponentName);
                 if (Component == null)
                     throw new Exception(Name + " can not find the component: " + ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -344,7 +339,7 @@ namespace Models
                 string ComponentName = Utility.String.ParentName(Event, '.');
                 string EventName = Utility.String.ChildName(Event, '.');
 
-                object Component = Paddock.Get(ComponentName);
+                object Component = Get(ComponentName);
                 if (Component != null)
                 {
                     EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);

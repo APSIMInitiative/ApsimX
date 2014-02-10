@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Models.Graph
 {
     [Serializable]
-    public class Series : Model
+    public class Series
     {
 
         public string Title { get; set; }

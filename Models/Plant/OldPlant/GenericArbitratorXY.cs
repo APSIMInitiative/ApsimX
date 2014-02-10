@@ -15,7 +15,8 @@ namespace Models.PMF.OldPlant
 
         public string[] PartitionRules = null;
 
-        public Function RatioRootShoot { get; set; }
+        [Link]
+        Function RatioRootShoot = null;
 
         [Link]
         Leaf1 Leaf = null;

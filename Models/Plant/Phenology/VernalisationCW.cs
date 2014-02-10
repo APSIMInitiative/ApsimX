@@ -12,7 +12,8 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        public Function Photoperiod { get; set; }
+        [Link]
+        Function Photoperiod = null;
 
         
         private double PhotopEff;

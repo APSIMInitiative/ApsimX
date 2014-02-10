@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
         [Link]
         Phenology Phenology = null;
 
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         public string Start = "";
 

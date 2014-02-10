@@ -10,11 +10,11 @@ namespace Models.PMF.Organs
     public class Nodule : GenericOrgan, BelowGround
     {
         #region Paramater Input Classes
-        public Function FixationMetabolicCost { get; set; }
-        public Function SpecificNitrogenaseActivity { get; set; }
-        public Function FT { get; set; }
-        public Function FW { get; set; }
-        public Function FWlog { get; set; }
+        [Link] Function FixationMetabolicCost = null;
+        [Link] Function SpecificNitrogenaseActivity = null;
+        [Link] Function FT = null;
+        [Link] Function FW = null;
+        [Link] Function FWlog = null;
         #endregion
 
         #region Class Fields

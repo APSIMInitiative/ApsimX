@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <Area>0</Area>
   <Simulation>
     <Name>Slurp</Name>
-    <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -22,7 +20,6 @@
     </Summary>
     <Zone>
       <Name>Field</Name>
-      <Area>0</Area>
       <Report>
         <Name>Report</Name>
         <Variables>
@@ -38,15 +35,6 @@
       </Report>
       <Soil>
         <Name>Soil</Name>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Black Vertosol</SoilType>
-        <LocalName>Waco</LocalName>
-        <Site>Jimbour</Site>
-        <NearestTown>Jimbour, Q 4352</NearestTown>
-        <Region>South East Queensland</Region>
-        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
         <Water>
           <Name>Water</Name>
           <Thickness>
@@ -633,6 +621,15 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <RecordNumber>0</RecordNumber>
+        <SoilType>Black Vertosol</SoilType>
+        <LocalName>Waco</LocalName>
+        <Site>Jimbour</Site>
+        <NearestTown>Jimbour, Q 4352</NearestTown>
+        <Region>South East Queensland</Region>
+        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -740,7 +737,9 @@
           <R50>200</R50>
         </ComponentData>
       </MicroClimate>
+      <Area>0</Area>
     </Zone>
+    <Area>0</Area>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -748,7 +747,6 @@
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
-    <Area>0</Area>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -766,7 +764,6 @@
     </Summary>
     <Zone>
       <Name>Field</Name>
-      <Area>0</Area>
       <Report>
         <Name>Report</Name>
         <Variables>
@@ -781,15 +778,6 @@
       </Report>
       <Soil>
         <Name>Soil</Name>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Black Vertosol</SoilType>
-        <LocalName>Waco</LocalName>
-        <Site>Jimbour</Site>
-        <NearestTown>Jimbour, Q 4352</NearestTown>
-        <Region>South East Queensland</Region>
-        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
         <Water>
           <Name>Water</Name>
           <Thickness>
@@ -1376,6 +1364,15 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <RecordNumber>0</RecordNumber>
+        <SoilType>Black Vertosol</SoilType>
+        <LocalName>Waco</LocalName>
+        <Site>Jimbour</Site>
+        <NearestTown>Jimbour, Q 4352</NearestTown>
+        <Region>South East Queensland</Region>
+        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -1429,57 +1426,51 @@
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
+      <Area>0</Area>
     </Zone>
+    <Area>0</Area>
   </Simulation>
   <Graph>
     <Name>soil water (1)</Name>
     <Axis>
-      <Name>Axis</Name>
       <Type>Bottom</Type>
       <Title>X axis title 2</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
-      <Name>Axis</Name>
       <Type>Left</Type>
       <Title>Y axis title</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
-      <Name>Series</Name>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>Slurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>Slurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>NoSlurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>NoSlurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilWater.sw_dep(1)</FieldName>
@@ -1506,19 +1497,16 @@
   <Graph>
     <Name>no3(1)</Name>
     <Axis>
-      <Name>Axis</Name>
       <Type>Bottom</Type>
       <Title>X axis title 2</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
-      <Name>Axis</Name>
       <Type>Left</Type>
       <Title>Y axis title</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
-      <Name>Series</Name>
       <Title>Slurp</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -1526,20 +1514,17 @@
       <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>Slurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>Slurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilNitrogen.no3(1)</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>NoSlurp</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -1547,17 +1532,17 @@
       <ColourArgb>-16760704</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>NoSlurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>NoSlurp</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilNitrogen.no3(1)</FieldName>
       </Y>
     </Series>
   </Graph>
+  <Area>0</Area>
+  <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

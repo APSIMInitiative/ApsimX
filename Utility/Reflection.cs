@@ -322,7 +322,7 @@ namespace Utility
             }
 
             // If source is a Model then get rid of it's parent as we don't want to serialise that.
-            Models.Core.Model parent = null;
+            Models.Core.ModelCollection parent = null;
             if (source is Models.Core.Model)
             {
                 Models.Core.Model model = source as Models.Core.Model;

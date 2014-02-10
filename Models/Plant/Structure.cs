@@ -11,7 +11,7 @@ namespace Models.PMF
 {
     [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
-    public class Structure : Model
+    public class Structure : ModelCollection
     {
         #region Links
         [Link]
@@ -28,15 +28,15 @@ namespace Models.PMF
         [Units("/plant")]
         public double PrimaryBudNo {get; set;}
 
-        public Function ThermalTime { get; set; }
-        public Function MainStemPrimordiaInitiationRate { get; set; }
-        public Function MainStemNodeAppearanceRate { get; set; }
-        public Function MainStemFinalNodeNumber { get; set; }
-        public Function HeightModel { get; set; }
-        public Function BranchingRate { get; set; }
-        public Function ShadeInducedBranchMortality { get; set; }
-        public Function DroughtInducedBranchMortality { get; set; }
-        public Function PlantMortality { get; set; }
+        [Link] Function ThermalTime = null;
+        [Link] Function MainStemPrimordiaInitiationRate = null;
+        [Link] public Function MainStemNodeAppearanceRate = null;
+        [Link] Function MainStemFinalNodeNumber = null;
+        [Link] Function HeightModel = null;
+        [Link] Function BranchingRate = null;
+        [Link] Function ShadeInducedBranchMortality = null;
+        [Link] Function DroughtInducedBranchMortality = null;
+        [Link(IsOptional=true)] Function PlantMortality = null;
         #endregion
 
         #region States

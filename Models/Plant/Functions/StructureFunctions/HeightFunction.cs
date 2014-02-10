@@ -9,7 +9,8 @@ namespace Models.PMF.Functions.StructureFunctions
     [Description("Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress)")]
     public class HeightFunction : Function
     {
-        public Function PotentialHeight { get; set; }
+        [Link]
+        Function PotentialHeight = null;
         double PotentialHeightYesterday = 0;
         double Height = 0;
         public List<Function> Children { get; set; }

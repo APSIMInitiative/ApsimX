@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
     public class LessThanFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
         public override double Value
         {
             get

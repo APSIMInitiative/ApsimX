@@ -237,7 +237,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             if (ParentZone != null && g != null)
-                this.Model.RemoveModel(g);
+                ParentZone.RemoveModel(g);
         }
 
         /// <summary>

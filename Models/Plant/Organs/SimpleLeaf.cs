@@ -38,13 +38,13 @@ namespace Models.PMF.Organs
         public double _Frgr;           // Relative Growth Rate Factor
         public XYPairs FT { get; set; }    // Temperature effect on Growth Interpolation Set
         public XYPairs FVPD { get; set; }   // VPD effect on Growth Interpolation Set
-        public Function PotentialBiomass { get; set; }
-        public Function DMDemandFunction { get; set; }
-        public Function CoverFunction { get; set; }
-        public Function NitrogenDemandSwitch { get; set; }
-        public Function NConc { get; set; }
-        public Function LaiFunction { get; set; }
-        public RUEModel Photosynthesis { get; set; }
+        [Link] Function PotentialBiomass = null;
+        [Link] Function DMDemandFunction = null;
+        [Link] Function CoverFunction = null;
+        [Link] Function NitrogenDemandSwitch = null;
+        [Link] Function NConc = null;
+        [Link] Function LaiFunction = null;
+        [Link] RUEModel Photosynthesis = null;
 
 
 

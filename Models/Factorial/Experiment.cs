@@ -15,27 +15,42 @@ namespace Models.Factorial
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     public class Experiment : ModelCollection
     {
-        public Factors Factors { get; set; }
-        public Simulation Simulation { get; set; }
+        [Link] Factors Factors = null;
+        [Link] Simulation Base = null;
 
         /// <summary>
         /// Create all simulations.
         /// </summary>
         public Simulation[] Create()
         {
+            // remove event connections and links from the base simulation before we clone.
+            Base.AllModels.ForEach(DisconnectEvents);
+            Base.AllModels.ForEach(UnresolveLinks);
+
             List<List<FactorValue>> allCombinations = AllCombinations();
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Simulation);
+                Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Base);
                 newSimulation.Name = "";
+                Model.Variables.ClearCache();
+                Model.Scope.ClearCache();
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
 
+                // Connect events and links in our new  simulation.
+                newSimulation.AllModels.ForEach(DisconnectEvents);
+                newSimulation.AllModels.ForEach(UnresolveLinks);
+                newSimulation.AllModels.ForEach(ConnectEventPublishers);
+                newSimulation.AllModels.ForEach(ResolveLinks);
                 simulations.Add(newSimulation);
             }
+
+            // reconnect events and links in the base simulation.
+            Base.AllModels.ForEach(ConnectEventPublishers);
+            Base.AllModels.ForEach(ResolveLinks);
 
             return simulations.ToArray();
         }
@@ -75,7 +90,8 @@ namespace Models.Factorial
                 List<FactorValue> values = new List<FactorValue>();
                 foreach (FactorValue factorValue in factor.FactorValues)
                     values.AddRange(factorValue.CreateValues());
-                allValues.Add(values);
+                if (values.Count > 0)
+                    allValues.Add(values);
             }
 
             List<List<FactorValue>> allCombinations = AllCombinationsOf<FactorValue>(allValues.ToArray());

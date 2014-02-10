@@ -58,20 +58,28 @@ namespace Models.Soils
         //[UILargeText]
         public string Comments { get; set; }
 
-        public Water Water { get; set; }
-        public SoilWater SoilWater { get; set; }
-        public SoilNitrogen SoilNitrogen { get; set; }
-        public SoilOrganicMatter SoilOrganicMatter { get; set; }
-        public Analysis Analysis { get; set; }
-        public InitialWater InitialWater { get; set; }
-        public Phosphorus Phosphorus { get; set; }
-        public Swim Swim { get; set; }
-        public LayerStructure LayerStructure { get; set; }
-        public SoilTemperature SoilTemperature { get; set; }
-        public SoilTemperature2 SoilTemperature2 { get; set; }
+        [Link] public Water Water = null;
+        [Link] public SoilWater SoilWater = null;
+        [Link] public SoilOrganicMatter SoilOrganicMatter = null;
+        [Link] public Analysis Analysis = null;
+        [Link(IsOptional=true)] public InitialWater InitialWater = null;
+        [Link(IsOptional=true)] public Phosphorus Phosphorus = null;
+        [Link(IsOptional=true)] public Swim Swim = null;
+        [Link(IsOptional=true)] public LayerStructure LayerStructure = null;
+        [Link(IsOptional=true)] public SoilTemperature SoilTemperature = null;
+        [Link(IsOptional=true)] public SoilTemperature2 SoilTemperature2 = null;
 
-        [XmlElement("Sample")]
-        public List<Sample> Samples { get; set; }
+        [XmlIgnore]
+        public List<Sample> Samples 
+        { 
+            get 
+            {
+                List<Sample> samples = new List<Sample>();
+                foreach (Sample sample in AllModelsMatching(typeof(Sample)))
+                    samples.Add(sample);
+                return samples;
+            } 
+        }
         
         /// <summary>
         /// Constructor
@@ -79,14 +87,6 @@ namespace Models.Soils
         public Soil()
         {
             Name = "Soil";                
-            Water = new Water();
-            SoilOrganicMatter = new SoilOrganicMatter();
-            Analysis = new Analysis();
-            Samples = new List<Sample>();
-
-            Water.Name = "Water";
-            SoilOrganicMatter.Name = "SoilOrganicMatter";
-            Analysis.Name = "Analysis";
         }
 
         /// <summary>

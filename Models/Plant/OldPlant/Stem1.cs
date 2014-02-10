@@ -17,27 +17,23 @@ namespace Models.PMF.OldPlant
         [Link]
         Plant15 Plant = null;
 
-        public Function HeightFunction { get; set; }
 
         [Link]
         Population1 Population = null;
 
-        public CompositeBiomass TotalLive { get; set; }
+        public CompositeBiomass TotalLive = null;
 
-        public Function GrowthStructuralFractionStage { get; set; }
-
-        public Function DMSenescenceFraction { get; set; }
+        [Link] Function HeightFunction = null;
+        [Link] Function GrowthStructuralFractionStage = null;
+        [Link] Function DMSenescenceFraction = null;
+        [Link] Function NConcentrationCritical = null;
+        [Link] Function NConcentrationMinimum = null;
+        [Link] Function NConcentrationMaximum = null;
+        [Link] Function RetainFraction = null;
 
         [Link]
         Leaf1 Leaf = null;
 
-        public Function NConcentrationCritical { get; set; }
-
-        public Function NConcentrationMinimum { get; set; }
-
-        public Function NConcentrationMaximum { get; set; }
-
-        public Function RetainFraction { get; set; }
 
         public double NDeficitUptakeFraction = 1.0;
 

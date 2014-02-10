@@ -19,6 +19,7 @@ namespace ModelTests
     public class ModelTest
     {
         private Simulations S;
+        private Simulation Sim;
         public TestContext TestContext {get; set;}
         private string sqliteFileName;
 
@@ -41,8 +42,8 @@ namespace ModelTests
             if (!File.Exists(sqliteFileName))
                 File.Copy(sqliteSourceFileName, sqliteFileName);
 
-            Utility.ModelFunctions.CallOnCommencing(S);
-            Utility.ModelFunctions.ResolveLinks(S);
+            Sim = S.Models[0] as Simulation;
+            Sim.StartRun();
         }
 
         private string FindSqlite3DLL()
@@ -65,7 +66,7 @@ namespace ModelTests
         [TestCleanup]
         public void Cleanup()
         {
-            Utility.ModelFunctions.CallOnCompleted(S);
+            Sim.CleanupRun();
             File.Delete("Test.apsimx");
             File.Delete("Goondiwindi.met");
             //File.Delete(sqliteFileName);
@@ -84,7 +85,6 @@ namespace ModelTests
 
             Assert.AreEqual(sim.FullPath, ".Simulations.Test");
             Assert.AreEqual(zone2.FullPath, ".Simulations.Test.Field2");
-            Assert.AreEqual(graph.Series[0].FullPath, ".Simulations.Test.Field2.Graph1.Series1");
             Assert.AreEqual(soil.Water.FullPath, ".Simulations.Test.Field2.Soil.Water");
         }
 
@@ -94,11 +94,11 @@ namespace ModelTests
         [TestMethod]
         public void ModelsTest()
         {
-            Assert.AreEqual(S.Models.Length, 3);
+            Assert.AreEqual(S.Models.Count, 3);
             Assert.AreEqual(Utility.Reflection.Name(S.Models[0]), "Test");
 
             Simulation Sim = S.Models[0] as Simulation;
-            Assert.AreEqual(Sim.Models.Length, 5);
+            Assert.AreEqual(Sim.Models.Count, 5);
             Assert.AreEqual(Sim.Models[0].Name, "WeatherFile");
             Assert.AreEqual(Sim.Models[1].Name, "Clock");
             Assert.AreEqual(Sim.Models[2].Name, "Summary");
@@ -106,7 +106,7 @@ namespace ModelTests
             Assert.AreEqual(Sim.Models[4].Name, "Field2");
 
             Zone Z = Sim.Models[3] as Zone;
-            Assert.AreEqual(Z.Models.Length, 1);
+            Assert.AreEqual(Z.Models.Count, 1);
             Assert.AreEqual(Utility.Reflection.Name(Z.Models[0]), "Field1Report");
         }
 
@@ -123,22 +123,8 @@ namespace ModelTests
 
             // Test for ensuring we can add a model to a Zone.
             Sim.AddModel(new Clock() { Name = "Clock" });
-            Assert.AreEqual(Sim.Models.Length, 6);
+            Assert.AreEqual(Sim.Models.Count, 6);
             Assert.AreEqual(Sim.Models[5].Name, "Clock1");
-
-            // Test for ensuring we can add a model to a simple model reference property of a class.
-            Assert.IsNull(soil.SoilWater);
-            //soil.AddModel(new SoilWater());
-            //Assert.IsNotNull(soil.Water);
-
-            // Test for ensuring we can add a model to a List<> property of a class where the list has already been created.
-            graph.AddModel(new Series());
-            Assert.AreEqual(graph.Series.Count, 2);
-
-            // Test for ensuring we can add a model to a List<> property of a class where the list is null
-            graph.Series = null;
-            graph.AddModel(new Series());
-            Assert.AreEqual(graph.Series.Count, 1);
         }
 
         /// <summary>
@@ -153,22 +139,9 @@ namespace ModelTests
             Soil soil = zone2.Models[1] as Soil;
 
             // Test for ensuring we can remove a model from a Zone.
-            Assert.IsTrue(Sim.RemoveModel(Sim.Models[1]));
-            Assert.AreEqual(Sim.Models.Length, 4);
+            Assert.IsTrue(Sim.RemoveModel(Sim.Models[3]));
+            Assert.AreEqual(Sim.Models.Count, 4);
             Assert.AreEqual(Sim.Models[0].Name, "WeatherFile");
-
-            // Test for ensuring we can add a model to a simple model reference property of a class.
-            Assert.IsNotNull(soil.Water);
-            Assert.IsTrue(soil.RemoveModel(soil.Water));
-            Assert.IsNull(soil.SoilWater);
-
-            // Test for ensuring we can remove a model from a List<> property of a class.
-            Assert.IsTrue(graph.RemoveModel(graph.Series[0]));
-            Assert.AreEqual(graph.Series.Count, 0);
-
-            // Test for ensuring RemoveChild returns false when it can't remove a model.
-            Assert.IsFalse(graph.RemoveModel(new Series()));
-            Assert.IsFalse(graph.RemoveModel(new Clock()));
         }
 
         /// <summary>
@@ -184,29 +157,24 @@ namespace ModelTests
 
             // Test the models that are in scope of zone2.graph
             Model[] inScopeForGraph = graph.FindAll();
-            Assert.AreEqual(inScopeForGraph.Length, 16);
+            Assert.AreEqual(inScopeForGraph.Length, 15);
             Assert.AreEqual(inScopeForGraph[0].FullPath, ".Simulations.Test.Field2.Graph1");
-            Assert.AreEqual(inScopeForGraph[1].FullPath, ".Simulations.Test.Field2.Graph1.Series1");
-            Assert.AreEqual(inScopeForGraph[2].FullPath, ".Simulations.Test.Field2.Graph1.Series1.X");
-            Assert.AreEqual(inScopeForGraph[3].FullPath, ".Simulations.Test.Field2.Graph1.Series1.Y");
-            Assert.AreEqual(inScopeForGraph[4].FullPath, ".Simulations.Test.Field2.Soil");
-            Assert.AreEqual(inScopeForGraph[5].FullPath, ".Simulations.Test.Field2.Soil.Water");
-            Assert.AreEqual(inScopeForGraph[6].FullPath, ".Simulations.Test.Field2.Soil.SoilOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[7].FullPath, ".Simulations.Test.Field2.Soil.Analysis");
+            Assert.AreEqual(inScopeForGraph[1].FullPath, ".Simulations.Test.Field2");
+            Assert.AreEqual(inScopeForGraph[2].FullPath, ".Simulations.Test.Field2.Soil");
+            Assert.AreEqual(inScopeForGraph[3].FullPath, ".Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(inScopeForGraph[4].FullPath, ".Simulations.Test.Field2.Soil.SoilWater");
+            Assert.AreEqual(inScopeForGraph[5].FullPath, ".Simulations.Test.Field2.Soil.SoilOrganicMatter");
+            Assert.AreEqual(inScopeForGraph[6].FullPath, ".Simulations.Test.Field2.Soil.Analysis");
+            Assert.AreEqual(inScopeForGraph[7].FullPath, ".Simulations.Test.Field2.SurfaceOrganicMatter");
             Assert.AreEqual(inScopeForGraph[8].FullPath, ".Simulations.Test.Field2.Field2SubZone");
             Assert.AreEqual(inScopeForGraph[9].FullPath, ".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport");
-            Assert.AreEqual(inScopeForGraph[10].FullPath, ".Simulations.Test.Field2");
-            Assert.AreEqual(inScopeForGraph[11].FullPath, ".Simulations.Test.WeatherFile");
-            Assert.AreEqual(inScopeForGraph[12].FullPath, ".Simulations.Test.Clock");
-            Assert.AreEqual(inScopeForGraph[13].FullPath, ".Simulations.Test.Summary");
-            Assert.AreEqual(inScopeForGraph[14].FullPath, ".Simulations.Test.Field1");
-            Assert.AreEqual(inScopeForGraph[15].FullPath, ".Simulations.Test");
+            Assert.AreEqual(inScopeForGraph[10].FullPath, ".Simulations.Test.WeatherFile");
+            Assert.AreEqual(inScopeForGraph[11].FullPath, ".Simulations.Test.Clock");
+            Assert.AreEqual(inScopeForGraph[12].FullPath, ".Simulations.Test.Summary");
+            Assert.AreEqual(inScopeForGraph[13].FullPath, ".Simulations.Test.Field1");
+            Assert.AreEqual(inScopeForGraph[14].FullPath, ".Simulations.Test");
 
-            // Test that FindAll(type) works at the Simulations level
-            Assert.AreEqual(S.FindAll(typeof(Simulations)).Length, 1);
-
-
-        }
+       }
 
         /// <summary>
         /// Scoping rule tests
@@ -219,7 +187,7 @@ namespace ModelTests
             Zone Field1 = Sim.Models[3] as Zone;
 
             // Make sure we can get a link to a local model from Field1
-            Assert.AreEqual(Utility.Reflection.Name(Field1.Find("Field1Report")), "Field1Report");
+            Assert.AreEqual(Field1.Find("Field1Report").Name, "Field1Report");
             Assert.AreEqual(Utility.Reflection.Name(Field1.Find(typeof(Models.Report))), "Field1Report");
 
             // Make sure we can get a link to a model in top level zone from Field1
@@ -236,7 +204,7 @@ namespace ModelTests
             Assert.IsNotNull(Field2.Find(typeof(Models.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
-            Zone Field2SubZone = Field2.Models[2] as Zone;
+            Zone Field2SubZone = Field2.Models[3] as Zone;
             Assert.AreEqual(Utility.Reflection.Name(Field2SubZone.Find("WeatherFile")), "WeatherFile");
             Assert.AreEqual(Utility.Reflection.Name(Field2SubZone.Find(typeof(Models.WeatherFile))), "WeatherFile");
         }
@@ -285,10 +253,8 @@ namespace ModelTests
             Assert.AreEqual(soil.Get("[Graph].Name"), "Graph1");
             Assert.AreEqual(graph.Get("[Soil].Water.Name"), "Water");
             Assert.AreEqual(graph.Get("[Simulation].Name"), "Test");
-
-            // Test the absolute path version of get.
-            Assert.AreEqual(S.Get(".Simulations.Name"), "Simulations");
         }
+
         [TestMethod]
         public void WeatherSummary()
         {

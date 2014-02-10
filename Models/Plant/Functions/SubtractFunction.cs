@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
     public class SubtractFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
         public override double Value
         {
             get

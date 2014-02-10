@@ -176,27 +176,27 @@ namespace Models.Soils
             // Variable handling when using APSIMX
             initDone = false;
             dlayer = Soil.Thickness;
-            bd = Soil.Water.BD;
-            sat_dep = Utility.Math.Multiply(Soil.Water.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Soil.Water.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Soil.Water.LL15, Soil.Thickness);
+            bd = Water.BD;
+            sat_dep = Utility.Math.Multiply(Water.SAT, Soil.Thickness);
+            dul_dep = Utility.Math.Multiply(Water.DUL, Soil.Thickness);
+            ll15_dep = Utility.Math.Multiply(Water.LL15, Soil.Thickness);
             sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
             oc = Soil.OC;
-            ph = Soil.Analysis.PH;
-            salb = Soil.SoilWater.Salb;
+            ph = Analysis.PH;
+            salb = SoilWater.Salb;
             no3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
             num_residues = 0;
             Tsoil = null;
             simpleST = null;
 
-            fbiom = Soil.SoilOrganicMatter.FBiom;
-            finert = Soil.SoilOrganicMatter.FInert;
-            soil_cn = Soil.SoilOrganicMatter.SoilCN;
-            root_wt = Soil.SoilOrganicMatter.RootWt;
-            root_cn = Soil.SoilOrganicMatter.RootCN;
-            enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
-            enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
+            fbiom = SoilOrganicMatter.FBiom;
+            finert = SoilOrganicMatter.FInert;
+            soil_cn = SoilOrganicMatter.SoilCN;
+            root_wt = SoilOrganicMatter.RootWt;
+            root_cn = SoilOrganicMatter.RootCN;
+            enr_a_coeff = SoilOrganicMatter.EnrACoeff;
+            enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
 
             initDone = true;
 

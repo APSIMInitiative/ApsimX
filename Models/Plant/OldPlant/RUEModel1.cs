@@ -21,11 +21,9 @@ namespace Models.PMF.OldPlant
         [Link]
         SWStress SWStress = null;
 
-        public Function TempStress { get; set; }
-
-        public Function RUE { get; set; }
-
-        public Function RUEModifier { get; set; }   // used for CO2
+        [Link] Function TempStress = null;
+        [Link] Function RUE = null;
+        [Link] Function RUEModifier = null;   // used for CO2
 
         
         public event NewPotentialGrowthDelegate NewPotentialGrowth;

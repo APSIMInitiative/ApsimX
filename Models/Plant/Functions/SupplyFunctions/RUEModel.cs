@@ -7,25 +7,31 @@ using Models.Core;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     [Serializable]
-    public class RUEModel : Model
+    public class RUEModel : ModelCollection
     {
         [Link]
         Plant Plant = null;
 
-        public Function RUE { get; set; }
-
-        public Function FCO2 { get; set; }
-
-        public Function FN { get; set; }
-
-        public Function FT { get; set; }
-
-        public Function FW { get; set; }
-
-        public Function FVPD { get; set; }
+        [Link]
+        Function RUE = null;
 
         [Link]
-        public WeatherFile MetData = null;
+        Function FCO2 = null;
+
+        [Link]
+        Function FN = null;
+
+        [Link]
+        Function FT = null;
+
+        [Link]
+        Function FW = null;
+
+        [Link]
+        Function FVPD = null;
+
+        [Link]
+        WeatherFile MetData = null;
 
 
         #region Class Data Members

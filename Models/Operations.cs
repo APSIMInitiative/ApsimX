@@ -33,7 +33,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.OperationsView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
-    public class Operations : Model
+    public class Operations : ModelCollection
     {
         // Parameter
         [XmlElement("Operation")]
@@ -110,8 +110,19 @@ namespace Models
 
             Model = Activator.CreateInstance(ScriptType) as Model;
             Model.Name = "OperationsScript";
-            AddModel(Model);
+            Model.Parent = this;
+            Model.ConnectEventPublishers(Model);
+            Model.ConnectEventSubscribers(Model);
+            Model.ResolveLinks(Model);
         }
+
+        public override void OnCompleted()
+        {
+            Model.UnresolveLinks(Model);
+            Model.DisconnectEvents(Model);
+            Model.Parent = null;
+        }
+
 
 
     }

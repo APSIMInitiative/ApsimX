@@ -9,7 +9,8 @@ namespace Models.PMF.Phen
     [Serializable]
     class PhaseJumpFunction
     {
-        public Phenology Phenology { get; set; }
+        [Link]
+        Phenology Phenology = null;
 
         public string Start = "";
         public string End = "";

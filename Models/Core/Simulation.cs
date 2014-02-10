@@ -12,6 +12,8 @@ namespace Models.Core
     [Serializable]
     public class Simulation : Zone
     {
+        private bool _IsRunning = false;
+
         // Private links
         [Link] private Clock Clock = null;
 
@@ -27,24 +29,30 @@ namespace Models.Core
         public string FileName { get; set; }
 
         /// <summary>
+        /// Return true if the simulation is running.
+        /// </summary>
+        public bool IsRunning { get { return _IsRunning; } }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Simulation()
+        {
+        }
+
+        /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
         /// </summary>
         public bool Run()
         {
             bool ok = false;
+            
             try
             {
-                Utility.ModelFunctions.ConnectEventsInAllModels(this);
-                Utility.ModelFunctions.ResolveLinks(this);
-                Utility.ModelFunctions.CallOnCommencing(this);
-
-                if (Commenced != null)
-                {
-                    Commenced.Invoke(this, new EventArgs());
-                    ok = true;
-                }
-                else
-                    throw new ApsimXException(FullPath, "Cannot invoke Commenced");
+                StartRun();
+                DoRun();
+                CleanupRun();
+                ok = true;
             }
             catch (ApsimXException err)
             {
@@ -59,16 +67,47 @@ namespace Models.Core
 
                 store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
 
+                CleanupRun();
                 ok = false;
             }
 
-            Utility.ModelFunctions.CallOnCompleted(this);
-            Utility.ModelFunctions.UnresolveLinks(this);
-            Utility.ModelFunctions.DisconnectEventsInAllModels(this);
-            ok &= true;
-
             return ok;
         }
+
+        /// <summary>
+        /// Startup the run.
+        /// </summary>
+        public void StartRun()
+        {
+            _IsRunning = true;
+            Model.Variables.ClearCache();
+            Model.Scope.ClearCache();
+            AllModels.ForEach(CallOnCommencing);
+        }
+
+        /// <summary>
+        /// Perform the run. Will throw if error occurs.
+        /// </summary>
+        public void DoRun()
+        {
+            if (Commenced != null)
+                Commenced.Invoke(this, new EventArgs());
+            else
+                throw new ApsimXException(FullPath, "Cannot invoke Commenced");
+        }
+
+        /// <summary>
+        /// Cleanup after the run.
+        /// </summary>
+        public void CleanupRun()
+        {
+            CallOnCompleted(this);
+            AllModels.ForEach(CallOnCompleted);
+            _IsRunning = false;
+        }
+
+
+
     }
 
 

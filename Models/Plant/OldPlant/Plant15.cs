@@ -52,7 +52,7 @@ namespace Models.PMF.OldPlant
         public AvailableToAnimalelementType[] element;
     }
 
-    public class Plant15: Model
+    public class Plant15: ModelCollection
     {
         [Link]
         Phenology Phenology = null;

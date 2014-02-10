@@ -15,9 +15,8 @@ namespace Models.PMF.Functions
         public string ReSetEvent = "";
 
 
-        public Function PreEventValue { get; set; }
-
-        public Function PostEventValue { get; set; }
+        [Link] Function PreEventValue = null;
+        [Link] Function PostEventValue = null;
 
         public override void OnCommencing()
         {

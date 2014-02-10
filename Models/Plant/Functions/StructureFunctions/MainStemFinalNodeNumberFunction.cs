@@ -13,10 +13,10 @@ namespace Models.PMF.Functions.StructureFunctions
         [Link]
         Structure Structure = null;
 
-        public Function FinalLeafNumber { get; set; }
+        [Link]
+        Function FinalLeafNumber = null;
 
         double _FinalNodeNumber = 0;
-
         public double MaximumMainStemNodeNumber = 0;
 
         public override void UpdateVariables(string initial)

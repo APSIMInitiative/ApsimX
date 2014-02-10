@@ -16,8 +16,8 @@ namespace Models.Factorial
     {
         public List<string> Paths { get; set; }
 
-        [XmlElement("Value")]
-        public List<FactorValue> FactorValues { get; set; }
+        [XmlIgnore]
+        public List<FactorValue> FactorValues { get { return ModelsMatching<FactorValue>(); } }
 
 
         //public Model Child { get; set; }

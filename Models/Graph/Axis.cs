@@ -4,7 +4,7 @@ using System;
 namespace Models.Graph
 {
     [Serializable]
-    public class Axis : Model
+    public class Axis
     {
         public enum AxisType { Left, Top, Right, Bottom };
 

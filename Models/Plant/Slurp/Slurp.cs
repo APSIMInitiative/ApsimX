@@ -61,8 +61,8 @@ namespace Models.PMF.Slurp
         private double[] SWUptake;
         private double[] PotNUptake = null;
         private double[] bd = null;
-        private double RootNConcentration;
-        private double KNO3;
+        private double RootNConcentration = 0.0;
+        private double KNO3 = 0.0;
 
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnCommencing()

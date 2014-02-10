@@ -9,7 +9,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     [Serializable]
-    abstract public class Phase : Model
+    abstract public class Phase : ModelCollection
     {
         public string Start;
 
@@ -20,9 +20,8 @@ namespace Models.PMF.Phen
 
         [Link]
         private Summary Summary = null;
-        public Function ThermalTime { get; set; }  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        public Function Stress { get; set; }
+        [Link] public Function ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        [Link(IsOptional=true)] public Function Stress = null;
 
         protected double PropOfDayUnused = 0;
         protected double _TTForToday = 0;

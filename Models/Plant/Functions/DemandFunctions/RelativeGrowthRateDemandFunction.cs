@@ -12,12 +12,12 @@ namespace Models.PMF.Functions.DemandFunctions
 
         public string InitialStageName = "";
 
-        public Function RelativeGrowthRate { get; set; }
+        [Link]
+        Function RelativeGrowthRate = null;
 
-        public Function OrganNumber { get; set; }
+        [Link]
+        Function OrganNumber = null;
 
-        //[Link]
-        //Phenology Phenology = null;
         [Link]
         Phenology Phenology = null;
 

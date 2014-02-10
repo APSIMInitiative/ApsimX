@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
         private ExplorerActions ExplorerActions;
         private IPresenter CurrentRightHandPresenter;
         private bool AdvancedMode = false;
-        private DataStore store = null;
+        //private DataStore store = null;
 
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
@@ -81,10 +81,10 @@ namespace UserInterface.Presenters
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
 
 
-            store = ApsimXFile.Get("DataStore") as DataStore;
-            if (store == null)
-                throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
-            WriteLoadErrors();
+            //store = ApsimXFile.Get("DataStore") as DataStore;
+            //if (store == null)
+            //    throw new Exception("Cannot find DataStore in file: " + ApsimXFile.FileName);
+            //WriteLoadErrors();
         }
 
 
@@ -165,45 +165,45 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Write all error messages from the datastore to the window.
         /// </summary>
-        void WriteMessagesFromDataStore()
-        {
-            DataTable messageTable = store.GetData("*", "Messages");
-            if (messageTable != null)
-            {
-                foreach (DataRow messageRow in messageTable.Rows)
-                {
-                    if (Convert.ToInt32(messageRow["MessageType"]) == 2)
-                    {
-                        DateTime date = (DateTime)messageRow["Date"];
-                        string message;
-                        if (date.Ticks == 0)
-                            message = String.Format("{0}:\n{1}", new object[] {
-                                messageRow["ComponentName"].ToString(),
-                                messageRow["Message"].ToString()});
-                        else
-                            message = String.Format("{0} - {1}:\n{2}", new object[] {
-                                                   date.ToShortDateString(),
-                                                   messageRow["ComponentName"].ToString(),
-                                                   messageRow["Message"].ToString()});
-                        View.ShowMessage(message, DataStore.ErrorLevel.Error);
-                    }
-                }
-            }
-        }
+        //void WriteMessagesFromDataStore()
+        //{
+        //    DataTable messageTable = store.GetData("*", "Messages");
+        //    if (messageTable != null)
+        //    {
+        //        foreach (DataRow messageRow in messageTable.Rows)
+        //        {
+        //            if (Convert.ToInt32(messageRow["MessageType"]) == 2)
+        //            {
+        //                DateTime date = (DateTime)messageRow["Date"];
+        //                string message;
+        //                if (date.Ticks == 0)
+        //                    message = String.Format("{0}:\n{1}", new object[] {
+        //                        messageRow["ComponentName"].ToString(),
+        //                        messageRow["Message"].ToString()});
+        //                else
+        //                    message = String.Format("{0} - {1}:\n{2}", new object[] {
+        //                                           date.ToShortDateString(),
+        //                                           messageRow["ComponentName"].ToString(),
+        //                                           messageRow["Message"].ToString()});
+        //                View.ShowMessage(message, DataStore.ErrorLevel.Error);
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Write all errors thrown during the loading of the .apsimx file.
         /// </summary>
-        private void WriteLoadErrors()
-        {
-            foreach (ApsimXException err in ApsimXFile.LoadErrors)
-            {
-                string message = String.Format("{0}:\n{1}", new object[] {
-                                               err.ModelFullPath,
-                                               err.Message});
-                View.ShowMessage(message, DataStore.ErrorLevel.Error);
-            }
-        }
+        //private void WriteLoadErrors()
+        //{
+        //    foreach (ApsimXException err in ApsimXFile.LoadErrors)
+        //    {
+        //        string message = String.Format("{0}:\n{1}", new object[] {
+        //                                       err.ModelFullPath,
+        //                                       err.Message});
+        //        View.ShowMessage(message, DataStore.ErrorLevel.Error);
+        //    }
+        //}
 
 
         #region Events from view
@@ -284,9 +284,10 @@ namespace UserInterface.Presenters
             else
             {
                 Model Model = ApsimXFile.Get(e.NodePath) as Model;
-                if (Model != null)
+                if (Model != null && Model is ModelCollection)
                 {
-                    foreach (Model ChildModel in Model.Models)
+                    ModelCollection modelCollection = Model as ModelCollection;
+                    foreach (Model ChildModel in modelCollection.Models)
                         e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }
@@ -416,10 +417,7 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            if (AdvancedMode)
-                description.HasChildren = Model.Models.Length > 0;
-            else
-                description.HasChildren = Model is ModelCollection;
+            description.HasChildren = Model is ModelCollection;
             return description;
         }
 

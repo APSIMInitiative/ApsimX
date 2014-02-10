@@ -3,6 +3,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Collections;
 
 namespace Models.Graph
 {
@@ -21,6 +22,9 @@ namespace Models.Graph
         [XmlElement("Series")]
         public List<Series> Series { get; set; }
 
+        /// <summary>
+        /// Destructor. Get rid of DataStore
+        /// </summary>
         ~Graph()
         {
             if (_DataStore != null)
@@ -28,6 +32,21 @@ namespace Models.Graph
             _DataStore = null;
         }
 
+        public IEnumerable GetValues(GraphValues graphValues)
+        {
+            return graphValues.Values(this);
+        }
+
+        public IEnumerable GetValidFieldNames(GraphValues graphValues)
+        {
+            return graphValues.ValidFieldNames(this);
+        }
+
+
+        
+        /// <summary>
+        /// Return an instance of the datastore. Creates it if it doesn't exist.
+        /// </summary>
         public DataStore DataStore
         {
             get

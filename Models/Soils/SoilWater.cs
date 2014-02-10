@@ -50,6 +50,9 @@ namespace Models.Soils
         [Link]
         private Soil Soil = null;
 
+        [Link]
+        private Water Water = null;
+
         [Link] ISummary Summary = null;
 
         [Link]
@@ -4126,8 +4129,17 @@ namespace Models.Soils
 
         #region Clock Event Handlers
 
+        public override void OnLoaded()
+        {
+            Initialise();
+        }
 
         public override void OnCommencing()
+        {
+            Initialise();
+        }
+
+        private void Initialise()
         {
             soilwat2_zero_variables();
             soilwat2_zero_daily_variables();
@@ -4158,33 +4170,35 @@ namespace Models.Soils
             //discharge_width = Soil.SoilWater.DischargeWidth;
             //catchment_area = Soil.SoilWater.CatchmentArea;
 
-            dlayer = Soil.Thickness;
-            sat = Soil.SAT;
-            dul = Soil.DUL;
-            sw = Soil.SW;
-            ll15 = Soil.LL15;
-            air_dry = Soil.AirDry;
-            ks = Soil.Water.KS;
-            bd = Soil.Water.BD;
-            sw = Soil.SW;
-
-            // some defaults.
-            if (SWCON == null)
+            if (Soil.Thickness != null)
             {
-                SWCON = new double[dlayer.Length];
-                for (int i = 0; i < dlayer.Length; i++)
-                    SWCON[i] = 0.3;
+                dlayer = Soil.Thickness;
+                sat = Soil.SAT;
+                dul = Soil.DUL;
+                sw = Soil.SW;
+                ll15 = Soil.LL15;
+                air_dry = Soil.AirDry;
+                ks = Water.KS;
+                bd = Water.BD;
+                sw = Soil.SW;
+
+                // some defaults.
+                if (SWCON == null)
+                {
+                    SWCON = new double[dlayer.Length];
+                    for (int i = 0; i < dlayer.Length; i++)
+                        SWCON[i] = 0.3;
+                }
+                inflow_lat = null;
+
+                //Save State
+                soilwat2_save_state();
+
+                soilwat2_init();
+
+                //Change State
+                soilwat2_delta_state();
             }
-            inflow_lat = null;
-
-            //Save State
-            soilwat2_save_state();
-
-            soilwat2_init();
-
-            //Change State
-            soilwat2_delta_state();
-
             initDone = true;
         }
 

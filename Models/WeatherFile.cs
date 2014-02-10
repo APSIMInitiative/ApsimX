@@ -16,7 +16,6 @@ namespace Models
     {
         // Links
         [Link] private Clock Clock = null;
-        [Link] private Simulation Simulation = null;
 
         // Privates
         private Utility.ApsimTextFile WtrFile = null;

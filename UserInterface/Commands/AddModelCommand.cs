@@ -43,10 +43,6 @@ namespace UserInterface.Commands
                 while ((sims != null) && !(sims is Simulations))
                     sims = (Model)sims.Parent;
 
-                Utility.ModelFunctions.ResolveLinks(sims);
-                Utility.ModelFunctions.DisconnectEventsInAllModels(sims);
-                Utility.ModelFunctions.ConnectEventsInAllModels(sims);
-
                 // initialise the simulation
                 Model sim = FromModel;
                 while ((sim != null) && !(sim is Simulation))

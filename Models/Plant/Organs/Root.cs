@@ -37,15 +37,15 @@ namespace Models.PMF.Organs
         public double KNO3 { get; set; }
         public double KNH4 { get; set; }
 
-        public Function NitrogenDemandSwitch { get; set; }
-        public Function SenescenceRate { get; set; }
-        public Function TemperatureEffect { get; set; }
-        public Function RootFrontVelocity { get; set; }
-        public Function PartitionFraction { get; set; }
-        public Function MaximumNConc { get; set; }
-        public Function MaxDailyNUptake { get; set; }
-        public Function MinimumNConc { get; set; }
-        public Function KLModifier { get; set; }
+        [Link] Function NitrogenDemandSwitch = null;
+        [Link(IsOptional=true)] Function SenescenceRate = null;
+        [Link] Function TemperatureEffect = null;
+        [Link] Function RootFrontVelocity = null;
+        [Link] Function PartitionFraction = null;
+        [Link] Function MaximumNConc = null;
+        [Link] Function MaxDailyNUptake = null;
+        [Link] Function MinimumNConc = null;
+        [Link] Function KLModifier = null;
         #endregion
 
         #region States

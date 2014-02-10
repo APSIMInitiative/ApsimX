@@ -17,11 +17,9 @@ namespace Models.PMF.Organs
 
         public Biomass AboveGround { get; set; }
 
-        public Function WaterContent { get; set; }
-
-        public Function HIIncrement { get; set; }
-
-        public Function NConc { get; set; }
+        [Link] Function WaterContent = null;
+        [Link] Function HIIncrement = null;
+        [Link] Function NConc = null;
 
         private double DailyGrowth = 0;
 

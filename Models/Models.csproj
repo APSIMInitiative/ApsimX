@@ -105,6 +105,8 @@
     </Compile>
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />
+    <Compile Include="Core\Scope.cs" />
+    <Compile Include="Core\Variables.cs" />
     <Compile Include="Factorial\Factor.cs" />
     <Compile Include="Factorial\Experiment.cs" />
     <Compile Include="Factorial\Factors.cs" />

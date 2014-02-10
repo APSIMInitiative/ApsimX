@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Reflection;
 using System.Collections;
-using System.Linq;
+
 
 namespace Models.Core
 {
@@ -13,14 +13,41 @@ namespace Models.Core
     [Serializable]
     public class Model
     {
-        //private Model BaseModel = null;
-        private Model _DefaultModel = null;
         private string _Name = null;
-        private Dictionary<string, Utility.IVariable> VariableCache = new Dictionary<string, Utility.IVariable>();
+        private static Scope _Scope = null;
+        private static Variables _Variables = null;
 
-        // Cache the models list - this dramatically speeds up runtime!
-        [NonSerialized]
-        private List<Model> AllModels = null;
+        /// <summary>
+        /// Locate the parent with the specified type. Returns null if not found.
+        /// </summary>
+        protected Simulation Simulation
+        {
+            get
+            {
+                Model m = this;
+                while (m != null && m.Parent != null && !(m is Simulation))
+                    m = m.Parent;
+
+                if (m == null || !(m is Simulation))
+                    throw new ApsimXException(FullPath, "Cannot find root simulation.");
+                return m as Simulation;
+            }
+        }
+
+        /// <summary>
+        /// Called immediately after the model is XML deserialised.
+        /// </summary>
+        public virtual void OnLoaded() { }
+
+        /// <summary>
+        /// Called just before a simulation commences.
+        /// </summary>
+        public virtual void OnCommencing() { }
+
+        /// <summary>
+        /// Called just after a simulation has completed.
+        /// </summary>
+        public virtual void OnCompleted() { }
 
         /// <summary>
         /// Get or set the name of the model
@@ -40,25 +67,11 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Get or set the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public Model Parent { get; set; }
-
-        /// <summary>
-        /// Return a newly created empty model. Used for property comparisons with default values.
-        /// </summary>
-        public Model DefaultModel
-        {
-            get
-            {
-                if (_DefaultModel == null)
-                    _DefaultModel = Activator.CreateInstance(this.GetType()) as Model;
-                return _DefaultModel;
-            }
-        }
+        public ModelCollection Parent { get; set; }
 
         /// <summary>
         /// Get the model's full path. 
@@ -76,40 +89,28 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Return a list of all child models. A child model is any public, writtable, class property
-        /// that is in the "Models" namespace. Never returns null. Can return empty list.
+        /// Provides access to scoping rules.
         /// </summary>
-        public virtual Model[] Models
+        public static Scope Scope
         {
             get
             {
-                if (AllModels == null)
-                {
-                    AllModels = new List<Model>();
-                    foreach (PropertyInfo property in ModelPropertyInfos())
-                    {
-                        // If a field is public and is a class 
-                        object value = property.GetValue(this, null);
-                        if (value != null)
-                        {
-                            Model localModel = value as Model;
-                            if (localModel != null)
-                                AllModels.Add(localModel);
-                            else if (property.PropertyType.GetInterface("IList") != null)
-                            {
-                                Type[] arguments = property.PropertyType.GetGenericArguments();
-                                if (arguments.Length > 0 && typeof(Model).IsAssignableFrom(arguments[0]))
-                                {
-                                    IList list = (IList)value;
+                if (_Scope == null)
+                    _Scope = new Scope();
+                return _Scope;
+            }
+        }
 
-                                     foreach (Model child in list)
-                                        AllModels.Add(child);
-                                }
-                            }
-                        }
-                    }
-                }
-                return AllModels.ToArray();
+        /// <summary>
+        /// Provides access to variables in other models.
+        /// </summary>
+        public static Variables Variables
+        {
+            get
+            {
+                if (_Variables == null)
+                    _Variables = new Variables();
+                return _Variables;
             }
         }
 
@@ -118,10 +119,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(Type modelType)
         {
-            Model[] modelsInScope = FindAll(modelType);
-            if (modelsInScope.Length >= 1)
-                return modelsInScope[0];
-            return null;
+            return Scope.Find(this, modelType);
         }
 
         /// <summary>
@@ -129,11 +127,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(string modelNameToFind)
         {
-            Model[] modelsInScope = FindAll();
-            foreach (Model model in modelsInScope)
-                if (model.Name == modelNameToFind)
-                    return model;
-            return null;
+            return Scope.Find(this, modelNameToFind);
         }
 
         /// <summary>
@@ -143,49 +137,15 @@ namespace Models.Core
         /// </summary>
         public Model[] FindAll(Type modelType = null)
         {
-            // Go looking for a zone or Simulation.
-            Model m = this;
-            if (!typeof(Zone).IsAssignableFrom(this.GetType()))
-                m = LocateParent(typeof(Zone));
-
-            if (m != null)
-            {
-                // Get a list of children (resursively) of this zone.
-                List<Model> modelsInScope = m.ModelsRecursively(modelType);
-
-                modelsInScope.Add(m);
-
-                // Add in the children of the zone(s) above.
-                while (m.Parent != null && !(m.Parent is Simulations))
-                {
-                    m = m.Parent;
-                   
-                    modelsInScope.AddRange(m.Models);
-                    modelsInScope.Add(m);
-                }
-
-                if (modelType != null)
-                {
-                    List<Model> modelsOfCorrectType = new List<Model>();
-                    foreach (Model model in modelsInScope)
-                        if (modelType.IsAssignableFrom(model.GetType()))
-                            modelsOfCorrectType.Add(model);
-                    return modelsOfCorrectType.Distinct().ToArray();
-                }
-                else
-                    return modelsInScope.Distinct().ToArray();
-            }
-            return new Model[0];
+            return Scope.FindAll(this, modelType); 
         }
-
-
 
         /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
         public object Get(string namePath)
         {
-            Utility.IVariable variable = FindVariable(namePath);
+            Utility.IVariable variable = Variables.Get(this, namePath);
             if (variable == null)
                 return null;
             else
@@ -193,325 +153,265 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Set the value of a variable.
+        /// Set the value of a variable. Will throw if variable doesn't exist.
         /// </summary>
         public void Set(string namePath, object value)
         {
-            Utility.IVariable variable = FindVariable(namePath);
+            Utility.IVariable variable = Variables.Get(this, namePath);
             if (variable == null)
                 throw new ApsimXException(FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             else
                 variable.Value = value;
         }
 
-        /// <summary>
-        /// Add a model to the Models collection. Will throw if model cannot be added.
-        /// </summary>
-        public virtual void AddModel(Model model)
-        {
-            model.Parent = this;
 
-            // Need to find where in the object to store this model.
-            bool wasAdded = false;
-            foreach (PropertyInfo property in ModelPropertyInfos())
-            {
-                if (property.PropertyType.IsAssignableFrom(model.GetType()))
-                {
-                    // Simple reference to a model.
-                    property.SetValue(this, model, null);
-                    wasAdded = true;
-                    break;
-                }
-                else if (property.PropertyType.GetInterface("IList") != null)
-                {
-                    Type[] arguments = property.PropertyType.GetGenericArguments();
-                    if (arguments.Length > 0 && arguments[0].IsAssignableFrom(model.GetType()))
-                    {
-                        // List<T>
-                        IList value = property.GetValue(this, null) as IList;
-                        if (value == null)
-                        {
-                            value = Activator.CreateInstance(property.PropertyType) as IList;
-                            property.SetValue(this, value, null);
-                        }
-                        value.Add(model);
-                        EnsureNameIsUnique(model);
-                        wasAdded = true;
-                        break;
-                    }
-                }
-            }
-            if (!wasAdded)
-                throw new ApsimXException(FullPath, "Cannot add model: " + model.Name + " to parent model: " + Name);
-
-            // Invalidate the AllModels list and clear variable caches.
-            AllModels = null;
-            ClearAllCacheInScope();
-        }
+        #region Internals
 
         /// <summary>
-        /// Replace the specified child model with the specified newChild
+        /// Resolve all [Link] fields in this model.
         /// </summary>
-        public bool ReplaceModel(Model childToReplace, Model newChild)
+        public static void ResolveLinks(Model model)
         {
-            // Need to find where in the object to store this model.
-            bool wasReplaced = false;
-            foreach (PropertyInfo property in ModelPropertyInfos())
+            // Go looking for [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
+                                                                        BindingFlags.NonPublic | BindingFlags.Public))
             {
-                if (property.PropertyType.IsAssignableFrom(childToReplace.GetType()))
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
                 {
-                    // Simple reference to a model.
-                    property.SetValue(this, childToReplace, null);
-                    wasReplaced = true;
-                    break;
-                }
-                else if (property.PropertyType.GetInterface("IList") != null)
-                {
-                    Type[] arguments = property.PropertyType.GetGenericArguments();
-                    if (arguments.Length > 0 && arguments[0].IsAssignableFrom(childToReplace.GetType()))
+                    object linkedObject = null;
+                    if (link.NamePath != null)
+                        linkedObject = Scope.Find(model, link.NamePath);
+                    else if (model is ModelCollection)
                     {
-                        // List<T>
-                        IList<Model> value = property.GetValue(this, null) as IList<Model>;
-                        if (value != null)
+                        // Try and get a match from a child.
+                        ModelCollection modelAsCollection = model as ModelCollection;
+                        List<Model> matchingModels = modelAsCollection.AllModelsMatching(field.FieldType);
+                        if (matchingModels.Count == 1)
+                            linkedObject = matchingModels[0];  // only 1 match of the required type.
+                        else
                         {
-                            int i = value.IndexOf(childToReplace);
-                            if (i != -1)
-                            {
-                                // Name and parent the model we're adding.
-                                newChild.Parent = childToReplace.Parent;
-                                newChild.Name = value[i].Name;
-
-                                value.RemoveAt(i);
-
-                                // Add in the new model.
-                                value.Insert(i, newChild);
-                                wasReplaced = true;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            if (!wasReplaced)
-                throw new ApsimXException(FullPath, "Cannot replace model: " + childToReplace.Name + " in parent model: " + Name);
-
-            // Invalidate the AllModels list and clear variable caches.
-            AllModels = null;
-            ClearAllCacheInScope();
-            return wasReplaced;
-        }
-
-        /// <summary>
-        /// Remove a model from the Models collection. Returns true if model was removed.
-        /// </summary>
-        public virtual bool RemoveModel(Model model)
-        {
-            // Invalidate the AllModels list.
-            AllModels = null;
-
-            bool removed = false;
-
-            // Need to find where in the object to store this model.
-            foreach (PropertyInfo property in ModelPropertyInfos())
-            {
-                if (property.PropertyType.IsAssignableFrom(model.GetType()))
-                {
-                    property.SetValue(this, null, null);
-                    removed = true;
-                    break; ;
-                }
-                else if (property.PropertyType.GetInterface("IList") != null)
-                {
-                    Type[] arguments = property.PropertyType.GetGenericArguments();
-                    if (arguments.Length > 0 && arguments[0].IsAssignableFrom(model.GetType()))
-                    {
-                        IList value = property.GetValue(this, null) as IList;
-                        if (value != null && value.Contains(model))
-                        {
-                            value.Remove(model);
-                            removed = true;
-                            break;
+                            // more that one match so use name to match.
+                            foreach (Model matchingModel in matchingModels)
+                                if (matchingModel.Name == field.Name)
+                                {
+                                    linkedObject = matchingModel;
+                                    break;
+                                }
                         }
                     }
-                }
-            }
-
-            if (removed)
-            {
-                // Clear the variable caches.
-                ClearAllCacheInScope();
-            }
-            return removed;
-        }
-
-        public virtual void OnLoaded()             { }
-        public virtual void OnCommencing()         { }
-        public virtual void OnCompleted()          { }
-        
-        /// <summary>
-        /// Return a variable using the specified NamePath. Returns null if not found.
-        /// </summary>
-        private Utility.IVariable FindVariable(string namePath)
-        {
-            if (VariableCache == null)
-                VariableCache = new Dictionary<string, Utility.IVariable>();
-            if (VariableCache.ContainsKey(namePath))
-                return VariableCache[namePath];
-
-            string originalNamePath = namePath;
-
-            object obj = this;
-            PropertyInfo propertyInfo = null;
-
-            if (namePath.StartsWith(".Simulations", StringComparison.CurrentCulture))
-            {
-                // Absolute path beginning with .Simulations.
-                obj = LocateParent(typeof(Simulations));
-                namePath = namePath.Remove(0, 12);
-            }
-            else if (namePath.StartsWith("[", StringComparison.CurrentCulture) && namePath.Contains(']'))
-            {
-                // namePath has a [type] at its beginning.
-                int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
-                string typeName = namePath.Substring(1, pos - 1);
-                Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
-                if (t == null)
-                    obj = Find(typeName);
-                else
-                    obj = Find(t);
-
-                namePath = namePath.Substring(pos + 1);
-                if (obj == null)
-                    throw new ApsimXException(FullPath, "Cannot find type: " + typeName + " while doing a get for: " + namePath);
-            }
-
-            // Now look through all paths which are separated by a '.'
-            string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string pathBit in namePathBits)
-            {
-                if (propertyInfo != null)
-                {
-                    obj = propertyInfo.GetValue(obj, null);
-                    propertyInfo = null;
-                }
-
-                object localObj = null;
-                Model localModel = obj as Model;
-                if (localModel != null)
-                    localObj = localModel.Models.FirstOrDefault(m => m.Name == pathBit);
-
-                if (localObj != null)
-                    obj = localObj;
-                else
-                {
-                    propertyInfo = obj.GetType().GetProperty(pathBit);
-                    if (propertyInfo == null)
-                        return null;
-                }
-            }
-
-            // Now we can create our return variable.
-            Utility.IVariable variable;
-            if (propertyInfo == null)
-                variable = new Utility.VariableObject(obj);
-            else
-                variable = new Utility.VariableProperty(obj, propertyInfo);
-
-            VariableCache[originalNamePath] = variable;
-            return variable;
-        }
-
-        /// <summary>
-        /// Locate the parent with the specified type. Returns null if not found.
-        /// </summary>
-        private Model LocateParent(Type parentType)
-        {
-            if (this.GetType() == parentType)
-                return this;
-
-            Model m = Parent;
-            while (m != null && !parentType.IsAssignableFrom(m.GetType()))
-                m = m.Parent;
-            if (m != null)
-                return m;
-            return null;
-        }
-
-        /// <summary>
-        /// Return a list of models recursively. Never returns null. Can return empty list.
-        /// </summary>
-        private List<Model> ModelsRecursively(Type modelType = null)
-        {
-            // Get a list of children (recursively) of this zone.
-            List<Model> allModels = new List<Model>();
-            foreach (Model child in Models)
-            {
-                if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
-                    allModels.Add(child);
-                allModels.AddRange(child.ModelsRecursively(modelType));
-            }
-            return allModels;
-        }
-
-        /// <summary>
-        /// Return a list of all child model properties. A child model is any public, writtable, class property
-        /// that is in the "Models" namespace. Never returns null. Can return empty list.
-        /// </summary>
-        private PropertyInfo[] ModelPropertyInfos()
-        {
-            List<PropertyInfo> allModelProperties = new List<PropertyInfo>();
-            foreach (PropertyInfo property in this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
-            {
-                if (property.GetType().IsClass && property.CanWrite && property.Name != "Parent")
-                {
-                    MethodInfo[] accessors = property.GetAccessors();
-                    if (accessors.Length == 2 && accessors[0].IsPublic && accessors[1].IsPublic)
+                    if (linkedObject == null)
                     {
-                        if (property.PropertyType.GetInterface("IList") != null && property.PropertyType.FullName.Contains("Models."))
-                            allModelProperties.Add(property);
+                        Model[] allMatches = model.FindAll(field.FieldType);
+                        if (allMatches.Length == 1)
+                            linkedObject = allMatches[0];
+                        else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
+                        {
+                            // Doesn't matter what the link is being connected to if the the model passed
+                            // into ResolveLinks is sitting under a FactorValue. It won't be run from
+                            // under FactorValue anyway.
+                            linkedObject = allMatches[0];
+                        }
+                    }
 
-                        else if (property.PropertyType.Name == "Model" || property.PropertyType.IsSubclassOf(typeof(Model)))
-                            allModelProperties.Add(property);
+                    if (linkedObject != null)
+                        field.SetValue(model, linkedObject);
+                    else if (!link.IsOptional)
+                        throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() +
+                                                            "' in class '" + model.FullPath + "'");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unresolve (set to null) all [Link] fields.
+        /// </summary>
+        public static void UnresolveLinks(Model model)
+        {
+            // Go looking for private [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
+                                                                        BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
+                    field.SetValue(model, null);
+            }
+        }
+
+        /// <summary>
+        /// Call OnCommencing in the specified model and all child models.
+        /// </summary>
+        protected static void CallOnCommencing(Model model)
+        {
+            model.OnCommencing();
+        }
+
+        /// <summary>
+        /// Call OnCompleted in the specified model and all child models.
+        /// </summary>
+        protected static void CallOnCompleted(Model model)
+        {
+            model.OnCompleted();
+        }
+
+        /// <summary>
+        /// Call OnLoaded in the specified model and all child models.
+        /// </summary>
+        protected static void CallOnLoaded(Model model)
+        {
+            try
+            {
+                model.OnLoaded();
+            }
+            catch (ApsimXException)
+            {
+            }
+        }
+
+        #endregion
+
+        #region Event functions
+        private class EventSubscriber
+        {
+            public Model Model;
+            public MethodInfo MethodInfo;
+            public string Name
+            {
+                get
+                {
+                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(MethodInfo, typeof(EventSubscribe), false);
+                    return subscriberAttribute.Name;
+                }
+            }
+        }
+        private class EventPublisher
+        {
+            public Model Model;
+            public EventInfo EventInfo;
+            public string Name { get { return EventInfo.Name; } }
+            public Type EventHandlerType { get { return EventInfo.EventHandlerType; } }
+            public void AddEventHandler(Model model, Delegate eventDelegate)
+            {
+                EventInfo.AddEventHandler(model, eventDelegate);
+            }
+        }
+
+        /// <summary>
+        /// Connect all event publishers in the specified model.
+        /// </summary>
+        public static void ConnectEventPublishers(Model model)
+        {
+            // Go through all events in the specified model and attach them to subscribers.
+            foreach (EventPublisher publisher in FindEventPublishers(null, model))
+            {
+                foreach (EventSubscriber subscriber in FindEventSubscribers(publisher))
+                {
+                    // connect subscriber to the event.
+                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
+                    publisher.AddEventHandler(model, eventdelegate);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Connect all event subscribers in the specified model.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void ConnectEventSubscribers(Model model)
+        {
+            // Go through all subscribers in the specified model and find the event publisher to connect to.
+            foreach (EventSubscriber subscriber in FindEventSubscribers(null, model))
+            {
+                foreach (EventPublisher publisher in FindEventPublishers(subscriber))
+                {
+                    // connect subscriber to the event.
+                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
+                    publisher.AddEventHandler(publisher.Model, eventdelegate);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Disconnect all events in all models that are in scope of 'model'
+        /// </summary>
+        public static void DisconnectEvents(Model model)
+        {
+            foreach (EventPublisher publisher in FindEventPublishers(null, model))
+            {
+                FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
+                if (eventDelegate != null)
+                {
+                    foreach (Delegate del in eventDelegate.GetInvocationList())
+                    {
+                        //if (model == null || del.Target == model)
+                            publisher.EventInfo.RemoveEventHandler(publisher.Model, del);
                     }
                 }
             }
-            return allModelProperties.ToArray();
         }
 
         /// <summary>
-        /// Clear all variable caches
+        /// Look through and return all models in scope for event subscribers with the specified event name.
+        /// If eventName is null then all will be returned.
         /// </summary>
-        private void ClearAllCacheInScope()
+        private static List<EventSubscriber> FindEventSubscribers(EventPublisher publisher)
         {
-            VariableCache.Clear();
-            AllModels = null;
-            foreach (Model model in FindAll())
-            {
-                model.VariableCache.Clear();
-                model.AllModels = null;
-            }
+            List<EventSubscriber> subscribers = new List<EventSubscriber>();
+            foreach (Model model in publisher.Model.FindAll())
+                subscribers.AddRange(FindEventSubscribers(publisher.Name, model));
+            return subscribers;
+
         }
 
         /// <summary>
-        /// If the specified model has a settable name property then ensure it has a unique name.
-        /// Otherwise don't do anything.
+        /// Look through the specified model and return all event subscribers that match the event name. If
+        /// eventName is null then all will be returned.
         /// </summary>
-        protected string EnsureNameIsUnique(object Model)
+        private static List<EventSubscriber> FindEventSubscribers(string eventName, Model model)
         {
-            string OriginalName = Utility.Reflection.Name(Model);
-            string NewName = OriginalName;
-            int Counter = 0;
-            object Child = Models.FirstOrDefault(m => m.Name == NewName);
-            while (Child != null && Child != Model && Counter < 10000)
+            List<EventSubscriber> subscribers = new List<EventSubscriber>();
+            foreach (MethodInfo method in model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                Counter++;
-                NewName = OriginalName + Counter.ToString();
-                Child = Models.FirstOrDefault(m => m.Name == NewName);
+                EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(method, typeof(EventSubscribe), false);
+                if (subscriberAttribute != null && (eventName == null || subscriberAttribute.Name == eventName))
+                    subscribers.Add(new EventSubscriber() { MethodInfo = method, Model = model });
             }
-            if (Counter == 1000)
-                throw new Exception("Cannot create a unique name for model: " + OriginalName);
-            Utility.Reflection.SetName(Model, NewName);
-            return NewName;
+            return subscribers;
         }
+
+        /// <summary>
+        /// Look through and return all models in scope for event publishers with the specified event name.
+        /// If eventName is null then all will be returned.
+        /// </summary>
+        private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
+        {
+            List<EventPublisher> publishers = new List<EventPublisher>();
+            foreach (Model model in subscriber.Model.FindAll())
+                publishers.AddRange(FindEventPublishers(subscriber.Name, model));
+            return publishers;
+
+        }
+
+        /// <summary>
+        /// Look through the specified model and return all event publishers that match the event name. If
+        /// eventName is null then all will be returned.
+        /// </summary>
+        private static List<EventPublisher> FindEventPublishers(string eventName, Model model)
+        {
+            List<EventPublisher> publishers = new List<EventPublisher>();
+            foreach (EventInfo Event in model.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (eventName == null || Event.Name == eventName)
+                    publishers.Add(new EventPublisher() { EventInfo = Event, Model = model });
+            }
+            return publishers;
+        }
+
+        #endregion
+
     }
 }

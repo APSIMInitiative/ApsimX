@@ -65,6 +65,11 @@ namespace Models.Soils
         [XmlElement("SoilCrop")]
         public List<SoilCrop> Crops { get; set; }
 
+        public override void OnLoaded()
+        {
+            foreach (SoilCrop crop in Crops)
+                crop.Soil = Parent as Soil;
+        }
 
         /// <summary>
         /// Constructor

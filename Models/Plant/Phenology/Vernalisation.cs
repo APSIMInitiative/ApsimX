@@ -11,7 +11,8 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        public AirTemperatureFunction VDModel { get; set; }
+        [Link]
+        AirTemperatureFunction VDModel = null;
 
         public string StartStage = "";
         public string EndStage = "";

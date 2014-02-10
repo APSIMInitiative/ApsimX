@@ -24,17 +24,12 @@ namespace Models.PMF.OldPlant
         [Link]
         Plant15 Plant = null;
 
-        public Function ExpansionFactor { get; set; }
-
-        public Function PhenoFactor { get; set; }
-
-        public Function FixationFactor { get; set; }
-
-        public Function OxygenDeficitPhotoFactor { get; set; }
-
-        public Function PhenoFlowerFactor { get; set; }
-
-        public Function PhenoGrainFillingFactor { get; set; }
+        [Link] Function ExpansionFactor = null;
+        [Link] Function PhenoFactor = null;
+        [Link] Function FixationFactor = null;
+        [Link] Function OxygenDeficitPhotoFactor = null;
+        [Link] Function PhenoFlowerFactor = null;
+        [Link] Function PhenoGrainFillingFactor = null;
 
         public double PhotoStress { get { return 1 - Photo; } }
         public double PhenoStress { get { return 1 - Pheno; } }

@@ -34,6 +34,18 @@ namespace Models.Soils
         [Link]
         private Soil Soil = null;
 
+        [Link]
+        private Water Water = null;
+
+        [Link]
+        private Analysis Analysis = null;
+
+        [Link]
+        private SoilWater SoilWater = null;
+
+        [Link]
+        private SoilOrganicMatter SoilOrganicMatter = null;
+
         #endregion
 
         #region Parameters and inputs provided by the user or APSIM

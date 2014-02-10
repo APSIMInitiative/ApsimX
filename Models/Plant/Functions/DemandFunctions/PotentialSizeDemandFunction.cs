@@ -12,18 +12,20 @@ namespace Models.PMF.Functions.DemandFunctions
 
         public string EndStageName = "";
 
-        public Function PotentialGrowthIncrement { get; set; }
+        [Link]
+        Function PotentialGrowthIncrement = null;
 
-        public Function OrganNumber { get; set; }
+        [Link] 
+        Function OrganNumber = null;
 
-        //[Link]
-        //Phenology Phenology = null;
         [Link]
         Phenology Phenology = null;
 
-        public Function ThermalTime { get; set; }
+        [Link]
+        Function ThermalTime = null;
 
-        public Function AccumThermalTime { get; set; }
+        [Link]
+        Function AccumThermalTime = null;
 
         [Units("oCd")]
         public double AccumulatedThermalTime //FIXME.  This is not used in Code, check is needed

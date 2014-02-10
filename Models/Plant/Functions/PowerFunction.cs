@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     {
         public double Exponent = 1.0;
 
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
         public override double Value
         {
             get

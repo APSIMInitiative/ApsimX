@@ -18,19 +18,6 @@ namespace Models
         private const string divider = "------------------------------------------------------------------------------";
         [NonSerialized] private DataStore DataStore = null;
 
-        private Simulation Simulation
-        {
-            get
-            {
-                Model rootModel = this;
-                while (!(rootModel is Simulation) && rootModel.Parent != null)
-                    rootModel = rootModel.Parent;
-
-                if (rootModel != null && rootModel is Simulation)
-                    return rootModel as Simulation;
-                throw new ApsimXException(FullPath, "Cannot find a root Simulation object");
-            }
-        }
         [Link] private Clock Clock = null;
 
         // Parameters

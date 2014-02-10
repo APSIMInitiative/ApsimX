@@ -14,9 +14,6 @@ namespace Models
     public class Log : Model
     {
         [Link]
-        Simulation Simulation = null;
-
-        [Link]
         Clock Clock = null;
 
         private StreamWriter Writer;

@@ -27,7 +27,8 @@ namespace Models.PMF.OldPlant
         [Link]
         NStress NStress = null;
 
-        public Function TempStress { get; set; }
+        [Link]
+        Function TempStress = null;
 
         [Link]
         Stem1 Stem = null;
@@ -38,23 +39,15 @@ namespace Models.PMF.OldPlant
         [Link]
         Population1 Population = null;
 
-        public Function GrainGrowthPeriod { get; set; }
-
-        public Function ReproductivePeriod { get; set; }
-
-        public Function RelativeGrainFill { get; set; }
-
-        public Function RelativeGrainNFill { get; set; }
-
-        public Function DMSenescenceFraction { get; set; }
-
-        public Function NConcentrationCritical { get; set; }
-
-        public Function NConcentrationMinimum { get; set; }
-
-        public Function NConcentrationMaximum { get; set; }
-
-        public Function GrowthStructuralFractionStage { get; set; }
+        [Link] Function GrainGrowthPeriod = null;
+        [Link] Function ReproductivePeriod = null;
+        [Link] Function RelativeGrainFill = null;
+        [Link] Function RelativeGrainNFill = null;
+        [Link] Function DMSenescenceFraction = null;
+        [Link] Function NConcentrationCritical = null;
+        [Link] Function NConcentrationMinimum = null;
+        [Link] Function NConcentrationMaximum = null;
+        [Link] Function GrowthStructuralFractionStage = null;
 
         public double InitialWt = 0;
 

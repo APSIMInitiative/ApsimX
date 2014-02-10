@@ -10,6 +10,9 @@ namespace Models.Soils
     [Serializable]
     public class SoilCrop : Model
     {
+        [XmlIgnore]
+        public Soil Soil { get; set; }
+
         [Units("mm/mm")]
         public double[] LL { get; set; }
 
@@ -20,10 +23,7 @@ namespace Models.Soils
         {
             get
             {
-                Soil parentSoil = Parent.Parent as Soil;
-                if (parentSoil == null)
-                    return null;
-                return Utility.Math.Multiply(Soil.CalcPAWC(parentSoil.Thickness, LL, parentSoil.DUL, XF), parentSoil.Thickness);
+                return Utility.Math.Multiply(Soil.CalcPAWC(Soil.Thickness, LL, Soil.DUL, XF), Soil.Thickness);
             }
         }
 

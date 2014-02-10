@@ -18,15 +18,15 @@ namespace Models.PMF.Organs
         protected Plant Plant = null;
         [Link]
         protected Phenology Phenology = null;
-        public Function WaterContent { get; set; }
-        public Function FillingRate { get; set; }
-        public Function NumberFunction { get; set; }
-        public Function NFillingRate { get; set; }
-        public Function MaxNConcDailyGrowth { get; set; }
-        public Function NitrogenDemandSwitch { get; set; }
-        public Function MaximumNConc { get; set; }
-        public Function MinimumNConc { get; set; }
-        public Function DMDemandFunction { get; set; }
+        [Link] Function WaterContent = null;
+        [Link] Function FillingRate = null;
+        [Link] Function NumberFunction = null;
+        [Link] Function NFillingRate = null;
+        //[Link] Function MaxNConcDailyGrowth = null;
+        [Link] Function NitrogenDemandSwitch = null;
+        [Link] Function MaximumNConc = null;
+        [Link] Function MinimumNConc = null;
+        [Link] Function DMDemandFunction = null;
         #endregion
 
         #region Class Fields

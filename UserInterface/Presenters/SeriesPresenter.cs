@@ -98,13 +98,13 @@ namespace UserInterface.Presenters
                     {
                         SeriesView.SeriesGrid.SetToolTipForCell(0, Row, S.X.SimulationName + "." +
                                                                         S.X.TableName);
-                        SeriesView.SeriesGrid.SetCellEditor(0, Row, S.X.ValidFieldNames);
+                        SeriesView.SeriesGrid.SetCellEditor(0, Row, Graph.GetValidFieldNames(S.X));
                     }
                     if (S.Y != null)
                     {
                         SeriesView.SeriesGrid.SetToolTipForCell(1, Row, S.Y.SimulationName + "." +
                                                                         S.Y.TableName);
-                        SeriesView.SeriesGrid.SetCellEditor(1, Row, S.Y.ValidFieldNames);
+                        SeriesView.SeriesGrid.SetCellEditor(1, Row, Graph.GetValidFieldNames(S.Y));
                     }
                     SeriesView.SeriesGrid.SetCellEditor(3, Row, Color.Red); //Data.Rows[Row][3]);
                     SeriesView.SeriesGrid.SetCellEditor(4, Row, S.Type);
@@ -137,11 +137,6 @@ namespace UserInterface.Presenters
                 DataSources.Sort();
             }
 
-            List<string> FullPaths = new List<string>();
-            foreach (Model Model in Graph.Models)
-                FullPaths.Add(Model.FullPath);
-
-            DataSources.AddRange(FullPaths);
             SeriesView.DataSourceItems = DataSources.ToArray();
         }
 
@@ -167,9 +162,9 @@ namespace UserInterface.Presenters
                 }
 
                 // Add a series.
-                Series NewSeries = new Series() { Parent = Graph };
-                NewSeries.X = new GraphValues() { Parent = NewSeries, SimulationName = SimulationName, TableName = TableName };
-                NewSeries.Y = new GraphValues() { Parent = NewSeries, SimulationName = SimulationName, TableName = TableName };
+                Series NewSeries = new Series();
+                NewSeries.X = new GraphValues() { SimulationName = SimulationName, TableName = TableName };
+                NewSeries.Y = new GraphValues() { SimulationName = SimulationName, TableName = TableName };
                 NewSeries.XAxis = Axis.AxisType.Bottom;
                 NewSeries.YAxis = Axis.AxisType.Left;
                 AllSeries.Add(NewSeries);

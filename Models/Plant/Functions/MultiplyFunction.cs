@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     [Description("Returns the product of all childern function values")]
     public class MultiplyFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
         public override double Value
         {
             get

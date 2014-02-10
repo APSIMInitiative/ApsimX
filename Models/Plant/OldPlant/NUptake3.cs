@@ -13,7 +13,8 @@ namespace Models.PMF.OldPlant
         [Link]
         Root1 Root = null;
 
-        public Function NStressPeriod { get; set; }
+        [Link]
+        Function NStressPeriod = null;
 
         public double kno3 = 0;
 

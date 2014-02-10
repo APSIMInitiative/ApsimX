@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
         public double A = 1.0;
         public double B = 1.0;
         public double C = 1.0;
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         
         public override double Value

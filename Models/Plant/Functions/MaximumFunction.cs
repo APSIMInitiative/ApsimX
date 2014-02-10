@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     [Description("Returns the maximum value of all childern functions")]
     public class MaximumFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         public override double Value
         {

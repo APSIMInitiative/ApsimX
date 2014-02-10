@@ -44,7 +44,14 @@
           </Y>
         </Series>
       </Graph>
-      <Soil />
+      <Soil>
+        <Water/>
+        <SoilWater/>
+        <SoilOrganicMatter/>
+        <Analysis/>
+      </Soil>
+      <SurfaceOrganicMatter/>
+      
       <Zone>
         <Name>Field2SubZone</Name>
         <Report>
@@ -91,7 +98,13 @@
           </Y>
         </Series>
       </Graph>
-      <Soil />
+      <Soil>
+        <Water/>
+        <SoilWater/>
+        <SoilOrganicMatter/>
+        <Analysis/>
+      </Soil>
+      <SurfaceOrganicMatter/>
     </Zone>
   </Simulation>
   <DataStore>

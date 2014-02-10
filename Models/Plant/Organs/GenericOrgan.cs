@@ -21,19 +21,19 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Parameter Function Links
-        public Function SenescenceRateFunction { get; set; }
-        public Function DMReallocationFunction { get; set; }
-        public Function NReallocationFactor { get; set; }
-        public Function NRetranslocationFactor { get; set; }
-        public Function NitrogenDemandSwitch { get; set; }
-        public Function DMRetranslocationFactor { get; set; }
-        public Function StructuralFraction { get; set; }
-        public Function DMDemandFunction { get; set; }
-        public Function InitialWtFunction { get; set; }
-        public Function InitialStructuralFraction { get; set; }
-        public Function WaterContent { get; set; }
-        public Function MaximumNConc { get; set; }
-        public Function MinimumNConc { get; set; }
+        [Link(IsOptional=true)] Function SenescenceRateFunction = null;
+        //[Link] Function DMReallocationFunction = null;
+        [Link(IsOptional=true)] Function NReallocationFactor = null;
+        [Link(IsOptional=true)] Function NRetranslocationFactor = null;
+        [Link] Function NitrogenDemandSwitch = null;
+        [Link(IsOptional=true)] Function DMRetranslocationFactor = null;
+        [Link] Function StructuralFraction = null; 
+        [Link] Function DMDemandFunction = null; 
+        [Link(IsOptional=true)] Function InitialWtFunction = null;
+        [Link(IsOptional=true)] Function InitialStructuralFraction = null;
+        [Link(IsOptional=true)] Function WaterContent = null;  
+        [Link] Function MaximumNConc = null;  
+        [Link] Function MinimumNConc = null;  
         #endregion
 
         #region States

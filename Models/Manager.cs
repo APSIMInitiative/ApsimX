@@ -12,7 +12,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : Model 
+    public class Manager : ModelCollection
     {
         // ----------------- Privates
         private string _Code;
@@ -24,9 +24,6 @@ namespace Models
         [NonSerialized] private string AssemblyFile = "";
         [NonSerialized] private Assembly CompiledAssembly = null;
         [NonSerialized] private string CompiledCode = "";
-
-        // ----------------- Links
-        [Link] private ISummary Summary = null;
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
@@ -104,8 +101,11 @@ namespace Models
                 {
                     XmlSerializer oldSerial = new XmlSerializer(Script.GetType());
                     currentState = Utility.Xml.Serialise(Script, true);
-                    
-                    RemoveModel(Script);
+
+                    Model.UnresolveLinks(Script);
+                    Model.DisconnectEvents(Script);
+                    Script.Parent = null;
+                    Script = null;
                 }
 
                     // determine if the script needs to be recompiled
@@ -166,7 +166,14 @@ namespace Models
                         Script = Activator.CreateInstance(ScriptType) as Model;
 
                     if (Script != null)
-                        AddModel(Script);
+                    {
+                        Script.Parent = this;
+                        // Need to reconnect all events and links in all models in simulation because
+                        // some may want to connect or link to this new script.
+                        Model.ConnectEventPublishers(Script);
+                        Model.ConnectEventSubscribers(Script);
+                        Model.ResolveLinks(Script);
+                    }
 
 
                     // Call the OnInitialised if present.

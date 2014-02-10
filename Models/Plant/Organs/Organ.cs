@@ -46,11 +46,11 @@ namespace Models.PMF.Organs
     #endregion
 
     [Serializable]
-    abstract public class Organ : Model
+    abstract public class Organ : ModelCollection
     {
         #region Links to other models or compontnets
-        public virtual Biomass Live { get; set; }
-        public virtual Biomass Dead { get; set; }
+        [Link] public Biomass Live = null;
+        [Link] public Biomass Dead = null;
         #endregion
 
         #region Organ - Arbitrator interface methods

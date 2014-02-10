@@ -9,7 +9,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     [Serializable]
-    public class Zadok
+    public class Zadok : Model
     {
         [Link]
         Phenology Phenology = null;

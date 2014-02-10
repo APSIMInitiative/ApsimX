@@ -10,8 +10,9 @@ namespace Models.PMF.Phen
     public class GenericPhase : Phase
     {
         [Link]
-        Summary Summary = null; 
-        public Function Target { get; set; }
+        Summary Summary = null;
+        [Link]
+        Function Target = null;
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 

@@ -4,12 +4,14 @@ using System.Xml;
 using Models.Soils;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models
 {
     [Serializable]
-    public class FertiliserType : Model
+    public class FertiliserType
     {
+        public string Name { get; set; }
         public double FractionNO3 { get; set;}
         public double FractionNH4 { get; set;}
         public double FractionUrea { get; set;}
@@ -44,7 +46,7 @@ namespace Models
                 // find the layer that the fertilizer is to be added to.
                 int layer = GetLayerDepth(Depth, Soil.Thickness);
 
-                FertiliserType fertiliserType = this.Get(Type.ToString()) as FertiliserType;
+                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
                 if (fertiliserType == null)
                     throw new ApsimXException(FullPath, "Cannot find fertiliser type '" + Type + "'");
 

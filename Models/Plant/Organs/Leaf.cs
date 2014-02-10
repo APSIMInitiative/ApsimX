@@ -29,31 +29,31 @@ namespace Models.PMF.Organs
 
         #region Structures
         [Serializable]
-        public class InitialLeafValues : Model
+        public class InitialLeafValues : ModelCollection
         {
-            public Function MaxArea { get; set; }
-            public Function GrowthDuration { get; set; }
-            public Function LagDuration { get; set; }
-            public Function SenescenceDuration { get; set; }
-            public Function DetachmentLagDuration { get; set; }
-            public Function DetachmentDuration { get; set; }
-            public Function SpecificLeafAreaMax { get; set; }
-            public Function SpecificLeafAreaMin { get; set; }
-            public Function StructuralFraction { get; set; }
-            public Function MaximumNConc { get; set; }
-            public Function MinimumNConc { get; set; }
-            public Function StructuralNConc { get; set; }
-            public Function InitialNConc { get; set; }
-            public Function NReallocationFactor { get; set; }
-            public Function DMReallocationFactor { get; set; }
-            public Function NRetranslocationFactor { get; set; }
-            public Function ExpansionStress { get; set; }
-            public Function CriticalNConc { get; set; }
-            public Function DMRetranslocationFactor { get; set; }
-            public Function ShadeInducedSenescenceRate { get; set; }
-            public Function DroughtInducedSenAcceleration { get; set; }
-            public Function NonStructuralFraction { get; set; }
-            public Function CellDivisionStress { get; set; }
+            [Link] public Function MaxArea = null;
+            [Link] public Function GrowthDuration = null;
+            [Link] public Function LagDuration = null;
+            [Link] public Function SenescenceDuration = null;
+            [Link] public Function DetachmentLagDuration = null;
+            [Link] public Function DetachmentDuration = null;
+            [Link] public Function SpecificLeafAreaMax = null;
+            [Link] public Function SpecificLeafAreaMin = null;
+            [Link] public Function StructuralFraction = null;
+            [Link] public Function MaximumNConc = null;
+            [Link] public Function MinimumNConc = null;
+            [Link(IsOptional=true)] public Function StructuralNConc = null;
+            [Link] public Function InitialNConc = null;
+            [Link] public Function NReallocationFactor = null;
+            [Link(IsOptional=true)] public Function DMReallocationFactor = null;
+            [Link] public Function NRetranslocationFactor = null;
+            [Link] public Function ExpansionStress = null;
+            [Link] public Function CriticalNConc = null;
+            [Link] public Function DMRetranslocationFactor = null;
+            [Link] public Function ShadeInducedSenescenceRate = null;
+            [Link(IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
+            [Link] public Function NonStructuralFraction = null;
+            [Link(IsOptional=true)] public Function CellDivisionStress = null;
         }
         #endregion
 
@@ -64,22 +64,22 @@ namespace Models.PMF.Organs
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
-        [XmlElement("InitialLeaf")]
-        public List<LeafCohort> InitialLeaves { get; set; }
-        public InitialLeafValues LeafCohortParameters { get; set; }
-        public RUEModel Photosynthesis { get; set; }
-        public Function ThermalTime { get; set; }
-        public Function ExtinctionCoeff { get; set; }
-        public Function FrostFraction { get; set; }
-        public Function ExpansionStress { get; set; }
-        public Function CriticalNConc { get; set; }
-        public Function MaximumNConc { get; set; }
-        public Function MinimumNConc { get; set; }
-        public Function StructuralFraction { get; set; }
-        public Function DMDemandFunction = null;
-        public Biomass Total { get; set; }
-        public ArrayBiomass CohortArrayLive { get; set; }
-        public ArrayBiomass CohortArrayDead { get; set; }
+        [XmlIgnore]
+        public List<LeafCohort> InitialLeaves { get { return ModelsMatching<LeafCohort>(); } }
+        [Link] InitialLeafValues LeafCohortParameters = null;
+        [Link] RUEModel Photosynthesis = null;
+        [Link] Function ThermalTime = null;
+        [Link] Function ExtinctionCoeff = null;
+        [Link] Function FrostFraction = null;
+        //[Link] Function ExpansionStress = null;
+        //[Link] Function CriticalNConc = null;
+        //[Link] Function MaximumNConc = null;
+        //[Link] Function MinimumNConc = null;
+        [Link] Function StructuralFraction = null;
+        [Link(IsOptional=true)] Function DMDemandFunction = null;
+        //[Link] Biomass Total = null;
+        //[Link] ArrayBiomass CohortArrayLive = null;
+        //[Link] ArrayBiomass CohortArrayDead = null;
 
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }

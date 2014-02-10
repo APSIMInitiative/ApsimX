@@ -14,7 +14,8 @@ namespace Models.PMF.Organs
         [Link]
         Plant Plant = null;
 
-        public Function DMDemandFunction { get; set; }
+        [Link]
+        Function DMDemandFunction = null;
 
         private double Uptake = 0;
         private string CurrentPaddockName;
@@ -98,11 +99,11 @@ namespace Models.PMF.Organs
                 else
                 {
                     double Total = 0;
-                    foreach (Zone SubPaddock in this.Models)
-                    {
-                        SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
-                        Total += Utility.Math.Sum(SWSupply);
-                    }
+                    //foreach (Zone SubPaddock in this.Models)
+                    //{
+                    //    SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
+                    //    Total += Utility.Math.Sum(SWSupply);
+                    //}
                     return Total;
                 }
             }
@@ -119,25 +120,27 @@ namespace Models.PMF.Organs
                 throw new NotImplementedException();
             else
             {
-                List<string> ModelNames = new List<string>();
-                List<double> Supply = new List<double>();
-                foreach (Zone SubPaddock in this.Models)
-                {
-                    string ModelName = SubPaddock.FullPath + "." + Plant.Name + "Root";
-                    double[] SWSupply = (double[])this.Get(ModelName + ".SWSupply");
-                    Supply.Add(Utility.Math.Sum(SWSupply));
-                    ModelNames.Add(ModelName);
-                }
-                double fraction = Amount / Utility.Math.Sum(Supply);
-                if (fraction > 1)
-                    throw new Exception("Requested SW uptake > Available supplies.");
-                //int i = 0;
-                foreach (string ModelName in ModelNames)
-                {
-                    //MyPaddock.Set(ModelName + ".SWUptake", Supply[i] * fraction);
-                    throw new NotImplementedException();
-                    //i++;
-                }
+                throw new NotImplementedException();
+
+                //List<string> ModelNames = new List<string>();
+                //List<double> Supply = new List<double>();
+                //foreach (Zone SubPaddock in this.Models)
+                //{
+                //    string ModelName = SubPaddock.FullPath + "." + Plant.Name + "Root";
+                //    double[] SWSupply = (double[])this.Get(ModelName + ".SWSupply");
+                //    Supply.Add(Utility.Math.Sum(SWSupply));
+                //    ModelNames.Add(ModelName);
+                //}
+                //double fraction = Amount / Utility.Math.Sum(Supply);
+                //if (fraction > 1)
+                //    throw new Exception("Requested SW uptake > Available supplies.");
+                ////int i = 0;
+                //foreach (string ModelName in ModelNames)
+                //{
+                //    //MyPaddock.Set(ModelName + ".SWUptake", Supply[i] * fraction);
+                //    throw new NotImplementedException();
+                //    //i++;
+                //}
 
             }
 

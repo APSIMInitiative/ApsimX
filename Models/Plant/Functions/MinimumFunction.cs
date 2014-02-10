@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     [Description("Returns the Minimum value of all children functions")]
     public class MinimumFunction : Function
     {
-        public List<Function> Children { get; set; }
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         public override double Value
         {

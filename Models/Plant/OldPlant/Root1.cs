@@ -22,26 +22,20 @@ namespace Models.PMF.OldPlant
         [Link]
         public Plant15 Plant;
 
-        public Function RootAdvanceFactorTemp { get; set; }
-
-        public Function RootAdvanceFactorWaterStress { get; set; }
-
-        public Function SWFactorRootDepth { get; set; }
-
-        public Function SWFactorRootLength { get; set; }
-
-        public Function RootDepthRate { get; set; }
+        [Link] Function RootAdvanceFactorTemp = null;
+        [Link] Function RootAdvanceFactorWaterStress = null;
+        [Link] Function SWFactorRootDepth = null;
+        [Link] Function SWFactorRootLength = null;
+        [Link] Function RootDepthRate = null;
 
         [Link]
         Population1 Population = null;
 
-        public Function RelativeRootRate { get; set; }
+        public Function RelativeRootRate = null;
+        public Function DMSenescenceFraction = null;
+        public Function GrowthStructuralFractionStage = null;
 
-        public Function DMSenescenceFraction { get; set; }
-
-        public CompositeBiomass TotalLive { get; set; }
-
-        public Function GrowthStructuralFractionStage { get; set; }
+        public CompositeBiomass TotalLive = null;
 
         [Link]
         object NUptakeFunction = null;

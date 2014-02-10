@@ -11,7 +11,7 @@ namespace Models.Factorial
     [AllowDropOn("Experiment")]
     public class Factors : ModelCollection
     {
-        [XmlElement("Factor")]
-        public List<Factor> factors { get; set; }
+        [XmlIgnore]
+        public List<Factor> factors { get { return ModelsMatching<Factor>(); } }
     }
 }

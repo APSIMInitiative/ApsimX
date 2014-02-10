@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <Area>0</Area>
   <Experiment>
     <Name>Experiment</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
         <Name>SowDate</Name>
+        <FactorValue>
+          <Name>2003-11-01</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>2003-12-20</Name>
+        </FactorValue>
         <Paths>
           <string>[SowingRule].Script.SowingDate</string>
         </Paths>
-        <Value>
-          <Name>2003-11-01</Name>
-        </Value>
-        <Value>
-          <Name>2003-12-20</Name>
-        </Value>
       </Factor>
       <Factor>
         <Name>Fertiliser</Name>
+        <FactorValue>
+          <Name>0</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>20</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>60</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>80</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>100</Name>
+        </FactorValue>
         <Paths>
           <string>[FertiliserRule].Script.ApplicationAmount</string>
         </Paths>
-        <Value>
-          <Name>0</Name>
-        </Value>
-        <Value>
-          <Name>20</Name>
-        </Value>
-        <Value>
-          <Name>60</Name>
-        </Value>
-        <Value>
-          <Name>80</Name>
-        </Value>
-        <Value>
-          <Name>100</Name>
-        </Value>
       </Factor>
     </Factors>
     <Simulation>
       <Name>Base</Name>
-      <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -60,7 +58,6 @@
       </Summary>
       <Zone>
         <Name>Field</Name>
-        <Area>0</Area>
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
@@ -95,15 +92,6 @@
         </Report>
         <Soil>
           <Name>Soil</Name>
-          <RecordNumber>0</RecordNumber>
-          <SoilType>Black Vertosol</SoilType>
-          <LocalName>Waco</LocalName>
-          <Site>Jimbour</Site>
-          <NearestTown>Jimbour, Q 4352</NearestTown>
-          <Region>South East Queensland</Region>
-          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -705,6 +693,15 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Black Vertosol</SoilType>
+          <LocalName>Waco</LocalName>
+          <Site>Jimbour</Site>
+          <NearestTown>Jimbour, Q 4352</NearestTown>
+          <Region>South East Queensland</Region>
+          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -856,7 +853,9 @@
         }
 				]]></Code>
         </Manager>
+        <Area>0</Area>
       </Zone>
+      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -865,17 +864,16 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Fertiliser</Name>
+        <FactorValue>
+          <Name>0 to 100 step 20</Name>
+        </FactorValue>
         <Paths>
           <string>[FertiliserRule].Script.ApplicationAmount</string>
         </Paths>
-        <Value>
-          <Name>0 to 100 step 20</Name>
-        </Value>
       </Factor>
     </Factors>
     <Simulation>
       <Name>Base2</Name>
-      <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -893,7 +891,6 @@
       </Summary>
       <Zone>
         <Name>Field</Name>
-        <Area>0</Area>
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
@@ -926,15 +923,6 @@
         </Report>
         <Soil>
           <Name>Soil</Name>
-          <RecordNumber>0</RecordNumber>
-          <SoilType>Black Vertosol</SoilType>
-          <LocalName>Waco</LocalName>
-          <Site>Jimbour</Site>
-          <NearestTown>Jimbour, Q 4352</NearestTown>
-          <Region>South East Queensland</Region>
-          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -1536,6 +1524,15 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Black Vertosol</SoilType>
+          <LocalName>Waco</LocalName>
+          <Site>Jimbour</Site>
+          <NearestTown>Jimbour, Q 4352</NearestTown>
+          <Region>South East Queensland</Region>
+          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1631,7 +1628,9 @@
         }
 				]]></Code>
         </Manager>
+        <Area>0</Area>
       </Zone>
+      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1640,34 +1639,33 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Operations</Name>
-        <Paths>
-          <string>[FertiliserRule]</string>
-        </Paths>
-        <Value>
+        <FactorValue>
           <Name>0N</Name>
-          <Value xsi:type="Operations">
+          <Operations>
             <Name>FertiliserRule</Name>
             <Operation>
               <Date>2003-11-15T00:00:00</Date>
               <Action>Fertiliser.Apply(0, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
-          </Value>
-        </Value>
-        <Value>
+          </Operations>
+        </FactorValue>
+        <FactorValue>
           <Name>50N</Name>
-          <Value xsi:type="Operations">
+          <Operations>
             <Name>FertiliserRule</Name>
             <Operation>
               <Date>2003-11-15T00:00:00</Date>
               <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
-          </Value>
-        </Value>
+          </Operations>
+        </FactorValue>
+        <Paths>
+          <string>[FertiliserRule]</string>
+        </Paths>
       </Factor>
     </Factors>
     <Simulation>
       <Name>Base3</Name>
-      <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -1685,7 +1683,6 @@
       </Summary>
       <Zone>
         <Name>Field</Name>
-        <Area>0</Area>
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
@@ -1718,15 +1715,6 @@
         </Report>
         <Soil>
           <Name>Soil</Name>
-          <RecordNumber>0</RecordNumber>
-          <SoilType>Black Vertosol</SoilType>
-          <LocalName>Waco</LocalName>
-          <Site>Jimbour</Site>
-          <NearestTown>Jimbour, Q 4352</NearestTown>
-          <Region>South East Queensland</Region>
-          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -2328,6 +2316,15 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Black Vertosol</SoilType>
+          <LocalName>Waco</LocalName>
+          <Site>Jimbour</Site>
+          <NearestTown>Jimbour, Q 4352</NearestTown>
+          <Region>South East Queensland</Region>
+          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -2415,7 +2412,9 @@
             <Action>Fertiliser.Apply(10, Fertiliser.Types.NO3N, 0);</Action>
           </Operation>
         </Operations>
+        <Area>0</Area>
       </Zone>
+      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -2424,42 +2423,41 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Location</Name>
+        <FactorValue>
+          <Name>Dalby</Name>
+          <FactorValue>
+            <Name>1988-01-01</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>1988-12-31</Name>
+          </FactorValue>
+          <WeatherFile>
+            <Name>WeatherFile</Name>
+            <FileName>..\WeatherFiles\Dalby.met</FileName>
+          </WeatherFile>
+        </FactorValue>
+        <FactorValue>
+          <Name>Goondiwindi</Name>
+          <FactorValue>
+            <Name>1940-01-01</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>1940-12-31</Name>
+          </FactorValue>
+          <WeatherFile>
+            <Name>WeatherFile</Name>
+            <FileName>..\WeatherFiles\Goond.met</FileName>
+          </WeatherFile>
+        </FactorValue>
         <Paths>
           <string>[Clock].StartDate</string>
           <string>[Clock].EndDate</string>
           <string>[WeatherFile]</string>
         </Paths>
-        <Value>
-          <Name>Dalby</Name>
-          <Value xsi:type="FactorValue">
-            <Name>1988-01-01</Name>
-          </Value>
-          <Value xsi:type="FactorValue">
-            <Name>1988-12-31</Name>
-          </Value>
-          <Value xsi:type="WeatherFile">
-            <Name>WeatherFile</Name>
-            <FileName>..\WeatherFiles\Dalby.met</FileName>
-          </Value>
-        </Value>
-        <Value>
-          <Name>Goondiwindi</Name>
-          <Value xsi:type="FactorValue">
-            <Name>1940-01-01</Name>
-          </Value>
-          <Value xsi:type="FactorValue">
-            <Name>1940-12-31</Name>
-          </Value>
-          <Value xsi:type="WeatherFile">
-            <Name>WeatherFile</Name>
-            <FileName>..\WeatherFiles\Goond.met</FileName>
-          </Value>
-        </Value>
       </Factor>
     </Factors>
     <Simulation>
       <Name>Base3</Name>
-      <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
@@ -2477,7 +2475,6 @@
       </Summary>
       <Zone>
         <Name>Field</Name>
-        <Area>0</Area>
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
@@ -2509,15 +2506,6 @@
         </Report>
         <Soil>
           <Name>Soil</Name>
-          <RecordNumber>0</RecordNumber>
-          <SoilType>Black Vertosol</SoilType>
-          <LocalName>Waco</LocalName>
-          <Site>Jimbour</Site>
-          <NearestTown>Jimbour, Q 4352</NearestTown>
-          <Region>South East Queensland</Region>
-          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -3119,6 +3107,15 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Black Vertosol</SoilType>
+          <LocalName>Waco</LocalName>
+          <Site>Jimbour</Site>
+          <NearestTown>Jimbour, Q 4352</NearestTown>
+          <Region>South East Queensland</Region>
+          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -3202,18 +3199,15 @@
         <Graph>
           <Name>SoilWater</Name>
           <Axis>
-            <Name>Axis 1</Name>
             <Type>Left</Type>
             <Title>Soil water (mm)</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Axis>
-            <Name>Axis</Name>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
-            <Name>Series</Name>
             <Title>Predicted</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
@@ -3221,13 +3215,11 @@
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.sw_dep(1)</FieldName>
@@ -3241,7 +3233,9 @@
             <Action>Fertiliser.Apply(10, Fertiliser.Types.UreaN, 0);</Action>
           </Operation>
         </Operations>
+        <Area>0</Area>
       </Zone>
+      <Area>0</Area>
     </Simulation>
   </Experiment>
   <DataStore>
@@ -3251,19 +3245,16 @@
   <Graph>
     <Name>Graph</Name>
     <Axis>
-      <Name>Axis</Name>
       <Type>Bottom</Type>
       <Title>Date</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
-      <Name>Axis</Name>
       <Type>Left</Type>
       <Title>Leaf live wt</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
-      <Name>Series</Name>
       <Title>1-Nov, 0N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3271,20 +3262,17 @@
       <ColourArgb>-16744448</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>1-Nov, 20N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3292,20 +3280,17 @@
       <ColourArgb>-16727808</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>1-Nov, 60N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3313,20 +3298,17 @@
       <ColourArgb>-8323200</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>20-Dec, 0N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3334,20 +3316,17 @@
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>20-Dec, 20N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3355,20 +3334,17 @@
       <ColourArgb>-8224001</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>20-Dec, 60N</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -3376,13 +3352,11 @@
       <ColourArgb>-16711681</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
@@ -3587,20 +3561,7 @@
       <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>
       <Parameters>50</Parameters>
     </Test>
-   <!--  <Test>
-      <SimulationName>Location Dalby</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>Clock.Today.Year</ColumnNames>
-      <Parameters>1988</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Location Goondiwindi</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>Clock.Today.Year</ColumnNames>
-      <Parameters>1940</Parameters>
-    </Test> -->
   </Tests>
+  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

@@ -16,14 +16,18 @@ namespace Models.PMF.Phen
         public String NewPhaseName = "";
     }
     [Serializable]
-    public class Phenology : Model
+    public class Phenology : ModelCollection
     {
         #region Links
         [Link]
         private Summary Summary = null;
-
         [Link]
         private Clock Clock = null;
+        [Link(IsOptional = true)]
+        private Function RewindDueToBiomassRemoved = null;
+        [Link(IsOptional = true)]
+        private Function AboveGroundPeriod = null;
+
         #endregion
 
         #region Events
@@ -33,19 +37,12 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Parameters
-        public Function RewindDueToBiomassRemoved { get; set; }
-        public Function AboveGroundPeriod { get; set; }
-        public Function StageCode { get; set; }
-        public Function ThermalTime { get; set; } 
+        [Link] public Function StageCode = null;
+        [Link] public Function ThermalTime = null;
 
-        [XmlArrayItem(typeof(EmergingPhase))]
-        [XmlArrayItem(typeof(EndPhase))]
-        [XmlArrayItem(typeof(GenericPhase))]
-        [XmlArrayItem(typeof(GerminatingPhase))]
-        [XmlArrayItem(typeof(GotoPhase))]
-        [XmlArrayItem(typeof(LeafAppearancePhase))]
-        [XmlArrayItem(typeof(LeafDeathPhase))]
-        public List<Phase> Phases { get; set; }
+        [XmlIgnore]
+        public List<Phase> Phases { get { return ModelsMatching<Phase>(); } }
+
         #endregion
 
         #region States

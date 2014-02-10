@@ -66,16 +66,11 @@ namespace UserInterface.Views
         /// </summary>
         public void PopulateData(DataTable Data)
         {
+            Grid.DataSource = Data;
             if (Data != null)
             {
-                Grid.DataSource = Data;
                 Grid.Columns[0].Visible = false;
                 FormatGrid();
-            }
-            else
-            {
-                Grid.ColumnCount = 0;
-                Grid.RowCount = 1;
             }
         }
 

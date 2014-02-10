@@ -32,37 +32,25 @@ namespace Models.PMF.OldPlant
         [Link]
         Phenology Phenology = null;
 
-        public Function TEModifier { get; set; }
-
-        public Function NConcCriticalModifier { get; set; }
-
-        public Function TE { get; set; }
-
-        public Function LeafSize { get; set; }
-
-        public SWStress SWStress { get; set; }
-
-        public NStress NStress { get; set; }
-
-        public PStress PStress { get; set; }
+        [Link] Function TEModifier = null;
+        [Link] Function NConcCriticalModifier = null;
+        [Link] Function TE = null;
+        [Link] Function LeafSize = null;
+        [Link] SWStress SWStress = null;
+        [Link] NStress NStress = null;
+        [Link] PStress PStress = null;
 
 
         [Link]
         PlantSpatial1 PlantSpatial = null;
 
-        public Function SLAMax { get; set; }
-
-        public Function LeafNumberFraction { get; set; }
-
-        public Function ExtinctionCoefficient { get; set; }
-
-        public Function ExtinctionCoefficientDead { get; set; }
-
-        public Function NConcentrationCritical { get; set; }
-
-        public Function NConcentrationMinimum { get; set; }
-
-        public Function NConcentrationMaximum { get; set; }
+        [Link] Function SLAMax = null;
+        [Link] Function LeafNumberFraction = null;
+        [Link] Function ExtinctionCoefficient = null;
+        [Link] Function ExtinctionCoefficientDead = null;
+        [Link] Function NConcentrationCritical = null;
+        [Link] Function NConcentrationMinimum = null;
+        [Link] Function NConcentrationMaximum = null;
 
         [Link]
         WeatherFile MetData = null;

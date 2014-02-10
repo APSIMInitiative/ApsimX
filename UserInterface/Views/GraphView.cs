@@ -37,6 +37,8 @@ namespace UserInterface.Views
 
     public partial class GraphView : UserControl, IGraphView
     {
+        private Graph Graph;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -55,8 +57,10 @@ namespace UserInterface.Views
         /// <summary>
         /// Draw the graph based on the Graph model passed in.
         /// </summary>
-        public void DrawGraph(Graph Graph)
+        public void DrawGraph(Graph graph)
         {
+            Graph = graph;
+
             plot1.Model.Series.Clear();
             plot1.Model.Axes.Clear();
             if (Graph != null)
@@ -147,10 +151,12 @@ namespace UserInterface.Views
             Type XDataType = null;
             Type YDataType = null;
             List<DataPoint> Points = new List<DataPoint>();
-            if (X != null && Y != null && X.Values != null && Y.Values != null)
+            IEnumerable XValues = Graph.GetValues(X);
+            IEnumerable YValues = Graph.GetValues(Y);
+            if (X != null && Y != null && XValues != null && YValues != null)
             {
-                IEnumerator XEnum = X.Values.GetEnumerator();
-                IEnumerator YEnum = Y.Values.GetEnumerator();
+                IEnumerator XEnum = XValues.GetEnumerator();
+                IEnumerator YEnum = YValues.GetEnumerator();
                 while (XEnum.MoveNext() && YEnum.MoveNext())
                 {
                     DataPoint P = new DataPoint();

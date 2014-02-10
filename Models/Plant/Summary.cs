@@ -8,13 +8,13 @@ using Models.PMF.Phen;
 namespace Models.PMF
 {
     [Serializable]
-    public class Summariser : Model
+    public class Summariser : ModelCollection
     {
-        public Biomass AboveGround { get; set; }
-        public Biomass BelowGround { get; set; }
-        public Biomass Total { get; set; }
-        public Biomass TotalLive { get; set; }
-        public Biomass TotalDead { get; set; }
+        [Link] Biomass AboveGround = null;
+        [Link] Biomass BelowGround = null;
+        [Link] Biomass Total       = null;
+        [Link] Biomass TotalLive   = null;
+        [Link] Biomass TotalDead   = null;
 
         [Link]
         Summary Summary = null;

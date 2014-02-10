@@ -45,9 +45,8 @@ namespace Models.PMF.OldPlant
         [Link]
         Leaf1 Leaf = null;
 
-        public Function CropFailureStressPeriod { get; set; }
-
-        public Function DeathHighTemperatureDuringEmergence { get; set; }
+        [Link] Function CropFailureStressPeriod = null;
+        [Link] Function DeathHighTemperatureDuringEmergence = null;
 
         public double LeafNumberCritical = 0;
 

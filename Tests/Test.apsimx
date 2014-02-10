@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <Area>0</Area>
   <Folder>
     <Name>Simulations</Name>
-    <Area>0</Area>
     <Simulation>
       <Name>Test</Name>
-      <Area>0</Area>
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>WeatherFiles\lincoln.met</FileName>
@@ -25,7 +22,6 @@
       </Summary>
       <Zone>
         <Name>Field</Name>
-        <Area>0</Area>
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
@@ -58,18 +54,8 @@
             <string>[SoilWater].sw_dep</string>
             <string>[SoilNitrogen].no3</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
-            <string>[Plant].Phenology.StageCode.Value</string>
-            <string>[Plant].Structure.Population</string>
-            <string>[Plant].Leaf.LAI</string>
-            <string>[Plant].Leaf.CoverGreen</string>
-            <string>[Plant].Leaf.Live.Wt</string>
-            <string>[Plant].Stem.Live.Wt</string>
-            <string>[Plant].Tuber.Live.Wt</string>
-            <string>[Plant].Root.Live.Wt</string>
-            <string>[Plant].Leaf.Live.N</string>
-            <string>[Plant].Stem.Live.N</string>
-            <string>[Plant].Tuber.Live.N</string>
-            <string>[Plant].Root.Live.N</string>
+            <string />
+            <string />
           </Variables>
           <Events>
             <string>[Clock].EndOfDay</string>
@@ -77,15 +63,6 @@
         </Report>
         <Soil>
           <Name>Soil</Name>
-          <RecordNumber>0</RecordNumber>
-          <SoilType>Black Vertosol</SoilType>
-          <LocalName>Waco</LocalName>
-          <Site>Jimbour</Site>
-          <NearestTown>Jimbour, Q 4352</NearestTown>
-          <Region>South East Queensland</Region>
-          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -687,6 +664,15 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Black Vertosol</SoilType>
+          <LocalName>Waco</LocalName>
+          <Site>Jimbour</Site>
+          <NearestTown>Jimbour, Q 4352</NearestTown>
+          <Region>South East Queensland</Region>
+          <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -767,1308 +753,6 @@
             <R50>200</R50>
           </ComponentData>
         </MicroClimate>
-        <Plant>
-          <Name>Potato</Name>
-          <CropType>Potato</CropType>
-          <Phenology>
-            <Name>Phenology</Name>
-            <StageCode xsi:type="StageBasedInterpolation">
-              <Name>StageCode</Name>
-              <Stages>
-                <string>Planting</string>
-                <string>Peeping</string>
-                <string>Emergence</string>
-                <string>TuberInitiation</string>
-                <string>FinalLeaf</string>
-                <string>FullSenescence</string>
-                <string>Maturity</string>
-              </Stages>
-              <Codes>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-                <double>5</double>
-                <double>6</double>
-                <double>7</double>
-              </Codes>
-            </StageCode>
-            <Phases>
-              <GenericPhase>
-                <Name>Dormant</Name>
-                <Start>Planting</Start>
-                <End>Peeping</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-                <Target xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>1</Value>
-                </Target>
-              </GenericPhase>
-              <EmergingPhase>
-                <Name>Sprouting</Name>
-                <Start>Peeping</Start>
-                <End>Emergence</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-                <ShootLag>72</ShootLag>
-                <ShootRate>1.35</ShootRate>
-              </EmergingPhase>
-              <GenericPhase>
-                <Name>Vegetative</Name>
-                <Start>Emergence</Start>
-                <End>TuberInitiation</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-                <Target xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>300</Value>
-                </Target>
-              </GenericPhase>
-              <LeafAppearancePhase>
-                <Name>EarlyTuber</Name>
-                <Start>TuberInitiation</Start>
-                <End>FinalLeaf</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-              </LeafAppearancePhase>
-              <LeafDeathPhase>
-                <Name>LateTuber</Name>
-                <Start>FinalLeaf</Start>
-                <End>FullSenescence</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-              </LeafDeathPhase>
-              <GenericPhase>
-                <Name>Senesced</Name>
-                <Start>FullSenescence</Start>
-                <End>Maturity</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-                <Target xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>200</Value>
-                </Target>
-              </GenericPhase>
-              <EndPhase>
-                <Name>Maturity</Name>
-                <Start>Maturity</Start>
-                <End>Unused</End>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-              </EndPhase>
-            </Phases>
-          </Phenology>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-          </Arbitrator>
-          <Structure>
-            <Name>Structure</Name>
-            <InitialiseStage>Emergence</InitialiseStage>
-            <PrimaryBudNo>2.2</PrimaryBudNo>
-            <ThermalTime xsi:type="AirTemperatureFunction">
-              <Name>AirTemperatureFunction</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>2</double>
-                  <double>20</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>18</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </ThermalTime>
-            <MainStemPrimordiaInitiationRate xsi:type="PhaseLookupValue">
-              <Name>PhaseLookupValue</Name>
-              <Start>Emergence</Start>
-              <End>FinalLeaf</End>
-              <Children>
-                <Function xsi:type="DivideFunction">
-                  <Name>NodeInitiationRateFunction</Name>
-                  <Children>
-                    <Function xsi:type="VariableReference">
-                      <Name>Phyllochron</Name>
-                      <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
-                    </Function>
-                    <Function xsi:type="Constant">
-                      <Name>PrimordiaPerMainstemNode</Name>
-                      <Value>2</Value>
-                    </Function>
-                  </Children>
-                </Function>
-              </Children>
-            </MainStemPrimordiaInitiationRate>
-            <MainStemNodeAppearanceRate xsi:type="PhaseLookupValue">
-              <Name>PhaseLookupValue</Name>
-              <Start>Emergence</Start>
-              <End>FinalLeaf</End>
-              <Children>
-                <Function xsi:type="LinearInterpolationFunction">
-                  <Name>Phyllochron</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.15</double>
-                      <double>0.74</double>
-                      <double>0.75</double>
-                    </X>
-                    <Y>
-                      <double>5</double>
-                      <double>30</double>
-                      <double>30</double>
-                      <double>60</double>
-                    </Y>
-                  </XYPairs>
-                </Function>
-              </Children>
-            </MainStemNodeAppearanceRate>
-            <MainStemFinalNodeNumber xsi:type="Constant">
-              <Name>Constant</Name>
-              <Value>34</Value>
-            </MainStemFinalNodeNumber>
-            <HeightModel xsi:type="LinearInterpolationFunction">
-              <Name>LinearInterpolationFunction</Name>
-              <XProperty>[Stem].Live.Wt</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>200</double>
-                  <double>1200</double>
-                  <double>4000</double>
-                </X>
-                <Y>
-                  <double>20</double>
-                  <double>300</double>
-                  <double>700</double>
-                  <double>900</double>
-                </Y>
-              </XYPairs>
-            </HeightModel>
-            <BranchingRate xsi:type="MultiplyFunction">
-              <Name>MultiplyFunction</Name>
-              <Children>
-                <Function xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].MainStemNodeNo</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>7</double>
-                      <double>8</double>
-                      <double>13</double>
-                      <double>14</double>
-                      <double>34</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>0</double>
-                      <double>0.5</double>
-                      <double>0.5</double>
-                      <double>0</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </Function>
-                <Function xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Leaf].CoverGreen</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.4</double>
-                      <double>0.55</double>
-                      <double>0.8</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>1</double>
-                      <double>1</double>
-                      <double>0.45</double>
-                      <double>0</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </Function>
-              </Children>
-            </BranchingRate>
-            <ShadeInducedBranchMortality xsi:type="Constant">
-              <Name>Constant</Name>
-              <Value>0</Value>
-            </ShadeInducedBranchMortality>
-            <DroughtInducedBranchMortality xsi:type="Constant">
-              <Name>Constant</Name>
-              <Value>0</Value>
-            </DroughtInducedBranchMortality>
-          </Structure>
-          <Summariser>
-            <Name>Summariser</Name>
-            <AboveGround xsi:type="CompositeBiomass">
-              <Name>CompositeBiomass</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </AboveGround>
-            <BelowGround xsi:type="CompositeBiomass">
-              <Name>CompositeBiomass</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-                <string>[Tuber].Live</string>
-                <string>[Tuber].Dead</string>
-              </Propertys>
-            </BelowGround>
-            <Total xsi:type="CompositeBiomass">
-              <Name>CompositeBiomass</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-                <string>[Tuber].Live</string>
-                <string>[Tuber].Dead</string>
-              </Propertys>
-            </Total>
-          </Summariser>
-          <Organs>
-            <GenericAboveGroundOrgan>
-              <Name>Tuber</Name>
-              <Live>
-                <Name>Biomass</Name>
-              </Live>
-              <Dead>
-                <Name>Biomass</Name>
-              </Dead>
-              <NitrogenDemandSwitch xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Leaf].LAI</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.02</double>
-                    <double>0.0201</double>
-                    <double>10</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </NitrogenDemandSwitch>
-              <StructuralFraction xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </StructuralFraction>
-              <DMDemandFunction xsi:type="PotentialSizeDemandFunction">
-                <Name>PotentialSizeDemandFunction</Name>
-                <StartStageName>TuberInitiation</StartStageName>
-                <EndStageName>Maturity</EndStageName>
-                <PotentialGrowthIncrement xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Phenology].StageCode.Value</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>4</double>
-                      <double>4.04</double>
-                      <double>4.32</double>
-                      <double>4.52</double>
-                      <double>4.95</double>
-                      <double>6.54</double>
-                    </X>
-                    <Y>
-                      <double>0.017</double>
-                      <double>0.017</double>
-                      <double>0.06</double>
-                      <double>0.06</double>
-                      <double>0.018</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </PotentialGrowthIncrement>
-                <OrganNumber xsi:type="MultiplyFunction">
-                  <Name>MultiplyFunction</Name>
-                  <Children>
-                    <Function xsi:type="Constant">
-                      <Name>Constant</Name>
-                      <Value>5</Value>
-                    </Function>
-                    <Function xsi:type="VariableReference">
-                      <Name>VariableReference</Name>
-                      <VariableName>[Structure].MainStemPopn</VariableName>
-                    </Function>
-                  </Children>
-                </OrganNumber>
-                <ThermalTime xsi:type="AirTemperatureFunction">
-                  <Name>AirTemperatureFunction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>20</double>
-                      <double>35</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>18</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </ThermalTime>
-                <AccumThermalTime xsi:type="AccumulateFunction">
-                  <Name>AccumulateFunction</Name>
-                  <StartStageName>TuberInitiation</StartStageName>
-                  <EndStageName>Maturity</EndStageName>
-                  <Children>
-                    <Function xsi:type="VariableReference">
-                      <Name>VariableReference</Name>
-                      <VariableName>[Structure].ThermalTime.Value</VariableName>
-                    </Function>
-                  </Children>
-                </AccumThermalTime>
-              </DMDemandFunction>
-              <WaterContent xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>3</double>
-                    <double>4</double>
-                    <double>4.1</double>
-                    <double>4.7</double>
-                    <double>5.4</double>
-                    <double>6</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0.1</double>
-                    <double>0.16</double>
-                    <double>0.2</double>
-                    <double>0.22</double>
-                  </Y>
-                </XYPairs>
-              </WaterContent>
-              <MaximumNConc xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>3</double>
-                    <double>4</double>
-                    <double>5</double>
-                    <double>6</double>
-                  </X>
-                  <Y>
-                    <double>0.023</double>
-                    <double>0.023</double>
-                    <double>0.018</double>
-                    <double>0.015</double>
-                  </Y>
-                </XYPairs>
-              </MaximumNConc>
-              <MinimumNConc xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>4</double>
-                    <double>4.1</double>
-                    <double>7</double>
-                  </X>
-                  <Y>
-                    <double>0.02</double>
-                    <double>0.006</double>
-                    <double>0.006</double>
-                  </Y>
-                </XYPairs>
-              </MinimumNConc>
-            </GenericAboveGroundOrgan>
-            <Root>
-              <Name>Root</Name>
-              <Live xsi:type="CompositeBiomass">
-                <Name>CompositeBiomass</Name>
-                <Propertys>
-                  <string>[Root].LayerLive</string>
-                </Propertys>
-              </Live>
-              <Dead xsi:type="CompositeBiomass">
-                <Name>CompositeBiomass</Name>
-                <Propertys>
-                  <string>[Root].LayerDead</string>
-                </Propertys>
-              </Dead>
-              <InitialDM>5</InitialDM>
-              <SpecificRootLength>40000</SpecificRootLength>
-              <KNO3>0.02</KNO3>
-              <KNH4>0</KNH4>
-              <NitrogenDemandSwitch xsi:type="PhaseBasedSwitch">
-                <Name>PhaseBasedSwitch</Name>
-                <Start>Planting</Start>
-                <End>FinalLeaf</End>
-              </NitrogenDemandSwitch>
-              <TemperatureEffect xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>26</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </TemperatureEffect>
-              <RootFrontVelocity xsi:type="PhaseLookup">
-                <Name>PhaseLookup</Name>
-                <Children>
-                  <Function xsi:type="PhaseLookupValue">
-                    <Name>PhaseLookupValue</Name>
-                    <Start>Peeping</Start>
-                    <End>FinalLeaf</End>
-                    <Children>
-                      <Function xsi:type="Constant">
-                        <Name>Constant</Name>
-                        <Value>10</Value>
-                      </Function>
-                    </Children>
-                  </Function>
-                </Children>
-              </RootFrontVelocity>
-              <PartitionFraction xsi:type="PhaseLookup">
-                <Name>PhaseLookup</Name>
-                <Children>
-                  <Function xsi:type="PhaseLookupValue">
-                    <Name>PhaseLookupValue</Name>
-                    <Start>Emergence</Start>
-                    <End>TuberInitiation</End>
-                    <Children>
-                      <Function xsi:type="Constant">
-                        <Name>Constant</Name>
-                        <Value>0.3</Value>
-                      </Function>
-                    </Children>
-                  </Function>
-                  <Function xsi:type="PhaseLookupValue">
-                    <Name>PhaseLookupValue</Name>
-                    <Start>TuberInitiation</Start>
-                    <End>FinalLeaf</End>
-                    <Children>
-                      <Function xsi:type="Constant">
-                        <Name>Constant</Name>
-                        <Value>0.05</Value>
-                      </Function>
-                    </Children>
-                  </Function>
-                  <Function xsi:type="PhaseLookupValue">
-                    <Name>PhaseLookupValue</Name>
-                    <Start>FinalLeaf</Start>
-                    <End>FullSenescence</End>
-                    <Children>
-                      <Function xsi:type="Constant">
-                        <Name>Constant</Name>
-                        <Value>0</Value>
-                      </Function>
-                    </Children>
-                  </Function>
-                </Children>
-              </PartitionFraction>
-              <MaximumNConc xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0.01</Value>
-              </MaximumNConc>
-              <MaxDailyNUptake xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Root].Length</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.02</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>6</double>
-                  </Y>
-                </XYPairs>
-              </MaxDailyNUptake>
-              <MinimumNConc xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0.01</Value>
-              </MinimumNConc>
-              <KLModifier xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Leaf].LAI</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>3</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </KLModifier>
-            </Root>
-            <Leaf>
-              <Name>Leaf</Name>
-              <Live xsi:type="CompositeBiomass">
-                <Name>CompositeBiomass</Name>
-                <Propertys>
-                  <string>[Leaf].CohortLive</string>
-                </Propertys>
-              </Live>
-              <Dead xsi:type="CompositeBiomass">
-                <Name>CompositeBiomass</Name>
-                <Propertys>
-                  <string>[Leaf].CohortDead</string>
-                </Propertys>
-              </Dead>
-              <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
-              <StartFractionExpanded>0.86262315376711707</StartFractionExpanded>
-              <FractionNextleafExpanded>0.89989693128355064</FractionNextleafExpanded>
-              <_ExpandedNodeNo>34.89989693128355</_ExpandedNodeNo>
-              <MaxCover>1</MaxCover>
-              <InitialLeaf>
-                <Name>LeafCohort</Name>
-                <Rank>1</Rank>
-                <Area>900</Area>
-              </InitialLeaf>
-              <InitialLeaf>
-                <Name>LeafCohort</Name>
-                <Rank>2</Rank>
-                <Area>600</Area>
-              </InitialLeaf>
-              <InitialLeaf>
-                <Name>LeafCohort</Name>
-                <Rank>3</Rank>
-                <Area>300</Area>
-              </InitialLeaf>
-              <LeafCohortParameters>
-                <Name>InitialLeafValues</Name>
-                <MaxArea xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.15</double>
-                      <double>0.3</double>
-                      <double>0.44</double>
-                      <double>0.59</double>
-                      <double>0.73</double>
-                    </X>
-                    <Y>
-                      <double>2000</double>
-                      <double>18000</double>
-                      <double>27000</double>
-                      <double>15000</double>
-                      <double>6000</double>
-                      <double>1500</double>
-                    </Y>
-                  </XYPairs>
-                </MaxArea>
-                <GrowthDuration xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.3</double>
-                      <double>0.4</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>200</double>
-                      <double>400</double>
-                      <double>400</double>
-                      <double>400</double>
-                    </Y>
-                  </XYPairs>
-                </GrowthDuration>
-                <LagDuration xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.15</double>
-                      <double>0.3</double>
-                      <double>0.4</double>
-                      <double>0.73</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>20</double>
-                    </Y>
-                  </XYPairs>
-                </LagDuration>
-                <SenescenceDuration xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.15</double>
-                      <double>0.3</double>
-                      <double>0.4</double>
-                      <double>0.73</double>
-                      <double>2</double>
-                    </X>
-                    <Y>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>350</double>
-                      <double>100</double>
-                    </Y>
-                  </XYPairs>
-                </SenescenceDuration>
-                <DetachmentLagDuration xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>1000000</Value>
-                </DetachmentLagDuration>
-                <DetachmentDuration xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>1000000</Value>
-                </DetachmentDuration>
-                <SpecificLeafAreaMax xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>40000</double>
-                      <double>25000</double>
-                    </Y>
-                  </XYPairs>
-                </SpecificLeafAreaMax>
-                <SpecificLeafAreaMin xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>25000</Value>
-                </SpecificLeafAreaMin>
-                <StructuralFraction xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.5</Value>
-                </StructuralFraction>
-                <MaximumNConc xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.07</Value>
-                </MaximumNConc>
-                <MinimumNConc xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.03</Value>
-                </MinimumNConc>
-                <InitialNConc xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0</Value>
-                </InitialNConc>
-                <NReallocationFactor xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>1</Value>
-                </NReallocationFactor>
-                <NRetranslocationFactor xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.01</Value>
-                </NRetranslocationFactor>
-                <ExpansionStress xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0.5</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
-                </ExpansionStress>
-                <CriticalNConc xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.05</Value>
-                </CriticalNConc>
-                <DMRetranslocationFactor xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.5</Value>
-                </DMRetranslocationFactor>
-                <ShadeInducedSenescenceRate xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.5</double>
-                      <double>0.8</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>0</double>
-                      <double>0</double>
-                      <double>0.03</double>
-                    </Y>
-                  </XYPairs>
-                </ShadeInducedSenescenceRate>
-                <NonStructuralFraction xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.2</Value>
-                </NonStructuralFraction>
-              </LeafCohortParameters>
-              <Photosynthesis>
-                <Name>RUEModel</Name>
-                <RUE xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>1.2</Value>
-                </RUE>
-                <FCO2 xsi:type="RUECO2Function">
-                  <Name>RUECO2Function</Name>
-                  <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-                </FCO2>
-                <FN xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Leaf].Fn</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>1.5</double>
-                    </X>
-                    <Y>
-                      <double>1</double>
-                      <double>1</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
-                </FN>
-                <FT xsi:type="WeightedTemperatureFunction">
-                  <Name>WeightedTemperatureFunction</Name>
-                  <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>2</double>
-                      <double>12</double>
-                      <double>24</double>
-                      <double>34</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>1</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                </FT>
-                <FW xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Leaf].Fw</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>0.4</double>
-                      <double>1.5</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
-                </FW>
-                <FVPD xsi:type="LinearInterpolationFunction">
-                  <Name>LinearInterpolationFunction</Name>
-                  <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>10</double>
-                      <double>50</double>
-                    </X>
-                    <Y>
-                      <double>1</double>
-                      <double>1</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
-                </FVPD>
-              </Photosynthesis>
-              <ThermalTime xsi:type="AirTemperatureFunction">
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </ThermalTime>
-              <ExtinctionCoeff xsi:type="MultiplyFunction">
-                <Name>MultiplyFunction</Name>
-                <Children>
-                  <Function xsi:type="Constant">
-                    <Name>Constant</Name>
-                    <Value>0.8</Value>
-                  </Function>
-                  <Function xsi:type="LinearInterpolationFunction">
-                    <Name>LinearInterpolationFunction</Name>
-                    <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
-                    <XYPairs>
-                      <Name>XYPairs</Name>
-                      <X>
-                        <double>0</double>
-                        <double>1</double>
-                      </X>
-                      <Y>
-                        <double>0.5</double>
-                        <double>1</double>
-                      </Y>
-                    </XYPairs>
-                  </Function>
-                </Children>
-              </ExtinctionCoeff>
-              <FrostFraction xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[WeatherFile].MinT</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>-1</double>
-                    <double>0</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </FrostFraction>
-              <Total xsi:type="CompositeBiomass">
-                <Name>CompositeBiomass</Name>
-                <Propertys>
-                  <string>[Leaf].Live</string>
-                  <string>[Leaf].Dead</string>
-                </Propertys>
-              </Total>
-              <CohortArrayLive>
-                <Name>ArrayBiomass</Name>
-                <Propertys>
-                  <string>[Leaf].Live</string>
-                </Propertys>
-                <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-              </CohortArrayLive>
-              <CohortArrayDead>
-                <Name>ArrayBiomass</Name>
-                <Propertys>
-                  <string>[Leaf].Dead</string>
-                </Propertys>
-                <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-              </CohortArrayDead>
-              <KDead>0.03</KDead>
-            </Leaf>
-            <GenericAboveGroundOrgan>
-              <Name>Stem</Name>
-              <Live>
-                <Name>Biomass</Name>
-              </Live>
-              <Dead>
-                <Name>Biomass</Name>
-              </Dead>
-              <NReallocationFactor xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0</Value>
-              </NReallocationFactor>
-              <NRetranslocationFactor xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0.05</Value>
-              </NRetranslocationFactor>
-              <NitrogenDemandSwitch xsi:type="PhaseBasedSwitch">
-                <Name>PhaseBasedSwitch</Name>
-                <Start>Planting</Start>
-                <End>FinalLeaf</End>
-              </NitrogenDemandSwitch>
-              <DMRetranslocationFactor xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0</Value>
-              </DMRetranslocationFactor>
-              <StructuralFraction xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>1</Value>
-              </StructuralFraction>
-              <DMDemandFunction xsi:type="InternodeDemandFunction">
-                <Name>InternodeDemandFunction</Name>
-                <InterNodeWt xsi:type="Constant">
-                  <Name>Constant</Name>
-                  <Value>0.2</Value>
-                </InterNodeWt>
-              </DMDemandFunction>
-              <MaximumNConc xsi:type="LinearInterpolationFunction">
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>3</double>
-                    <double>4</double>
-                    <double>5.3</double>
-                  </X>
-                  <Y>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.025</double>
-                  </Y>
-                </XYPairs>
-              </MaximumNConc>
-              <MinimumNConc xsi:type="Constant">
-                <Name>Constant</Name>
-                <Value>0.006</Value>
-              </MinimumNConc>
-            </GenericAboveGroundOrgan>
-          </Organs>
-        </Plant>
-        <Graph>
-          <Name>SoilWater</Name>
-          <Axis>
-            <Name>Axis 1</Name>
-            <Type>Left</Type>
-            <Title>Soil water (mm)</Title>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Axis>
-            <Name>Axis</Name>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Series>
-            <Name>Series</Name>
-            <Title>Predicted</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <Marker>None</Marker>
-            <X>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
-          </Series>
-        </Graph>
-        <Graph>
-          <Name>Biomass</Name>
-          <Axis>
-            <Name>Axis 1</Name>
-            <Type>Left</Type>
-            <Title>Crop Biomass (g/m2)</Title>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Axis>
-            <Name>Axis</Name>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Series>
-            <Name>Series</Name>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <X>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Live.Wt</FieldName>
-            </Y>
-          </Series>
-          <Series>
-            <Name>Series</Name>
-            <Title>Stem</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16760704</ColourArgb>
-            <Marker>None</Marker>
-            <X>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Live.Wt</FieldName>
-            </Y>
-          </Series>
-          <Series>
-            <Name>Series</Name>
-            <Title>Tuber</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <Marker>None</Marker>
-            <X>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Live.Wt</FieldName>
-            </Y>
-          </Series>
-          <Series>
-            <Name>Series</Name>
-            <Title>Root</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-32768</ColourArgb>
-            <Marker>None</Marker>
-            <X>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <Name>GraphValues</Name>
-              <SimulationName>Test</SimulationName>
-              <TableName>Report</TableName>
-              <FieldName>Plant.Root.Live.Wt</FieldName>
-            </Y>
-          </Series>
-        </Graph>
-        <Manager>
-          <Name>PotatoSowingRule</Name>
-          <Script>
-            <Name>Script</Name>
-            <RowSpace>280</RowSpace>
-            <RowWidth>770</RowWidth>
-            <PlantingDepth>150</PlantingDepth>
-            <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-            <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>2003-11-10T00:00:00</SowingDate>
-          </Script>
-          <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-           
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant Plant;
-               [Link] Clock Clock; 
-
-               [Description("Spacing (mm) between plants within rows")]
-               public double RowSpace { get; set; }//= 280;
-               [Description("Spacing (mm) between rows")]
-               public double RowWidth { get; set; }//= 770;
-               [Description("Depth (mm) tubers are planted")]
-               public double PlantingDepth { get; set; }//= 150;
-               [Description("Number of stems per seed tuber")]
-               public double StemNumberPerSeedTuber { get; set; }//= 2.2;
-               [Description("Cultivar")]
-               public string CultivarName { get; set; }//= "RussetBurbank";
-               [Description("Sowing Date")]
-               public DateTime SowingDate { get; set; }//= new DateTime(2003, 11, 10, 0, 0, 0);
-
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
-               {
-				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
-
-				if (Clock.Today.Date.Equals(SowingDate))
-                    Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
-                //Plant.Sow(... Contains the following arguements:
-                //Population  double  Required  Seeds sowing/m2
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-                //if (Clock.Today.DayOfYear == 30)
-                //   Plant.EndCrop();
-			   }
-            }
-        }
-				]]></Code>
-        </Manager>
         <Manager>
           <Name>IrrigationRule</Name>
           <Script>
@@ -2156,18 +840,15 @@
         <Graph>
           <Name>SoilNitrogen</Name>
           <Axis>
-            <Name>Axis 1</Name>
             <Type>Left</Type>
             <Title>Soil water (mm)</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Axis>
-            <Name>Axis</Name>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
-            <Name>Series</Name>
             <Title>SoilN</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
@@ -2175,13 +856,11 @@
             <ColourArgb>-8388544</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilNitrogen.no3(1)</FieldName>
@@ -2191,104 +870,90 @@
         <Graph>
           <Name>Graph</Name>
           <Axis>
-            <Name>Axis</Name>
             <Type>Left</Type>
             <Title>Depth (mm)</Title>
             <Inverted>true</Inverted>
           </Axis>
           <Axis>
-            <Name>Axis</Name>
             <Type>Top</Type>
             <Title>Volumetric water (mm/mm)</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
-            <Name>Series</Name>
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].AirDry</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
           </Series>
           <Series>
-            <Name>Series</Name>
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].DUL</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
           </Series>
           <Series>
-            <Name>Series</Name>
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711681</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].SW</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
           </Series>
           <Series>
-            <Name>Series</Name>
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16760704</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].SAT</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
           </Series>
           <Series>
-            <Name>Series</Name>
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-32768</ColourArgb>
             <Marker>None</Marker>
             <X>
-              <Name>GraphValues</Name>
               <FieldName>[Soil].LL15</FieldName>
             </X>
             <Y>
-              <Name>GraphValues</Name>
               <FieldName>[Soil]l.DepthMidPoints</FieldName>
             </Y>
           </Series>
         </Graph>
+        <Area>0</Area>
       </Zone>
       <Input>
         <Name>Observed</Name>
         <FileName>TestObserved.txt</FileName>
       </Input>
+      <Area>0</Area>
     </Simulation>
+    <Area>0</Area>
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
@@ -2296,90 +961,6 @@
   </DataStore>
   <Tests>
     <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Structure.Population</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.LAI</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
     <Test>
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
@@ -2391,19 +972,16 @@
   <Graph>
     <Name>Graph</Name>
     <Axis>
-      <Name>Axis</Name>
       <Type>Bottom</Type>
       <Title>X axis title 2</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
-      <Name>Axis</Name>
       <Type>Left</Type>
       <Title>Y axis title</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
-      <Name>Series</Name>
       <Title>Soil water top layer</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
@@ -2411,20 +989,17 @@
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
     </Series>
     <Series>
-      <Name>Series</Name>
       <Title>Observed data</Title>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
@@ -2432,13 +1007,11 @@
       <ColourArgb>-16776961</ColourArgb>
       <Marker>FilledCircle</Marker>
       <X>
-        <Name>GraphValues</Name>
         <SimulationName>Test</SimulationName>
         <TableName>Observed</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <Name>GraphValues</Name>
         <SimulationName>Test</SimulationName>
         <TableName>Observed</TableName>
         <FieldName>sw(1)</FieldName>
@@ -2449,4 +1022,6 @@
     <Name>Memo</Name>
     <MemoText>This is some text</MemoText>
   </Memo>
+  <Area>0</Area>
+  <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

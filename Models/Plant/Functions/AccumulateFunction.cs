@@ -13,17 +13,13 @@ namespace Models.PMF.Functions
     {
         //Class members
         private double AccumulatedValue = 0;
+        private List<Function> Children { get { return ModelsMatching<Function>(); } }
 
         [Link]
         Phenology Phenology = null;
 
-        public List<Function> Children { get; set; }
- 
-
         public string StartStageName = "";
-
         public string EndStageName = "";
-
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
         public override void OnCommencing()

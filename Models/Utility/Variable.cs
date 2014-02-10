@@ -22,11 +22,6 @@
         public abstract object Value { get; set; }
 
         /// <summary>
-        /// Returns the value of the property.
-        /// </summary>
-        public abstract object DefaultValue { get; }
-
-        /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
         public abstract string Description { get; }
@@ -99,18 +94,6 @@
             set
             {
                 Obj = value;
-            }
-        }
-
-        /// <summary>
-        /// Returns the value of the property.
-        /// </summary>
-        public override object DefaultValue
-        {
-            get
-            {
-              
-                    throw new NotImplementedException();
             }
         }
 
@@ -191,16 +174,6 @@
             }
         }
 
-        /// <summary>
-        /// Returns the value of the property.
-        /// </summary>
-        public override object DefaultValue 
-        { 
-            get 
-            {
-                throw new NotImplementedException();
-            } 
-        }
 
         /// <summary>
         /// Returns a description of the property or null if not found.
@@ -284,20 +257,6 @@
             set
             {
                 PropertyInfo.SetValue(Obj, value, null);
-            }
-        }
-
-        /// <summary>
-        /// Returns the value of the property.
-        /// </summary>
-        public override  object DefaultValue
-        {
-            get
-            {
-                if (Obj is Model)
-                    return PropertyInfo.GetValue((Obj as Model).DefaultModel, null);
-                else
-                    throw new ApsimXException("", "Cannot return a default value for object type '" + Obj.GetType().Name + "' in VariableField class");
             }
         }
 

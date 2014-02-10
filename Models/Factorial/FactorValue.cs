@@ -12,9 +12,6 @@ namespace Models.Factorial
         private List<string> FactorPaths;
         private string FactorName;
 
-        [XmlElement("Value")]
-        public List<Model> Values { get; set; }
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -65,34 +62,34 @@ namespace Models.Factorial
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
         {
-            if (FactorPaths.Count > 1 && FactorPaths.Count != Values.Count)
+            if (FactorPaths.Count > 1 && FactorPaths.Count != Models.Count)
                 throw new ApsimXException(FullPath, "The number of factor paths does not match the number of factor values");
 
             if (FactorPaths.Count == 1)
             {
-                if (Values != null && Values.Count > 1)
+                if (Models != null && Models.Count > 1)
                     throw new ApsimXException(FullPath, "One factor path was specified with multiple child factor values.");
 
-                if (Values == null || Values.Count == 0)
+                if (Models == null || Models.Count == 0)
                     ApplyNameAsValue(newSimulation, FactorPaths[0], Name);
                 else
-                    ApplyModelReplacement(newSimulation, FactorPaths[0], Values[0]);
+                    ApplyModelReplacement(newSimulation, FactorPaths[0], Models[0]);
             }
-            else if (Values != null)
+            else if (Models != null)
             {
                 // Multiple child factor values specified - apply each one.
                 for (int i = 0; i != FactorPaths.Count; i++)
                 {
-                    if (Values[i] is FactorValue)
+                    if (Models[i] is FactorValue)
                     {
-                        FactorValue factorValue = Values[i] as FactorValue;
+                        FactorValue factorValue = Models[i] as FactorValue;
                         if (factorValue != null)
                             ApplyNameAsValue(newSimulation, FactorPaths[i], factorValue.Name);
                         else
-                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Values[0]);
+                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Models[0]);
                     }
                     else
-                        ApplyModelReplacement(newSimulation, FactorPaths[i], Values[i]);
+                        ApplyModelReplacement(newSimulation, FactorPaths[i], Models[i]);
 
                     
                 }
