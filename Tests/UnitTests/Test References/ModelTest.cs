@@ -122,9 +122,9 @@ namespace ModelTests
             Soil soil = zone2.Models[1] as Soil;
 
             // Test for ensuring we can add a model to a Zone.
-            Sim.AddModel(new Clock() { Name = "Clock" });
+            Sim.AddModel(new Graph() { Name = "Graph" });
             Assert.AreEqual(Sim.Models.Count, 6);
-            Assert.AreEqual(Sim.Models[5].Name, "Clock1");
+            Assert.AreEqual(Sim.Models[5].Name, "Graph");
         }
 
         /// <summary>
