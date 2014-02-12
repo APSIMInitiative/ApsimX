@@ -29,8 +29,8 @@ namespace Models.Core
         public Model Find(Model relativeTo, string modelNameToFind)
         {
             // If it is in the cache then return it.
-            string cacheKey = "ONE:" + relativeTo.FullPath + ":" + modelNameToFind;
-            if (Cache.ContainsKey(cacheKey))
+            string cacheKey = GetCacheKey(relativeTo, modelNameToFind, singleMatch: true);
+            if (cacheKey != null && Cache.ContainsKey(cacheKey))
                 return Cache[cacheKey][0];
 
             // Not in cache so look for it and add to cache.
@@ -39,11 +39,12 @@ namespace Models.Core
 
             foreach (Model modelInScope in modelsInScope)
             {
-                Cache.Add(cacheKey, new Model[1] { modelInScope });
+                AddToCache(cacheKey, new Model[1] { modelInScope });
                 return modelInScope;
             }
             return null;
         }
+
 
         /// <summary>
         /// Return a model of the specified type that is in scope. Returns null if none found.
@@ -51,8 +52,8 @@ namespace Models.Core
         public Model Find(Model relativeTo, Type modelType)
         {
             // If it is in the cache then return it.
-            string cacheKey = "ONE:" + relativeTo.FullPath + ":" + modelType.Name;
-            if (Cache.ContainsKey(cacheKey))
+            string cacheKey = GetCacheKey(relativeTo, modelType.Name, singleMatch: true);
+            if (cacheKey != null && Cache.ContainsKey(cacheKey))
                 return Cache[cacheKey][0];
             
             // Not in cache so look for it and add to cache.
@@ -60,7 +61,10 @@ namespace Models.Core
             Walk(relativeTo, new Comparer(modelType), true, modelsInScope, null);
 
             if (modelsInScope.Count >= 1)
+            {
+                AddToCache(cacheKey, modelsInScope.ToArray());
                 return modelsInScope[0];
+            }
             return null;
         }
 
@@ -72,10 +76,12 @@ namespace Models.Core
         public Model[] FindAll(Model relativeTo, Type modelType = null)
         {
             // If it is in the cache then return it.
-            string cacheKey = relativeTo.FullPath;
-            if (modelType != null)
-                cacheKey += ":" + modelType.Name;
-            if (Cache.ContainsKey(cacheKey))
+            string cacheKey;
+            if (modelType == null)
+                cacheKey = GetCacheKey(relativeTo, null, singleMatch: false);
+            else
+                cacheKey = GetCacheKey(relativeTo, modelType.Name, singleMatch: false);
+            if (cacheKey != null && Cache.ContainsKey(cacheKey))
                 return Cache[cacheKey];
 
             // Not in cache so look for matching models.
@@ -84,11 +90,50 @@ namespace Models.Core
 
             // Add matching models to cache and return.
             if (modelsInScope.Count >= 1)
-                Cache.Add(cacheKey, modelsInScope.ToArray());
-
+            {
+                AddToCache(cacheKey, modelsInScope.ToArray());
+            }
             return modelsInScope.ToArray();
         }
 
+        /// <summary>
+        /// Return a unique cache key or null if cache shouldn't be used.
+        /// </summary>
+        private string GetCacheKey(Model relativeTo, string modelName, bool singleMatch)
+        {
+            // Look in cache first.
+            Simulation simulation = GetSimulation(relativeTo);
+
+            // If this is a simulation variable then try and use the cache.
+            bool useCache = simulation != null;
+ 
+            if (!useCache) 
+                return null;
+
+            string cacheKey = null;
+            cacheKey = simulation.FileName + "|" + relativeTo.FullPath;
+            if (singleMatch)
+                cacheKey += "|SINGLE";
+            else
+                cacheKey += "|MANY";
+            if (modelName != null)
+                cacheKey += "|" + modelName;
+            return cacheKey;
+        }
+
+        /// <summary>
+        /// Add the specified list of models to the cache.
+        /// </summary>
+        private void AddToCache(string cacheKey, Model[] models)
+        {
+            if (cacheKey != null)
+            {
+                if (Cache.ContainsKey(cacheKey))
+                    Cache[cacheKey] = models;
+                else
+                    Cache.Add(cacheKey, models);
+            }
+        }
 
         private class Comparer
         {
@@ -203,5 +248,19 @@ namespace Models.Core
             return parentZone as Zone;
         }
 
+        /// <summary>
+        /// Locate the parent with the specified type. Returns null if not found.
+        /// </summary>
+        private Simulation GetSimulation(Model relativeTo)
+        {
+            Model m = relativeTo;
+            while (m != null && m.Parent != null && !(relativeTo is Simulation))
+                m = m.Parent;
+
+            if (m == null || !(m is Simulation))
+                return null;
+            else
+                return m as Simulation;
+        }
     }
 }

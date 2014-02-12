@@ -33,12 +33,19 @@ namespace Models.Core
         public Utility.IVariable Get(Model relativeTo, string namePath)
         {
             // Look in cache first.
-            string cacheKey = GetSimulationName(relativeTo) + namePath;
+            Simulation simulation = GetSimulation(relativeTo);
 
-            if (VariableCache.ContainsKey(cacheKey))
-                return VariableCache[cacheKey];
+            // If this is a simulation variable then try and use the cache.
+            bool useCache = simulation != null;
 
             string absolutePath = ToAbsolute(namePath, relativeTo);
+            string cacheKey = null;
+            if (useCache)
+            {
+                cacheKey = simulation.FileName + "|" + absolutePath;
+                if (VariableCache.ContainsKey(cacheKey))
+                    return VariableCache[cacheKey];
+            }
 
             Model rootModel = GetRootModelOf(relativeTo);
 
@@ -83,7 +90,8 @@ namespace Models.Core
                 variable = new Utility.VariableProperty(obj, propertyInfo);
 
             // Add to our cache.
-            VariableCache[cacheKey] = variable;
+            if (useCache)
+                VariableCache[cacheKey] = variable;
             return variable;
         }
 
@@ -124,16 +132,16 @@ namespace Models.Core
         /// <summary>
         /// Locate the parent with the specified type. Returns null if not found.
         /// </summary>
-        private string GetSimulationName(Model relativeTo)
+        private Simulation GetSimulation(Model relativeTo)
         {
             Model m = relativeTo;
             while (m != null && m.Parent != null && !(relativeTo is Simulation))
                 m = m.Parent;
 
             if (m == null || !(m is Simulation))
-                return "";
+                return null;
             else
-                return m.FullPath;
+                return m as Simulation;
         }
 
 
