@@ -21,6 +21,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
         [XmlElement(typeof(Models.Soils.Soil))]
         [XmlElement(typeof(Models.SurfaceOM.SurfaceOrganicMatter))]
+        [XmlElement(typeof(AgPasture))]
         [XmlElement(typeof(Clock))]
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]

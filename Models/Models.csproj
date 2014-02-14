@@ -103,6 +103,7 @@
     <Compile Include="..\Utility\Xml.cs">
       <Link>Utility\Xml.cs</Link>
     </Compile>
+    <Compile Include="AgPasture.cs" />
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />
     <Compile Include="Core\Scope.cs" />
