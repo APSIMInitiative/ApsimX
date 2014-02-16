@@ -7,7 +7,7 @@
       <Name>Test</Name>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>WeatherFiles\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
