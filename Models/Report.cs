@@ -232,7 +232,7 @@ namespace Models
         private List<VariableMember> Members = null;
 
         // Properties read in.
-        public new string[] Variables {get; set;}
+        public string[] Variables {get; set;}
         public string[] Events { get; set; }
 
         /// <summary>

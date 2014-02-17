@@ -7,6 +7,7 @@ using Models.Core;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 
 namespace Models
 {
@@ -26,6 +27,41 @@ namespace Models
         /// </summary>
         [NonSerialized]
         private string Filename;
+
+        /// <summary>
+        /// This class encapsulates a simple lock mechanism. It is used by DataStore to 
+        /// apply file level locking.
+        /// </summary>
+        class DbMutex
+        {
+            private bool Locked = false;
+
+            /// <summary>
+            /// Aquire a lock. If already locked then wait a bit.
+            /// </summary>
+            public void Aquire()
+            {
+                lock (this)
+                {
+                    while (Locked)
+                        Thread.Sleep(100);
+                    Locked = true;
+                }
+            }
+
+            /// <summary>
+            /// Release a lock.
+            /// </summary>
+            public void Release()
+            {
+                Locked = false;
+            }
+        }
+
+        /// <summary>
+        /// A static dictionary of locks, one for each filename.
+        /// </summary>
+        private static Dictionary<string, DbMutex> Locks = new Dictionary<string, DbMutex>();
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -51,7 +87,7 @@ namespace Models
                 {
                     Connect(dbFileName, false);
                     if (!TableExists("Simulations"))
-                        Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                        RunQueryWithNoReturnData("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
 
                     // Get rid of unwanted simulations.
                     RemoveUnwantedSimulations(simulations);
@@ -86,6 +122,8 @@ namespace Models
                     throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
                 Connection = new Utility.SQLite();
                 Connection.OpenDatabase(Filename, readOnly);
+                if (!Locks.ContainsKey(Filename))
+                    Locks.Add(Filename, new DbMutex());
             }
         }
 
@@ -113,11 +151,11 @@ namespace Models
                 {
                     int id = GetSimulationID(simulationNameInDB);
 
-                    Connection.ExecuteNonQuery("DELETE FROM Simulations WHERE ID = " + id.ToString());
+                    RunQueryWithNoReturnData("DELETE FROM Simulations WHERE ID = " + id.ToString());
                     foreach (string tableName in TableNames)
                     {
                         // delete this simulation
-                        Connection.ExecuteNonQuery("DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString());
+                        RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString());
                     }
                 }
             }
@@ -148,7 +186,7 @@ namespace Models
             }
             cmd += ")";
             if (!TableExists(tableName))
-                Connection.ExecuteNonQuery(cmd);
+                RunQueryWithNoReturnData(cmd);
             else
                 AddMissingColumnsToTable(tableName, names, types);
         }
@@ -189,6 +227,8 @@ namespace Models
             // Create the table.
             CreateTable(tableName, names.ToArray(), types.ToArray());
 
+            Locks[Filename].Aquire(); 
+
             // prepare the sql
             names.Insert(0, "SimulationID");
             IntPtr query = PrepareInsertIntoTable(tableName, names.ToArray());
@@ -211,6 +251,8 @@ namespace Models
 
             // finalise our query.
             Connection.Finalize(query);
+
+            Locks[Filename].Release(); 
         }
 
         /// <summary>
@@ -218,6 +260,7 @@ namespace Models
         /// </summary>
         public void WriteMessage(string simulationName, DateTime date, string componentName, string message, ErrorLevel type)
         {
+
             string[] names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
 
             string sql = string.Format("INSERT INTO Messages (SimulationID, ComponentName, Date, Message, MessageType) " +
@@ -227,7 +270,8 @@ namespace Models
                                                       date,
                                                       message,
                                                       Convert.ToInt32(type, System.Globalization.CultureInfo.InvariantCulture)});
-            Connection.ExecuteNonQuery(sql);
+
+            RunQueryWithNoReturnData(sql);
         }
         
         /// <summary>
@@ -322,7 +366,11 @@ namespace Models
         /// </summary>
         public void RunQueryWithNoReturnData(string sql)
         {
+            Locks[Filename].Aquire(); 
+
             Connection.ExecuteNonQuery(sql);
+
+            Locks[Filename].Release(); 
         }
 
         /// <summary>
@@ -434,7 +482,7 @@ namespace Models
                 {
                     string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
                     sql += names[i] + "] " + GetSQLColumnType(types[i]);
-                    Connection.ExecuteNonQuery(sql);    
+                    RunQueryWithNoReturnData(sql);    
                 }
             }
         }
