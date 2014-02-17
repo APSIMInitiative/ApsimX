@@ -201,38 +201,9 @@ namespace UserInterface.Presenters
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
-        	ExplorerView.ShowMessage("Simulation running...", DataStore.ErrorLevel.Information);
-
-            try
-            {
-                Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
-                RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node);
-
-                C.Do(null);
-                if (C.ok)
-                {
-                    if (Node != null)
-                        ExplorerView.ShowMessage("Simulation " + Node.Name + " complete", DataStore.ErrorLevel.Information);
-                    else
-                        ExplorerView.ShowMessage("Simulations complete", DataStore.ErrorLevel.Information);
-                    SoundPlayer player = new SoundPlayer();
-                    if (DateTime.Now.Month == 12)
-                    {
-                        player.Stream = Properties.Resources.notes;
-                    }
-                    else
-                    {
-                        player.Stream = Properties.Resources.success;
-                    }
-                    player.Play();
-                }
-                else
-                    ExplorerView.ShowMessage("Simulation " + Node.Name + " complete with errors", DataStore.ErrorLevel.Error);
-            }
-            catch (ApsimXException err)
-            {
-                ExplorerView.ShowMessage(err.ModelFullPath + ": " + err.Message, DataStore.ErrorLevel.Error);
-            }
+            Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node, ExplorerView);
+            C.Do(null);
         }
 
         /// <summary>

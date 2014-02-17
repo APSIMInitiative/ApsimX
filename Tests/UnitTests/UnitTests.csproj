@@ -69,7 +69,6 @@
     <None Include="Resources\Test3.apsimxForUnitTest">
       <SubType>Designer</SubType>
     </None>
-    <Shadow Include="Test References\Model.accessor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Models\Models.csproj">

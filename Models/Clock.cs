@@ -44,8 +44,17 @@ namespace Models
         [EventSubscribe("Commenced")]
         private void OnCommenced(object sender, EventArgs e)
         {
+            System.ComponentModel.BackgroundWorker bw = sender as System.ComponentModel.BackgroundWorker;
+
             while (Today <= EndDate)
             {
+                // If this is being run on a background worker thread then check for cancellation
+                if (bw != null && bw.CancellationPending)
+                {
+                    Summary.WriteMessage(FullPath, "Simulation cancelled");
+                    return;
+                }
+
                 if (Tick != null)
                     Tick.Invoke(this, new EventArgs());
                 if (StartOfDay != null)

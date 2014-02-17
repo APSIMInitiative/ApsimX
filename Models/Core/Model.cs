@@ -14,8 +14,6 @@ namespace Models.Core
     public class Model
     {
         private string _Name = null;
-        private static Scope _Scope = null;
-        private static Variables _Variables = null;
 
         /// <summary>
         /// Locate the parent with the specified type. Returns null if not found.
@@ -85,32 +83,6 @@ namespace Models.Core
                     return "." + Name;
                 else
                     return Parent.FullPath + "." + Name;
-            }
-        }
-
-        /// <summary>
-        /// Provides access to scoping rules.
-        /// </summary>
-        public static Scope Scope
-        {
-            get
-            {
-                if (_Scope == null)
-                    _Scope = new Scope();
-                return _Scope;
-            }
-        }
-
-        /// <summary>
-        /// Provides access to variables in other models.
-        /// </summary>
-        public static Variables Variables
-        {
-            get
-            {
-                if (_Variables == null)
-                    _Variables = new Variables();
-                return _Variables;
             }
         }
 

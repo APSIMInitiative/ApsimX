@@ -34,11 +34,36 @@ namespace Utility
         const int SQLITE_BLOB = 4;
         const int SQLITE_NULL = 5;
 
+        const int SQLITE_OPEN_READONLY       =   0x00000001;  /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_READWRITE      =   0x00000002; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_CREATE         =   0x00000004; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_DELETEONCLOSE  =   0x00000008; /* VFS only */
+        const int SQLITE_OPEN_EXCLUSIVE      =   0x00000010; /* VFS only */
+        const int SQLITE_OPEN_AUTOPROXY      =   0x00000020; /* VFS only */
+        const int SQLITE_OPEN_URI            =   0x00000040; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_MEMORY         =   0x00000080; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_MAIN_DB        =   0x00000100; /* VFS only */
+        const int SQLITE_OPEN_TEMP_DB        =   0x00000200; /* VFS only */
+        const int SQLITE_OPEN_TRANSIENT_DB   =   0x00000400; /* VFS only */
+        const int SQLITE_OPEN_MAIN_JOURNAL   =   0x00000800; /* VFS only */
+        const int SQLITE_OPEN_TEMP_JOURNAL   =   0x00001000; /* VFS only */
+        const int SQLITE_OPEN_SUBJOURNAL     =   0x00002000; /* VFS only */
+        const int SQLITE_OPEN_MASTER_JOURNAL =   0x00004000; /* VFS only */
+        const int SQLITE_OPEN_NOMUTEX        =   0x00008000; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_FULLMUTEX      =   0x00010000; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_SHAREDCACHE    =   0x00020000; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_PRIVATECACHE   =   0x00040000; /* Ok for sqlite3_open_v2() */
+        const int SQLITE_OPEN_WAL            =   0x00080000; /* VFS only */
+
+
         #region Externals
         //When using sqlite3 without .dll the platforms are intelligent enough to add the OS specific details.
         //On Linux-Mono the lib .so artifacts appear to be accounted for.
         [DllImport("sqlite3", EntryPoint = "sqlite3_open", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_open(string filename, out IntPtr db);
+
+        [DllImport("sqlite3", EntryPoint = "sqlite3_open_v2", CallingConvention = CallingConvention.Cdecl)]
+        static extern int sqlite3_open_v2(string filename, out IntPtr db, int flags, string zVfs);
 
         [DllImport("sqlite3", EntryPoint = "sqlite3_close", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_close(IntPtr db);
@@ -85,6 +110,21 @@ namespace Utility
 
         [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern int sqlite3_reset(IntPtr Query);
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sqlite3_threadsafe();
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sqlite3_busy_timeout(IntPtr db, int ms);
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr sqlite3_db_mutex(IntPtr db);
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void sqlite3_mutex_enter(IntPtr sqlite3_mutex);
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void sqlite3_mutex_leave(IntPtr sqlite3_mutex);
         #endregion
 
         [NonSerialized]
@@ -101,16 +141,22 @@ namespace Utility
         /// Opens or creates SQLite database with the specified path
         /// </summary>
         /// <param name="path">Path to SQLite database</param>
-        public void OpenDatabase(string path)
+        public void OpenDatabase(string path, bool readOnly)
         {
-            int id = sqlite3_open(path, out _db);
+            int id;
+            if (readOnly)
+                id = sqlite3_open_v2(path, out _db, SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, null);
+            else
+                id = sqlite3_open_v2(path, out _db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_CREATE, null);
+
             if (id != SQLITE_OK)
             {
-                
-                throw new SQLiteException("Could not open database file: " + path);
+                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
+                throw new SQLiteException(errorMessage);
             }
 
             _open = true;
+            sqlite3_busy_timeout(_db, 40000);
         }
 
         /// <summary>
@@ -318,7 +364,10 @@ namespace Utility
             }
 
             if (sqlite3_step(Query) != SQLITE_DONE)
-                throw new SQLiteException("Could not execute SQL statement.");
+            {
+                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
+                throw new SQLiteException(errorMessage);
+            }
             sqlite3_reset(Query);
         }
 
@@ -346,7 +395,21 @@ namespace Utility
             return columnNames;
         }
 
+        /// <summary>
+        /// Lock the mutex
+        /// </summary>
+        public void MutexEnter()
+        {
+            sqlite3_mutex_enter(sqlite3_db_mutex(_db));
+        }
 
+        /// <summary>
+        /// Unlock the mutex
+        /// </summary>
+        public void MutexLeave()
+        {
+            sqlite3_mutex_leave(sqlite3_db_mutex(_db));
+        }
 
     }
 

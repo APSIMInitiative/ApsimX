@@ -63,7 +63,7 @@ namespace Models.Graph
 
                     Simulations simulations = rootComponent as Simulations;
                     _DataStore = new DataStore();
-                    _DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"));
+                    _DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"), readOnly: true);
                 }
                 return _DataStore;
             }

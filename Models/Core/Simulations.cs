@@ -21,16 +21,6 @@ namespace Models.Core
         public Int32 ExplorerWidth { get; set; }
 
         /// <summary>
-        /// Invoked when all simulations are about to commence.
-        /// </summary>
-        public event EventHandler AllCommencing;
-
-        /// <summary>
-        /// When all simulations have finished, this event will be invoked
-        /// </summary>
-        public event EventHandler AllCompleted;
-
-        /// <summary>
         /// The name of the file containing the simulations.
         /// </summary>
         [XmlIgnore]
@@ -65,7 +55,7 @@ namespace Models.Core
             {
                 // Set the filename
                 simulations.FileName = FileName;
-                simulations.SetFileNameInAllSimulatoins();
+                simulations.SetFileNameInAllSimulations();
 
                 // Parent all models.
                 ParentAllModels(simulations);
@@ -100,50 +90,9 @@ namespace Models.Core
                 File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
+            SetFileNameInAllSimulations();
         }
 
-        /// <summary>
-        /// Run all simulations. Return true if all ran ok.
-        /// </summary>
-        public bool Run()
-        {
-            return Run(FindAllSimulationsToRun(this));
-        }
-
-        /// <summary>
-        /// Run the specified simulation. Return true if it ran ok.
-        /// </summary>
-        public bool Run(Model simulationOrFolder)
-        {
-            if (simulationOrFolder is Simulation)
-                return Run(new Simulation[1] { simulationOrFolder as Simulation });
-            else
-                return Run(FindAllSimulationsToRun(simulationOrFolder));
-        }
-
-        /// <summary>
-        /// Run the specified simulations
-        /// </summary>
-        private bool Run(Simulation[] simulations)
-        {
-            // Invoke the AllCommencing event.
-            if (AllCommencing != null)
-                AllCommencing(this, new EventArgs());
-
-            // Run all simulations
-            bool allok = true;
-            foreach (Simulation simulation in simulations)
-            {
-                simulation.FileName = FileName;
-                allok = simulation.Run() && allok;
-            }
-
-            // Invoke the AllCompleted event.
-            if (AllCompleted != null)
-                AllCompleted(this, new EventArgs());
-
-            return allok;
-        }
 
         /// <summary>
         /// Constructor, private to stop developers using it. Use Simulations.Read instead.
@@ -185,16 +134,22 @@ namespace Models.Core
         {
             List<string> simulations = new List<string>();
             // Look for simulations.
-            foreach (Model Model in FindAll(typeof(Simulation)))
+            foreach (Model Model in AllModels)
             {
-                // An experiment can have a base simulation - don't return that to caller.
-                if (!(Model.Parent is Experiment))
-                    simulations.Add(Model.Name);
+                if (Model is Simulation)
+                {
+                    // An experiment can have a base simulation - don't return that to caller.
+                    if (!(Model.Parent is Experiment))
+                        simulations.Add(Model.Name);
+                }
             }
 
             // Look for experiments and get them to create their simulations.
-            foreach (Experiment experiment in FindAll(typeof(Experiment)))
-                simulations.AddRange(experiment.Names());
+            foreach (Model experiment in AllModels)
+            {
+                if (experiment is Experiment)
+                    simulations.AddRange((experiment as Experiment).Names());
+            }
 
             return simulations.ToArray();
 
@@ -203,7 +158,7 @@ namespace Models.Core
         /// <summary>
         /// Look through all models. For each simulation found set the filename.
         /// </summary>
-        private void SetFileNameInAllSimulatoins()
+        private void SetFileNameInAllSimulations()
         {
             foreach (Simulation simulation in AllModelsMatching(typeof(Simulation)))
                 simulation.FileName = FileName;

@@ -10,11 +10,25 @@ using System.IO;
 namespace Models.Core
 {
     [Serializable]
-    public class Simulation : Zone
+    public class Simulation : Zone, Utility.JobManager.IRunnable
     {
         private bool _IsRunning = false;
 
-        // Private links
+        /// <summary>
+        /// Cache to speed up scope lookups.
+        /// </summary>
+        [NonSerialized]
+        private Dictionary<string, Model[]> _ScopeCache = null;
+
+        /// <summary>
+        /// Cache to speed up variable lookups.
+        /// </summary>
+        [NonSerialized]
+        private Dictionary<string, Utility.IVariable> _VariableCache = null;
+
+        /// <summary>
+        /// Get a reference to the clock model.
+        /// </summary>
         [Link] private Clock Clock = null;
 
         /// <summary>
@@ -33,6 +47,12 @@ namespace Models.Core
         /// </summary>
         public bool IsRunning { get { return _IsRunning; } }
 
+
+
+
+
+
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -41,23 +61,49 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Return a reference to the scope cache.
+        /// </summary>
+        [XmlIgnore]
+        public Dictionary<string, Model[]> ScopeCache 
+        { 
+            get 
+            { 
+                if (_ScopeCache == null)
+                    _ScopeCache = new Dictionary<string, Model[]>();
+                return _ScopeCache; 
+            } 
+        }
+
+        /// <summary>
+        /// Return a reference to the variable cache.
+        /// </summary>
+        [XmlIgnore]
+        public Dictionary<string, Utility.IVariable> VariableCache 
+        { 
+            get 
+            { 
+                if (_VariableCache == null)
+                    _VariableCache = new Dictionary<string, Utility.IVariable>();
+                return _VariableCache; 
+            } 
+        }
+
+        /// <summary>
         /// Run the simulation. Returns true if no fatal errors or exceptions.
         /// </summary>
-        public bool Run()
+        public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            bool ok = false;
             
             try
             {
                 StartRun();
-                DoRun();
+                DoRun(sender);
                 CleanupRun();
-                ok = true;
             }
             catch (ApsimXException err)
             {
                 DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"));
+                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
 
                 string Msg = err.Message;
                 if (err.InnerException != null)
@@ -68,10 +114,9 @@ namespace Models.Core
                 store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
 
                 CleanupRun();
-                ok = false;
+                throw;
             }
-
-            return ok;
+            e.Result = this;
         }
 
         /// <summary>
@@ -80,18 +125,18 @@ namespace Models.Core
         public void StartRun()
         {
             _IsRunning = true;
-            Model.Variables.ClearCache();
-            Model.Scope.ClearCache();
+            VariableCache.Clear();
+            ScopeCache.Clear();
             AllModels.ForEach(CallOnCommencing);
         }
 
         /// <summary>
         /// Perform the run. Will throw if error occurs.
         /// </summary>
-        public void DoRun()
+        public void DoRun(object sender)
         {
             if (Commenced != null)
-                Commenced.Invoke(this, new EventArgs());
+                Commenced.Invoke(sender, new EventArgs());
             else
                 throw new ApsimXException(FullPath, "Cannot invoke Commenced");
         }

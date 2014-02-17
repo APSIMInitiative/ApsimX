@@ -34,7 +34,6 @@
             this.Grid = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.CreateButton = new System.Windows.Forms.Button();
-            this.AutoCreateCheckBox = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.panel1.SuspendLayout();
@@ -77,7 +76,6 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.CreateButton);
-            this.panel1.Controls.Add(this.AutoCreateCheckBox);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -88,24 +86,13 @@
             // 
             this.CreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CreateButton.AutoSize = true;
-            this.CreateButton.Location = new System.Drawing.Point(337, 3);
+            this.CreateButton.Location = new System.Drawing.Point(3, 3);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(125, 23);
             this.CreateButton.TabIndex = 4;
             this.CreateButton.Text = "Write output file now";
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.OnCreateButtonClick);
-            // 
-            // AutoCreateCheckBox
-            // 
-            this.AutoCreateCheckBox.AutoSize = true;
-            this.AutoCreateCheckBox.Location = new System.Drawing.Point(3, 3);
-            this.AutoCreateCheckBox.Name = "AutoCreateCheckBox";
-            this.AutoCreateCheckBox.Size = new System.Drawing.Size(176, 17);
-            this.AutoCreateCheckBox.TabIndex = 5;
-            this.AutoCreateCheckBox.Text = "Automatically create output file?";
-            this.AutoCreateCheckBox.UseVisualStyleBackColor = true;
-            this.AutoCreateCheckBox.CheckedChanged += new System.EventHandler(this.OnAutoCreateCheckBoxChanged);
             // 
             // splitter1
             // 
@@ -140,7 +127,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button CreateButton;
-        private System.Windows.Forms.CheckBox AutoCreateCheckBox;
         private System.Windows.Forms.Splitter splitter1;
     }
 }

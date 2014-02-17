@@ -114,6 +114,7 @@
     <Compile Include="Memo.cs" />
     <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
+    <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />

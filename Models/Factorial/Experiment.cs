@@ -34,8 +34,6 @@ namespace Models.Factorial
             {
                 Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Base);
                 newSimulation.Name = "";
-                Model.Variables.ClearCache();
-                Model.Scope.ClearCache();
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);

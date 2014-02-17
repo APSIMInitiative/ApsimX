@@ -14,9 +14,10 @@ namespace Models
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
     {
+
         // Privates
         private const string divider = "------------------------------------------------------------------------------";
-        [NonSerialized] private DataStore DataStore = null;
+        private DataTable Messages;
 
         [Link] private Clock Clock = null;
 
@@ -25,20 +26,16 @@ namespace Models
         public bool AutoCreate { get; set; }
         public bool StateVariables { get; set; }
 
-        public override void OnLoaded()
-        {
-            DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
-        }
-
+        /// <summary>
+        /// Simulation is commencing.
+        /// </summary>
         public override void OnCommencing()
         {
-            if (DataStore == null)
-            {
-                DataStore = new DataStore();
-                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
-            }
-            DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
+            Messages = new DataTable("Messages");
+            Messages.Columns.Add("ComponentName", typeof(string));
+            Messages.Columns.Add("Date", typeof(DateTime));
+            Messages.Columns.Add("Message", typeof(string));
+            Messages.Columns.Add("MessageType", typeof(int));
         }
 
         /// <summary>
@@ -46,10 +43,16 @@ namespace Models
         /// </summary>
         public override void OnCompleted()
         {
-            if (AutoCreate)
-                CreateReportFile(false);
+            DataStore DataStore = new DataStore();
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
+            DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
+            DataStore.WriteTable(Simulation.Name, "Messages", Messages);
             DataStore.Disconnect();
             DataStore = null;
+
+            if (AutoCreate)
+                CreateReportFile(false);
+
         }
 
         /// <summary>
@@ -57,7 +60,12 @@ namespace Models
         /// </summary>
         public void WriteMessage(string FullPath, string Message)
         {
-            DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Information);
+            DataRow newRow = Messages.NewRow();
+            newRow["ComponentName"] = FullPath;
+            newRow["Date"] = Clock.Today;
+            newRow["Message"] = Message;
+            newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Information);
+            Messages.Rows.Add(newRow);
         }
 
         /// <summary>
@@ -65,7 +73,12 @@ namespace Models
         /// </summary>
         public void WriteWarning(string FullPath, string Message)
         {
-            DataStore.WriteMessage(FullPath, Simulation.Name, Clock.Today, Message, DataStore.ErrorLevel.Warning);
+            DataRow newRow = Messages.NewRow();
+            newRow["ComponentName"] = FullPath;
+            newRow["Date"] = Clock.Today;
+            newRow["Message"] = Message;
+            newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
+            Messages.Rows.Add(newRow);
         }
 
         /// <summary>
@@ -98,8 +111,8 @@ namespace Models
         /// </summary>
         public void WriteSummary(TextWriter report, string simulationName, string apsimSummaryImageFileName)
         {
-            DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+            DataStore DataStore = new DataStore();
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
 
             if (html)
             {
@@ -133,7 +146,7 @@ namespace Models
             if (html)
                 report.WriteLine("<hr>");
             WriteHeading(report, "Simulation log:", html);
-            DataTable messageTable = GetMessageTable(simulationName);
+            DataTable messageTable = GetMessageTable(DataStore, simulationName);
             WriteTable(report, messageTable, html, false, "PropertyTable");
 
             if (html)
@@ -148,7 +161,7 @@ namespace Models
         /// <summary>
         /// Create a message table ready for writing.
         /// </summary>
-        private DataTable GetMessageTable(string simulationName)
+        private DataTable GetMessageTable(DataStore DataStore, string simulationName)
         {
 
             DataTable messageTable = new DataTable();

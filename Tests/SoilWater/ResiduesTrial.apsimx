@@ -757,7 +757,7 @@
           <string>[SoilWater].sw</string>
           <string>[SoilWater].runoff</string>
           <string>[SoilWater].infiltration</string>
-          <string>[SoilWater].flux(1)</string>
+          <string>[SoilWater].flux</string>
           <string>[SoilWater].ll15</string>
           <string>[SoilWater].dul</string>
           <string>[SoilWater].ll15_dep</string>

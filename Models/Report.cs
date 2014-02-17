@@ -294,33 +294,44 @@ namespace Models
         {
             // Get rid of old data in .db
             DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
             DataStore.DeleteOldContentInTable(Simulation.Name, Name);
-            
+
             // Write and store a table in the DataStore
             if (Members != null && Members.Count > 0)
             {
-                
-                List<string> AllNames = new List<string>();
-                List<Type> AllTypes = new List<Type>();
+                DataTable table = new DataTable();
+
                 foreach (VariableMember Variable in Members)
                 {
                     Variable.Analyse();
-                    AllNames.AddRange(Variable.Names);
-                    AllTypes.AddRange(Variable.Types);
+                    for (int i = 0; i < Variable.Names.Length; i++)
+                    {
+                        if (Variable.Types[i] == null)
+                            table.Columns.Add(Variable.Names[i], typeof(int));
+                        else
+                            table.Columns.Add(Variable.Names[i], Variable.Types[i]);
+                    }
                 }
-                DataStore.CreateTable(Name, AllNames.ToArray(), AllTypes.ToArray());
 
-                List<object> AllValues = new List<object>();
                 for (int Row = 0; Row < Members[0].NumValues; Row++)
                 {
-                    AllValues.Clear();
+                    DataRow newRow = table.NewRow();
+                    int colIndex = 0;
                     foreach (VariableMember Variable in Members)
                     {
-                        AllValues.AddRange(Variable.Values(Row));
+                        foreach (object value in Variable.Values(Row))
+                        {
+                            if (value != null)
+                                newRow[colIndex] = value;
+                            colIndex++;
+                        }
                     }
-                    DataStore.WriteToTable(Simulation.Name, Name, AllValues.ToArray());
+                    table.Rows.Add(newRow);
                 }
+
+                DataStore.WriteTable(Simulation.Name, Name, table);
+
                 Members.Clear();
                 Members = null;
 

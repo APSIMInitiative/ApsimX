@@ -20,12 +20,9 @@ namespace UserInterface.Presenters
             CommandHistory = commandHistory;
             
             DataStoreView.PopulateTables(DataStore.SimulationNames, DataStore.TableNames);
-            DataStoreView.AutoCreate = DataStore.AutoCreateReport;
 
             DataStoreView.OnTableSelected += OnTableSelected;
-            DataStoreView.AutoCreateChanged += OnAutoCreateChanged;
             DataStoreView.CreateNowClicked += OnCreateNowClicked;
-            CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -34,9 +31,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             DataStoreView.OnTableSelected -= OnTableSelected;
-            DataStoreView.AutoCreateChanged -= OnAutoCreateChanged;
             DataStoreView.CreateNowClicked -= OnCreateNowClicked;
-            CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -55,23 +50,5 @@ namespace UserInterface.Presenters
             DataStore.WriteOutputFile();
         }
 
-        /// <summary>
-        /// The auto create checkbox has been changed.
-        /// </summary>
-        void OnAutoCreateChanged(object sender, EventArgs e)
-        {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(DataStore, "AutoCreateReport", DataStoreView.AutoCreate));
-        }
-
-        /// <summary>
-        /// Model has changed - probably because of Undo/Redo
-        /// </summary>
-        void OnModelChanged(object changedModel)
-        {
-            if (changedModel == DataStore)
-            {
-                DataStoreView.AutoCreate = DataStore.AutoCreateReport;
-            }
-        }
     }
 }

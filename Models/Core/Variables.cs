@@ -15,22 +15,21 @@ namespace Models.Core
     /// </summary>
     public class Variables
     {
-        [NonSerialized]
-        private Dictionary<string, Utility.IVariable> VariableCache = new Dictionary<string, Utility.IVariable>();
-
         /// <summary>
         /// Clear the variable cache.
         /// </summary>
-        public void ClearCache()
+        public static void ClearCache(Model relativeTo)
         {
-            VariableCache.Clear();
+            Simulation simulation = GetSimulation(relativeTo);
+            if (simulation != null)
+                simulation.VariableCache.Clear();
         }
 
 
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public Utility.IVariable Get(Model relativeTo, string namePath)
+        public static Utility.IVariable Get(Model relativeTo, string namePath)
         {
             // Look in cache first.
             Simulation simulation = GetSimulation(relativeTo);
@@ -42,9 +41,9 @@ namespace Models.Core
             string cacheKey = null;
             if (useCache)
             {
-                cacheKey = simulation.FileName + "|" + absolutePath;
-                if (VariableCache.ContainsKey(cacheKey))
-                    return VariableCache[cacheKey];
+                cacheKey = absolutePath;
+                if (simulation.VariableCache.ContainsKey(cacheKey))
+                    return simulation.VariableCache[cacheKey];
             }
 
             Model rootModel = GetRootModelOf(relativeTo);
@@ -91,7 +90,7 @@ namespace Models.Core
 
             // Add to our cache.
             if (useCache)
-                VariableCache[cacheKey] = variable;
+                simulation.VariableCache[cacheKey] = variable;
             return variable;
         }
 
@@ -100,7 +99,7 @@ namespace Models.Core
         /// <summary>
         /// Return the specified 'namePath' as an absolute one.
         /// </summary>
-        private string ToAbsolute(string namePath, Model relativeTo)
+        private static string ToAbsolute(string namePath, Model relativeTo)
         {
             if (namePath.StartsWith("."))
             {
@@ -115,9 +114,9 @@ namespace Models.Core
                 Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
                 Model modelInScope;
                 if (t == null)
-                    modelInScope = Model.Scope.Find(relativeTo, typeName);
+                    modelInScope = Scope.Find(relativeTo, typeName);
                 else
-                    modelInScope = Model.Scope.Find(relativeTo, t);
+                    modelInScope = Scope.Find(relativeTo, t);
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);
@@ -132,10 +131,10 @@ namespace Models.Core
         /// <summary>
         /// Locate the parent with the specified type. Returns null if not found.
         /// </summary>
-        private Simulation GetSimulation(Model relativeTo)
+        private static Simulation GetSimulation(Model relativeTo)
         {
             Model m = relativeTo;
-            while (m != null && m.Parent != null && !(relativeTo is Simulation))
+            while (m != null && m.Parent != null && !(m is Simulation))
                 m = m.Parent;
 
             if (m == null || !(m is Simulation))
@@ -148,7 +147,7 @@ namespace Models.Core
         /// <summary>
         /// Locate the parent simulation Returns null if not found.
         /// </summary>
-        protected Model GetRootModelOf(Model relativeTo)
+        private static Model GetRootModelOf(Model relativeTo)
         {
             while (relativeTo != null && relativeTo.Parent != null)
                 relativeTo = relativeTo.Parent;

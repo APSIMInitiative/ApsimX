@@ -188,8 +188,8 @@ namespace Models.Core
             EnsureNameIsUnique(model);
             Models.Add(model);
             model.Parent = this;
-            Simulation.Scope.ClearCache();
-            Simulation.Variables.ClearCache();
+            Scope.ClearCache(this);
+            Variables.ClearCache(this);
 
             // Call the model's OnLoaded method.
             CallOnLoaded(model);
@@ -230,8 +230,8 @@ namespace Models.Core
                 Models.Insert(index, newModel);
 
                 // clear caches.
-                Simulation.Scope.ClearCache();
-                Simulation.Variables.ClearCache();
+                Scope.ClearCache(this);
+                Variables.ClearCache(this);
 
                 // Call the model's OnLoaded method.
                 CallOnLoaded(newModel);
@@ -264,8 +264,8 @@ namespace Models.Core
                 Models.RemoveAt(index);
 
                 // clear caches.
-                Simulation.Scope.ClearCache();
-                Simulation.Variables.ClearCache();
+                Scope.ClearCache(this);
+                Variables.ClearCache(this);
 
                 // unresolve the links in the old model
                 UnresolveLinks(oldModel);

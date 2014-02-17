@@ -46,13 +46,13 @@ namespace Models
             if (FileName != null && File.Exists(FullFileName))
             {
                 DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"));
+                dataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
                 if (dataStore.TableNames.Contains(Name))
                 {
                     // delete the old data.
                     dataStore.DeleteOldContentInTable(Simulation.Name, Name);
                 }
-                dataStore.CreateTable(Simulation.Name, this.Name, GetTable());
+                dataStore.WriteTable(Simulation.Name, this.Name, GetTable());
                 dataStore.Disconnect();
             }
         }

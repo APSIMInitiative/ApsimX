@@ -30,7 +30,7 @@ namespace UserInterface.Presenters
             {
                 Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
                 DataStore = new Models.DataStore();
-                DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"));
+                DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"), readOnly: true);
             }
 
             PopulateGrid();

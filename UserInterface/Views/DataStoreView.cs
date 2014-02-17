@@ -15,11 +15,8 @@ namespace UserInterface.Views
     {
         void PopulateTables(string[] Simulations, string[] TableNames);
         void PopulateData(DataTable Data);
-
-        bool AutoCreate { get; set; }
-        
+      
         event TableSelectedDelegate OnTableSelected;
-        event EventHandler AutoCreateChanged;
         event EventHandler CreateNowClicked;
     }
 
@@ -28,7 +25,6 @@ namespace UserInterface.Views
     {
 
         public event TableSelectedDelegate OnTableSelected;
-        public event EventHandler AutoCreateChanged;
         public event EventHandler CreateNowClicked;
 
         /// <summary>
@@ -97,30 +93,6 @@ namespace UserInterface.Views
         {
             if (e.IsSelected && OnTableSelected != null)
                 OnTableSelected.Invoke(e.Item.Group.Name, e.Item.Text);
-        }
-
-        /// <summary>
-        /// Get/Set auto create checkbox state
-        /// </summary>
-        public bool AutoCreate
-        {
-            get
-            {
-                return AutoCreateCheckBox.Checked;
-            }
-            set
-            {
-                AutoCreateCheckBox.Checked = value;
-            }
-        }
-
-        /// <summary>
-        /// The user has changed the auto check state.
-        /// </summary>
-        private void OnAutoCreateCheckBoxChanged(object sender, EventArgs e)
-        {
-            if (AutoCreateChanged != null)
-                AutoCreateChanged(this, e);
         }
 
         /// <summary>
