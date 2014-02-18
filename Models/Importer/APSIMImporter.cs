@@ -92,12 +92,24 @@ namespace Importer
 
             try
             {
+                // Get the types.xml
+                string xml = Properties.Resources.Types;
+
+                // Create a temporary file.
+                string tempFileName = Path.GetTempFileName();
+                StreamWriter f = new StreamWriter(tempFileName);
+                f.Write(xml);
+                f.Close();                
+
                 // initialise the configuration for ApsimFile
                 Configuration.SetApsimDir(ApsimPath);
-                PlugIns.LoadAll();
+                PlugIns.Load(tempFileName);
 
                 // open and resolve all the links
-                ApsimFile infile = new ApsimFile(filename);
+                ApsimFile infile = new ApsimFile();
+                XmlDocument filedoc = new XmlDocument();
+                filedoc.Load(filename);
+                infile.Open(filedoc.DocumentElement);
                 string concretexml = infile.RootComponent.FullXMLNoShortCuts();
 
                 //open the .apsim file
