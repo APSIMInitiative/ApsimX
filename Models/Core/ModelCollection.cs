@@ -138,17 +138,27 @@ namespace Models.Core
         /// Never returns null. Can return empty list.
         /// </summary>
         [XmlIgnore]
-        public List<Model> AllModels { get { return AllModelsMatching(null); } }
+        public List<Model> AllModels 
+        { 
+            get 
+            {
+                List<Model> allModels = new List<Model>();
+                allModels.Add(this);
+                allModels.AddRange(AllModelsMatching(null));
+                return allModels;
+            } 
+        }
 
         /// <summary>
-        /// Return a list containing 'this' model and all child models recursively. 
+        /// Return a list containing all child models recursively. 
         /// Never returns null. Can return empty list.
         /// If 'modelType' is specified, only models of that type will be returned.
         /// </summary>
         public List<Model> AllModelsMatching(Type modelType)
         {
-            // Get a list of children (recursively) of this zone.
             List<Model> allModels = new List<Model>();
+
+            // Get a list of children (recursively) of this zone.
             foreach (Model child in Models)
             {
                 if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
@@ -190,6 +200,7 @@ namespace Models.Core
             EnsureNameIsUnique(model);
             Models.Add(model);
             model.Parent = this;
+            ParentAllModels(this);
             Scope.ClearCache(this);
             Variables.ClearCache(this);
 
@@ -198,10 +209,19 @@ namespace Models.Core
 
             // We need to resolve all links in all models as 
             // the new model may be a better fit for an existing link.
-            Simulation.AllModels.ForEach(DisconnectEvents);
-            Simulation.AllModels.ForEach(UnresolveLinks);
-            Simulation.AllModels.ForEach(ResolveLinks);
-            Simulation.AllModels.ForEach(ConnectEventPublishers);
+            Simulation simulationToReLink = null;
+            if (model is Simulation)
+                simulationToReLink = model as Simulation;
+            else
+                simulationToReLink = Simulation;
+
+            if (simulationToReLink != null)
+            {
+                simulationToReLink.AllModels.ForEach(DisconnectEvents);
+                simulationToReLink.AllModels.ForEach(UnresolveLinks);
+                simulationToReLink.AllModels.ForEach(ResolveLinks);
+                simulationToReLink.AllModels.ForEach(ConnectEventPublishers);
+            }
         }
 
         /// <summary>

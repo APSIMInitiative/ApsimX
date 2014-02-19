@@ -196,7 +196,7 @@ namespace Models.Core
             bool haveFinished = firstOnly && matches.Count > 0;
             if (!haveFinished && relativeTo.Parent != null)
             {
-                if (relativeTo is Simulation)
+                if (relativeTo is Simulation || relativeTo is Factorial.Experiment)
                 {
                     // Don't go beyond simulation.
                 }
@@ -205,9 +205,11 @@ namespace Models.Core
                 {
                     // Walk the parent but not all child models recursively.
                     ModelCollection parent = relativeTo.Parent;
-                    while (parent != null && !(parent is Simulations))
+                    while (parent != null)
                     {
                         WalkParent(parent, comparer, firstOnly, matches, relativeTo);
+                        if (parent is Simulation)
+                            break;
                         parent = parent.Parent;
                     }
                 }

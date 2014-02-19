@@ -123,6 +123,10 @@ namespace Models.Core
                         simulations.Add(model as Simulation);
                 }
             }
+            // Make sure each simulation has it's filename set correctly.
+            string fileName = RootSimulations(parent).FileName;
+            foreach (Simulation simulation in simulations)
+                simulation.FileName = fileName;
             return simulations.ToArray();
         }
 
@@ -164,6 +168,14 @@ namespace Models.Core
                 simulation.FileName = FileName;
         }
 
+        public static Simulations RootSimulations(Model model)
+        {
+            Model m = model;
+            while (m != null && m.Parent != null && !(m is Simulations))
+                m = m.Parent;
+
+            return m as Simulations;
+        }
 
 
     }
