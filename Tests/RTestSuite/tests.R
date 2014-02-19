@@ -110,6 +110,7 @@ Mean <- function (x, func, params, ...) {
 # @baseData: vector - reference data
 ##################################
 Tolerance <- function (x, func, params, baseData, ...) {
+  #print (baseData)
   if (is.na(baseData))
     stop("Tolerance test requires a baseline and one was not found.")
   if (params[1]) {
