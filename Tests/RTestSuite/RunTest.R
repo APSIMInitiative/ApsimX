@@ -109,6 +109,8 @@ for (fileNumber in 1:length(files)){
                      print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
                                  "]. Do you need to update the baseline?", sep="")))
                    })
+               else
+                 simOutputBase <- NA
                   
             # retrieve the test name
             func <- match.fun(tests[i])
@@ -140,4 +142,4 @@ for (fileNumber in 1:length(files)){
 }
 
 #write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing
-if (all(results) == FALSE | haveTestsPassed == FALSE) stop("One or more tests failed.")
+if (haveTestsPassed == FALSE) stop("One or more tests failed.")
