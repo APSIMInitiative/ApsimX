@@ -16,6 +16,9 @@ namespace Models
         [Link]
         Clock Clock = null;
 
+        [Link]
+        Simulation Simulation = null;
+
         private StreamWriter Writer;
 
         /// <summary>

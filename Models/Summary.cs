@@ -20,6 +20,7 @@ namespace Models
         private DataTable Messages;
 
         [Link] private Clock Clock = null;
+        [Link] Simulation Simulation = null;
 
         // Parameters
         public bool html { get; set; }

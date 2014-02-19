@@ -164,18 +164,6 @@ namespace Models.Core
                 simulation.FileName = FileName;
         }
 
-        /// <summary>
-        /// Recursively go through all child models are correctly set their parent field.
-        /// </summary>
-        private static void ParentAllModels(ModelCollection parent)
-        {
-            foreach (Model child in parent.Models)
-            {
-                child.Parent = parent;
-                if (child is ModelCollection)
-                    ParentAllModels(child as ModelCollection);
-            }
-        }
 
 
     }

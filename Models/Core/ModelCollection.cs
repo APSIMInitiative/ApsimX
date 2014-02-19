@@ -170,7 +170,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Return child models that matche the specified 'modelType'. Returns empty list if none found.
+        /// Return child models that match the specified 'modelType'. Returns empty list if none found.
         /// </summary>
         public List<T> ModelsMatching<T>() where T : Model
         {
@@ -300,6 +300,36 @@ namespace Models.Core
                 throw new Exception("Cannot create a unique name for model: " + originalName);
             Utility.Reflection.SetName(Model, NewName);
             return NewName;
+        }
+
+
+        /// <summary>
+        /// Locate the parent with the specified type. Returns null if not found.
+        /// </summary>
+        private Simulation Simulation
+        {
+            get
+            {
+                Model m = this;
+                while (m != null && m.Parent != null && !(m is Simulation))
+                    m = m.Parent;
+
+                return m as Simulation;
+            }
+        }
+
+
+        /// <summary>
+        /// Recursively go through all child models are correctly set their parent field.
+        /// </summary>
+        protected static void ParentAllModels(ModelCollection parent)
+        {
+            foreach (Model child in parent.Models)
+            {
+                child.Parent = parent;
+                if (child is ModelCollection)
+                    ParentAllModels(child as ModelCollection);
+            }
         }
 
     }

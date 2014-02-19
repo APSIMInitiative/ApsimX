@@ -231,6 +231,9 @@ namespace Models
         // privates
         private List<VariableMember> Members = null;
 
+        [Link]
+        Simulation Simulation = null;
+
         // Properties read in.
         public string[] Variables {get; set;}
         public string[] Events { get; set; }
@@ -240,8 +243,6 @@ namespace Models
         /// </summary>
         public override void OnCommencing()
         {
-            UnsubscribeAllEventHandlers();
-
             foreach (string Event in Events)
             {
                 string ComponentName = Utility.String.ParentName(Event, '.');

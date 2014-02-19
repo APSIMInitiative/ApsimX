@@ -116,6 +116,22 @@ namespace Models.Core
                 CleanupRun();
                 throw;
             }
+            catch (Exception err)
+            {
+                DataStore store = new DataStore();
+                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
+
+                string Msg = err.Message;
+                if (err.InnerException != null)
+                    Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
+                else
+                    Msg += "\r\n" + err.StackTrace;
+
+                store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
+
+                CleanupRun();
+                throw;
+            }
             e.Result = this;
         }
 

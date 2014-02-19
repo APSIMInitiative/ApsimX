@@ -185,7 +185,7 @@ namespace Models.Core
         /// </summary>
         private static void Walk(Model relativeTo, Comparer comparer, bool firstOnly, List<Model> matches, Model excludeChild)
         {
-            if (comparer.DoesMatch(relativeTo))
+            if (comparer.DoesMatch(relativeTo) && !matches.Contains(relativeTo))
                 matches.Add(relativeTo);
 
             if (relativeTo is ModelCollection)
@@ -225,7 +225,7 @@ namespace Models.Core
             {
                 if (excludeChild == null || child != excludeChild)
                 {
-                    if (comparer.DoesMatch(child))
+                    if (comparer.DoesMatch(child) && !matches.Contains(child))
                         matches.Add(child);
 
                     if (child is ModelCollection)
@@ -245,14 +245,14 @@ namespace Models.Core
             {
                 if (excludeChild == null || child != excludeChild)
                 {
-                    if (comparer.DoesMatch(child))
+                    if (comparer.DoesMatch(child) && !matches.Contains(child))
                         matches.Add(child);
                 }
                 if (firstOnly && matches.Count > 0)
                     return;
             }
 
-            if (comparer.DoesMatch(relativeTo))
+            if (comparer.DoesMatch(relativeTo) && !matches.Contains(relativeTo))
                 matches.Add(relativeTo);
         }
 

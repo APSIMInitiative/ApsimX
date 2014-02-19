@@ -16,23 +16,6 @@ namespace Models.Core
         private string _Name = null;
 
         /// <summary>
-        /// Locate the parent with the specified type. Returns null if not found.
-        /// </summary>
-        protected Simulation Simulation
-        {
-            get
-            {
-                Model m = this;
-                while (m != null && m.Parent != null && !(m is Simulation))
-                    m = m.Parent;
-
-                if (m == null || !(m is Simulation))
-                    throw new ApsimXException(FullPath, "Cannot find root simulation.");
-                return m as Simulation;
-            }
-        }
-
-        /// <summary>
         /// Called immediately after the model is XML deserialised.
         /// </summary>
         public virtual void OnLoaded() { }
@@ -186,6 +169,7 @@ namespace Models.Core
                             linkedObject = allMatches[0];
                         }
                     }
+                     //   linkedObject = model.Find(field.FieldType);
 
                     if (linkedObject != null)
                         field.SetValue(model, linkedObject);
