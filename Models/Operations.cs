@@ -41,6 +41,9 @@ namespace Models
         [NonSerialized]
         private Utility.TempFileNames TemporaryFiles = null;
 
+        [Link]
+        Simulation Simulation = null;
+
         // Parameter
         [XmlElement("Operation")]
         public List<Operation> Schedule { get; set; }

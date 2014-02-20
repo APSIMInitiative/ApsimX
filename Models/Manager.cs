@@ -30,6 +30,8 @@ namespace Models
         private Assembly CompiledAssembly = null;
         [NonSerialized]
         private string CompiledCode = "";
+        [Link]
+        Simulation Simulation = null;
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]

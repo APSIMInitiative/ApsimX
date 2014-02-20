@@ -21,6 +21,9 @@ namespace Models
     {
         public string FileName { get; set; }
 
+        [Link]
+        Simulation Simulation = null;
+
         // A property providing a full file name. The user interface uses this.
         [XmlIgnore]
         public string FullFileName

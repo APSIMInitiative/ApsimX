@@ -123,6 +123,10 @@ namespace Models.Core
                         simulations.Add(model as Simulation);
                 }
             }
+            // Make sure each simulation has it's filename set correctly.
+            string fileName = RootSimulations(parent).FileName;
+            foreach (Simulation simulation in simulations)
+                simulation.FileName = fileName;
             return simulations.ToArray();
         }
 
@@ -164,17 +168,13 @@ namespace Models.Core
                 simulation.FileName = FileName;
         }
 
-        /// <summary>
-        /// Recursively go through all child models are correctly set their parent field.
-        /// </summary>
-        private static void ParentAllModels(ModelCollection parent)
+        public static Simulations RootSimulations(Model model)
         {
-            foreach (Model child in parent.Models)
-            {
-                child.Parent = parent;
-                if (child is ModelCollection)
-                    ParentAllModels(child as ModelCollection);
-            }
+            Model m = model;
+            while (m != null && m.Parent != null && !(m is Simulations))
+                m = m.Parent;
+
+            return m as Simulations;
         }
 
 

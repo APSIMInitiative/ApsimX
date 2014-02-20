@@ -55,7 +55,7 @@ namespace Utility
             {
                 string tempFileName = baseFileName + counter.ToString() + ".dll";
                 if (File.Exists(tempFileName))
-                    File.Delete(tempFileName);
+                    try { File.Delete(tempFileName); } catch (Exception) { }
                 else
                     finished = true;
                 counter++;

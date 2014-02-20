@@ -957,7 +957,6 @@
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>false</AutoCreateReport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
