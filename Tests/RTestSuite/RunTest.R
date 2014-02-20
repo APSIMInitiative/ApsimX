@@ -36,6 +36,11 @@ for (fileNumber in 1:length(files)){
   doc <- xmlTreeParse(files[fileNumber], useInternalNodes=TRUE)
   group <- getNodeSet(doc, "/Simulations/Tests/Test")
   
+  if (length(group) == 0) {
+    print(noquote(paste("Skipping", files[fileNumber], "as it does not contain any tests.", sep = " ")))
+    next
+  }
+  
   groupdf <- list()
   c <- 1
   for (n in group){
