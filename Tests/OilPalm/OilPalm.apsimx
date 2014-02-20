@@ -28,6 +28,7 @@
 					<string>[SoilWater].sw_dep</string>
 					<string>[SoilWater].sw</string>
 					<string>[SoilNitrogen].no3</string>
+					<string>[OilPalm].BunchMass</string>
 					<string />
 				</Variables>
 				<Events>
@@ -1124,17 +1125,94 @@
 	<Name>DataStore</Name>
 </DataStore>
 <Graph>
-	<Name>soil water (1)</Name>
-	<Axis>
-		<Type>Bottom</Type>
-		<Title>X axis title 2</Title>
-		<Inverted>false</Inverted>
-	</Axis>
-	<Axis>
-		<Type>Left</Type>
-		<Title>Y axis title</Title>
-		<Inverted>false</Inverted>
-	</Axis>
+  <Name>soil water (1)</Name>
+  <Axis>
+    <Type>Bottom</Type>
+    <Title>X axis title 2</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Axis>
+    <Type>Left</Type>
+    <Title>Y axis title</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Series>
+    <Type>Line</Type>
+    <XAxis>Bottom</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-65536</ColourArgb>
+    <Marker>None</Marker>
+    <X>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>Clock.Today</FieldName>
+    </X>
+    <Y>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>SoilWater.sw_dep(1)</FieldName>
+    </Y>
+  </Series>
+</Graph>
+<Graph>
+  <Name>NO3 (1)</Name>
+  <Axis>
+    <Type>Bottom</Type>
+    <Title>X axis title 2</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Axis>
+    <Type>Left</Type>
+    <Title>Y axis title</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Series>
+    <Type>Line</Type>
+    <XAxis>Bottom</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-65536</ColourArgb>
+    <Marker>None</Marker>
+    <X>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>Clock.Today</FieldName>
+    </X>
+    <Y>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>SoilWater.no3(1)</FieldName>
+    </Y>
+  </Series>
+</Graph>
+<Graph>
+  <Name>Bunch Mass</Name>
+  <Axis>
+    <Type>Bottom</Type>
+    <Title>X axis title 2</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Axis>
+    <Type>Left</Type>
+    <Title>Y axis title</Title>
+    <Inverted>false</Inverted>
+  </Axis>
+  <Series>
+    <Type>Line</Type>
+    <XAxis>Bottom</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-65536</ColourArgb>
+    <Marker>None</Marker>
+    <X>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>Clock.Today</FieldName>
+    </X>
+    <Y>
+      <SimulationName>OilPalm</SimulationName>
+      <TableName>Report</TableName>
+      <FieldName>OilPalm.BunchMass</FieldName>
+    </Y>
+  </Series>
 </Graph>
 <Tests>
 	<Name>Tests</Name>
@@ -1152,37 +1230,14 @@
 		<ColumnNames>SoilNitrogen.no3(1)</ColumnNames>
 		<Parameters>1,1</Parameters>
 	</Test>
-</Tests>
-<Graph>
-	<Name>no3(1)</Name>
-	<Axis>
-		<Type>Bottom</Type>
-		<Title>X axis title 2</Title>
-		<Inverted>false</Inverted>
-	</Axis>
-	<Axis>
-		<Type>Left</Type>
-		<Title>Y axis title</Title>
-		<Inverted>false</Inverted>
-	</Axis>
-	<Series>
-		<Type>Line</Type>
-		<XAxis>Bottom</XAxis>
-		<YAxis>Left</YAxis>
-		<ColourArgb>-65536</ColourArgb>
-		<Marker>None</Marker>
-		<X>
-			<SimulationName>OilPalm</SimulationName>
-			<TableName>Report</TableName>
-			<FieldName>Clock.Today</FieldName>
-		</X>
-		<Y>
-			<SimulationName>OilPalm</SimulationName>
-			<TableName>Report</TableName>
-			<FieldName>SoilNitrogen.no3(1)</FieldName>
-		</Y>
-	</Series>
-</Graph>
+	<Test>
+		<SimulationName>OilPalm</SimulationName>
+		<TableName>Report</TableName>
+		<Type>Tolerance</Type>
+		<ColumnNames>OilPalm.BunchMass</ColumnNames>
+		<Parameters>1,1</Parameters>
+	</Test>
+	</Tests>
 <Area>0</Area>
 <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

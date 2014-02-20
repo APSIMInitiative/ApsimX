@@ -46,8 +46,8 @@ namespace Models.PMF.OilPalm
         double Ndemand = 0.0;
         
         double RootDepth = 0.0;
-        public double InitialRootDepth = 0.0;
-        public double MaximumRootDepth = 0.0;
+        public double InitialRootDepth = 1.0;
+        public double MaximumRootDepth = 10000.0;
         public double[] kl;
         public double[] ll;
         public double[] xf;
@@ -90,6 +90,7 @@ namespace Models.PMF.OilPalm
         double HarvestBunchSize = 0.0;
 
         public double Age { get; set; }
+
         public double Population { get; set; }
         public SowPlant2Type SowingData = new SowPlant2Type();
 
@@ -248,6 +249,7 @@ namespace Models.PMF.OilPalm
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = Population;
+            this.Population = Population;
             SowingData.Depth = Depth;
             SowingData.Cultivar = Cultivar;
             SowingData.MaxCover = MaxCover;
