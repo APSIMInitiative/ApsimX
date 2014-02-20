@@ -255,12 +255,14 @@ namespace Utility
                 if (OnComplete != null)
                 {
                     JobCompleteArgs completeArgs = new JobCompleteArgs();
-                    completeArgs.Name = Utility.Reflection.Name(e.Result);
                     if (e.Error != null)
                     {
                         completeArgs.ErrorMessage = e.Error.Message;
                         SomeHadErrors = true;
                     }
+                    else
+                        completeArgs.Name = Utility.Reflection.Name(e.Result);
+                    
                     completeArgs.PercentComplete = Convert.ToInt32((NumJobsCompleted * 1.0) / Jobs.Count * 100.0);
                     PendingCompletedJobs.Enqueue(completeArgs);
                 }

@@ -93,7 +93,6 @@ namespace Models.Core
         /// </summary>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            
             try
             {
                 StartRun();
@@ -114,7 +113,7 @@ namespace Models.Core
                 store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
 
                 CleanupRun();
-                throw;
+                throw new Exception(Msg);
             }
             catch (Exception err)
             {
@@ -130,7 +129,7 @@ namespace Models.Core
                 store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
 
                 CleanupRun();
-                throw;
+                throw new Exception(Msg);
             }
             e.Result = this;
         }

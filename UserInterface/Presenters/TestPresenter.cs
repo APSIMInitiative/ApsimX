@@ -109,14 +109,16 @@ namespace UserInterface.Presenters
             Table.Columns.Add("Test type", typeof(string));
             Table.Columns.Add("Parameters", typeof(string));
 
-            foreach (Test Test in Tests.AllTests)
-            {
-                Table.Rows.Add(new string[] { Test.SimulationName,
-                                              Test.TableName, 
-                                              Test.ColumnNames,
-                                              Test.Type.ToString(), 
-                                              Test.Parameters});
-            }
+            if (Tests.AllTests != null)
+                foreach (Test Test in Tests.AllTests)
+                {
+                    Table.Rows.Add(new string[] { Test.SimulationName,
+                                                  Test.TableName, 
+                                                  Test.ColumnNames,
+                                                  Test.Type.ToString(), 
+                                                  Test.Parameters});
+                }
+
             return Table;
         }
 

@@ -27,7 +27,7 @@ namespace UserInterface.Presenters
             Graph = Model as Graph;
             SeriesView = View as SeriesView;
             this.CommandHistory = CommandHistory;
-            DataStore = Graph.Find(typeof(DataStore)) as DataStore;
+            DataStore = Graph.DataStore;
 
             SeriesView.SeriesGrid.AddContextAction("Delete series", OnDeleteSeries);
             SeriesView.SeriesGrid.AddContextAction("Clear all series", OnClearSeries);
@@ -35,8 +35,8 @@ namespace UserInterface.Presenters
             SeriesView.DataGrid.ColumnHeaderClicked += OnDataColumnClicked;
             SeriesView.SeriesGrid.CellValueChanged += OnCellChanged;
 
-            PopulateSeries();
             PopulateDataSources();
+            PopulateSeries();
 
             SeriesView.XFocused = true;
             this.CommandHistory.ModelChanged += OnGraphModelChanged;
@@ -63,6 +63,7 @@ namespace UserInterface.Presenters
             DataTable Data = new DataTable();
             if (Graph != null && Graph.Series.Count > 0)
             {
+                Data.Columns.Add("Data source", typeof(string));
                 Data.Columns.Add("X", typeof(string));
                 Data.Columns.Add("Y", typeof(string));
                 Data.Columns.Add("Title", typeof(string));
@@ -75,42 +76,39 @@ namespace UserInterface.Presenters
                 {
                     DataRow Row = Data.NewRow();
                     if (S.X != null)
-                        Row[0] = S.X.FieldName;
+                    {
+                        Row[0] = S.X.SimulationName + "." + S.X.TableName;
+                        Row[1] = S.X.FieldName;
+                    }
                     if (S.Y != null)
-                        Row[1] = S.Y.FieldName;
-                    Row[2] = S.Title;
-                    Row[3] = S.Colour.ToArgb();
-                    Row[4] = S.Type.ToString();
-                    Row[5] = S.XAxis == Axis.AxisType.Top;
-                    Row[6] = S.YAxis == Axis.AxisType.Right;
-                    Row[7] = S.Marker.ToString();
+                        Row[2] = S.Y.FieldName;
+                    Row[3] = S.Title;
+                    Row[4] = S.Colour.ToArgb();
+                    Row[5] = S.Type.ToString();
+                    Row[6] = S.XAxis == Axis.AxisType.Top;
+                    Row[7] = S.YAxis == Axis.AxisType.Right;
+                    Row[8] = S.Marker.ToString();
                     Data.Rows.Add(Row);
                 }
                 SeriesView.SeriesGrid.DataSource = Data;
                 SeriesView.SeriesGrid.SetColumnAlignment(0, true);
                 SeriesView.SeriesGrid.SetColumnAlignment(1, true);
                 SeriesView.SeriesGrid.SetColumnAlignment(2, true);
+                SeriesView.SeriesGrid.SetColumnAlignment(3, true);
 
                 for (int Row = 0; Row < Data.Rows.Count; Row++)
                 {
+                    SeriesView.SeriesGrid.SetCellEditor(0, Row, SeriesView.DataSourceItems);
                     Series S = Graph.Series[Row];
                     if (S.X != null)
-                    {
-                        SeriesView.SeriesGrid.SetToolTipForCell(0, Row, S.X.SimulationName + "." +
-                                                                        S.X.TableName);
-                        SeriesView.SeriesGrid.SetCellEditor(0, Row, Graph.GetValidFieldNames(S.X));
-                    }
+                        SeriesView.SeriesGrid.SetCellEditor(1, Row, Graph.GetValidFieldNames(S.X));
                     if (S.Y != null)
-                    {
-                        SeriesView.SeriesGrid.SetToolTipForCell(1, Row, S.Y.SimulationName + "." +
-                                                                        S.Y.TableName);
-                        SeriesView.SeriesGrid.SetCellEditor(1, Row, Graph.GetValidFieldNames(S.Y));
-                    }
-                    SeriesView.SeriesGrid.SetCellEditor(3, Row, Color.Red); //Data.Rows[Row][3]);
-                    SeriesView.SeriesGrid.SetCellEditor(4, Row, S.Type);
-                    SeriesView.SeriesGrid.SetCellEditor(5, Row, Data.Rows[Row][5]);
+                        SeriesView.SeriesGrid.SetCellEditor(2, Row, Graph.GetValidFieldNames(S.Y));
+                    SeriesView.SeriesGrid.SetCellEditor(4, Row, Color.Red);
+                    SeriesView.SeriesGrid.SetCellEditor(5, Row, S.Type);
                     SeriesView.SeriesGrid.SetCellEditor(6, Row, Data.Rows[Row][6]);
-                    SeriesView.SeriesGrid.SetCellEditor(7, Row, S.Marker);
+                    SeriesView.SeriesGrid.SetCellEditor(7, Row, Data.Rows[Row][7]);
+                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Marker);
                 }
             }
             else
@@ -128,13 +126,14 @@ namespace UserInterface.Presenters
             {
                 foreach (string SimulationName in DataStore.SimulationNames)
                     foreach (string TableName in DataStore.TableNames)
-                    {
-                        if (TableName != "Properties" && TableName != "Messages")
-                        {
+                        if (TableName != "Messages")
                             DataSources.Add(SimulationName + "." + TableName);
-                        }
-                    }
                 DataSources.Sort();
+
+                // Add in the all simulations in scope tables e.g. *.report
+                foreach (string TableName in DataStore.TableNames)
+                    if (TableName != "Messages") 
+                        DataSources.Insert(0, "*." + TableName);
             }
 
             SeriesView.DataSourceItems = DataSources.ToArray();
@@ -171,31 +170,40 @@ namespace UserInterface.Presenters
             }
             Series S = AllSeries[SeriesIndex];
 
-            if (Col == 0) // X
+            if (Col == 0) // Data source
+            {
+                string SimulationName = NewContents.ToString();
+                string TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                S.X.SimulationName = SimulationName;
+                S.X.TableName = TableName;
+                S.Y.SimulationName = SimulationName;
+                S.Y.TableName = TableName;
+            }
+            else if (Col == 1) // X
                 S.X.FieldName = NewContents.ToString();
-            else if (Col == 1)  // Y
+            else if (Col == 2)  // Y
                 S.Y.FieldName = NewContents.ToString();
-            else if (Col == 2) // Title
+            else if (Col == 3) // Title
                 S.Title = NewContents.ToString();
-            else if (Col == 3) // Colour
+            else if (Col == 4) // Colour
                 S.Colour = Color.FromArgb((int)NewContents);
-            else if (Col == 4) // Type
+            else if (Col == 5) // Type
                 S.Type = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), NewContents.ToString());
-            else if (Col == 5) // Top?
+            else if (Col == 6) // Top?
             {
                 if ((bool)NewContents)
                     S.XAxis = Axis.AxisType.Top;
                 else
                     S.XAxis = Axis.AxisType.Bottom;
             }
-            else if (Col == 6) // Right?
+            else if (Col == 7) // Right?
             {
                 if ((bool)NewContents)
                     S.YAxis = Axis.AxisType.Right;
                 else
                     S.YAxis = Axis.AxisType.Left;
             }
-            else if (Col == 7) // Marker
+            else if (Col == 8) // Marker
                 S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
 
             List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
@@ -319,7 +327,7 @@ namespace UserInterface.Presenters
 
                 int Row = SeriesView.SeriesGrid.RowCount-1;
                 SeriesView.SeriesGrid.SetCellValue(0, Row, ColumnName);
-                OnCellChanged(0, Row, null, ColumnName);
+                OnCellChanged(1, Row, null, ColumnName);
                 SeriesView.XFocused = false;
                 SeriesView.YFocused = true;
             }
@@ -327,7 +335,7 @@ namespace UserInterface.Presenters
             {
                 int Row = SeriesView.SeriesGrid.RowCount - 1;
                 SeriesView.SeriesGrid.SetCellValue(1, Row, ColumnName);
-                OnCellChanged(1, Row, null, ColumnName);
+                OnCellChanged(2, Row, null, ColumnName);
             }
         }
 

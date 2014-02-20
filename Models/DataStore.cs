@@ -64,6 +64,11 @@ namespace Models
         private static Dictionary<string, DbMutex> Locks = new Dictionary<string, DbMutex>();
 
         /// <summary>
+        /// True when the database has been opened as readonly.
+        /// </summary>
+        private bool ReadOnly = false;
+
+        /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
         /// </summary>
         public enum ErrorLevel { Information, Warning, Error };
@@ -117,6 +122,7 @@ namespace Models
             
             if (Connection == null)
             {
+                ReadOnly = readOnly;
                 Filename = fileName;
                 if (Filename == null || Filename.Length == 0)
                     throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
@@ -185,10 +191,12 @@ namespace Models
                 cmd += ",[" + names[i] + "] " + columnType;
             }
             cmd += ")";
+            Locks[Filename].Aquire();
             if (!TableExists(tableName))
-                RunQueryWithNoReturnData(cmd);
+                Connection.ExecuteNonQuery(cmd);
             else
                 AddMissingColumnsToTable(tableName, names, types);
+            Locks[Filename].Release(); 
         }
 
         /// <summary>
@@ -264,11 +272,11 @@ namespace Models
             string[] names = new string[] { "ComponentName", "Date", "Message", "MessageType" };
 
             string sql = string.Format("INSERT INTO Messages (SimulationID, ComponentName, Date, Message, MessageType) " +
-                                       "VALUES ({0}, {1}. {2}, {3}, {4})",
+                                       "VALUES ({0}, {1}, {2}, {3}, {4})",
                                        new object[] { GetSimulationID(simulationName),
-                                                      componentName,
-                                                      date,
-                                                      message,
+                                                      "\"" + componentName + "\"",
+                                                      date.ToString("yyyy-MM-dd"),
+                                                      "\"" + message + "\"",
                                                       Convert.ToInt32(type, System.Globalization.CultureInfo.InvariantCulture)});
 
             RunQueryWithNoReturnData(sql);
@@ -422,7 +430,7 @@ namespace Models
                 return -1;
 
             int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-            if (ID == -1)
+            if (ID == -1 && !ReadOnly)
             {
                 Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
                 ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
@@ -482,7 +490,7 @@ namespace Models
                 {
                     string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
                     sql += names[i] + "] " + GetSQLColumnType(types[i]);
-                    RunQueryWithNoReturnData(sql);    
+                    Connection.ExecuteNonQuery(sql);    
                 }
             }
         }

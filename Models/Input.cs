@@ -12,7 +12,12 @@ namespace Models
 
 
     /// <summary>
-    /// Reads the contents of a file (in apsim format) and stores into the DataStore
+    /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
+    /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
+    /// where the data in column 'SimulationName' matches the name of the simulation under which
+    /// this input model sits. 
+    /// 
+    /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
@@ -72,7 +77,15 @@ namespace Models
                 textFile.Open(FullFileName);
                 DataTable table = textFile.ToTable();
                 textFile.Close();
-                return table;
+
+                if (table.Columns.Contains("SimulationName"))
+                {
+                    DataView filteredData = new DataView(table);
+                    filteredData.RowFilter = "SimulationName = '" + Simulation.Name + "'";
+                    return filteredData.ToTable();
+                }
+                else
+                    return table;
             }
             return null;
         }

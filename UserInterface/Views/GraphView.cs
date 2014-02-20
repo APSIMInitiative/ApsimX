@@ -12,6 +12,7 @@ using OxyPlot;
 using OxyPlot.Axes;
 using Models.Graph;
 using System.Collections;
+using Models.Core;
 
 namespace UserInterface.Views
 {
@@ -71,14 +72,58 @@ namespace UserInterface.Views
                     {
                         if (S.X != null && S.Y != null)
                         {
-                            
-                            ItemsSeries Series = null;
-                            if (S.Type == Models.Graph.Series.SeriesType.Line || S.Type == Models.Graph.Series.SeriesType.Scatter)
-                                Series = CreateLineSeries(S);
-                            else if (S.Type == Models.Graph.Series.SeriesType.Bar)
-                                Series = CreateBarSeries(S);
-                            Series.ItemsSource = PopulateDataPointSeries(S.X, S.Y, S.XAxis, S.YAxis);
-                            plot1.Model.Series.Add(Series);
+                            // We need to handle the case where series X and Y SimulationName member
+                            // may be a wildcard '*'. If found then it duplicates the creating of
+                            // graph series for each simulation found in the datastore.
+                            bool simulationWildCard = S.X.SimulationName == "*";
+                            List<string> simulationNames = new List<string>();
+                            if (simulationWildCard)
+                            {
+                                foreach (Simulation simulation in graph.FindAll(typeof(Simulation)))
+                                    simulationNames.Add(simulation.Name);
+                            }
+                            else
+                                simulationNames.Add(S.X.SimulationName);
+
+                            Color originalColour = S.Colour;
+                            string originalSeriesTitle = S.Title;
+
+                            Color seriesColour = S.Colour;
+                            for (int i = 0; i < simulationNames.Count; i++)
+                            {
+                                // Change the simulation name as it may be a wildcard.
+                                S.X.SimulationName = simulationNames[i];
+                                S.Y.SimulationName = simulationNames[i];
+
+                                // lighten the series colour for all series after the first one.
+                                if (i > 0)
+                                    seriesColour = ChangeColorBrightness(seriesColour, 0.4);
+                                S.Colour = seriesColour;
+                                
+                                // If this is a wildcard series then add the simulation name to the
+                                // title of the series.
+                                if (simulationWildCard)
+                                    S.Title = originalSeriesTitle + " [" + simulationNames[i] + "]";
+
+                                // Create the series and populate it with data.
+                                ItemsSeries Series = null;
+                                if (S.Type == Models.Graph.Series.SeriesType.Line || S.Type == Models.Graph.Series.SeriesType.Scatter)
+                                    Series = CreateLineSeries(S);
+                                else if (S.Type == Models.Graph.Series.SeriesType.Bar)
+                                    Series = CreateBarSeries(S);
+                                Series.ItemsSource = PopulateDataPointSeries(S.X, S.Y, S.XAxis, S.YAxis);
+                                plot1.Model.Series.Add(Series);
+                            }
+
+                            // Restore the series simulation names and colour if this is a wildcard
+                            // series.
+                            if (simulationWildCard)
+                            {
+                                S.X.SimulationName = "*";
+                                S.Y.SimulationName = "*";
+                                S.Colour = originalColour;
+                                S.Title = originalSeriesTitle;
+                            }
                         }
                     }
                 }
@@ -346,7 +391,37 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Creates color with corrected brightness.
+        /// </summary>
+        /// <param name="color">Color to correct.</param>
+        /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1. 
+        /// Negative values produce darker colors.</param>
+        /// <returns>
+        /// Corrected <see cref="Color"/> structure.
+        /// </returns>
+        private static Color ChangeColorBrightness(Color color, double correctionFactor)
+        {
+            float red = (float)color.R;
+            float green = (float)color.G;
+            float blue = (float)color.B;
 
+            if (correctionFactor < 0)
+            {
+                correctionFactor = 1 + correctionFactor;
+                red *= (float)correctionFactor;
+                green *= (float)correctionFactor;
+                blue *= (float)correctionFactor;
+            }
+            else
+            {
+                red = (float)((255 - red) * correctionFactor + red);
+                green = (float)((255 - green) * correctionFactor + green);
+                blue = (float)((255 - blue) * correctionFactor + blue);
+            }
+
+            return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
+        }
 
     }
 }

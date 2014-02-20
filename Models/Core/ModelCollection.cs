@@ -293,10 +293,13 @@ namespace Models.Core
                 UnresolveLinks(oldModel);
                 // Completely wipe out all link and event connections as the deleted model may
                 // affect other model's links and events.
-                Simulation.AllModels.ForEach(DisconnectEvents);
-                Simulation.AllModels.ForEach(ConnectEventPublishers);
-                Simulation.AllModels.ForEach(UnresolveLinks);
-                Simulation.AllModels.ForEach(ResolveLinks);
+                if (Simulation != null)
+                {
+                    Simulation.AllModels.ForEach(DisconnectEvents);
+                    Simulation.AllModels.ForEach(ConnectEventPublishers);
+                    Simulation.AllModels.ForEach(UnresolveLinks);
+                    Simulation.AllModels.ForEach(ResolveLinks);
+                }
                 return true;
             }
             return false;

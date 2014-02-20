@@ -65,7 +65,7 @@ namespace Models.Graph
         /// </summary>
         public string[] ValidFieldNames(Graph graph)
         {
-            if (graph.DataStore != null && SimulationName != null && TableName != null)
+            if (graph.DataStore != null && SimulationName != null && TableName != null && TableName != "")
             {
                 List<string> Names = new List<string>();
                 Names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData(SimulationName, TableName)));
