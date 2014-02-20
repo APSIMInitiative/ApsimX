@@ -6,6 +6,7 @@ using UserInterface.Views;
 using System.IO;
 using System.Xml;
 using Models.Core;
+using Importer;
 
 namespace UserInterface.Presenters
 {
@@ -35,11 +36,19 @@ namespace UserInterface.Presenters
                 ResourceNameForImage = "StandardToolboxIcon",
                 OnClick = OnStandardToolboxClick
             });
+
+            e.Descriptions.Add(new PopulateStartPageArgs.Description()
+            {
+                Name = "Import old .apsim file",
+                ResourceNameForImage = "import2.png",
+                OnClick = OnImport
+            });
+
         }
 
         private void OnOpenApsimXFile(object Sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName();
+            string FileName = View.AskUserForFileName("*.apsimx|*.apsimx");
             OpenApsimXFileInTab(FileName);
         }
         
@@ -48,6 +57,17 @@ namespace UserInterface.Presenters
             byte[] b = Properties.Resources.ResourceManager.GetObject("StandardToolBox") as byte[];
             StreamReader SR = new StreamReader(new MemoryStream(b));
             OpenApsimXFromMemoryInTab("Standard toolbox", SR.ReadToEnd());
+        }
+
+        private void OnImport(object Sender, EventArgs e)
+        {
+            string FileName = View.AskUserForFileName("*.apsim|*.apsim");
+
+            APSIMImporter importer = new APSIMImporter();
+            importer.ProcessFile(FileName);
+
+            string newFileName = Path.ChangeExtension(FileName, ".apsimx");
+            OpenApsimXFileInTab(newFileName);
         }
 
         /// <summary>

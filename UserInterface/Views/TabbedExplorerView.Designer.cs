@@ -90,6 +90,7 @@
             this.ListViewImages.Images.SetKeyName(1, "chest.png");
             this.ListViewImages.Images.SetKeyName(2, "chart.png");
             this.ListViewImages.Images.SetKeyName(3, "user1.png");
+            this.ListViewImages.Images.SetKeyName(4, "import2.png");
             // 
             // TabPopupMenu
             // 

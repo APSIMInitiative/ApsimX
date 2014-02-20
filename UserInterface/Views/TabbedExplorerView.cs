@@ -23,7 +23,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        string AskUserForFileName();
+        string AskUserForFileName(string fileSpec);
 
         /// <summary>
         /// Show an error message to caller.
@@ -207,8 +207,9 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        public string AskUserForFileName()
+        public string AskUserForFileName(string fileSpec)
         {
+            OpenFileDialog.Filter = fileSpec;
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
                 return OpenFileDialog.FileName;
             return null;
