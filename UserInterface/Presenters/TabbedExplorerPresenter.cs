@@ -64,10 +64,17 @@ namespace UserInterface.Presenters
             string FileName = View.AskUserForFileName("*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
-            importer.ProcessFile(FileName);
+            try
+            {
+                importer.ProcessFile(FileName);
 
-            string newFileName = Path.ChangeExtension(FileName, ".apsimx");
-            OpenApsimXFileInTab(newFileName);
+                string newFileName = Path.ChangeExtension(FileName, ".apsimx");
+                OpenApsimXFileInTab(newFileName);
+            }
+            catch (Exception exp)
+            {
+                throw new Exception("Failed import: " + exp.Message);
+            }
         }
 
         /// <summary>
