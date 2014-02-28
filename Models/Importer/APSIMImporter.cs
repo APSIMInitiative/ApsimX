@@ -32,7 +32,7 @@ namespace Importer
         /// <summary>
         /// Original path that is substituted for %apsim%
         /// </summary>
-        public string ApsimPath;
+        public string ApsimPath = "";
 
         public APSIMImporter()
         {
@@ -56,6 +56,7 @@ namespace Importer
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    throw new Exception(e.Message);
                 }
             }
             else
@@ -92,24 +93,34 @@ namespace Importer
 
             try
             {
-                // Get the types.xml
-                string xml = Properties.Resources.Types;
-
-                // Create a temporary file.
-                string tempFileName = Path.GetTempFileName();
-                StreamWriter f = new StreamWriter(tempFileName);
-                f.Write(xml);
-                f.Close();                
-
-                // initialise the configuration for ApsimFile
+                ApsimFile infile;
                 Configuration.SetApsimDir(ApsimPath);
-                PlugIns.Load(tempFileName);
 
-                // open and resolve all the links
-                ApsimFile infile = new ApsimFile();
-                XmlDocument filedoc = new XmlDocument();
-                filedoc.Load(filename);
-                infile.Open(filedoc.DocumentElement);
+                // initialise the configuration for ApsimFile               
+                if (ApsimPath.Length > 0)
+                {
+                    PlugIns.LoadAll();  // loads the plugins from apsim.xml and types from other xml files
+                    // open and resolve all the links
+                    infile = new ApsimFile(filename);
+                }
+                else
+                {
+                    // Get the types.xml from built-in resources
+                    string xml = Properties.Resources.Types;
+
+                    // Create a temporary file.
+                    string tempFileName = Path.GetTempFileName();
+                    StreamWriter f = new StreamWriter(tempFileName);
+                    f.Write(xml);
+                    f.Close();
+
+                    PlugIns.Load(tempFileName);
+
+                    infile = new ApsimFile();
+                    XmlDocument filedoc = new XmlDocument();
+                    filedoc.Load(filename);
+                    infile.Open(filedoc.DocumentElement);
+                }
                 string concretexml = infile.RootComponent.FullXMLNoShortCuts();
 
                 //open the .apsim file
@@ -303,9 +314,13 @@ namespace Importer
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
                         if (Types.Instance.IsCrop(compNode.Name))
-                            classname = "Plant";
-
-                        newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                        {
+                            ImportPlant(compNode, destParent, newNode);
+                        }
+                        else
+                        {
+                            newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                        }
                     }
                 }
             }
@@ -317,9 +332,72 @@ namespace Importer
         }
 
         /// <summary>
+        /// Import a Plant component
+        /// </summary>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
+        /// <param name="destParent"></param>
+        /// <param name="plantNode"></param>
+        /// <returns></returns>
+        private XmlNode ImportPlant(XmlNode compNode, XmlNode destParent, XmlNode plantNode)
+        {
+            Models.PMF.Plant myplant = new Models.PMF.Plant();
+
+            // Attempt to create a usable plant class in xml. 
+            // This doesn't always work and it does not yet copy all the settings from 
+            // the imported component. (*** There must be a better way!)
+            plantNode = ImportObject(destParent, plantNode, myplant, Utility.Xml.NameAttr(compNode));
+            AddPhenologyClass(plantNode);
+
+            AddCompNode(plantNode, "Arbitrator", "Arbitrator");
+            XmlNode structNode = AddCompNode(plantNode, "Structure", "Structure");
+            AddCompNode(structNode, "AirTemperatureFunction", "ThermalTime");
+
+
+            XmlNode leafNode = AddCompNode(plantNode, "Leaf", "Leaf");
+            AddCompNode(leafNode, "Biomass", "Live");
+            AddCompNode(leafNode, "MultiplyFunction", "ExtinctionCoeff");
+            AddCompNode(leafNode, "LinearInterpolationFunction", "FrostFraction");
+            AddCompNode(leafNode, "AirTemperatureFunction", "ThermalTime");
+            XmlNode rueNode = AddCompNode(leafNode, "RUEModel", "PhotoSynthesis");
+            AddCompNode(rueNode, "Constant", "RUE");
+
+            XmlNode cohortNode = AddCompNode(leafNode, "InitialLeafValues", "LeafCohortParameters");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaxArea");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "GrowthDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "LagDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SenescenceDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentLagDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMax");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMin");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaximumNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MinimumNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "InitialNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NReallocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NRetranslocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "ExpansionStress");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "CriticalNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DMRetranslocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "ShadeInducedSenescenceRate");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NonStructuralFraction");
+            AddCompNode(cohortNode, "Constant", "StructuralFraction");
+
+            return plantNode;
+        }
+
+        private XmlNode AddPhenologyClass(XmlNode destParent)
+        {
+            XmlNode phenNode = AddCompNode(destParent, "Phenology", "Phenology");
+            AddCompNode(phenNode, "StageBasedInterpolation", "StageCode");
+            AddCompNode(phenNode, "AirTemperatureFunction", "ThermalTime");
+
+            return phenNode;
+        }
+
+        /// <summary>
         /// Import a micromet component
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -341,7 +419,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -361,7 +439,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -384,7 +462,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -402,7 +480,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -429,7 +507,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -450,7 +528,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -475,7 +553,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -527,7 +605,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -561,7 +639,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -592,7 +670,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
