@@ -74,12 +74,15 @@ namespace Models
         /// </summary>
         public void WriteWarning(string FullPath, string Message)
         {
-            DataRow newRow = Messages.NewRow();
-            newRow["ComponentName"] = FullPath;
-            newRow["Date"] = Clock.Today;
-            newRow["Message"] = Message;
-            newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
-            Messages.Rows.Add(newRow);
+            if (Messages != null)
+            {
+                DataRow newRow = Messages.NewRow();
+                newRow["ComponentName"] = FullPath;
+                newRow["Date"] = Clock.Today;
+                newRow["Message"] = Message;
+                newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
+                Messages.Rows.Add(newRow);
+            }
         }
 
         /// <summary>

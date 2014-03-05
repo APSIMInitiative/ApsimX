@@ -7,7 +7,7 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    interface Organ1 
+    public interface Organ1
     {
         string Name { get; }
         Biomass Live { get; }

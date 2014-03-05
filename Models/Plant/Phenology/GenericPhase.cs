@@ -11,8 +11,12 @@ namespace Models.PMF.Phen
     {
         [Link]
         Summary Summary = null;
-        [Link]
-        Function Target = null;
+
+        // Target isn't a [Link] because we want to force the engine to only look for a
+        // target under the generic phase xml element. Also, because EmergingPhase doesn't 
+        // need a Target, using a link would connect this target to the target of another 
+        // phase.
+        public Function Target { get; set; }
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
