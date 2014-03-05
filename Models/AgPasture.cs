@@ -298,8 +298,10 @@ namespace Models
         //component constant
         private const double SVPfrac = 0.66;
         //private WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();  // Daily Met Data
+        private double _IntRadn;    // Intercepted Radn   
+
         [Units("MJ")]
-        public double IntRadn;    // Intercepted Radn   
+        public double IntRadn { get { return _IntRadn; }}
 
         //Parameters that get initial values from the .xml    
         private int _Nsp = 3;
@@ -546,6 +548,10 @@ namespace Models
             //Initialising the aggregated pasture parameters from initial valuses of each species  
             p_rootFrontier = 0.0;
             p_rootMass = 0.0;
+            p_greenLAI = 0.0;
+            p_deadLAI = 0.0;
+            p_greenDM = 0.0;
+            p_deadDM = 0.0;
             double sum_fShoot = 0.0;
             double sum_lightExtCoeff = 0.0;
 
@@ -639,7 +645,7 @@ namespace Models
             Species.month = month;
             Species.year = year;
             Species.CO2 = co2;
-            Species.PIntRadn = IntRadn;
+            Species.PIntRadn = _IntRadn;
             Species.PCoverGreen = Cover_green;
             Species.PLightExtCoeff = p_lightExtCoeff;
             Species.Pdmshoot = AboveGroundWt;   //dm_shoot;
@@ -663,7 +669,7 @@ namespace Models
                 else
                 {
                     SP[s].intRadnFrac = SP[s].coverGreen / sumRadnIntercept;
-                    SP[s].intRadn = IntRadn * SP[s].intRadnFrac;
+                    SP[s].intRadn = _IntRadn * SP[s].intRadnFrac;
                 }
             }
 
@@ -884,7 +890,7 @@ namespace Models
                 // Send out New Crop Event to tell other modules who I am and what I am
                 PMF.NewCropType EventData = new PMF.NewCropType();
                 EventData.crop_type = SP[0].micrometType;  // need to separate crop type for micromet & canopy name !!  
-                EventData.sender = thisCropName;        // 
+                EventData.sender = Name;        // 
                 NewCrop.Invoke(EventData);
             }
 
@@ -899,7 +905,7 @@ namespace Models
             if (NewCanopy != null)
             {
                 NewCanopyType canopy = new NewCanopyType();
-                canopy.sender = thisCropName;
+                canopy.sender = Name;
                 canopy.lai = p_greenLAI;
                 canopy.lai_tot = p_totalLAI;
                 p_height = HeightfromDM;
@@ -922,7 +928,7 @@ namespace Models
             if (NewPotentialGrowth != null)
             {
                 NewPotentialGrowthType EventData = new NewPotentialGrowthType();
-                EventData.sender = thisCropName;
+                EventData.sender = Name;
                 p_gftemp = 0;     //weighted average   
 
 
@@ -1043,12 +1049,12 @@ namespace Models
             {
                 if (LP.Interception[i].name.ToUpper() == thisCropName.ToUpper())  //TO: species by species, and get the total?
                 {
-                    IntRadn = 0;
+                    _IntRadn = 0;
                     for (int j = 0; j < LP.Interception[i].layer.Length; j++)
                     {
-                        IntRadn += LP.Interception[i].layer[j].amount;
+                        _IntRadn += LP.Interception[i].layer[j].amount;
                     }
-                    canopiesRadn[i] = IntRadn;
+                    canopiesRadn[i] = _IntRadn;
                 }
                 else //Radn intercepted possibly by other canopies used for a rough IL estimation,
                 {    //potenital use when species were specified separately in pasture. (not used of now.11Mar10 )                    
@@ -1310,11 +1316,8 @@ namespace Models
             OnGraze(GZ);
         }
 
-        //----------------------------------------------------------------------
-        [EventSubscribe("graze")]
-        private void OnGraze(GrazeType GZ)
+        public void Graze(string type, double amount)
         {
-            Console.WriteLine("Agpasture.ongraze");
             if ((!p_Live) || p_totalDM == 0)
                 return;
 
@@ -1324,9 +1327,9 @@ namespace Models
             double remove_amt = 0;
 
             //case 1: remove untill the residue reaches the specified amount
-            if (GZ.type == "residue")
+            if (type == "residue")
             {
-                residue_amt = GZ.amount;
+                residue_amt = amount;
                 if (herbage_mass > residue_amt)
                 {
                     remove_amt = herbage_mass - residue_amt;
@@ -1337,9 +1340,9 @@ namespace Models
                 }
             }
             //case 2: remove the specified amount
-            else if (GZ.type == "removal")
+            else if (type == "removal")
             {
-                remove_amt = GZ.amount;
+                remove_amt = amount;
 
                 if (herbage_mass > min_residue)
                 {
@@ -1376,7 +1379,15 @@ namespace Models
                 if (remove_amt > 0)
                     p_harvestDigest += SP[s].digestDefoliated * amt / remove_amt;
             }
+        }
 
+
+        //----------------------------------------------------------------------
+        [EventSubscribe("graze")]
+        private void OnGraze(GrazeType GZ)
+        {
+            Console.WriteLine("Agpasture.ongraze");
+            Graze(GZ.type, GZ.amount);
         }
 
         //----------------------------------------------------------
@@ -2249,7 +2260,8 @@ namespace Models
             get { return p_waterDemand; }
         }
 
-        public double actualUptake;
+        private double actualUptake;
+
         [Units("mm")]
         public double ep   //sw_demand          // Daily Soil Water Demand (mm)
         {
@@ -2652,7 +2664,7 @@ namespace Models
         {
             //Uptake from the root_zone
             Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
-            NUptake.Sender = "AgPasture";
+            NUptake.Sender = Name;
             NUptake.SenderType = "Plant";
             NUptake.DeltaNO3 = new double[SoilWat.dlayer.Length];
             NUptake.DeltaNH4 = new double[SoilWat.dlayer.Length];
@@ -2902,7 +2914,7 @@ namespace Models
             double sumLAI = 0;
             for (int i = 0; i < canopiesNum; i++)
             {
-                double cover = Cover_green * canopiesRadn[i] / IntRadn;
+                double cover = Cover_green * canopiesRadn[i] / _IntRadn;
                 sumCov += cover;
                 sumLAI += -Math.Log(1 - cover) / p_lightExtCoeff;
 
@@ -3096,10 +3108,15 @@ namespace Models
         internal double dmstol1;	//stolon 1 (kg/ha)
         internal double dmstol2;	//stolon 2 (kg/ha)
         internal double dmstol3;	//stolon 3 (kg/ha)
-        public double dmroot;	//root (kg/ha)
-        public double dmlitter;	//Litter pool (kg/ha)
-        public double dmgreenmin; // minimum grenn dm
+        internal double dmroot;	    //root (kg/ha)
+        internal double dmlitter;	//Litter pool (kg/ha)
+
+        public double dmrootInit;   // Intial value for dmroot
+        public double dmlitterInit;
+        public double dmtotalInit;
+        public double dmgreenmin;   // minimum grenn dm
         public double Frgr;
+
 
         //CO2
         public double CO2PmaxScale;
@@ -3166,7 +3183,7 @@ namespace Models
 
         //calculated 
         //DM
-        public double dmtotal;      //=dmgreen + dmdead
+        internal double dmtotal;      //=dmgreen + dmdead
         internal double dmgreen;
         internal double dmdead;
         internal double dmleaf;
@@ -3269,6 +3286,10 @@ namespace Models
 
             leafPref = 1;
             if (isLegume) leafPref = 1.5;        //Init DM (is partitioned to different pools)
+
+            dmtotal = dmtotalInit;
+            dmroot = dmrootInit;
+            dmlitter = dmlitterInit;
 
             if (dmtotal == 0.0) phenoStage = 0;
             else phenoStage = 1;

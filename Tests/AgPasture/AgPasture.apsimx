@@ -75,8 +75,9 @@
               <fStolon>0</fStolon>
               <digestLive>0.6</digestLive>
               <digestDead>0.2</digestDead>
-              <dmroot>248.4311830855286</dmroot>
-              <dmlitter>200</dmlitter>
+              <dmrootInit>450</dmrootInit>
+              <dmlitterInit>200</dmlitterInit>
+              <dmtotalInit>1500</dmtotalInit>
               <dmgreenmin>500</dmgreenmin>
               <Frgr>1</Frgr>
               <CO2PmaxScale>700</CO2PmaxScale>
@@ -93,7 +94,6 @@
               <NcleafMin>0.012</NcleafMin>
               <MaxFix>0</MaxFix>
               <MinFix>0</MinFix>
-              <dmtotal>921.82701548783211</dmtotal>
             </Species>
             <Species>
               <speciesName>whiteclover</speciesName>
@@ -142,8 +142,9 @@
               <fStolon>0.2</fStolon>
               <digestLive>0.6</digestLive>
               <digestDead>0.2</digestDead>
-              <dmroot>25.603145242049948</dmroot>
-              <dmlitter>50</dmlitter>
+              <dmrootInit>120</dmrootInit>
+              <dmlitterInit>50</dmlitterInit>
+              <dmtotalInit>350</dmtotalInit>
               <dmgreenmin>50</dmgreenmin>
               <Frgr>1</Frgr>
               <CO2PmaxScale>700</CO2PmaxScale>
@@ -160,7 +161,6 @@
               <NcleafMin>0.012</NcleafMin>
               <MaxFix>0.6</MaxFix>
               <MinFix>0.2</MinFix>
-              <dmtotal>170.14936158661521</dmtotal>
             </Species>
             <Species>
               <speciesName>paspalum</speciesName>
@@ -209,8 +209,9 @@
               <fStolon>0</fStolon>
               <digestLive>0.6</digestLive>
               <digestDead>0.2</digestDead>
-              <dmroot>47.727868783996719</dmroot>
-              <dmlitter>10</dmlitter>
+              <dmrootInit>30</dmrootInit>
+              <dmlitterInit>10</dmlitterInit>
+              <dmtotalInit>100</dmtotalInit>
               <dmgreenmin>20</dmgreenmin>
               <Frgr>1</Frgr>
               <CO2PmaxScale>150</CO2PmaxScale>
@@ -227,10 +228,8 @@
               <NcleafMin>0.008</NcleafMin>
               <MaxFix>0</MaxFix>
               <MinFix>0</MinFix>
-              <dmtotal>275.48032356768391</dmtotal>
             </Species>
           </SP>
-          <IntRadn>1.2873672246932983</IntRadn>
           <FVPDFunction>
             <X>
               <double>0</double>
@@ -314,7 +313,6 @@
           <NUptakeSource>calc</NUptakeSource>
           <alt_N_uptake>no</alt_N_uptake>
           <UseRootProportion>1</UseRootProportion>
-          <actualUptake>0.2344387620687485</actualUptake>
           <Nsp>3</Nsp>
           <thisCropName>AgPasture</thisCropName>
           <WaterUptakeSource>calc</WaterUptakeSource>
@@ -1252,7 +1250,6 @@
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>false</AutoCreateReport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
