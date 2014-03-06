@@ -1,1037 +1,1452 @@
 <PlugIn>
   <Type name="simulation">
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="area" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="folder" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="PlugIns" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Reference" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="farmmanager" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPasture" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPastureDry" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPastureDryHerbage" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPastureGreen" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPastureGreenHerbage" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AusfarmPastureSeeds" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="stock" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="supplement" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Plot" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDApsimFileReader" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDDepth" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDFilter" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="REMS" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDPredObs" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDProbability" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GDSOI" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Graph" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="GraphReport" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="RegressionGraph" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="RGraphics" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Graph2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AnimatedReport" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilWater" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Water" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilOrganicMatter" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Analysis" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Sample" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Phosphorus" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="LayerStructure" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="accum" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AgPasture" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="AgPastureSWIM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="animalSection" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="atmosphere" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="bambatsi" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="barley" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="BarleySWIM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="bore" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="br" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="butterflypea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="canola" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CanolaSWIM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="canopy" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="centro" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="channel" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="chickpea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="chicory" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="Cl2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="climatechange" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="clock" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="cloverseed" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Cotton2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="cowpea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPICashbook" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPIGeneric" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPIManager" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPIPaddock" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPIPasture" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPIStock" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPISupplement" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="CPITextOut" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="cropui" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="DairyMod" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="dam" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="dcd" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="dcd2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="dcd3" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="DDRules" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="egrandis" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="emelliodora" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="eo" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="epopulnea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="erosion" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="events" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="fababean" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="factor" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="factorComplex" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="factorial" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="FarmSimGraze" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="fertiliser" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="fertiliserNET" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="fieldpea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="floor" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="gcm_data" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="grasp" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="grassseed" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="graz" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="growth" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Heliotrope" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="horsegram" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="Inhibitor" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="ini" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="InitialWater" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="input" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="irrigation" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="itallianryegrass" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="kale" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="KWTest" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="lablab" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="lettuce" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="LocalClimate" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="log" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="lolium_rigidum" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="lucerne" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="LucerneSWIM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="lupin" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="maize" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="maizez" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="manager" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="map" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="memo" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="MetFile" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="MicroClimate" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="micromet" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="micromet" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="millet" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="mucuna" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="mungbean" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="navybean" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="NitrificationInhibitor2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="oats" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="ocean_data" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="operations" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="orobanche" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="rice" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Oryza2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="outputfile" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="cotton" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="patchinput" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="peanut" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="PHmodel" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="pigeonpea" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="PigHousing" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="pigs" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="pond" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="potato" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="raphanus_raphanistrum" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="RLink" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="root" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="RotPlot" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="RugPlotUI" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="rule" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="manager2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="seedling" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SiloInput" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="simpleBuilding" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SimpleTree" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SlurryTank" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="soi" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="soil" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilArbitrator" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="erosion" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilNitrogen" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilNui" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilTemperature" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SoilTemperature2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Solute" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="sorghum" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SorghumConstants" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SorghumGenotype" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="soybean" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="stylo" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="sugar" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SugarCane" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="summaryfile" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="sunflower" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SurfaceOM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SurfaceTemp" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SweetCorn" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SweetSorghum" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SWIM2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Swim" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SwimSoluteParameters" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SwimSubsurfaceDrain" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SwimWaterTable" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="sysbal" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="SysBal2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="tcllink" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="tclmanager" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="tclui" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="TextOutput" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Tracer" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="tracer2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="tracker" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Tree" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="TreeMicroClimate" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="triticale" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name ="UreaseInhibitor2" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="UrinePatch" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="variables" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="venlink" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="WASHWATER" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="WaterSupply" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="weed" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="WF_Millet" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="wheat" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="wheat" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="Wheat2" version="31" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="WHEATSTRAW" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="WheatSWIM" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
   <Type name="YPCalc" >
     <MetaData>
-      <ShowInMainTree>yes</ShowInMainTree>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Cultivar">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Plant">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="folder">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Summary">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Override">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="RUEModel">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="RUECO2Function">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Phenology">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Structure">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="AllometricDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="InternodeDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PartitionFractionDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PopulationBasedDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PotentialSizeDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="RelativeGrowthRateDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="HeightFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="BranchingRate">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="CerealFinalNodeNumber">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="MainStemFinalNodeNumberFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="CerealFinalNodeNumber">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Population">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Arbitrator">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="HIReproductiveOrgan">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Leaf">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LeafCohort">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Nodule">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="GenericAboveGroundOrgan">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="GenericBelowGroundOrgan">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ReproductiveOrgan">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ReserveOrgan">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Root">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="RootSWIM">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SimpleLeaf">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SimpleRoot">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Biomass">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="CompositeBiomass">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ArrayBiomass">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="CerealVegetativePhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="EmergingPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="EndPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="GenericPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="GerminatingPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="GotoPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LeafAppearancePhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LeafDeathPhase">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="MolecularPhenology">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhaseJumpFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Vernalisation">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="VernalisationCW">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="AccumulateFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="AddFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="AgeCalculatorfunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="AirTemperatureFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="BellCurveFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Constant">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="DivideFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ExponentialFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ExpressionFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="ExternalVariable">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="InPhaseTtFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LinearInterpolationFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LessThanFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="MinimumFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="MaximumFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="MultiplyFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="OnEventFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhaseBasedSwitch">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhaseLookup">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhaseLookupValue">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhotoperiodDeltaFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PhotoperiodFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="PowerFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SigmoidFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SigmoidFunction2">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SoilTemperatureDepthFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SoilTemperatureFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="StageBasedInterpolation">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="TemperatureFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="SubtractFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="VariableReference">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="WeightedTemperatureFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="XYPairs">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="Model">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
 </PlugIn>
