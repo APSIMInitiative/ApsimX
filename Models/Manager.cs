@@ -84,6 +84,20 @@ namespace Models
         }
 
         /// <summary>
+        /// Called just before a simulation commences.
+        /// </summary>
+        public override void OnCommencing() {
+            Script.OnCommencing();
+        }
+
+        /// <summary>
+        /// Called just after a simulation has completed.
+        /// </summary>
+        public override void OnCompleted() {
+            Script.OnCompleted();
+        }
+
+        /// <summary>
         /// The model has been loaded.
         /// </summary>
         public override void OnLoaded()
@@ -113,6 +127,7 @@ namespace Models
 
                     Model.UnresolveLinks(Script);
                     Model.DisconnectEvents(Script);
+                    Model.DisconnectSubscriptions(Script);
                     Script.Parent = null;
                     Script = null;
                 }
