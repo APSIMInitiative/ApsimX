@@ -506,6 +506,7 @@ namespace Models
             // This hack uses rlvp as interface to pass distribution parameters and then recalc rlvp
             // This is not what I would call good pratice due to the parameters technically changing meaning during
             // initilisation, but it will do in the interim.
+            Nsp = SP.Length;
             if (rlvp.Length == Nsp)
             {
                 //Console.Out.WriteLine("Using two parameter root distribution model (root depth + distribution parameter)");
@@ -3340,7 +3341,7 @@ namespace Models
             if (dmtotal == 0.0) phenoStage = 0;
             else phenoStage = 1;
 
-            if (isLegume)
+            if (!isLegume)
             {
                 dmleaf1 = 0.15 * dmtotal;
                 dmleaf2 = 0.25 * dmtotal;
