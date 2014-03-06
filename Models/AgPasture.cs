@@ -86,6 +86,8 @@ namespace Models
         [Link]
         private WeatherFile MetData = null;
 
+        [Link]
+        private ISummary Summary = null;
         private int Debug_Level = 0;
         public Species[] SP = new Species[3] { 
             new Species { 
@@ -531,13 +533,46 @@ namespace Models
                 //throw new Exception("AgPasture: Incorrect number of values passed to RLVP exception");
             }
 
+            //init
+            p_dGrowthPot = 0.0;
+            p_dGrowthW = 0.0;
+            p_dGrowth = 0.0;
+            p_dHerbage = 0.0;
+            p_height = 0.0;
+
+            p_dLitter = 0.0;         //daily litter formation  
+            p_dRootSen = 0.0;        //daily root senescence
+            p_dNLitter = 0.0;        //daily litter formation N
+            p_dNRootSen = 0.0;       //daily root senescence N
+            p_bottomRootLayer = 0;
+
+            //Parameters for environmental factors 
+            p_soilNdemand = 0;
+            p_soilNavailable = 0;
+            p_soilNuptake = 0;
+            p_gfn = 0;
+            p_Nfix = 0.0;
+            p_gftemp = 0.0;
+            p_gfwater = 0.0;
+            p_harvestN = 0.0;
+
+            p_waterSupply = 0;
+            p_waterDemand = 0;
+            p_waterUptake = 0;
+            p_gfwater = 0;
+            _IntRadn = 0.0;
+            actualUptake = 0.0;
+
+            month = clock.Today.Month;
+            year = clock.Today.Year;
+            day_of_month = clock.Today.Day;
 
             //Create and initialise each species  
             //Nsp = (int)Nspecies;
             ftArray = new double[Nsp];
 
             //SP = new Species[Nsp];         //species of the pasture
-            //pSP = new Species[Nsp];        //For storing species status at previous day     
+            pSP = new Species[Nsp];        //For storing species status at previous day     
             for (int s = 0; s < Nsp; s++)
             {
                 //SP[s] = new Species();
@@ -583,26 +618,6 @@ namespace Models
 
             if (p_totalLAI == 0) { p_lightExtCoeff = 0.5; }
             else { p_lightExtCoeff = sum_lightExtCoeff / p_totalLAI; }
-
-            //init
-            p_dGrowthPot = 0.0;
-            p_dGrowthW = 0.0;
-            p_dGrowth = 0.0;
-
-            p_dLitter = 0.0;         //daily litter formation  
-            p_dRootSen = 0.0;        //daily root senescence
-            p_dNLitter = 0.0;        //daily litter formation N
-            p_dNRootSen = 0.0;       //daily root senescence N
-
-            //Parameters for environmental factors 
-            p_soilNdemand = 0;
-            p_soilNavailable = 0;
-            p_soilNuptake = 0;
-            p_gfn = 0;
-
-            p_waterDemand = 0;
-            p_waterUptake = 0;
-            p_gfwater = 0;
 
             //if (rlvp.Length != dlayer.Length)
             //{
@@ -1383,10 +1398,11 @@ namespace Models
 
 
         //----------------------------------------------------------------------
-        [EventSubscribe("graze")]
+        [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Console.WriteLine("Agpasture.ongraze");
+            Summary.WriteMessage(FullPath, "Agpasture.OnGraze");
+            //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
 
@@ -1412,7 +1428,7 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
-        [EventSubscribe("sow")]
+        [EventSubscribe("Sow")]
         private void OnSow(SowType PSow)
         {
             /*SowType is our type and is defined like this:
@@ -2992,7 +3008,7 @@ namespace Models
     public class Species
     {
 
-        internal DMPools pS = new DMPools();              //for remember the status of previous day
+        internal DMPools pS;                //for remember the status of previous day
         //constants                        
         const double CD2C = 12.0 / 44.0;    //convert CO2 into C 
         const double C2DM = 2.5;            //C to DM convertion
@@ -3279,6 +3295,36 @@ namespace Models
 
         public void InitValues()
         {
+            pS = new DMPools();
+            Nremob = 0.0;
+            Cremob = 0;
+            Nfix = 0.0;
+            Ncfactor = 0.0;
+            Ndemand = 0.0;
+            soilNdemand = 0.0;
+            soilNuptake = 0.0;
+            dmdefoliated = 0.0;
+            Ndefoliated = 0;
+            digestHerbage = 0;
+            digestDefoliated = 0;
+            dLitter = 0.0;
+            dNLitter = 0.0;
+            dRootSen = 0.0;
+            dNrootSen = 0.0;
+            gfn = 0.0;
+            gftemp = 0.0;
+            gfwater = 0.0;
+            phenoFactor = 1.0;
+            intRadn = 0.0;
+            intRadnFrac = 0.0;
+            newGrowthN = 0.0;
+            Pgross = 0.0;
+            NdemandOpt = 0.0;
+            remob2NewGrowth = 0.0;
+            Resp_m = 0.0;
+            NrootRemob = 0.0;
+            IL1 = 0.0;
+
             if (isAnnual) //calulate days from Emg to Antheis        
                 CalcDaysEmgToAnth();
 
