@@ -781,8 +781,7 @@ namespace Importer
                 {
                     if (eventNode.InnerText.ToLower() == "init")
                     {
-                        code.Append("\t\t[EventSubscribe(\"Initialised\")]\n");
-                        code.Append("\t\tprivate void OnInitialised(object sender, EventArgs e)\n");
+                        code.Append("\t\tpublic override void OnCommencing()\n");
                     }
                     else if (eventNode.InnerText.ToLower() == "start_of_day")
                     {
