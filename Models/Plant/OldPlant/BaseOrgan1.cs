@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
-    abstract public class BaseOrgan1 : Model, Organ1
+    abstract public class BaseOrgan1 : ModelCollection, Organ1
     {
         public Biomass Live  {get; set;}
         public Biomass Dead {get; set;}

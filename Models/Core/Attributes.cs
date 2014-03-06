@@ -11,6 +11,7 @@ namespace Models.Core
     {
         private string _Path = null;
         private bool _IsOptional = false;
+        private bool _MustBeChild = false;
 
         public string NamePath
         {
@@ -22,7 +23,11 @@ namespace Models.Core
             get { return _IsOptional; }
             set { _IsOptional = value; }
         }
-
+        public bool MustBeChild
+        {
+            get { return _MustBeChild; }
+            set { _MustBeChild = value; }
+        }
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]

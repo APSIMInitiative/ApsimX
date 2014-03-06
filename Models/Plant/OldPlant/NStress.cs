@@ -6,7 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    public class NStress
+    public class NStress : ModelCollection
     {
         [Link]
         Leaf1 Leaf = null;

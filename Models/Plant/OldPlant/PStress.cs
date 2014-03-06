@@ -6,7 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    public class PStress
+    public class PStress : Model
     {
         public double Photo
         {

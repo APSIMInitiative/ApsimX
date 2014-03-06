@@ -80,6 +80,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
         [XmlElement(typeof(Models.PMF.Phen.EndPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GenericPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GerminatingPhase))]
@@ -131,6 +132,23 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Environment))]
+        [XmlElement(typeof(Models.PMF.OldPlant.GenericArbitratorXY))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Grain))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Leaf1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.LeafNumberPotential3))]
+        [XmlElement(typeof(Models.PMF.OldPlant.NStress))]
+        [XmlElement(typeof(Models.PMF.OldPlant.NUptake3))]
+        [XmlElement(typeof(Models.PMF.OldPlant.PlantSpatial1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Pod))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Population1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.PStress))]
+        [XmlElement(typeof(Models.PMF.OldPlant.RadiationPartitioning))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Root1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.RUEModel1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         public List<Model> Models { get; set; }
 
         /// <summary>
@@ -176,6 +194,17 @@ namespace Models.Core
         {
             foreach (Model child in Models)
                 if (modelType.IsAssignableFrom(child.GetType()))
+                    return child;
+            return null;
+        }
+
+        /// <summary>
+        /// Return a child model that matches the specified 'name'. Returns null if not found.
+        /// </summary>
+        public Model ModelMatching(string name)
+        {
+            foreach (Model child in Models)
+                if (child.Name == name)
                     return child;
             return null;
         }

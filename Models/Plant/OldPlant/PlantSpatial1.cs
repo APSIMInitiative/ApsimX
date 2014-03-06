@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
-    class PlantSpatial1
+    public class PlantSpatial1 : Model
     {
         SowPlant2Type SowData;
         double _CanopyWidth = 0;
@@ -19,8 +20,10 @@ namespace Models.PMF.OldPlant
                 throw new Exception("Invalid SkipRow: " + Sow.SkipRow.ToString());
         }
 
+        [XmlIgnore]
         public double Density { get { return SowData.Population; } set { SowData.Population = value; } }
         private double SkipRowFactor { get { return (2.0 + SowData.SkipRow) / 2.0; } }
+        [XmlIgnore]
         public double CanopyWidth { get { return _CanopyWidth; } set { _CanopyWidth = value; } }
         public double RowSpacing { get { return SowData.RowSpacing; } }
         public double CanopyFactor

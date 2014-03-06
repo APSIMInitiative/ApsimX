@@ -21,19 +21,29 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Parameter Function Links
-        [Link(IsOptional=true)] Function SenescenceRateFunction = null;
-        //[Link] Function DMReallocationFunction = null;
-        [Link(IsOptional=true)] Function NReallocationFactor = null;
-        [Link(IsOptional=true)] Function NRetranslocationFactor = null;
-        [Link] Function NitrogenDemandSwitch = null;
-        [Link(IsOptional=true)] Function DMRetranslocationFactor = null;
-        [Link] Function StructuralFraction = null; 
-        [Link] Function DMDemandFunction = null; 
-        [Link(IsOptional=true)] Function InitialWtFunction = null;
-        [Link(IsOptional=true)] Function InitialStructuralFraction = null;
-        [Link(IsOptional=true)] Function WaterContent = null;  
-        [Link] Function MaximumNConc = null;  
-        [Link] Function MinimumNConc = null;  
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function SenescenceRateFunction = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function NReallocationFactor = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function NRetranslocationFactor = null;
+        [Link(MustBeChild = true)] Function NitrogenDemandSwitch = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function DMRetranslocationFactor = null;
+        [Link(IsOptional = true)] 
+        Function StructuralFraction = null;
+        [Link(IsOptional = true)]
+        Function DMDemandFunction = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function InitialWtFunction = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function InitialStructuralFraction = null;
+        [Link(IsOptional = true, MustBeChild = true)]
+        Function WaterContent = null;
+        [Link(IsOptional = true)]
+        Function MaximumNConc = null;
+        [Link(IsOptional = true)]
+        Function MinimumNConc = null;  
         #endregion
 
         #region States
