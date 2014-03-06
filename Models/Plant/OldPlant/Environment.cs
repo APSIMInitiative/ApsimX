@@ -6,7 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    public class Environment
+    public class Environment : Model
     {
 
         [Link]

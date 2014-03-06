@@ -94,11 +94,11 @@ namespace Importer
             try
             {
                 ApsimFile infile;
-                Configuration.SetApsimDir(ApsimPath);
 
                 // initialise the configuration for ApsimFile               
                 if (ApsimPath.Length > 0)
                 {
+                    Configuration.SetApsimDir(ApsimPath);
                     PlugIns.LoadAll();  // loads the plugins from apsim.xml and types from other xml files
                     // open and resolve all the links
                     infile = new ApsimFile(filename);
@@ -308,8 +308,8 @@ namespace Importer
                 {
                     // all other components not listed above will be handled by this
                     // code and some test used to try to determine what type of object it is
-                    XmlNode ApsimToSim = Types.Instance.ApsimToSim(compNode.Name);
-                    if (ApsimToSim != null)
+                    string show = Types.Instance.MetaData(compNode.Name, "ShowInMainTree"); 
+                    if (String.Compare(show, "yes", true) == 0)
                     {
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
@@ -781,8 +781,7 @@ namespace Importer
                 {
                     if (eventNode.InnerText.ToLower() == "init")
                     {
-                        code.Append("\t\t[EventSubscribe(\"Initialised\")]\n");
-                        code.Append("\t\tprivate void OnInitialised(object sender, EventArgs e)\n");
+                        code.Append("\t\tpublic override void OnCommencing()\n");
                     }
                     else if (eventNode.InnerText.ToLower() == "start_of_day")
                     {

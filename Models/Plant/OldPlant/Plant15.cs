@@ -8,6 +8,7 @@ using System.Collections;
 using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.OldPlant
@@ -69,13 +70,12 @@ namespace Models.PMF.OldPlant
         #region Event handlers and publishers
         
         public event NewCropDelegate NewCrop;
-        
-        public event NullTypeDelegate Sowing;
+
+        public event EventHandler Sowing;
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
+        public void Sow(SowPlant2Type Sow)
         {
             if (Sow.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
@@ -105,7 +105,7 @@ namespace Models.PMF.OldPlant
             }
 
             if (Sowing != null)
-                Sowing.Invoke();
+                Sowing.Invoke(this, new EventArgs());
 
             WriteSowReport(Sow);
         }
@@ -114,21 +114,32 @@ namespace Models.PMF.OldPlant
 
         #region Plant1 functionality
 
-        public NStress NStress { get; set; }
+        [Link]
+        NStress NStress = null;
 
-        public RadiationPartitioning RadiationPartitioning { get; set; }
+        [Link]
+        RadiationPartitioning RadiationPartitioning = null;
 
-        public Function NFixRate { get; set; }
+        [Link]
+        Function NFixRate = null;
 
-        public CompositeBiomass AboveGroundLive { get; set; }
+        [Link]
+        CompositeBiomass AboveGroundLive = null;
 
-        public CompositeBiomass AboveGround { get; set; }
+        [Link]
+        CompositeBiomass AboveGround = null;
 
-        public CompositeBiomass BelowGround { get; set; }
+        [Link]
+        CompositeBiomass BelowGround = null;
 
-        public SWStress SWStress { get; set; }
+        [Link]
+        public CompositeBiomass TotalLive = null;
 
-        public Function TempStress { get; set; }
+        [Link]
+        SWStress SWStress = null;
+
+        [Link]
+        Function TempStress = null;
 
         [Link]
         Root1 Root = null;
@@ -163,7 +174,7 @@ namespace Models.PMF.OldPlant
         //[Input]
         //double EO = 0;
         [Link]
-        Soils.SoilWater SoilWat = null;
+        Soils.Soil Soil = null;
 
         //[Input]
         //public DateTime Today; // for debugging.
@@ -221,8 +232,35 @@ namespace Models.PMF.OldPlant
         [Units("kg/ha")]
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
 
-        internal List<Organ1> Organ1s = new List<Organ1>();
-        internal List<Organ1> Tops = new List<Organ1>();
+        [XmlIgnore]
+        public List<Organ1> Organ1s 
+        { 
+            get 
+            {
+                List<Organ1> organs = new List<Organ1>();
+                foreach (Model model in this.Models)
+                {
+                    if (model is Organ1)
+                        organs.Add(model as Organ1);
+                }
+                return organs;
+            }
+        }
+        
+        [XmlIgnore]
+        public List<Organ1> Tops
+        {
+            get
+            {
+                List<Organ1> tops = new List<Organ1>(); 
+                foreach (Organ1 organ in this.Organ1s)
+                {
+                    if (organ is AboveGround)
+                        tops.Add(organ);
+                }
+                return tops;
+            }
+        }
         private double ext_n_demand;
         private string AverageStressMessage;
         private DateTime FloweringDate;
@@ -272,32 +310,35 @@ namespace Models.PMF.OldPlant
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
-            Util.Debug("\r\nPREPARE=%s", Clock.Today.ToString("d/M/yyyy"));
-            Util.Debug("       =%i", Clock.Today.DayOfYear);
+            if (SowingData != null)
+            {
+                Util.Debug("\r\nPREPARE=%s", Clock.Today.ToString("d/M/yyyy"));
+                Util.Debug("       =%i", Clock.Today.DayOfYear);
 
-            foreach (Organ1 Organ in Organ1s)
-                Organ.OnPrepare(null, null);
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.OnPrepare(null, null);
 
-            NStress.DoPlantNStress();
-            RadiationPartitioning.DoRadiationPartition();
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoPotentialRUE();
+                NStress.DoPlantNStress();
+                RadiationPartitioning.DoRadiationPartition();
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoPotentialRUE();
 
-            // Calculate Plant Water Demand
-            double SWDemandMaxFactor = EOCropFactor * SoilWat.eo;
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoSWDemand(SWDemandMaxFactor);
+                // Calculate Plant Water Demand
+                double SWDemandMaxFactor = EOCropFactor * Soil.SoilWater.eo;
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoSWDemand(SWDemandMaxFactor);
 
-            DoNDemandEstimate();
+                DoNDemandEstimate();
 
-            // PUBLISH NewPotentialGrowth event.
-            NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-            NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
-                                                            Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
-            NewPotentialGrowthData.sender = Name;
-            NewPotentialGrowth.Invoke(NewPotentialGrowthData);
-            Util.Debug("NewPotentialGrowth.frgr=%f", NewPotentialGrowthData.frgr);
-            //Prepare_p();   // FIXME
+                // PUBLISH NewPotentialGrowth event.
+                NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
+                NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                                                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
+                NewPotentialGrowthData.sender = Name;
+                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
+                Util.Debug("NewPotentialGrowth.frgr=%f", NewPotentialGrowthData.frgr);
+                //Prepare_p();   // FIXME
+            }
         }
 
         /// <summary>
@@ -306,101 +347,105 @@ namespace Models.PMF.OldPlant
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)
         {
-            Util.Debug("\r\nPROCESS=%s", Clock.Today.ToString("d/M/yyyy"));
-            Util.Debug("       =%i", Clock.Today.DayOfYear);
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoSWUptake(TopsSWDemand);
-
-            SWStress.DoPlantWaterStress(TopsSWDemand);
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoNSupply();
-            Phenology.DoTimeStep();
-            Stem.Morphology();
-            Leaf.DoCanopyExpansion();
-
-            foreach (Organ1 Organ in Organ1s)   // NIH - WHY IS THIS HERE!!!!?????  Not needed I hope.
-                Organ.DoPotentialRUE();         // DPH - It does make a small difference!
-
-            Arbitrator1.PartitionDM(Organ1s);
-            Arbitrator1.RetranslocateDM(Organ1s);
-            Leaf.Actual();
-            Pod.CalcDltPodArea();
-            Root.RootLengthGrowth();
-            Leaf.LeafDeath();
-            Leaf.LeafAreaSenescence();
-
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoSenescence();
-
-            Root.DoSenescenceLength();
-            Grain.DoNDemandGrain();
-
-            //  g.n_fix_pot = _fixation->Potential(biomass, swStress->swDef.fixation);
-            double n_fix_pot = 0;
-
-            if (DoRetranslocationBeforeNDemand)
-                Arbitrator1.DoNRetranslocate(Grain.NDemand, Organ1s);
-
-            bool IncludeRetranslocationInNDemand = !DoRetranslocationBeforeNDemand;
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoNDemand(IncludeRetranslocationInNDemand);
-
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoNSenescence();
-            Arbitrator1.doNSenescedRetranslocation(Organ1s);
-
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoSoilNDemand();
-            // PotNFix = _fixation->NFixPot();
-            double PotNFix = 0;
-            Root.DoNUptake(PotNFix);
-
-            double n_fix_uptake = Arbitrator1.DoNPartition(n_fix_pot, Organ1s);
-
-            // DoPPartition();
-            if (!DoRetranslocationBeforeNDemand)
-                Arbitrator1.DoNRetranslocate(Grain.NDemand2, Tops);
-
-            // DoPRetranslocate();
-            bool PlantIsDead = Population.PlantDeath();
-
-            foreach (Organ1 Organ in Organ1s)
-                Organ.DoDetachment();
-
-            Update();
-
-            CheckBounds();
-            SWStress.DoPlantWaterStress(TopsSWDemand);
-            NStress.DoPlantNStress();
-            if (PhenologyEventToday)
+            if (SowingData != null)
             {
-                Summary.WriteMessage(FullPath, Phenology.CurrentPhase.Start);
-                if (Phenology.CurrentPhase.Start != "Germination")
+
+                Util.Debug("\r\nPROCESS=%s", Clock.Today.ToString("d/M/yyyy"));
+                Util.Debug("       =%i", Clock.Today.DayOfYear);
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoSWUptake(TopsSWDemand);
+
+                SWStress.DoPlantWaterStress(TopsSWDemand);
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoNSupply();
+                Phenology.DoTimeStep();
+                Stem.Morphology();
+                Leaf.DoCanopyExpansion();
+
+                foreach (Organ1 Organ in Organ1s)   // NIH - WHY IS THIS HERE!!!!?????  Not needed I hope.
+                    Organ.DoPotentialRUE();         // DPH - It does make a small difference!
+
+                Arbitrator1.PartitionDM(Organ1s);
+                Arbitrator1.RetranslocateDM(Organ1s);
+                Leaf.Actual();
+                Pod.CalcDltPodArea();
+                Root.RootLengthGrowth();
+                Leaf.LeafDeath();
+                Leaf.LeafAreaSenescence();
+
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoSenescence();
+
+                Root.DoSenescenceLength();
+                Grain.DoNDemandGrain();
+
+                //  g.n_fix_pot = _fixation->Potential(biomass, swStress->swDef.fixation);
+                double n_fix_pot = 0;
+
+                if (DoRetranslocationBeforeNDemand)
+                    Arbitrator1.DoNRetranslocate(Grain.NDemand, Organ1s);
+
+                bool IncludeRetranslocationInNDemand = !DoRetranslocationBeforeNDemand;
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoNDemand(IncludeRetranslocationInNDemand);
+
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoNSenescence();
+                Arbitrator1.doNSenescedRetranslocation(Organ1s);
+
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoSoilNDemand();
+                // PotNFix = _fixation->NFixPot();
+                double PotNFix = 0;
+                Root.DoNUptake(PotNFix);
+
+                double n_fix_uptake = Arbitrator1.DoNPartition(n_fix_pot, Organ1s);
+
+                // DoPPartition();
+                if (!DoRetranslocationBeforeNDemand)
+                    Arbitrator1.DoNRetranslocate(Grain.NDemand2, Tops);
+
+                // DoPRetranslocate();
+                bool PlantIsDead = Population.PlantDeath();
+
+                foreach (Organ1 Organ in Organ1s)
+                    Organ.DoDetachment();
+
+                Update();
+
+                CheckBounds();
+                SWStress.DoPlantWaterStress(TopsSWDemand);
+                NStress.DoPlantNStress();
+                if (PhenologyEventToday)
                 {
-                    double biomass = 0;
-
-                    double StoverWt = 0;
-                    double StoverN = 0;
-                    foreach (Organ1 Organ in Tops)
+                    Summary.WriteMessage(FullPath, Phenology.CurrentPhase.Start);
+                    if (Phenology.CurrentPhase.Start != "Germination")
                     {
-                        biomass += Organ.Live.Wt + Organ.Dead.Wt;
-                        if (!(Organ is Reproductive))
-                        {
-                            StoverWt += Organ.Live.Wt + Organ.Dead.Wt;
-                            StoverN += Organ.Live.N + Organ.Dead.N;
-                        }
-                    }
-                    double StoverNConc = Utility.Math.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
-                    Summary.WriteMessage(FullPath, string.Format("biomass =       {0,8:F2} (g/m^2)   lai          = {1,7:F2} (m^2/m^2)",
-                                                    biomass, Leaf.LAI));
-                    Summary.WriteMessage(FullPath, string.Format("stover N conc = {0,8:F2} (%)     extractable sw = {1,7:F2} (mm)",
-                                                    StoverNConc, Root.ESWInRootZone));
-                }
-                PhenologyEventToday = false;
-            }
-            //Root.UpdateWaterBalance();
+                        double biomass = 0;
 
-            LAIMax = Math.Max(LAIMax, Leaf.LAI);
+                        double StoverWt = 0;
+                        double StoverN = 0;
+                        foreach (Organ1 Organ in Tops)
+                        {
+                            biomass += Organ.Live.Wt + Organ.Dead.Wt;
+                            if (!(Organ is Reproductive))
+                            {
+                                StoverWt += Organ.Live.Wt + Organ.Dead.Wt;
+                                StoverN += Organ.Live.N + Organ.Dead.N;
+                            }
+                        }
+                        double StoverNConc = Utility.Math.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
+                        Summary.WriteMessage(FullPath, string.Format("biomass =       {0,8:F2} (g/m^2)   lai          = {1,7:F2} (m^2/m^2)",
+                                                        biomass, Leaf.LAI));
+                        Summary.WriteMessage(FullPath, string.Format("stover N conc = {0,8:F2} (%)     extractable sw = {1,7:F2} (mm)",
+                                                        StoverNConc, Root.ESWInRootZone));
+                    }
+                    PhenologyEventToday = false;
+                }
+                //Root.UpdateWaterBalance();
+
+                LAIMax = Math.Max(LAIMax, Leaf.LAI);
+            }
         }
 
         [EventSubscribe("PhaseChanged")]

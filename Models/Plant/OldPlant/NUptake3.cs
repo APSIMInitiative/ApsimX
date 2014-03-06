@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
-    class NUptake3
+    public class NUptake3 : ModelCollection
     {
         [Link]
         Root1 Root = null;

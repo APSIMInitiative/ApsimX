@@ -8,7 +8,7 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.OldPlant
 {
-    public class Population1 : Model
+    public class Population1 : ModelCollection
     {
         [Link]
         Plant15 Plant = null;

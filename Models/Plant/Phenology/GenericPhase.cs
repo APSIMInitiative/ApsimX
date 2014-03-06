@@ -11,8 +11,9 @@ namespace Models.PMF.Phen
     {
         [Link]
         Summary Summary = null;
-        [Link]
-        Function Target = null;
+
+        [Link(IsOptional=true, MustBeChild = true)]
+        private Function Target = null;
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 

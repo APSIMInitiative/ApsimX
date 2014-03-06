@@ -21,8 +21,7 @@ namespace Models.PMF.Functions
         // States
         private int[] StageCodes = null;
 
-        [XmlIgnore]
-        public bool Proportional = true;
+        public bool Proportional { get; set; }
 
         /// <summary>
         /// Initialise ourselves.
@@ -30,6 +29,7 @@ namespace Models.PMF.Functions
         public override void OnCommencing()
         {
             StageCodes = null;
+            Proportional = true;
         }
         
         public override double Value

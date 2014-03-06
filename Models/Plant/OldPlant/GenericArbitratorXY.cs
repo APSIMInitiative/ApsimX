@@ -9,7 +9,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
-    class GenericArbitratorXY: Model
+    public class GenericArbitratorXY : ModelCollection
     {
         public string[] PartitionOrgans = null;
 
