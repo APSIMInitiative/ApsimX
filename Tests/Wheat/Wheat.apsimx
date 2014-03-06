@@ -5,7 +5,7 @@
     <Name>Wheat</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>C:\Users\hol353\ApsimX\Tests\WeatherFiles\Dalby.met</FileName>
+      <FileName>..\WeatherFiles\Dalby.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
