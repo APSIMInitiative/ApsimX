@@ -298,7 +298,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Disconnect all events in all models that are in scope of 'model'
+        /// Disconnect all published events in all models that are in scope of 'model'
         /// </summary>
         public static void DisconnectEvents(Model model)
         {
@@ -312,6 +312,29 @@ namespace Models.Core
                     {
                         //if (model == null || del.Target == model)
                             publisher.EventInfo.RemoveEventHandler(publisher.Model, del);
+                    }
+                }
+            }
+        }
+
+        public static void DisconnectSubscriptions(Model model)
+        {
+            if (model != null)
+            {
+                foreach (EventSubscriber subscription in FindEventSubscribers(null, model))
+                {
+                    foreach (EventPublisher publisher in FindEventPublishers(subscription))
+                    {
+                        FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                        Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
+                        if (eventDelegate != null)
+                        {
+                            foreach (Delegate del in eventDelegate.GetInvocationList())
+                            {
+                                if (del.Target == model)
+                                    publisher.EventInfo.RemoveEventHandler(publisher.Model, del);
+                            }
+                        }
                     }
                 }
             }
