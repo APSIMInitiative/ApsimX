@@ -237,7 +237,7 @@ namespace Models
             if (value is double || value is float)
                 return String.Format("{0:F3}", value);
             else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-mm-dd");
+                return ((DateTime)value).ToString("yyyy-MM-dd");
             else
                 return value.ToString();
         }
