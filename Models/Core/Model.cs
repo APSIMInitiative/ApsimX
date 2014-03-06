@@ -127,6 +127,8 @@ namespace Models.Core
         /// </summary>
         public static void ResolveLinks(Model model)
         {
+            //Console.WriteLine(model.FullPath + ":");
+
             // Go looking for [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
@@ -136,68 +138,46 @@ namespace Models.Core
                 if (link != null)
                 {
                     object linkedObject = null;
-                    //if (link.NamePath != null)
-                    //    linkedObject = Scope.Find(model, link.NamePath);
-                    //else if (model is ModelCollection)
-                    //{
-                    //    // Try and get a match from a child.
-                    //    ModelCollection modelAsCollection = model as ModelCollection;
-                    //    List<Model> matchingModels = modelAsCollection.AllModelsMatching(field.FieldType);
-                    //    if (matchingModels.Count == 1)
-                    //        linkedObject = matchingModels[0];  // only 1 match of the required type.
-                    //    else
-                    //    {
-                    //        // This is primarily for PLANT where matches for things link Functions should
-                    //        // only come from children and not somewhere else in Plant.
-                    //        // e.g. EmergingPhase in potato has an optional link for 'Target'
-                    //        // Potato doesn't have a target child so we don't want to use scoping 
-                    //        // rules to find the target for some other phase.
-
-                    //        // more that one match so use name to match.
-                    //        foreach (Model matchingModel in matchingModels)
-                    //            if (matchingModel.Name == field.Name)
-                    //            {
-                    //                linkedObject = matchingModel;
-                    //                break;
-                    //            }
-                    //    }
-                    //}
                     
-                    if (linkedObject == null)
+                    // NEW SECTION
+                    Model[] allMatches;
+                    if (link.MustBeChild && model is ModelCollection)
+                        allMatches = (model as ModelCollection).AllModelsMatching(field.FieldType).ToArray();
+                    else
+                        allMatches = model.FindAll(field.FieldType);
+                    if (!link.MustBeChild && allMatches.Length == 1)
+                        linkedObject = allMatches[0];
+                    else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
                     {
-                        Model[] allMatches = model.FindAll(field.FieldType);
-                        if (allMatches.Length == 1)
-                            linkedObject = allMatches[0];
-                        else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
-                        {
-                            // Doesn't matter what the link is being connected to if the the model passed
-                            // into ResolveLinks is sitting under a FactorValue. It won't be run from
-                            // under FactorValue anyway.
-                            linkedObject = allMatches[0];
-                        }
-                        else
-                        {
-                            // This is primarily for PLANT where matches for things link Functions should
-                            // only come from children and not somewhere else in Plant.
-                            // e.g. EmergingPhase in potato has an optional link for 'Target'
-                            // Potato doesn't have a target child so we don't want to use scoping 
-                            // rules to find the target for some other phase.
-
-                            // more that one match so use name to match.
-                            foreach (Model matchingModel in allMatches)
-                                if (matchingModel.Name == field.Name)
-                                {
-                                    linkedObject = matchingModel;
-                                    break;
-                                }
-
-
-                        }
+                        // Doesn't matter what the link is being connected to if the the model passed
+                        // into ResolveLinks is sitting under a FactorValue. It won't be run from
+                        // under FactorValue anyway.
+                        linkedObject = allMatches[0];
                     }
-                     //   linkedObject = model.Find(field.FieldType);
+                    else
+                    {
+                        // This is primarily for PLANT where matches for things link Functions should
+                        // only come from children and not somewhere else in Plant.
+                        // e.g. EmergingPhase in potato has an optional link for 'Target'
+                        // Potato doesn't have a target child so we don't want to use scoping 
+                        // rules to find the target for some other phase.
+
+                        // more that one match so use name to match.
+                        foreach (Model matchingModel in allMatches)
+                            if (matchingModel.Name == field.Name)
+                            {
+                                linkedObject = matchingModel;
+                                break;
+                            }
+                    }
 
                     if (linkedObject != null)
+                    {
+                        //if (linkedObject is Model)
+                        //    Console.WriteLine("    " + field.Name + " linked to " + (linkedObject as Model).FullPath);
+
                         field.SetValue(model, linkedObject);
+                    }
                     else if (!link.IsOptional)
                         throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() +
                                                             "' in class '" + model.FullPath + "'");

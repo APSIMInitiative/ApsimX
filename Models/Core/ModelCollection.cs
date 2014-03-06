@@ -199,6 +199,17 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Return a child model that matches the specified 'name'. Returns null if not found.
+        /// </summary>
+        public Model ModelMatching(string name)
+        {
+            foreach (Model child in Models)
+                if (child.Name == name)
+                    return child;
+            return null;
+        }
+
+        /// <summary>
         /// Return child models that match the specified 'modelType'. Returns empty list if none found.
         /// </summary>
         public List<T> ModelsMatching<T>() where T : Model
