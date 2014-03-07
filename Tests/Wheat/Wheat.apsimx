@@ -2702,7 +2702,7 @@
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>Test</SimulationName>
+      <SimulationName>Wheat</SimulationName>
       <TableName>Report</TableName>
       <Type>AllPos</Type>
       <ColumnNames>WeatherFile.MaxT</ColumnNames>
