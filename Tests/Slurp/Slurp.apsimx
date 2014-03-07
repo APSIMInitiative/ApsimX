@@ -1483,7 +1483,7 @@
       <SimulationName>Slurp</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>SoilWAAAater.sw_dep(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
