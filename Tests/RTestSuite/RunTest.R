@@ -105,6 +105,7 @@ for (fileNumber in 1:length(files)){
                    simOutput    <- subset(readSimOutput, select=unlist(cols))
                }, error = function(err) {
                    print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
+				   haveTestsPassed <<- FALSE
                })
                
                if(!is.na(readSimOutputBase))
@@ -113,6 +114,7 @@ for (fileNumber in 1:length(files)){
                    }, error = function(err) {
                      print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
                                  "]. Do you need to update the baseline?", sep="")))
+					 haveTestsPassed <<- FALSE
                    })
                else
                  simOutputBase <- NA
