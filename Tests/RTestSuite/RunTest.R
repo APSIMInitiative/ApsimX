@@ -114,11 +114,7 @@ for (fileNumber in 1:length(files)){
                    }, error = function(err) {
                      print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
                                  "]. Do you need to update the baseline?", sep="")))
-<<<<<<< HEAD
-					haveTestsPassed <<- FALSE
-=======
 					 haveTestsPassed <<- FALSE 
->>>>>>> de24b1e434f59ef0e0e77a7f90a677fa528c9734
                    })
                else
                  simOutputBase <- NA
