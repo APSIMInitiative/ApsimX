@@ -65,12 +65,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Continuous Wheat.apsim" />
+    <None Include="Resources\Continuous_Wheat.apsimx" />
     <None Include="Resources\Goondiwindi.met" />
     <None Include="Resources\Test3.apsimxForUnitTest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Models\Importer\Importer.csproj">
+      <Project>{075F2644-F14E-4010-BA52-35E4B0011835}</Project>
+      <Name>Importer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Models\Models.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
