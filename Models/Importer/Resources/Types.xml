@@ -1,1037 +1,1249 @@
+<?xml version="1.0"?>
 <PlugIn>
   <Type name="simulation">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="area" >
+  <Type name="area">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="folder" >
+  <Type name="folder">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="PlugIns" >
+  <Type name="PlugIns">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Reference" >
+  <Type name="Reference">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="farmmanager" >
+  <Type name="farmmanager">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AusfarmPasture" >
+  <Type name="AusfarmPasture">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="AusfarmPastureDry" >
+  <Type name="AusfarmPastureDry">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AusfarmPastureDryHerbage" >
+  <Type name="AusfarmPastureDryHerbage">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AusfarmPastureGreen" >
+  <Type name="AusfarmPastureGreen">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AusfarmPastureGreenHerbage" >
+  <Type name="AusfarmPastureGreenHerbage">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AusfarmPastureSeeds" >
+  <Type name="AusfarmPastureSeeds">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="stock" >
+  <Type name="stock">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="supplement" >
+  <Type name="supplement">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="Plot" >
+  <Type name="Plot">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDApsimFileReader" >
+  <Type name="GDApsimFileReader">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDDepth" >
+  <Type name="GDDepth">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDFilter" >
+  <Type name="GDFilter">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="REMS" >
+  <Type name="REMS">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDPredObs" >
+  <Type name="GDPredObs">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDProbability" >
+  <Type name="GDProbability">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GDSOI" >
+  <Type name="GDSOI">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Graph" >
+  <Type name="Graph">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="GraphReport" >
+  <Type name="GraphReport">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="RegressionGraph" >
+  <Type name="RegressionGraph">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="RGraphics" >
+  <Type name="RGraphics">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Graph2" >
+  <Type name="Graph2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="AnimatedReport" >
+  <Type name="AnimatedReport">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SoilWater" >
+  <Type name="SoilWater">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Water" >
+  <Type name="Water">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SoilOrganicMatter" >
+  <Type name="SoilOrganicMatter">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Analysis" >
+  <Type name="Analysis">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Sample" >
+  <Type name="Sample">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Phosphorus" >
+  <Type name="Phosphorus">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="LayerStructure" >
+  <Type name="LayerStructure">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="accum" >
+  <Type name="accum">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Accum</class>
     </MetaData>
   </Type>
-  <Type name="AgPasture" >
+  <Type name="AgPasture">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>AgPasture</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="AgPastureSWIM" >
+  <Type name="AgPastureSWIM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>AgPasture.AgPastureSWIM</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="animalSection" >
+  <Type name="animalSection">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="atmosphere" >
+  <Type name="atmosphere">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="bambatsi" >
+  <Type name="bambatsi">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Growth.Bambatsi</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="barley" >
+  <Type name="barley">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Barley</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="BarleySWIM" >
+  <Type name="BarleySWIM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.BarleySWIM</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="bore" >
+  <Type name="bore">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>WaterSupply.Bore</class>
     </MetaData>
   </Type>
-  <Type name="br" >
+  <Type name="br">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Solute.Br</class>
     </MetaData>
   </Type>
-  <Type name="butterflypea" >
+  <Type name="butterflypea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Butterflypea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="canola" >
+  <Type name="canola">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Canola</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="CanolaSWIM" >
+  <Type name="CanolaSWIM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.CanolaSWIM</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="canopy" >
+  <Type name="canopy">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Canopy</class>
     </MetaData>
   </Type>
-  <Type name="centro" >
+  <Type name="centro">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Centro</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="channel" >
+  <Type name="channel">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>WaterSupply.Channel</class>
     </MetaData>
   </Type>
-  <Type name="chickpea" >
+  <Type name="chickpea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.ChickPea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="chicory" >
+  <Type name="chicory">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Chicory</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name ="Cl2" >
+  <Type name="Cl2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="climatechange" >
+  <Type name="climatechange">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Manager.ClimateChange</class>
     </MetaData>
   </Type>
-  <Type name="clock" >
+  <Type name="clock">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Clock</class>
     </MetaData>
   </Type>
-  <Type name="cloverseed" >
+  <Type name="cloverseed">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Cloverseed</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="Cotton2" >
+  <Type name="Cotton2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Cotton2</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="cowpea" >
+  <Type name="cowpea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Cowpea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="CPICashbook" >
+  <Type name="CPICashbook">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>CPICashbook</class>
     </MetaData>
   </Type>
-  <Type name="CPIGeneric" >
+  <Type name="CPIGeneric">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Generic</class>
     </MetaData>
   </Type>
-  <Type name="CPIManager" >
+  <Type name="CPIManager">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Manager</class>
     </MetaData>
   </Type>
-  <Type name="CPIPaddock" >
+  <Type name="CPIPaddock">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Paddock</class>
     </MetaData>
   </Type>
-  <Type name="CPIPasture" >
+  <Type name="CPIPasture">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Pasture</class>
     </MetaData>
   </Type>
-  <Type name="CPIStock" >
+  <Type name="CPIStock">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Stock</class>
     </MetaData>
   </Type>
-  <Type name="CPISupplement" >
+  <Type name="CPISupplement">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Supplement</class>
     </MetaData>
   </Type>
-  <Type name="CPITextOut" >
+  <Type name="CPITextOut">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>CPITextout</class>
     </MetaData>
   </Type>
-  <Type name="cropui" >
+  <Type name="cropui">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="DairyMod" >
+  <Type name="DairyMod">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="dam" >
+  <Type name="dam">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>WaterSupply.Dam</class>
     </MetaData>
   </Type>
-  <Type name="dcd" >
+  <Type name="dcd">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Solute.Dcd</class>
     </MetaData>
   </Type>
-  <Type name ="dcd2" >
+  <Type name="dcd2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name ="dcd3" >
+  <Type name="dcd3">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="DDRules" >
+  <Type name="DDRules">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>DDRules</class>
     </MetaData>
   </Type>
-  <Type name="egrandis" >
+  <Type name="egrandis">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Growth.Egrandis</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="emelliodora" >
+  <Type name="emelliodora">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Growth.Emelliodora</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="eo" >
+  <Type name="eo">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Eo</class>
     </MetaData>
   </Type>
-  <Type name="epopulnea" >
+  <Type name="epopulnea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Growth.Epopulnea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="erosion" >
+  <Type name="erosion">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Erosion</class>
     </MetaData>
   </Type>
-  <Type name="events" >
+  <Type name="events">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="fababean" >
+  <Type name="fababean">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Fababean</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="factor" >
+  <Type name="factor">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="factorComplex" >
+  <Type name="factorComplex">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="factorial" >
+  <Type name="factorial">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="FarmSimGraze" >
+  <Type name="FarmSimGraze">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>FarmSimGraze</class>
     </MetaData>
   </Type>
-  <Type name="fertiliser" >
+  <Type name="fertiliser">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Fertiliser</class>
     </MetaData>
   </Type>
-  <Type name="fertiliserNET" >
+  <Type name="fertiliserNET">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="fieldpea" >
+  <Type name="fieldpea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.FieldPea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="floor" >
+  <Type name="floor">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="gcm_data" >
+  <Type name="gcm_data">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Input.GcmData</class>
     </MetaData>
   </Type>
-  <Type name="grasp" >
+  <Type name="grasp">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Grasp</class>
     </MetaData>
   </Type>
-  <Type name="grassseed" >
+  <Type name="grassseed">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Grassseed</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="graz" >
+  <Type name="graz">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Graz</class>
     </MetaData>
   </Type>
-  <Type name="growth" >
+  <Type name="growth">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Heliotrope" >
+  <Type name="Heliotrope">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="horsegram" >
+  <Type name="horsegram">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Horsegram</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name ="Inhibitor" >
+  <Type name="Inhibitor">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="ini" >
+  <Type name="ini">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="InitialWater" >
+  <Type name="InitialWater">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="input" >
+  <Type name="input">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Input</class>
     </MetaData>
   </Type>
-  <Type name="irrigation" >
+  <Type name="irrigation">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Irrigation</class>
     </MetaData>
   </Type>
-  <Type name="itallianryegrass" >
+  <Type name="itallianryegrass">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Itallianryegrass</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="kale" >
+  <Type name="kale">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Kale</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="KWTest" >
+  <Type name="KWTest">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="lablab" >
+  <Type name="lablab">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Lablab</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="lettuce" >
+  <Type name="lettuce">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Lettuce</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="LocalClimate" >
+  <Type name="LocalClimate">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="log" >
+  <Type name="log">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Log</class>
     </MetaData>
   </Type>
-  <Type name="lolium_rigidum" >
+  <Type name="lolium_rigidum">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.lolium_rigidum</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="lucerne" >
+  <Type name="lucerne">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Lucerne</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="LucerneSWIM" >
+  <Type name="LucerneSWIM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.LucerneSWIM</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="lupin" >
+  <Type name="lupin">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Lupin</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="maize" >
+  <Type name="maize">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Maize</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="maizez" >
+  <Type name="maizez">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>MaizeZ</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="manager" >
+  <Type name="manager">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Manager</class>
     </MetaData>
   </Type>
-  <Type name="map" >
+  <Type name="map">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="memo" >
+  <Type name="memo">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="MetFile" >
+  <Type name="MetFile">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Input.Metfile</class>
     </MetaData>
   </Type>
-  <Type name="MicroClimate" >
+  <Type name="MicroClimate">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>MicroClimate</class>
     </MetaData>
   </Type>
-  <Type name="micromet" >
+  <Type name="micromet">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>MicroMet</class>
     </MetaData>
   </Type>
-  <Type name="micromet" >
+  <Type name="micromet">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>MicroMet</class>
     </MetaData>
   </Type>
-  <Type name="millet" >
+  <Type name="millet">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Millet</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="mucuna" >
+  <Type name="mucuna">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Mucuna</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="mungbean" >
+  <Type name="mungbean">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Mungbean</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="navybean" >
+  <Type name="navybean">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Navybean</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name ="NitrificationInhibitor2" >
+  <Type name="NitrificationInhibitor2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="oats" >
+  <Type name="oats">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Oats</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="ocean_data" >
+  <Type name="ocean_data">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Input.OceanData</class>
     </MetaData>
   </Type>
-  <Type name="operations" >
+  <Type name="operations">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Operations</class>
     </MetaData>
   </Type>
-  <Type name="orobanche" >
+  <Type name="orobanche">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="rice" >
+  <Type name="rice">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Oryza.Rice</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="Oryza2" >
+  <Type name="Oryza2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Oryza2.Oryza2</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="outputfile" >
+  <Type name="outputfile">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Report.Outputfile</class>
     </MetaData>
   </Type>
-  <Type name="cotton" >
+  <Type name="cotton">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Ozcot.Cotton</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="patchinput" >
+  <Type name="patchinput">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>PatchInput</class>
     </MetaData>
   </Type>
-  <Type name="peanut" >
+  <Type name="peanut">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Peanut</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="PHmodel" >
+  <Type name="PHmodel">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="pigeonpea" >
+  <Type name="pigeonpea">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Pigeonpea</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="PigHousing" >
+  <Type name="PigHousing">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="pigs" >
+  <Type name="pigs">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="pond" >
+  <Type name="pond">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Pond</class>
     </MetaData>
   </Type>
-  <Type name="potato" >
+  <Type name="potato">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Potato</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="raphanus_raphanistrum" >
+  <Type name="raphanus_raphanistrum">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.RaphanusRaphanistrum</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="RLink" >
+  <Type name="RLink">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="root" >
+  <Type name="root">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Root</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="RotPlot" >
+  <Type name="RotPlot">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="RugPlotUI" >
+  <Type name="RugPlotUI">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="rule" >
+  <Type name="rule">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="manager2" >
+  <Type name="manager2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Manager2</class>
     </MetaData>
   </Type>
-  <Type name="seedling" >
+  <Type name="seedling">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Growth.Seedling</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SiloInput" >
+  <Type name="SiloInput">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SiloInput</class>
     </MetaData>
   </Type>
-  <Type name="simpleBuilding" >
+  <Type name="simpleBuilding">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="SimpleTree" >
+  <Type name="SimpleTree">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="SlurryTank" >
+  <Type name="SlurryTank">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="soi" >
+  <Type name="soi">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Soi</class>
     </MetaData>
   </Type>
-  <Type name="soil" >
+  <Type name="soil">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SoilWat</class>
     </MetaData>
   </Type>
-  <Type name="SoilArbitrator" >
+  <Type name="SoilArbitrator">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="erosion" >
+  <Type name="erosion">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Erosion</class>
     </MetaData>
   </Type>
-  <Type name="SoilNitrogen" >
+  <Type name="SoilNitrogen">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SoilN</class>
     </MetaData>
   </Type>
-  <Type name="SoilNui" >
+  <Type name="SoilNui">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SoilN.SoilNui</class>
     </MetaData>
   </Type>
-  <Type name="SoilTemperature" >
+  <Type name="SoilTemperature">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Soiltemp</class>
     </MetaData>
   </Type>
-  <Type name="SoilTemperature2" >
+  <Type name="SoilTemperature2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SoilTemp2</class>
     </MetaData>
   </Type>
-  <Type name="Solute" >
+  <Type name="Solute">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Solute.Cl</class>
     </MetaData>
   </Type>
-  <Type name="sorghum" >
+  <Type name="sorghum">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Sorghum</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SorghumConstants" >
+  <Type name="SorghumConstants">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SorghumGenotype" >
+  <Type name="SorghumGenotype">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="soybean" >
+  <Type name="soybean">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Soybean</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="stylo" >
+  <Type name="stylo">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Stylo</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="sugar" >
+  <Type name="sugar">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Sugar</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SugarCane" >
+  <Type name="SugarCane">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SugarCane</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="summaryfile" >
+  <Type name="summaryfile">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="sunflower" >
+  <Type name="sunflower">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Cropmode.Sunflower</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SurfaceOM" >
+  <Type name="SurfaceOM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SurfaceOM</class>
     </MetaData>
   </Type>
-  <Type name="SurfaceTemp" >
+  <Type name="SurfaceTemp">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SweetCorn" >
+  <Type name="SweetCorn">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.SweetCorn</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SweetSorghum" >
+  <Type name="SweetSorghum">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.SweetSorghum</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SWIM2" >
+  <Type name="SWIM2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="Swim" >
+  <Type name="Swim">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SwimSoluteParameters" >
+  <Type name="SwimSoluteParameters">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SwimSubsurfaceDrain" >
+  <Type name="SwimSubsurfaceDrain">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SwimWaterTable" >
+  <Type name="SwimWaterTable">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="sysbal" >
+  <Type name="sysbal">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Sysbal</class>
     </MetaData>
   </Type>
-  <Type name="SysBal2" >
+  <Type name="SysBal2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>SysBal2</class>
     </MetaData>
   </Type>
-  <Type name="tcllink" >
+  <Type name="tcllink">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="tclmanager" >
+  <Type name="tclmanager">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>TclLink.Tclmanager</class>
     </MetaData>
   </Type>
-  <Type name="tclui" >
+  <Type name="tclui">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="TextOutput" >
+  <Type name="TextOutput">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>TextOutput</class>
     </MetaData>
   </Type>
-  <Type name="Tracer" >
+  <Type name="Tracer">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name ="tracer2" >
+  <Type name="tracer2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="tracker" >
+  <Type name="tracker">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Tracker</class>
     </MetaData>
   </Type>
-  <Type name="Tree" >
+  <Type name="Tree">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="TreeMicroClimate" >
+  <Type name="TreeMicroClimate">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="triticale" >
+  <Type name="triticale">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Triticale</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name ="UreaseInhibitor2" >
+  <Type name="UreaseInhibitor2">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="UrinePatch" >
+  <Type name="UrinePatch">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>UrinePatch</class>
     </MetaData>
   </Type>
-  <Type name="variables" >
+  <Type name="variables">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="venlink" >
+  <Type name="venlink">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>VenLink</class>
     </MetaData>
   </Type>
-  <Type name="WASHWATER" >
+  <Type name="WASHWATER">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="WaterSupply" >
+  <Type name="WaterSupply">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="weed" >
+  <Type name="weed">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Weed</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="WF_Millet" >
+  <Type name="WF_Millet">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.WF_Millet</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="wheat" >
+  <Type name="wheat">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Wheat</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="wheat" >
+  <Type name="wheat">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Wheat</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="Wheat2" version="31" >
+  <Type name="Wheat2" version="31">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant2.Wheat2</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="WHEATSTRAW" >
+  <Type name="WHEATSTRAW">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>
+      </class>
     </MetaData>
   </Type>
-  <Type name="WheatSWIM" >
+  <Type name="WheatSWIM">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="YPCalc" >
+  <Type name="YPCalc">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>YieldProphet.YPCalc</class>
     </MetaData>
   </Type>
   <Type name="Cultivar">
@@ -1187,6 +1399,8 @@
   <Type name="Root">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Root</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
   <Type name="RootSWIM">
