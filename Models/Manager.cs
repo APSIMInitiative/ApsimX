@@ -18,6 +18,7 @@ namespace Models
         private string _Code;
         private bool HasDeserialised = false;
         private string elementsAsXml = null;
+        [NonSerialized]
         private Model _Script;
         [NonSerialized]
         private Utility.TempFileNames TemporaryFiles = null;
