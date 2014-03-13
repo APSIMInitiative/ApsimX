@@ -91,8 +91,6 @@ namespace Models
                 if (File.Exists(dbFileName))
                 {
                     Connect(dbFileName, false);
-                    if (!TableExists("Simulations"))
-                        RunQueryWithNoReturnData("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
 
                     // Get rid of unwanted simulations.
                     RemoveUnwantedSimulations(simulations);
@@ -130,6 +128,9 @@ namespace Models
                 Connection.OpenDatabase(Filename, readOnly);
                 if (!Locks.ContainsKey(Filename))
                     Locks.Add(Filename, new DbMutex());
+
+                if (!TableExists("Simulations"))
+                    RunQueryWithNoReturnData("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
             }
         }
 

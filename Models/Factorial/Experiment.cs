@@ -35,14 +35,17 @@ namespace Models.Factorial
                 Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Base);
                 newSimulation.Name = "";
 
-                foreach (FactorValue value in combination)
-                    value.ApplyToSimulation(newSimulation);
-
                 // Connect events and links in our new  simulation.
                 newSimulation.AllModels.ForEach(DisconnectEvents);
                 newSimulation.AllModels.ForEach(UnresolveLinks);
                 newSimulation.AllModels.ForEach(ConnectEventPublishers);
                 newSimulation.AllModels.ForEach(ResolveLinks);
+                newSimulation.AllModels.ForEach(CallOnLoaded);
+
+
+                foreach (FactorValue value in combination)
+                    value.ApplyToSimulation(newSimulation);
+
                 simulations.Add(newSimulation);
             }
 
