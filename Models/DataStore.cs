@@ -129,8 +129,10 @@ namespace Models
                 if (!Locks.ContainsKey(Filename))
                     Locks.Add(Filename, new DbMutex());
 
+                Locks[Filename].Aquire(); 
                 if (!TableExists("Simulations"))
-                    RunQueryWithNoReturnData("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                    Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                Locks[Filename].Release(); 
             }
         }
 
