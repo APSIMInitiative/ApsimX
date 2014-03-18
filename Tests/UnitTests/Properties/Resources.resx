@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Continuous_Wheat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Continuous Wheat.apsim;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Continuous_Wheat1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Continuous_Wheat.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Goondiwindi" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Goondiwindi.met;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

@@ -25,6 +25,12 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 results <- -1
 
 for (fileNumber in 1:length(files)){
+  #skip tests in Unit Tests directory
+  if (length(grep("UnitTests", files[fileNumber])) > 0){
+    print(noquote("Skipping test found in UnitTests directory."))
+    next
+  }
+  
   print(noquote(files[fileNumber]))
   if(length(args) > 1){
     dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))

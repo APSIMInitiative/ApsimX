@@ -7,6 +7,7 @@ namespace Importer
     using System.IO;
     using System.Xml;
     using System.Text.RegularExpressions;
+    using System.Reflection;
     using Models.Core;
     using ApsimFile;
 
@@ -149,7 +150,7 @@ namespace Importer
 
                 try
                 {
-                    newSimulations = Simulations.Read(xfile);   // construct a Simulations object
+                    newSimulations = Simulations.Read(xfile);
                 }
                 catch (Exception exp)
                 {
@@ -271,6 +272,8 @@ namespace Importer
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    CopyNodeAndValue(compNode, newNode, "paddock_area", "Area");
+
                     SurfOMExists = false;
                     SoilWaterExists = false;
                     AddChildComponents(compNode, newNode);
@@ -313,7 +316,9 @@ namespace Importer
                     {
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
-                        if (Types.Instance.IsCrop(compNode.Name))
+                        string compClass = Types.Instance.MetaData(compNode.Name, "class");
+                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 0) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
+                        if (Types.Instance.IsCrop(compNode.Name) &&  usePlantClass)
                         {
                             ImportPlant(compNode, destParent, newNode);
                         }
@@ -346,20 +351,35 @@ namespace Importer
             // This doesn't always work and it does not yet copy all the settings from 
             // the imported component. (*** There must be a better way!)
             plantNode = ImportObject(destParent, plantNode, myplant, Utility.Xml.NameAttr(compNode));
+
             AddPhenologyClass(plantNode);
 
             AddCompNode(plantNode, "Arbitrator", "Arbitrator");
+
             XmlNode structNode = AddCompNode(plantNode, "Structure", "Structure");
             AddCompNode(structNode, "AirTemperatureFunction", "ThermalTime");
-
+            AddCompNode(structNode, "PhaseLookupValue", "MainStemPrimordiaInitiationRate");
+            AddCompNode(structNode, "PhaseLookupValue", "MainStemNodeAppearanceRate");
+            AddCompNode(structNode, "Constant", "MainStemFinalNodeNumber");
+            AddCompNode(structNode, "Constant", "ShadeInducedBranchMortality");
+            AddCompNode(structNode, "Constant", "DroughtInducedBranchMortality");
+            AddCompNode(structNode, "LinearInterpolationFunction", "HeightModel");
+            AddCompNode(structNode, "MultiplyFunction", "BranchingRate");
+            
 
             XmlNode leafNode = AddCompNode(plantNode, "Leaf", "Leaf");
             AddCompNode(leafNode, "Biomass", "Live");
             AddCompNode(leafNode, "MultiplyFunction", "ExtinctionCoeff");
             AddCompNode(leafNode, "LinearInterpolationFunction", "FrostFraction");
             AddCompNode(leafNode, "AirTemperatureFunction", "ThermalTime");
-            XmlNode rueNode = AddCompNode(leafNode, "RUEModel", "PhotoSynthesis");
+
+            XmlNode rueNode = AddCompNode(leafNode, "RUEModel", "Photosynthesis");
             AddCompNode(rueNode, "Constant", "RUE");
+            AddCompNode(rueNode, "RUECO2Function", "FCO2");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FN");
+            AddCompNode(rueNode, "WeightedTemperatureFunction", "FT");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FW");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FVPD");
 
             XmlNode cohortNode = AddCompNode(leafNode, "InitialLeafValues", "LeafCohortParameters");
             AddCompNode(cohortNode, "LinearInterpolationFunction", "MaxArea");
@@ -385,6 +405,11 @@ namespace Importer
             return plantNode;
         }
 
+        /// <summary>
+        /// Add the Phenology object
+        /// </summary>
+        /// <param name="destParent"></param>
+        /// <returns></returns>
         private XmlNode AddPhenologyClass(XmlNode destParent)
         {
             XmlNode phenNode = AddCompNode(destParent, "Phenology", "Phenology");
@@ -392,6 +417,34 @@ namespace Importer
             AddCompNode(phenNode, "AirTemperatureFunction", "ThermalTime");
 
             return phenNode;
+        }
+
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <param name="plantNode"></param>
+        /// <param name="model"></param>
+        private void AddLinkedObjects(XmlNode plantNode, Object model)
+        {
+
+            // Go looking for [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
+                                                                        BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
+                {
+                    if (!field.FieldType.IsAbstract && !link.IsOptional)
+                    {
+                        // get the type here and add a tag?
+                        XmlNode newNode = AddCompNode(plantNode, field.FieldType.Name, field.Name);
+
+                        Object obj = Activator.CreateInstance(field.FieldType);
+                        AddLinkedObjects(newNode, obj);
+                    }
+                } 
+            } 
         }
 
         /// <summary>
@@ -880,17 +933,15 @@ namespace Importer
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
             string metfilepath = GetInnerText(compNode, "filename");
 
-            //resolve shortcut ?
-            XmlNode filenameNode = Utility.Xml.Find(compNode, "filename");
-            if (filenameNode != null)
+            if (Path.VolumeSeparatorChar == '/')
             {
-                string attrValue = AttributeText(filenameNode, "shortcut");
-                if (attrValue != "")
-                {
-                    //resolve shortcut
-                }
+                metfilepath = metfilepath.Replace("\\", "/");
             }
-                
+            else
+            {
+                metfilepath = metfilepath.Replace("/", "\\");
+            }
+               
             anode.InnerText = metfilepath.Replace("%apsim%", ApsimPath);
 
             return newNode;

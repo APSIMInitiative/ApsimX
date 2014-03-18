@@ -7,6 +7,7 @@ using Models;
 using Models.Graph;
 using Models.Soils;
 using System.Reflection;
+using Importer;
 
 namespace ModelTests
 {
@@ -26,6 +27,10 @@ namespace ModelTests
         [TestInitialize]
         public void Initialise()
         {
+            FileStream oldfile = new FileStream("Continuous_Wheat.apsim", FileMode.Create);
+            oldfile.Write(Properties.Resources.Continuous_Wheat, 0, Properties.Resources.Continuous_Wheat.Length);
+            oldfile.Close();
+            
             FileStream F = new FileStream("Test.apsimx", FileMode.Create);
             F.Write(Properties.Resources.TestFile, 0, Properties.Resources.TestFile.Length);
             F.Close();
@@ -280,6 +285,21 @@ namespace ModelTests
                     Assert.AreEqual(avmonth[11], 62.8259, 0.001, "LTAV12 Monthly");
                 }
             }
+        }
+        [TestMethod]
+        public void ImportOldAPSIM()
+        {
+            // test the importing of an example simulation from APSIM 7.6
+            APSIMImporter importer = new APSIMImporter();
+            importer.ProcessFile("Continuous_Wheat.apsim");
+
+            StreamReader reader = new StreamReader("Continuous_Wheat.apsimx");  // from test runs directory. Compare with file from Resources directory
+            string testrun = reader.ReadToEnd();
+            reader.Close();
+
+            string control = System.Text.Encoding.ASCII.GetString(Properties.Resources.Continuous_Wheat1);
+            // do a string comparison. There may be a better way to identify difference but this will show the differences in the text.
+            Assert.AreEqual(testrun, control, "Imported file contents");
         }
     }
 }

@@ -25,6 +25,10 @@ namespace RunAllSims
             //     Parallel.ForEach(Files, file =>
             foreach (string file in Files)
             {
+                // skip sims in UnitTest directory.
+                if (file.Contains("UnitTest"))
+                    continue;
+
                 Process p = new Process();
                 p.StartInfo.Arguments = file;
                 p.StartInfo.CreateNoWindow = true;
