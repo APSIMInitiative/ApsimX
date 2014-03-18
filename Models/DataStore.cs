@@ -175,7 +175,7 @@ namespace Models
         /// </summary>
         public bool TableExists(string tableName)
         {
-            return Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
+            return (Connection != null) && Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
                                                     tableName + "'", 0) > 0;
         }
 

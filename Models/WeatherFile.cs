@@ -220,6 +220,26 @@ namespace Models
         }
 
         /// <summary>
+        /// Read data for the first day of the simulation
+        /// Handy for component which need this data for their initialisation,
+        /// but use sparingly
+        /// </summary>
+        public Boolean ReadFirstDay()
+        {
+            if (!OpenDataFile())
+                return false;
+            WtrFile.SeekToDate(Clock.StartDate);
+            object[] Values = WtrFile.GetNextLineOfData();
+
+            TodaysMetData.today = (double)Clock.StartDate.Ticks;
+            TodaysMetData.radn = Convert.ToSingle(Values[RadnIndex]);
+            TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
+            TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
+            TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
+            return true;
+        }
+
+        /// <summary>
         /// An event handler for the tick event.
         /// </summary>
         [EventSubscribe("Tick")]
