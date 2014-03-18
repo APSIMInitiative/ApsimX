@@ -117,22 +117,25 @@ namespace Models
         /// </summary>
         public void Connect(string fileName, bool readOnly)
         {
-            
-            if (Connection == null)
+            lock (Locks)
             {
-                ReadOnly = readOnly;
-                Filename = fileName;
-                if (Filename == null || Filename.Length == 0)
-                    throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
-                Connection = new Utility.SQLite();
-                Connection.OpenDatabase(Filename, readOnly);
-                if (!Locks.ContainsKey(Filename))
-                    Locks.Add(Filename, new DbMutex());
+                if (Connection == null)
+                {
+                    ReadOnly = readOnly;
+                    Filename = fileName;
+                    if (Filename == null || Filename.Length == 0)
+                        throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
+                    Connection = new Utility.SQLite();
+                    Connection.OpenDatabase(Filename, readOnly);
 
-                Locks[Filename].Aquire(); 
-                if (!TableExists("Simulations"))
-                    Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                Locks[Filename].Release(); 
+                    if (!Locks.ContainsKey(Filename))
+                        Locks.Add(Filename, new DbMutex());
+
+                    Locks[Filename].Aquire();
+                    if (!TableExists("Simulations"))
+                        Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                    Locks[Filename].Release();
+                }
             }
         }
 
