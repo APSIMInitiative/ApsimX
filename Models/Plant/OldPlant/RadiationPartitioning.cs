@@ -8,9 +8,9 @@ namespace Models.PMF.OldPlant
 {
     public class RadiationPartitioning: Model
     {
-        public double FractIncidentRadn = 0.0;
+        public double FractIncidentRadn { get; set; }
 
-        public string[] RadiationPartitioningOrder = null;
+        public string[] RadiationPartitioningOrder { get; set; }
 
         [Link]
         WeatherFile MetData = null;

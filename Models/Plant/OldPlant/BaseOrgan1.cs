@@ -9,8 +9,28 @@ namespace Models.PMF.OldPlant
 {
     abstract public class BaseOrgan1 : ModelCollection, Organ1
     {
-        public Biomass Live  {get; set;}
-        public Biomass Dead {get; set;}
+        public Biomass Live 
+        { 
+            get 
+            { 
+                return ModelMatching("Live") as Biomass;
+            }
+            set
+            {
+                Live.SetTo(value);
+            }
+        }
+        public Biomass Dead
+        {
+            get
+            {
+                return ModelMatching("Dead") as Biomass;
+            }
+            set
+            {
+                Dead.SetTo(value);
+            }
+        }
 
         
 

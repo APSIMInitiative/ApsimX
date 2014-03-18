@@ -389,7 +389,7 @@ namespace Models
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
-            Plant newCrop = sender as Plant;
+            Model newCrop = sender as Model;
 
             int senderIdx = FindComponentIndex(newCrop.Name);
 
@@ -397,7 +397,10 @@ namespace Models
             if (senderIdx == -1)
                 throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
             ComponentData[senderIdx].Name = newCrop.Name;
-            ComponentData[senderIdx].Type = newCrop.CropType;
+            if (newCrop is Plant)
+                ComponentData[senderIdx].Type = (newCrop as Plant).CropType;
+            else
+                ComponentData[senderIdx].Type = newCrop.Name;
             Clear(ComponentData[senderIdx]);
         }
 

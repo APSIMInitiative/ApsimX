@@ -17,11 +17,8 @@ namespace Models.PMF.OldPlant
         [Link]
         Plant15 Plant = null;
 
-
         [Link]
         Population1 Population = null;
-
-        public CompositeBiomass TotalLive = null;
 
         [Link] Function HeightFunction = null;
         [Link] Function GrowthStructuralFractionStage = null;
@@ -35,15 +32,15 @@ namespace Models.PMF.OldPlant
         Leaf1 Leaf = null;
 
 
-        public double NDeficitUptakeFraction = 1.0;
+        public double NDeficitUptakeFraction { get; set; }
 
-        public double NSenescenceConcentration = 0;
+        public double NSenescenceConcentration { get; set; }
 
-        public double SenescenceDetachmentFraction = 0;
+        public double SenescenceDetachmentFraction { get; set; }
 
-        public double InitialWt = 0;
+        public double InitialWt { get; set; }
 
-        public double InitialNConcentration = 0;
+        public double InitialNConcentration { get; set; }
         #endregion
 
         #region Private variables
@@ -180,7 +177,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Stem.Growth.StructuralWt=%f", Growth.StructuralWt);
 
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,

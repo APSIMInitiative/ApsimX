@@ -12,10 +12,10 @@ namespace Models.PMF.OldPlant
         Leaf1 Leaf = null;
         [Link]
         Stem1 Stem = null;
-        public double N_fact_photo = 0;
-        public double N_fact_pheno = 0;
-        public double N_fact_expansion = 0;
-        public double N_fact_grain = 0;
+        public double N_fact_photo { get; set; }
+        public double N_fact_pheno { get; set; }
+        public double N_fact_expansion { get; set; }
+        public double N_fact_grain { get; set; }
 
         public double PhotoStress { get { return 1 - photo; } }
         public double PhenoStress { get { return 1 - pheno; } }

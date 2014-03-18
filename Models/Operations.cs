@@ -68,6 +68,7 @@ namespace Models
                 string classHeader = "using System;\r\n" +
                                      "using Models.Core;\r\n" +
                                      "using Models.PMF;\r\n" +
+                                     "using Models.PMF.OldPlant;\r\n" +
                                      "using Models.Soils;\r\n" +
                                      "namespace Models\r\n" +
                                      "{\r\n" +
