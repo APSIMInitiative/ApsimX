@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
         private double DayBeforeYesterday = 0;
         private double Yesterday = 0;
         private double Today = 0;
-        private XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
         [Units("oC")]
         double maxt_soil_surface = 15;  //Fixme.  Need to connect to soil temp model when it is working

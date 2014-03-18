@@ -55,19 +55,19 @@ namespace Models.PMF.OldPlant
         [Link]
         WeatherFile MetData = null;
 
-        public double NodeNumberCorrection = 0;
+        public double NodeNumberCorrection { get; set; }
 
-        public double SLAMin = 0;
+        public double SLAMin { get; set; }
 
-        public double FractionLeafSenescenceRate = 0;
+        public double FractionLeafSenescenceRate { get; set; }
 
-        public double NodeSenescenceRate = 0;
+        public double NodeSenescenceRate { get; set; }
 
-        public double NFactLeafSenescenceRate = 0;
+        public double NFactLeafSenescenceRate { get; set; }
 
-        public double MinTPLA = 0;
+        public double MinTPLA { get; set; }
 
-        public double NDeficitUptakeFraction = 1.0;
+        public double NDeficitUptakeFraction { get; set; }
 
         [Link]
         Function NodeFormationPeriod = null;
@@ -93,23 +93,23 @@ namespace Models.PMF.OldPlant
         [Link]
         Function GrowthStructuralFractionStage = null;
 
-        public double InitialWt = 0;
+        public double InitialWt { get; set; }
 
-        public double InitialNConcentration = 0;
+        public double InitialNConcentration { get; set; }
 
-        public double InitialTPLA = 0;
+        public double InitialTPLA { get; set; }
 
-        public double InitialLeafNumber = 0;
+        public double InitialLeafNumber { get; set; }
 
-        public double LAISenLight = 0;
+        public double LAISenLight { get; set; }
 
-        public double SenLightSlope = 0;
+        public double SenLightSlope { get; set; }
 
-        public double SenRateWater = 0;
+        public double SenRateWater { get; set; }
 
-        public double NSenescenceConcentration = 0;
+        public double NSenescenceConcentration { get; set; }
 
-        public double SenescenceDetachmentFraction = 0;
+        public double SenescenceDetachmentFraction { get; set; }
         #endregion
 
         #region Variables we need from other modules
@@ -151,7 +151,9 @@ namespace Models.PMF.OldPlant
         private double dltNodeNoPot;
         private bool ExternalSWDemand = false;
         private double transpEff;
-        private double NodeNo;
+
+        [XmlIgnore]
+        public double NodeNo { get; set; }
         private double[] LeafNo;
 
         private double[] LeafNoSen;
@@ -714,7 +716,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        void Initialise()
+        public override void OnCommencing()
         {
             Senescing = new Biomass();
             Retranslocation = new Biomass();
@@ -732,7 +734,7 @@ namespace Models.PMF.OldPlant
         public override void OnPrepare(object sender, EventArgs e)
         {
             if (LeafNo == null)
-                Initialise();
+                OnCommencing();
 
             Growth.Clear();
             Senescing.Clear();

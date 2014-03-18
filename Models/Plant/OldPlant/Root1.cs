@@ -31,11 +31,9 @@ namespace Models.PMF.OldPlant
         [Link]
         Population1 Population = null;
 
-        public Function RelativeRootRate = null;
-        public Function DMSenescenceFraction = null;
-        public Function GrowthStructuralFractionStage = null;
-
-        public CompositeBiomass TotalLive = null;
+        [Link] Function RelativeRootRate = null;
+        [Link] Function DMSenescenceFraction = null;
+        [Link] Function GrowthStructuralFractionStage = null;
 
         [Link]
         object NUptakeFunction = null;
@@ -47,15 +45,15 @@ namespace Models.PMF.OldPlant
         [Link]
         Soil Soil = null;
 
-        public double NConcentrationCritical = 0;
+        public double NConcentrationCritical { get; set; }
 
-        public double NConcentrationMinimum = 0;
+        public double NConcentrationMinimum { get; set; }
 
-        public double NConcentrationMaximum = 0;
+        public double NConcentrationMaximum { get; set; }
 
-        public double InitialRootDepth = 0;
+        public double InitialRootDepth { get; set; }
 
-        public double DieBackFraction = 0;
+        public double DieBackFraction { get; set; }
 
         public double[] cl = null;
 
@@ -65,33 +63,33 @@ namespace Models.PMF.OldPlant
 
         public double[] xf = null;
 
-        public bool ModifyKL;
+        public bool ModifyKL { get; set; }
 
-        public double ClA = 0;
+        public double ClA { get; set; }
 
-        public double ClB = 0;
+        public double ClB { get; set; }
 
-        public double ESPA = 0;
+        public double ESPA { get; set; }
 
-        public double ESPB = 0;
+        public double ESPB { get; set; }
 
-        public double ECA = 0;
+        public double ECA { get; set; }
 
-        public double ECB = 0;
+        public double ECB { get; set; }
 
-        public double NDeficitUptakeFraction = 1.0;
+        public double NDeficitUptakeFraction { get; set; }
 
-        public double NSenescenceConcentration = 0;
+        public double NSenescenceConcentration { get; set; }
 
-        public string NSupplyPreference = "";
+        public string NSupplyPreference { get; set; }
 
-        public double SenescenceDetachmentFraction = 0;
+        public double SenescenceDetachmentFraction { get; set; }
 
-        public double InitialWt = 0;
+        public double InitialWt { get; set; }
 
-        public double InitialNConcentration = 0;
+        public double InitialNConcentration { get; set; }
 
-        public double SpecificRootLength = 0;
+        public double SpecificRootLength { get; set; }
 
         #endregion
 
@@ -317,7 +315,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
@@ -567,7 +565,7 @@ namespace Models.PMF.OldPlant
                     return 0.0;
             }
         }
-        double[] FASWLayered
+        public double[] FASWLayered
         {
             get
             {
@@ -780,6 +778,10 @@ namespace Models.PMF.OldPlant
             nh4gsm_min = new double[SoilWat.dlayer.Length];
             RootLength = new double[SoilWat.dlayer.Length];
             RootLengthSenesced = new double[SoilWat.dlayer.Length];
+
+            ll = Soil.Crop(Plant.Name).LL;
+            kl = Soil.Crop(Plant.Name).KL;
+            xf = Soil.Crop(Plant.Name).XF;
 
             ll_dep = Utility.Math.Multiply(ll, SoilWat.dlayer);
             Util.ZeroArray(no3gsm_min);

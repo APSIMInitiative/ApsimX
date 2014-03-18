@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
     [Serializable]
-    public class VernalisationCW
+    public class VernalisationCW : ModelCollection
     {
         [Link]
         Phenology Phenology = null;
@@ -15,10 +16,11 @@ namespace Models.PMF.Phen
         [Link]
         Function Photoperiod = null;
 
-        
-        private double PhotopEff;
-        
-        private double VernEff;
+
+        [XmlIgnore]
+        public double PhotopEff { get; set; }
+        [XmlIgnore]
+        public double VernEff { get; set; }
         private const double Snow = 0.0;
         private double Maxt = 0;
         private double Mint = 0;

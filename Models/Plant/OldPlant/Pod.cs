@@ -40,15 +40,15 @@ namespace Models.PMF.OldPlant
         [Link]
         Population1 Population = null;
 
-        public double InitialWt = 0;
+        public double InitialWt { get; set; }
 
-        public double InitialNConcentration = 0;
+        public double InitialNConcentration { get; set; }
 
-        public double NDeficitUptakeFraction = 1.0;
+        public double NDeficitUptakeFraction { get; set; }
 
-        public double NSenescenceConcentration = 0;
+        public double NSenescenceConcentration { get; set; }
 
-        public double SenescenceDetachmentFraction = 0;
+        public double SenescenceDetachmentFraction { get; set; }
 
         #endregion
 
