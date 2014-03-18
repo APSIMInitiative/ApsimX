@@ -293,7 +293,7 @@ namespace ModelTests
             APSIMImporter importer = new APSIMImporter();
             importer.ProcessFile("Continuous_Wheat.apsim");
 
-            StreamReader reader = new StreamReader("Continuous_Wheat.apsimx");
+            StreamReader reader = new StreamReader("Continuous_Wheat.apsimx");  // from test runs directory. Compare with file from Resources directory
             string testrun = reader.ReadToEnd();
             reader.Close();
 

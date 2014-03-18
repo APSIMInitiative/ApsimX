@@ -986,7 +986,7 @@ namespace Models
           <string xsi:nil="true" />
         </Events>
       </Report>
-      <Area>0</Area>
+      <Area>100</Area>
     </Zone>
     <Area>0</Area>
   </Simulation>

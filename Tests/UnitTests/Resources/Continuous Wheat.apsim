@@ -9,6 +9,7 @@
     </clock>
     <summaryfile />
     <area name="paddock">
+      <paddock_area>100</paddock_area>
       <Soil>
         <SoilType description="Soil description">Black Vertosol</SoilType>
         <LocalName>Waco</LocalName>

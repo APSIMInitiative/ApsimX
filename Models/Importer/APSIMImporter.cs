@@ -272,6 +272,8 @@ namespace Importer
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    CopyNodeAndValue(compNode, newNode, "paddock_area", "Area");
+
                     SurfOMExists = false;
                     SoilWaterExists = false;
                     AddChildComponents(compNode, newNode);
