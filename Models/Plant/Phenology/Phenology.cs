@@ -51,7 +51,7 @@ namespace Models.PMF.Phen
         private string CurrentlyOnFirstDayOfPhase = "";
         private bool JustInitialised = true;
         private double FractionBiomassRemoved = 0;
-        private DateTime SowDate;
+        private DateTime SowDate = DateTime.MinValue;
 
         [XmlIgnore]
         /// <summary>
@@ -134,7 +134,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (SowDate == null)
+                if (SowDate == DateTime.MinValue)
                     return 0;
                 else
                     return (Clock.Today - SowDate).Days;
