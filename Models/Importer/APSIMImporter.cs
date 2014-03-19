@@ -931,17 +931,8 @@ namespace Importer
             newNode = AddCompNode(destParent, "WeatherFile", Utility.Xml.NameAttr(compNode));
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
-            string metfilepath = GetInnerText(compNode, "filename");
-
-            if (Path.VolumeSeparatorChar == '/')
-            {
-                metfilepath = metfilepath.Replace("\\", "/");
-            }
-            else
-            {
-                metfilepath = metfilepath.Replace("/", "\\");
-            }
-               
+            string metfilepath = Utility.PathUtils.OSFilePath(GetInnerText(compNode, "filename"));
+              
             anode.InnerText = metfilepath.Replace("%apsim%", ApsimPath);
 
             return newNode;

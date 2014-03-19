@@ -309,7 +309,8 @@ namespace UserInterface.Views
             if (!Message.EndsWith("\n"))
                 Message = Message + "\n";
             StatusWindow.Visible = Message != null;
-            StatusWindow.Select(0, 0);
+            //StatusWindow.Select(0, 0);
+            StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
                 StatusWindow.SelectionColor = Color.Red;
@@ -319,6 +320,7 @@ namespace UserInterface.Views
                 StatusWindow.SelectionColor = Color.Blue;
 
             StatusWindow.SelectedText = Message;
+            StatusWindow.ScrollToCaret();
             //StatusWindow.Select(0, Message.Length);
 
             Application.DoEvents();

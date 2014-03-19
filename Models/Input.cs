@@ -45,7 +45,7 @@ namespace Models
                 FileName = value;
 
                 // try and convert to path relative to the Simulations.FileName.
-                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
+                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
             }
         }
 

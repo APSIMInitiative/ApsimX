@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace Utility
 {
-    class Path
+    public class PathUtils
     {
 
         public static string ConvertURLToPath(string Url)
@@ -14,6 +15,21 @@ namespace Utility
             return uri.LocalPath;
         }
 
+        /// <summary>
+        /// Takes a file path, and attempts to assure it's in the
+        /// right form for the current OS. For now, it just looks
+        /// at the path separators.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string OSFilePath(string path)
+        {
+            if (Path.DirectorySeparatorChar != '\\')
+                return path.Replace('\\', Path.DirectorySeparatorChar);
+            if (Path.DirectorySeparatorChar != '/')
+                return path.Replace('/', Path.DirectorySeparatorChar);
+            return path;
+        }
 
         /// <summary>
         /// Check for valid characters allowed in component names

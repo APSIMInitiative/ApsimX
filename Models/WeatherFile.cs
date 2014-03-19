@@ -50,11 +50,11 @@ namespace Models
             }
             set
             {
-                FileName = value;
+                FileName = Utility.PathUtils.OSFilePath(value);
                 WtrFile = null; // ensure it is reopened
                 // try and convert to path relative to the Simulations.FileName.
                 if (FileName != null)
-                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
+                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
             }
         }
 
