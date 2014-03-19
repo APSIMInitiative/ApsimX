@@ -182,9 +182,9 @@ namespace Models
                     string message = (string)row[3];
                     Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
 
-                    if (errorLevel == DataStore.ErrorLevel.Error)
+                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
                         message = "FATAL ERROR: " + message;
-                    else if (errorLevel == DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
                         message = "WARNING: " + message;
 
                     messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
