@@ -460,9 +460,6 @@
     <None Include="Resources\bug_red.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\notes.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>

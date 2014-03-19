@@ -38,14 +38,13 @@ namespace Models
         [XmlAnyElement]
         public XmlElement[] elements { get { return _elements; } set { _elements = value; } }
 
-        [XmlText]
         [XmlElement("Code")]
-        public XmlNode[] CodeCData
+        public XmlNode CodeCData
         {
             get
             {
                 XmlDocument dummy = new XmlDocument();
-                return new XmlNode[] { dummy.CreateCDataSection(Code) };
+                return dummy.CreateCDataSection(Code);
             }
             set
             {
@@ -55,14 +54,7 @@ namespace Models
                     return;
                 }
 
-                if (value.Length != 1)
-                {
-                    throw new InvalidOperationException(
-                        String.Format(
-                            "Invalid array length {0}", value.Length));
-                }
-
-                Code = value[0].Value;
+                Code = value.Value;
             }
         }
 
