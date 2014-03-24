@@ -18,11 +18,16 @@ namespace Models.SurfaceOM
 
         public ResidueType getResidue(string name)
         {
-            foreach (ResidueType residueType in residues)
-            {
-                if (residueType.Name == name)
-                    return residueType;
-            }
+            if (residues != null)
+                foreach (ResidueType residueType in residues)
+                {
+                    if (residueType.Name == name)
+                        return residueType;
+                }
+
+            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
+                return new ResidueType("wheat") {specific_area = 0.0005};
+
             return null;
         }
     }
@@ -41,6 +46,31 @@ namespace Models.SurfaceOM
         public double[] fr_c { get; set; }
         public double[] fr_n { get; set; }
         public double[] fr_p { get; set; }
+
+        public ResidueType()
+        {
+            fom_type = "inert";
+            InitialiseWithDefaults();
+        }
+
+        public ResidueType(string fomType)
+        {
+            fom_type = fomType;
+            InitialiseWithDefaults();
+        }
+
+        private void InitialiseWithDefaults()
+        {
+            fraction_C = 0.4;
+            specific_area = 0.0005;
+            cf_contrib = 1;
+            pot_decomp_rate = 0.1;
+            fr_c = new double[3] { 0.2, 0.7, 0.1 };
+            fr_n = new double[3] { 0.2, 0.7, 0.1 };
+            fr_p = new double[3] { 0.2, 0.7, 0.1 };
+        }
+
+
     }
         [Serializable]
 

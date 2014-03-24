@@ -134,6 +134,8 @@ namespace Models
                     Locks[Filename].Aquire();
                     if (!TableExists("Simulations"))
                         Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                    if (!TableExists("Messages"))
+                        Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
                     Locks[Filename].Release();
                 }
             }

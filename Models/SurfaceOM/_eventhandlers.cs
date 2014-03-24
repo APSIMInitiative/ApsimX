@@ -43,6 +43,8 @@ namespace Models.SurfaceOM
 
         public override void OnCommencing()
         {
+            if (ResidueTypes == null)
+                ResidueTypes = new SurfaceOM.ResidueTypes();
             g = new SurfaceOMGlobals();
             p = new SurfaceOMParameters();
             c = new SurfaceOMConstants();

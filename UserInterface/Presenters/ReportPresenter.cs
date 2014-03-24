@@ -60,6 +60,7 @@ namespace UserInterface.Presenters
                 {
                     e.Items.Add(Property.Name);
                 }
+                e.Items.Sort();
             }
         }
 

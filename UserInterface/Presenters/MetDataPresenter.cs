@@ -116,8 +116,11 @@ namespace UserInterface.Presenters
                 }
                 if (MetData.StartDate.DayOfYear > 2) //if the start year is truncated
                 {
-                    yearly.RemoveAt(0);
-                    count -= 1;
+                    if (yearly.Count > 0)
+                    {
+                        yearly.RemoveAt(0);
+                        count -= 1;
+                    }
                     startYr += 1;
                 }
                 if (count > 0)

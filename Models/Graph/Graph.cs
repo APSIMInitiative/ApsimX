@@ -59,7 +59,7 @@ namespace Models.Graph
                         rootComponent = rootComponent.Parent;
 
                     if (rootComponent == null || !(rootComponent is Simulations))
-                        throw new Exception("Cannot find root component");
+                        return null;
 
                     Simulations simulations = rootComponent as Simulations;
                     _DataStore = new DataStore();

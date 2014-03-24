@@ -685,6 +685,13 @@ namespace Models
                 }
             }
             // Couldn't find
+
+            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // crop type
+                ComponentData.Add(new ComponentDataStruct() { Name = name, Albedo = 0.26, Gsmax = 0.011 });
+                return ComponentData.Count - 1;
+            }
             return -1;
         }
 

@@ -245,19 +245,22 @@ namespace Models
         {
             foreach (string Event in Events)
             {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
+                if (Event != "")
+                {
+                    string ComponentName = Utility.String.ParentName(Event, '.');
+                    string EventName = Utility.String.ChildName(Event, '.');
 
-                if (ComponentName == null)
-                    throw new Exception("Invalid syntax for reporting event: " + Event);
-                object Component = Get(ComponentName);
-                if (Component == null)
-                    throw new Exception(Name + " can not find the component: " + ComponentName);
-                EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                if (ComponentEvent == null)
-                    throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
+                    if (ComponentName == null)
+                        throw new Exception("Invalid syntax for reporting event: " + Event);
+                    object Component = Get(ComponentName);
+                    if (Component == null)
+                        throw new Exception(Name + " can not find the component: " + ComponentName);
+                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
+                    if (ComponentEvent == null)
+                        throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
 
-                ComponentEvent.AddEventHandler(Component, new EventHandler(OnReport));
+                    ComponentEvent.AddEventHandler(Component, new EventHandler(OnReport));
+                }
             }
         }
 
@@ -355,7 +358,8 @@ namespace Models
                 if (Component != null)
                 {
                     EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                    ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
+                    if (ComponentEvent != null)
+                        ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
                 }
             }
         }

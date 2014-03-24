@@ -523,6 +523,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Public interface specific to Root
+        [XmlIgnore]
         [Units("mm")]
         public double RootDepth = 0;
 

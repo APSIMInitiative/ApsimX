@@ -140,7 +140,7 @@ namespace Importer
                 newNode.InnerText = "Simulations";
 
                 XmlNode rootNode = doc.DocumentElement;     // get first folder
-                AddChildComponents(rootNode, xdocNode);
+                AddFoldersAndSimulations(rootNode, xdocNode);
                 AddDataStore(xdocNode);                     // each file must contain a DataStore
 
                 //write to temporary xfile
@@ -163,6 +163,28 @@ namespace Importer
                 throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message + "\n");
             }
             return newSimulations;
+        }
+
+        /// <summary>
+        /// At the top level we only want to add folder and simulation nodes, not nodes
+        /// under 'shared' folders eg. wheat validation.
+        /// </summary>
+        /// <param name="systemNode"></param>
+        /// <param name="destParent"></param>
+        private void AddFoldersAndSimulations(XmlNode systemNode, XmlNode destParent)
+        {
+            XmlNode child = systemNode.FirstChild;
+            while (child != null)
+            {
+                if (child.Name == "simulation")
+                    AddComponent(child, ref destParent);
+                else if (child.Name == "folder")
+                {
+                    XmlNode newFolder = AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(child));
+                    AddFoldersAndSimulations(child, newFolder);
+                }
+                child = child.NextSibling;
+            }
         }
 
         /// <summary>
@@ -252,6 +274,7 @@ namespace Importer
                 {
                     newNode = ImportSoilWater(compNode, destParent, newNode);
                     SoilWaterExists = (newNode != null);
+                    AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -272,8 +295,13 @@ namespace Importer
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
-                    CopyNodeAndValue(compNode, newNode, "paddock_area", "Area");
 
+                    string area = GetInnerText(compNode, "paddock_area");
+                    if (area == "")
+                    {
+                        Utility.Xml.SetValue(compNode, "paddock_area", "1.0");
+                    }
+                    CopyNodeAndValue(compNode, newNode, "paddock_area", "Area");
                     SurfOMExists = false;
                     SoilWaterExists = false;
                     AddChildComponents(compNode, newNode);
