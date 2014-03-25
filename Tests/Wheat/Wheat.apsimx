@@ -2673,16 +2673,6 @@
   <DataStore>
     <Name>DataStore</Name>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Wheat</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
-    </Test>
-  </Tests>
   <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

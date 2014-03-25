@@ -293,13 +293,14 @@ namespace ModelTests
             APSIMImporter importer = new APSIMImporter();
             importer.ProcessFile("Continuous_Wheat.apsim");
 
-            StreamReader reader = new StreamReader("Continuous_Wheat.apsimx");  // from test runs directory. Compare with file from Resources directory
-            string testrun = reader.ReadToEnd();
-            reader.Close();
+            Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
+            
+            Assert.AreEqual(testrunSimulations.AllModels.Count, 68);
+            Assert.IsNotNull(testrunSimulations.Find("wheat"));
+            Assert.IsNotNull(testrunSimulations.Find("clock"));
+            Assert.IsNotNull(testrunSimulations.Find("SoilNitrogen"));
+            Assert.IsNotNull(testrunSimulations.Find("SoilWater"));
 
-            string control = System.Text.Encoding.ASCII.GetString(Properties.Resources.Continuous_Wheat1);
-            // do a string comparison. There may be a better way to identify difference but this will show the differences in the text.
-            Assert.AreEqual(testrun, control, "Imported file contents");
         }
     }
 }
