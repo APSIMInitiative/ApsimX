@@ -300,7 +300,6 @@ namespace ModelTests
             Assert.IsNotNull(testrunSimulations.Find("clock"));
             Assert.IsNotNull(testrunSimulations.Find("SoilNitrogen"));
             Assert.IsNotNull(testrunSimulations.Find("SoilWater"));
-
         }
     }
 }
