@@ -649,6 +649,7 @@
         <ResidueTypes>
           <ResidueType>
             <Name>Slurp</Name>
+            <fom_type>inert</fom_type>
             <fraction_C>0.08</fraction_C>
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
@@ -743,7 +744,6 @@
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>true</AutoCreateReport>
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
@@ -1392,6 +1392,7 @@
         <ResidueTypes>
           <ResidueType>
             <Name>Slurp</Name>
+            <fom_type>inert</fom_type>
             <fraction_C>0.08</fraction_C>
             <po4ppm>10</po4ppm>
             <nh4ppm>10</nh4ppm>
