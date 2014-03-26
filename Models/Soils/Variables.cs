@@ -392,6 +392,7 @@ namespace Models.Soils
         /// <remarks>
         /// Case not given, iniFomCNratio is used
         /// </remarks>
+        [XmlIgnore]
         private double[] fomPoolsCNratio = null;
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         public double[] root_cn_pool

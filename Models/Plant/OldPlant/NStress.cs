@@ -78,8 +78,6 @@ namespace Models.PMF.OldPlant
         *   status between a critical and minimum Nitrogen concentration.
         */
         {
-            //Fixme, this should be active
-            /*
             double dm = Leaf.Live.Wt;
             double N = Leaf.Live.N;
             if (Stem != null)
@@ -112,7 +110,7 @@ namespace Models.PMF.OldPlant
                     double result = multiplier * dividend / divisor;
                     return Utility.Math.Bound(result, 0.0, 1.0);
                 }
-            }*/
+            }
             return (1.0);
         }
 

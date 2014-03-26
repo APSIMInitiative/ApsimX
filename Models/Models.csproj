@@ -115,6 +115,9 @@
     <Compile Include="Memo.cs" />
     <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
+    <Compile Include="Soils\PatchHandler.cs" />
+    <Compile Include="Soils\soilCNPatch.cs" />
+    <Compile Include="Soils\Variables.cs" />
     <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
@@ -235,7 +238,6 @@
     <Compile Include="Plant\Summary.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
@@ -244,7 +246,6 @@
     <Compile Include="Soils\Sample.cs" />
     <Compile Include="Soils\simpleSoilTemp.cs" />
     <Compile Include="Soils\Soil.cs" />
-    <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilOrganicMatter.cs" />
@@ -255,7 +256,6 @@
     <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
-    <Compile Include="Soils\Variables.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />

@@ -99,7 +99,7 @@ namespace Models
         public double Rain { get { return MetData.rain; } }
         public double Radn { get { return MetData.radn; } }
         public double vp { get { return MetData.vp; } }
-        public double CO2 { get { return 380; } }
+        public double CO2 { get { return 350; } }
         public double Latitude
         {
             get

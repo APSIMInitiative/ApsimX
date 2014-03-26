@@ -103,6 +103,7 @@ namespace Models.PMF.OldPlant
 
             Population.OnSow(SowingData);
             WriteSowReport(SowingData);
+            OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
         #endregion
 
