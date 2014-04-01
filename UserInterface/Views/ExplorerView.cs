@@ -170,8 +170,7 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            Node.Nodes.Clear();
-            if (Description.HasChildren)
+            if (Node.Nodes.Count == 0 && Description.HasChildren)
                 Node.Nodes.Add("Loading...");
         }
 

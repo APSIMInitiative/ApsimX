@@ -13,21 +13,21 @@ namespace UserInterface.Presenters
     {
         private IGridView Grid;
         private Model Model;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
         private List<Utility.IVariable> Properties = new List<Utility.IVariable>();
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             Grid = View as IGridView;
             this.Model = Model as Model;
-            this.CommandHistory = CommandHistory;
+            this.ExplorerPresenter = explorerPresenter;
 
             PopulateGrid(this.Model);
             Grid.CellValueChanged += OnCellValueChanged;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             Grid.CellValueChanged -= OnCellValueChanged;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -102,9 +102,9 @@ namespace UserInterface.Presenters
                                                                                     Properties[Row].Name,
                                                                                     NewValue);
             //Stop the recursion. The users entry is the updated value in the grid.
-            CommandHistory.ModelChanged -= OnModelChanged;
-            CommandHistory.Add(Cmd, true);
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

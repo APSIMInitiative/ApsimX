@@ -16,7 +16,7 @@ namespace Models.PMF
     {
         public static StreamWriter Dbg = null;
         
-        [Conditional("DEBUG")]
+        [Conditional("DEBUGOUTPUT")]
         public static void Debug(string format, object value)
         {
             if (Dbg == null)
@@ -29,7 +29,7 @@ namespace Models.PMF
             Dbg.WriteLine(string.Format(format, value));
         }
 
-        [Conditional("DEBUG")]
+        [Conditional("DEBUGOUTPUT")]
         public static void DebugArray(string format, double[] value, int NumElements)
         {
             for (int i = 0; i < NumElements; i++)

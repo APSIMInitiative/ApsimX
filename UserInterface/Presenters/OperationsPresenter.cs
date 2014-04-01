@@ -16,21 +16,21 @@ namespace UserInterface.Presenters
     {
         private Operations Operations;
         private OperationsView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach model to view.
         /// </summary>
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Operations = model as Operations;
             View = view as OperationsView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             PopulateEditorView();
             View.EditorView.ContextItemsNeeded += OnContextItemsNeeded;
             View.EditorView.TextHasChangedByUser += OnTextHasChangedByUser;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         {
             View.EditorView.ContextItemsNeeded -= OnContextItemsNeeded;
             View.EditorView.TextHasChangedByUser -= OnTextHasChangedByUser;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             List<Operation> operations = new List<Operation>();
             foreach (string line in View.EditorView.Lines)
             {
@@ -74,8 +74,8 @@ namespace UserInterface.Presenters
                     operations.Add(operation);
                 }
             }
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

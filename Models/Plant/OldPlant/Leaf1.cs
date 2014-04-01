@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class Leaf1 : BaseOrgan1, AboveGround
     {
         #region Parameters read from XML file and links to other functions.

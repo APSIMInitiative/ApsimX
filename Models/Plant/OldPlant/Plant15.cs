@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class HarvestType
     {
         public Double Plants;
@@ -20,10 +21,12 @@ namespace Models.PMF.OldPlant
         public Double Height;
         public String Report = "";
     }
+    [Serializable]
     public class RemovedByAnimalType
     {
         public RemovedByAnimalelementType[] element;
     }
+    [Serializable]
     public class RemovedByAnimalelementType
     {
         public String CohortID = "";
@@ -34,6 +37,7 @@ namespace Models.PMF.OldPlant
         public String Chem = "";
         public Double WeightRemoved;
     }
+    [Serializable]
     public class AvailableToAnimalelementType
     {
         public String CohortID = "";
@@ -48,6 +52,7 @@ namespace Models.PMF.OldPlant
         public Double S;
         public Double AshAlk;
     }
+    [Serializable]
     public class AvailableToAnimalType
     {
         public AvailableToAnimalelementType[] element;

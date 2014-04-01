@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
         [Link]

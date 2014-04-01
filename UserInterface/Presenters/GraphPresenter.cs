@@ -10,20 +10,20 @@ namespace UserInterface.Presenters
     {
         private IGraphView GraphView;
         private Graph Graph;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             Graph = Model as Graph;
             GraphView = View as GraphView;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             GraphView.OnAxisClick += OnAxisClick;
             GraphView.OnPlotClick += OnPlotClick;
-            CommandHistory.ModelChanged += OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             GraphView.DrawGraph(Graph);
         }
 
@@ -34,7 +34,7 @@ namespace UserInterface.Presenters
         {
             GraphView.OnAxisClick -= OnAxisClick;
             GraphView.OnPlotClick -= OnPlotClick;
-            CommandHistory.ModelChanged -= OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
 
@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
             AxisPresenter AxisPresenter = new AxisPresenter();
             AxisView A = new AxisView();
             GraphView.ShowEditorPanel(A);
-            AxisPresenter.Attach(GetAxis(AxisPosition), A, CommandHistory);
+            AxisPresenter.Attach(GetAxis(AxisPosition), A, ExplorerPresenter);
         }
 
         private void OnPlotClick()
@@ -60,7 +60,7 @@ namespace UserInterface.Presenters
             SeriesPresenter SeriesPresenter = new SeriesPresenter();
             SeriesView SeriesView = new SeriesView();
             GraphView.ShowEditorPanel(SeriesView);
-            SeriesPresenter.Attach(Graph, SeriesView, CommandHistory);
+            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
         }
 
         private object GetAxis(OxyPlot.Axes.AxisPosition AxisType)

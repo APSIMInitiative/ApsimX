@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class PlantSpatial1 : Model
     {
         [Link]

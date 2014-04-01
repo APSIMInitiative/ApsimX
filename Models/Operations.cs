@@ -72,6 +72,7 @@ namespace Models
                                      "using Models.Soils;\r\n" +
                                      "namespace Models\r\n" +
                                      "{\r\n" +
+                                     "   [Serializable]\r\n" +
                                      "   public class OperationsScript : Model\r\n" +
                                      "   {\r\n";
 

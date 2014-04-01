@@ -87,10 +87,10 @@ namespace Models
             if (simulations != null)
             {
                 // Make sure that the .db exists and that it has a Simulations table.
-                string dbFileName = Path.ChangeExtension(simulations.FileName, ".db");
-                if (File.Exists(dbFileName))
+                Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                if (File.Exists(Filename))
                 {
-                    Connect(dbFileName, false);
+                    Connect(Filename, false);
 
                     // Get rid of unwanted simulations.
                     RemoveUnwantedSimulations(simulations);
@@ -99,7 +99,7 @@ namespace Models
                     Disconnect();
 
                     // Now reconnect as readonly. This is so the GUI can display data from the db
-                    Connect(dbFileName, true);
+                    Connect(Filename, true);
                 }
             }
         }
@@ -323,6 +323,10 @@ namespace Models
             {
                 try
                 {
+                    if (Connection == null)
+                    {
+                        Connect(Filename, true);
+                    }
                     DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
                     List<string> tables = new List<string>();
                     if (table != null)

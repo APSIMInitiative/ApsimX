@@ -14,13 +14,13 @@ namespace UserInterface.Presenters
         private Memo MemoModel;
         private MemoView MemoViewer;
 
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             MemoModel = Model as Memo;
             MemoViewer = View as MemoView;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             MemoViewer.MemoText = MemoModel.MemoText;
 

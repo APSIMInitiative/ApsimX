@@ -95,9 +95,6 @@ namespace Models
         /// </summary>
         public override void OnLoaded()
         {
-            // Cleanup after last build.
-            TemporaryFiles = new Utility.TempFileNames(Simulation.FileName, this, ".dll");
-
             HasDeserialised = true;
             if (Script == null)
                 RebuildScriptModel();
@@ -108,7 +105,7 @@ namespace Models
         /// </summary>
         public string RebuildScriptModel()
         {
-            if (HasDeserialised)
+            if (HasDeserialised && Simulation != null)
             {
                 // If a script model already exists, then serialise it so that we capture the current state,
                 // and then create a new script model using those values.
@@ -126,6 +123,9 @@ namespace Models
                 }
                 
                 // determine if the script needs to be recompiled
+                if (TemporaryFiles == null)
+                    TemporaryFiles = new Utility.TempFileNames(Simulation.FileName, this, ".dll");
+
                 if ((CompiledAssembly == null) || (String.Compare(_Code, CompiledCode) != 0))
                 {
                     CompiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, TemporaryFiles.GetUniqueFileName());

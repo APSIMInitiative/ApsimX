@@ -13,15 +13,15 @@ namespace UserInterface.Presenters
     {
         private Report Report;
         private IReportView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             this.Report = Model as Report;
-            this.CommandHistory = CommandHistory;
+            this.ExplorerPresenter = explorerPresenter;
             this.View = View as IReportView;
 
             this.View.VariableList.Lines = Report.Variables;
@@ -30,7 +30,7 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
-            CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
-            CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
-            CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
+            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnEventNamesChanged(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
-            CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
+            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
         /// <summary>

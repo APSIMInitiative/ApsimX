@@ -15,18 +15,18 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ISeriesView SeriesView;
         private DataStore DataStore;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model and view to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             //Series Series = Model as Series;
             //Graph = Series.Parent as Graph;
             Graph = Model as Graph;
             SeriesView = View as SeriesView;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
             DataStore = Graph.DataStore;
 
             SeriesView.SeriesGrid.AddContextAction("Delete series", OnDeleteSeries);
@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
             PopulateSeries();
 
             SeriesView.XFocused = true;
-            this.CommandHistory.ModelChanged += OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
 
             SeriesView.DataSourceChanged += OnDataSourceChanged;
             OnDataSourceChanged(SeriesView.DataSource);
@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
         {
             SeriesView.DataSourceChanged -= OnDataSourceChanged;
             SeriesView.DataGrid.ColumnHeaderClicked -= OnDataColumnClicked;
-            CommandHistory.ModelChanged -= OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace UserInterface.Presenters
             string[] PropertyNamesChanged = new string[] { "Series", "Axes" };
             object[] PropertyValues = new object[] { AllSeries, AllAxes };
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, PropertyNamesChanged, PropertyValues);
-            CommandHistory.Add(Cmd);
+            ExplorerPresenter.CommandHistory.Add(Cmd);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace UserInterface.Presenters
                 AllSeries.AddRange(Graph.Series);
                 AllSeries.RemoveAt(SeriesIndex);
                 Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", AllSeries);
-                CommandHistory.Add(Cmd);
+                ExplorerPresenter.CommandHistory.Add(Cmd);
             }
         }
 
@@ -361,7 +361,7 @@ namespace UserInterface.Presenters
         private void OnClearSeries(object Sender, EventArgs Args)
         {
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", new List<Series>());
-            CommandHistory.Add(Cmd);
+            ExplorerPresenter.CommandHistory.Add(Cmd);
         }
 
     }

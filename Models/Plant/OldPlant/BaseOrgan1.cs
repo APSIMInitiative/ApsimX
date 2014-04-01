@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     abstract public class BaseOrgan1 : ModelCollection, Organ1
     {
         public Biomass Live 

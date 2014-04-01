@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class Root1 : BaseOrgan1, BelowGround
     {
 

@@ -1,14 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <Folder>
-    <Name>shared</Name>
-    <Area>0</Area>
-  </Folder>
-  <Folder>
+  <DataStore>
+    <Name>DataStore</Name>
+  </DataStore>
+  <Experiment>
     <Name>APS26</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>NRate</Name>
+        <FactorValue>
+          <Name>0</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>40</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>80</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>160</Name>
+        </FactorValue>
+        <Paths>
+          <string>[ApplyFertiliser].Script.Amount</string>
+        </Paths>
+      </Factor>
+      <Factor>
+        <Name>Water</Name>
+        <FactorValue>
+          <Name>Wet</Name>
+          <Operations>
+            <Name>IrrigationSchedule</Name>
+            <Operation>
+              <Date>1995-05-31T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:31);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-01T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:13);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-02T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-05T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-06T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-07T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-08T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-06-15T00:00:00</Date>
+              <Action>Wheat.Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-07-05T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:26);</Action>
+            </Operation>
+          </Operations>
+        </FactorValue>
+        <FactorValue>
+          <Name>Dry</Name>
+          <Operations>
+            <Name>IrrigationSchedule</Name>
+            <Operation>
+              <Date>1995-06-15T00:00:00</Date>
+              <Action>Wheat.Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
+            </Operation>
+          </Operations>
+        </FactorValue>
+        <Paths>
+          <string>[IrrigationSchedule]</string>
+        </Paths>
+      </Factor>
+    </Factors>
     <Simulation>
-      <Name>APS26_DryN000</Name>
+      <Name>Base</Name>
       <Clock>
         <Name>clock</Name>
         <StartDate>1995-06-13T00:00:00</StartDate>
@@ -64,11 +142,11 @@
           <Name>Irrigation</Name>
         </Irrigation>
         <Fertiliser>
-          <Name>fertiliser</Name>
+          <Name>Fertiliser</Name>
           <Definitions />
         </Fertiliser>
         <Manager>
-          <Name>Fertilizer</Name>
+          <Name>ApplyFertiliser</Name>
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
@@ -78,7 +156,25 @@ namespace Models
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Clock TimeClock;
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		
+		[Description("Day of year fertiliser is to be applied")]
+		public int FertDayOfYear { get; set;}
+
+		[Description("Amount of fertiliser to be applied")]
+		public double Amount { get; set;}
+
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			if (Clock.Today.DayOfYear == FertDayOfYear)
+			{
+				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+			}
+		
+		}
+		
 	}
 }
 ]]></Code>
@@ -2483,43 +2579,7 @@ namespace Models
           <RemovedByAnimal />
         </Plant15>
         <Operations>
-          <Name>Operations</Name>
-          <Operation>
-            <Date>1995-05-31T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:31);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-01T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:13);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-02T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-05T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-06T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-07T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-08T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-06-15T00:00:00</Date>
-            <Action>Wheat.Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-07-05T00:00:00</Date>
-            <Action>Irrigation.Apply(amount:26);</Action>
-          </Operation>
+          <Name>IrrigationSchedule</Name>
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -2551,65 +2611,61 @@ namespace Models
         <Area>1</Area>
       </Zone>
       <Input>
-        <Name>Input</Name>
-        <FileName>OLDAPS26_DryN000.out</FileName>
+        <Name>Observed</Name>
+        <FileName>APS26TimeSeries.txt</FileName>
       </Input>
-      <Graph>
-        <Name>Graph</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>LAI</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Title>ApsimX</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8355840</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <SimulationName>*</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>*</SimulationName>
-            <TableName>Report</TableName>
-            <FieldName>Wheat.Leaf.LAI</FieldName>
-          </Y>
-        </Series>
-        <Series>
-          <Title>Old Apsim</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <X>
-            <SimulationName>*</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Date</FieldName>
-          </X>
-          <Y>
-            <SimulationName>*</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>lai</FieldName>
-          </Y>
-        </Series>
-      </Graph>
       <Area>0</Area>
     </Simulation>
-    <Area>0</Area>
-  </Folder>
-  <DataStore>
-    <Name>DataStore</Name>
-  </DataStore>
+    <Graph>
+      <Name>Graph</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>ApsimX</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8355840</ColourArgb>
+        <Marker>None</Marker>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.Leaf.LAI</FieldName>
+        </Y>
+      </Series>
+      <Series>
+        <Title>Observed</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Observed</TableName>
+          <FieldName>Date</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Observed</TableName>
+          <FieldName>lai</FieldName>
+        </Y>
+      </Series>
+    </Graph>
+  </Experiment>
   <Area>0</Area>
   <ExplorerWidth>238</ExplorerWidth>
 </Simulations>

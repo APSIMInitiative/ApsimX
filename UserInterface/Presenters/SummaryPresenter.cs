@@ -15,23 +15,23 @@ namespace UserInterface.Presenters
     {
         private ISummary Summary;
         private ISummaryView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Summary = model as ISummary;
             View = view as ISummaryView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
             PopulateView();
 
             View.AutoCreateChanged += OnAutoCreateChanged;
             View.CreateButtonClicked += OnCreateButtonClicked;
             View.HTMLChanged += OnHTMLChanged;
             View.StateVariablesChanged += OnStateVariablesChanged;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
             View.AutoCreateChanged -= OnAutoCreateChanged;
             View.CreateButtonClicked -= OnCreateButtonClicked;
             View.HTMLChanged -= OnHTMLChanged;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnHTMLChanged(object sender, EventArgs e)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "html", View.html));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "html", View.html));
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnAutoCreateChanged(object sender, EventArgs e)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "AutoCreate", View.AutoCreate));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "AutoCreate", View.AutoCreate));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnStateVariablesChanged(object sender, EventArgs e)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "StateVariables", View.StateVariables));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "StateVariables", View.StateVariables));
         }
 
         /// <summary>

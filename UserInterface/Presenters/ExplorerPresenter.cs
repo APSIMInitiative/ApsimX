@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             this.CommandHistory = new CommandHistory();
             this.ApsimXFile = Model as Simulations;
@@ -204,6 +204,14 @@ namespace UserInterface.Presenters
         //        View.ShowMessage(message, DataStore.ErrorLevel.Error);
         //    }
         //}
+
+        /// <summary>
+        /// Add a status message to the explorer window
+        /// </summary>
+        public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
+        {
+            View.ShowMessage(Message, errorLevel);
+        }
 
 
         #region Events from view
@@ -459,7 +467,7 @@ namespace UserInterface.Presenters
                     if (NewView != null && CurrentRightHandPresenter != null)
                     {
                         View.AddRightHandView(NewView);
-                        CurrentRightHandPresenter.Attach(Model, NewView, CommandHistory);
+                        CurrentRightHandPresenter.Attach(Model, NewView, this);
                     }
                 }
             }

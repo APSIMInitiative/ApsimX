@@ -299,7 +299,18 @@ namespace UserInterface.Presenters
                 ExplorerPresenter.CommandHistory.Add(Cmd, true);
             }
         }
-        
+
+        [ContextModelType(typeof(Factors))]
+        [ContextMenuName("Add factor")]
+        public void AddFactor(object Sender, EventArgs e)
+        {
+            ModelCollection Factors = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
+            if (Factors != null)
+            {
+                AddModelCommand Cmd = new AddModelCommand("<Factor/>", Factors);
+                ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            }
+        }
         
         #endregion
     }

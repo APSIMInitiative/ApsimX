@@ -721,6 +721,7 @@
           <ResidueTypes>
             <ResidueType>
               <Name>Potato</Name>
+              <fom_type>inert</fom_type>
               <fraction_C>0.08</fraction_C>
               <po4ppm>10</po4ppm>
               <nh4ppm>10</nh4ppm>
@@ -1552,6 +1553,7 @@
           <ResidueTypes>
             <ResidueType>
               <Name>Potato</Name>
+              <fom_type>inert</fom_type>
               <fraction_C>0.08</fraction_C>
               <po4ppm>10</po4ppm>
               <nh4ppm>10</nh4ppm>
@@ -2344,6 +2346,7 @@
           <ResidueTypes>
             <ResidueType>
               <Name>Potato</Name>
+              <fom_type>inert</fom_type>
               <fraction_C>0.08</fraction_C>
               <po4ppm>10</po4ppm>
               <nh4ppm>10</nh4ppm>
@@ -3135,6 +3138,7 @@
           <ResidueTypes>
             <ResidueType>
               <Name>Potato</Name>
+              <fom_type>inert</fom_type>
               <fraction_C>0.08</fraction_C>
               <po4ppm>10</po4ppm>
               <nh4ppm>10</nh4ppm>
@@ -3240,7 +3244,6 @@
   </Experiment>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>false</AutoCreateReport>
   </DataStore>
   <Graph>
     <Name>Graph</Name>
@@ -3366,196 +3369,196 @@
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser0</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>305</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser0</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>0</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser0</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>354</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser0</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>0</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser20</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>305</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser20</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>20</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser20</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>354</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser20</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>20</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser60</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>305</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser60</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>60</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser60</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>354</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser60</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>60</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 80</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser80</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>305</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 80</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser80</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>80</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 80</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser80</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>354</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 80</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser80</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>80</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 100</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser100</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>305</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-11-01: Fertiliser 100</SimulationName>
+      <SimulationName>ExperimentSowDate2003-11-01Fertiliser100</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>100</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 100</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser100</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>SowingRule.Script.SowingDate.DayOfYear</ColumnNames>
       <Parameters>354</Parameters>
     </Test>
     <Test>
-      <SimulationName>SowDate 2003-12-20: Fertiliser 100</SimulationName>
+      <SimulationName>ExperimentSowDate2003-12-20Fertiliser100</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>100</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 0</SimulationName>
+      <SimulationName>RangeExperimentFertiliser0</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>0</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 20</SimulationName>
+      <SimulationName>RangeExperimentFertiliser20</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>20</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 40</SimulationName>
+      <SimulationName>RangeExperimentFertiliser40</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>40</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 60</SimulationName>
+      <SimulationName>RangeExperimentFertiliser60</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>60</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 80</SimulationName>
+      <SimulationName>RangeExperimentFertiliser80</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>80</Parameters>
     </Test>
     <Test>
-      <SimulationName>Fertiliser 100</SimulationName>
+      <SimulationName>RangeExperimentFertiliser100</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>FertiliserRule.Script.ApplicationAmount</ColumnNames>
       <Parameters>100</Parameters>
     </Test>
     <Test>
-      <SimulationName>Operations 0N</SimulationName>
+      <SimulationName>OperationsExptOperations0N</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>
       <Parameters>0</Parameters>
     </Test>
     <Test>
-      <SimulationName>Operations 50N</SimulationName>
+      <SimulationName>OperationsExptOperations50N</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
       <ColumnNames>Fertiliser.NitrogenApplied</ColumnNames>

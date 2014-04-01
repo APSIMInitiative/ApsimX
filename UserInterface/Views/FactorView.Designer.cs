@@ -34,14 +34,16 @@
             // 
             // editor
             // 
-            this.editor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.editor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.editor.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.editor.Lines = new string[] {
+        "",
         ""};
             this.editor.Location = new System.Drawing.Point(20, 51);
             this.editor.Name = "editor";
-            this.editor.Size = new System.Drawing.Size(558, 131);
+            this.editor.Size = new System.Drawing.Size(558, 496);
             this.editor.TabIndex = 0;
             // 
             // label1
