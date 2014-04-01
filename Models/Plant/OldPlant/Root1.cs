@@ -56,13 +56,13 @@ namespace Models.PMF.OldPlant
 
         public double DieBackFraction { get; set; }
 
-        public double[] cl = null;
+        public double[] cl { get; set; }
 
-        public double[] ll = null;
+        public double[] ll { get; set; }
 
-        public double[] kl = null;
+        public double[] kl { get; set; }
 
-        public double[] xf = null;
+        public double[] xf { get; set; }
 
         public bool ModifyKL { get; set; }
 
@@ -526,7 +526,7 @@ namespace Models.PMF.OldPlant
         #region Public interface specific to Root
         [XmlIgnore]
         [Units("mm")]
-        public double RootDepth = 0;
+        public double RootDepth { get; set; }
 
         [Units("mm")]
         public double[] RootSWUptake
