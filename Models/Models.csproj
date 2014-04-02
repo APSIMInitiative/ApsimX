@@ -122,6 +122,7 @@
     <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="NullSummary.cs" />
+    <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
@@ -323,6 +324,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

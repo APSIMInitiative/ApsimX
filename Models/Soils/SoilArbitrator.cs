@@ -34,8 +34,6 @@ namespace Models.Soils
         [Link]
         Simulation paddock;
         [Link]
-        Clock clock;   // Equates to the value of the current simulation date - value comes from CLOCK
-        [Link]
         SoilWater SoilWat;
         RootSystem RootData;
         DataTable AllRootSystems;
@@ -58,8 +56,7 @@ namespace Models.Soils
             formatProvider.TextInfo.ListSeparator = " ";
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        private void OnPrepare(object sender, EventArgs e)
         {
             //set up data table
             int NumLayers = 0;
