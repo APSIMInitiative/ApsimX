@@ -1,9 +1,10 @@
 ﻿
+using UserInterface.Views;
 namespace UserInterface.Presenters
 {
     public interface IPresenter
     {
-        void Attach(object Model, object View, CommandHistory CommandHistory);
+        void Attach(object model, object view, ExplorerPresenter explorerPresenter);
 
         void Detach();
     }

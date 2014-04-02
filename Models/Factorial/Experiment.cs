@@ -33,7 +33,7 @@ namespace Models.Factorial
             foreach (List<FactorValue> combination in allCombinations)
             {
                 Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Base);
-                newSimulation.Name = "";
+                newSimulation.Name = Name;
 
                 // Connect events and links in our new  simulation.
                 newSimulation.AllModels.ForEach(DisconnectEvents);
@@ -66,16 +66,18 @@ namespace Models.Factorial
             List<List<FactorValue>> allCombinations = AllCombinations();
 
             List<string> names = new List<string>();
-            foreach (List<FactorValue> combination in allCombinations)
+            if (allCombinations != null)
             {
-                string newSimulationName = "";
+                foreach (List<FactorValue> combination in allCombinations)
+                {
+                    string newSimulationName = Name;
 
-                foreach (FactorValue value in combination)
-                    value.AddToName(ref newSimulationName);
+                    foreach (FactorValue value in combination)
+                        value.AddToName(ref newSimulationName);
 
-                names.Add(newSimulationName);
+                    names.Add(newSimulationName);
+                }
             }
-
             return names.ToArray();
         }
 
@@ -86,17 +88,20 @@ namespace Models.Factorial
         {
             // Create a list of list of factorValuse so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
-            foreach (Factor factor in Factors.factors)
+            if (Factors != null)
             {
-                List<FactorValue> values = new List<FactorValue>();
-                foreach (FactorValue factorValue in factor.FactorValues)
-                    values.AddRange(factorValue.CreateValues());
-                if (values.Count > 0)
-                    allValues.Add(values);
+                foreach (Factor factor in Factors.factors)
+                {
+                    List<FactorValue> values = new List<FactorValue>();
+                    foreach (FactorValue factorValue in factor.FactorValues)
+                        values.AddRange(factorValue.CreateValues());
+                    if (values.Count > 0)
+                        allValues.Add(values);
+                }
+                List<List<FactorValue>> allCombinations = AllCombinationsOf<FactorValue>(allValues.ToArray());
+                return allCombinations;
             }
-
-            List<List<FactorValue>> allCombinations = AllCombinationsOf<FactorValue>(allValues.ToArray());
-            return allCombinations;
+            return null;
         }
 
         /// <summary>
@@ -108,12 +113,14 @@ namespace Models.Factorial
             var combinations = new List<List<T>>();
 
             // prime the data
-            foreach (var value in sets[0])
-                combinations.Add(new List<T> { value });
+            if (sets.Length > 0)
+            {
+                foreach (var value in sets[0])
+                    combinations.Add(new List<T> { value });
 
-            foreach (var set in sets.Skip(1))
-                combinations = AddExtraSet(combinations, set);
-
+                foreach (var set in sets.Skip(1))
+                    combinations = AddExtraSet(combinations, set);
+            }
             return combinations;
         }
 

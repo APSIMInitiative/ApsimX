@@ -377,7 +377,7 @@ namespace Models.Core
 
 
         /// <summary>
-        /// Recursively go through all child models are correctly set their parent field.
+        /// Recursively go through all child models and correctly set their parent field.
         /// </summary>
         protected static void ParentAllModels(ModelCollection parent)
         {

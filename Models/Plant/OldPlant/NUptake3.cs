@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class NUptake3 : ModelCollection
     {
         [Link]

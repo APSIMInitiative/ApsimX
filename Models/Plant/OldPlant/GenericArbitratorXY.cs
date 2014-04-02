@@ -9,6 +9,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class GenericArbitratorXY : ModelCollection
     {
         public string[] PartitionOrgans { get; set; }

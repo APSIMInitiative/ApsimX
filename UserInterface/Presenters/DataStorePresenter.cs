@@ -8,16 +8,16 @@ namespace UserInterface.Presenters
     {
         private DataStore DataStore;
         private IDataStoreView DataStoreView;
-        CommandHistory CommandHistory;
+        ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model and view to this presenter and populate the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory commandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             DataStore = Model as DataStore;
             DataStoreView = View as IDataStoreView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
             
             DataStoreView.PopulateTables(DataStore.SimulationNames, DataStore.TableNames);
 

@@ -6,7 +6,8 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    public class RadiationPartitioning: Model
+    [Serializable]
+    public class RadiationPartitioning : Model
     {
         public double FractIncidentRadn { get; set; }
 

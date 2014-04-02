@@ -16,10 +16,10 @@ namespace UserInterface.Presenters
         private WeatherFile MetData;
         private TabbedMetDataView MetDataView;
 
-        private CommandHistory CommandHistory;
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        private ExplorerPresenter ExplorerPresenter;
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
             MetData = (Model as WeatherFile);
             MetDataView = (View as TabbedMetDataView);
             

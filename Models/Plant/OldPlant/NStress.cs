@@ -6,6 +6,7 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class NStress : ModelCollection
     {
         [Link]

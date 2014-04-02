@@ -10,17 +10,17 @@ namespace UserInterface.Presenters
     {
         private IGridView Grid;
         private Tests Tests;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
         private DataStore DataStore = null;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             Grid = View as IGridView;
             this.Tests = Model as Tests;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             Models.Core.Model RootModel = Tests;
             while (RootModel.Parent != null)
@@ -35,7 +35,7 @@ namespace UserInterface.Presenters
 
             PopulateGrid();
             Grid.CellValueChanged += OnCellValueChanged;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
          /// <summary>
@@ -44,7 +44,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             Grid.CellValueChanged -= OnCellValueChanged;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             DataStore.Disconnect();
             DataStore = null;
         }
@@ -148,7 +148,7 @@ namespace UserInterface.Presenters
         {
             // The ChangePropertyCommand below will trigger a call to OnModelChanged. We don't need to 
             // repopulate the grid so stop the event temporarily until end of this method.
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             PopulateComboItemsInRow(Row);
 
@@ -156,10 +156,10 @@ namespace UserInterface.Presenters
             // via a command.
             Test[] AllTests = DataTableToTests(Grid.DataSource);
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Tests, "AllTests", AllTests);
-            CommandHistory.Add(Cmd, true);
+            ExplorerPresenter.CommandHistory.Add(Cmd, true);
 
             // Reinstate the model changed event.
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
