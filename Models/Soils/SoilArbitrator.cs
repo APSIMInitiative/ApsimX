@@ -56,7 +56,8 @@ namespace Models.Soils
             formatProvider.TextInfo.ListSeparator = " ";
         }
 
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("MiddleOfDay")]
+        private void OnProcess(object sender, EventArgs e)
         {
             //set up data table
             int NumLayers = 0;
@@ -328,22 +329,22 @@ namespace Models.Soils
             string[] ZoneNames = new string[RootData.Zones.Length];
             double[] SWDeps = new double[RootData.Zones.Length];
             double TotalSW;
-        /*    Paddock p;
-            Component Soil;
+            Model p;
+            SoilWater SoilWat;
 
             for (int i = 0; i < ZoneNames.Length; i++)
             {
                 double[] SWlayers;
                 ZoneNames[i] = RootData.Zones[i].ZoneName;
-                p = (Paddock)paddock.LinkByName(ZoneNames[i]);
-                Soil = (Component)p.LinkByType("SoilWat");
-                Soil.Get("sw_dep", out SWlayers);
+                p = (Model)paddock.Find(ZoneNames[i]);
+                SoilWat = (SoilWater)p.Find(typeof(SoilWater));
+                SWlayers = (double[])SoilWat.Get("sw_dep");
                 SWDeps[i] = (double)Utility.Math.Sum(SWlayers);
             }
 
             TotalSW = (double)Utility.Math.Sum(SWDeps);
             for (int i = 0; i < ZoneNames.Length; i++)
-                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.Zones[i].ZoneArea);*/
+                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.Zones[i].ZoneArea);
 
             return SoilWaters;
         }

@@ -9,7 +9,7 @@ namespace Models.PMF
 {
     public class SimpleTree : Model
     {
-        RootSystem RootSystem;
+        public RootSystem RootSystem { get; set; }
         public double CoverLive { get; set; }
         public string plant_status { get; set; }
         public double sw_demand { get; set; }
@@ -20,14 +20,15 @@ namespace Models.PMF
 
         public override void OnCommencing()
         {
-            NumPlots = this.Parent.FindAll(typeof(Zone)).Count();
+            NumPlots = this.Parent.FindAll(typeof(Zone)).Count() - 1; //will evetually be a list of zones to include
             RootSystem = new RootSystem();
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
         }
 
-        public void OnPrepare()
+        [EventSubscribe("StartOfDay")]
+        private void OnPrepare(object sender, EventArgs e)
         {
             RootSystem.Zones = new RootZone[NumPlots];
 
@@ -35,6 +36,7 @@ namespace Models.PMF
             {
                 //   Component fieldProps = (Component)MyPaddock.Parent.ChildPaddocks[i].LinkByName("FieldProps");
                 RootSystem.Zones[i] = new RootZone();
+                RootSystem.Zones[i].ZoneArea = (double)this.Parent.Get("Area"); //get the zone area from parent (field)
                 //   if (!fieldProps.Get("fieldArea", out RootSystem.Zones[i].ZoneArea))
                 //       throw new Exception("Could not find FieldProps component in field " + MyPaddock.Parent.ChildPaddocks[i].Name);
                 SoilWat = (SoilWater)this.Find(typeof(SoilWater));
