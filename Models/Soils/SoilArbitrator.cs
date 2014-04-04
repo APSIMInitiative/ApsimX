@@ -33,7 +33,7 @@ namespace Models.Soils
     {
         [Link]
         Simulation paddock;
-        [Link]
+
         SoilWater SoilWat;
         RootSystem RootData;
         DataTable AllRootSystems;
@@ -124,7 +124,7 @@ namespace Models.Soils
                 IEnumerable<DataRow> RootZones = AllRootSystems.AsEnumerable().Where(row => row.ItemArray[0].Equals(PaddockName));
                 Model p = (Model)paddock.Find(PaddockName);
                 Model fieldProps = (Model)p.Find("FieldProps");
-                double fieldArea = 0;
+                double fieldArea = (double)p.Get("Area");
 //                if (fieldProps == null)
 //                    throw new Exception("Could not find FieldProps component in field " + PaddockName);
 
@@ -188,7 +188,7 @@ namespace Models.Soils
                     }
 
                     //subtract from soil water
-                    for (int j = 0; j < Uptake.ColumnCount; j++)
+                   for (int j = 0; j < Uptake.ColumnCount; j++)
                     {
                         SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
                     }
