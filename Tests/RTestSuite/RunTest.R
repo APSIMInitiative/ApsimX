@@ -146,12 +146,15 @@ for (fileNumber in 1:length(files)){
   }
   if(exists("results"))
     print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
- 
-  if (length(args) > 1){
-      # this line does the save to the external database. comment out to stop this happening for testing
-        sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-  }
+
   odbcCloseAll()
+}
+
+if (length(args) > 1){
+    # this line does the save to the external database. comment out to stop this happening for testing
+    print(noquote("Uploading test results."))
+    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+    print(noquote("Uploading complete."))
 }
 
 #write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing
