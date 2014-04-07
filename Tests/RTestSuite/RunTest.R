@@ -149,7 +149,7 @@ for (fileNumber in 1:length(files)){
  
   if (length(args) > 1){
       # this line does the save to the external database. comment out to stop this happening for testing
-      #    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+        sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
   }
   odbcCloseAll()
 }

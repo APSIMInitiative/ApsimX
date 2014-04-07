@@ -3208,7 +3208,7 @@
       </Y>
     </Series>
   </Graph>
- <!--   <Tests>
+    <Tests>
     <Name>Tests</Name>
     <Test>
       <SimulationName>WithTree</SimulationName>
@@ -3238,7 +3238,7 @@
       <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>	
-  </Tests> -->
+  </Tests>
   <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
