@@ -27,7 +27,7 @@ namespace Models
         public string FileName { get; set; }
 
         [Link]
-        Simulation Simulation = null;
+        protected Simulation Simulation = null;
 
         // A property providing a full file name. The user interface uses this.
         [XmlIgnore]
@@ -68,7 +68,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Return a datatable for this input file.
+        /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable()

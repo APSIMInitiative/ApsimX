@@ -69,6 +69,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\ObservedInputPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
@@ -487,6 +488,7 @@
     <None Include="Resources\element_edit.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\link.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

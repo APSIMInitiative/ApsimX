@@ -27,6 +27,7 @@ namespace Models.Core
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]
         [XmlElement(typeof(Input))]
+        [XmlElement(typeof(PredictedObserved))]
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
@@ -336,6 +337,8 @@ namespace Models.Core
             }
             return false;
         }
+
+
 
         /// <summary>
         /// Give the specified model a unique name

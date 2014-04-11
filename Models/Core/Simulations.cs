@@ -79,20 +79,38 @@ namespace Models.Core
         {
             string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
             StreamWriter Out = new StreamWriter(tempFileName);
-            Out.Write(Utility.Xml.Serialise(this, true));
+            Write(Out);
             Out.Close();
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
             string bakFileName = FileName + ".bak";
             File.Delete(bakFileName);
-            if (File.Exists(FileName)) 
+            if (File.Exists(FileName))
                 File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
         }
 
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public void Write(TextWriter stream)
+        {
+            foreach (Model model in AllModels)
+                model.OnSerialising(xmlSerialisation: true);
+
+            try
+            {
+                stream.Write(Utility.Xml.Serialise(this, true));
+            }
+            finally
+            {
+                foreach (Model model in AllModels)
+                    model.OnSerialised(xmlSerialisation: true);
+            }
+        }
 
         /// <summary>
         /// Constructor, private to stop developers using it. Use Simulations.Read instead.
@@ -176,7 +194,6 @@ namespace Models.Core
 
             return m as Simulations;
         }
-
 
     }
 }

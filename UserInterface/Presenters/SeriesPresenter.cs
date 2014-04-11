@@ -77,7 +77,10 @@ namespace UserInterface.Presenters
                     DataRow Row = Data.NewRow();
                     if (S.X != null)
                     {
-                        Row[0] = S.X.SimulationName + "." + S.X.TableName;
+                        if (S.X.SimulationName == null)
+                            Row[0] = S.X.TableName;
+                        else
+                            Row[0] = S.X.SimulationName + "." + S.X.TableName;
                         Row[1] = S.X.FieldName;
                     }
                     if (S.Y != null)
@@ -130,6 +133,11 @@ namespace UserInterface.Presenters
                             DataSources.Add(SimulationName + "." + TableName);
                 DataSources.Sort();
 
+                // Add in the raw table names e.g. report
+                foreach (string TableName in DataStore.TableNames)
+                    if (TableName != "Messages")
+                        DataSources.Insert(0, TableName);
+
                 // Add in the all simulations in scope tables e.g. *.report
                 foreach (string TableName in DataStore.TableNames)
                     if (TableName != "Messages") 
@@ -173,7 +181,14 @@ namespace UserInterface.Presenters
             if (Col == 0) // Data source
             {
                 string SimulationName = NewContents.ToString();
-                string TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                string TableName;
+                if (SimulationName.Contains("."))
+                    TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                else
+                {
+                    TableName = SimulationName;
+                    SimulationName = null;
+                }
                 S.X.SimulationName = SimulationName;
                 S.X.TableName = TableName;
                 S.Y.SimulationName = SimulationName;

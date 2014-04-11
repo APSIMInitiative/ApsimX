@@ -124,26 +124,29 @@ namespace UserInterface.Presenters
             {
                 if (ApsimXFile != null)
                 {
-                // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                // serialise ApsimXFile to buffer
-                string newSim = Utility.Xml.Serialise(ApsimXFile, true);
-                StreamReader simStream = new StreamReader(ApsimXFile.FileName);
-                string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                simStream.Close();
+                    // need to test is ApsimXFile has changed and only prompt when changes have occured.
+                    // serialise ApsimXFile to buffer
+                    StringWriter o = new StringWriter();
+                    ApsimXFile.Write(o);
+                    string newSim = o.ToString();
 
-                Int32 choice = 1;                           // no save
-                if (String.Compare(newSim, origSim) != 0)   // do comparison
-                {
-                    choice = View.AskToSave(); 
-                }
-                if (choice == -1)                           // cancel
-                    result = false;
-                else if (choice == 0)                       // save
-                {
+                    StreamReader simStream = new StreamReader(ApsimXFile.FileName);
+                    string origSim = simStream.ReadToEnd(); // read original file to buffer2
+                    simStream.Close();
+
+                    Int32 choice = 1;                           // no save
+                    if (String.Compare(newSim, origSim) != 0)   // do comparison
+                    {
+                        choice = View.AskToSave();
+                    }
+                    if (choice == -1)                           // cancel
+                        result = false;
+                    else if (choice == 0)                       // save
+                    {
                         WriteSimulation();
-                    result = true;
-            }
-            }
+                        result = true;
+                    }
+                }
             }
             catch (Exception err)
             {

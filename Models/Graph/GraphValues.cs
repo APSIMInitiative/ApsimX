@@ -44,7 +44,7 @@ namespace Models.Graph
                     return A;
                 }
             }
-            else if (graph.DataStore != null && SimulationName != null && TableName != null && FieldName != null)
+            else if (graph.DataStore != null && TableName != null && FieldName != null)
             {
                 System.Data.DataTable DataSource = graph.DataStore.GetData(SimulationName, TableName);
                 if (DataSource != null && FieldName != null && DataSource.Columns[FieldName] != null)
@@ -65,7 +65,7 @@ namespace Models.Graph
         /// </summary>
         public string[] ValidFieldNames(Graph graph)
         {
-            if (graph.DataStore != null && SimulationName != null && TableName != null && TableName != "")
+            if (graph.DataStore != null && TableName != null && TableName != "")
             {
                 List<string> Names = new List<string>();
                 Names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData(SimulationName, TableName)));

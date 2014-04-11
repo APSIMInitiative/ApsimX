@@ -86,7 +86,7 @@
       </Factor>
     </Factors>
     <Simulation>
-      <Name>Base</Name>
+      <Name>APS26NRate0WaterDry</Name>
       <Clock>
         <Name>clock</Name>
         <StartDate>1995-06-13T00:00:00</StartDate>
@@ -143,21 +143,39 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions />
+          <Definitions>
+            <FertiliserType>
+              <Name>UreaN</Name>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>1</FractionUrea>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NO3N</Name>
+              <FractionNO3>1</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+            </FertiliserType>
+          </Definitions>
         </Fertiliser>
         <Manager>
           <Name>ApplyFertiliser</Name>
+          <Script>
+            <Name>Script</Name>
+            <FertDayOfYear>186</FertDayOfYear>
+            <Amount>0</Amount>
+          </Script>
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 namespace Models
 {
 	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Clock Clock;
 		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
 		
 		[Description("Day of year fertiliser is to be applied")]
 		public int FertDayOfYear { get; set;}
@@ -168,6 +186,8 @@ namespace Models
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
+			Summary.WriteMessage(FullPath, "Clock.Today.DayOfYear: " + Clock.Today.DayOfYear.ToString());
+			Summary.WriteMessage(FullPath, "FertDayOfYear: " + FertDayOfYear.ToString());
 			if (Clock.Today.DayOfYear == FertDayOfYear)
 			{
 				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
@@ -1298,6 +1318,11 @@ namespace Models
             <Dead>
               <Name>Dead</Name>
             </Dead>
+            <NConcentrationCritical>0.02</NConcentrationCritical>
+            <NConcentrationMinimum>0.01</NConcentrationMinimum>
+            <NConcentrationMaximum>0.02</NConcentrationMaximum>
+            <InitialRootDepth>100</InitialRootDepth>
+            <DieBackFraction>0</DieBackFraction>
             <cl />
             <ll>
               <double>0.2</double>
@@ -1329,11 +1354,6 @@ namespace Models
               <double>1</double>
               <double>1</double>
             </xf>
-            <NConcentrationCritical>0.02</NConcentrationCritical>
-            <NConcentrationMinimum>0.01</NConcentrationMinimum>
-            <NConcentrationMaximum>0.02</NConcentrationMaximum>
-            <InitialRootDepth>100</InitialRootDepth>
-            <DieBackFraction>0</DieBackFraction>
             <ModifyKL>false</ModifyKL>
             <ClA>4</ClA>
             <ClB>-0.005</ClB>
@@ -1942,7 +1962,7 @@ namespace Models
             <Dead>
               <Name>Dead</Name>
             </Dead>
-            <dlt_n_senesced_retrans>1.0637965665577477E-05</dlt_n_senesced_retrans>
+            <dlt_n_senesced_retrans>1.0776869661837108E-05</dlt_n_senesced_retrans>
             <dlt_n_senesced_trans>0</dlt_n_senesced_trans>
             <dlt_height>0</dlt_height>
             <dlt_width>0</dlt_width>
@@ -2580,6 +2600,10 @@ namespace Models
         </Plant15>
         <Operations>
           <Name>IrrigationSchedule</Name>
+          <Operation>
+            <Date>1995-06-15T00:00:00</Date>
+            <Action>Wheat.Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
+          </Operation>
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -2608,60 +2632,41 @@ namespace Models
             <R50>200</R50>
           </ComponentData>
         </MicroClimate>
+        <PredictedObserved>
+          <Name>PredictedObserved</Name>
+          <FileName>APS26TimeSeries.txt</FileName>
+          <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
+        </PredictedObserved>
         <Area>1</Area>
       </Zone>
-      <Input>
-        <Name>Observed</Name>
-        <FileName>APS26TimeSeries.txt</FileName>
-      </Input>
       <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Graph</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>Date</Title>
+        <Title>Observed yield</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Predicted Yield</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title>ApsimX</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8355840</ColourArgb>
-        <Marker>None</Marker>
-        <X>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Leaf.LAI</FieldName>
-        </Y>
-      </Series>
-      <Series>
-        <Title>Observed</Title>
+        <Title>Yield</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <X>
-          <SimulationName>*</SimulationName>
-          <TableName>Observed</TableName>
-          <FieldName>Date</FieldName>
+          <TableName>PredictedObserved</TableName>
+          <FieldName>ObservedWheat.Grain.Wt</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
-          <TableName>Observed</TableName>
-          <FieldName>lai</FieldName>
+          <TableName>PredictedObserved</TableName>
+          <FieldName>PredictedWheat.Grain.Wt</FieldName>
         </Y>
       </Series>
     </Graph>

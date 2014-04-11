@@ -32,7 +32,7 @@ namespace Models.Factorial
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Utility.Reflection.Clone<Simulation>(Base);
+                Simulation newSimulation = Model.Clone(Base) as Simulation;
                 newSimulation.Name = Name;
 
                 // Connect events and links in our new  simulation.
@@ -41,7 +41,6 @@ namespace Models.Factorial
                 newSimulation.AllModels.ForEach(ConnectEventPublishers);
                 newSimulation.AllModels.ForEach(ResolveLinks);
                 newSimulation.AllModels.ForEach(CallOnLoaded);
-
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);

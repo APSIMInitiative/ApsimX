@@ -129,7 +129,7 @@ namespace Models.Factorial
         {
             DisconnectEvents(value);
             UnresolveLinks(value);
-            Model newModel = Utility.Reflection.Clone<Model>(value);
+            Model newModel = Model.Clone(value);
             Model modelToReplace = newSimulation.Get(path) as Model;
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);

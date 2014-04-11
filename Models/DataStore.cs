@@ -359,7 +359,7 @@ namespace Models
             try
             {
                 string sql = "SELECT * FROM " + tableName;
-                if (simulationName != "*")
+                if (simulationName != "*" && simulationName != null)
                 {
                     int simulationID = GetSimulationID(simulationName);
                     sql += " WHERE SimulationID = " + simulationID.ToString();

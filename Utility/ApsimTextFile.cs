@@ -405,7 +405,7 @@ namespace Utility
             int Pos = In.Position;
 
             StringCollection Words = new StringCollection();
-            while (GetNextLine(In, ref Words) && Words[w] == "?") ;
+            while (GetNextLine(In, ref Words) && (Words[w] == "?" || Words[w] == "*"));
 
             In.Position = Pos;
 

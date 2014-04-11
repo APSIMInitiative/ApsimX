@@ -54,7 +54,8 @@ namespace Models
         /// </summary>
         static void OnError(object sender, Utility.JobManager.JobCompleteArgs e)
         {
-            Console.WriteLine(e.ErrorMessage);
+            if (e.ErrorMessage != null)
+                Console.WriteLine(e.ErrorMessage);
         }
 
 

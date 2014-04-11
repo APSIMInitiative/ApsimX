@@ -246,21 +246,7 @@ namespace Models
             foreach (string Event in Events)
             {
                 if (Event != "")
-                {
-                    string ComponentName = Utility.String.ParentName(Event, '.');
-                    string EventName = Utility.String.ChildName(Event, '.');
-
-                    if (ComponentName == null)
-                        throw new Exception("Invalid syntax for reporting event: " + Event);
-                    object Component = Get(ComponentName);
-                    if (Component == null)
-                        throw new Exception(Name + " can not find the component: " + ComponentName);
-                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                    if (ComponentEvent == null)
-                        throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
-
-                    ComponentEvent.AddEventHandler(Component, new EventHandler(OnReport));
-                }
+                    Subscribe(Event, OnReport);
             }
         }
 
@@ -350,18 +336,8 @@ namespace Models
         {
             // Unsubscribe to all events.
             foreach (string Event in Events)
-            {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
-
-                object Component = Get(ComponentName);
-                if (Component != null)
-                {
-                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                    if (ComponentEvent != null)
-                        ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
-                }
-            }
+                if (Event != "")
+                    Unsubscribe(Event);
         }
 
     }
