@@ -158,7 +158,7 @@ namespace Models
                 Utility.Xml.DeleteAttribute(doc.DocumentElement, "xmlns:xsi");
                 elements[0] = doc.DocumentElement;
             }
-            else if (elementsAsXml == null && elements.Length >= 1)
+            else if (elementsAsXml == null && elements != null && elements.Length >= 1)
                 elementsAsXml = elements[0].OuterXml;
             else if (elementsAsXml == null)
                 elementsAsXml = "<Script />";

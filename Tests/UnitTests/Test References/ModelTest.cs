@@ -295,7 +295,7 @@ namespace ModelTests
 
             Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
             
-            Assert.AreEqual(testrunSimulations.AllModels.Count, 68);
+            Assert.AreEqual(testrunSimulations.AllModels.Count, 71);
             Assert.IsNotNull(testrunSimulations.Find("wheat"));
             Assert.IsNotNull(testrunSimulations.Find("clock"));
             Assert.IsNotNull(testrunSimulations.Find("SoilNitrogen"));
