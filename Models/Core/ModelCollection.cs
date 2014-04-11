@@ -153,6 +153,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.RUEModel1))]
         [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
+        [XmlElement(typeof(Models.PMF.SimpleTree))]
         public List<Model> Models { get; set; }
 
         /// <summary>

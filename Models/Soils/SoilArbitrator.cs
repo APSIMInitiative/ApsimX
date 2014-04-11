@@ -33,9 +33,7 @@ namespace Models.Soils
     {
         [Link]
         Simulation paddock;
-        [Link]
-        Clock clock;   // Equates to the value of the current simulation date - value comes from CLOCK
-        [Link]
+
         SoilWater SoilWat;
         RootSystem RootData;
         DataTable AllRootSystems;
@@ -126,7 +124,7 @@ namespace Models.Soils
                 IEnumerable<DataRow> RootZones = AllRootSystems.AsEnumerable().Where(row => row.ItemArray[0].Equals(PaddockName));
                 Model p = (Model)paddock.Find(PaddockName);
                 Model fieldProps = (Model)p.Find("FieldProps");
-                double fieldArea = 0;
+                double fieldArea = (double)p.Get("Area");
 //                if (fieldProps == null)
 //                    throw new Exception("Could not find FieldProps component in field " + PaddockName);
 
@@ -190,7 +188,7 @@ namespace Models.Soils
                     }
 
                     //subtract from soil water
-                    for (int j = 0; j < Uptake.ColumnCount; j++)
+                   for (int j = 0; j < Uptake.ColumnCount; j++)
                     {
                         SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
                     }
@@ -331,22 +329,22 @@ namespace Models.Soils
             string[] ZoneNames = new string[RootData.Zones.Length];
             double[] SWDeps = new double[RootData.Zones.Length];
             double TotalSW;
-        /*    Paddock p;
-            Component Soil;
+            Model p;
+            SoilWater SoilWat;
 
             for (int i = 0; i < ZoneNames.Length; i++)
             {
                 double[] SWlayers;
                 ZoneNames[i] = RootData.Zones[i].ZoneName;
-                p = (Paddock)paddock.LinkByName(ZoneNames[i]);
-                Soil = (Component)p.LinkByType("SoilWat");
-                Soil.Get("sw_dep", out SWlayers);
+                p = (Model)paddock.Find(ZoneNames[i]);
+                SoilWat = (SoilWater)p.Find(typeof(SoilWater));
+                SWlayers = (double[])SoilWat.Get("sw_dep");
                 SWDeps[i] = (double)Utility.Math.Sum(SWlayers);
             }
 
             TotalSW = (double)Utility.Math.Sum(SWDeps);
             for (int i = 0; i < ZoneNames.Length; i++)
-                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.Zones[i].ZoneArea);*/
+                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.Zones[i].ZoneArea);
 
             return SoilWaters;
         }

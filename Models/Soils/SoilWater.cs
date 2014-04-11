@@ -906,7 +906,8 @@ namespace Models.Soils
             get { return _sw_dep; }
             set
             {
-                soilwat2_zero_default_variables();
+                //do we need this now? It actually resets anything passed into sw_dep.
+    //            soilwat2_zero_default_variables();
                 numvals_sw = value.Length;          //used in soilwat2_set_default()
                 _sw_dep = new double[value.Length];
                 Array.Copy(value, _sw_dep, value.Length);
