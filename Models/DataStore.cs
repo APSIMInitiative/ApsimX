@@ -352,15 +352,22 @@ namespace Models
         /// Return all data from the specified simulation and table name. If simulatinName = "*"
         /// the all simulation data will be returned.
         /// </summary>
-        public DataTable GetData(string simulationName, string tableName)
+        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
             if (Connection == null || !TableExists("Simulations"))
                 return null;
             try
             {
-                string sql = "SELECT * FROM " + tableName;
-                if (simulationName != "*" && simulationName != null)
+                string sql;
+
+                if (simulationName == null || simulationName == "*")
                 {
+                    sql = "SELECT S.Name as SimulationName, T.* FROM " + tableName + " T" + ", Simulations S " +
+                          "WHERE SimulationID = ID";
+                }
+                else
+                {
+                    sql = "SELECT * FROM " + tableName;
                     int simulationID = GetSimulationID(simulationName);
                     sql += " WHERE SimulationID = " + simulationID.ToString();
                 }

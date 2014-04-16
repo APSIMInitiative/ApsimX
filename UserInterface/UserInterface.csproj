@@ -91,6 +91,8 @@
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\Configuration.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Editor.cs">
       <SubType>UserControl</SubType>
     </Compile>

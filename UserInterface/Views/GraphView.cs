@@ -107,6 +107,7 @@ namespace UserInterface.Views
         {
             plot1.Model.PlotAreaBorderThickness = 0;
             plot1.Model.LegendBorder = OxyColors.Black;
+            plot1.Model.LegendBackground = OxyColors.White;
             plot1.Model.RefreshPlot(true);
         }
 
@@ -179,6 +180,7 @@ namespace UserInterface.Views
             TextAnnotation annotation = new TextAnnotation();
             annotation.Text = text;
             annotation.HorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
+            annotation.VerticalAlignment = VerticalAlignment.Top;
             annotation.Stroke = OxyColors.White;
             annotation.Position = new DataPoint(x, y);
             annotation.XAxis = GetAxis(xAxisType);

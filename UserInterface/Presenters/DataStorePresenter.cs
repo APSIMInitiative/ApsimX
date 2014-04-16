@@ -1,6 +1,7 @@
 ﻿using System;
 using UserInterface.Views;
 using Models;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
@@ -18,11 +19,13 @@ namespace UserInterface.Presenters
             DataStore = Model as DataStore;
             DataStoreView = View as IDataStoreView;
             ExplorerPresenter = explorerPresenter;
-            
-            DataStoreView.PopulateTables(DataStore.SimulationNames, DataStore.TableNames);
 
             DataStoreView.OnTableSelected += OnTableSelected;
             DataStoreView.CreateNowClicked += OnCreateNowClicked;
+
+            DataStoreView.Grid.ReadOnly = true;
+            DataStoreView.Grid.AutoFilterOn = true;
+            DataStoreView.PopulateTables(DataStore.TableNames);
         }
 
         /// <summary>
@@ -37,9 +40,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The selected table has changed.
         /// </summary>
-        private void OnTableSelected(string SimulationName, string TableName)
+        private void OnTableSelected(string TableName)
         {
-            DataStoreView.PopulateData(DataStore.GetData(SimulationName, TableName));
+            DataStoreView.Grid.DataSource = DataStore.GetData("*", TableName);
+
+            // Make all numeric columns have a format of N3
+            foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+            {
+                DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
+                if (col.DataType == typeof(double))
+                    DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
+            }
         }
 
         /// <summary>
