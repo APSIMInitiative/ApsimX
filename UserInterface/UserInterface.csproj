@@ -69,6 +69,8 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\TitlePresenter.cs" />
+    <Compile Include="Presenters\LegendPresenter.cs" />
     <Compile Include="Presenters\ObservedInputPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
@@ -96,6 +98,18 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\TitleView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TitleView.Designer.cs">
+      <DependentUpon>TitleView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LegendView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\LegendView.Designer.cs">
+      <DependentUpon>LegendView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FactorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -219,6 +233,12 @@
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TitleView.resx">
+      <DependentUpon>TitleView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\LegendView.resx">
+      <DependentUpon>LegendView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FactorView.resx">
       <DependentUpon>FactorView.cs</DependentUpon>

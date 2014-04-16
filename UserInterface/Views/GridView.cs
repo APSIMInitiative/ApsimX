@@ -465,7 +465,7 @@ namespace UserInterface.Views
             if (UserEditingCell)
             {
                 object OldValue = ValueBeforeEdit;
-                ValueBeforeEdit = null;
+                //ValueBeforeEdit = null;
                 UserEditingCell = false;
 
                 // Make sure our table has enough rows.
@@ -476,6 +476,9 @@ namespace UserInterface.Views
                 // Put the new value into the table on the correct row.
                 if (DataSource != null)
                     DataSource.Rows[e.RowIndex][e.ColumnIndex] = NewValue;
+
+                if (ValueBeforeEdit != null && ValueBeforeEdit.GetType() == typeof(string) && NewValue == null)
+                    NewValue = "";
 
                 if (CellValueChanged != null && ValueBeforeEdit != NewValue)
                     CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);

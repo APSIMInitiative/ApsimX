@@ -440,7 +440,7 @@ namespace Utility
             public double RMSD;
         };
 
-        static public RegrStats CalcRegressionStats(List<double> X, List<double> Y)
+        static public RegrStats CalcRegressionStats(IEnumerable X, IEnumerable Y)
         {
             // ------------------------------------------------------------------
             //    Calculate regression stats.   
@@ -469,62 +469,66 @@ namespace Utility
             stats.R2YX = 0.0;
             stats.VarRatio = 0.0;
             stats.RMSD = 0.0;
-            int Num_points = X.Count;
 
-            if (Num_points > 1)
+            int Num_points = 0;
+            IEnumerator xEnum = X.GetEnumerator();
+            IEnumerator yEnum = Y.GetEnumerator();
+            while (xEnum.MoveNext() && yEnum.MoveNext())
             {
+                if (xEnum.Current.GetType() != typeof(double) ||
+                    yEnum.Current.GetType() != typeof(double))
+                    return null;
+                double xValue = Convert.ToDouble(xEnum.Current);
+                double yValue = Convert.ToDouble(yEnum.Current);
 
-                for (int Point = 0;
-                     Point < Num_points;
-                     Point++)
-                {
-                    SumX = SumX + X[Point];
-                    SumX2 = SumX2 + X[Point] * X[Point];       // SS for X
-                    SumY = SumY + Y[Point];
-                    SumY2 = SumY2 + Y[Point] * Y[Point];       // SS for y
-                    SumXY = SumXY + X[Point] * Y[Point];       // SS for products
-                }
-                Xbar = SumX / Num_points;
-                Ybar = SumY / Num_points;
-
-                CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
-                CSSX = SumX2 - SumX * SumX / Num_points;      // Corrected SS for X
-                stats.n = Num_points;
-                stats.m = CSSXY / CSSX;                             // Calculate slope
-                stats.c = Ybar - stats.m * Xbar;                          // Calculate intercept
-
-                TSS = SumY2 - SumY * SumY / Num_points;       // Corrected SS for Y = Sum((y-ybar)^2)
-                TSSM = TSS / (Num_points - 1);                // Total mean SS
-                REGSS = stats.m * CSSXY;                            // SS due to regression = Sum((yest-ybar)^2)
-                REGSSM = REGSS;                               // Regression mean SS
-                RESIDSS = TSS - REGSS;                        // SS about the regression = Sum((y-yest)^2)
-
-                if (Num_points > 2)                           // MUST HAVE MORE THAN TWO POINTS FOR REG
-                    RESIDSSM = RESIDSS / (Num_points - 2);     // Residual mean SS, variance of residual
-                else
-                    RESIDSSM = 0.0;
-
-                stats.RMSD = System.Math.Sqrt(RESIDSSM);                        // Root mean square deviation
-                stats.VarRatio = REGSSM / RESIDSSM;                  // Variance ratio - for F test (1,n-2)
-                stats.R2 = 1.0 - (RESIDSS / TSS);                   // Unadjusted R2 calculated from SS
-                stats.ADJR2 = 1.0 - (RESIDSSM / TSSM);              // Adjusted R2 calculated from mean SS
-                if (stats.ADJR2 < 0.0)
-                    stats.ADJR2 = 0.0;
-                S2 = RESIDSSM;                                // Resid. MSS is estimate of variance
-                // about the regression
-                stats.SEslope = System.Math.Sqrt(S2) / System.Math.Sqrt(CSSX);              // Standard errors estimated from S2 & CSSX
-                stats.SEcoeff = System.Math.Sqrt(S2) * System.Math.Sqrt(SumX2 / (Num_points * CSSX));
-
-                // Statistical parameters of Butler, Mayer and Silburn
-
-                stats.R2YX = 1.0 - (SumXYdiff2 / TSS);              // If you are on the 1:1 line then R2YX=1
-
-                // If R2YX is -ve then the 1:1 line is a worse fit than the line y=ybar
-
-                //      MeanAbsError = SumXYdiff / Num_points;
-                //      MeanAbsPerError = SumXYDiffPer / Num_points;  // very dangerous when y is low
-                // could use MeanAbsError over mean
+                SumX = SumX + xValue;
+                SumX2 = SumX2 + xValue * xValue;       // SS for X
+                SumY = SumY + yValue;
+                SumY2 = SumY2 + yValue * yValue;       // SS for y
+                SumXY = SumXY + xValue * yValue;       // SS for products
+                Num_points++;
             }
+            Xbar = SumX / Num_points;
+            Ybar = SumY / Num_points;
+
+            CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
+            CSSX = SumX2 - SumX * SumX / Num_points;      // Corrected SS for X
+            stats.n = Num_points;
+            stats.m = CSSXY / CSSX;                             // Calculate slope
+            stats.c = Ybar - stats.m * Xbar;                          // Calculate intercept
+
+            TSS = SumY2 - SumY * SumY / Num_points;       // Corrected SS for Y = Sum((y-ybar)^2)
+            TSSM = TSS / (Num_points - 1);                // Total mean SS
+            REGSS = stats.m * CSSXY;                            // SS due to regression = Sum((yest-ybar)^2)
+            REGSSM = REGSS;                               // Regression mean SS
+            RESIDSS = TSS - REGSS;                        // SS about the regression = Sum((y-yest)^2)
+
+            if (Num_points > 2)                           // MUST HAVE MORE THAN TWO POINTS FOR REG
+                RESIDSSM = RESIDSS / (Num_points - 2);     // Residual mean SS, variance of residual
+            else
+                RESIDSSM = 0.0;
+
+            stats.RMSD = System.Math.Sqrt(RESIDSSM);                        // Root mean square deviation
+            stats.VarRatio = REGSSM / RESIDSSM;                  // Variance ratio - for F test (1,n-2)
+            stats.R2 = 1.0 - (RESIDSS / TSS);                   // Unadjusted R2 calculated from SS
+            stats.ADJR2 = 1.0 - (RESIDSSM / TSSM);              // Adjusted R2 calculated from mean SS
+            if (stats.ADJR2 < 0.0)
+                stats.ADJR2 = 0.0;
+            S2 = RESIDSSM;                                // Resid. MSS is estimate of variance
+            // about the regression
+            stats.SEslope = System.Math.Sqrt(S2) / System.Math.Sqrt(CSSX);              // Standard errors estimated from S2 & CSSX
+            stats.SEcoeff = System.Math.Sqrt(S2) * System.Math.Sqrt(SumX2 / (Num_points * CSSX));
+
+            // Statistical parameters of Butler, Mayer and Silburn
+
+            stats.R2YX = 1.0 - (SumXYdiff2 / TSS);              // If you are on the 1:1 line then R2YX=1
+
+            // If R2YX is -ve then the 1:1 line is a worse fit than the line y=ybar
+
+            //      MeanAbsError = SumXYdiff / Num_points;
+            //      MeanAbsPerError = SumXYDiffPer / Num_points;  // very dangerous when y is low
+            // could use MeanAbsError over mean
+            
             return stats;
         }
 

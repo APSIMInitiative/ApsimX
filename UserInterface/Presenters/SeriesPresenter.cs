@@ -71,7 +71,9 @@ namespace UserInterface.Presenters
                 Data.Columns.Add("Type", typeof(string));
                 Data.Columns.Add("X on Top?", typeof(bool));
                 Data.Columns.Add("Y on Right?", typeof(bool));
+                Data.Columns.Add("Line", typeof(string));
                 Data.Columns.Add("Marker", typeof(string));
+                Data.Columns.Add("Regression?", typeof(bool));
                 foreach (Series S in Graph.Series)
                 {
                     DataRow Row = Data.NewRow();
@@ -90,7 +92,9 @@ namespace UserInterface.Presenters
                     Row[5] = S.Type.ToString();
                     Row[6] = S.XAxis == Axis.AxisType.Top;
                     Row[7] = S.YAxis == Axis.AxisType.Right;
-                    Row[8] = S.Marker.ToString();
+                    Row[8] = S.Line.ToString();
+                    Row[9] = S.Marker.ToString();
+                    Row[10] = S.ShowRegressionLine;
                     Data.Rows.Add(Row);
                 }
                 SeriesView.SeriesGrid.DataSource = Data;
@@ -111,7 +115,9 @@ namespace UserInterface.Presenters
                     SeriesView.SeriesGrid.SetCellEditor(5, Row, S.Type);
                     SeriesView.SeriesGrid.SetCellEditor(6, Row, Data.Rows[Row][6]);
                     SeriesView.SeriesGrid.SetCellEditor(7, Row, Data.Rows[Row][7]);
-                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Marker);
+                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Line);
+                    SeriesView.SeriesGrid.SetCellEditor(9, Row, S.Marker);
+                    SeriesView.SeriesGrid.SetCellEditor(10, Row, S.ShowRegressionLine);
                 }
             }
             else
@@ -156,7 +162,6 @@ namespace UserInterface.Presenters
             List<Series> AllSeries = new List<Series>();
             AllSeries.AddRange(Graph.Series);
            
-
             if (SeriesIndex >= Graph.Series.Count)
             {
                 // Get the simulation and table names.
@@ -218,8 +223,14 @@ namespace UserInterface.Presenters
                 else
                     S.YAxis = Axis.AxisType.Left;
             }
-            else if (Col == 8) // Marker
+            else if (Col == 8) // Line
+                S.Line = (Series.LineType)Enum.Parse(typeof(Series.LineType), NewContents.ToString());
+
+            else if (Col == 9) // Marker
                 S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
+
+            else if (Col == 10) // Regression line?
+                S.ShowRegressionLine = (bool)NewContents;
 
             List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
             string[] PropertyNamesChanged = new string[] { "Series", "Axes" };

@@ -2643,6 +2643,7 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>Graph</Name>
+      <Title>APS26 Predicted vs Observed Yield</Title>
       <Axis>
         <Type>Bottom</Type>
         <Title>Observed yield</Title>
@@ -2654,12 +2655,13 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title>Yield</Title>
+        <Title />
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
+        <Line>None</Line>
         <X>
           <TableName>PredictedObserved</TableName>
           <FieldName>ObservedWheat.Grain.Wt</FieldName>
@@ -2668,7 +2670,9 @@ namespace Models
           <TableName>PredictedObserved</TableName>
           <FieldName>PredictedWheat.Grain.Wt</FieldName>
         </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
       </Series>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
   </Experiment>
   <Area>0</Area>

@@ -22,6 +22,9 @@ namespace Models.Graph
         [XmlElement("Series")]
         public List<Series> Series { get; set; }
 
+        public enum LegendPositionType { TopLeft, TopRight, BottomLeft, BottomRight };
+        public LegendPositionType LegendPosition { get; set; }
+
         /// <summary>
         /// Destructor. Get rid of DataStore
         /// </summary>
@@ -30,11 +33,6 @@ namespace Models.Graph
             if (_DataStore != null)
                 _DataStore.Disconnect();
             _DataStore = null;
-        }
-
-        public IEnumerable GetValues(GraphValues graphValues)
-        {
-            return graphValues.Values(this);
         }
 
         public IEnumerable GetValidFieldNames(GraphValues graphValues)
