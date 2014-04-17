@@ -125,8 +125,9 @@ namespace UserInterface.Presenters
             Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null)
             {
-                string St = Utility.Xml.Serialise(Model, false);
-                Clipboard.SetText(St);
+                StringWriter writer = new StringWriter();
+                Model.Write(writer);
+                Clipboard.SetText(writer.ToString());
             }
         }
 

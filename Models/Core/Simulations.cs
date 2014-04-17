@@ -94,25 +94,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Write the specified simulation set to the specified 'stream'
-        /// </summary>
-        public void Write(TextWriter stream)
-        {
-            foreach (Model model in AllModels)
-                model.OnSerialising(xmlSerialisation: true);
-
-            try
-            {
-                stream.Write(Utility.Xml.Serialise(this, true));
-            }
-            finally
-            {
-                foreach (Model model in AllModels)
-                    model.OnSerialised(xmlSerialisation: true);
-            }
-        }
-
-        /// <summary>
         /// Constructor, private to stop developers using it. Use Simulations.Read instead.
         /// </summary>
         private Simulations() { }

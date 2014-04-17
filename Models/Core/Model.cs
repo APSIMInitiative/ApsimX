@@ -176,6 +176,14 @@ namespace Models.Core
             throw new ApsimXException(FullPath, "Cannot disconnect from event: " + namePath);
         }
 
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public virtual void Write(TextWriter stream)
+        {
+            stream.Write(Utility.Xml.Serialise(this, true));
+        }
+
         #region Internals
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 
 namespace Models.Core
 {
@@ -339,7 +340,24 @@ namespace Models.Core
             return false;
         }
 
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public override void Write(TextWriter stream)
+        {
+            foreach (Model model in AllModels)
+                model.OnSerialising(xmlSerialisation: true);
 
+            try
+            {
+                stream.Write(Utility.Xml.Serialise(this, true));
+            }
+            finally
+            {
+                foreach (Model model in AllModels)
+                    model.OnSerialised(xmlSerialisation: true);
+            }
+        }
 
         /// <summary>
         /// Give the specified model a unique name
