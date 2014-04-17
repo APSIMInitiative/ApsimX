@@ -32,6 +32,8 @@ for (fileNumber in 1:length(files)){
   }
   
   print(noquote(files[fileNumber]))
+  
+  # get connection string used to store test output
   if(length(args) > 1){
     dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
     connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
@@ -80,6 +82,7 @@ for (fileNumber in 1:length(files)){
           
           #do the same thing for baseline data
           if(file.exists(paste(dbName, ".baseline", sep=""))){
+            simID <- dbGetQuery(dbBase, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
             readSimOutputBase <- dbReadTable(dbBase, "Report")
             readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]
           }
