@@ -232,11 +232,12 @@ namespace Models
         private List<VariableMember> Members = null;
 
         [Link]
-        Simulation Simulation = null;
+        public Simulation Simulation = null;
 
         // Properties read in.
         public string[] Variables {get; set;}
         public string[] Events { get; set; }
+        public bool AutoCreateCSV { get; set; }
 
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
@@ -325,6 +326,15 @@ namespace Models
                 Members.Clear();
                 Members = null;
 
+                // If user wants a csv file written, then write it.
+                if (AutoCreateCSV)
+                {
+                    string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
+                                                   Simulation.Name + this.Name + ".csv.");
+                    StreamWriter writer = new StreamWriter(fileName);
+                    writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
+                    writer.Close();
+                }
             }
 
             UnsubscribeAllEventHandlers();

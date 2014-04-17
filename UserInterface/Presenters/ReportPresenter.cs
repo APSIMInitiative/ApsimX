@@ -6,6 +6,8 @@ using Models;
 using UserInterface.Views;
 using System.Reflection;
 using Models.Core;
+using System.Data;
+using System.IO;
 
 namespace UserInterface.Presenters
 {
@@ -14,6 +16,7 @@ namespace UserInterface.Presenters
         private Report Report;
         private IReportView View;
         private ExplorerPresenter ExplorerPresenter;
+        private DataStore DataStore = new DataStore();
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -30,7 +33,13 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.View.OnAutoCreateClick += OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+
+            DataStore.Connect(Path.ChangeExtension(Report.Simulation.FileName, ".db"), readOnly: true);
+
+            PopulateDataGrid();
+            this.View.AutoCreate = Report.AutoCreateCSV;
         }
 
         /// <summary>
@@ -42,7 +51,9 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
+            this.View.OnAutoCreateClick -= OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
+            DataStore.Disconnect();
         }
 
         /// <summary>
@@ -107,8 +118,37 @@ namespace UserInterface.Presenters
             {
                 View.VariableList.Lines = Report.Variables;
                 View.EventList.Lines = Report.Events;
+                View.AutoCreate = Report.AutoCreateCSV;
             }
         }
+
+        /// <summary>
+        /// Populate the data grid.
+        /// </summary>
+        private void PopulateDataGrid()
+        {
+            View.DataGrid.DataSource = DataStore.GetData(Report.Simulation.Name, Report.Name);
+
+            // Make all numeric columns have a format of N3
+            foreach (DataColumn col in View.DataGrid.DataSource.Columns)
+            {
+                View.DataGrid.SetColumnAlignment(col.Ordinal, false);
+                if (col.DataType == typeof(double))
+                    View.DataGrid.SetColumnFormat(col.Ordinal, "N3");
+            }
+        }
+
+        /// <summary>
+        /// User has changed the auto create checkbox.
+        /// </summary>
+        void OnAutoCreateClick(object sender, EventArgs e)
+        {
+            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "AutoCreateCSV", View.AutoCreate));
+            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+        }
+
+
 
 
     }

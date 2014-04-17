@@ -137,6 +137,7 @@
             <string>[Clock].EndOfDay</string>
             <string />
           </Events>
+          <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <Irrigation>
           <Name>Irrigation</Name>
