@@ -68,6 +68,42 @@
               <Date>1995-07-05T00:00:00</Date>
               <Action>Irrigation.Apply(amount:26);</Action>
             </Operation>
+            <Operation>
+              <Date>1995-07-21T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:14);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-01T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:28);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-11T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:30);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-25T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:15);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-31T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:14);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-09-04T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:15);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-09-15T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:25);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-09-22T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:20);</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-10-02T00:00:00</Date>
+              <Action>Irrigation.Apply(amount:11);</Action>
+            </Operation>
           </Operations>
         </FactorValue>
         <FactorValue>
@@ -86,7 +122,7 @@
       </Factor>
     </Factors>
     <Simulation>
-      <Name>APS26NRate0WaterDry</Name>
+      <Name>APS26NRate160WaterWet</Name>
       <Clock>
         <Name>clock</Name>
         <StartDate>1995-06-13T00:00:00</StartDate>
@@ -164,7 +200,7 @@
           <Script>
             <Name>Script</Name>
             <FertDayOfYear>186</FertDayOfYear>
-            <Amount>0</Amount>
+            <Amount>160</Amount>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -1803,7 +1839,7 @@ namespace Models
               <Name>Dead</Name>
             </Dead>
             <dlt_dm_pot_rue>0</dlt_dm_pot_rue>
-            <dlt_n_senesced_retrans>0</dlt_n_senesced_retrans>
+            <dlt_n_senesced_retrans>5.8629151214952273E-07</dlt_n_senesced_retrans>
             <dlt_n_senesced_trans>0</dlt_n_senesced_trans>
             <dlt_height>0</dlt_height>
             <dlt_width>0</dlt_width>
@@ -1961,7 +1997,7 @@ namespace Models
             <Dead>
               <Name>Dead</Name>
             </Dead>
-            <dlt_n_senesced_retrans>1.0776869661837108E-05</dlt_n_senesced_retrans>
+            <dlt_n_senesced_retrans>4.344675059504535E-05</dlt_n_senesced_retrans>
             <dlt_n_senesced_trans>0</dlt_n_senesced_trans>
             <dlt_height>0</dlt_height>
             <dlt_width>0</dlt_width>
@@ -2600,8 +2636,76 @@ namespace Models
         <Operations>
           <Name>IrrigationSchedule</Name>
           <Operation>
+            <Date>1995-05-31T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:31);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-01T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:13);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-02T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-05T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-06T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-07T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-06-08T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
             <Date>1995-06-15T00:00:00</Date>
             <Action>Wheat.Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-07-05T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:26);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-07-21T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:14);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-08-01T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:28);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-08-11T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:30);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-08-25T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:15);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-08-31T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:14);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-09-04T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:15);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-09-15T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:25);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-09-22T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:20);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-02T00:00:00</Date>
+            <Action>Irrigation.Apply(amount:11);</Action>
           </Operation>
         </Operations>
         <MicroClimate>

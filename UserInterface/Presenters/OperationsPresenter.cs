@@ -69,7 +69,9 @@ namespace UserInterface.Presenters
                 if (Pos != -1)
                 {
                     Operation operation = new Operation();
-                    operation.Date = DateTime.Parse(line.Substring(0, Pos));
+                    DateTime d;
+                    if (DateTime.TryParse(line.Substring(0, Pos), out d))
+                        operation.Date = d;
                     operation.Action = line.Substring(Pos + 1);
                     operations.Add(operation);
                 }
