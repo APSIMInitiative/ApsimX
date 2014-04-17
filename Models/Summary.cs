@@ -100,12 +100,16 @@ namespace Models
         /// </summary>
         public void CreateReportFile(bool baseline)
         {
+            string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
+                                           Simulation.Name + this.Name + ".csv.");
+
             StreamWriter report;
             if (baseline)
-                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".baseline.csv"));
-            else
-                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".csv"));
+                fileName = fileName.Replace(".csv", ".baseline.csv");
+            
+            report = new StreamWriter(fileName);
             WriteSummary(report, Simulation.Name, null);
+            report.Close();
         }
 
         #region Summary report generation

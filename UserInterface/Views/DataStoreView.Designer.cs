@@ -32,7 +32,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.CreateButton = new System.Windows.Forms.Button();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.GridView = new Views.GridView();
+            this.GridView = new GridView();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +62,6 @@
             // 
             // CreateButton
             // 
-            this.CreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CreateButton.AutoSize = true;
             this.CreateButton.Location = new System.Drawing.Point(3, 3);
             this.CreateButton.Name = "CreateButton";
@@ -83,6 +82,7 @@
             // 
             // GridView
             // 
+            this.GridView.AutoFilterOn = false;
             this.GridView.DataSource = null;
             this.GridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GridView.Location = new System.Drawing.Point(0, 139);

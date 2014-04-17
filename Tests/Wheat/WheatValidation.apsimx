@@ -95,7 +95,7 @@
       <Summary>
         <Name>summaryfile</Name>
         <html>false</html>
-        <AutoCreate>false</AutoCreate>
+        <AutoCreate>true</AutoCreate>
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>

@@ -208,6 +208,15 @@ namespace Models
         }
 
         /// <summary>
+        /// Delete the specified table.
+        /// </summary>
+        public void DeleteTable(string tableName)
+        {
+            string cmd = "DROP TABLE " + tableName;
+            RunQueryWithNoReturnData(cmd);
+        }
+
+        /// <summary>
         /// Convert the specified type to a SQL type.
         /// </summary>
         private static string GetSQLColumnType(Type type)
@@ -423,7 +432,7 @@ namespace Models
             // Write baseline .csv
             string baselineFileName = Path.ChangeExtension(Filename, ".db.baseline");
             Connect(baselineFileName, readOnly: true);
-            StreamWriter report = new StreamWriter(Filename + ".csv");
+            StreamWriter report = new StreamWriter(baselineFileName + ".csv");
             WriteAllTables(report);
             report.Close();
             Disconnect();

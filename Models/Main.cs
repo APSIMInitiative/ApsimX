@@ -108,8 +108,7 @@ namespace Models
                 foreach (string apsimxFileName in Files)
                 {
                     Simulations simulations = Simulations.Read(apsimxFileName);
-                    foreach (Simulation simulation in Simulations.FindAllSimulationsToRun(simulations))
-                        jobManager.AddJob(simulation);
+                    jobManager.AddJob(simulations);
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Zone
+    public class Simulations : Zone, Utility.JobManager.IRunnable
     {
         private string _FileName;
         public Int32 ExplorerWidth { get; set; }
@@ -186,7 +186,7 @@ namespace Models.Core
                 simulation.FileName = FileName;
         }
 
-        public static Simulations RootSimulations(Model model)
+        private static Simulations RootSimulations(Model model)
         {
             Model m = model;
             while (m != null && m.Parent != null && !(m is Simulations))
@@ -195,5 +195,29 @@ namespace Models.Core
             return m as Simulations;
         }
 
+        /// <summary>
+        /// Run all simulations.
+        /// </summary>
+        public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            // Get a reference to the JobManager so that we can add jobs to it.
+            Utility.JobManager jobManager = e.Argument as Utility.JobManager;
+
+            // As we are going to run all simulations, we can delete all tables in the DataStore. This
+            // will clean up order of columns in the tables and removed unused ones.
+            DataStore store = new DataStore();
+            store.Connect(Path.ChangeExtension(FileName, ".db"), false);
+
+            foreach (string tableName in store.TableNames)
+                if (tableName != "Simulations" && tableName != "Messages")
+                    store.DeleteTable(tableName);
+
+            store.Disconnect();
+
+            Simulations simulations = Simulations.Read(FileName);
+            foreach (Simulation simulation in Simulations.FindAllSimulationsToRun(simulations))
+                jobManager.AddJob(simulation);
+
+        }
     }
 }

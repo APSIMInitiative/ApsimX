@@ -89,7 +89,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Run the simulation. Returns true if no fatal errors or exceptions.
+        /// Run the simulation. Will throw on error.
         /// </summary>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
