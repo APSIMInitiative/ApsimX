@@ -156,6 +156,8 @@ namespace Models
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(elementsAsXml);
                 Utility.Xml.DeleteAttribute(doc.DocumentElement, "xmlns:xsi");
+                if (elements == null)
+                    elements = new XmlElement[1];
                 elements[0] = doc.DocumentElement;
             }
             else if (elementsAsXml == null && elements != null && elements.Length >= 1)
