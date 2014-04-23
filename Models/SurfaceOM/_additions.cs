@@ -16,17 +16,76 @@ namespace Models.SurfaceOM
         [XmlElement("ResidueType")]
         public List<ResidueType> residues { get; set; }
 
+        public ResidueTypes()
+        {
+            if (residues == null)
+                residues = new List<ResidueType>();
+            residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("tithonia") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("bambatsi") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("broccoli") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("butterflypea") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("camaldulensis") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("canola") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("centro") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("chickpea") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("cowpea") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("danthonia") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("nativepasture") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("pasture") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("globulus") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("grandis") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("oilmallee") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("fababean") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("fieldpea") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("grass") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("lablab") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("lentil") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("lolium_rigidum") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("lupin") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("maize") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("medic") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("millet") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("mucuna") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("mungbean") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("horsegram") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("navybean") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("frenchbean") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("cotton") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("oats") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("oilpalmunderstory") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("orobanche") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("peanut") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("pigeonpea") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("poppies") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("potato") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("raphanus_raphanistrum") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("rice") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("soybean") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("sorghum") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("stylo") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("sugar") { specific_area = 0.0007 });
+            residues.Add(new ResidueType("sunflower") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("sweetcorn") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("sweetsorghum") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("vetch") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("weed") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("WF_Millet") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
+        }
+
         public ResidueType getResidue(string name)
         {
             if (residues != null)
                 foreach (ResidueType residueType in residues)
                 {
-                    if (residueType.Name == name)
+                    if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                         return residueType;
                 }
-
-            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
-                return new ResidueType("wheat") {specific_area = 0.0005};
 
             return null;
         }

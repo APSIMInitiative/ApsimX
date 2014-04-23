@@ -85,6 +85,7 @@ namespace Models
                                      "using Models.PMF;\r\n" +
                                      "using Models.PMF.OldPlant;\r\n" +
                                      "using Models.Soils;\r\n" +
+                                     "using Models.SurfaceOM;\r\n" +
                                      "namespace Models\r\n" +
                                      "{\r\n" +
                                      "   [Serializable]\r\n" +
