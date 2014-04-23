@@ -27,8 +27,8 @@ namespace Models.PMF.Functions
             AccumulatedValue = 0;
         }
 
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             if (Phenology.Between(StartStageName, EndStageName))
             {

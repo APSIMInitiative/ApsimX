@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Collections;
+using Models.Factorial;
 
 namespace UserInterface.Presenters
 {
@@ -15,6 +16,21 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ExplorerPresenter ExplorerPresenter;
         private Models.DataStore DataStore = new Models.DataStore();
+        private static Color[] colours = {Color.FromArgb(255,255,204),
+                                          Color.FromArgb(217,240,163),
+                                          Color.FromArgb(173,221,142),
+                                          Color.FromArgb(120,198,121),
+                                          Color.FromArgb(65,171,93),
+                                          Color.FromArgb(35,132,67),
+                                          Color.FromArgb(0,104,55),
+                                          Color.FromArgb(0,90,50),
+                                          Color.FromArgb(255,255,212),
+                                          Color.FromArgb(254,227,145),
+                                          Color.FromArgb(254,196,79),
+                                          Color.FromArgb(254,153,41),
+                                          Color.FromArgb(236,112,20),
+                                          Color.FromArgb(204,76,2),
+                                          Color.FromArgb(140,45,4)};
 
         /// <summary>
         /// Attach the model to the view.
@@ -72,8 +88,11 @@ namespace UserInterface.Presenters
                         List<string> simulationNames = new List<string>();
                         if (simulationWildCard)
                         {
-                            foreach (Simulation simulation in Graph.FindAll(typeof(Simulation)))
-                                simulationNames.Add(simulation.Name);
+                            // get all simulation names in scope.
+                            string[] simulationNamesInScope = FindSimulationNamesInScope();
+
+                            foreach (string simulationName in simulationNamesInScope)
+                                simulationNames.Add(simulationName);
                         }
                         else
                             simulationNames.Add(S.X.SimulationName);
@@ -84,9 +103,8 @@ namespace UserInterface.Presenters
                         {
                             string simulationName = simulationNames[i];
 
-                            // lighten the series colour for all series after the first one.
-                            if (i > 0)
-                                seriesColour = ChangeColorBrightness(seriesColour, 0.4);
+                            // If this is a multi simulation series then choose colour.
+                            seriesColour = ChooseColour(seriesNumber - 1);
 
                             // If this is a wildcard series then add the simulation name to the
                             // title of the series.
@@ -129,6 +147,31 @@ namespace UserInterface.Presenters
                 GraphView.Refresh();
             }
 
+        }
+
+        /// <summary>
+        /// Return a list of simulation names in scope.
+        /// </summary>
+        /// <returns></returns>
+        private string[] FindSimulationNamesInScope()
+        {
+            Model parent = FindParent();
+            if (parent is Experiment)
+                return (parent as Experiment).Names();
+            else if (parent is Simulation)
+                return new string[1] { parent.Name };
+            else
+                return Graph.DataStore.SimulationNames;
+        }
+
+        private Model FindParent()
+        {
+            Model parent = Graph;
+            while (parent != null && parent.GetType() != typeof(Simulation) &&
+                                     parent.GetType() != typeof(Experiment) &&
+                                     parent.GetType() != typeof(Simulations))
+                parent = parent.Parent;
+            return parent;
         }
 
         /// <summary>
@@ -312,7 +355,12 @@ namespace UserInterface.Presenters
             return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
         }
 
+        private static Color ChooseColour(int colourNumber)
+        {
+            return colours[colourNumber];
 
+
+        }
 
 
     }

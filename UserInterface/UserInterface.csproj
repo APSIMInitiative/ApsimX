@@ -511,6 +511,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\link.png" />
+    <None Include="Resources\Apsim.ico" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

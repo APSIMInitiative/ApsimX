@@ -2810,6 +2810,40 @@ namespace Models
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
+    <Graph>
+      <Name>Temp</Name>
+      <Title>APS26 Predicted vs Observed Yield</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Yield</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Yield</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.Leaf.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Experiment>
   <Experiment>
     <Name>APS6</Name>
@@ -5464,6 +5498,40 @@ namespace Models
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
   </Experiment>
+  <Graph>
+    <Name>Temp</Name>
+    <Title>APS26 Predicted vs Observed Yield</Title>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Observed Yield</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Predicted Yield</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Wheat.Leaf.LAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
   <Area>0</Area>
   <ExplorerWidth>238</ExplorerWidth>
 </Simulations>

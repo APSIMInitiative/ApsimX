@@ -352,8 +352,8 @@ namespace Models
         /// <summary>
         /// Obtain all relevant met data
         /// </summary>
-        [EventSubscribe("NewMet")]
-        private void OnNewmet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             radn = NewMet.radn;
             maxt = NewMet.maxt;
