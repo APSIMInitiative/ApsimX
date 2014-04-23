@@ -49,7 +49,8 @@ namespace UserInterface.Presenters
 
             // Connect to a datastore.
             string dbName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".db");
-            DataStore.Connect(dbName, true);
+            if (dbName != null && File.Exists(dbName))
+                DataStore.Connect(dbName, true);
 
             DrawGraph();
         }

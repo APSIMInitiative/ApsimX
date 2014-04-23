@@ -306,6 +306,11 @@ namespace UserInterface.Presenters
                 Model M = Graph.Get(NewDataSource) as Model;
                 SeriesView.DataGrid.DataSource = GetAllArrayProperties(M);
             }
+            else if (!NewDataSource.Contains("."))
+            {
+                string TableName = NewDataSource;
+                SeriesView.DataGrid.DataSource = DataStore.GetData(null, TableName);
+            }
             else
             {
                 string SimulationName = NewDataSource;

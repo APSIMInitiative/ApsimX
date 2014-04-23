@@ -23,6 +23,10 @@ namespace Models.SurfaceOM
             residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
             residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
             residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("potato") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("grass") { specific_area = 0.0004 });
+            residues.Add(new ResidueType("oilpalm") { specific_area = 0.0002, fraction_C = 0.44, pot_decomp_rate= 0.05 });
+            residues.Add(new ResidueType("slurp") { specific_area = 0.0005 });
         }
 
         public ResidueType getResidue(string name)
