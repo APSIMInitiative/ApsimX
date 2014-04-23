@@ -1026,17 +1026,17 @@ namespace Models
             DoNewPotentialGrowthEvent();
         }
 
-/*        //---------------------------------------------------------------------
-        /// <summary>
-        /// Get new meteo- data
-        /// </summary>
-        /// <param name="NewMetData"></param>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(WeatherFile.NewMetType NewMetData)
-        {
-            MetData = NewMetData;
-        }
- */
+        /*        //---------------------------------------------------------------------
+                /// <summary>
+                /// Get new meteo- data
+                /// </summary>
+                /// <param name="NewMetData"></param>
+                [EventSubscribe("NewWeatherDataAvailable")]
+                private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMetData)
+                {
+                    MetData = NewMetData;
+                }
+         */
 
         //---------------------------------------------------------------------
         /// <summary>

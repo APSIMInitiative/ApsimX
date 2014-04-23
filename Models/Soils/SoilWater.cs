@@ -4418,8 +4418,8 @@ namespace Models.Soils
 
         #region Met, Irrig, Solute, Plants Event Handlers
 
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMet)
         {
             //*     ===========================================================
             //      subroutine soilwat2_ONnewmet (variant)

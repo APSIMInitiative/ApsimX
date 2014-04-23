@@ -27,7 +27,8 @@ namespace Models
         private int RainIndex;
         private NewMetType TodaysMetData = new NewMetType();
         private bool DoSeek;
-
+        private double co2 = 350;
+        
         public WeatherFile()
         {
         }
@@ -83,23 +84,24 @@ namespace Models
         public struct NewMetType
         {
             public double today;
-            public float radn;
-            public float maxt;
-            public float mint;
-            public float rain;
-            public float vp;
+            public double radn;
+            public double maxt;
+            public double mint;
+            public double rain;
+            public double vp;
         }
-        public delegate void NewMetDelegate(NewMetType Data); 
-        public event NewMetDelegate NewMet;
+        public delegate void NewMetDelegate(NewMetType Data);
+        public event EventHandler PreparingNewWeatherData;
+        public event NewMetDelegate NewWeatherDataAvailable;
 
         // Outputs
         public NewMetType MetData { get { return TodaysMetData; } }
-        public double MaxT { get { return MetData.maxt; } }
-        public double MinT { get { return MetData.mint; } }
-        public double Rain { get { return MetData.rain; } }
-        public double Radn { get { return MetData.radn; } }
-        public double vp { get { return MetData.vp; } }
-        public double CO2 { get { return 350; } }
+        public double MaxT { get { return MetData.maxt; } set { TodaysMetData.maxt = value; } }
+        public double MinT { get { return MetData.mint; } set { TodaysMetData.mint = value; } }
+        public double Rain { get { return MetData.rain; } set { TodaysMetData.rain = value; } }
+        public double Radn { get { return MetData.radn; } set { TodaysMetData.radn = value; } }
+        public double vp { get { return MetData.vp; } set { TodaysMetData.vp = value; } }
+        public double CO2 { get { return co2; } set { co2 = value; } }
         public double Latitude
         {
             get
@@ -265,8 +267,12 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
-            if (NewMet != null)
-                NewMet.Invoke(MetData);
+
+            if (PreparingNewWeatherData != null)
+                PreparingNewWeatherData.Invoke(this, new EventArgs());
+
+            if (NewWeatherDataAvailable != null)
+                NewWeatherDataAvailable.Invoke(MetData);
         }
         //=====================================================================
         /// <summary>

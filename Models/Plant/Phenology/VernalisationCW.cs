@@ -34,10 +34,10 @@ namespace Models.PMF.Phen
         private double CumulativeVD = 0;
 
         /// <summary>
-        /// Trap the NewMet event.
+        /// Trap the NewWeatherDataAvailable event.
         /// </summary>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             Maxt = NewMet.maxt;
             Mint = NewMet.mint;
