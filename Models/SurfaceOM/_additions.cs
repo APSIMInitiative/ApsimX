@@ -16,17 +16,23 @@ namespace Models.SurfaceOM
         [XmlElement("ResidueType")]
         public List<ResidueType> residues { get; set; }
 
+        public ResidueTypes()
+        {
+            if (residues == null)
+                residues = new List<ResidueType>();
+            residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
+        }
+
         public ResidueType getResidue(string name)
         {
             if (residues != null)
                 foreach (ResidueType residueType in residues)
                 {
-                    if (residueType.Name == name)
+                    if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                         return residueType;
                 }
-
-            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
-                return new ResidueType("wheat") {specific_area = 0.0005};
 
             return null;
         }

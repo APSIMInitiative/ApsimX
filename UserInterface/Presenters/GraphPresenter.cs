@@ -104,7 +104,8 @@ namespace UserInterface.Presenters
                             string simulationName = simulationNames[i];
 
                             // If this is a multi simulation series then choose colour.
-                            seriesColour = ChooseColour(seriesNumber - 1);
+                            if (simulationNames.Count> 1)
+                                seriesColour = ChooseColour(seriesNumber - 1);
 
                             // If this is a wildcard series then add the simulation name to the
                             // title of the series.
@@ -357,6 +358,8 @@ namespace UserInterface.Presenters
 
         private static Color ChooseColour(int colourNumber)
         {
+            if (colourNumber >= colours.Length)
+                Math.DivRem(colourNumber, colours.Length, out colourNumber);
             return colours[colourNumber];
 
 

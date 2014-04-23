@@ -96,6 +96,7 @@ namespace Models.SurfaceOM
                 this.name = name;
                 OrganicMatterType = type;
             }
+
         }
         [Serializable]
         class SurfaceOMGlobals
