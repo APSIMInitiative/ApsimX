@@ -87,6 +87,9 @@ namespace UserInterface.Presenters
         {
             object o = Operations.Get(e.ObjectName);
 
+            if (o == null)
+                o = Operations.Find(e.ObjectName);
+
             if (o != null)
             {
                 foreach (MethodInfo method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))

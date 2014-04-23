@@ -129,12 +129,15 @@ namespace UserInterface.Presenters
         {
             View.DataGrid.DataSource = DataStore.GetData(Report.Simulation.Name, Report.Name);
 
-            // Make all numeric columns have a format of N3
-            foreach (DataColumn col in View.DataGrid.DataSource.Columns)
+            if (View.DataGrid.DataSource != null)
             {
-                View.DataGrid.SetColumnAlignment(col.Ordinal, false);
-                if (col.DataType == typeof(double))
-                    View.DataGrid.SetColumnFormat(col.Ordinal, "N3");
+                // Make all numeric columns have a format of N3
+                foreach (DataColumn col in View.DataGrid.DataSource.Columns)
+                {
+                    View.DataGrid.SetColumnAlignment(col.Ordinal, false);
+                    if (col.DataType == typeof(double))
+                        View.DataGrid.SetColumnFormat(col.Ordinal, "N3");
+                }
             }
         }
 
