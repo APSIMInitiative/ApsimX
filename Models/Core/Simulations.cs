@@ -21,6 +21,16 @@ namespace Models.Core
         public Int32 ExplorerWidth { get; set; }
 
         /// <summary>
+        /// Invoked immediately before all simulations begin running.
+        /// </summary>
+        public event EventHandler AllCommencing;
+
+        /// <summary>
+        /// Invoked after all simulations finish running.
+        /// </summary>
+        public event EventHandler AllCompleted;
+
+        /// <summary>
         /// The name of the file containing the simulations.
         /// </summary>
         [XmlIgnore]
@@ -177,6 +187,13 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Allows the GUI to specify a simulation to run. It then calls
+        /// 'Run' below to run this simulation.
+        /// </summary>
+        [XmlIgnore]
+        public Model SimulationToRun { get; set; }
+
+        /// <summary>
         /// Run all simulations.
         /// </summary>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -184,20 +201,34 @@ namespace Models.Core
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
-            // As we are going to run all simulations, we can delete all tables in the DataStore. This
-            // will clean up order of columns in the tables and removed unused ones.
-            DataStore store = new DataStore();
-            store.Connect(Path.ChangeExtension(FileName, ".db"), false);
+            Simulation[] simulationsToRun;
+            if (SimulationToRun == null)
+            {
+                // As we are going to run all simulations, we can delete all tables in the DataStore. This
+                // will clean up order of columns in the tables and removed unused ones.
+                DataStore store = new DataStore();
+                store.Connect(Path.ChangeExtension(FileName, ".db"), false);
 
-            foreach (string tableName in store.TableNames)
-                if (tableName != "Simulations" && tableName != "Messages")
-                    store.DeleteTable(tableName);
+                foreach (string tableName in store.TableNames)
+                    if (tableName != "Simulations" && tableName != "Messages")
+                        store.DeleteTable(tableName);
 
-            store.Disconnect();
+                store.Disconnect();
 
-            Simulations simulations = Simulations.Read(FileName);
-            foreach (Simulation simulation in Simulations.FindAllSimulationsToRun(simulations))
+                simulationsToRun = Simulations.FindAllSimulationsToRun(this);
+            }
+            else
+                simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
+
+            if (AllCommencing != null)
+                AllCommencing.Invoke(this, new EventArgs());
+
+            foreach (Simulation simulation in simulationsToRun)
                 jobManager.AddJob(simulation);
+
+            if (AllCompleted != null)
+                AllCompleted.Invoke(this, new EventArgs());
+
 
         }
     }

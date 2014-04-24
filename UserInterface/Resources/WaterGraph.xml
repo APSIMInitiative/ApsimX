@@ -1,5 +1,6 @@
       <Graph>
         <Name>Graph</Name>
+        <LegendPosition>BottomRight</LegendPosition>
         <Axis>
           <Type>Left</Type>
           <Title>Depth (mm)</Title>
@@ -43,7 +44,7 @@
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
           <X>
-            <FieldName>[Soil].SW</FieldName>
+            <FieldName>[Soil].LL15</FieldName>
           </X>
           <Y>
             <FieldName>[Soil].DepthMidPoints</FieldName>
