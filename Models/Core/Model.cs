@@ -82,6 +82,12 @@ namespace Models.Core
         public ModelCollection Parent { get; set; }
 
         /// <summary>
+        /// Is this model hidden in the GUI?
+        /// </summary>
+        [XmlIgnore]
+        public bool HiddenModel { get; set; }
+
+        /// <summary>
         /// Get the model's full path. 
         /// Format: Simulations.SimName.PaddockName.ChildName
         /// </summary>

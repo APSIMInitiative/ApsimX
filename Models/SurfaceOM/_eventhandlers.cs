@@ -34,12 +34,29 @@ namespace Models.SurfaceOM
             public double p;
             public double cpr;
         }
-
-        [EventSubscribe("AddSurfaceOM")]
-        private void OnAdd_surfaceom(Add_surfaceomType data)
+        public void Incorporate(double fraction, double depth)
         {
+            TillageType data = new TillageType();
+            data.f_incorp = fraction;
+            data.tillage_depth = depth;
+            data.Name = "User";
+            surfom_tillage(data);
+        }
+        public void Add(string type, double mass, double N, string name=null)
+        {
+            Add_surfaceomType data = new Add_surfaceomType();
+            if (name == null)
+                data.name = type;
+            else
+                data.name = name;
+            data.type = type;
+            data.mass = mass;
+            data.n = N;
+            
+
             surfom_add_surfom(data);
         }
+
 
         public override void OnCommencing()
         {
@@ -58,8 +75,8 @@ namespace Models.SurfaceOM
         [EventSubscribe("RemoveSurfaceOM")]
         private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM) { surfom_remove_surfom(SOM); }
 
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType newmetdata) { g.MetData = newmetdata; }
+        [EventSubscribe("NewMet")]
+        private void OnNewmet(Models.WeatherFile.NewMetType newmetdata) { g.MetData = newmetdata; }
 
         public class IrrigationApplicationType : EventArgs
         {
