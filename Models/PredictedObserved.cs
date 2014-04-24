@@ -20,37 +20,51 @@ namespace Models
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.InputView")]
-    [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
-    public class PredictedObserved : Input
+    [ViewName("UserInterface.Views.PredictedObservedView")]
+    [PresenterName("UserInterface.Presenters.PredictedObservedPresenter")]
+    public class PredictedObserved : Model
     {
-        [Link]
-        Report Predicted = null;
+        public string PredictedTableName { get; set; }
+        public string ObservedTableName { get; set; }
 
         public string FieldNameUsedForMatch { get; set; }
+
+
+        /// <summary>
+        /// Go find the top level simulations object.
+        /// </summary>
+        public Simulations Simulations
+        {
+            get
+            {
+                Model obj = this;
+                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
+                    obj = obj.Parent;
+                if (obj == null)
+                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
+                return obj as Simulations;
+            }
+        }
 
         /// <summary>
         /// Simulation has completed. Create a predicted observed data in the data store.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnAllCompleted()
         {
-            DataTable observedData = GetTable();
-
-            if (observedData != null)
+            if (PredictedTableName != null && ObservedTableName != null)
             {
                 DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
-                if (dataStore.TableNames.Contains(Name))
-                {
-                    // delete the old data.
-                    dataStore.DeleteOldContentInTable(Simulation.Name, Name);
-                }
+                dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
 
-                DataTable predictedData = dataStore.GetData(Simulation.Name, Predicted.Name);
+                dataStore.DeleteTable(this.Name);
+                
+                DataTable predictedData = dataStore.GetData("*", PredictedTableName);
+                DataTable observedData = dataStore.GetData("*", ObservedTableName);
+
                 DataTable predictedObservedData = GetPredictedObservedData(dataStore, observedData, predictedData);
 
                 if (predictedObservedData != null)
-                    dataStore.WriteTable(Simulation.Name, this.Name, predictedObservedData);
+                    dataStore.WriteTable(Simulations.Name, this.Name, predictedObservedData);
                 dataStore.Disconnect();
             }
         }

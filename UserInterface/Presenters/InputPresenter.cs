@@ -25,7 +25,7 @@ namespace UserInterface.Presenters
             View = view as IInputView;
             ExplorerPresenter = explorerPresenter;
 
-            View.FileName = Input.FileName;
+            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
             View.GridView.DataSource = Input.GetTable();
 
             View.BrowseButtonClicked += OnBrowseButtonClicked;
@@ -47,7 +47,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FullFileName", e.FileName));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileNames", e.FileNames));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            View.FileName = Input.FileName;
+            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
             View.GridView.DataSource = Input.GetTable();
         }
 

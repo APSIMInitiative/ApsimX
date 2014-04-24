@@ -20,15 +20,7 @@ namespace Models.Core
         private string _FileName;
         public Int32 ExplorerWidth { get; set; }
 
-        /// <summary>
-        /// Invoked immediately before all simulations begin running.
-        /// </summary>
-        public event EventHandler AllCommencing;
 
-        /// <summary>
-        /// Invoked after all simulations finish running.
-        /// </summary>
-        public event EventHandler AllCompleted;
 
         /// <summary>
         /// The name of the file containing the simulations.
@@ -65,6 +57,35 @@ namespace Models.Core
             {
                 // Set the filename
                 simulations.FileName = FileName;
+                simulations.SetFileNameInAllSimulations();
+
+                // Parent all models.
+                ParentAllModels(simulations);
+
+                // Connect events and resolve links.
+                simulations.AllModels.ForEach(ConnectEventPublishers);
+                simulations.AllModels.ForEach(ResolveLinks);
+
+                // Call OnLoaded in all models.
+                simulations.AllModels.ForEach(CallOnLoaded);
+            }
+            else
+                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
+            return simulations;
+        }
+
+        /// <summary>
+        /// Create a simulations object by reading the specified filename
+        /// </summary>
+        public static Simulations Read(XmlNode node)
+        {
+
+            // Deserialise
+            Simulations simulations = Utility.Xml.Deserialise(node) as Simulations;
+
+            if (simulations != null)
+            {
+                // Set the filename
                 simulations.SetFileNameInAllSimulations();
 
                 // Parent all models.
@@ -220,14 +241,14 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
-            if (AllCommencing != null)
-                AllCommencing.Invoke(this, new EventArgs());
+            foreach (Model model in AllModels)
+                model.OnAllCommencing();
 
             foreach (Simulation simulation in simulationsToRun)
                 jobManager.AddJob(simulation);
 
-            if (AllCompleted != null)
-                AllCompleted.Invoke(this, new EventArgs());
+            foreach (Model model in AllModels)
+                model.OnAllCompleted();
 
 
         }

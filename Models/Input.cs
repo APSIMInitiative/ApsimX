@@ -24,45 +24,46 @@ namespace Models
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model
     {
-        public string FileName { get; set; }
+        public string[] FileNames { get; set; }
 
-        [Link]
-        protected Simulation Simulation = null;
-
-        // A property providing a full file name. The user interface uses this.
-        [XmlIgnore]
-        public string FullFileName
+        /// <summary>
+        /// Go find the top level simulations object.
+        /// </summary>
+        protected Simulations Simulations
         {
             get
             {
-                string FullFileName = FileName;
-                if (FullFileName == null)
-                    return null;
-                if (Path.GetFullPath(FileName) != FileName)
-                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
-                return FullFileName;
-            }
-            set
-            {
-                FileName = value;
-
-                // try and convert to path relative to the Simulations.FileName.
-                FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
+                Model obj = this;
+                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
+                    obj = obj.Parent;
+                if (obj == null)
+                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
+                return obj as Simulations;
             }
         }
 
-        public override void OnCompleted()
+
+        public override void OnAllCompleted()
         {
-            if (FileName != null && File.Exists(FullFileName))
+            if (FileNames != null)
             {
                 DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
-                if (dataStore.TableNames.Contains(Name))
+                dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
+                dataStore.DeleteTable(Name);
+                foreach (string fileName in FileNames)
                 {
-                    // delete the old data.
-                    dataStore.DeleteOldContentInTable(Simulation.Name, Name);
+                    if (fileName != null && File.Exists(fileName))
+                    {
+                        DataTable data = GetTable();
+                        string[] simulationNames = Utility.DataTable.GetDistinctValues(data, "SimulationName").ToArray();
+                        foreach (string simulationName in simulationNames)
+                        {
+                            DataView filteredData = new DataView(data);
+                            filteredData.RowFilter = "SimulationName = '" + simulationName + "'";
+                            dataStore.WriteTable(simulationName, this.Name, filteredData.ToTable());
+                        }
+                    }
                 }
-                dataStore.WriteTable(Simulation.Name, this.Name, GetTable());
                 dataStore.Disconnect();
             }
         }
@@ -73,23 +74,24 @@ namespace Models
         /// <returns></returns>
         public DataTable GetTable()
         {
-            if (FileName != null && File.Exists(FullFileName))
+            DataTable returnDataTable = null;
+            foreach (string fileName in FileNames)
             {
-                Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                textFile.Open(FullFileName);
-                DataTable table = textFile.ToTable();
-                textFile.Close();
-
-                if (table.Columns.Contains("SimulationName"))
+                if (fileName != null && File.Exists(fileName))
                 {
-                    DataView filteredData = new DataView(table);
-                    filteredData.RowFilter = "SimulationName = '" + Simulation.Name + "'";
-                    return filteredData.ToTable();
+                    Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
+                    textFile.Open(fileName);
+                    DataTable table = textFile.ToTable();
+                    textFile.Close();
+
+                    if (returnDataTable == null)
+                        returnDataTable = table;
+                    else
+                        returnDataTable.Merge(table);
                 }
-                else
-                    return table;
             }
-            return null;
+            return returnDataTable;
+
         }
 
     }

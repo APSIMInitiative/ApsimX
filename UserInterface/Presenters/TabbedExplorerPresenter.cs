@@ -130,7 +130,8 @@ namespace UserInterface.Presenters
 
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(Contents);
-            Presenter.Attach(Utility.Xml.Deserialise(Doc.DocumentElement), ExplorerView, null);
+            Simulations simulations = Simulations.Read(Doc.DocumentElement);
+            Presenter.Attach(simulations, ExplorerView, null);
 
             View.AddTab(Name, Properties.Resources.apsim_logo32, ExplorerView, true);
         }

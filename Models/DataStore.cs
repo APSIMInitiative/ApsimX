@@ -14,7 +14,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    public class DataStore : Model
+    public class DataStore : ModelCollection
     {
         /// <summary>
         /// A SQLite connection shared between all instances of this DataStore.
@@ -123,20 +123,21 @@ namespace Models
                 {
                     ReadOnly = readOnly;
                     Filename = fileName;
-                    if (Filename == null || Filename.Length == 0)
-                        throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
-                    Connection = new Utility.SQLite();
-                    Connection.OpenDatabase(Filename, readOnly);
+                    if (Filename != null)
+                    {
+                        Connection = new Utility.SQLite();
+                        Connection.OpenDatabase(Filename, readOnly);
 
-                    if (!Locks.ContainsKey(Filename))
-                        Locks.Add(Filename, new DbMutex());
+                        if (!Locks.ContainsKey(Filename))
+                            Locks.Add(Filename, new DbMutex());
 
-                    Locks[Filename].Aquire();
-                    if (!TableExists("Simulations"))
-                        Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                    if (!TableExists("Messages"))
-                        Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                    Locks[Filename].Release();
+                        Locks[Filename].Aquire();
+                        if (!TableExists("Simulations"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                        if (!TableExists("Messages"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                        Locks[Filename].Release();
+                    }
                 }
             }
         }
@@ -212,8 +213,11 @@ namespace Models
         /// </summary>
         public void DeleteTable(string tableName)
         {
-            string cmd = "DROP TABLE " + tableName;
-            RunQueryWithNoReturnData(cmd);
+            if (TableExists(tableName))
+            {
+                string cmd = "DROP TABLE " + tableName;
+                RunQueryWithNoReturnData(cmd);
+            }
         }
 
         /// <summary>
@@ -363,7 +367,7 @@ namespace Models
         /// </summary>
         public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
-            if (Connection == null || !TableExists("Simulations"))
+            if (Connection == null || !TableExists("Simulations") || tableName == null)
                 return null;
             try
             {
@@ -371,7 +375,7 @@ namespace Models
 
                 if (simulationName == null || simulationName == "*")
                 {
-                    sql = "SELECT S.Name as SimulationName, T.* FROM " + tableName + " T" + ", Simulations S " +
+                    sql = "SELECT S.Name as SimName, T.* FROM " + tableName + " T" + ", Simulations S " +
                           "WHERE SimulationID = ID";
                 }
                 else
@@ -428,21 +432,27 @@ namespace Models
         public void WriteOutputFile()
         {
             string originalFileName = Filename;
+
+            Disconnect();
             
             // Write baseline .csv
             string baselineFileName = Path.ChangeExtension(Filename, ".db.baseline");
-            Connect(baselineFileName, readOnly: true);
-            StreamWriter report = new StreamWriter(baselineFileName + ".csv");
-            WriteAllTables(report);
-            report.Close();
-            Disconnect();
-            
-            // Write normal .csv
-            Connect(originalFileName, readOnly: true);
-            report = new StreamWriter(originalFileName + ".csv");
-            WriteAllTables(report);
-            report.Close();
-            Disconnect();
+            if (File.Exists(baselineFileName))
+            {
+                Connect(baselineFileName, readOnly: true);
+                StreamWriter report = new StreamWriter(baselineFileName + ".csv");
+                WriteAllTables(report);
+                report.Close();
+            }
+
+            if (File.Exists(originalFileName))
+            {
+                // Write normal .csv
+                Connect(originalFileName, readOnly: true);
+                StreamWriter report = new StreamWriter(originalFileName + ".csv");
+                WriteAllTables(report);
+                report.Close();
+            }
         }
 
         #region Privates
