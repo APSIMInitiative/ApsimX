@@ -1,5 +1,6 @@
 
 SimulationName   Clock.Today   Biomass   Biomasserror   Grain_wt   Grain_wterror   LAI   LAIerror   Leaf_wt   Leaf_wterror   Stem_wt   Stem_wterror   DeadLeaf_wt   DeadLeaf_wterror   BiomassN   BiomassNerror   Grain_N   Grain_Nerror   Leaf_N   Leaf_Nerror   Stem_N   Stem_Nerror   DeadLeaf_N   DeadLeaf_Nerror
+     ()          (dd/mm/yyyy)    ()           ()           ()           ()          ()       ()         ()           ()          ()         ()           ()             ()                   ()        ()           ()           ()            ()          ()       ()            ()           ()        ()
 Wheat_APS6_N000   12/07/1992   41.0   2.4   *   *   0.06   0.01   3.1   0.1   1.0   0.2   *   *   0.16   0.01   *   *   0.13   0.01   0.03   0.00   *   *
 Wheat_APS6_N000   27/07/1992   150.2   54.1   *   *   0.17   0.06   10.5   3.6   4.6   1.8   *   *   0.43   0.17   *   *   0.35   0.14   0.09   0.03   *   *
 Wheat_APS6_N000   24/08/1992   486.0   90.5   *   *   0.35   0.08   17.7   2.7   25.9   3.5   4.9   3.0   0.59   0.09   *   *   0.35   0.04   0.21   0.04   0.03   0.02

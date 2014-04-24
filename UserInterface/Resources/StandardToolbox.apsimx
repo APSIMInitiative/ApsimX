@@ -609,6 +609,17 @@
         
       </Factor>
     </Factors>
+    <Simulation>
+      <Name>Base</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <StartDate>1940-01-01T00:00:00</StartDate>
+        <EndDate>1989-12-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>Summary</Name>
+      </Summary>
+    </Simulation>
   </Experiment>
   <Folder />
   <Memo />

@@ -72,9 +72,9 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
-    <Compile Include="Presenters\ObservedInputPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
@@ -103,6 +103,12 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\PredictedObservedView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\PredictedObservedView.Designer.cs">
+      <DependentUpon>PredictedObservedView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\TitleView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -238,6 +244,9 @@
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PredictedObservedView.resx">
+      <DependentUpon>PredictedObservedView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TitleView.resx">
       <DependentUpon>TitleView.cs</DependentUpon>

@@ -119,51 +119,54 @@ namespace Models
         /// </summary>
         public void WriteSummary(TextWriter report, string simulationName, string apsimSummaryImageFileName)
         {
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
-
-            if (html)
+            if (Simulation.FileName != null)
             {
-                report.WriteLine("<!DOCTYPE html>");
-                report.WriteLine("<html>");
-                report.WriteLine("<body>");
-               
-                report.WriteLine("<style type=\"text/css\">");
-                report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
-                report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
-                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
-                report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
+                DataStore DataStore = new DataStore();
+                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
 
-                report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
-                report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                if (html)
+                {
+                    report.WriteLine("<!DOCTYPE html>");
+                    report.WriteLine("<html>");
+                    report.WriteLine("<body>");
 
-                report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
-                report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-                
-                report.WriteLine("</style>");
+                    report.WriteLine("<style type=\"text/css\">");
+                    report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
+                    report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
+                    report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
+                    report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
 
-                report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
+                    report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                    report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                    report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
+                    report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+
+                    report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
+                    report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
+
+                    report.WriteLine("</style>");
+
+                    report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
+                }
+
+                // Write out all properties.
+                WriteProperties(report, simulationName);
+
+                // Write out all messages.
+                if (html)
+                    report.WriteLine("<hr>");
+                WriteHeading(report, "Simulation log:", html);
+                DataTable messageTable = GetMessageTable(DataStore, simulationName);
+                WriteTable(report, messageTable, html, false, "PropertyTable");
+
+                if (html)
+                {
+                    report.WriteLine("</body>");
+                    report.WriteLine("</html>");
+                }
+                DataStore.Disconnect();
+                DataStore = null;
             }
-
-            // Write out all properties.
-            WriteProperties(report, simulationName);
-            
-            // Write out all messages.
-            if (html)
-                report.WriteLine("<hr>");
-            WriteHeading(report, "Simulation log:", html);
-            DataTable messageTable = GetMessageTable(DataStore, simulationName);
-            WriteTable(report, messageTable, html, false, "PropertyTable");
-
-            if (html)
-            {
-                report.WriteLine("</body>");
-                report.WriteLine("</html>");
-            }
-            DataStore.Disconnect();
-            DataStore = null;
         }
 
         /// <summary>

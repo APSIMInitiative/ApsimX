@@ -38,6 +38,16 @@ namespace Models.Core
         public virtual void OnCompleted() { }
 
         /// <summary>
+        /// Invoked immediately before all simulations begin running.
+        /// </summary>
+        public virtual void OnAllCommencing() {}
+
+        /// <summary>
+        /// Invoked after all simulations finish running.
+        /// </summary>
+        public virtual void OnAllCompleted() {}
+
+        /// <summary>
         /// Called immediately before deserialising.
         /// </summary>
         public virtual void OnDeserialising(bool xmlSerialisation) { }
