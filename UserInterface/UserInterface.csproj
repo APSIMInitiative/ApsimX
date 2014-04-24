@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -512,6 +515,9 @@
   <ItemGroup>
     <None Include="Resources\link.png" />
     <None Include="Resources\Apsim.ico" />
+    <Content Include="apsim_logo32.ico" />
+    <None Include="Resources\AppIcon.ico" />
+    <Content Include="Resources\apsim_logo32.ico" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
