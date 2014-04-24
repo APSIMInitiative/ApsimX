@@ -299,7 +299,8 @@ namespace UserInterface.Presenters
                 {
                     ModelCollection modelCollection = Model as ModelCollection;
                     foreach (Model ChildModel in modelCollection.Models)
-                        e.Descriptions.Add(GetNodeDescription(ChildModel));
+                        if (!ChildModel.HiddenModel)
+                            e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }
         }
@@ -432,7 +433,7 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            description.HasChildren = Model is ModelCollection;
+            description.HasChildren = (Model is ModelCollection && (Model as ModelCollection).Models.Count > 0);
             return description;
         }
 

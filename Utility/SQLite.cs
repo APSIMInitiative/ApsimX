@@ -248,7 +248,8 @@ namespace Utility
                     {
                         IntPtr iptr = sqlite3_column_text(stmHandle, i);
                         string Value = Marshal.PtrToStringAnsi(iptr);
-                        row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
+                        if (Value != null)
+                            row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
                     }
                     else if (dTable.Columns[i].DataType == typeof(int))
                         row[i] = sqlite3_column_int(stmHandle, i);

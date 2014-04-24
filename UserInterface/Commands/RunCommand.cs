@@ -36,12 +36,15 @@ namespace UserInterface.Commands
                 View.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
 
             if (ModelClicked is Simulations)
-                JobManager.AddJob(ModelClicked as Simulations);
+            {
+                Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
+            }
             else
             {
-                foreach (Simulation simulation in Simulations.FindAllSimulationsToRun(ModelClicked))
-                    JobManager.AddJob(simulation);
+                Simulations.SimulationToRun = ModelClicked;
             }
+
+            JobManager.AddJob(Simulations);
             JobManager.Start(waitUntilFinished: false);
         }
 

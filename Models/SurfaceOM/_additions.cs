@@ -77,7 +77,7 @@ namespace Models.SurfaceOM
             residues.Add(new ResidueType("WF_Millet") { specific_area = 0.0004 });
             residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
             residues.Add(new ResidueType("inert") { pot_decomp_rate = 0.0 });
-            residues.Add(new ResidueType("slurp") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("slurp") { specific_area = 0.0005 });
             residues.Add(new ResidueType("manure")
             {
                 fraction_C = 0.08,

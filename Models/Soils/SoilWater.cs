@@ -534,6 +534,7 @@ namespace Models.Soils
 
 
         private double[] _dlayer = null;
+        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
@@ -601,6 +602,7 @@ namespace Models.Soils
         }
 
 
+        [UserInterfaceIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Saturated water content for layer")]
@@ -633,6 +635,7 @@ namespace Models.Soils
             }
         }
 
+        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -729,6 +732,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [XmlIgnore]
+        [UserInterfaceIgnore]
         [Description("15 bar lower limit of extractable soil water for each soil layer")]
         public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
@@ -766,6 +770,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [Description("Air dry soil water content")]
+        [UserInterfaceIgnore]
         private double[] air_dry   //! air dry soil water content
         {
             get
@@ -824,11 +829,6 @@ namespace Models.Soils
         [Description("Soil water conductivity constant")]
         public double[] SWCON { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Impermeable soil layer indicator")]
-        public double[] MWCON { get; set; }     //! impermeable soil layer indicator
-
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
         public double[] KLAT { get; set; }
@@ -858,6 +858,7 @@ namespace Models.Soils
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
@@ -878,6 +879,7 @@ namespace Models.Soils
         private double[] _dul_dep;
         [Units("mm")]
         [Description("dul * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
@@ -925,6 +927,7 @@ namespace Models.Soils
         private double[] _ll15_dep;
         [Units("mm")]
         [Description("ll15 * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
@@ -945,6 +948,7 @@ namespace Models.Soils
 
         private double[] _air_dry_dep;
         [Units("mm")]
+        [UserInterfaceIgnore]
         [Description("air_dry * dlayer")]
         private double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
         {
@@ -991,6 +995,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         [Description("flow_water[layer] = flux[layer] - flow[layer]")]
+        [UserInterfaceIgnore]
         public double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
         {
             get
@@ -1894,14 +1899,6 @@ namespace Models.Soils
 
             if (!initDone) // If this is actual initialisation, establish whether we will use ks
             {
-                //sv- with mwcon: 0 is impermeable and 1 is permeable.
-                //sv- if mwcon is not specified then set it to 1 and don't use ks. If it is specified then use mwcon and use ks. 
-                //c dsg - if there is NO impermeable layer specified, then mwcon must be set to '1' in all layers by default.
-                if (MWCON != null)
-                {
-                    IssueWarning("mwcon is being replaced with a saturated conductivity (ks). " + "\n"
-                                        + "See documentation for details.");
-                }
 
                 //for (klat == null) see Lateral_init().
 
@@ -3143,41 +3140,11 @@ namespace Models.Soils
                 //! get water draining out of layer (mm)
                 if (excess > 0.0)
                 {
-                    if (Soil.MWCON == null || Soil.MWCON[layer] >= 1.0)
-                    {
                         //! all this excess goes on down so do nothing
                         w_out = excess + w_drain;
                         new_sw_dep[layer] = _sw_dep[layer] + w_in - w_out;
                         flux[layer] = w_out;
-                    }
-                    else
-                    {
-                        //! Calculate amount of water to backup and push down
-                        //! Firstly top up this layer (to saturation)
-                        add = Math.Min(excess, w_drain);
-                        excess = excess - add;
-                        new_sw_dep[layer] = _sat_dep[layer] - w_drain + add;
 
-                        //! partition between flow back up and flow down
-                        backup = (1.0 - Soil.MWCON[layer]) * excess;
-                        excess = Soil.MWCON[layer] * excess;
-
-                        w_out = excess + w_drain;
-                        flux[layer] = w_out;
-
-                        //! now back up to saturation for this layer up out of the
-                        //! backup water keeping account for reduction of actual
-                        //! flow rates (flux) for N movement.         
-                        for (i = layer - 1; i >= 0; i--)
-                        {
-                            flux[i] = flux[i] - backup;
-                            add = Math.Min((_sat_dep[i] - new_sw_dep[i]), backup);
-                            new_sw_dep[i] = new_sw_dep[i] + add;
-                            backup = backup - add;
-                        }
-
-                        ExtraRunoff = ExtraRunoff + backup;
-                    }
                 }
                 else
                 {
@@ -3318,14 +3285,6 @@ namespace Models.Soils
                 {
                     flow[layer] = 0.0;
                 }
-
-                //c dsg 260202
-                //c dsg    this code will stop unsaturated flow downwards through an impermeable layer, but will allow flow up
-                if ((Soil.MWCON != null) && (Soil.MWCON[layer] == 0) && (flow[layer] < 0.0))
-                {
-                    flow[layer] = 0.0;
-                }
-
 
                 if (flow[layer] < 0.0)
                 {
@@ -3844,13 +3803,6 @@ namespace Models.Soils
                 if ((_sat_dep[layer] - _sw_dep[layer]) <= margin)
                 {
                     sat_layer = layer + 1;
-                    break;
-                }
-                //Or if mwcon is set to be impermeable for this layer and above sw is above dul then consider this layer as saturated.
-                else if ((Soil.MWCON != null) && (Soil.MWCON[layer] < 1.0) && (_sw_dep[layer] > _dul_dep[layer]))
-                {
-                    //!  dsg 150302     also check whether impermeable layer is above dul. If so then consider it to be saturated
-                    sat_layer = layer;
                     break;
                 }
                 else

@@ -132,6 +132,7 @@ namespace Models
 
                     // Add the new script model to our models collection.
                     AddModel(Script);
+                    Script.HiddenModel = true;
                 }
             }
         }

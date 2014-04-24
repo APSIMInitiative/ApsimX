@@ -44,12 +44,15 @@ namespace UserInterface.Presenters
         {
             DataStoreView.Grid.DataSource = DataStore.GetData("*", TableName);
 
-            // Make all numeric columns have a format of N3
-            foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+            if (DataStoreView.Grid.DataSource != null)
             {
-                DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
-                if (col.DataType == typeof(double))
-                    DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
+                // Make all numeric columns have a format of N3
+                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                {
+                    DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
+                    if (col.DataType == typeof(double))
+                        DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
+                }
             }
         }
 
