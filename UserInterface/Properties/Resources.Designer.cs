@@ -631,6 +631,7 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized string similar to       &lt;Graph&gt;
         ///        &lt;Name&gt;Graph&lt;/Name&gt;
+        ///        &lt;LegendPosition&gt;BottomRight&lt;/LegendPosition&gt;
         ///        &lt;Axis&gt;
         ///          &lt;Type&gt;Left&lt;/Type&gt;
         ///          &lt;Title&gt;Depth (mm)&lt;/Title&gt;
@@ -645,8 +646,7 @@ namespace UserInterface.Properties {
         ///          &lt;Type&gt;Line&lt;/Type&gt;
         ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///          &lt;ColourArgb&gt;-65536&lt;/ColourArgb&gt;
-        ///          &lt;Marker&gt;None&lt;/Marker&gt;        /// [rest of string was truncated]&quot;;.
+        ///          &lt;ColourArgb [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {
