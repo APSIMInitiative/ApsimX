@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -516,7 +516,6 @@
     <None Include="Resources\link.png" />
     <None Include="Resources\Apsim.ico" />
     <Content Include="apsim_logo32.ico" />
-    <None Include="Resources\AppIcon.ico" />
     <Content Include="Resources\apsim_logo32.ico" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
