@@ -6,6 +6,12 @@
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>lincoln.met</FileName>
+      <MaxT>12.199999809265137</MaxT>
+      <MinT>9.3999996185302734</MinT>
+      <Rain>0.60000002384185791</Rain>
+      <Radn>3.2999999523162842</Radn>
+      <vp>0</vp>
+      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -194,25 +200,6 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
-          <NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
-          <n2o_approach>0</n2o_approach>
-          <wnmm_n_alpha>0.002</wnmm_n_alpha>
-          <wnmm_dn_alpha>0.5</wnmm_dn_alpha>
-          <nemis_dn_km>22</nemis_dn_km>
-          <nemis_dn_pot>7.194</nemis_dn_pot>
-          <cent_n_soilt_ave>15</cent_n_soilt_ave>
-          <cent_n_maxt_ave>25</cent_n_maxt_ave>
-          <cent_n_wfps_ave>0.7</cent_n_wfps_ave>
-          <cent_n_max_rate>0.1</cent_n_max_rate>
-          <ureappm_min>0</ureappm_min>
-          <nh4ppm_min>0</nh4ppm_min>
-          <no3ppm_min>0</no3ppm_min>
-          <fom_min>0</fom_min>
-          <ini_FOMtype>default</ini_FOMtype>
-          <oc2om_factor>0</oc2om_factor>
-          <ini_pH>0</ini_pH>
-          <WarningThreshold>0</WarningThreshold>
-          <FatalThreshold>0</FatalThreshold>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -245,104 +232,6 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <ef_res>0.4</ef_res>
-          <fr_res_biom>0.9</fr_res_biom>
-          <min_depth>100</min_depth>
-          <rd_carb>
-            <double>0.2</double>
-            <double>0.1</double>
-          </rd_carb>
-          <rd_cell>
-            <double>0.05</double>
-            <double>0.25</double>
-          </rd_cell>
-          <rd_lign>
-            <double>0.0095</double>
-            <double>0.003</double>
-          </rd_lign>
-          <ef_fom>0.4</ef_fom>
-          <fr_fom_biom>0.9</fr_fom_biom>
-          <cnrf_coeff>0.693</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
-          <rd_biom>
-            <double>0.0081</double>
-            <double>0.004</double>
-          </rd_biom>
-          <ef_biom>0.4</ef_biom>
-          <fr_biom_biom>0.6</fr_biom_biom>
-          <rd_hum>
-            <double>0.00015</double>
-            <double>7E-05</double>
-          </rd_hum>
-          <ef_hum>0.4</ef_hum>
-          <opt_temp>
-            <double>32</double>
-            <double>32</double>
-          </opt_temp>
-          <wfmin_index>
-            <double>0</double>
-            <double>0.5</double>
-            <double>1</double>
-            <double>2</double>
-          </wfmin_index>
-          <wfmin_values>
-            <double>0</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0.5</double>
-          </wfmin_values>
-          <potHydrol_min>0</potHydrol_min>
-          <potHydrol_parmA>0</potHydrol_parmA>
-          <potHydrol_parmB>0</potHydrol_parmB>
-          <potHydrol_parmC>0</potHydrol_parmC>
-          <potHydrol_parmD>0</potHydrol_parmD>
-          <nitrification_pot>40</nitrification_pot>
-          <nh4_at_half_pot>90</nh4_at_half_pot>
-          <wfnit_index>
-            <double>0</double>
-            <double>0.25</double>
-            <double>1</double>
-            <double>2</double>
-          </wfnit_index>
-          <wfnit_values>
-            <double>0</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-          </wfnit_values>
-          <pHf_nit_pH>
-            <double>4.5</double>
-            <double>6</double>
-            <double>8</double>
-            <double>9</double>
-          </pHf_nit_pH>
-          <pHf_nit_values>
-            <double>0</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-          </pHf_nit_values>
-          <dnit_rate_coeff>25.1</dnit_rate_coeff>
-          <dnit_nitrf_loss>0</dnit_nitrf_loss>
-          <dnit_k1>0</dnit_k1>
-          <dnit_wf_power>1</dnit_wf_power>
-          <actC_parmB>0</actC_parmB>
-          <actC_parmA>0</actC_parmA>
-          <N2N2O_parmA>0</N2N2O_parmA>
-          <N2N2O_parmB>0</N2N2O_parmB>
-          <soiltype>standard</soiltype>
-          <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
-          <profile_reduction>no</profile_reduction>
-          <use_organic_solutes>no</use_organic_solutes>
-          <c_in_fom>0.4</c_in_fom>
-          <minPatchArea>1</minPatchArea>
-          <mcn>8</mcn>
-          <root_depth>3000</root_depth>
-          <root_cn_pool>
-            <double>40</double>
-            <double>40</double>
-            <double>40</double>
-          </root_cn_pool>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -1730,32 +1619,6 @@
         <Name>ExtraVariables</Name>
         <Script>
           <Name>Script</Name>
-          <InitialDay>false</InitialDay>
-          <AccumPlantN>0</AccumPlantN>
-          <AccumMineralisation>78.9480813203057</AccumMineralisation>
-          <AccumDenit>0</AccumDenit>
-          <AccumFert>0</AccumFert>
-          <AccumLeach>0</AccumLeach>
-          <AccumDetach>0</AccumDetach>
-          <DeltaSoilOMN>-17417.180928918533</DeltaSoilOMN>
-          <DeltaSurfaceOMN>-11.5599500144599</DeltaSurfaceOMN>
-          <DeltaSoilMineralN>-98.871100404718064</DeltaSoilMineralN>
-          <AccumEO>-755.8996783081277</AccumEO>
-          <AccumEP>0</AccumEP>
-          <AccumES>0</AccumES>
-          <AccumDrainage>0</AccumDrainage>
-          <AccumRunoff>0</AccumRunoff>
-          <AccumOutflowLat>0</AccumOutflowLat>
-          <AccumIrrigation>100</AccumIrrigation>
-          <AccumRainfall>246.60000206530094</AccumRainfall>
-          <SoilWaterDeficit>-110.10140489249852</SoilWaterDeficit>
-          <AccumTtemerg>1894.1208022147289</AccumTtemerg>
-          <InitialSoilOMN>18891.70597281654</InitialSoilOMN>
-          <InitialSurfaceOMN>12</InitialSurfaceOMN>
-          <InitialMineralN>101.36</InitialMineralN>
-          <SWC>342.89859510750148</SWC>
-          <DUL>453</DUL>
-          <OutFlowLat>0</OutFlowLat>
         </Script>
         <Code><![CDATA[
         using System;
@@ -1844,8 +1707,8 @@ SWC = 0;
 DUL = 0;
 }	   
 
-[EventSubscribe("EndOfDay")]
-private void OnEndOfDay(object sender, EventArgs e)
+[EventSubscribe("StartOfDay")]
+private void OnStartOfDay(object sender, EventArgs e)
 {
 	int layers = SoilWat.dlayer.Length;
     if (InitialDay)
@@ -1898,11 +1761,7 @@ double OutFlowLat = 0;
    }
 AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
-}
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
-{
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 if (Plant.Phenology.StageCode.Value >= 3)
@@ -2070,6 +1929,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
         <Events>
           <string>[Clock].EndOfDay</string>
         </Events>
+        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Graph>
         <Name>N balance components</Name>
@@ -2090,6 +1950,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2100,6 +1961,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumMineralisation</Title>
@@ -2108,6 +1970,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388353</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2118,6 +1981,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumDenit</Title>
@@ -2126,6 +1990,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744193</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2136,6 +2001,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumFert</Title>
@@ -2144,6 +2010,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2154,6 +2021,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumFert</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumLeach</Title>
@@ -2162,6 +2030,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2172,6 +2041,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>DeltaSoilOMN</Title>
@@ -2180,6 +2050,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8372224</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2190,6 +2061,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>DeltaSurfaceOMN</Title>
@@ -2198,6 +2070,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2208,6 +2081,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>DeltaSoilMineralN</Title>
@@ -2216,6 +2090,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777152</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2226,7 +2101,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>WaterBalanceComponents</Name>
@@ -2246,6 +2123,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2256,6 +2134,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>SoilWater.pond</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumEO</Title>
@@ -2264,6 +2143,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2274,6 +2154,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumEO</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumEP</Title>
@@ -2282,6 +2163,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2292,6 +2174,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumEP</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumES</Title>
@@ -2300,6 +2183,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2310,6 +2194,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumES</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumDrainage</Title>
@@ -2318,6 +2203,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2328,6 +2214,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumRunoff</Title>
@@ -2336,6 +2223,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2346,6 +2234,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumRainfall</Title>
@@ -2354,6 +2243,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388544</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2364,6 +2254,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumIrrigation</Title>
@@ -2372,6 +2263,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-12582784</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2382,6 +2274,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>AccumLatOutFlow</Title>
@@ -2390,6 +2283,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2400,6 +2294,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>SoilWaterDeficit</Title>
@@ -2408,6 +2303,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777056</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2418,7 +2314,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Plant Biomass components</Name>
@@ -2438,6 +2336,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2448,6 +2347,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -2456,6 +2356,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2466,6 +2367,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Tuber</Title>
@@ -2474,6 +2376,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2484,6 +2387,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Tuber.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -2492,6 +2396,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2502,6 +2407,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Leaf</Title>
@@ -2510,6 +2416,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388480</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2520,6 +2427,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Dead.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Step</Title>
@@ -2528,6 +2436,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2538,6 +2447,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Dead.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Tuber</Title>
@@ -2546,6 +2456,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2556,6 +2467,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Tuber.Dead.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root Dead</Title>
@@ -2564,6 +2476,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2574,6 +2487,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Dead.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Above Ground Wt</Title>
@@ -2582,6 +2496,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8372160</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2592,6 +2507,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Below Ground Wt</Title>
@@ -2600,6 +2516,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777088</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2610,6 +2527,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.BelowGround.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Total Wt</Title>
@@ -2618,6 +2536,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2628,7 +2547,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.Total.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Plant Nitrogen components</Name>
@@ -2648,6 +2569,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2658,6 +2580,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Live.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -2666,6 +2589,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2676,6 +2600,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Live.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Tuber</Title>
@@ -2684,6 +2609,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2694,6 +2620,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Tuber.Live.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -2702,6 +2629,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2712,6 +2640,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Live.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Leaf</Title>
@@ -2720,6 +2649,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388480</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2730,6 +2660,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Dead.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Step</Title>
@@ -2738,6 +2669,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2748,6 +2680,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Dead.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Tuber</Title>
@@ -2756,6 +2689,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2766,6 +2700,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Tuber.Dead.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root Dead</Title>
@@ -2774,6 +2709,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2784,6 +2720,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Dead.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Above Ground Wt</Title>
@@ -2792,6 +2729,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8372160</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2802,6 +2740,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.AboveGround.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Below Ground Wt</Title>
@@ -2810,6 +2749,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777088</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2820,6 +2760,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.BelowGround.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Total Wt</Title>
@@ -2828,6 +2769,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2838,7 +2780,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.Total.N</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Stress factors</Name>
@@ -2858,6 +2802,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2868,6 +2813,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Photosynthesis.FT.Value</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -2876,6 +2822,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2886,6 +2833,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Fn</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Tuber</Title>
@@ -2894,6 +2842,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2904,6 +2853,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Fw</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -2912,6 +2862,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2922,7 +2873,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Photosynthesis.FVPD.Value</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Water supply and demand</Name>
@@ -2946,6 +2899,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16777088</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2956,6 +2910,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.WaterSupply</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -2964,6 +2919,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2974,6 +2930,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.WaterUptake</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Tuber</Title>
@@ -2982,6 +2939,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -2992,6 +2950,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.WaterDemand</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -3000,6 +2959,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3010,6 +2970,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Transpiration</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -3017,6 +2978,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3027,6 +2989,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>SoilWater.eo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -3034,6 +2997,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Right</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3044,6 +3008,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Depth</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -3051,6 +3016,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3061,7 +3027,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Structure.Height</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Canopy structure</Name>
@@ -3081,6 +3049,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3091,6 +3060,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.CoverDead</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Cover Green</Title>
@@ -3099,6 +3069,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3109,6 +3080,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.CoverGreen</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>CoverTotal</Title>
@@ -3117,6 +3089,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3127,6 +3100,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.CoverTotal</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>LAI</Title>
@@ -3135,6 +3109,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3145,6 +3120,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.LAI</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>LAI Dead</Title>
@@ -3153,6 +3129,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3163,7 +3140,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.LAIDead</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>LeafCohorts</Name>
@@ -3183,6 +3162,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3193,6 +3173,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Total Stem Popn</Title>
@@ -3201,6 +3182,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3211,6 +3193,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Structure.TotalStemPopn</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Expanding Nodes</Title>
@@ -3219,6 +3202,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3229,6 +3213,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>TotalNodes</Title>
@@ -3237,6 +3222,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-8388608</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3247,6 +3233,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Dead Cohorts</Title>
@@ -3255,6 +3242,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3265,6 +3253,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Appeared Cohorts</Title>
@@ -3273,6 +3262,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3283,6 +3273,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Green leaves</Title>
@@ -3291,6 +3282,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3301,6 +3293,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Expanded Cohorts</Title>
@@ -3309,6 +3302,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-12582784</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3319,7 +3313,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Graph>
         <Name>Nitrogen %</Name>
@@ -3339,6 +3335,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3349,6 +3346,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -3357,6 +3355,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3367,6 +3366,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Tuber</Title>
@@ -3375,6 +3375,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3385,6 +3386,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Tuber.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -3393,6 +3395,7 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
+          <Line>Solid</Line>
           <X>
             <SimulationName>Test</SimulationName>
             <TableName>Report</TableName>
@@ -3403,7 +3406,9 @@ AccumTtemerg += Plant.Phenology.ThermalTime.Value;
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Live.Wt</FieldName>
           </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Series>
+        <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Area>0</Area>
     </Zone>
