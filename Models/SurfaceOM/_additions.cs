@@ -76,6 +76,131 @@ namespace Models.SurfaceOM
             residues.Add(new ResidueType("weed") { specific_area = 0.0004 });
             residues.Add(new ResidueType("WF_Millet") { specific_area = 0.0004 });
             residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
+            residues.Add(new ResidueType("inert") { pot_decomp_rate = 0.0 });
+            residues.Add(new ResidueType("slurp") { specific_area = 0.0002 });
+            residues.Add(new ResidueType("manure")
+            {
+                fraction_C = 0.08,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.3, 0.3, 0.4 },
+                fr_n = new double[] { 0.3, 0.3, 0.4 },
+                fr_p = new double[] { 0.3, 0.3, 0.4 },
+                po4ppm = 10,
+                nh4ppm = 10,
+                no3ppm = 10,
+                specific_area = 0.0001
+            });
+            residues.Add(new ResidueType("RuminantDung_PastureFed")
+            {
+                fraction_C = 0.4,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.3, 0.5, 0.2 },
+                fr_n = new double[] { 0.3, 0.5, 0.2 },
+                fr_p = new double[] { 0.3, 0.5, 0.2 },
+                po4ppm = 5,
+                nh4ppm = 1250,
+                no3ppm = 0,
+                specific_area = 0.0001
+            });
+            residues.Add(new ResidueType("algae")
+            {
+                fraction_C = 0.4,
+                pot_decomp_rate = 0.1,
+                specific_area = 0.0005,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("fym")
+            {
+                fraction_C = 0.8,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.3, 0.3, 0.4 },
+                fr_n = new double[] { 0.3, 0.3, 0.4 },
+                fr_p = new double[] { 0.3, 0.3, 0.4 },
+                po4ppm = 40,
+                nh4ppm = 10,
+                no3ppm = 10,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("goatmanure")
+            {
+                fraction_C = 0.8,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.3, 0.6, 0.3 },
+                fr_n = new double[] { 0.3, 0.6, 0.3 },
+                fr_p = new double[] { 0.3, 0.6, 0.34 },
+                po4ppm = 5,
+                nh4ppm = 1307,
+                no3ppm = 481,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("cm")
+            {
+                fraction_C = 0.277,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.0, 0.5, 0.5 },
+                fr_n = new double[] { 0.0, 0.5, 0.5 },
+                fr_p = new double[] { 0.0, 0.5, 0.5 },
+                po4ppm = 5,
+                nh4ppm = 2558,
+                no3ppm = 873,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("cmA")
+            {
+                fraction_C = 0.374,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.0, 0.5, 0.5 },
+                fr_n = new double[] { 0.0, 0.5, 0.5 },
+                fr_p = new double[] { 0.0, 0.5, 0.5 },
+                po4ppm = 5,
+                nh4ppm = 1307,
+                no3ppm = 481,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("cmB")
+            {
+                fraction_C = 0.24,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.0, 0.5, 0.5 },
+                fr_n = new double[] { 0.0, 0.5, 0.5 },
+                fr_p = new double[] { 0.0, 0.5, 0.5 },
+                po4ppm = 5,
+                nh4ppm = 3009,
+                no3ppm = 36,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("manB")
+            {
+                fraction_C = 0.08,
+                pot_decomp_rate = 0.1,
+                fr_c = new double[] { 0.1, 0.01, 0.89 },
+                fr_n = new double[] { 0.1, 0.01, 0.89 },
+                fr_p = new double[] { 0.1, 0.01, 0.89 },
+                po4ppm = 5,
+                nh4ppm = 1307,
+                no3ppm = 481,
+                specific_area = 0.0001,
+                cf_contrib = 1
+            });
+            residues.Add(new ResidueType("oilpalm")
+            {
+                fraction_C = 0.44,
+                pot_decomp_rate = 0.05,
+                specific_area = 0.0002,
+            });
+            residues.Add(new ResidueType("oilpalmstem")
+            {
+                fraction_C = 0.44,
+                fr_c = new double[] { 0.2, 0.7, 0.1 },
+                fr_n = new double[] { 0.2, 0.7, 0.1 },
+                fr_p = new double[] { 0.2, 0.7, 0.1 },
+                specific_area = 0.000005,
+            });
         }
 
         public ResidueType getResidue(string name)
