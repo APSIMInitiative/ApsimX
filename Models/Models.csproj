@@ -125,7 +125,6 @@
     <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
-    <Compile Include="Soils\SoilWaterRefactored.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />

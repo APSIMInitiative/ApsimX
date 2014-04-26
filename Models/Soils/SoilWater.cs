@@ -25,7 +25,7 @@ namespace Models.Soils
         public double[] bd;
     }
     public delegate void NewProfileDelegate(NewProfileType Data);
-
+      
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model

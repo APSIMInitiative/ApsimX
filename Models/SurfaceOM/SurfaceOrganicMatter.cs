@@ -15,7 +15,7 @@ namespace Models.SurfaceOM
     public partial class SurfaceOrganicMatter : Model
     {
         [Link]
-        SoilWaterRefactored SoilWater = null;
+        SoilWater SoilWater = null;
 
 
         [Link]
