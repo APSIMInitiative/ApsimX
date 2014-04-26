@@ -17,7 +17,6 @@ namespace Models.SurfaceOM
         [Link]
         SoilWater SoilWater = null;
 
-
         [Link]
         Soil Soil = null;
 
