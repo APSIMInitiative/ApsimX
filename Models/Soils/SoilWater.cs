@@ -454,6 +454,21 @@ namespace Models.Soils
         [Description("Drainage rate from bottom layer")]
         public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNO3 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNH4 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachUrea { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
 
         [XmlIgnore]
         [Units("mm")]
@@ -3703,8 +3718,17 @@ namespace Models.Soils
                     soilwat2_solute_flux(ref solutes[solnum].leach, solutes[solnum].amount);               //calc leaching
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].amount);      //use leaching to set new solute values
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].delta);       //use leaching to set new delta (change in) solute values
+
+                    if(solutes[solnum].name == "no3")
+                        LeachNO3 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "nh4")
+                        LeachNH4 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "urea")
+                        LeachUrea = solutes[solnum].leach[num_layers - 1];
                 }
             }
+
+            
         }
 
 
