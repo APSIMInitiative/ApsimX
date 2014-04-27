@@ -163,6 +163,7 @@
         <Radn>3.2999999523162842</Radn>
         <vp>0</vp>
         <CO2>350</CO2>
+		<Latitude>-43.63</Latitude>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -549,15 +550,15 @@
           <night_interception_fraction>0.5</night_interception_fraction>
           <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
-          <albedo>0.29366217672824863</albedo>
+          <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
+          <gsmax>0.03</gsmax>
           <r50>200</r50>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
+          <soil_albedo>0.23</soil_albedo>
           <ComponentData>
             <Name>Potato</Name>
             <Type>Potato</Type>
@@ -1893,7 +1894,12 @@
             <string>[SoilNitrogen].no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>[Plant].Arbitrator.NDemand</string>
-            <string />
+            <string>[MicroClimate].ga</string>
+            <string>[MicroClimate].gc</string>
+            <string>[MicroClimate].net_radn</string>
+            <string>[MicroClimate].dryleaffraction</string>
+            <string>[MicroClimate].peta</string>
+            <string>[MicroClimate].petr</string>
             <string />
             <string />
             <string />
