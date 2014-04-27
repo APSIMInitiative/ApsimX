@@ -163,7 +163,6 @@
         <Radn>3.2999999523162842</Radn>
         <vp>0</vp>
         <CO2>350</CO2>
-		<Latitude>-43.63</Latitude>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
