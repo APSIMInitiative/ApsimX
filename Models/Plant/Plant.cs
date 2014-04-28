@@ -136,7 +136,8 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnSow(SowingData);
-            Structure.OnSow(SowingData);
+            if (Structure != null)
+               Structure.OnSow(SowingData);
             Phenology.OnSow();
 
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
@@ -207,7 +208,8 @@ namespace Models.PMF
             SowingData = null;
             WaterSupplyDemandRatio = 0;
             Population = 0;
-            Structure.Clear();
+            if (Structure != null)
+               Structure.Clear();
             Phenology.Clear();
             Arbitrator.Clear();
         }

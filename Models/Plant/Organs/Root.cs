@@ -16,9 +16,6 @@ namespace Models.PMF.Organs
         Plant Plant = null;
         
         [Link]
-        Structure Structure = null;
-
-        [Link]
         Arbitrator Arbitrator = null;
 
         [Link]
