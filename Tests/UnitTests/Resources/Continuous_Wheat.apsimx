@@ -6,6 +6,12 @@
     <WeatherFile>
       <Name>met</Name>
       <FileName>\Examples\MetFiles\Goond.met</FileName>
+      <MaxT>0</MaxT>
+      <MinT>0</MinT>
+      <Rain>0</Rain>
+      <Radn>0</Radn>
+      <vp>0</vp>
+      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>clock</Name>
@@ -512,25 +518,6 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
-          <NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
-          <n2o_approach>0</n2o_approach>
-          <wnmm_n_alpha>0.002</wnmm_n_alpha>
-          <wnmm_dn_alpha>0.5</wnmm_dn_alpha>
-          <nemis_dn_km>22</nemis_dn_km>
-          <nemis_dn_pot>7.194</nemis_dn_pot>
-          <cent_n_soilt_ave>15</cent_n_soilt_ave>
-          <cent_n_maxt_ave>25</cent_n_maxt_ave>
-          <cent_n_wfps_ave>0.7</cent_n_wfps_ave>
-          <cent_n_max_rate>0.1</cent_n_max_rate>
-          <ureappm_min>0</ureappm_min>
-          <nh4ppm_min>0</nh4ppm_min>
-          <no3ppm_min>0</no3ppm_min>
-          <fom_min>0</fom_min>
-          <ini_FOMtype>default</ini_FOMtype>
-          <oc2om_factor>0</oc2om_factor>
-          <ini_pH>0</ini_pH>
-          <WarningThreshold>0</WarningThreshold>
-          <FatalThreshold>0</FatalThreshold>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -563,83 +550,14 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <ef_res>0.4</ef_res>
-          <fr_res_biom>0.9</fr_res_biom>
-          <min_depth>100</min_depth>
-          <rd_carb>
-            <double>0.2</double>
-            <double>0.1</double>
-          </rd_carb>
-          <rd_cell>
-            <double>0.05</double>
-            <double>0.25</double>
-          </rd_cell>
-          <rd_lign>
-            <double>0.0095</double>
-            <double>0.003</double>
-          </rd_lign>
-          <ef_fom>0.4</ef_fom>
-          <fr_fom_biom>0.9</fr_fom_biom>
-          <cnrf_coeff>0.693</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
-          <rd_biom>
-            <double>0.0081</double>
-            <double>0.004</double>
-          </rd_biom>
-          <ef_biom>0.4</ef_biom>
-          <fr_biom_biom>0.6</fr_biom_biom>
-          <rd_hum>
-            <double>0.00015</double>
-            <double>7E-05</double>
-          </rd_hum>
-          <ef_hum>0.4</ef_hum>
-          <opt_temp>
-            <double>32</double>
-            <double>32</double>
-          </opt_temp>
-          <wfmin_index>
-            <double>0</double>
-            <double>0.5</double>
-            <double>1</double>
-            <double>2</double>
-          </wfmin_index>
-          <wfmin_values>
-            <double>0</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0.5</double>
-          </wfmin_values>
-          <potHydrol_min>0</potHydrol_min>
-          <potHydrol_parmA>0</potHydrol_parmA>
-          <potHydrol_parmB>0</potHydrol_parmB>
-          <potHydrol_parmC>0</potHydrol_parmC>
-          <potHydrol_parmD>0</potHydrol_parmD>
-          <nitrification_pot>0</nitrification_pot>
-          <nh4_at_half_pot>0</nh4_at_half_pot>
-          <dnit_rate_coeff>0</dnit_rate_coeff>
-          <dnit_nitrf_loss>0</dnit_nitrf_loss>
-          <dnit_k1>0</dnit_k1>
-          <dnit_wf_power>0</dnit_wf_power>
-          <actC_parmB>0</actC_parmB>
-          <actC_parmA>0</actC_parmA>
-          <N2N2O_parmA>0</N2N2O_parmA>
-          <N2N2O_parmB>0</N2N2O_parmB>
-          <soiltype>standard</soiltype>
-          <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
-          <profile_reduction>no</profile_reduction>
-          <use_organic_solutes>no</use_organic_solutes>
-          <c_in_fom>0.4</c_in_fom>
-          <minPatchArea>1</minPatchArea>
-          <mcn>8</mcn>
-          <root_depth>0</root_depth>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
-          <RootCN>0</RootCN>
-          <RootWt>0</RootWt>
-          <SoilCN>0</SoilCN>
-          <EnrACoeff>0</EnrACoeff>
-          <EnrBCoeff>0</EnrBCoeff>
+          <RootCN>40</RootCN>
+          <RootWt>200</RootWt>
+          <SoilCN>12.5</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -815,7 +733,7 @@
           <Name>Phenology</Name>
           <StageBasedInterpolation>
             <Name>StageCode</Name>
-            <Proportional>false</Proportional>
+            <Proportional>true</Proportional>
           </StageBasedInterpolation>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
@@ -864,9 +782,15 @@
         </Structure>
         <Leaf>
           <Name>Leaf</Name>
-          <Biomass>
+          <CompositeBiomass>
             <Name>Live</Name>
-          </Biomass>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Dead</Name>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+          </CompositeBiomass>
           <MultiplyFunction>
             <Name>ExtinctionCoeff</Name>
           </MultiplyFunction>
@@ -1108,7 +1032,27 @@ namespace Models
         <Events>
           <string xsi:nil="true" />
         </Events>
+        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
+      </MicroClimate>
       <Area>100</Area>
     </Zone>
     <Area>0</Area>
