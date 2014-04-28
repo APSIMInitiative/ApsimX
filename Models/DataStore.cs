@@ -436,7 +436,7 @@ namespace Models
             Disconnect();
             
             // Write baseline .csv
-            string baselineFileName = Path.ChangeExtension(Filename, ".db.baseline");
+            string baselineFileName = Path.ChangeExtension(originalFileName, ".db.baseline");
             if (File.Exists(baselineFileName))
             {
                 Connect(baselineFileName, readOnly: true);
@@ -447,6 +447,8 @@ namespace Models
 
             if (File.Exists(originalFileName))
             {
+                Disconnect();
+
                 // Write normal .csv
                 Connect(originalFileName, readOnly: true);
                 StreamWriter report = new StreamWriter(originalFileName + ".csv");

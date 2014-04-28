@@ -75,19 +75,22 @@ namespace Models
         public DataTable GetTable()
         {
             DataTable returnDataTable = null;
-            foreach (string fileName in FileNames)
+            if (FileNames != null)
             {
-                if (fileName != null && File.Exists(fileName))
+                foreach (string fileName in FileNames)
                 {
-                    Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                    textFile.Open(fileName);
-                    DataTable table = textFile.ToTable();
-                    textFile.Close();
+                    if (fileName != null && File.Exists(fileName))
+                    {
+                        Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
+                        textFile.Open(fileName);
+                        DataTable table = textFile.ToTable();
+                        textFile.Close();
 
-                    if (returnDataTable == null)
-                        returnDataTable = table;
-                    else
-                        returnDataTable.Merge(table);
+                        if (returnDataTable == null)
+                            returnDataTable = table;
+                        else
+                            returnDataTable.Merge(table);
+                    }
                 }
             }
             return returnDataTable;

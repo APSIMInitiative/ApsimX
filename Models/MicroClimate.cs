@@ -130,7 +130,7 @@ namespace Models
             b_interception = 1.0;
             c_interception = 0.0;
             d_interception = 0.0;
-            soil_albedo = 0.3;
+            soil_albedo = 0.23;
         }
 
 
