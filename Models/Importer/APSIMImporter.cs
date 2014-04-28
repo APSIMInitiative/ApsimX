@@ -29,6 +29,7 @@ namespace Importer
         /// </summary>
         private bool SurfOMExists = false;
         private bool SoilWaterExists = false;
+        private bool MicroClimateExists = false;
 
         /// <summary>
         /// Original path that is substituted for %apsim%
@@ -275,6 +276,7 @@ namespace Importer
                     newNode = ImportSoilWater(compNode, destParent, newNode);
                     SoilWaterExists = (newNode != null);
                     AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
+                    // may need to copy more details for SoilNitrogen
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -295,19 +297,22 @@ namespace Importer
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    XmlNode newPaddockNode = newNode;
 
                     string area = GetInnerText(compNode, "paddock_area");
                     if (area == "")
                     {
                         Utility.Xml.SetValue(compNode, "paddock_area", "1.0");
                     }
-                    CopyNodeAndValue(compNode, newNode, "paddock_area", "Area");
+                    CopyNodeAndValue(compNode, newPaddockNode, "paddock_area", "Area", true);
                     SurfOMExists = false;
                     SoilWaterExists = false;
-                    AddChildComponents(compNode, newNode);
+                    MicroClimateExists = false;
+                    // copy all the children in this paddock
+                    AddChildComponents(compNode, newPaddockNode);
                     if (SoilWaterExists && !SurfOMExists)   // if it contains a soilwater then
                     {
-                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newNode));
+                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newPaddockNode));
                         Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
 
                         mysom.PoolName = "wheat_stubble";
@@ -317,7 +322,12 @@ namespace Importer
                         mysom.cpr = "0";
                         mysom.standing_fraction = "0.0";
 
-                        newNode = ImportObject(newNode, newNode, mysom, "SurfaceOrganicMatter");
+                        newNode = ImportObject(newPaddockNode, newNode, mysom, "SurfaceOrganicMatter");
+                    }
+                    // alway ensure that MicroClimate exists in this paddock
+                    if (!MicroClimateExists)
+                    {
+                        newNode = ImportMicromet(null, newPaddockNode, newNode);    // create a new node from no source
                     }
                 }
                 else if (compNode.Name == "surfaceom")
@@ -394,9 +404,11 @@ namespace Importer
             AddCompNode(structNode, "LinearInterpolationFunction", "HeightModel");
             AddCompNode(structNode, "MultiplyFunction", "BranchingRate");
             
-
+            
             XmlNode leafNode = AddCompNode(plantNode, "Leaf", "Leaf");
-            AddCompNode(leafNode, "Biomass", "Live");
+            AddCompNode(leafNode, "CompositeBiomass", "Live");
+            AddCompNode(leafNode, "CompositeBiomass", "Dead");
+            AddCompNode(leafNode, "CompositeBiomass", "Total");
             AddCompNode(leafNode, "MultiplyFunction", "ExtinctionCoeff");
             AddCompNode(leafNode, "LinearInterpolationFunction", "FrostFraction");
             AddCompNode(leafNode, "AirTemperatureFunction", "ThermalTime");
@@ -429,7 +441,7 @@ namespace Importer
             AddCompNode(cohortNode, "LinearInterpolationFunction", "ShadeInducedSenescenceRate");
             AddCompNode(cohortNode, "LinearInterpolationFunction", "NonStructuralFraction");
             AddCompNode(cohortNode, "Constant", "StructuralFraction");
-
+            
             return plantNode;
         }
 
@@ -485,14 +497,20 @@ namespace Importer
         private XmlNode ImportMicromet(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
             Models.MicroClimate mymicro = new Models.MicroClimate();
+            string newName = "MicroClimate";
 
-            mymicro.soil_albedo = GetChildDouble(compNode, "soilalbedo", 0);
-            mymicro.a_interception = GetChildDouble(compNode, "a_interception", 0);
-            mymicro.b_interception = GetChildDouble(compNode, "b_interception", 0);
-            mymicro.c_interception = GetChildDouble(compNode, "c_interception", 0);
-            mymicro.d_interception = GetChildDouble(compNode, "d_interception", 0);
+            if (compNode != null)
+            {
+                mymicro.soil_albedo = GetChildDouble(compNode, "soilalbedo", 0);
+                mymicro.a_interception = GetChildDouble(compNode, "a_interception", 0);
+                mymicro.b_interception = GetChildDouble(compNode, "b_interception", 0);
+                mymicro.c_interception = GetChildDouble(compNode, "c_interception", 0);
+                mymicro.d_interception = GetChildDouble(compNode, "d_interception", 0);
+                newName = Utility.Xml.NameAttr(compNode);
+            }
+            newNode = ImportObject(destParent, newNode, mymicro, newName);
 
-            newNode = ImportObject(destParent, newNode, mymicro, Utility.Xml.NameAttr(compNode));
+            MicroClimateExists = true; // has been added
 
             return newNode;
         }     
@@ -618,6 +636,12 @@ namespace Importer
             newNode = AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
+            CopyNodeAndValue(compNode, newNode, "RootCN", "RootCN", true);
+            CopyNodeAndValue(compNode, newNode, "RootWt", "RootWt", true);
+            CopyNodeAndValue(compNode, newNode, "SoilCN", "SoilCN", true);
+            CopyNodeAndValue(compNode, newNode, "EnrACoeff", "EnrACoeff", true);
+            CopyNodeAndValue(compNode, newNode, "EnrBCoeff", "EnrBCoeff", true);
+
             // thickness array
             childNode = Utility.Xml.Find(compNode, "Thickness");
             CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
@@ -745,6 +769,9 @@ namespace Importer
             childNode = Utility.Xml.Find(compNode, "SW");
             CopyNodeAndValueArray(childNode, newNode, "SW", "SW");
 
+            CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
+            CopyNodeAndValue(compNode, newNode, "NH4Units", "NH4Units", false);
+
             return newNode;
         }
 
@@ -766,12 +793,18 @@ namespace Importer
 
             newNode = AddCompNode(destParent, "Soil", Utility.Xml.NameAttr(compNode));
 
-            CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType");
-            CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName");
-            CopyNodeAndValue(compNode, newNode, "Site", "Site");
-            CopyNodeAndValue(compNode, newNode, "NearestTown", "NearestTown");
-            CopyNodeAndValue(compNode, newNode, "Region", "Region");
-            CopyNodeAndValue(compNode, newNode, "NaturalVegetation", "NaturalVegetation");
+            CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
+            CopyNodeAndValue(compNode, newNode, "NH4Units", "NH4Units", false);
+            CopyNodeAndValue(compNode, newNode, "SWUnits", "SWUnits", false);
+            CopyNodeAndValue(compNode, newNode, "OCUnits", "OCUnits", false);
+            CopyNodeAndValue(compNode, newNode, "PHUnits", "PHUnits", false);
+
+            CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType", true);
+            CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName", true);
+            CopyNodeAndValue(compNode, newNode, "Site", "Site", true);
+            CopyNodeAndValue(compNode, newNode, "NearestTown", "NearestTown", true);
+            CopyNodeAndValue(compNode, newNode, "Region", "Region", true);
+            CopyNodeAndValue(compNode, newNode, "NaturalVegetation", "NaturalVegetation", true);
 
             AddChildComponents(compNode, newNode);
 
@@ -1063,12 +1096,24 @@ namespace Importer
         /// <param name="destParentNode"></param>
         /// <param name="srcName"></param>
         /// <param name="destName"></param>
-        private void CopyNodeAndValue(XmlNode srcParentNode, XmlNode destParentNode, string srcName, string destName)
+        /// <param name="forceCreate">Always create the node even if the source is not found</param>
+        private void CopyNodeAndValue(XmlNode srcParentNode, XmlNode destParentNode, string srcName, string destName, bool forceCreate)
         {
             if (srcParentNode != null)
             {
-                XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
-                childNode.InnerText = GetInnerText(srcParentNode, srcName);
+                XmlNode srcChildNode = Utility.Xml.Find(srcParentNode, srcName);
+                if ( forceCreate || (srcChildNode != null))
+                {
+                    XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
+                    if (srcChildNode != null)
+                    {
+                        childNode.InnerText = srcChildNode.InnerText;
+                    }
+                    else
+                    {
+                        childNode.InnerText = "";
+                    }
+                }
             }
         }
 
