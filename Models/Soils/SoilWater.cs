@@ -25,7 +25,7 @@ namespace Models.Soils
         public double[] bd;
     }
     public delegate void NewProfileDelegate(NewProfileType Data);
-
+      
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model
@@ -454,6 +454,21 @@ namespace Models.Soils
         [Description("Drainage rate from bottom layer")]
         public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNO3 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNH4 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachUrea { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
 
         [XmlIgnore]
         [Units("mm")]
@@ -852,9 +867,6 @@ namespace Models.Soils
 
         //sv- Lateral Flow profile   //sv- also from Lateral_read_param()
 
-
-
-
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
@@ -986,11 +998,10 @@ namespace Models.Soils
         [Description("Depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)")]
         public double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Initially, water moving downward into layer i (mm), then water moving downward out of layer i (saturated flow)")]
-        private double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
-
+        public double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
         [XmlIgnore]
         [Units("mm")]
@@ -1008,6 +1019,37 @@ namespace Models.Soils
             }
         }
 
+        //private double[] _flow2;
+        [XmlIgnore]
+        [Units("mm")]
+        [Description("Nasty cludge to get flow reporting without a massive refactor")]
+        public double[] flow2
+        {
+            get;
+            set;
+            /*   get { return _flow2; }
+               set
+               {
+                   flow2 = new double[value.Length];
+                   Array.Copy(value, _flow2, value.Length);
+               }*/
+        }
+        
+       // private double[] _flux2;
+        [XmlIgnore]
+        [Units("mm")]
+        [Description("Nasty cludge to get fluw reporting without a massive refactor")]
+        public double[] flux2
+        {
+            get;
+            set;
+            /* get { return _flux2; }
+            set
+            {
+                flux2 = new double[value.Length];
+                Array.Copy(value, _flux2, value.Length);
+            }*/
+        }
 
         //Soilwat2Globals
 
@@ -3212,7 +3254,8 @@ namespace Models.Soils
 
             //! *** calculate unsaturated flow below drained upper limit (flow)***   
             flow = new double[num_layers];
-
+            
+            
             //! second_last_layer is bottom layer but 1.
             second_last_layer = num_layers - 1;
 
@@ -3362,11 +3405,12 @@ namespace Models.Soils
             num_layers = _dlayer.Length;
             solute_out = new double[num_layers];
             in_solute = 0.0;
-
+                
             for (layer = 0; layer < num_layers; layer++)
             {
                 //! get water draining out of layer and n content of layer includes that leaching down         
                 out_w = flux[layer];
+                flux2[layer] = flux[layer]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
                 solute_kg_layer = solute_kg[layer] + in_solute;
 
                 //! n leaching out of layer is proportional to the water draining out.
@@ -3452,6 +3496,7 @@ namespace Models.Soils
 
                 //! get water moving up and out of layer to the one above
                 out_w = flow[layer - 1];
+                flow2[layer] = flow[layer]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
                 if (out_w <= 0.0)
                 {
                     out_solute = 0.0;
@@ -3673,8 +3718,17 @@ namespace Models.Soils
                     soilwat2_solute_flux(ref solutes[solnum].leach, solutes[solnum].amount);               //calc leaching
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].amount);      //use leaching to set new solute values
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].delta);       //use leaching to set new delta (change in) solute values
+
+                    if(solutes[solnum].name == "no3")
+                        LeachNO3 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "nh4")
+                        LeachNH4 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "urea")
+                        LeachUrea = solutes[solnum].leach[num_layers - 1];
                 }
             }
+
+            
         }
 
 
@@ -4153,6 +4207,8 @@ namespace Models.Soils
                 soilwat2_delta_state();
             }
             initDone = true;
+            flux2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
+            flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
         [EventSubscribe("StartOfDay")]
@@ -4180,6 +4236,8 @@ namespace Models.Soils
             //! potential: sevap + transpiration:
             soilwat2_pot_evapotranspiration();
             real_eo = eo;  //! store for reporting
+
+
         }
 
 
