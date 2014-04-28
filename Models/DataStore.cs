@@ -123,7 +123,7 @@ namespace Models
                 {
                     ReadOnly = readOnly;
                     Filename = fileName;
-                    if (Filename != null)
+                    if (Filename != null && File.Exists(Filename))
                     {
                         Connection = new Utility.SQLite();
                         Connection.OpenDatabase(Filename, readOnly);
@@ -340,18 +340,22 @@ namespace Models
                     {
                         Connect(Filename, true);
                     }
-                    DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                    List<string> tables = new List<string>();
-                    if (table != null)
+                    if (Connection != null)
                     {
-                        tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
+                        DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                        List<string> tables = new List<string>();
+                        if (table != null)
+                        {
+                            tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
 
-                        // remove the simulations table
-                        int simulationsI = tables.IndexOf("Simulations");
-                        if (simulationsI != -1)
-                            tables.RemoveAt(simulationsI);
+                            // remove the simulations table
+                            int simulationsI = tables.IndexOf("Simulations");
+                            if (simulationsI != -1)
+                                tables.RemoveAt(simulationsI);
+                        }
+                        return tables.ToArray();
                     }
-                    return tables.ToArray();
+                    return new string[0];
                 }
                 catch (Utility.SQLiteException )
                 {
@@ -367,7 +371,7 @@ namespace Models
         /// </summary>
         public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
-            if (Connection == null || !TableExists("Simulations") || tableName == null)
+            if (Connection == null || !TableExists("Simulations") || tableName == null || !TableExists(tableName))
                 return null;
             try
             {
