@@ -8,12 +8,11 @@ using Models.PMF.Functions.SupplyFunctions;
 namespace Models.PMF.Organs
 {
     [Serializable]
-    public class SimpleLeaf : BaseOrgan, AboveGround
+    public class TreeCanopy : BaseOrgan, AboveGround
     {
         [Link]
         Plant Plant = null;
-        [Link(IsOptional = true)]
-        Structure structure = null;
+
         [Link]
         Summary Summary = null;
 
