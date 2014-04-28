@@ -551,7 +551,7 @@
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.03</gsmax>
+          <Gsmax>0.03</Gsmax>
           <r50>200</r50>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
@@ -563,7 +563,7 @@
             <Type>Potato</Type>
             <Albedo>0.26</Albedo>
             <Emissivity>0.96</Emissivity>
-            <Gsmax>0.011</Gsmax>
+            <Gsmax>0.03</Gsmax>
             <R50>200</R50>
           </ComponentData>
         </MicroClimate>

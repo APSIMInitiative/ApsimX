@@ -360,6 +360,7 @@ namespace Models
             mint = NewMet.mint;
             rain = NewMet.rain;
             vp = NewMet.vp;
+            wind = NewMet.wind;
         }
 
         [EventSubscribe("MiddleOfDay")]
@@ -561,7 +562,8 @@ namespace Models
             public double Depth;
             public double Albedo = 0.26;
             public double Emissivity = 0.96;
-            public double Gsmax = 0.011;
+            
+            public double Gsmax {get; set;}
             public double R50 = 200;
             [XmlIgnore]
             public double Frgr;
@@ -600,6 +602,7 @@ namespace Models
         private double radn;
         private double rain;
         private double vp;
+        private double wind;
         private bool use_external_windspeed;
 
         private bool windspeed_checked = false;
