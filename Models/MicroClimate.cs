@@ -499,6 +499,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
+            AddCropTypes();
         }
 
 
@@ -560,7 +561,7 @@ namespace Models
             public double Height;
             [XmlIgnore]
             public double Depth;
-            public double Albedo = 0.26;
+            public double Albedo = 0.15;
             public double Emissivity = 0.96;
             
             public double Gsmax {get; set;}
@@ -595,6 +596,82 @@ namespace Models
             public double[] Omega;
             [XmlIgnore]
             public double[] interception;
+        }
+
+        private void AddCropTypes()
+        {
+            SetupCropTypes("crop", "Crop");
+            SetupCropTypes("broccoli", "Crop");
+            SetupCropTypes("tree", "Tree");
+            SetupCropTypes("grandis", "Tree");
+            SetupCropTypes("oilpalm", "Tree");
+            SetupCropTypes("oilmallee", "Tree");
+            SetupCropTypes("globulus", "Tree");
+            SetupCropTypes("camaldulensis", "Tree");
+            SetupCropTypes("grass", "Grass");
+            SetupCropTypes("wheat", "Crop");
+            SetupCropTypes("barley", "Crop");
+            SetupCropTypes("canola", "Crop");
+            SetupCropTypes("raphanus_raphanistrum", "Crop");
+            SetupCropTypes("lolium_rigidum", "Crop");
+            SetupCropTypes("chickpea", "Crop");
+            SetupCropTypes("weed", "Crop");
+            SetupCropTypes("oats", "Crop");
+            SetupCropTypes("chickpea", "Crop");
+            SetupCropTypes("fieldpea", "Crop");
+            SetupCropTypes("sugar", "Crop");
+            SetupCropTypes("potato", "Potato");
+            SetupCropTypes("frenchbean", "Crop");
+            SetupCropTypes("bambatsi", "C4grass");
+            SetupCropTypes("lucerne", "Crop");
+            SetupCropTypes("maize", "Crop");
+            SetupCropTypes("banksia", "Tree");
+            SetupCropTypes("understorey", "Crop");
+            SetupCropTypes("ryegrass", "Grass");
+            SetupCropTypes("vine", "Crop");
+            SetupCropTypes("saltbush", "Tree");
+            SetupCropTypes("sorghum", "Crop");
+            SetupCropTypes("danthonia", "Grass");
+            SetupCropTypes("nativepasture", "C4Grass");
+            SetupCropTypes("raphanus_raphanistrum", "Crop");
+            SetupCropTypes("canola", "Crop");
+            SetupCropTypes("kale2", "Crop");
+            SetupCropTypes("Carrots4", "Crop");
+        }
+
+        private void SetupCropTypes(string Name, string Type)
+        {
+            ComponentDataStruct CropType = new ComponentDataStruct();
+            CropType.Name = Name;
+
+            if (Type.Equals("Crop"))
+            {
+                CropType.Albedo = 0.26;
+                CropType.Gsmax=0.011;
+            }
+            else if (Type.Equals("Grass"))
+            {
+                CropType.Albedo=0.23;
+            }
+            else if (Type.Equals("C4grass"))
+            {
+                CropType.Albedo=0.23;
+                CropType.Gsmax=0.015;
+                CropType.R50=150;
+            }
+            else if (Type.Equals("Tree"))
+            {
+                CropType.Albedo=0.15;
+                CropType.Gsmax=0.005;
+            }
+            else if (Type.Equals("Tree2"))
+            {
+                CropType.Albedo=0.15;
+                CropType.Gsmax=0.01;
+                CropType.R50=100;
+            }
+
+            ComponentData.Add(CropType);
         }
 
         private double maxt;

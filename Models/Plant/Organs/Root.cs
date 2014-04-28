@@ -16,9 +16,6 @@ namespace Models.PMF.Organs
         Plant Plant = null;
         
         [Link]
-        Structure Structure = null;
-
-        [Link]
         Arbitrator Arbitrator = null;
 
         [Link]
@@ -160,8 +157,8 @@ namespace Models.PMF.Organs
 
             if (Live.Wt == 0)
             {
-                LayerLive[0].StructuralWt = (Structure == null) ? InitialDM : InitialDM * Structure.Population;
-                LayerLive[0].StructuralN = (Structure == null) ? InitialDM * MaxNconc : InitialDM * MaxNconc * Structure.Population;
+                LayerLive[0].StructuralWt = InitialDM * Plant.Population;
+                LayerLive[0].StructuralN = InitialDM * MaxNconc * Plant.Population;
                 Depth = Plant.SowingData.Depth;
             }
 
