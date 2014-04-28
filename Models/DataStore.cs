@@ -123,7 +123,7 @@ namespace Models
                 {
                     ReadOnly = readOnly;
                     Filename = fileName;
-                    if (Filename != null && File.Exists(Filename))
+                    if (Filename != null)
                     {
                         Connection = new Utility.SQLite();
                         Connection.OpenDatabase(Filename, readOnly);
