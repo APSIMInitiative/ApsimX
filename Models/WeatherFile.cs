@@ -275,7 +275,13 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
-            TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            if (VPIndex == -1) //If VP is not present in the weather file assign a defalt value
+                TodaysMetData.vp = Math.Max(0,Utility.Met.svp(MetData.mint));
+            else
+                TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            if (VPIndex == -1) //If Wind is not present in the weather file assign a defalt value
+                TodaysMetData.wind = 3.0;
+            else
             TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
 
             if (PreparingNewWeatherData != null)
