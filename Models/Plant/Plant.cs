@@ -76,7 +76,7 @@ namespace Models.PMF
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
-        [Link] public Structure Structure = null;
+        [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
         public SowPlant2Type SowingData;
@@ -104,16 +104,22 @@ namespace Models.PMF
 
         [XmlIgnore]
         public double WaterSupplyDemandRatio { get; private set; }
+
+        [XmlIgnore]
+        [Description("Number of plants per meter2")]
+        [Units("/m2")]
+        public double Population { get; set; }
+        
         #endregion
 
         #region Public functions
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
-        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string Cultivar, double Pop, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Population;
+            SowingData.Population = Pop;
             SowingData.Depth = Depth;
             SowingData.Cultivar = Cultivar;
             SowingData.MaxCover = MaxCover;
@@ -124,6 +130,8 @@ namespace Models.PMF
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
+
+            Population = Pop;
 
             // tell all our children about sow
             foreach (Organ Child in Organs)
@@ -198,6 +206,7 @@ namespace Models.PMF
         {
             SowingData = null;
             WaterSupplyDemandRatio = 0;
+            Population = 0;
             Structure.Clear();
             Phenology.Clear();
             Arbitrator.Clear();
