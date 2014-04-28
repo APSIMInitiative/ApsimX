@@ -116,10 +116,10 @@ namespace Models.PMF
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
-        public void Sow(string Cultivar, double Pop, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Pop;
+            SowingData.Population = Population;
             SowingData.Depth = Depth;
             SowingData.Cultivar = Cultivar;
             SowingData.MaxCover = MaxCover;
@@ -131,7 +131,7 @@ namespace Models.PMF
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Population = Pop;
+            this.Population = Population;
 
             // tell all our children about sow
             foreach (Organ Child in Organs)
