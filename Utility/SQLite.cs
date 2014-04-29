@@ -268,6 +268,7 @@ namespace Utility
 
             Finalize(stmHandle);
 
+            if (dTable!=null)
             for (int i = dTable.Columns.Count -1; i >= 0; i--)
             {
                 if (dTable.Columns[i].DataType.Equals(typeof(object)))
