@@ -221,7 +221,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                     if ((L.IsAppeared) && (!L.Finished))
                         n += L.CohortPopulation;
-                return n / Structure.Population;
+                return n / Plant.Population;
             }
         }
 

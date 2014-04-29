@@ -26,20 +26,20 @@ namespace Models
         /// <summary>
         /// Apply irrigatopm.
         /// </summary>
-        public void Apply(double Amount, double Depth = 0.0, double Efficiency = 1.0, bool WillRunoff = false)
+        public void Apply(double amount, double depth = 0.0, double efficiency = 1.0, bool willRunoff = false)
         {
-            if (Irrigated != null && Amount > 0)
+            if (Irrigated != null && amount > 0)
             {
-                if(Efficiency > 1.0 || Efficiency < 0)
+                if(efficiency > 1.0 || efficiency < 0)
                     throw new ApsimXException(FullPath, "Efficiency value for irrigation event must bet between 0 and 1 ");
 
                 Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType water = new Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType();
-                water.Amount = Amount * Efficiency;
-                water.Depth = Depth;
-                water.will_runoff = WillRunoff;
-                IrrigationApplied = Amount;
+                water.Amount = amount * efficiency;
+                water.Depth = depth;
+                water.will_runoff = willRunoff;
+                IrrigationApplied = amount;
                 Irrigated.Invoke(this, water);
-                Summary.WriteMessage(FullPath, string.Format("{0} mm of water added at depth {1}", Amount * Efficiency, Depth));
+                Summary.WriteMessage(FullPath, string.Format("{0} mm of water added at depth {1}", amount * efficiency, depth));
             }
         }
 

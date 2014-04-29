@@ -12,19 +12,19 @@ namespace UserInterface.Presenters
     {
         private Axis Axis;
         private IAxisView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Axis = model as Axis;
             View = view as AxisView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             // Trap change event from the model.
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Trap events from the view.
             View.OnTitleChanged += OnTitleChanged;
@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             // Trap change event from the model.
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             // Trap events from the view.
             View.OnTitleChanged -= OnTitleChanged;
@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnTitleChanged(string NewText)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Title", NewText));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Title", NewText));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnInvertedChanged(bool Inverted)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Inverted", Inverted));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Inverted", Inverted));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using UserInterface.Views;
 using Models;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
@@ -8,21 +9,23 @@ namespace UserInterface.Presenters
     {
         private DataStore DataStore;
         private IDataStoreView DataStoreView;
-        CommandHistory CommandHistory;
+        ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model and view to this presenter and populate the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory commandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             DataStore = Model as DataStore;
             DataStoreView = View as IDataStoreView;
-            CommandHistory = commandHistory;
-            
-            DataStoreView.PopulateTables(DataStore.SimulationNames, DataStore.TableNames);
+            ExplorerPresenter = explorerPresenter;
 
             DataStoreView.OnTableSelected += OnTableSelected;
             DataStoreView.CreateNowClicked += OnCreateNowClicked;
+
+            DataStoreView.Grid.ReadOnly = true;
+            DataStoreView.Grid.AutoFilterOn = true;
+            DataStoreView.PopulateTables(DataStore.TableNames);
         }
 
         /// <summary>
@@ -37,9 +40,27 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The selected table has changed.
         /// </summary>
-        private void OnTableSelected(string SimulationName, string TableName)
+        private void OnTableSelected(string TableName)
         {
-            DataStoreView.PopulateData(DataStore.GetData(SimulationName, TableName));
+            DataStoreView.Grid.DataSource = DataStore.GetData("*", TableName);
+
+            if (DataStoreView.Grid.DataSource != null)
+            {
+
+                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                    DataStoreView.Grid.SetColumnSize(col.Ordinal, 50);
+
+                // Make all numeric columns have a format of N3
+                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                {
+                    //DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
+                    if (col.DataType == typeof(double))
+                        DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
+                }
+
+                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                    DataStoreView.Grid.SetColumnSize(col.Ordinal, -1);
+            }
         }
 
         /// <summary>

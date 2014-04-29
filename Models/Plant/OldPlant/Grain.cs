@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
         [Link]
@@ -49,31 +50,31 @@ namespace Models.PMF.OldPlant
         [Link] Function NConcentrationMaximum = null;
         [Link] Function GrowthStructuralFractionStage = null;
 
-        public double InitialWt = 0;
+        public double InitialWt { get; set; }
 
-        public double InitialNConcentration = 0;
+        public double InitialNConcentration { get; set; }
 
-        public double GrainsPerGramStem = 0;
+        public double GrainsPerGramStem { get; set; }
 
-        public double PotentialGrainFillingRate = 0;
+        public double PotentialGrainFillingRate { get; set; }
 
-        public double PotentialGrainGrowthRate = 0;
+        public double PotentialGrainGrowthRate { get; set; }
 
-        public double MinimumGrainNFillingRate = 0;
+        public double MinimumGrainNFillingRate { get; set; }
 
-        public double CriticalGrainFillingRate = 0;
+        public double CriticalGrainFillingRate { get; set; }
 
-        public double GrainMaxDailyNConc = 0;
+        public double GrainMaxDailyNConc { get; set; }
 
-        public double PotentialGrainNFillingRate = 0;
+        public double PotentialGrainNFillingRate { get; set; }
 
-        public double MaxGrainSize = 0;
+        public double MaxGrainSize { get; set; }
 
-        public double NSenescenceConcentration = 0;
+        public double NSenescenceConcentration { get; set; }
 
-        public double SenescenceDetachmentFraction = 0;
+        public double SenescenceDetachmentFraction { get; set; }
 
-        public double WaterContentFraction = 0;
+        public double WaterContentFraction { get; set; }
 
         #endregion
 

@@ -19,8 +19,8 @@ namespace UserInterface
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
-            this.tabbedExplorerView1 = new Views.TabbedExplorerView();
-            this.tabbedExplorerView2 = new Views.TabbedExplorerView();
+            this.tabbedExplorerView1 = new TabbedExplorerView();
+            this.tabbedExplorerView2 = new TabbedExplorerView();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.Panel1.SuspendLayout();
             this.SplitContainer.Panel2.SuspendLayout();
@@ -40,7 +40,7 @@ namespace UserInterface
             // SplitContainer.Panel2
             // 
             this.SplitContainer.Panel2.Controls.Add(this.tabbedExplorerView2);
-            this.SplitContainer.Size = new System.Drawing.Size(979, 790);
+            this.SplitContainer.Size = new System.Drawing.Size(979, 742);
             this.SplitContainer.SplitterDistance = 500;
             this.SplitContainer.TabIndex = 1;
             // 
@@ -49,7 +49,7 @@ namespace UserInterface
             this.tabbedExplorerView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabbedExplorerView1.Location = new System.Drawing.Point(0, 0);
             this.tabbedExplorerView1.Name = "tabbedExplorerView1";
-            this.tabbedExplorerView1.Size = new System.Drawing.Size(500, 790);
+            this.tabbedExplorerView1.Size = new System.Drawing.Size(500, 742);
             this.tabbedExplorerView1.TabIndex = 0;
             // 
             // tabbedExplorerView2
@@ -57,7 +57,7 @@ namespace UserInterface
             this.tabbedExplorerView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabbedExplorerView2.Location = new System.Drawing.Point(0, 0);
             this.tabbedExplorerView2.Name = "tabbedExplorerView2";
-            this.tabbedExplorerView2.Size = new System.Drawing.Size(475, 790);
+            this.tabbedExplorerView2.Size = new System.Drawing.Size(475, 742);
             this.tabbedExplorerView2.TabIndex = 1;
             // 
             // MainForm
@@ -65,7 +65,7 @@ namespace UserInterface
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(979, 790);
+            this.ClientSize = new System.Drawing.Size(979, 742);
             this.Controls.Add(this.SplitContainer);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.SystemColors.WindowText;

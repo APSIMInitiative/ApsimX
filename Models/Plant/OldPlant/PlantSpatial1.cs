@@ -7,25 +7,20 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class PlantSpatial1 : Model
     {
-        SowPlant2Type SowData;
+        [Link]
+        Plant15 Plant = null;
+
         double _CanopyWidth = 0;
 
-        [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
-        {
-            SowData = Sow;
-            if (Sow.SkipRow < 0 || Sow.SkipRow > 2)
-                throw new Exception("Invalid SkipRow: " + Sow.SkipRow.ToString());
-        }
-
         [XmlIgnore]
-        public double Density { get { return SowData.Population; } set { SowData.Population = value; } }
-        private double SkipRowFactor { get { return (2.0 + SowData.SkipRow) / 2.0; } }
+        public double Density { get { return Plant.SowingData.Population; } set { Plant.SowingData.Population = value; } }
+        private double SkipRowFactor { get { return (2.0 + Plant.SowingData.SkipRow) / 2.0; } }
         [XmlIgnore]
         public double CanopyWidth { get { return _CanopyWidth; } set { _CanopyWidth = value; } }
-        public double RowSpacing { get { return SowData.RowSpacing; } }
+        public double RowSpacing { get { return Plant.SowingData.RowSpacing; } }
         public double CanopyFactor
         {
             get

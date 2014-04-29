@@ -22,6 +22,9 @@ namespace Models.Graph
         [XmlElement("Series")]
         public List<Series> Series { get; set; }
 
+        public enum LegendPositionType { TopLeft, TopRight, BottomLeft, BottomRight };
+        public LegendPositionType LegendPosition { get; set; }
+
         /// <summary>
         /// Destructor. Get rid of DataStore
         /// </summary>
@@ -30,11 +33,6 @@ namespace Models.Graph
             if (_DataStore != null)
                 _DataStore.Disconnect();
             _DataStore = null;
-        }
-
-        public IEnumerable GetValues(GraphValues graphValues)
-        {
-            return graphValues.Values(this);
         }
 
         public IEnumerable GetValidFieldNames(GraphValues graphValues)
@@ -59,11 +57,12 @@ namespace Models.Graph
                         rootComponent = rootComponent.Parent;
 
                     if (rootComponent == null || !(rootComponent is Simulations))
-                        throw new Exception("Cannot find root component");
+                        return null;
 
                     Simulations simulations = rootComponent as Simulations;
                     _DataStore = new DataStore();
-                    _DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"), readOnly: true);
+                    string dbName = Path.ChangeExtension(simulations.FileName, ".db");
+                    _DataStore.Connect(dbName, readOnly: File.Exists(dbName));
                 }
                 return _DataStore;
             }

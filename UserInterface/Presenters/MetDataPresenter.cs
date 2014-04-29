@@ -16,10 +16,10 @@ namespace UserInterface.Presenters
         private WeatherFile MetData;
         private TabbedMetDataView MetDataView;
 
-        private CommandHistory CommandHistory;
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        private ExplorerPresenter ExplorerPresenter;
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
             MetData = (Model as WeatherFile);
             MetDataView = (View as TabbedMetDataView);
             
@@ -116,8 +116,11 @@ namespace UserInterface.Presenters
                 }
                 if (MetData.StartDate.DayOfYear > 2) //if the start year is truncated
                 {
-                    yearly.RemoveAt(0);
-                    count -= 1;
+                    if (yearly.Count > 0)
+                    {
+                        yearly.RemoveAt(0);
+                        count -= 1;
+                    }
                     startYr += 1;
                 }
                 if (count > 0)

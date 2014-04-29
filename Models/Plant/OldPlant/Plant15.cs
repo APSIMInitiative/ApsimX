@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class HarvestType
     {
         public Double Plants;
@@ -20,10 +21,12 @@ namespace Models.PMF.OldPlant
         public Double Height;
         public String Report = "";
     }
+    [Serializable]
     public class RemovedByAnimalType
     {
         public RemovedByAnimalelementType[] element;
     }
+    [Serializable]
     public class RemovedByAnimalelementType
     {
         public String CohortID = "";
@@ -34,6 +37,7 @@ namespace Models.PMF.OldPlant
         public String Chem = "";
         public Double WeightRemoved;
     }
+    [Serializable]
     public class AvailableToAnimalelementType
     {
         public String CohortID = "";
@@ -48,12 +52,17 @@ namespace Models.PMF.OldPlant
         public Double S;
         public Double AshAlk;
     }
+    [Serializable]
     public class AvailableToAnimalType
     {
         public AvailableToAnimalelementType[] element;
     }
 
-    public class Plant15: ModelCollection
+
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    public class Plant15 : ModelCollectionFromResource, ICrop
     {
         [Link]
         Phenology Phenology = null;
@@ -61,11 +70,11 @@ namespace Models.PMF.OldPlant
         [Link]
         Summary Summary = null;
 
+        public bool AutoHarvest { get; set; }
+
         public SowPlant2Type SowingData;
 
-        #region Outputs
-        public string CropType = "";
-        #endregion
+        public string CropType { get; set; }
 
         #region Event handlers and publishers
         
@@ -75,26 +84,16 @@ namespace Models.PMF.OldPlant
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        public void Sow(SowPlant2Type Sow)
+        public void Sow(double population, string cultivar, double depth, double rowSpacing)
         {
-            if (Sow.Cultivar == "")
+            SowingData = new SowPlant2Type();
+            SowingData.Population = population;
+            SowingData.Cultivar = cultivar;
+            SowingData.Depth = depth;
+            SowingData.RowSpacing = rowSpacing;
+
+            if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
-
-            SowingData = Sow;
-
-            // Go through all our children and find all organs.
-            Organ1s.Clear();
-            foreach (object ChildObject in this.Models)
-            {
-                Organ1 Child1 = ChildObject as Organ1;
-                if (Child1 != null)
-                {
-                    Organ1s.Add(Child1);
-                    if (Child1 is AboveGround)
-                        Tops.Add(Child1);
-                }
-
-            }
 
             if (NewCrop != null)
             {
@@ -107,7 +106,9 @@ namespace Models.PMF.OldPlant
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            WriteSowReport(Sow);
+            Population.OnSow(SowingData);
+            WriteSowReport(SowingData);
+            OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
         #endregion
 
@@ -165,11 +166,11 @@ namespace Models.PMF.OldPlant
         [Link]
         GenericArbitratorXY Arbitrator1 = null;
 
-        public double EOCropFactor = 1.5;
+        public double EOCropFactor { get; set; }
 
-        public string NSupplyPreference = "";
+        public string NSupplyPreference { get; set; }
 
-        public bool DoRetranslocationBeforeNDemand = false;
+        public bool DoRetranslocationBeforeNDemand { get; set; }
 
         //[Input]
         //double EO = 0;
@@ -181,7 +182,7 @@ namespace Models.PMF.OldPlant
         [Link]
         Clock Clock = null;
         
-        public event NewCanopyDelegate New_Canopy;
+        public event NewCanopyDelegate NewCanopy;
 
         
         public event NewCropDelegate CropEnding;
@@ -444,6 +445,13 @@ namespace Models.PMF.OldPlant
                 }
                 //Root.UpdateWaterBalance();
 
+                if (Phenology.InPhase("ReadyForHarvesting"))
+                {
+                    OnHarvest(new HarvestType());
+                    OnEndCrop();
+                    SowingData = null;
+                }
+
                 LAIMax = Math.Max(LAIMax, Leaf.LAI);
             }
         }
@@ -510,21 +518,22 @@ namespace Models.PMF.OldPlant
                 cover_sen += Organ.CoverSen;
             }
             double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
-            NewCanopyType NewCanopy = new NewCanopyType();
-            NewCanopy.height = (float)Stem.Height;
-            NewCanopy.depth = (float)Stem.Height;
-            NewCanopy.lai = (float)Leaf.LAI;
-            NewCanopy.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
-            NewCanopy.cover = (float)cover_green;
-            NewCanopy.cover_tot = (float)cover_tot;
-            NewCanopy.sender = Name;
-            New_Canopy.Invoke(NewCanopy);
-            Util.Debug("NewCanopy.height=%f", NewCanopy.height);
-            Util.Debug("NewCanopy.depth=%f", NewCanopy.depth);
-            Util.Debug("NewCanopy.lai=%f", NewCanopy.lai);
-            Util.Debug("NewCanopy.lai_tot=%f", NewCanopy.lai_tot);
-            Util.Debug("NewCanopy.cover=%f", NewCanopy.cover);
-            Util.Debug("NewCanopy.cover_tot=%f", NewCanopy.cover_tot);
+            NewCanopyType NewCanopyData = new NewCanopyType();
+            NewCanopyData.height = (float)Stem.Height;
+            NewCanopyData.depth = (float)Stem.Height;
+            NewCanopyData.lai = (float)Leaf.LAI;
+            NewCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
+            NewCanopyData.cover = (float)cover_green;
+            NewCanopyData.cover_tot = (float)cover_tot;
+            NewCanopyData.sender = Name;
+
+            NewCanopy.Invoke(NewCanopyData);
+            Util.Debug("NewCanopy.height=%f", NewCanopyData.height);
+            Util.Debug("NewCanopy.depth=%f", NewCanopyData.depth);
+            Util.Debug("NewCanopy.lai=%f", NewCanopyData.lai);
+            Util.Debug("NewCanopy.lai_tot=%f", NewCanopyData.lai_tot);
+            Util.Debug("NewCanopy.cover=%f", NewCanopyData.cover);
+            Util.Debug("NewCanopy.cover_tot=%f", NewCanopyData.cover_tot);
         }
 
         private void DoBiomassRemoved()
@@ -605,8 +614,7 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Event handler for the Harvest event - normally comes from Manager.
         /// </summary>
-        [EventSubscribe("Harvest")]
-        private void OnHarvest(HarvestType Harvest)
+        public void OnHarvest(HarvestType Harvest)
         {
             //WriteHarvestReport();
 
@@ -642,10 +650,12 @@ namespace Models.PMF.OldPlant
 
             foreach (Organ1 Organ in Organ1s)
                 Organ.DoNConccentrationLimits();
+
+            foreach (Organ1 Organ in Organ1s)
+                Organ.OnHarvest(Harvest, BiomassRemovedData);
         }
 
-        [EventSubscribe("EndCrop")]
-        private void OnEndCrop()
+        public void OnEndCrop()
         {
             NewCropType Crop = new NewCropType();
             Crop.crop_type = CropType;

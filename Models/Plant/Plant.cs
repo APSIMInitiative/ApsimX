@@ -71,12 +71,12 @@ namespace Models.PMF
         public String crop_type = "";
     }
     [Serializable]
-    public class Plant : ModelCollection
+    public class Plant : ModelCollection, ICrop
     {
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
-        [Link] public Structure Structure = null;
+        [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
         public SowPlant2Type SowingData;
@@ -104,6 +104,12 @@ namespace Models.PMF
 
         [XmlIgnore]
         public double WaterSupplyDemandRatio { get; private set; }
+
+        [XmlIgnore]
+        [Description("Number of plants per meter2")]
+        [Units("/m2")]
+        public double Population { get; set; }
+        
         #endregion
 
         #region Public functions
@@ -125,10 +131,13 @@ namespace Models.PMF
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
+            this.Population = Population;
+
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnSow(SowingData);
-            Structure.OnSow(SowingData);
+            if (Structure != null)
+               Structure.OnSow(SowingData);
             Phenology.OnSow();
 
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
@@ -198,7 +207,9 @@ namespace Models.PMF
         {
             SowingData = null;
             WaterSupplyDemandRatio = 0;
-            Structure.Clear();
+            Population = 0;
+            if (Structure != null)
+               Structure.Clear();
             Phenology.Clear();
             Arbitrator.Clear();
         }

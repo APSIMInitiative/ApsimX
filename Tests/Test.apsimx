@@ -144,7 +144,7 @@
               <double>0.49</double>
             </SAT>
             <SoilCrop>
-              <Name>WheatSoilCrop</Name>
+              <Name>Wheat</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -186,7 +186,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>BarleySoilCrop</Name>
+              <Name>Barley</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -228,7 +228,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>PotatoSoilCrop</Name>
+              <Name>Potato</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -692,6 +692,7 @@
           <ResidueTypes>
             <ResidueType>
               <Name>Potato</Name>
+              <fom_type>inert</fom_type>
               <fraction_C>0.08</fraction_C>
               <po4ppm>10</po4ppm>
               <nh4ppm>10</nh4ppm>
@@ -781,7 +782,7 @@
                private void OnStartOfDay(object sender, EventArgs e)
                {
 				if (Clock.Today.Date.Equals(ApplicationDate))
-                    Irrigation.Apply(Amount:ApplicationAmount);
+                    Irrigation.Apply(amount:ApplicationAmount);
                   //Irrigation.Apply(Amount:a, Depth:b, Efficiency:c, willRunoff:"d");
                   //a is a double and can be represented by a variable name or a number representing the amount (mm) of irrigation to apply
 			      //b is an optional double and can be represented by a variable name or a number representing the depth (mm) at which irrigation is applied

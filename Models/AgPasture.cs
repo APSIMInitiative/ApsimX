@@ -72,7 +72,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgPasture : Model
+    public class AgPasture : Model, ICrop
     {
         [Link]
         private Clock clock = null;
@@ -654,7 +654,7 @@ namespace Models
         private bool SetSpeciesMetData()
         {
             //pass metData & day_length to species (same to all species)
-            Species.dayLength = day_length;
+            Species.dayLength = day_length = MetData.DayLength;
             Species.latitude = MetData.Latitude;
             Species.MetData = MetData.MetData;
             Species.day_of_month = day_of_month;
@@ -989,7 +989,8 @@ namespace Models
         {
             InitParameters();            // Init parameters after reading the data           
 
-            //SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
+            if (MetData.StartDate != new DateTime(0) || MetData.ReadFirstDay())
+              SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
 
             DoNewCropEvent();            // Tell other modules that I exist
             DoNewCanopyEvent();          // Tell other modules about my canopy
@@ -1025,17 +1026,17 @@ namespace Models
             DoNewPotentialGrowthEvent();
         }
 
-/*        //---------------------------------------------------------------------
-        /// <summary>
-        /// Get new meteo- data
-        /// </summary>
-        /// <param name="NewMetData"></param>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(WeatherFile.NewMetType NewMetData)
-        {
-            MetData = NewMetData;
-        }
- */
+        /*        //---------------------------------------------------------------------
+                /// <summary>
+                /// Get new meteo- data
+                /// </summary>
+                /// <param name="NewMetData"></param>
+                [EventSubscribe("NewWeatherDataAvailable")]
+                private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMetData)
+                {
+                    MetData = NewMetData;
+                }
+         */
 
         //---------------------------------------------------------------------
         /// <summary>

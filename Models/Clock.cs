@@ -67,6 +67,7 @@ namespace Models
                 Today = Today.AddDays(1);
             }
 
+
             Summary.WriteMessage(FullPath, "Simulation terminated normally");
         }
     }

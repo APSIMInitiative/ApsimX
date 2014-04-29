@@ -14,22 +14,22 @@ namespace UserInterface.Presenters
     {
         private Input Input;
         private IInputView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attaches an Input model to an Input View.
         /// </summary>
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Input = model as Input;
             View = view as IInputView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
 
-            View.FileName = Input.FileName;
+            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
             View.GridView.DataSource = Input.GetTable();
 
             View.BrowseButtonClicked += OnBrowseButtonClicked;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
 
@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             View.BrowseButtonClicked -= OnBrowseButtonClicked;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -47,7 +47,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
         {
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FullFileName", e.FileName));
+            try
+            {
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileNames", e.FileNames));
+            }
+            catch (Exception err)
+            {
+                ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
@@ -55,7 +62,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            View.FileName = Input.FileName;
+            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
             View.GridView.DataSource = Input.GetTable();
         }
 

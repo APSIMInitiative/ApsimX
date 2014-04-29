@@ -70,7 +70,7 @@ namespace UserInterface.Views
             if (BrowseButtonClicked != null && OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 OpenDialogArgs args = new OpenDialogArgs();
-                args.FileName = OpenFileDialog.FileName;
+                args.FileNames = OpenFileDialog.FileNames;
 
                 BrowseButtonClicked.Invoke(this, args);
             }
@@ -82,6 +82,6 @@ namespace UserInterface.Views
     /// </summary>
     public class OpenDialogArgs : EventArgs
     {
-        public string FileName;
+        public string[] FileNames;
     }
 }

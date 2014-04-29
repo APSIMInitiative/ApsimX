@@ -6,16 +6,17 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class NStress : ModelCollection
     {
         [Link]
         Leaf1 Leaf = null;
         [Link]
         Stem1 Stem = null;
-        public double N_fact_photo = 0;
-        public double N_fact_pheno = 0;
-        public double N_fact_expansion = 0;
-        public double N_fact_grain = 0;
+        public double N_fact_photo { get; set; }
+        public double N_fact_pheno { get; set; }
+        public double N_fact_expansion { get; set; }
+        public double N_fact_grain { get; set; }
 
         public double PhotoStress { get { return 1 - photo; } }
         public double PhenoStress { get { return 1 - pheno; } }
@@ -78,8 +79,6 @@ namespace Models.PMF.OldPlant
         *   status between a critical and minimum Nitrogen concentration.
         */
         {
-            //Fixme, this should be active
-            /*
             double dm = Leaf.Live.Wt;
             double N = Leaf.Live.N;
             if (Stem != null)
@@ -112,7 +111,7 @@ namespace Models.PMF.OldPlant
                     double result = multiplier * dividend / divisor;
                     return Utility.Math.Bound(result, 0.0, 1.0);
                 }
-            }*/
+            }
             return (1.0);
         }
 

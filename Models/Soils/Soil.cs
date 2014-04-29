@@ -240,19 +240,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// MWCON at standard thickness. Units: 0-1
-        /// </summary>
-        internal double[] MWCON 
-        { 
-            get 
-            {
-                if (SoilWater == null) return null;
-                return Map(SoilWater.MWCON, SoilWater.Thickness, Thickness, MapType.Concentration); 
-            } 
-        }
-
-
-        /// <summary>
         /// Return the plant available water CAPACITY at standard thickness. Units: mm/mm
         /// </summary>
         public double[] PAWC

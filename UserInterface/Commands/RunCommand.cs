@@ -35,7 +35,17 @@ namespace UserInterface.Commands
             if (View != null)
                 View.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
 
-            JobManager.Start(Simulations.FindAllSimulationsToRun(ModelClicked), waitUntilFinished:false);
+            if (ModelClicked is Simulations)
+            {
+                Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
+            }
+            else
+            {
+                Simulations.SimulationToRun = ModelClicked;
+            }
+
+            JobManager.AddJob(Simulations);
+            JobManager.Start(waitUntilFinished: false);
         }
 
         /// <summary>

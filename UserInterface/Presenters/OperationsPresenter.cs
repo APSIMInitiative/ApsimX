@@ -16,21 +16,21 @@ namespace UserInterface.Presenters
     {
         private Operations Operations;
         private OperationsView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach model to view.
         /// </summary>
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Operations = model as Operations;
             View = view as OperationsView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             PopulateEditorView();
             View.EditorView.ContextItemsNeeded += OnContextItemsNeeded;
             View.EditorView.TextHasChangedByUser += OnTextHasChangedByUser;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         {
             View.EditorView.ContextItemsNeeded -= OnContextItemsNeeded;
             View.EditorView.TextHasChangedByUser -= OnTextHasChangedByUser;
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             List<Operation> operations = new List<Operation>();
             foreach (string line in View.EditorView.Lines)
             {
@@ -69,13 +69,15 @@ namespace UserInterface.Presenters
                 if (Pos != -1)
                 {
                     Operation operation = new Operation();
-                    operation.Date = DateTime.Parse(line.Substring(0, Pos));
+                    DateTime d;
+                    if (DateTime.TryParse(line.Substring(0, Pos), out d))
+                        operation.Date = d;
                     operation.Action = line.Substring(Pos + 1);
                     operations.Add(operation);
                 }
             }
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -84,6 +86,9 @@ namespace UserInterface.Presenters
         private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
         {
             object o = Operations.Get(e.ObjectName);
+
+            if (o == null)
+                o = Operations.Find(e.ObjectName);
 
             if (o != null)
             {

@@ -216,8 +216,6 @@ namespace Models.PMF.Organs
         }
         public override void OnSow(SowPlant2Type Data)
         {
-            if (structure != null) //could be optional ?
-                structure.Population = Data.Population;
             PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }

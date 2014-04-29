@@ -36,10 +36,15 @@ namespace Models.Graph
         public enum MarkerType { None, Circle, Diamond, Square, Triangle, Cross, Plus, Star, FilledCircle, FilledDiamond, FilledSquare, FilledTriangle }
         public MarkerType Marker { get; set; }
 
+        public enum LineType { Solid, Dash, Dot, DashDot, None };
+        public LineType Line { get; set; }
+
         public GraphValues X { get; set; }
         public GraphValues Y { get; set; }
         public GraphValues X2 { get; set; }
         public GraphValues Y2 { get; set; }
+
+        public bool ShowRegressionLine { get; set; }
 
 
     }

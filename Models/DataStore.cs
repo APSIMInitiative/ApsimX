@@ -14,7 +14,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    public class DataStore : Model
+    public class DataStore : ModelCollection
     {
         /// <summary>
         /// A SQLite connection shared between all instances of this DataStore.
@@ -87,10 +87,10 @@ namespace Models
             if (simulations != null)
             {
                 // Make sure that the .db exists and that it has a Simulations table.
-                string dbFileName = Path.ChangeExtension(simulations.FileName, ".db");
-                if (File.Exists(dbFileName))
+                Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                if (File.Exists(Filename))
                 {
-                    Connect(dbFileName, false);
+                    Connect(Filename, false);
 
                     // Get rid of unwanted simulations.
                     RemoveUnwantedSimulations(simulations);
@@ -99,7 +99,7 @@ namespace Models
                     Disconnect();
 
                     // Now reconnect as readonly. This is so the GUI can display data from the db
-                    Connect(dbFileName, true);
+                    Connect(Filename, true);
                 }
             }
         }
@@ -117,22 +117,28 @@ namespace Models
         /// </summary>
         public void Connect(string fileName, bool readOnly)
         {
-            
-            if (Connection == null)
+            lock (Locks)
             {
-                ReadOnly = readOnly;
-                Filename = fileName;
-                if (Filename == null || Filename.Length == 0)
-                    throw new ApsimXException("Filename", "The simulations object doesn't have a filename. Cannot open .db");
-                Connection = new Utility.SQLite();
-                Connection.OpenDatabase(Filename, readOnly);
-                if (!Locks.ContainsKey(Filename))
-                    Locks.Add(Filename, new DbMutex());
+                if (Connection == null)
+                {
+                    ReadOnly = readOnly;
+                    Filename = fileName;
+                    if (Filename != null)
+                    {
+                        Connection = new Utility.SQLite();
+                        Connection.OpenDatabase(Filename, readOnly);
 
-                Locks[Filename].Aquire(); 
-                if (!TableExists("Simulations"))
-                    Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                Locks[Filename].Release(); 
+                        if (!Locks.ContainsKey(Filename))
+                            Locks.Add(Filename, new DbMutex());
+
+                        Locks[Filename].Aquire();
+                        if (!TableExists("Simulations"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                        if (!TableExists("Messages"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                        Locks[Filename].Release();
+                    }
+                }
             }
         }
 
@@ -175,7 +181,7 @@ namespace Models
         /// </summary>
         public bool TableExists(string tableName)
         {
-            return Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
+            return (Connection != null) && Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
                                                     tableName + "'", 0) > 0;
         }
 
@@ -200,6 +206,18 @@ namespace Models
             else
                 AddMissingColumnsToTable(tableName, names, types);
             Locks[Filename].Release(); 
+        }
+
+        /// <summary>
+        /// Delete the specified table.
+        /// </summary>
+        public void DeleteTable(string tableName)
+        {
+            if (TableExists(tableName))
+            {
+                string cmd = "DROP TABLE " + tableName;
+                RunQueryWithNoReturnData(cmd);
+            }
         }
 
         /// <summary>
@@ -318,18 +336,26 @@ namespace Models
             {
                 try
                 {
-                    DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                    List<string> tables = new List<string>();
-                    if (table != null)
+                    if (Connection == null)
                     {
-                        tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
-
-                        // remove the simulations table
-                        int simulationsI = tables.IndexOf("Simulations");
-                        if (simulationsI != -1)
-                            tables.RemoveAt(simulationsI);
+                        Connect(Filename, true);
                     }
-                    return tables.ToArray();
+                    if (Connection != null)
+                    {
+                        DataTable table = Connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                        List<string> tables = new List<string>();
+                        if (table != null)
+                        {
+                            tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
+
+                            // remove the simulations table
+                            int simulationsI = tables.IndexOf("Simulations");
+                            if (simulationsI != -1)
+                                tables.RemoveAt(simulationsI);
+                        }
+                        return tables.ToArray();
+                    }
+                    return new string[0];
                 }
                 catch (Utility.SQLiteException )
                 {
@@ -343,15 +369,22 @@ namespace Models
         /// Return all data from the specified simulation and table name. If simulatinName = "*"
         /// the all simulation data will be returned.
         /// </summary>
-        public DataTable GetData(string simulationName, string tableName)
+        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
-            if (Connection == null || !TableExists("Simulations"))
+            if (Connection == null || !TableExists("Simulations") || tableName == null || !TableExists(tableName))
                 return null;
             try
             {
-                string sql = "SELECT * FROM " + tableName;
-                if (simulationName != "*")
+                string sql;
+
+                if (simulationName == null || simulationName == "*")
                 {
+                    sql = "SELECT S.Name as SimName, T.* FROM " + tableName + " T" + ", Simulations S " +
+                          "WHERE SimulationID = ID";
+                }
+                else
+                {
+                    sql = "SELECT * FROM " + tableName;
                     int simulationID = GetSimulationID(simulationName);
                     sql += " WHERE SimulationID = " + simulationID.ToString();
                 }
@@ -403,21 +436,29 @@ namespace Models
         public void WriteOutputFile()
         {
             string originalFileName = Filename;
+
+            Disconnect();
             
             // Write baseline .csv
-            string baselineFileName = Path.ChangeExtension(Filename, ".db.baseline");
-            Connect(baselineFileName, readOnly: true);
-            StreamWriter report = new StreamWriter(Filename + ".csv");
-            WriteAllTables(report);
-            report.Close();
-            Disconnect();
-            
-            // Write normal .csv
-            Connect(originalFileName, readOnly: true);
-            report = new StreamWriter(originalFileName + ".csv");
-            WriteAllTables(report);
-            report.Close();
-            Disconnect();
+            string baselineFileName = Path.ChangeExtension(originalFileName, ".db.baseline");
+            if (File.Exists(baselineFileName))
+            {
+                Connect(baselineFileName, readOnly: true);
+                StreamWriter report = new StreamWriter(baselineFileName + ".csv");
+                WriteAllTables(report);
+                report.Close();
+            }
+
+            if (File.Exists(originalFileName))
+            {
+                Disconnect();
+
+                // Write normal .csv
+                Connect(originalFileName, readOnly: true);
+                StreamWriter report = new StreamWriter(originalFileName + ".csv");
+                WriteAllTables(report);
+                report.Close();
+            }
         }
 
         #region Privates

@@ -25,9 +25,12 @@ namespace Models
         private int MinTIndex;
         private int RadnIndex;
         private int RainIndex;
+        private int VPIndex;
+        private int WindIndex;
         private NewMetType TodaysMetData = new NewMetType();
         private bool DoSeek;
-
+        private double co2 = 350;
+        
         public WeatherFile()
         {
         }
@@ -50,11 +53,11 @@ namespace Models
             }
             set
             {
-                FileName = value;
+                FileName = Utility.PathUtils.OSFilePath(value);
                 WtrFile = null; // ensure it is reopened
                 // try and convert to path relative to the Simulations.FileName.
                 if (FileName != null)
-                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
+                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
             }
         }
 
@@ -83,22 +86,26 @@ namespace Models
         public struct NewMetType
         {
             public double today;
-            public float radn;
-            public float maxt;
-            public float mint;
-            public float rain;
-            public float vp;
+            public double radn;
+            public double maxt;
+            public double mint;
+            public double rain;
+            public double vp;
+            public double wind;
         }
-        public delegate void NewMetDelegate(NewMetType Data); 
-        public event NewMetDelegate NewMet;
+        public delegate void NewMetDelegate(NewMetType Data);
+        public event EventHandler PreparingNewWeatherData;
+        public event NewMetDelegate NewWeatherDataAvailable;
 
         // Outputs
         public NewMetType MetData { get { return TodaysMetData; } }
-        public double MaxT { get { return MetData.maxt; } }
-        public double MinT { get { return MetData.mint; } }
-        public double Rain { get { return MetData.rain; } }
-        public double Radn { get { return MetData.radn; } }
-        public double vp { get { return MetData.vp; } }
+        public double MaxT { get { return MetData.maxt; } set { TodaysMetData.maxt = value; } }
+        public double MinT { get { return MetData.mint; } set { TodaysMetData.mint = value; } }
+        public double Rain { get { return MetData.rain; } set { TodaysMetData.rain = value; } }
+        public double Radn { get { return MetData.radn; } set { TodaysMetData.radn = value; } }
+        public double vp { get { return MetData.vp; } set { TodaysMetData.vp = value; } }
+        public double wind { get { return MetData.wind; } set { TodaysMetData.wind = value; } }
+        public double CO2 { get { return co2; } set { co2 = value; } }
         public double Latitude
         {
             get
@@ -193,6 +200,8 @@ namespace Models
                     MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
                     RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
                     RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
+                    VPIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "VP");
+                    WindIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Wind");
                     if (MaxTIndex == -1)
                         throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
                     if (MinTIndex == -1)
@@ -220,6 +229,28 @@ namespace Models
         }
 
         /// <summary>
+        /// Read data for the first day of the simulation
+        /// Handy for component which need this data for their initialisation,
+        /// but use sparingly
+        /// </summary>
+        public Boolean ReadFirstDay()
+        {
+            if (!OpenDataFile())
+                return false;
+            WtrFile.SeekToDate(Clock.StartDate);
+            object[] Values = WtrFile.GetNextLineOfData();
+
+            TodaysMetData.today = (double)Clock.StartDate.Ticks;
+            TodaysMetData.radn = Convert.ToSingle(Values[RadnIndex]);
+            TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
+            TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
+            TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
+            TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
+            return true;
+        }
+
+        /// <summary>
         /// An event handler for the tick event.
         /// </summary>
         [EventSubscribe("Tick")]
@@ -244,8 +275,20 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
-            if (NewMet != null)
-                NewMet.Invoke(MetData);
+            if (VPIndex == -1) //If VP is not present in the weather file assign a defalt value
+                TodaysMetData.vp = Math.Max(0,Utility.Met.svp(MetData.mint));
+            else
+                TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            if (WindIndex == -1) //If Wind is not present in the weather file assign a defalt value
+                TodaysMetData.wind = 3.0;
+            else
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
+
+            if (PreparingNewWeatherData != null)
+                PreparingNewWeatherData.Invoke(this, new EventArgs());
+
+            if (NewWeatherDataAvailable != null)
+                NewWeatherDataAvailable.Invoke(MetData);
         }
         //=====================================================================
         /// <summary>

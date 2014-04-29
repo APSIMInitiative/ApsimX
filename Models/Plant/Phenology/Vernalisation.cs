@@ -6,7 +6,7 @@ namespace Models.PMF.Phen
 {
 
     [Serializable]
-    public class Vernalisation
+    public class Vernalisation : ModelCollection
     {
         [Link]
         Phenology Phenology = null;
@@ -22,8 +22,8 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Trap the NewMet event.
         /// </summary>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             if (Phenology.Between(StartStage, EndStage))
                 DoVernalisation(NewMet.maxt, NewMet.mint);
@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialise everything
         /// </summary>
-        public void OnCommencing()
+        public override void OnCommencing()
         {
             CumulativeVD = 0;
         }

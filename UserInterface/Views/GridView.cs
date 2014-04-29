@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using DataGridViewAutoFilter;
 
 namespace UserInterface.Views
 {
@@ -86,6 +87,11 @@ namespace UserInterface.Views
         Point CurrentCell { get; }
 
         /// <summary>
+        /// set the autofilter capability on
+        /// </summary>
+        bool AutoFilterOn { get; set; }
+
+        /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
         void AddContextAction(string ButtonText, System.EventHandler OnClick);
@@ -121,6 +127,7 @@ namespace UserInterface.Views
         private bool UserEditingCell = false;
         private object ValueBeforeEdit;
         private DataTable Data;
+        private bool AutoFilterIsOn = false;
 
         /// <summary>
         /// This event is invoked when the value of a cell is changed.
@@ -161,6 +168,11 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateGrid()
         {
+            // The DataGridViewAutoFilterColumnHeaderCell class needs DataSource to be set.
+            Grid.DataSource = null;
+            Grid.Columns.Clear();
+            Grid.Rows.Clear();
+            
             if (DataSource != null)
             {
                 // Under MONO for LINUX, when Grid.EditMode = DataGridViewEditMode.EditOnEnter
@@ -172,24 +184,35 @@ namespace UserInterface.Views
                 // Turn this event off temporarily.
                 Grid.CellValueChanged -= OnCellValueChanged;
 
-                // Make sure we have the right number of columns.
-                Grid.ColumnCount = Math.Max(DataSource.Columns.Count, 1);
-
-                // Populate the grid headers.
-                for (int Col = 0; Col < DataSource.Columns.Count; Col++)
+                // If autofilter is on then use a data bound grid.
+                if (AutoFilterIsOn)
                 {
-                    Grid.Columns[Col].HeaderText = DataSource.Columns[Col].ColumnName;
-                    Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    Grid.Columns[Col].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    Grid.DataSource = new BindingSource(Data, null);
+
+                    foreach (DataGridViewColumn column in Grid.Columns)
+                        column.HeaderCell = new DataGridViewAutoFilterColumnHeaderCell(column.HeaderCell);
                 }
-
-                // Populate the grid cells with new rows.
-                Grid.RowCount = DataSource.Rows.Count;
-                for (int Row = 0; Row < DataSource.Rows.Count; Row++)
+                else
                 {
+                    // Make sure we have the right number of columns.
+                    Grid.ColumnCount = Math.Max(DataSource.Columns.Count, 1);
+
+                    // Populate the grid headers.
                     for (int Col = 0; Col < DataSource.Columns.Count; Col++)
-                        Grid[Col, Row].Value = DataSource.Rows[Row][Col];
+                    {
+                        Grid.Columns[Col].HeaderText = DataSource.Columns[Col].ColumnName;
+                        Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        Grid.Columns[Col].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    }
+
+                    // Populate the grid cells with new rows.
+                    Grid.RowCount = DataSource.Rows.Count;
+                    for (int Row = 0; Row < DataSource.Rows.Count; Row++)
+                    {
+                        for (int Col = 0; Col < DataSource.Columns.Count; Col++)
+                            Grid[Col, Row].Value = DataSource.Rows[Row][Col];
+                    }
                 }
 
                 foreach (DataGridViewColumn Col in Grid.Columns)
@@ -276,9 +299,15 @@ namespace UserInterface.Views
         public void SetColumnAlignment(int Col, bool LeftAlign)
         {
             if (LeftAlign)
+            {
+                Grid.Columns[Col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            }
             else
+            {
+                Grid.Columns[Col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
                 Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
         }
 
         /// <summary>
@@ -321,7 +350,7 @@ namespace UserInterface.Views
         {
             if (size == -1)
             {
-                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 size = Grid.Columns[Col].Width + 20;
             }
             //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
@@ -369,6 +398,7 @@ namespace UserInterface.Views
                             Grid.Rows[Row].Cells[Col].ToolTipText = ToolTips[Row];
                     }
                 }
+                //Grid.Refresh();
             }
         }
 
@@ -394,6 +424,23 @@ namespace UserInterface.Views
                 return new Point(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex);
             }
         }
+
+        /// <summary>
+        /// set the autofilter capability on
+        /// </summary>
+        public bool AutoFilterOn
+        {
+            get
+            {
+                return AutoFilterIsOn;
+            }
+            set 
+            {
+                AutoFilterIsOn = value;
+                PopulateGrid();
+            }
+        }
+
 
         /// <summary>
         /// Add an action (on context menu) on the series grid.
@@ -465,7 +512,7 @@ namespace UserInterface.Views
             if (UserEditingCell)
             {
                 object OldValue = ValueBeforeEdit;
-                ValueBeforeEdit = null;
+                //ValueBeforeEdit = null;
                 UserEditingCell = false;
 
                 // Make sure our table has enough rows.
@@ -476,6 +523,9 @@ namespace UserInterface.Views
                 // Put the new value into the table on the correct row.
                 if (DataSource != null)
                     DataSource.Rows[e.RowIndex][e.ColumnIndex] = NewValue;
+
+                if (ValueBeforeEdit != null && ValueBeforeEdit.GetType() == typeof(string) && NewValue == null)
+                    NewValue = "";
 
                 if (CellValueChanged != null && ValueBeforeEdit != NewValue)
                     CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);
@@ -499,6 +549,17 @@ namespace UserInterface.Views
         {
             if (e.RowIndex == -1)
             {
+                //// Check to see if autofilter is on. If so then show drop down menu.
+                //if (Grid.Columns[e.ColumnIndex].HeaderCell.GetType() == typeof(DataGridViewAutoFilterColumnHeaderCell))
+                //{
+                //    DataGridViewAutoFilterColumnHeaderCell filterCell =  Grid.CurrentCell.OwningColumn.HeaderCell as
+                //                                                         DataGridViewAutoFilterColumnHeaderCell;
+                //    if (filterCell != null)
+                //    {
+                //        Grid.DataSource = Data;
+                //        filterCell.ShowDropDownList();
+                //    }
+                //}
                 if (ColumnHeaderClicked != null)
                     ColumnHeaderClicked.Invoke(Grid.Columns[e.ColumnIndex].HeaderText);
             }

@@ -32,6 +32,8 @@ for (fileNumber in 1:length(files)){
   }
   
   print(noquote(files[fileNumber]))
+  
+  # get connection string used to store test output
   if(length(args) > 1){
     dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
     connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
@@ -80,6 +82,7 @@ for (fileNumber in 1:length(files)){
           
           #do the same thing for baseline data
           if(file.exists(paste(dbName, ".baseline", sep=""))){
+            simID <- dbGetQuery(dbBase, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
             readSimOutputBase <- dbReadTable(dbBase, "Report")
             readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]
           }
@@ -146,12 +149,15 @@ for (fileNumber in 1:length(files)){
   }
   if(exists("results"))
     print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
- 
-  if (length(args) > 1){
-      # this line does the save to the external database. comment out to stop this happening for testing
-      #    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-  }
+
   odbcCloseAll()
+}
+
+if (length(args) > 1){
+    # this line does the save to the external database. comment out to stop this happening for testing
+    print(noquote("Uploading test results."))
+    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
+    print(noquote("Uploading complete."))
 }
 
 #write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing

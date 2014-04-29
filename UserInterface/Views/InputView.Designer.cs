@@ -38,6 +38,7 @@
             // 
             // Grid
             // 
+            this.Grid.AutoFilterOn = false;
             this.Grid.DataSource = null;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(0, 32);
@@ -80,6 +81,7 @@
             // OpenFileDialog
             // 
             this.OpenFileDialog.Filter = "All files|*.*";
+            this.OpenFileDialog.Multiselect = true;
             // 
             // InputView
             // 

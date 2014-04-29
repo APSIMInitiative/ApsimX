@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
+    [Serializable]
     public class NUptake3 : ModelCollection
     {
         [Link]
@@ -16,15 +17,15 @@ namespace Models.PMF.OldPlant
         [Link]
         Function NStressPeriod = null;
 
-        public double kno3 = 0;
+        public double kno3 { get; set; }
 
-        public double knh4 = 0;
+        public double knh4 { get; set; }
 
-        public double no3ppm_min = 0;
+        public double no3ppm_min { get; set; }
 
-        public double nh4ppm_min = 0;
+        public double nh4ppm_min { get; set; }
 
-        public double total_n_uptake_max = 0;
+        public double total_n_uptake_max { get; set; }
 
         public void DoNUptake(double RootDepth, double[] no3gsm, double[] nh4gsm,
                               double[] bd, double[] dlayer, double[] sw_avail, double[] sw_avail_pot,

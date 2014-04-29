@@ -486,7 +486,9 @@ namespace Models.Soils
                 aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
-        
+
+            sw_dep = Soil.SoilWater.sw_dep;
+
             // update soil temperature
             if (use_external_st)
                 Tsoil = ave_soil_temp;

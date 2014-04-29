@@ -6,6 +6,12 @@
     <WeatherFile>
       <Name>met</Name>
       <FileName>\Examples\MetFiles\Goond.met</FileName>
+      <MaxT>0</MaxT>
+      <MinT>0</MinT>
+      <Rain>0</Rain>
+      <Radn>0</Radn>
+      <vp>0</vp>
+      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>clock</Name>
@@ -510,13 +516,48 @@
             <double>0</double>
           </KLAT>
         </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+        </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
-          <RootCN>0</RootCN>
-          <RootWt>0</RootWt>
-          <SoilCN>0</SoilCN>
-          <EnrACoeff>0</EnrACoeff>
-          <EnrBCoeff>0</EnrBCoeff>
+          <RootCN>40</RootCN>
+          <RootWt>200</RootWt>
+          <SoilCN>12.5</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -692,7 +733,7 @@
           <Name>Phenology</Name>
           <StageBasedInterpolation>
             <Name>StageCode</Name>
-            <Proportional>false</Proportional>
+            <Proportional>true</Proportional>
           </StageBasedInterpolation>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
@@ -741,9 +782,15 @@
         </Structure>
         <Leaf>
           <Name>Leaf</Name>
-          <Biomass>
+          <CompositeBiomass>
             <Name>Live</Name>
-          </Biomass>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Dead</Name>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+          </CompositeBiomass>
           <MultiplyFunction>
             <Name>ExtinctionCoeff</Name>
           </MultiplyFunction>
@@ -985,8 +1032,28 @@ namespace Models
         <Events>
           <string xsi:nil="true" />
         </Events>
+        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
-      <Area>0</Area>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
+      </MicroClimate>
+      <Area>100</Area>
     </Zone>
     <Area>0</Area>
   </Simulation>

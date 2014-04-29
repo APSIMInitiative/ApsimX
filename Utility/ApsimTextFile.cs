@@ -75,6 +75,8 @@ namespace Utility
 
             In = new StreamReaderRandomAccess(_FileName);
             ReadApsimHeader(In);
+            if (Headings == null || Units == null)
+                throw new Exception("Cannot find headings and units line in " + FileName);
             FirstLinePosition = In.Position;
 
             // Read in first line.
@@ -405,7 +407,7 @@ namespace Utility
             int Pos = In.Position;
 
             StringCollection Words = new StringCollection();
-            while (GetNextLine(In, ref Words) && Words[w] == "?") ;
+            while (GetNextLine(In, ref Words) && (Words[w] == "?" || Words[w] == "*"));
 
             In.Position = Pos;
 

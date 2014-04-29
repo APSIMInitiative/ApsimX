@@ -15,10 +15,12 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Zone
+    public class Simulations : Zone, Utility.JobManager.IRunnable
     {
         private string _FileName;
         public Int32 ExplorerWidth { get; set; }
+
+
 
         /// <summary>
         /// The name of the file containing the simulations.
@@ -57,6 +59,43 @@ namespace Models.Core
                 simulations.FileName = FileName;
                 simulations.SetFileNameInAllSimulations();
 
+                // Call the OnSerialised method in each model.
+                foreach (Model model in simulations.AllModels)
+                    model.OnDeserialised(true);
+
+                // Parent all models.
+                ParentAllModels(simulations);
+
+                // Connect events and resolve links.
+                simulations.AllModels.ForEach(ConnectEventPublishers);
+                simulations.AllModels.ForEach(ResolveLinks);
+
+                // Call OnLoaded in all models.
+                simulations.AllModels.ForEach(CallOnLoaded);
+            }
+            else
+                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
+            return simulations;
+        }
+
+        /// <summary>
+        /// Create a simulations object by reading the specified filename
+        /// </summary>
+        public static Simulations Read(XmlNode node)
+        {
+
+            // Deserialise
+            Simulations simulations = Utility.Xml.Deserialise(node) as Simulations;
+
+            if (simulations != null)
+            {
+                // Set the filename
+                simulations.SetFileNameInAllSimulations();
+
+                // Call the OnSerialised method in each model.
+                foreach (Model model in simulations.AllModels)
+                    model.OnDeserialised(true);
+
                 // Parent all models.
                 ParentAllModels(simulations);
 
@@ -79,20 +118,19 @@ namespace Models.Core
         {
             string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
             StreamWriter Out = new StreamWriter(tempFileName);
-            Out.Write(Utility.Xml.Serialise(this, true));
+            Write(Out);
             Out.Close();
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
             string bakFileName = FileName + ".bak";
             File.Delete(bakFileName);
-            if (File.Exists(FileName)) 
+            if (File.Exists(FileName))
                 File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
         }
-
 
         /// <summary>
         /// Constructor, private to stop developers using it. Use Simulations.Read instead.
@@ -168,7 +206,7 @@ namespace Models.Core
                 simulation.FileName = FileName;
         }
 
-        public static Simulations RootSimulations(Model model)
+        private static Simulations RootSimulations(Model model)
         {
             Model m = model;
             while (m != null && m.Parent != null && !(m is Simulations))
@@ -177,6 +215,50 @@ namespace Models.Core
             return m as Simulations;
         }
 
+        /// <summary>
+        /// Allows the GUI to specify a simulation to run. It then calls
+        /// 'Run' below to run this simulation.
+        /// </summary>
+        [XmlIgnore]
+        public Model SimulationToRun { get; set; }
 
+        /// <summary>
+        /// Run all simulations.
+        /// </summary>
+        public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            // Get a reference to the JobManager so that we can add jobs to it.
+            Utility.JobManager jobManager = e.Argument as Utility.JobManager;
+
+            Simulation[] simulationsToRun;
+            if (SimulationToRun == null)
+            {
+                // As we are going to run all simulations, we can delete all tables in the DataStore. This
+                // will clean up order of columns in the tables and removed unused ones.
+                DataStore store = new DataStore();
+                store.Connect(Path.ChangeExtension(FileName, ".db"), false);
+
+                foreach (string tableName in store.TableNames)
+                    if (tableName != "Simulations" && tableName != "Messages")
+                        store.DeleteTable(tableName);
+
+                store.Disconnect();
+
+                simulationsToRun = Simulations.FindAllSimulationsToRun(this);
+            }
+            else
+                simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
+
+            foreach (Model model in AllModels)
+                model.OnAllCommencing();
+
+            foreach (Simulation simulation in simulationsToRun)
+                jobManager.AddJob(simulation);
+
+            foreach (Model model in AllModels)
+                model.OnAllCompleted();
+
+
+        }
     }
 }

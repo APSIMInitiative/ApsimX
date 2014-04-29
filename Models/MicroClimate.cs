@@ -130,7 +130,7 @@ namespace Models
             b_interception = 1.0;
             c_interception = 0.0;
             d_interception = 0.0;
-            soil_albedo = 0.3;
+            soil_albedo = 0.23;
         }
 
 
@@ -352,14 +352,15 @@ namespace Models
         /// <summary>
         /// Obtain all relevant met data
         /// </summary>
-        [EventSubscribe("NewMet")]
-        private void OnNewmet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             radn = NewMet.radn;
             maxt = NewMet.maxt;
             mint = NewMet.mint;
             rain = NewMet.rain;
             vp = NewMet.vp;
+            wind = NewMet.wind;
         }
 
         [EventSubscribe("MiddleOfDay")]
@@ -389,7 +390,7 @@ namespace Models
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
-            Plant newCrop = sender as Plant;
+            Model newCrop = sender as Model;
 
             int senderIdx = FindComponentIndex(newCrop.Name);
 
@@ -397,7 +398,10 @@ namespace Models
             if (senderIdx == -1)
                 throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
             ComponentData[senderIdx].Name = newCrop.Name;
-            ComponentData[senderIdx].Type = newCrop.CropType;
+            if (newCrop is Plant)
+                ComponentData[senderIdx].Type = (newCrop as Plant).CropType;
+            else
+                ComponentData[senderIdx].Type = newCrop.Name;
             Clear(ComponentData[senderIdx]);
         }
 
@@ -495,6 +499,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
+            AddCropTypes();
         }
 
 
@@ -556,9 +561,10 @@ namespace Models
             public double Height;
             [XmlIgnore]
             public double Depth;
-            public double Albedo = 0.26;
+            public double Albedo = 0.15;
             public double Emissivity = 0.96;
-            public double Gsmax = 0.011;
+            
+            public double Gsmax {get; set;}
             public double R50 = 200;
             [XmlIgnore]
             public double Frgr;
@@ -592,11 +598,88 @@ namespace Models
             public double[] interception;
         }
 
+        private void AddCropTypes()
+        {
+            SetupCropTypes("crop", "Crop");
+            SetupCropTypes("broccoli", "Crop");
+            SetupCropTypes("tree", "Tree");
+            SetupCropTypes("grandis", "Tree");
+            SetupCropTypes("oilpalm", "Tree");
+            SetupCropTypes("oilmallee", "Tree");
+            SetupCropTypes("globulus", "Tree");
+            SetupCropTypes("camaldulensis", "Tree");
+            SetupCropTypes("grass", "Grass");
+            SetupCropTypes("wheat", "Crop");
+            SetupCropTypes("barley", "Crop");
+            SetupCropTypes("canola", "Crop");
+            SetupCropTypes("raphanus_raphanistrum", "Crop");
+            SetupCropTypes("lolium_rigidum", "Crop");
+            SetupCropTypes("chickpea", "Crop");
+            SetupCropTypes("weed", "Crop");
+            SetupCropTypes("oats", "Crop");
+            SetupCropTypes("chickpea", "Crop");
+            SetupCropTypes("fieldpea", "Crop");
+            SetupCropTypes("sugar", "Crop");
+            SetupCropTypes("potato", "Potato");
+            SetupCropTypes("frenchbean", "Crop");
+            SetupCropTypes("bambatsi", "C4grass");
+            SetupCropTypes("lucerne", "Crop");
+            SetupCropTypes("maize", "Crop");
+            SetupCropTypes("banksia", "Tree");
+            SetupCropTypes("understorey", "Crop");
+            SetupCropTypes("ryegrass", "Grass");
+            SetupCropTypes("vine", "Crop");
+            SetupCropTypes("saltbush", "Tree");
+            SetupCropTypes("sorghum", "Crop");
+            SetupCropTypes("danthonia", "Grass");
+            SetupCropTypes("nativepasture", "C4Grass");
+            SetupCropTypes("raphanus_raphanistrum", "Crop");
+            SetupCropTypes("canola", "Crop");
+            SetupCropTypes("kale2", "Crop");
+            SetupCropTypes("Carrots4", "Crop");
+        }
+
+        private void SetupCropTypes(string Name, string Type)
+        {
+            ComponentDataStruct CropType = new ComponentDataStruct();
+            CropType.Name = Name;
+
+            if (Type.Equals("Crop"))
+            {
+                CropType.Albedo = 0.26;
+                CropType.Gsmax=0.011;
+            }
+            else if (Type.Equals("Grass"))
+            {
+                CropType.Albedo=0.23;
+            }
+            else if (Type.Equals("C4grass"))
+            {
+                CropType.Albedo=0.23;
+                CropType.Gsmax=0.015;
+                CropType.R50=150;
+            }
+            else if (Type.Equals("Tree"))
+            {
+                CropType.Albedo=0.15;
+                CropType.Gsmax=0.005;
+            }
+            else if (Type.Equals("Tree2"))
+            {
+                CropType.Albedo=0.15;
+                CropType.Gsmax=0.01;
+                CropType.R50=100;
+            }
+
+            ComponentData.Add(CropType);
+        }
+
         private double maxt;
         private double mint;
         private double radn;
         private double rain;
         private double vp;
+        private double wind;
         private bool use_external_windspeed;
 
         private bool windspeed_checked = false;
@@ -682,6 +765,13 @@ namespace Models
                 }
             }
             // Couldn't find
+
+            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // crop type
+                ComponentData.Add(new ComponentDataStruct() { Name = name, Albedo = 0.26, Gsmax = 0.011 });
+                return ComponentData.Count - 1;
+            }
             return -1;
         }
 

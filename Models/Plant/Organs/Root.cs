@@ -16,9 +16,6 @@ namespace Models.PMF.Organs
         Plant Plant = null;
         
         [Link]
-        Structure Structure = null;
-
-        [Link]
         Arbitrator Arbitrator = null;
 
         [Link]
@@ -160,8 +157,8 @@ namespace Models.PMF.Organs
 
             if (Live.Wt == 0)
             {
-                LayerLive[0].StructuralWt = (Structure == null) ? InitialDM : InitialDM * Structure.Population;
-                LayerLive[0].StructuralN = (Structure == null) ? InitialDM * MaxNconc : InitialDM * MaxNconc * Structure.Population;
+                LayerLive[0].StructuralWt = InitialDM * Plant.Population;
+                LayerLive[0].StructuralN = InitialDM * MaxNconc * Plant.Population;
                 Depth = Plant.SowingData.Depth;
             }
 
@@ -178,11 +175,11 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = LayerIndex(Depth);
             double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
-            string SoilCropPlantName = this.Plant.Name + "SoilCrop";
-            Depth = Depth + RootFrontVelocity.Value * Soil.XF(SoilCropPlantName)[RootLayer] * TEM;
+
+            Depth = Depth + RootFrontVelocity.Value * Soil.XF(this.Plant.Name)[RootLayer] * TEM;
             double MaxDepth = 0;
             for (int i = 0; i < SoilWat.dlayer.Length; i++)
-                if (Soil.XF(SoilCropPlantName)[i] > 0)
+                if (Soil.XF(this.Plant.Name)[i] > 0)
                     MaxDepth += SoilWat.dlayer[i];
 
             Depth = Math.Min(Depth, MaxDepth);
@@ -576,10 +573,10 @@ namespace Models.PMF.Organs
                 if (SWSupply == null || SWSupply.Length != SoilWat.dlayer.Length)
                     SWSupply = new double[SoilWat.dlayer.Length];
 
-                string SoilCropPlantName = this.Plant.Name + "SoilCrop";
+                
                 for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, Soil.KL(SoilCropPlantName)[layer] * KLModifier.Value * (SoilWat.sw_dep[layer] - Soil.LL(SoilCropPlantName)[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, Soil.KL(this.Plant.Name)[layer] * KLModifier.Value * (SoilWat.sw_dep[layer] - Soil.LL(this.Plant.Name)[layer] * SoilWat.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

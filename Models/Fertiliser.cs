@@ -12,9 +12,14 @@ namespace Models
     public class FertiliserType
     {
         public string Name { get; set; }
-        public double FractionNO3 { get; set;}
-        public double FractionNH4 { get; set;}
-        public double FractionUrea { get; set;}
+        public string Description { get; set; }
+        public double FractionNO3 { get; set; }
+        public double FractionNH4 { get; set; }
+        public double FractionUrea { get; set; }
+        public double FractionRockP { get; set;}
+        public double FractionBandedP{get;set;}
+        public double FractionLabileP{get;set;}
+        public double FractionCa { get; set; }
     }
         [Serializable]
 
@@ -27,6 +32,26 @@ namespace Models
         // Parameters
         public List<FertiliserType> Definitions { get; set; }
 
+        private void AddDefinitions()
+        {
+            Definitions.Add(new FertiliserType { Name = "CalciteCA", Description = "Ca as finely ground Agricultural Lime", FractionCa = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "CalciteFine", Description = "finely ground Agricultural Lime", FractionCa = 0.4 });
+            Definitions.Add(new FertiliserType { Name = "Dolomite", Description = "finely ground dolomite", FractionCa = 0.22 });
+            Definitions.Add(new FertiliserType { Name = "NO3N", Description = "N as nitrate", FractionNO3 = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "NH4N", Description = "N as ammonium", FractionNH4 = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "NH4NO3N", Description = "ammonium nitrate", FractionNH4 = 0.5, FractionNO3 = 0.5 });
+            Definitions.Add(new FertiliserType { Name = "DAP", Description = "di-ammonium phosphate", FractionNH4 = 0.18 });
+            Definitions.Add(new FertiliserType { Name = "MAP", Description = "mono-ammonium phosphate", FractionNH4 = 0.11 });
+            Definitions.Add(new FertiliserType { Name = "UreaN", Description = "N as urea", FractionUrea = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "UreaNO3", Description = "N as urea", FractionNO3 = 0.5, FractionUrea = 0.5 });
+            Definitions.Add(new FertiliserType { Name = "Urea", Description = "Urea fertiliser", FractionUrea = 0.46 });
+            Definitions.Add(new FertiliserType { Name = "NH4SO4N", Description = "ammonium sulphate", FractionNH4 = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "RockP", Description = "Rock phosphorus", FractionRockP = 0.8, FractionLabileP = 0.2 });
+            Definitions.Add(new FertiliserType { Name = "BandedP", Description = "Banded phosphorus", FractionBandedP = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "BroadcastP", Description = "Broadcast phosphorus", FractionLabileP = 1.0 });
+        }
+
+
         // Events we're going to send.
         public event NitrogenChangedDelegate NitrogenChanged;
 
@@ -34,7 +59,8 @@ namespace Models
         [Units("kg/ha")]
         public double NitrogenApplied { get ; private set; }
 
-        public enum Types { Urea, DAP, MAP, UreaN, NO3N, NH4N, NH4NO3N, NH4SO4N };
+        public enum Types { CalciteCA, CalciteFine, Dolomite, NO3N, NH4N, NH4NO3N, 
+                            DAP, MAP, UreaN, UreaNO3, Urea, NH4SO4N, RockP, BandedP, BroadcastP };
 
         /// <summary>
         /// Apply fertiliser.
@@ -52,10 +78,7 @@ namespace Models
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
                 NitrogenChanges.Sender = FullPath;
-
-                if ((fertiliserType.FractionNO3 + fertiliserType.FractionNH4 + fertiliserType.FractionUrea) != 1.0)
-                    throw new ApsimXException(FullPath, "The NO3, NH4 and Urea fractions of " + Type + "must sum to a value of 1.0 ");
-                
+               
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     NitrogenChanges.DeltaNO3 = new double[Soil.Thickness.Length];
@@ -92,6 +115,7 @@ namespace Models
         public override void OnCommencing()
         {
             NitrogenApplied = 0;
+            AddDefinitions();
         }
 
         /// <summary>

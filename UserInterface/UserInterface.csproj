@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +72,9 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\PredictedObservedPresenter.cs" />
+    <Compile Include="Presenters\TitlePresenter.cs" />
+    <Compile Include="Presenters\LegendPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
@@ -88,6 +94,8 @@
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\Configuration.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Editor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,6 +103,24 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\PredictedObservedView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\PredictedObservedView.Designer.cs">
+      <DependentUpon>PredictedObservedView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TitleView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TitleView.Designer.cs">
+      <DependentUpon>TitleView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LegendView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\LegendView.Designer.cs">
+      <DependentUpon>LegendView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FactorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -218,6 +244,15 @@
     </Compile>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PredictedObservedView.resx">
+      <DependentUpon>PredictedObservedView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TitleView.resx">
+      <DependentUpon>TitleView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\LegendView.resx">
+      <DependentUpon>LegendView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FactorView.resx">
       <DependentUpon>FactorView.cs</DependentUpon>
@@ -460,9 +495,6 @@
     <None Include="Resources\bug_red.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\notes.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +522,10 @@
     <None Include="Resources\element_edit.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\link.png" />
+    <None Include="Resources\Apsim.ico" />
+    <Content Include="apsim_logo32.ico" />
+    <Content Include="Resources\apsim_logo32.ico" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

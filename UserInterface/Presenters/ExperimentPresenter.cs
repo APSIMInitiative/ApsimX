@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
         private Experiment Experiment;
         private IMemoView ListView;
 
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             Experiment = Model as Experiment;
             ListView = View as IMemoView;

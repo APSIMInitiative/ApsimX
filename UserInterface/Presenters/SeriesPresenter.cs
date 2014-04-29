@@ -15,18 +15,18 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ISeriesView SeriesView;
         private DataStore DataStore;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the model and view to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             //Series Series = Model as Series;
             //Graph = Series.Parent as Graph;
             Graph = Model as Graph;
             SeriesView = View as SeriesView;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
             DataStore = Graph.DataStore;
 
             SeriesView.SeriesGrid.AddContextAction("Delete series", OnDeleteSeries);
@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
             PopulateSeries();
 
             SeriesView.XFocused = true;
-            this.CommandHistory.ModelChanged += OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
 
             SeriesView.DataSourceChanged += OnDataSourceChanged;
             OnDataSourceChanged(SeriesView.DataSource);
@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
         {
             SeriesView.DataSourceChanged -= OnDataSourceChanged;
             SeriesView.DataGrid.ColumnHeaderClicked -= OnDataColumnClicked;
-            CommandHistory.ModelChanged -= OnGraphModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
         /// <summary>
@@ -71,13 +71,18 @@ namespace UserInterface.Presenters
                 Data.Columns.Add("Type", typeof(string));
                 Data.Columns.Add("X on Top?", typeof(bool));
                 Data.Columns.Add("Y on Right?", typeof(bool));
+                Data.Columns.Add("Line", typeof(string));
                 Data.Columns.Add("Marker", typeof(string));
+                Data.Columns.Add("Regression?", typeof(bool));
                 foreach (Series S in Graph.Series)
                 {
                     DataRow Row = Data.NewRow();
                     if (S.X != null)
                     {
-                        Row[0] = S.X.SimulationName + "." + S.X.TableName;
+                        if (S.X.SimulationName == null)
+                            Row[0] = S.X.TableName;
+                        else
+                            Row[0] = S.X.SimulationName + "." + S.X.TableName;
                         Row[1] = S.X.FieldName;
                     }
                     if (S.Y != null)
@@ -87,7 +92,9 @@ namespace UserInterface.Presenters
                     Row[5] = S.Type.ToString();
                     Row[6] = S.XAxis == Axis.AxisType.Top;
                     Row[7] = S.YAxis == Axis.AxisType.Right;
-                    Row[8] = S.Marker.ToString();
+                    Row[8] = S.Line.ToString();
+                    Row[9] = S.Marker.ToString();
+                    Row[10] = S.ShowRegressionLine;
                     Data.Rows.Add(Row);
                 }
                 SeriesView.SeriesGrid.DataSource = Data;
@@ -108,7 +115,9 @@ namespace UserInterface.Presenters
                     SeriesView.SeriesGrid.SetCellEditor(5, Row, S.Type);
                     SeriesView.SeriesGrid.SetCellEditor(6, Row, Data.Rows[Row][6]);
                     SeriesView.SeriesGrid.SetCellEditor(7, Row, Data.Rows[Row][7]);
-                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Marker);
+                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Line);
+                    SeriesView.SeriesGrid.SetCellEditor(9, Row, S.Marker);
+                    SeriesView.SeriesGrid.SetCellEditor(10, Row, S.ShowRegressionLine);
                 }
             }
             else
@@ -130,6 +139,11 @@ namespace UserInterface.Presenters
                             DataSources.Add(SimulationName + "." + TableName);
                 DataSources.Sort();
 
+                // Add in the raw table names e.g. report
+                foreach (string TableName in DataStore.TableNames)
+                    if (TableName != "Messages")
+                        DataSources.Insert(0, TableName);
+
                 // Add in the all simulations in scope tables e.g. *.report
                 foreach (string TableName in DataStore.TableNames)
                     if (TableName != "Messages") 
@@ -148,7 +162,6 @@ namespace UserInterface.Presenters
             List<Series> AllSeries = new List<Series>();
             AllSeries.AddRange(Graph.Series);
            
-
             if (SeriesIndex >= Graph.Series.Count)
             {
                 // Get the simulation and table names.
@@ -173,7 +186,14 @@ namespace UserInterface.Presenters
             if (Col == 0) // Data source
             {
                 string SimulationName = NewContents.ToString();
-                string TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                string TableName;
+                if (SimulationName.Contains("."))
+                    TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                else
+                {
+                    TableName = SimulationName;
+                    SimulationName = null;
+                }
                 S.X.SimulationName = SimulationName;
                 S.X.TableName = TableName;
                 S.Y.SimulationName = SimulationName;
@@ -203,14 +223,20 @@ namespace UserInterface.Presenters
                 else
                     S.YAxis = Axis.AxisType.Left;
             }
-            else if (Col == 8) // Marker
+            else if (Col == 8) // Line
+                S.Line = (Series.LineType)Enum.Parse(typeof(Series.LineType), NewContents.ToString());
+
+            else if (Col == 9) // Marker
                 S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
+
+            else if (Col == 10) // Regression line?
+                S.ShowRegressionLine = (bool)NewContents;
 
             List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
             string[] PropertyNamesChanged = new string[] { "Series", "Axes" };
             object[] PropertyValues = new object[] { AllSeries, AllAxes };
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, PropertyNamesChanged, PropertyValues);
-            CommandHistory.Add(Cmd);
+            ExplorerPresenter.CommandHistory.Add(Cmd);
         }
 
         /// <summary>
@@ -279,6 +305,11 @@ namespace UserInterface.Presenters
 
                 Model M = Graph.Get(NewDataSource) as Model;
                 SeriesView.DataGrid.DataSource = GetAllArrayProperties(M);
+            }
+            else if (!NewDataSource.Contains("."))
+            {
+                string TableName = NewDataSource;
+                SeriesView.DataGrid.DataSource = DataStore.GetData(null, TableName);
             }
             else
             {
@@ -351,7 +382,7 @@ namespace UserInterface.Presenters
                 AllSeries.AddRange(Graph.Series);
                 AllSeries.RemoveAt(SeriesIndex);
                 Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", AllSeries);
-                CommandHistory.Add(Cmd);
+                ExplorerPresenter.CommandHistory.Add(Cmd);
             }
         }
 
@@ -361,7 +392,7 @@ namespace UserInterface.Presenters
         private void OnClearSeries(object Sender, EventArgs Args)
         {
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", new List<Series>());
-            CommandHistory.Add(Cmd);
+            ExplorerPresenter.CommandHistory.Add(Cmd);
         }
 
     }
