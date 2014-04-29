@@ -48,6 +48,9 @@ namespace Models.Soils
         private SoilWatTillageType SoilWatTillageType = null;
 
         [Link]
+        Simulation paddock;
+
+        [Link]
         private Soil Soil = null;
 
         [Link]
@@ -1229,42 +1232,69 @@ namespace Models.Soils
             //*+  Mission Statement
             //*     Get crop Variables
 
-#if (APSIMX == false)
-        Double coverLive;
-        Double coverTotal;
-        Double height;
-
         bool foundCL;
         bool foundCT;
         bool foundH;
 
         int i = 0;
-        foreach (Component Comp in MyPaddock.Crops)
-        {
-            foundCL = MyPaddock.Get(Comp.FullName + ".cover_green", out coverLive);
-            foundCT = MyPaddock.Get(Comp.FullName + ".cover_tot", out coverTotal);
-            foundH = MyPaddock.Get(Comp.FullName + ".Height", out height);
+        List<Model> models = paddock.AllModels;
 
-            ////must have at least these three variables to be considered a "crop" component.
-            if (foundCL && foundCT && foundH)
+            foreach (Model m in paddock.AllModels)
+            {
+                string OldPlantStatus = (string)m.Get("plant_status");
+                object DotNetPlantInGround = m.Get("InGround");
+
+                if (OldPlantStatus != null)//is a Plant15 plant model a plant
                 {
-                num_crops = i + 1;
-                Array.Resize(ref cover_green, num_crops);
-                Array.Resize(ref cover_tot, num_crops);
-                Array.Resize(ref canopy_height, num_crops);
-                cover_green[i] = coverLive;
-                cover_tot[i] = coverTotal;
-                canopy_height[i] = height;
-                i++;
+                    foundCL = (m.Get("cover_green") != null);
+                    foundCT = (m.Get("cover_tot") != null);
+                    foundH = (m.Get("Height") != null);
+
+                    ////must have at least these three variables to be considered a "crop" component.
+                    if (foundCL && foundCT && foundH)
+                    {
+                        num_crops = i + 1;
+                        Array.Resize(ref cover_green, num_crops);
+                        Array.Resize(ref cover_tot, num_crops);
+                        Array.Resize(ref canopy_height, num_crops);
+                        cover_green[i] = (double)m.Get("cover_green");
+                        cover_tot[i] = (double)m.Get("cover_tot");
+                        canopy_height[i] = (double)m.Get("Height");
+                        i++;
+                    }
+                    else
+                    {
+                        throw new Exception("Crop Module: " + m.Name +
+                                " is missing one/or more of the following 3 output variables (cover_green, cover_tot, height) " + Environment.NewLine +
+                                "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    }
                 }
-            else
+                if  (DotNetPlantInGround != null) // is a PMF plant model
                 {
-                throw new Exception("Crop Module: " +  Comp.FullName  + 
-                        " is missing one/or more of the following 3 output variables (cover_green, cover_tot, height) " + Environment.NewLine +
-                        "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    foundCL = (m.Get("Leaf.CoverGreen") != null);
+                    foundCT = (m.Get("Leaf.CoverTotal") != null);
+                    foundH = (m.Get("Leaf.Height") != null);
+
+                    ////must have at least these three variables to be considered a "crop" component.
+                    if (foundCL && foundCT && foundH)
+                    {
+                        num_crops = i + 1;
+                        Array.Resize(ref cover_green, num_crops);
+                        Array.Resize(ref cover_tot, num_crops);
+                        Array.Resize(ref canopy_height, num_crops);
+                        cover_green[i] = (double)m.Get("Leaf.CoverGreen");
+                        cover_tot[i] = (double)m.Get("Leaf.CoverGreen");
+                        canopy_height[i] = (double)m.Get("Leaf.CoverGreen");
+                        i++;
+                    }
+                    else
+                    {
+                        throw new Exception("Crop Module: " + m.Name +
+                                " is missing one/or more of the following 3 output variables (CoverGreen, CoverTotal, Height) " + Environment.NewLine +
+                                "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    }
                 }
         }
-#endif
 
         }
 

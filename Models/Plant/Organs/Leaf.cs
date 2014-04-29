@@ -306,6 +306,9 @@ namespace Models.PMF.Organs
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
+        [Description("This needs to be here so soilwater can get hight from leaf")]
+        public double Height { get { return Structure.Height; } }
+
         [Units("mm^2/g")]
         public double SpecificArea
         {
