@@ -279,7 +279,7 @@ namespace Models
                 TodaysMetData.vp = Math.Max(0,Utility.Met.svp(MetData.mint));
             else
                 TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
-            if (VPIndex == -1) //If Wind is not present in the weather file assign a defalt value
+            if (WindIndex == -1) //If Wind is not present in the weather file assign a defalt value
                 TodaysMetData.wind = 3.0;
             else
             TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
