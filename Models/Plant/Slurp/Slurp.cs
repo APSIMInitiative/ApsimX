@@ -18,11 +18,7 @@ namespace Models.PMF.Slurp
     {
         public string plant_status = "out";
         [Link]
-        Soils.SoilWater SoilWat = null;
-        [Link]
-        Water water = null;
-        [Link]
-        Soils.SoilNitrogen SoilN = null;
+        Soils.Soil Soil = null;
 
         [Description ("Cover Green")]
         public double CoverGreen { get; set; }
@@ -67,7 +63,7 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnCommencing()
         {
-            kl = new double[SoilWat.sw_dep.Length];
+            kl = new double[Soil.SoilWater.sw_dep.Length];
             PotSWUptake = new double[kl.Length];
             PotNUptake = new double[kl.Length];
             SWUptake = new double[kl.Length];
@@ -75,7 +71,7 @@ namespace Models.PMF.Slurp
             for (int i = 0; i < kl.Length; i++)
                 kl[i] = 0.5;
 
-            bd = (double[])water.Get("BD");
+            bd = (double[])Soil.Water.Get("BD");
             // Invoke a sowing event. Needed for MicroClimate
             if (StartSlurp != null)
                 StartSlurp.Invoke(this, new EventArgs());
@@ -109,19 +105,19 @@ namespace Models.PMF.Slurp
 
         private void DoWaterBalance()
         {
-            PEP = SoilWat.eo * CoverGreen;
+            PEP = Soil.SoilWater.eo * CoverGreen;
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl[j] * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
             EP = 0.0;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                SoilWat.sw_dep[j] = SoilWat.sw_dep[j] - SWUptake[j];
+                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
 
             }
 
@@ -149,22 +145,22 @@ namespace Models.PMF.Slurp
             Ndemand = LeafNDemand + RootNDemand;  //kg/ha
 
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 double swaf = 0;
-                swaf = (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]) / (SoilWat.dul_dep[j] - SoilWat.ll15_dep[j]);
+                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = SoilN.no3[j] * (100.0 / (bd[j] * SoilWat.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3 * SoilN.no3[j] * swaf);
+                double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (bd[j] * Soil.SoilWater.dlayer[j]));
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3 * Soil.SoilNitrogen.no3[j] * swaf);
             }
 
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
-                SoilN.no3[j] = SoilN.no3[j] - NUptake[j];
+                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
             }
 
             Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / LeafNDemand));
@@ -178,14 +174,14 @@ namespace Models.PMF.Slurp
             else
                 Fr = 0.0;
 
-            double[] RootNDef = new double[SoilWat.ll15_dep.Length];
+            double[] RootNDef = new double[Soil.SoilWater.ll15_dep.Length];
             double TotNDef = 1e-20;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 RootNDef[j] = Math.Max(0.0, RootMass * RootNConcentration / 100.0 - RootN);
                 TotNDef += RootNDef[j];
             }
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
                 RootN += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
 
             double EndN = PlantN;
@@ -203,20 +199,20 @@ namespace Models.PMF.Slurp
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += SoilWat.dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - SoilWat.dlayer[layer];
+                depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
+            depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / SoilWat.dlayer[layer];
+            return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
         }
 
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < SoilWat.dlayer.Length; i++)
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
             {
-                CumDepth = CumDepth + SoilWat.dlayer[i];
+                CumDepth = CumDepth + Soil.SoilWater.dlayer[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");

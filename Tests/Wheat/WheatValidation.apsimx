@@ -18894,8 +18894,7 @@ namespace Models
 public class Script : Model
 {      
 [Link] Clock Clock;
-[Link] Soils.SoilNitrogen SoilN;
-[Link] Soils.SoilWater SoilWat;
+[Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
 [Link] WeatherFile Met;   
@@ -18972,14 +18971,14 @@ DUL = 0;
 [EventSubscribe("EndOfDay")]
 private void OnEndOfDay(object sender, EventArgs e)
 {
-	int layers = SoilWat.dlayer.Length;
+	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
       InitialSurfaceOMN = SOM.surfaceom_n;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-      InitialMineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -18994,26 +18993,26 @@ MineralN = 0;
 TotalNO3 = 0;
 TotalNH4 = 0;
 double OrganicN = 0;
-//AccumLeach = AccumLeach - SoilN.leach_urea - SoilN.leach_no3 - SoilN.leach_nh4; //Fails
+//AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (SoilN.dlt_n_min[layer] + SoilN.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(SoilN.dnit);
-    OrganicN += (SoilN.biom_n[layer] + SoilN.fom_n[layer] + SoilN.hum_n[layer]);
-    MineralN += (SoilN.no3[layer] + SoilN.nh4[layer] + SoilN.urea[layer]);
-    TotalNO3 += SoilN.no3[layer];
-    TotalNH4 += SoilN.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
+    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= SoilWat.eo;
+AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= SoilWat.es; 
-AccumDrainage -= SoilWat.drain; 
-AccumRunoff -= SoilWat.runoff; 
+AccumES -= Soil.SoilWater.es; 
+AccumDrainage -= Soil.SoilWater.drain; 
+AccumRunoff -= Soil.SoilWater.runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -19021,9 +19020,9 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += SoilWat.sw_dep[layer];
-     DUL += SoilWat.dul_dep[layer];
-     OutFlowLat = SoilWat.outflow_lat[layer];
+     SWC += Soil.SoilWater.sw_dep[layer];
+     DUL += Soil.SoilWater.dul_dep[layer];
+     OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);

@@ -35,15 +35,6 @@ namespace Models.Soils
         private Soil Soil = null;
 
         [Link]
-        private Water Water = null;
-
-        [Link]
-        private Analysis Analysis = null;
-
-        [Link]
-        private SoilWater SoilWater = null;
-
-        [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
 
         #endregion

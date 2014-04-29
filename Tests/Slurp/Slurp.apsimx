@@ -31,8 +31,8 @@
         <Variables>
           <string>[Clock].Today</string>
           <string>[WeatherFile].MaxT</string>
-          <string>[SoilWater].sw_dep</string>
-          <string>[SoilNitrogen].no3</string>
+          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilNitrogen.no3</string>
           <string />
         </Variables>
         <Events>
@@ -4276,8 +4276,8 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[SoilWater].sw_dep</string>
-          <string>[SoilNitrogen].no3</string>
+          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilNitrogen.no3</string>
           <string />
         </Variables>
         <Events>
@@ -8493,14 +8493,14 @@
       <SimulationName>Slurp</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>Slurp</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>SoilNitrogen.no3(1)</ColumnNames>
+      <ColumnNames>Soil.SoilNitrogen.no3(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>

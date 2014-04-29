@@ -349,8 +349,8 @@
             <string>[WeatherFile].MinT</string>
             <string>[WeatherFile].Radn</string>
             <string>[WeatherFile].Rain</string>
-            <string>[SoilWater].sw_dep</string>
-            <string>[SoilNitrogen].no3</string>
+            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilNitrogen.no3</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
             <string>[AgPasture].Biomass</string>
             <string />

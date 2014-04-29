@@ -268,68 +268,70 @@ namespace Utility
 
             Finalize(stmHandle);
 
-            for (int i = dTable.Columns.Count -1; i >= 0; i--)
+            if (dTable != null)
             {
-                if (dTable.Columns[i].DataType.Equals(typeof(object)))
+                for (int i = dTable.Columns.Count - 1; i >= 0; i--)
                 {
-                    int tryInt;
-                    double tryDouble;
-
-                    foreach (DataRow dr in dTable.Rows)
+                    if (dTable.Columns[i].DataType.Equals(typeof(object)))
                     {
-                        DataColumn dc = dTable.Columns[i];
-                        if (dr[dc].ToString().Equals(""))
-                            continue;
+                        int tryInt;
+                        double tryDouble;
 
-                        dc.ColumnName = dc.ColumnName + "_";
-                        // found a value, try to convert it using most restrictive data type (int) first
-                        if (Int32.TryParse(dr[dc].ToString(), out tryInt))
+                        foreach (DataRow dr in dTable.Rows)
                         {
-                            dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(int));
-                            for (int j=0;j<dTable.Rows.Count;j++)
+                            DataColumn dc = dTable.Columns[i];
+                            if (dr[dc].ToString().Equals(""))
+                                continue;
+
+                            dc.ColumnName = dc.ColumnName + "_";
+                            // found a value, try to convert it using most restrictive data type (int) first
+                            if (Int32.TryParse(dr[dc].ToString(), out tryInt))
                             {
-                                dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                            }
-                            dTable.Columns.Remove(dc);
-                            break;
-                        }
-                        else if (Double.TryParse(dr[dc].ToString(), out tryDouble)) // double
-                        {
-                            dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(double));
-                            for (int j = 0; j < dTable.Rows.Count; j++)
-                            {
-                                dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                            }
-                            dTable.Columns.Remove(dc);
-                            break;
-                        }
-                        else
-                        {
-                            DateTime tryDate;
-                            if (DateTime.TryParse(dr[dc].ToString(), out tryDate))
-                            {
-                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(DateTime));
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(int));
                                 for (int j = 0; j < dTable.Rows.Count; j++)
                                 {
                                     dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
                                 }
                                 dTable.Columns.Remove(dc);
+                                break;
+                            }
+                            else if (Double.TryParse(dr[dc].ToString(), out tryDouble)) // double
+                            {
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(double));
+                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                {
+                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                }
+                                dTable.Columns.Remove(dc);
+                                break;
                             }
                             else
                             {
-                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(string));
-                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                DateTime tryDate;
+                                if (DateTime.TryParse(dr[dc].ToString(), out tryDate))
                                 {
-                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(DateTime));
+                                    for (int j = 0; j < dTable.Rows.Count; j++)
+                                    {
+                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                    }
+                                    dTable.Columns.Remove(dc);
                                 }
-                                dTable.Columns.Remove(dc);
+                                else
+                                {
+                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(string));
+                                    for (int j = 0; j < dTable.Rows.Count; j++)
+                                    {
+                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                    }
+                                    dTable.Columns.Remove(dc);
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
             }
-
 
 
             // Clone datatable to fix data types.
