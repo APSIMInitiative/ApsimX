@@ -22,13 +22,13 @@ namespace Models.PMF.Functions.SupplyFunctions
         Function FN = null;
 
         [Link]
-        Function FT = null;
+        public Function FT = null;
 
         [Link]
         Function FW = null;
 
         [Link]
-        Function FVPD = null;
+        public Function FVPD = null;
 
         [Link]
         WeatherFile MetData = null;
