@@ -24,7 +24,7 @@ namespace Models.Core
         /// </summary>
         public override void OnSerialising(bool xmlSerialisation)
         {
-            if (xmlSerialisation)
+            if (xmlSerialisation && ResourceName != null)
             {
                 SavedModels = new List<Model>();
                 SavedModels.AddRange(Models);

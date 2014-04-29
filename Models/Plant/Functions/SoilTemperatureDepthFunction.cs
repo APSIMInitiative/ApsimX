@@ -15,9 +15,8 @@ namespace Models.PMF.Functions
     {
 
         [Link]
-        Soils.SoilNitrogen SoilN = null;
-        [Link]
-        Soils.SoilWater SoilWat = null;
+        Soils.Soil Soil = null;
+
 
         [Units("mm")]
         public double Depth = 0;
@@ -31,15 +30,15 @@ namespace Models.PMF.Functions
         {
             get
             {
-                int Layer = LayerIndex(Depth, SoilWat.dlayer);
+                int Layer = LayerIndex(Depth, Soil.SoilWater.dlayer);
 
                 if (soilTempSource == "Unknown")
                 {
-                    if (SoilN.ave_soil_temp != null)
+                    if (Soil.SoilNitrogen.ave_soil_temp != null)
                     {
                         soilTempSource = "ave_soil_temp";
                     }
-                    else if (SoilN.st != null)
+                    else if (Soil.SoilNitrogen.st != null)
                     {
                         soilTempSource = "st";
                     }
@@ -53,9 +52,9 @@ namespace Models.PMF.Functions
                 switch (soilTempSource)
                 {
                     case "ave_soil_temp":
-                        return SoilN.ave_soil_temp[Layer];
+                        return Soil.SoilNitrogen.ave_soil_temp[Layer];
                     case "st":
-                        return SoilN.st[Layer];
+                        return Soil.SoilNitrogen.st[Layer];
                     default:
                         throw new Exception(Name + ": Unknown soil temperature source: " + soilTempSource);
                 }

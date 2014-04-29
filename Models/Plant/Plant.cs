@@ -71,7 +71,7 @@ namespace Models.PMF
         public String crop_type = "";
     }
     [Serializable]
-    public class Plant : ModelCollection
+    public class Plant : ModelCollection, ICrop
     {
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;

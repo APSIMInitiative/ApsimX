@@ -19,7 +19,7 @@ namespace Models.PMF
 
         private int NumPlots;
         private double[] dlayer;
-        private SoilWater SoilWat;
+        private Soil Soil;
         private string[] fieldList;
 
         [Units("mm/mm")]
@@ -60,8 +60,8 @@ namespace Models.PMF
                 RootSystem.Zones[i].ZoneArea = (double)this.Parent.Get("Area"); //get the zone area from parent (field)
                 //   if (!fieldProps.Get("fieldArea", out RootSystem.Zones[i].ZoneArea))
                 //       throw new Exception("Could not find FieldProps component in field " + MyPaddock.Parent.ChildPaddocks[i].Name);
-                SoilWat = (SoilWater)CurrentField.Find(typeof(SoilWater));
-                RootSystem.Zones[i].dlayer = (double[])SoilWat.Get("dlayer");
+                Soil = (Soil)CurrentField.Find(typeof(Soil));
+                RootSystem.Zones[i].dlayer = (double[])Soil.SoilWater.Get("dlayer");
                 RootSystem.Zones[i].ZoneName = CurrentField.Name;
                 RootSystem.Zones[i].RootDepth = 550;
                 RootSystem.Zones[i].kl = new double[RootSystem.Zones[i].dlayer.Length];
@@ -86,8 +86,8 @@ namespace Models.PMF
             for (int i = 0; i < RootSystem.Zones.Length; i++)
             {
                 PotSWUptake[i] = new double[RootSystem.Zones[i].dlayer.Length];
-                SWDep = (double[])SoilWat.Get("sw_dep");
-                LL15Dep = (double[])SoilWat.Get("ll15_dep");
+                SWDep = (double[])Soil.SoilWater.Get("sw_dep");
+                LL15Dep = (double[])Soil.SoilWater.Get("ll15_dep");
                 for (int j = 0; j < SWDep.Length; j++)
                 {
                     //only use 1 paddock to calculate sw_demand for testing

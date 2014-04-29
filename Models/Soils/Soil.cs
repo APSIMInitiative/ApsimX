@@ -61,6 +61,7 @@ namespace Models.Soils
         [Link] public Water Water = null;
         [Link] public SoilWater SoilWater = null;
         [Link] public SoilOrganicMatter SoilOrganicMatter = null;
+        [Link] public SoilNitrogen SoilNitrogen = null;
         [Link] public Analysis Analysis = null;
         [Link(IsOptional=true)] public InitialWater InitialWater = null;
         [Link(IsOptional=true)] public Phosphorus Phosphorus = null;

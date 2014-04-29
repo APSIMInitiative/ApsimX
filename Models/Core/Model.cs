@@ -540,7 +540,7 @@ namespace Models.Core
         private static List<EventSubscriber> FindEventSubscribers(EventPublisher publisher)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in publisher.Model.FindAll())
+            foreach (Model model in GetModelsVisibleToEvents(publisher.Model))
             {
                 subscribers.AddRange(FindEventSubscribers(publisher.Name, model));
 
@@ -555,6 +555,33 @@ namespace Models.Core
             }
             return subscribers;
 
+        }
+
+        private static List<Model> GetModelsVisibleToEvents(Model model)
+        {
+            List<Model> models = new List<Model>();
+
+            // Find our parent Simulation or Zone.
+            Model obj = model;
+            while (obj != null && !(obj is Zone) && !(obj is Simulation))
+            {
+                obj = obj.Parent;
+            }
+            if (obj == null)
+                throw new ApsimXException(model.FullPath, "Cannot find models to connect events to");
+            if (obj is Simulation)
+            {
+                models.AddRange((obj as Simulation).AllModels);
+            }
+            else
+            {
+                // return all models in zone and all direct children of zones parent.
+                models.AddRange((obj as Zone).AllModels);
+                if (obj.Parent != null)
+                    models.AddRange(obj.Parent.Models);
+            }
+
+            return models;
         }
 
         /// <summary>
