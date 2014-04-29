@@ -1248,7 +1248,7 @@ namespace Models.Soils
                 {
                     foundCL = (m.Get("cover_green") != null);
                     foundCT = (m.Get("cover_tot") != null);
-                    foundH = (m.Get("Height") != null);
+                    foundH = (m.Get("height") != null);
 
                     ////must have at least these three variables to be considered a "crop" component.
                     if (foundCL && foundCT && foundH)
@@ -1259,7 +1259,7 @@ namespace Models.Soils
                         Array.Resize(ref canopy_height, num_crops);
                         cover_green[i] = (double)m.Get("cover_green");
                         cover_tot[i] = (double)m.Get("cover_tot");
-                        canopy_height[i] = (double)m.Get("Height");
+                        canopy_height[i] = (double)m.Get("height");
                         i++;
                     }
                     else

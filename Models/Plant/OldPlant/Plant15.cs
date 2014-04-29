@@ -193,7 +193,31 @@ namespace Models.PMF.OldPlant
         
         public event NullTypeDelegate Harvesting;
 
-        
+        public double cover_green 
+        { 
+            get 
+            {
+                double green_cover = 0;
+                foreach (Organ1 Organ in Organ1s)
+                    green_cover += Organ.CoverGreen; //Fix me maybe.  Neil thinks this looks wrong 
+                return green_cover;
+            }
+        }
+         
+        public double cover_tot
+        {
+            get
+            {
+                double cover_sen = 0;
+                foreach (Organ1 Organ in Organ1s)
+                    cover_sen += Organ.CoverSen;
+                return cover_green + cover_sen;
+            }
+        }
+
+        public double height
+        { get { return Stem.Height; } }
+
         public string plant_status
         {
             get
@@ -514,7 +538,7 @@ namespace Models.PMF.OldPlant
             double cover_sen = 0;
             foreach (Organ1 Organ in Organ1s)
             {
-                cover_green += Organ.CoverGreen;
+                cover_green += Organ.CoverGreen; //Fix me maybe.  Neil thinks this looks wrong 
                 cover_sen += Organ.CoverSen;
             }
             double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
