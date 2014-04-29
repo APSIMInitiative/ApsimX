@@ -124,7 +124,8 @@ namespace UserInterface.Views
                 LineSeries series = new LineSeries(title);
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
 
                 bool filled = false;
                 string oxyMarkerName = markerType.ToString();
@@ -338,12 +339,15 @@ namespace UserInterface.Views
             if (GetAxis(AxisType) == null)
             {
                 AxisPosition Position = AxisTypeToPosition(AxisType);
+                OxyPlot.Axes.Axis axisToAdd;
                 if (DataType == typeof(DateTime))
-                    plot1.Model.Axes.Add(new DateTimeAxis(Position));
+                    axisToAdd = new DateTimeAxis(Position);
                 else if (DataType == typeof(double))
-                    plot1.Model.Axes.Add(new LinearAxis(Position));
+                    axisToAdd = new LinearAxis(Position);
                 else
-                    plot1.Model.Axes.Add(new CategoryAxis(Position));
+                    axisToAdd = new CategoryAxis(Position);
+                axisToAdd.Key = AxisType.ToString();
+                plot1.Model.Axes.Add(axisToAdd);
             }
         }
 

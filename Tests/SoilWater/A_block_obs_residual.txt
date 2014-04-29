@@ -7,4 +7,4 @@ ResiduesCoverBareSoil         2010-02-25 0.0    0.0   * *
 ResiduesCoverHarvesterWindrow 2010-08-25 4323.0 0.863 * 0.022
 ResiduesCoverStandingStubble  2010-08-25 2026.0 0.239 * 0.154
 ResiduesCoverMownStubble      2010-08-25 200.0  0.1 * *
-ResiduesCoverBareSoil         2010-08-25 4323.0 0.0* *
+ResiduesCoverBareSoil         2010-08-25 4323.0 0.0 * *

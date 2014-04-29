@@ -75,6 +75,8 @@ namespace Utility
 
             In = new StreamReaderRandomAccess(_FileName);
             ReadApsimHeader(In);
+            if (Headings == null || Units == null)
+                throw new Exception("Cannot find headings and units line in " + FileName);
             FirstLinePosition = In.Position;
 
             // Read in first line.

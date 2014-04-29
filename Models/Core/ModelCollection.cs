@@ -291,9 +291,6 @@ namespace Models.Core
                 Scope.ClearCache(this);
                 Variables.ClearCache(this);
 
-                // Call the model's OnLoaded method.
-                CallOnLoaded(newModel);
-
                 oldModel.Parent = null;
 
                 // Completely wipe out all link and event connections as the new model may
@@ -302,6 +299,10 @@ namespace Models.Core
                 Simulation.AllModels.ForEach(ConnectEventPublishers);
                 Simulation.AllModels.ForEach(UnresolveLinks);
                 Simulation.AllModels.ForEach(ResolveLinks);
+
+                // Call the model's OnLoaded method.
+                CallOnLoaded(newModel);
+
                 return true;
             }
             return false;
