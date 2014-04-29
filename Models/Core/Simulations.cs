@@ -59,6 +59,10 @@ namespace Models.Core
                 simulations.FileName = FileName;
                 simulations.SetFileNameInAllSimulations();
 
+                // Call the OnSerialised method in each model.
+                foreach (Model model in simulations.AllModels)
+                    model.OnDeserialised(true);
+
                 // Parent all models.
                 ParentAllModels(simulations);
 
@@ -87,6 +91,10 @@ namespace Models.Core
             {
                 // Set the filename
                 simulations.SetFileNameInAllSimulations();
+
+                // Call the OnSerialised method in each model.
+                foreach (Model model in simulations.AllModels)
+                    model.OnDeserialised(true);
 
                 // Parent all models.
                 ParentAllModels(simulations);
