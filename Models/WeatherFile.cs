@@ -25,6 +25,8 @@ namespace Models
         private int MinTIndex;
         private int RadnIndex;
         private int RainIndex;
+        private int VPIndex;
+        private int WindIndex;
         private NewMetType TodaysMetData = new NewMetType();
         private bool DoSeek;
         private double co2 = 350;
@@ -89,6 +91,7 @@ namespace Models
             public double mint;
             public double rain;
             public double vp;
+            public double wind;
         }
         public delegate void NewMetDelegate(NewMetType Data);
         public event EventHandler PreparingNewWeatherData;
@@ -101,6 +104,7 @@ namespace Models
         public double Rain { get { return MetData.rain; } set { TodaysMetData.rain = value; } }
         public double Radn { get { return MetData.radn; } set { TodaysMetData.radn = value; } }
         public double vp { get { return MetData.vp; } set { TodaysMetData.vp = value; } }
+        public double wind { get { return MetData.wind; } set { TodaysMetData.wind = value; } }
         public double CO2 { get { return co2; } set { co2 = value; } }
         public double Latitude
         {
@@ -196,6 +200,8 @@ namespace Models
                     MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
                     RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
                     RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
+                    VPIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "VP");
+                    WindIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Wind");
                     if (MaxTIndex == -1)
                         throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
                     if (MinTIndex == -1)
@@ -239,6 +245,8 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
+            TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
             return true;
         }
 
@@ -267,6 +275,14 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
+            if (VPIndex == -1) //If VP is not present in the weather file assign a defalt value
+                TodaysMetData.vp = Math.Max(0,Utility.Met.svp(MetData.mint));
+            else
+                TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            if (WindIndex == -1) //If Wind is not present in the weather file assign a defalt value
+                TodaysMetData.wind = 3.0;
+            else
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
 
             if (PreparingNewWeatherData != null)
                 PreparingNewWeatherData.Invoke(this, new EventArgs());

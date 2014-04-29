@@ -47,7 +47,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileNames", e.FileNames));
+            try
+            {
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileNames", e.FileNames));
+            }
+            catch (Exception err)
+            {
+                ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+            }
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace Models.Core
         [XmlElement(typeof(Simulations))]
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
+        [XmlElement(typeof(ModelCollectionFromResource))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
@@ -80,6 +81,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Root))]
         [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
+        [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
@@ -290,9 +292,6 @@ namespace Models.Core
                 Scope.ClearCache(this);
                 Variables.ClearCache(this);
 
-                // Call the model's OnLoaded method.
-                CallOnLoaded(newModel);
-
                 oldModel.Parent = null;
 
                 // Completely wipe out all link and event connections as the new model may
@@ -301,6 +300,10 @@ namespace Models.Core
                 Simulation.AllModels.ForEach(ConnectEventPublishers);
                 Simulation.AllModels.ForEach(UnresolveLinks);
                 Simulation.AllModels.ForEach(ResolveLinks);
+
+                // Call the model's OnLoaded method.
+                CallOnLoaded(newModel);
+
                 return true;
             }
             return false;

@@ -50,11 +50,11 @@ namespace Models
                 DataStore dataStore = new DataStore();
                 dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
                 dataStore.DeleteTable(Name);
+                DataTable data = GetTable();
                 foreach (string fileName in FileNames)
                 {
                     if (fileName != null && File.Exists(fileName))
                     {
-                        DataTable data = GetTable();
                         string[] simulationNames = Utility.DataTable.GetDistinctValues(data, "SimulationName").ToArray();
                         foreach (string simulationName in simulationNames)
                         {

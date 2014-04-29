@@ -1,6 +1,6 @@
 [weather.met.weather]                
 Site  =  Lincoln            
-Latitude=-43.38                
+Latitude=-43.63                
 tav=11.4  !annual  average  ambient  temperature        
 amp=11.5    !annual  amplitud  in  mean  monthly  temperature    
 year  day  rain  maxt  mint  mean  radn  wind  vp

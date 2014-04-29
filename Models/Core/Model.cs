@@ -253,6 +253,7 @@ namespace Models.Core
         /// </summary>
         public static void ResolveLinks(Model model)
         {
+            string errorMsg = "";
             //Console.WriteLine(model.FullPath + ":");
 
             // Go looking for [Link]s
@@ -295,6 +296,10 @@ namespace Models.Core
                                 linkedObject = matchingModel;
                                 break;
                             }
+                        if ((linkedObject == null) && (!link.IsOptional))
+                        {
+                            errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Length, field.FieldType.FullName, field.Name);
+                        }
                     }
 
                     if (linkedObject != null)
@@ -306,7 +311,7 @@ namespace Models.Core
                     }
                     else if (!link.IsOptional)
                         throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() +
-                                                            "' in class '" + model.FullPath + "'");
+                                                            "' in class '" + model.FullPath + "'" + errorMsg);
                 }
             }
         }

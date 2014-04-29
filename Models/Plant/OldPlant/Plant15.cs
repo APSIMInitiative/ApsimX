@@ -62,7 +62,7 @@ namespace Models.PMF.OldPlant
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Plant15 : ModelCollection
+    public class Plant15 : ModelCollectionFromResource
     {
         [Link]
         Phenology Phenology = null;
