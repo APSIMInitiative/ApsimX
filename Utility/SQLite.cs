@@ -236,7 +236,8 @@ namespace Utility
                                 dTable.Columns.Add(ColumnName, typeof(string));
                         }
                         else
-                            dTable.Columns.Add(ColumnName, typeof(byte));
+                            dTable.Columns.Add(ColumnName, typeof(object));
+                      //  dTable.Columns.Add(ColumnName, typeof(string));
                     }
                 }
 
@@ -255,18 +256,147 @@ namespace Utility
                         row[i] = sqlite3_column_int(stmHandle, i);
                     else if (dTable.Columns[i].DataType == typeof(double))
                         row[i] = sqlite3_column_double(stmHandle, i);
-                    else if (dTable.Columns[i].DataType == typeof(string))
+                    else if (dTable.Columns[i].DataType == typeof(string) ||
+                             dTable.Columns[i].DataType == typeof(object))
                     {
                         IntPtr iptr = sqlite3_column_text(stmHandle, i);
                         row[i] = Marshal.PtrToStringAnsi(iptr);
                     }
-                    else if (dTable.Columns[i].DataType == typeof(byte))
-                        row[i] = null;
                 }
                 dTable.Rows.Add(row);
             }
 
             Finalize(stmHandle);
+
+            for (int i = dTable.Columns.Count -1; i >= 0; i--)
+            {
+                if (dTable.Columns[i].DataType.Equals(typeof(object)))
+                {
+                    int tryInt;
+                    double tryDouble;
+
+                    foreach (DataRow dr in dTable.Rows)
+                    {
+                        DataColumn dc = dTable.Columns[i];
+                        if (dr[dc].ToString().Equals(""))
+                            continue;
+
+                        dc.ColumnName = dc.ColumnName + "_";
+                        // found a value, try to convert it using most restrictive data type (int) first
+                        if (Int32.TryParse(dr[dc].ToString(), out tryInt))
+                        {
+                            dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(int));
+                            for (int j=0;j<dTable.Rows.Count;j++)
+                            {
+                                dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                            }
+                            dTable.Columns.Remove(dc);
+                            break;
+                        }
+                        else if (Double.TryParse(dr[dc].ToString(), out tryDouble)) // double
+                        {
+                            dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(double));
+                            for (int j = 0; j < dTable.Rows.Count; j++)
+                            {
+                                dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                            }
+                            dTable.Columns.Remove(dc);
+                            break;
+                        }
+                        else
+                        {
+                            DateTime tryDate;
+                            if (DateTime.TryParse(dr[dc].ToString(), out tryDate))
+                            {
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(DateTime));
+                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                {
+                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                }
+                                dTable.Columns.Remove(dc);
+                            }
+                            else
+                            {
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(string));
+                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                {
+                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                }
+                                dTable.Columns.Remove(dc);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+
+            // Clone datatable to fix data types.
+            // Need to do this to overcome SQLite limitation where first row contains NULL
+    /*        if (dTable != null)
+            {
+                System.Data.DataTable fixedTypes = new System.Data.DataTable();
+
+                int tryInt;
+                double tryDouble;
+
+                for (int i = 0; i < dTable.Columns.Count; i++)
+                    for (int j = 0; j < dTable.Rows.Count; j++)
+                    {
+                        string dtype;
+
+                        if (dTable.Rows[j][i] is DBNull)
+                        {
+                            if (j == dTable.Columns.Count - 1) //entire column is null so make it a generic object type
+                            {
+                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(object));
+                                continue; // this means go to next loop (added for Hamish and Neil)
+                            }
+                            else
+                                dtype = "";
+                        }
+                        else
+                            dtype = (string)dTable.Rows[j][i];
+
+                        if (dtype.ToString().Equals(""))
+                            continue; 
+
+                        // found a value, try to convert it using most restrictive data type (int) first
+                        if (Int32.TryParse(dtype, out tryInt))
+                        {
+                            fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(int));
+                            break;
+                        }
+                        else if (Double.TryParse(dtype, out tryDouble)) // double
+                        {
+                            fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(double));
+                            break;
+                        }
+                        else 
+                        {
+                            DateTime tryDate;
+                            if (DateTime.TryParse(dtype, out tryDate))
+                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(DateTime));
+                            else
+                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(string));
+                            break;
+                        }
+                    }
+
+                for (int i = 0; i < dTable.Rows.Count; i++)
+                {
+                    object[] drow = new object[dTable.Columns.Count];
+                    for (int j = 0; j < dTable.Columns.Count; j++)
+                    {
+                        drow[j] = dTable.Rows[i][j];
+                    }
+                    fixedTypes.Rows.Add(drow);
+                }
+                return fixedTypes;
+            }
+            else 
+                return null;*/
 
             return dTable;
         }
