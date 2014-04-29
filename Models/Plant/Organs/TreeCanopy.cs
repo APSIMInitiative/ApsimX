@@ -35,14 +35,12 @@ namespace Models.PMF.Organs
         public double _LAI;            // Leaf Area Index (Green)
         public double _LAIDead;        // Leaf Area Index (Dead)
         public double _Frgr;           // Relative Growth Rate Factor
-        public XYPairs FT { get; set; }    // Temperature effect on Growth Interpolation Set
-        public XYPairs FVPD { get; set; }   // VPD effect on Growth Interpolation Set
-        [Link] Function PotentialBiomass = null;
+        
+        
         [Link] Function DMDemandFunction = null;
-        [Link] Function CoverFunction = null;
         [Link] Function NitrogenDemandSwitch = null;
         [Link] Function NConc = null;
-        [Link] Function LaiFunction = null;
+        [Link] Function LAIFunction = null;
         [Link] RUEModel Photosynthesis = null;
 
 
@@ -68,8 +66,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                DeltaBiomass = Photosynthesis.Growth(RadIntTot);
                 return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
             }
         }
@@ -106,32 +103,9 @@ namespace Models.PMF.Organs
             }
         }
         
-        public double Ft
-        {
-            get
-            {
-                double Tav = (MetData.MaxT + MetData.MinT) / 2.0;
-                return FT.ValueIndexed(Tav);
-            }
-        }
+
         
-        public double Fvpd
-        {
-            get
-            {
-                const double SVPfrac = 0.66;
-
-                double VPDmint = Utility.Met.svp(MetData.MinT) - MetData.vp;
-                VPDmint = Math.Max(VPDmint, 0.0);
-
-                double VPDmaxt = Utility.Met.svp(MetData.MaxT) - MetData.vp;
-                VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                double VPD = SVPfrac * VPDmaxt + (1.0 - SVPfrac) * VPDmint;
-
-                return FVPD.ValueIndexed(VPD);
-            }
-        }
+ 
         
         public double Fw
         {
@@ -190,10 +164,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-
-                if (CoverFunction == null)
-                    return 1.0 - Math.Exp(-K * LAI);
-                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+              return 1.0 - Math.Exp(-K * LAI);
             }
         }
         public double CoverTot
@@ -222,12 +193,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
-            if (PotentialBiomass != null)
-            {
-                DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                BiomassYesterday = PotentialBiomass.Value;
-            }
-
             EP = 0;
             PublishNewPotentialGrowth();
         }
@@ -257,7 +222,7 @@ namespace Models.PMF.Organs
             {
                 NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
                 GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(Frgr, Fvpd), Ft);
+                GrowthType.frgr = (float)Math.Min(Math.Min(Frgr, Photosynthesis.FVPD.Value), Photosynthesis.FT.Value);
                 NewPotentialGrowth.Invoke(GrowthType);
             }
         }
@@ -279,11 +244,8 @@ namespace Models.PMF.Organs
 
         public override void DoPotentialDM()
         {
-            if (CoverFunction != null)
-                // return _LAI;
-                _LAI = (Math.Log(1 - CoverGreen) / -K);
-            if (LaiFunction != null)
-                _LAI = LaiFunction.Value;
+            if (LAIFunction != null)
+                _LAI = LAIFunction.Value;
         }
         public override void OnCut()
         {
