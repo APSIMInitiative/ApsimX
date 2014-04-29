@@ -17,6 +17,7 @@ namespace Models.Core
         [XmlElement(typeof(Simulations))]
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
+        [XmlElement(typeof(ModelCollectionFromResource))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
