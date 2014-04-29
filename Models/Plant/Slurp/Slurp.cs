@@ -14,7 +14,7 @@ namespace Models.PMF.Slurp
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Slurp : Model
+    public class Slurp : Model, ICrop
     {
         public string plant_status = "out";
         [Link]

@@ -72,7 +72,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgPasture : Model
+    public class AgPasture : Model, ICrop
     {
         [Link]
         private Clock clock = null;

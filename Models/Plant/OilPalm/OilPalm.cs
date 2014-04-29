@@ -14,7 +14,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm: ModelCollection
+    public class OilPalm: ModelCollection, ICrop
     {
         
         public string plant_status = "out";
