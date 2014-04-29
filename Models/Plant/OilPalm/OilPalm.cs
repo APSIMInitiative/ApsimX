@@ -369,7 +369,7 @@ namespace Models.PMF.OilPalm
         private void DoRootGrowth(double Allocation)
         {
             int RootLayer = LayerIndex(RootDepth);
-            RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalmSoilCrop")[RootLayer];
+            RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalm")[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
             RootDepth = Math.Min(Utility.Math.Sum(SoilWat.dlayer), RootDepth);
 
@@ -573,7 +573,7 @@ namespace Models.PMF.OilPalm
 
 
             for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL("OilPalmSoilCrop")[j] * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL("OilPalm")[j] * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 

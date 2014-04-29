@@ -231,7 +231,7 @@
               <double>0.44</double>
             </SAT>
             <SoilCrop>
-              <Name>PotatoSoilCrop</Name>
+              <Name>Potato</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
