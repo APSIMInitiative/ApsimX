@@ -369,7 +369,7 @@ namespace Models.PMF.OilPalm
         private void DoRootGrowth(double Allocation)
         {
             int RootLayer = LayerIndex(RootDepth);
-            RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalmSoilCrop")[RootLayer];
+            RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalm")[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
             RootDepth = Math.Min(Utility.Math.Sum(SoilWat.dlayer), RootDepth);
 
