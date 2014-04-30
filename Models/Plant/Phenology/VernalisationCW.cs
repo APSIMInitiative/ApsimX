@@ -24,8 +24,8 @@ namespace Models.PMF.Phen
         private const double Snow = 0.0;
         private double Maxt = 0;
         private double Mint = 0;
-        public double VernSens = 0;
-        public double PhotopSens = 0;
+        public double VernSens { get; set; }
+        public double PhotopSens { get; set; }
         public string StartStageForEffects = "";
         public string EndStageForEffects = "";
         public string StartStageForCumulativeVD = "";

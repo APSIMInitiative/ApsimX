@@ -116,7 +116,11 @@ namespace Models.Core
                 if (t == null)
                     modelInScope = Scope.Find(relativeTo, typeName);
                 else
+                {
                     modelInScope = Scope.Find(relativeTo, t);
+                    if (modelInScope == null)
+                        modelInScope = Scope.Find(relativeTo, typeName);
+                }
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);
