@@ -181,37 +181,40 @@ namespace UserInterface.Presenters
         /// </summary>
         private void AddRegressionLine(int seriesNumber, string seriesTitle, IEnumerable x, IEnumerable y, Axis.AxisType xAxisType, Axis.AxisType yAxisType, Color colour)
         {
-            Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
-            if (stats != null)
+            if (x != null && y != null)
             {
-                // Show the regression line.
-                double minimumX = Utility.Math.Min(x);
-                double maximumX = Utility.Math.Max(x);
-                double[] regressionX = new double[] { minimumX, maximumX };
-                double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
-                GraphView.DrawLineAndMarkers("", regressionX, regressionY,
-                                             xAxisType, yAxisType, colour,  
-                                             Series.LineType.Solid, Series.MarkerType.None);
+                Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
+                if (stats != null)
+                {
+                    // Show the regression line.
+                    double minimumX = Utility.Math.Min(x);
+                    double maximumX = Utility.Math.Max(x);
+                    double[] regressionX = new double[] { minimumX, maximumX };
+                    double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
+                    GraphView.DrawLineAndMarkers("", regressionX, regressionY,
+                                                 xAxisType, yAxisType, colour,
+                                                 Series.LineType.Solid, Series.MarkerType.None);
 
-                // Show the 1:1 line
-                double minimumY = Utility.Math.Min(y);
-                double maximumY = Utility.Math.Max(y);
-                double lowestAxisScale = Math.Min(minimumX, minimumY);
-                double largestAxisScale = Math.Max(maximumX, maximumY);
-                double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
-                GraphView.DrawLineAndMarkers("", oneToOne, oneToOne,
-                                             xAxisType, yAxisType, colour,
-                                             Series.LineType.Dash, Series.MarkerType.None);
+                    // Show the 1:1 line
+                    double minimumY = Utility.Math.Min(y);
+                    double maximumY = Utility.Math.Max(y);
+                    double lowestAxisScale = Math.Min(minimumX, minimumY);
+                    double largestAxisScale = Math.Max(maximumX, maximumY);
+                    double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
+                    GraphView.DrawLineAndMarkers("", oneToOne, oneToOne,
+                                                 xAxisType, yAxisType, colour,
+                                                 Series.LineType.Dash, Series.MarkerType.None);
 
-                // Draw the equation.
-                double interval = (largestAxisScale - lowestAxisScale) / 20;
-                double yPosition = largestAxisScale - seriesNumber * interval;
+                    // Draw the equation.
+                    double interval = (largestAxisScale - lowestAxisScale) / 20;
+                    double yPosition = largestAxisScale - seriesNumber * interval;
 
-                string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
-                                 + "r2 = " + stats.R2.ToString("f2") + "\r\n"
-                                 + "n = " + stats.n.ToString() + "\r\n"
-                                 + "RMSD = " + stats.RMSD.ToString("f2");
-                GraphView.DrawText(equation, minimumX, yPosition, xAxisType, yAxisType, colour);
+                    string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
+                                     + "r2 = " + stats.R2.ToString("f2") + "\r\n"
+                                     + "n = " + stats.n.ToString() + "\r\n"
+                                     + "RMSD = " + stats.RMSD.ToString("f2");
+                    GraphView.DrawText(equation, minimumX, yPosition, xAxisType, yAxisType, colour);
+                }
             }
         }
 
