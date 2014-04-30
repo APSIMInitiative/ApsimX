@@ -1000,226 +1000,286 @@
         </SowingData>
         <Fronds>
           <FrondType>
-            <Mass>33.203890721305342</Mass>
-            <N>0.38181949161206441</N>
-            <Area>0.099667010941946479</Area>
-            <Age>106.25616163493956</Age>
+            <Mass>33.203890721305662</Mass>
+            <N>0.3818230000075209</N>
+            <Area>0.099667010941947548</Area>
+            <Age>133.05795576241536</Age>
           </FrondType>
           <FrondType>
-            <Mass>32.562839298696446</Mass>
-            <N>0.374314886781928</N>
-            <Area>0.098020286307669222</Area>
-            <Age>101.0061616349396</Age>
+            <Mass>32.562839298698371</Mass>
+            <N>0.37433680621388865</N>
+            <Area>0.098020286307675814</Area>
+            <Age>127.80795576241548</Age>
           </FrondType>
           <FrondType>
-            <Mass>29.678773803754879</Mass>
-            <N>0.34034936761473866</N>
-            <Area>0.0906540560592639</Area>
-            <Age>95.75616163493963</Age>
+            <Mass>29.678773803767097</Mass>
+            <N>0.34048226527039183</N>
+            <Area>0.090654056059305682</Area>
+            <Age>122.5579557624155</Age>
           </FrondType>
           <FrondType>
-            <Mass>23.726240196339827</Mass>
-            <N>0.26792410225555174</N>
-            <Area>0.075375661303415914</Area>
-            <Age>90.506161634939616</Age>
+            <Mass>23.726240196416239</Mass>
+            <N>0.2686087370182984</N>
+            <Area>0.075375661303677413</Area>
+            <Age>117.3079557624155</Age>
           </FrondType>
           <FrondType>
-            <Mass>17.92543034161411</Mass>
-            <N>0.19166795321943475</N>
-            <Area>0.059232009321443138</Area>
-            <Age>85.256161634939573</Age>
+            <Mass>17.925430342095</Mass>
+            <N>0.19367899759588783</N>
+            <Area>0.059232009323088204</Area>
+            <Age>112.05795576241545</Age>
           </FrondType>
           <FrondType>
-            <Mass>13.32560079967387</Mass>
-            <N>0.13291112457778362</N>
-            <Area>0.04526335713478076</Area>
-            <Age>79.956066389964775</Age>
+            <Mass>13.325600802749694</Mass>
+            <N>0.13573617206400798</N>
+            <Area>0.045263357145302531</Area>
+            <Age>106.75786051744066</Age>
           </FrondType>
           <FrondType>
-            <Mass>11.868408612288862</Mass>
-            <N>0.11336273480801112</N>
-            <Area>0.040156194019180226</Area>
-            <Age>74.70166823767326</Age>
+            <Mass>11.868408631646885</Mass>
+            <N>0.11657551122555275</N>
+            <Area>0.040156194085399527</Area>
+            <Age>101.50346236514915</Age>
           </FrondType>
           <FrondType>
-            <Mass>11.717699657906527</Mass>
-            <N>0.10030478932655919</N>
-            <Area>0.03897620134334407</Area>
-            <Age>69.367467190679022</Age>
+            <Mass>11.717699783186534</Mass>
+            <N>0.10509099960247709</N>
+            <Area>0.03897620177189759</Area>
+            <Age>96.1692613181549</Age>
           </FrondType>
           <FrondType>
-            <Mass>14.884639938633976</Mass>
-            <N>0.0921804354716268</N>
-            <Area>0.048892587901249951</Area>
-            <Age>63.783707486976496</Age>
+            <Mass>14.884640823445064</Mass>
+            <N>0.10315548356253598</N>
+            <Area>0.048892590927976168</Area>
+            <Age>90.585501614452369</Age>
           </FrondType>
           <FrondType>
-            <Mass>15.259583670793109</Mass>
-            <N>0.070370025823100965</N>
-            <Area>0.050512954908726281</Area>
-            <Age>58.529779548653217</Age>
+            <Mass>15.259589238440153</Mass>
+            <N>0.084974429304911253</N>
+            <Area>0.050512973954283773</Area>
+            <Age>85.331573676129153</Age>
           </FrondType>
           <FrondType>
-            <Mass>10.222107592534064</Mass>
-            <N>0.039951117384260847</N>
-            <Area>0.034626375252469165</Area>
-            <Age>53.096708440288928</Age>
+            <Mass>10.222144894443124</Mass>
+            <N>0.050733102292949514</N>
+            <Area>0.034626502852996316</Area>
+            <Age>79.898502567764865</Age>
           </FrondType>
           <FrondType>
-            <Mass>37.922513636293822</Mass>
-            <N>0.42904999211286632</N>
-            <Area>0.11381597163025756</Area>
-            <Age>77.491489888760327</Age>
+            <Mass>37.9225136435833</Mass>
+            <N>0.43003073721761687</N>
+            <Area>0.11381597165519329</Area>
+            <Age>104.29328401623621</Age>
           </FrondType>
           <FrondType>
-            <Mass>37.000632885404066</Mass>
-            <N>0.41268349409632737</N>
-            <Area>0.11129311697247148</Area>
-            <Age>72.241489888760327</Age>
+            <Mass>37.000632931208806</Mass>
+            <N>0.41446519343621263</N>
+            <Area>0.1112931171291587</Area>
+            <Age>99.043284016236214</Age>
           </FrondType>
           <FrondType>
-            <Mass>32.847479795642066</Mass>
-            <N>0.33781259374168132</N>
-            <Area>0.099980082727481878</Area>
-            <Age>66.991489888760313</Age>
+            <Mass>32.847480083468831</Mass>
+            <N>0.34336082788093486</N>
+            <Area>0.09998008371206904</Area>
+            <Age>93.793284016236186</Age>
           </FrondType>
           <FrondType>
-            <Mass>24.195014334983814</Mass>
-            <N>0.18542442627114752</N>
-            <Area>0.076325954670553184</Area>
-            <Age>61.741489888760292</Age>
+            <Mass>24.19501614363443</Mass>
+            <N>0.19832032423821142</N>
+            <Area>0.076325960857509159</Area>
+            <Age>88.543284016236214</Age>
           </FrondType>
           <FrondType>
-            <Mass>15.329916827487422</Mass>
-            <N>0.079187996892686685</N>
-            <Area>0.0503864816312285</Area>
-            <Age>56.491489888760285</Age>
+            <Mass>15.329928192735094</Mass>
+            <N>0.0926796388823595</N>
+            <Area>0.050386520508938631</Area>
+            <Age>83.293284016236242</Age>
           </FrondType>
           <FrondType>
-            <Mass>8.857170572174347</Mass>
-            <N>0.033143908338691748</N>
-            <Area>0.030239012340741118</Area>
-            <Age>51.191394643785451</Age>
+            <Mass>8.8572432530811813</Mass>
+            <N>0.042690833898588292</N>
+            <Area>0.030239260963879796</Area>
+            <Age>77.993188771261373</Age>
           </FrondType>
           <FrondType>
-            <Mass>8.0575361450618281</Mass>
-            <N>0.025755232855022993</N>
-            <Area>0.027635636095668395</Area>
-            <Age>45.936996491493936</Age>
+            <Mass>8.057993561590278</Mass>
+            <N>0.035051421834760788</N>
+            <Area>0.027637200800798761</Area>
+            <Age>72.7387906189698</Age>
           </FrondType>
           <FrondType>
-            <Mass>13.652240520741396</Mass>
-            <N>0.030317283177706468</N>
-            <Area>0.0460844357208162</Area>
-            <Age>40.658094963078526</Age>
+            <Mass>13.655143948254295</Mass>
+            <N>0.047920880129799413</N>
+            <Area>0.046094367591205748</Area>
+            <Age>67.459889090554384</Age>
           </FrondType>
           <FrondType>
-            <Mass>22.366004470831658</Mass>
-            <N>0.032570394002090726</N>
-            <Area>0.075298304729206025</Area>
-            <Age>35.257878878943608</Age>
+            <Mass>22.385227821779335</Mass>
+            <N>0.063797998478208676</N>
+            <Area>0.075364062666005871</Area>
+            <Age>62.05967300641943</Age>
           </FrondType>
           <FrondType>
-            <Mass>18.017250660990264</Mass>
-            <N>0.019598002216102466</N>
-            <Area>0.061249754510671231</Area>
-            <Age>29.948976779687136</Age>
+            <Mass>18.140295105486793</Mass>
+            <N>0.045771198104636125</N>
+            <Area>0.061670653386745447</Area>
+            <Age>56.750770907162945</Age>
           </FrondType>
           <FrondType>
-            <Mass>88.617783328875561</Mass>
-            <N>0.98238426723162919</N>
-            <Area>0.26596236820873</Area>
-            <Age>51.159272467196104</Age>
+            <Mass>88.617856831743183</Mass>
+            <N>0.98748613568231336</N>
+            <Area>0.26596261964358819</Area>
+            <Age>77.961066594672019</Age>
           </FrondType>
           <FrondType>
-            <Mass>85.6872983655093</Mass>
-            <N>0.93524497795120443</N>
-            <Area>0.25771373927809693</Area>
-            <Age>45.909272467196125</Age>
+            <Mass>85.687760243281</Mass>
+            <N>0.94221432471954358</N>
+            <Area>0.25771531924399016</Area>
+            <Age>72.711066594672019</Age>
           </FrondType>
           <FrondType>
-            <Mass>72.403848465323293</Mass>
-            <N>0.72095118056856755</N>
-            <Area>0.22033301349206297</Area>
-            <Age>40.659272467196132</Age>
+            <Mass>72.406750696259024</Mass>
+            <N>0.736472053008107</N>
+            <Area>0.22034294126927728</Area>
+            <Age>67.461066594671991</Age>
           </FrondType>
           <FrondType>
-            <Mass>45.401786789915157</Mass>
-            <N>0.30724544491138522</N>
-            <Area>0.14354067811344623</Area>
-            <Age>35.409272467196125</Age>
+            <Mass>45.42001817903018</Mass>
+            <N>0.33711565428274343</N>
+            <Area>0.14360304282037006</Area>
+            <Age>62.211066594671948</Age>
           </FrondType>
           <FrondType>
-            <Mass>23.224579003527548</Mass>
-            <N>0.077704482200328884</N>
-            <Area>0.07682040619221546</Area>
-            <Age>30.159272467196153</Age>
+            <Mass>23.338911014031435</Mass>
+            <N>0.10411699637854356</N>
+            <Area>0.077211502623712014</Area>
+            <Age>56.961066594671962</Age>
           </FrondType>
           <FrondType>
-            <Mass>11.445405658607042</Mass>
-            <N>0.010596861389363364</N>
-            <Area>0.039488554279093438</Area>
-            <Age>24.85996543267683</Age>
+            <Mass>12.166977547948301</Mass>
+            <N>0.02804732059576032</N>
+            <Area>0.041956744435371708</Area>
+            <Age>51.661759560152632</Age>
           </FrondType>
           <FrondType>
-            <Mass>8.8930430876388922</Mass>
-            <N>0.0074983401356405223</N>
-            <Area>0.030755515485322654</Area>
-            <Age>19.450733991100055</Age>
+            <Mass>13.30508704804755</Mass>
+            <N>0.024512553245486565</N>
+            <Area>0.045843751466075874</Area>
+            <Age>46.252528118575881</Age>
           </FrondType>
           <FrondType>
-            <Mass>7.0007166957521232</Mass>
-            <N>0.0052762975594035323</N>
-            <Area>0.0239472189823207</Area>
-            <Age>14.183272273055691</Age>
+            <Mass>25.310746864332657</Mass>
+            <N>0.030917213959873277</N>
+            <Area>0.086516212505271292</Area>
+            <Age>40.985066400531529</Age>
           </FrondType>
           <FrondType>
-            <Mass>2.503067003937764</Mass>
-            <N>0.0017262023658659229</N>
-            <Area>0.008517887259146352</Area>
-            <Age>8.8906163557888149</Age>
+            <Mass>33.618742726367508</Mass>
+            <N>0.028147249268321944</N>
+            <Area>0.11504710248441197</Area>
+            <Age>35.692410483264631</Age>
           </FrondType>
           <FrondType>
-            <Mass>0.41674954256621977</Mass>
-            <N>0.00026625707395457737</N>
-            <Area>0.0014124487032477248</Area>
-            <Age>3.6026219856731405</Age>
+            <Mass>22.11539833724353</Mass>
+            <N>0.014767458320393587</N>
+            <Area>0.076379064283926892</Area>
+            <Age>30.404416113148962</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>239.82114641855981</Mass>
+            <N>2.6501471407169546</N>
+            <Area>0.719651109334948</Area>
+            <Age>53.051794127475816</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>230.03090574670856</Mass>
+            <N>2.5191013326798513</N>
+            <Area>0.69121463387671522</Area>
+            <Age>47.801794127475816</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>185.67837776724224</Mass>
+            <N>1.92418006498574</N>
+            <Area>0.56240096381785343</Area>
+            <Age>42.551794127475844</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>98.696228732572308</Mass>
+            <N>0.78590171757376659</N>
+            <Area>0.30854957776312969</Area>
+            <Age>37.301794127475837</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>40.049653874670113</Mass>
+            <N>0.17671800000083343</N>
+            <Area>0.13151933943562749</Area>
+            <Age>32.051794127475816</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>15.103159085427469</Mass>
+            <N>0.0090770414700467039</N>
+            <Area>0.052496490264468121</Area>
+            <Age>26.751808677929105</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>10.674917984945827</Mass>
+            <N>0.0057791299999854972</N>
+            <Area>0.037210715927574578</Area>
+            <Age>21.215451123219591</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>8.5434950943267456</Mass>
+            <N>0.0038877998592396451</N>
+            <Area>0.029690111679035985</Area>
+            <Age>15.679838969580377</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>3.4871794194676329</Mass>
+            <N>0.0013618013262150391</N>
+            <Area>0.012108315668403327</Area>
+            <Age>10.209976186892881</Age>
+          </FrondType>
+          <FrondType>
+            <Mass>0.58327700811047456</Mass>
+            <N>0.00020139552841328003</N>
+            <Area>0.0020254555448260829</Area>
+            <Age>4.4501011206035761</Age>
           </FrondType>
         </Fronds>
         <Bunches>
           <BunchType>
-            <Mass>62.009667596650552</Mass>
-            <N>0.37391829560780282</N>
+            <Mass>76.655969982058082</Mass>
+            <N>0.46223549899181021</N>
             <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
-            <Mass>62.009667596650552</Mass>
-            <N>0.37391829560780282</N>
+            <Mass>76.655969982058082</Mass>
+            <N>0.46223549899181021</N>
             <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
-            <Mass>62.009667596650552</Mass>
-            <N>0.37391829560780282</N>
+            <Mass>76.655969982058082</Mass>
+            <N>0.46223549899181021</N>
             <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
-            <Mass>62.009667596650552</Mass>
-            <N>0.37391829560780282</N>
+            <Mass>76.655969982058082</Mass>
+            <N>0.46223549899181021</N>
             <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
-            <Mass>62.009667596650552</Mass>
-            <N>0.37391829560780282</N>
+            <Mass>76.655969982058082</Mass>
+            <N>0.46223549899181021</N>
             <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
-            <Mass>33.630064847127038</Mass>
-            <N>0.20278929102817603</N>
+            <Mass>36.901566598633607</Mass>
+            <N>0.22251644658976066</N>
             <Age>0</Age>
             <FemaleFraction>0.17869366153554658</FemaleFraction>
           </BunchType>
@@ -1287,31 +1347,31 @@
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>0.0056108937360126974</FemaleFraction>
+            <FemaleFraction>0.00012828375759024434</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>0.00017704073126713772</FemaleFraction>
+            <FemaleFraction>7.4663641245222222E-06</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>5.882563142648378E-06</FemaleFraction>
+            <FemaleFraction>1.4270356390663549E-07</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>5.6170773041234828E-07</FemaleFraction>
+            <FemaleFraction>1.5837279206621079E-09</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>1.7802018572127136E-05</FemaleFraction>
+            <FemaleFraction>1.2854885643573595E-08</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
@@ -1341,6 +1401,204 @@
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
+            <FemaleFraction>0.018290670060902969</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.00077137504900008137</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>1.8712585981934609E-05</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>2.3076203097430809E-06</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9511848601886235E-08</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>1.6287676209364178E-06</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.00057768215852558018</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>3.9651753900721876E-12</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
             <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
@@ -1485,55 +1743,277 @@
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
             <N>0</N>
             <Age>0</Age>
-            <FemaleFraction>3.5573785233421335E-08</FemaleFraction>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
+          </BunchType>
+          <BunchType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Age>0</Age>
+            <FemaleFraction>0.8</FemaleFraction>
           </BunchType>
           <BunchType>
             <Mass>0</Mass>
@@ -2456,43 +2936,38 @@
         </Bunches>
         <Roots>
           <RootType>
-            <Mass>21.971453862488165</Mass>
-            <N>0.0091276093913806138</N>
+            <Mass>23.6665641090677</Mass>
+            <N>0.0057124737137382786</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>13.490435712313207</Mass>
-            <N>0.0075712171512465135</N>
+            <Mass>13.965744460530896</Mass>
+            <N>0.0048373436032228528</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>24.732926759135641</Mass>
-            <N>0.012365701467379787</N>
+            <Mass>25.404496155344205</Mass>
+            <N>0.0079406523562049972</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>25.232507673130332</Mass>
-            <N>0.010400105885382623</N>
+            <Mass>26.198466681193604</Mass>
+            <N>0.0067043241816018249</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>24.772397367241705</Mass>
-            <N>0.0082638386333155657</N>
+            <Mass>25.974938845430369</Mass>
+            <N>0.0056229520294035946</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>24.891350379731218</Mass>
-            <N>0.0076453660058101386</N>
+            <Mass>26.53537103782643</Mass>
+            <N>0.00536103445477505</N>
             <Length>0</Length>
           </RootType>
           <RootType>
-            <Mass>23.814200040875935</Mass>
-            <N>0.0071180421840631447</N>
-            <Length>0</Length>
-          </RootType>
-          <RootType>
-            <Mass>0.08048425808804327</Mass>
-            <N>0.00031388860654336893</N>
+            <Mass>25.637710722427205</Mass>
+            <N>0.004992426881872505</N>
             <Length>0</Length>
           </RootType>
           <RootType>
@@ -2508,6 +2983,66 @@
           <RootType>
             <Mass>0.08048425808804327</Mass>
             <N>0.00031388860654336893</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0.08048425808804327</Mass>
+            <N>0.00031388860654336893</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
+            <Length>0</Length>
+          </RootType>
+          <RootType>
+            <Mass>0</Mass>
+            <N>0</N>
             <Length>0</Length>
           </RootType>
           <RootType>
@@ -2629,7 +3164,7 @@
         <UnderstoryDltDM>0</UnderstoryDltDM>
         <UnderstoryNFixation>0</UnderstoryNFixation>
         <CarbonStress>1</CarbonStress>
-        <Age>1.7835616438356414</Age>
+        <Age>2.3780821917808685</Age>
         <Population>4.6382189239332092</Population>
         <DefoliationFraction>0</DefoliationFraction>
       </OilPalm>
