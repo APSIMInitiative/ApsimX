@@ -494,6 +494,14 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -1227,6 +1235,14 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -2026,6 +2042,14 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -3244,6 +3268,14 @@ private void OnStartOfDay(object sender, EventArgs e)
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -4350,6 +4382,14 @@ private void OnStartOfDay(object sender, EventArgs e)
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -5133,5 +5173,5 @@ private void OnStartOfDay(object sender, EventArgs e)
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
   <Area>0</Area>
-  <ExplorerWidth>238</ExplorerWidth>
+  <ExplorerWidth>328</ExplorerWidth>
 </Simulations>
