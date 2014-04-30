@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 
 namespace UserInterface.Views
@@ -71,6 +72,12 @@ namespace UserInterface.Views
             {
                 OpenDialogArgs args = new OpenDialogArgs();
                 args.FileNames = OpenFileDialog.FileNames;
+
+                string curdir = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3);
+                for (int i=0; i< args.FileNames.Length; i++)
+                {
+                    args.FileNames[i] = args.FileNames[i].Replace(curdir, "");
+                }
 
                 BrowseButtonClicked.Invoke(this, args);
             }

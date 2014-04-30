@@ -51,9 +51,15 @@ namespace Models
                 dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable();
-                foreach (string fileName in FileNames)
+                for (int i=0;i< FileNames.Length; i++)
                 {
-                    if (fileName != null && File.Exists(fileName))
+                    if (FileNames[i] == null)
+                        continue;
+
+                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
+                        FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+
+                    if (File.Exists(FileNames[i]))
                     {
                         string[] simulationNames = Utility.DataTable.GetDistinctValues(data, "SimulationName").ToArray();
                         foreach (string simulationName in simulationNames)
@@ -77,12 +83,18 @@ namespace Models
             DataTable returnDataTable = null;
             if (FileNames != null)
             {
-                foreach (string fileName in FileNames)
+                for (int i=0;i <FileNames.Length;i++)
                 {
-                    if (fileName != null && File.Exists(fileName))
+                    if (FileNames[i] == null)
+                        continue;
+
+                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
+                        FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+
+                    if ( File.Exists(FileNames[i]))
                     {
                         Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                        textFile.Open(fileName);
+                        textFile.Open(FileNames[i]);
                         DataTable table = textFile.ToTable();
                         textFile.Close();
 
