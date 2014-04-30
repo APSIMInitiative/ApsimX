@@ -56,7 +56,7 @@ namespace Models
         public override void OnSerialising(bool xmlSerialisation)
         {
             if (_Model != null)
-                RemoveModel(_Model);
+                Models.Remove(_Model);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Models
         public override void OnSerialised(bool xmlSerialisation)
         {
             if (_Model != null)
-                AddModel(_Model);
+                Models.Add(_Model);
         }
 
         /// <summary>

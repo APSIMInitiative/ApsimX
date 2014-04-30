@@ -112,6 +112,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
     <Compile Include="PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />
@@ -126,6 +127,11 @@
     <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
@@ -326,7 +332,15 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Wheat.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
