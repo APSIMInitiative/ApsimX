@@ -6,8 +6,19 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Potato\Observed\Cultivar_node.txt</string>
         <string>C:\ApsimX\Tests\Potato\Observed\potato_observations.txt</string>
+      </FileNames>
+    </Input>
+    <Input>
+      <Name>InputRadInd</Name>
+      <FileNames>
+        <string>C:\ApsimX\Tests\Potato\Observed\Potato_radint_observations.txt</string>
+      </FileNames>
+    </Input>
+    <Input>
+      <Name>InputNodeNo</Name>
+      <FileNames>
+        <string>C:\ApsimX\Tests\Potato\Observed\cultivar_nodenumber.txt</string>
       </FileNames>
     </Input>
   </DataStore>
@@ -92,63 +103,37 @@
     </Test>
   </Tests>
   <Experiment>
-    <Name>Cultivar</Name>
+    <Name>Potato</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
         <Name>Cultivar</Name>
         <FactorValue>
-          <Name>RussetBurbank</Name>
-          <Operations>
-            <Name>Operations</Name>
-            <Operation>
-              <Date>2003-10-20T00:00:00</Date>
-              <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-25T00:00:00</Date>
-              <Action>Fertiliser.Apply(69, Fertiliser.Types.UreaN,0);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-26T00:00:00</Date>
-              <Action>Irrigation.Apply(15);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-04T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-16T00:00:00</Date>
-              <Action>Irrigation.Apply(15);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-22T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-30T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-08T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-21T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-31T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-02-27T00:00:00</Date>
-              <Action>Irrigation.Apply(25);</Action>
-            </Operation>
-          </Operations>
+          <Name>Burbank</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>JerseyBenny</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>RedRascal</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>Horizon</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>IlamHardy</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>Karaka</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>Nooksac</Name>
+        </FactorValue>
+        <FactorValue>
+          <Name>Rua</Name>
         </FactorValue>
         <Paths>
-          <string>[Operations]</string>
+          <string>[PotatoSowingRule].Script.CultivarName</string>
         </Paths>
       </Factor>
     </Factors>
@@ -530,6 +515,336 @@
               <FractionLabileP>0</FractionLabileP>
               <FractionCa>0</FractionCa>
             </FertiliserType>
+            <FertiliserType>
+              <Name>CalciteCA</Name>
+              <Description>Ca as finely ground Agricultural Lime</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>1</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>CalciteFine</Name>
+              <Description>finely ground Agricultural Lime</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0.4</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>Dolomite</Name>
+              <Description>finely ground dolomite</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0.22</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NO3N</Name>
+              <Description>N as nitrate</Description>
+              <FractionNO3>1</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4N</Name>
+              <Description>N as ammonium</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>1</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4NO3N</Name>
+              <Description>ammonium nitrate</Description>
+              <FractionNO3>0.5</FractionNO3>
+              <FractionNH4>0.5</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>DAP</Name>
+              <Description>di-ammonium phosphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0.18</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>MAP</Name>
+              <Description>mono-ammonium phosphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0.11</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>UreaN</Name>
+              <Description>N as urea</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>1</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>UreaNO3</Name>
+              <Description>N as urea</Description>
+              <FractionNO3>0.5</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0.5</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>Urea</Name>
+              <Description>Urea fertiliser</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0.46</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4SO4N</Name>
+              <Description>ammonium sulphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>1</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>RockP</Name>
+              <Description>Rock phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0.8</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0.2</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>BandedP</Name>
+              <Description>Banded phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>1</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>BroadcastP</Name>
+              <Description>Broadcast phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>1</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>CalciteCA</Name>
+              <Description>Ca as finely ground Agricultural Lime</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>1</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>CalciteFine</Name>
+              <Description>finely ground Agricultural Lime</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0.4</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>Dolomite</Name>
+              <Description>finely ground dolomite</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0.22</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NO3N</Name>
+              <Description>N as nitrate</Description>
+              <FractionNO3>1</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4N</Name>
+              <Description>N as ammonium</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>1</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4NO3N</Name>
+              <Description>ammonium nitrate</Description>
+              <FractionNO3>0.5</FractionNO3>
+              <FractionNH4>0.5</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>DAP</Name>
+              <Description>di-ammonium phosphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0.18</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>MAP</Name>
+              <Description>mono-ammonium phosphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0.11</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>UreaN</Name>
+              <Description>N as urea</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>1</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>UreaNO3</Name>
+              <Description>N as urea</Description>
+              <FractionNO3>0.5</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0.5</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>Urea</Name>
+              <Description>Urea fertiliser</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0.46</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>NH4SO4N</Name>
+              <Description>ammonium sulphate</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>1</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>RockP</Name>
+              <Description>Rock phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0.8</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>0.2</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>BandedP</Name>
+              <Description>Banded phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>1</FractionBandedP>
+              <FractionLabileP>0</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
+            <FertiliserType>
+              <Name>BroadcastP</Name>
+              <Description>Broadcast phosphorus</Description>
+              <FractionNO3>0</FractionNO3>
+              <FractionNH4>0</FractionNH4>
+              <FractionUrea>0</FractionUrea>
+              <FractionRockP>0</FractionRockP>
+              <FractionBandedP>0</FractionBandedP>
+              <FractionLabileP>1</FractionLabileP>
+              <FractionCa>0</FractionCa>
+            </FertiliserType>
           </Definitions>
         </Fertiliser>
         <SurfaceOrganicMatter>
@@ -578,16 +893,542 @@
           <soil_albedo>0.23</soil_albedo>
           <ComponentData>
             <Name>Potato</Name>
-            <Type>Potato</Type>
             <Albedo>0.26</Albedo>
             <Emissivity>0.96</Emissivity>
             <R50>200</R50>
             <Gsmax>0.03</Gsmax>
           </ComponentData>
+          <ComponentData>
+            <Name>crop</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>broccoli</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>tree</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>grandis</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oilpalm</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oilmallee</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>globulus</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>camaldulensis</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>grass</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>wheat</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>barley</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>canola</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>raphanus_raphanistrum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>lolium_rigidum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>chickpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>weed</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oats</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>chickpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>fieldpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>sugar</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>potato</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>frenchbean</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>bambatsi</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>150</R50>
+            <Gsmax>0.015</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>lucerne</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>maize</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>banksia</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>understorey</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>ryegrass</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>vine</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>saltbush</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>sorghum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>danthonia</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>nativepasture</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>raphanus_raphanistrum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>canola</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>kale2</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>Carrots4</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>crop</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>broccoli</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>tree</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>grandis</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oilpalm</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oilmallee</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>globulus</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>camaldulensis</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>grass</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>wheat</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>barley</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>canola</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>raphanus_raphanistrum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>lolium_rigidum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>chickpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>weed</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>oats</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>chickpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>fieldpea</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>sugar</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>potato</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>frenchbean</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>bambatsi</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>150</R50>
+            <Gsmax>0.015</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>lucerne</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>maize</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>banksia</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>understorey</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>ryegrass</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>vine</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>saltbush</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.005</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>sorghum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>danthonia</Name>
+            <Albedo>0.23</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>nativepasture</Name>
+            <Albedo>0.15</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>raphanus_raphanistrum</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>canola</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>kale2</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
+          <ComponentData>
+            <Name>Carrots4</Name>
+            <Albedo>0.26</Albedo>
+            <Emissivity>0.96</Emissivity>
+            <R50>200</R50>
+            <Gsmax>0.011</Gsmax>
+          </ComponentData>
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
+          <LocalCanopyData>
+            <sender>Potato</sender>
+            <height>265.47341918945312</height>
+            <depth>265.47341918945312</depth>
+            <lai>0</lai>
+            <lai_tot>5.893211841583252</lai_tot>
+            <cover>0</cover>
+            <cover_tot>0.16204959154129028</cover_tot>
+          </LocalCanopyData>
         </Plant>
         <Manager>
           <Name>PotatoSowingRule</Name>
@@ -693,6 +1534,145 @@
             <Action>Irrigation.Apply(25);</Action>
           </Operation>
         </Operations>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script>
+            <Name>Script</Name>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] WeatherFile Met;   
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;  
+		[Link] Plant Plant;          
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+		
+		[XmlIgnore] public double AccumTtemerg { get; set; }
+		
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+        public override void OnCommencing()
+        {
+			InitialDay = true;
+		}	   
+		
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+            int layers = Soil.SoilWater.dlayer.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			AccumFert += Fert.NitrogenApplied;
+			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+			AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumIrrigation += Irrig.IrrigationApplied;
+			AccumRainfall += Met.Rain;
+			AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
+			SoilWaterDeficit =  (SWC - DUL);
+			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+			
+			//!!!!!! Thermal time calculation !!!!!!
+			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+			if (Plant.Phenology.StageCode.Value >= 3)
+			AccumTtemerg += Plant.Phenology.ThermalTime.Value;
+		}
+		
+		[EventSubscribe("EndOfDay")]
+		private void OnEndOfDay(object sender, EventArgs e)
+		{
+			AccumEO -= Soil.SoilWater.eo;
+			AccumES -= Soil.SoilWater.es; 
+			AccumDrainage -= Soil.SoilWater.drain;
+			AccumRunoff -= Soil.SoilWater.runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Report>
           <Name>Report</Name>
           <Variables>
@@ -837,12 +1817,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
             </Y>
@@ -857,12 +1837,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
             </Y>
@@ -877,12 +1857,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
             </Y>
@@ -897,12 +1877,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumFert</FieldName>
             </Y>
@@ -917,12 +1897,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
             </Y>
@@ -937,12 +1917,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
             </Y>
@@ -957,12 +1937,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
             </Y>
@@ -977,12 +1957,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
             </Y>
@@ -1010,12 +1990,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.pond</FieldName>
             </Y>
@@ -1030,12 +2010,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumEO</FieldName>
             </Y>
@@ -1050,12 +2030,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumEP</FieldName>
             </Y>
@@ -1070,12 +2050,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumES</FieldName>
             </Y>
@@ -1090,12 +2070,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
             </Y>
@@ -1110,12 +2090,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
             </Y>
@@ -1130,12 +2110,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
             </Y>
@@ -1150,12 +2130,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
             </Y>
@@ -1170,12 +2150,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
             </Y>
@@ -1190,12 +2170,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
             </Y>
@@ -1223,12 +2203,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.Wt</FieldName>
             </Y>
@@ -1243,12 +2223,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.Wt</FieldName>
             </Y>
@@ -1263,12 +2243,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.Wt</FieldName>
             </Y>
@@ -1283,12 +2263,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.Wt</FieldName>
             </Y>
@@ -1303,12 +2283,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.Wt</FieldName>
             </Y>
@@ -1323,12 +2303,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.Wt</FieldName>
             </Y>
@@ -1343,12 +2323,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.Wt</FieldName>
             </Y>
@@ -1363,12 +2343,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.Wt</FieldName>
             </Y>
@@ -1383,12 +2363,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
             </Y>
@@ -1403,12 +2383,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.BelowGround.Wt</FieldName>
             </Y>
@@ -1423,12 +2403,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.Total.Wt</FieldName>
             </Y>
@@ -1456,12 +2436,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.N</FieldName>
             </Y>
@@ -1476,12 +2456,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.N</FieldName>
             </Y>
@@ -1496,12 +2476,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.N</FieldName>
             </Y>
@@ -1516,12 +2496,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.N</FieldName>
             </Y>
@@ -1536,12 +2516,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.N</FieldName>
             </Y>
@@ -1556,12 +2536,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.N</FieldName>
             </Y>
@@ -1576,12 +2556,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.N</FieldName>
             </Y>
@@ -1596,12 +2576,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.N</FieldName>
             </Y>
@@ -1616,12 +2596,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.AboveGround.N</FieldName>
             </Y>
@@ -1636,12 +2616,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.BelowGround.N</FieldName>
             </Y>
@@ -1656,12 +2636,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.Total.N</FieldName>
             </Y>
@@ -1676,12 +2656,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.TotalLive.N</FieldName>
             </Y>
@@ -1709,12 +2689,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Photosynthesis.FT.Value</FieldName>
             </Y>
@@ -1729,12 +2709,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Fn</FieldName>
             </Y>
@@ -1749,12 +2729,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Fw</FieldName>
             </Y>
@@ -1769,12 +2749,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Photosynthesis.FVPD.Value</FieldName>
             </Y>
@@ -1807,12 +2787,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.WaterSupply</FieldName>
             </Y>
@@ -1827,12 +2807,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.WaterUptake</FieldName>
             </Y>
@@ -1847,12 +2827,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.WaterDemand</FieldName>
             </Y>
@@ -1867,12 +2847,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Transpiration</FieldName>
             </Y>
@@ -1887,12 +2867,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.eo</FieldName>
             </Y>
@@ -1907,12 +2887,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Depth</FieldName>
             </Y>
@@ -1927,12 +2907,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.Height</FieldName>
             </Y>
@@ -1965,12 +2945,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverDead</FieldName>
             </Y>
@@ -1985,12 +2965,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverGreen</FieldName>
             </Y>
@@ -2005,12 +2985,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverTotal</FieldName>
             </Y>
@@ -2025,12 +3005,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LAI</FieldName>
             </Y>
@@ -2045,12 +3025,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LAIDead</FieldName>
             </Y>
@@ -2078,12 +3058,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
             </Y>
@@ -2098,12 +3078,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.TotalStemPopn</FieldName>
             </Y>
@@ -2118,12 +3098,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
             </Y>
@@ -2138,12 +3118,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
             </Y>
@@ -2158,12 +3138,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
             </Y>
@@ -2178,12 +3158,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
             </Y>
@@ -2198,12 +3178,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
             </Y>
@@ -2218,12 +3198,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
             </Y>
@@ -2244,7 +3224,6 @@
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -2256,12 +3235,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.NConc</FieldName>
             </Y>
@@ -2276,12 +3255,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.NConc</FieldName>
             </Y>
@@ -2296,12 +3275,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LeafCohortParameters.MinimumNConc.Value</FieldName>
             </Y>
@@ -2311,17 +3290,17 @@
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LeafCohortParameters.MaximumNConc.Value</FieldName>
             </Y>
@@ -2331,17 +3310,17 @@
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -2349,145 +3328,6 @@
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
         </Graph>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script>
-            <Name>Script</Name>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Plant;          
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        public override void OnCommencing()
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
-			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Plant.Phenology.StageCode.Value >= 3)
-			AccumTtemerg += Plant.Phenology.ThermalTime.Value;
-		}
-		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
-		{
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-
-		}
-	}
-}
-	   ]]></Code>
-        </Manager>
         <Graph>
           <Name>Stem Nitrogen %</Name>
           <Axis>
@@ -2501,7 +3341,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -2513,12 +3352,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.NConc</FieldName>
             </Y>
@@ -2533,12 +3372,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.NConc</FieldName>
             </Y>
@@ -2553,12 +3392,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.MinimumNConc.Value</FieldName>
             </Y>
@@ -2568,17 +3407,17 @@ namespace Models
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.MaximumNConc.Value</FieldName>
             </Y>
@@ -2588,17 +3427,17 @@ namespace Models
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -2619,7 +3458,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -2631,12 +3469,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.NConc</FieldName>
             </Y>
@@ -2651,12 +3489,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.NConc</FieldName>
             </Y>
@@ -2671,12 +3509,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.MinimumNConc.Value</FieldName>
             </Y>
@@ -2686,17 +3524,17 @@ namespace Models
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.MaximumNConc.Value</FieldName>
             </Y>
@@ -2706,17 +3544,17 @@ namespace Models
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -2744,12 +3582,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.NConc</FieldName>
             </Y>
@@ -2764,12 +3602,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.NConc</FieldName>
             </Y>
@@ -2784,12 +3622,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.MinimumNConc.Value</FieldName>
             </Y>
@@ -2804,12 +3642,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.MaximumNConc.Value</FieldName>
             </Y>
@@ -2867,7 +3705,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TotalLiveWt</FieldName>
+          <FieldName>TuberLiveWt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3277,13 +4115,13 @@ namespace Models
         <Line>None</Line>
         <X>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputRadInd</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
-          <FieldName>StemLiveN</FieldName>
+          <TableName>InputRadInd</TableName>
+          <FieldName>Cover_tot</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3485,12 +4323,12 @@ namespace Models
         <Line>None</Line>
         <X>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputNodeNo</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputNodeNo</TableName>
           <FieldName>LeafNodeNo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3499,5 +4337,5 @@ namespace Models
     </Graph>
   </Experiment>
   <Area>0</Area>
-  <ExplorerWidth>324</ExplorerWidth>
+  <ExplorerWidth>339</ExplorerWidth>
 </Simulations>
