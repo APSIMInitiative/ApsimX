@@ -86,7 +86,7 @@ namespace Models
         public override void OnSerialising(bool xmlSerialisation)
         {
             if (Script != null)
-                RemoveModel(Script);
+                Models.Remove(Script);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Models
         public override void OnSerialised(bool xmlSerialisation)
         {
             if (Script != null)
-                AddModel(Script);
+                Models.Add(Script);
         }
 
         /// <summary>
