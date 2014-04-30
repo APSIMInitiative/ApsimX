@@ -48,6 +48,9 @@ namespace Models.Soils
         private SoilWatTillageType SoilWatTillageType = null;
 
         [Link]
+        Simulation paddock;
+
+        [Link]
         private Soil Soil = null;
 
         [Link]
@@ -1221,52 +1224,33 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-            //also called in prepare event as well
-
-            //*+  Purpose
-            //*      get the value/s of a variable/array.
-
-            //*+  Mission Statement
-            //*     Get crop Variables
-
-#if (APSIMX == false)
-        Double coverLive;
-        Double coverTotal;
-        Double height;
-
-        bool foundCL;
-        bool foundCT;
-        bool foundH;
-
         int i = 0;
-        foreach (Component Comp in MyPaddock.Crops)
-        {
-            foundCL = MyPaddock.Get(Comp.FullName + ".cover_green", out coverLive);
-            foundCT = MyPaddock.Get(Comp.FullName + ".cover_tot", out coverTotal);
-            foundH = MyPaddock.Get(Comp.FullName + ".Height", out height);
+        Model[] models = paddock.FindAll(typeof(ICrop));
+        
+            foreach (Model m in models)
+            {
+                int CropNumber = 0;
+                Array.Resize(ref cover_green, CropNumber +1);
+                Array.Resize(ref cover_tot, CropNumber + 1);
+                Array.Resize(ref canopy_height, CropNumber + 1);
 
-            ////must have at least these three variables to be considered a "crop" component.
-            if (foundCL && foundCT && foundH)
+                ICrop Crop = m as ICrop;
+                if (Crop.CanopyData != null)
                 {
-                num_crops = i + 1;
-                Array.Resize(ref cover_green, num_crops);
-                Array.Resize(ref cover_tot, num_crops);
-                Array.Resize(ref canopy_height, num_crops);
-                cover_green[i] = coverLive;
-                cover_tot[i] = coverTotal;
-                canopy_height[i] = height;
-                i++;
+                    cover_green[CropNumber] = Crop.CanopyData.cover;
+                    cover_tot[CropNumber] = Crop.CanopyData.cover_tot;
+                    canopy_height[CropNumber] = Crop.CanopyData.height;
                 }
-            else
+                else
                 {
-                throw new Exception("Crop Module: " +  Comp.FullName  + 
-                        " is missing one/or more of the following 3 output variables (cover_green, cover_tot, height) " + Environment.NewLine +
-                        "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    cover_green[CropNumber] = 0;
+                    cover_tot[CropNumber] = 0;
+                    canopy_height[CropNumber] = 0;
                 }
-        }
-#endif
+                CropNumber += 1;     
+            }
+         }
 
-        }
 
 
         private void soilwat2_get_solute_variables()

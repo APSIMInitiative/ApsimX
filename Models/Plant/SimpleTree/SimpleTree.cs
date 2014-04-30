@@ -10,8 +10,11 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleTree : Model
+    public class SimpleTree : Model, ICrop
     {
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+        
         public RootSystem RootSystem { get; set; }
         public double CoverLive { get; set; }
         public string plant_status { get; set; }
@@ -44,6 +47,15 @@ namespace Models.PMF
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
+
+            //HEB.  I have put these here so values can be got by interface
+            LocalCanopyData.sender = Name;
+            LocalCanopyData.lai = 0;
+            LocalCanopyData.lai_tot = 0;
+            LocalCanopyData.height = 0;             // height effect, mm 
+            LocalCanopyData.depth = 0;              // canopy depth 
+            LocalCanopyData.cover = CoverLive;
+            LocalCanopyData.cover_tot = CoverLive;
         }
 
         [EventSubscribe("StartOfDay")]
