@@ -361,7 +361,7 @@ namespace Models.Soils
         /// If not given fom will be distributed over the whole soil profile
         /// Distribution is homogenous over this depth
         /// </remarks>
-        private double iniFomDepth = 3000;
+        private double iniFomDepth;
         
         [XmlIgnore]
         public double root_depth
