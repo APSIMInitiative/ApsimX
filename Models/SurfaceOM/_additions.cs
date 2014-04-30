@@ -14,12 +14,15 @@ namespace Models.SurfaceOM
     public class ResidueTypes
     {
         [XmlElement("ResidueType")]
+        [XmlIgnore]
         public List<ResidueType> residues { get; set; }
 
         public ResidueTypes()
         {
             if (residues == null)
                 residues = new List<ResidueType>();
+
+            residues.Clear();
             residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
             residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
             residues.Add(new ResidueType("barley") { specific_area = 0.0005 });

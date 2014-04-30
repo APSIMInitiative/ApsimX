@@ -218,6 +218,9 @@ namespace UserInterface.Views
                 foreach (DataGridViewColumn Col in Grid.Columns)
                     Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
 
+                foreach (DataGridViewColumn Col in Grid.Columns)
+                    Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
                 // Reinstate Grid.CellValueChanged event.
                 Grid.CellValueChanged += OnCellValueChanged;
 
