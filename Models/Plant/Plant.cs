@@ -38,7 +38,7 @@ namespace Models.PMF
     {
         public Single KillFraction;
     }
-    public delegate void NewCanopyDelegate(NewCanopyType Data);
+    public delegate void NewCanopyDelegate(NewCanopyType NewCanopyData);
     public delegate void FOMLayerDelegate(FOMLayerType Data);
     public delegate void NullTypeDelegate();
     public delegate void NewCropDelegate(NewCropType Data);
@@ -70,6 +70,8 @@ namespace Models.PMF
         public String sender = "";
         public String crop_type = "";
     }
+
+
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
@@ -84,6 +86,9 @@ namespace Models.PMF
         [XmlIgnore]
         public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
 
+        [XmlIgnore]
+        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        public NewCanopyType LocalCanopyData;
 
         #region Links
         [Link]
@@ -140,6 +145,9 @@ namespace Models.PMF
                Structure.OnSow(SowingData);
             Phenology.OnSow();
 
+            //Set up CanopyData tyep
+            NewCanopyType LocalCanopyData = new NewCanopyType();
+       
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
 

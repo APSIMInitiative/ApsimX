@@ -913,22 +913,23 @@ namespace Models
         /// <summary>
         /// Event publication - new canopy 
         /// </summary>
+        
+        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+                
         private void DoNewCanopyEvent()
         {
             if (NewCanopy != null)
             {
-                NewCanopyType canopy = new NewCanopyType();
-                canopy.sender = Name;
-                canopy.lai = p_greenLAI;
-                canopy.lai_tot = p_totalLAI;
+                LocalCanopyData.sender = Name;
+                LocalCanopyData.lai = p_greenLAI;
+                LocalCanopyData.lai_tot = p_totalLAI;
                 p_height = HeightfromDM;
-                canopy.height = (int)p_height;             // height effect, mm 
-                canopy.depth = (int)p_height;              // canopy depth 
-                canopy.cover = Cover_green;
-                canopy.cover_tot = Cover_tot;
-
-
-                NewCanopy.Invoke(canopy);
+                LocalCanopyData.height = (int)p_height;             // height effect, mm 
+                LocalCanopyData.depth = (int)p_height;              // canopy depth 
+                LocalCanopyData.cover = Cover_green;
+                LocalCanopyData.cover_tot = Cover_tot;
+                NewCanopy.Invoke(LocalCanopyData);
             }
         }
 

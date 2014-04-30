@@ -531,6 +531,9 @@ namespace Models.PMF.OldPlant
             DoBiomassRemoved();
         }
 
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+
         private void UpdateCanopy()
         {
             // PUBLISH New_Canopy event
@@ -542,22 +545,21 @@ namespace Models.PMF.OldPlant
                 cover_sen += Organ.CoverSen;
             }
             double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
-            NewCanopyType NewCanopyData = new NewCanopyType();
-            NewCanopyData.height = (float)Stem.Height;
-            NewCanopyData.depth = (float)Stem.Height;
-            NewCanopyData.lai = (float)Leaf.LAI;
-            NewCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
-            NewCanopyData.cover = (float)cover_green;
-            NewCanopyData.cover_tot = (float)cover_tot;
-            NewCanopyData.sender = Name;
+            LocalCanopyData.height = (float)Stem.Height;
+            LocalCanopyData.depth = (float)Stem.Height;
+            LocalCanopyData.lai = (float)Leaf.LAI;
+            LocalCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
+            LocalCanopyData.cover = (float)cover_green;
+            LocalCanopyData.cover_tot = (float)cover_tot;
+            LocalCanopyData.sender = Name;
 
-            NewCanopy.Invoke(NewCanopyData);
-            Util.Debug("NewCanopy.height=%f", NewCanopyData.height);
-            Util.Debug("NewCanopy.depth=%f", NewCanopyData.depth);
-            Util.Debug("NewCanopy.lai=%f", NewCanopyData.lai);
-            Util.Debug("NewCanopy.lai_tot=%f", NewCanopyData.lai_tot);
-            Util.Debug("NewCanopy.cover=%f", NewCanopyData.cover);
-            Util.Debug("NewCanopy.cover_tot=%f", NewCanopyData.cover_tot);
+            NewCanopy.Invoke(LocalCanopyData);
+            Util.Debug("NewCanopy.height=%f", LocalCanopyData.height);
+            Util.Debug("NewCanopy.depth=%f", LocalCanopyData.depth);
+            Util.Debug("NewCanopy.lai=%f", LocalCanopyData.lai);
+            Util.Debug("NewCanopy.lai_tot=%f", LocalCanopyData.lai_tot);
+            Util.Debug("NewCanopy.cover=%f", LocalCanopyData.cover);
+            Util.Debug("NewCanopy.cover_tot=%f", LocalCanopyData.cover_tot);
         }
 
         private void DoBiomassRemoved()
