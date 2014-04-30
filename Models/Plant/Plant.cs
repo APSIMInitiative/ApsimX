@@ -84,6 +84,8 @@ namespace Models.PMF
         [XmlIgnore]
         public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
 
+        [Link]
+        Cultivars Cultivars = null;
 
         #region Links
         [Link]
@@ -127,6 +129,12 @@ namespace Models.PMF
             SowingData.RowSpacing = RowSpacing;
             SowingData.CropClass = CropClass;
 
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.ApplyOverrides(this);
+
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -155,6 +163,12 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
+
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.UnapplyOverrides(this);
         }
 
         /// <summary>
