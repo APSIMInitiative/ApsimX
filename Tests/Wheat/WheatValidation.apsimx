@@ -6,10 +6,10 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Wheat\APS6Timeseries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\APS14TimeSeries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\APS26TimeSeries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
+        <string>Tests\Wheat\APS6Timeseries.txt</string>
+        <string>Tests\Wheat\APS14TimeSeries.txt</string>
+        <string>Tests\Wheat\APS26TimeSeries.txt</string>
+        <string>Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
