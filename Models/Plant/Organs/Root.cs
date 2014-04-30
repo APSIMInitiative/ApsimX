@@ -431,11 +431,13 @@ namespace Models.PMF.Organs
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
                     if (TotalRAw > 0)
-
+                    {
                         LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
+                        allocated += value.Structural * RAw[layer] / TotalRAw;
+                    }
                     else if (value.Structural > 0)
                         throw new Exception("Error trying to partition root biomass");
-                    allocated += (TotalRAw > 0) ? value.Structural * RAw[layer] / TotalRAw : 0;
+                        
                 }
             }
         }

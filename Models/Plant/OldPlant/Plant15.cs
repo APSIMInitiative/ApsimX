@@ -10,7 +10,6 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 
-
 namespace Models.PMF.OldPlant
 {
     [Serializable]
@@ -95,6 +94,12 @@ namespace Models.PMF.OldPlant
             if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
 
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + cultivar);
+            cultivarObj.ApplyOverrides(this);
+
             if (NewCrop != null)
             {
                 NewCropType Crop = new NewCropType();
@@ -110,6 +115,8 @@ namespace Models.PMF.OldPlant
             WriteSowReport(SowingData);
             OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
+
+
         #endregion
 
 
@@ -679,6 +686,12 @@ namespace Models.PMF.OldPlant
 
             foreach (Organ1 Organ in Organ1s)
                 Organ.OnHarvest(Harvest, BiomassRemovedData);
+
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.UnapplyOverrides(this);
         }
 
         public void OnEndCrop()
@@ -707,8 +720,7 @@ namespace Models.PMF.OldPlant
             Summary.WriteMessage(FullPath, string.Format("                      N  (kg/ha) = {0,22:F2}{1,24:F2}",
                                             AboveGroundBiomass.N, BelowGroundBiomass.N));
         }
-
-
+        
         /// <summary>
         /// Write a sowing report to summary file.
         /// </summary>
@@ -898,6 +910,8 @@ namespace Models.PMF.OldPlant
 
         #endregion
 
+        [Link]
+        Cultivars Cultivars = null;
 
     }
 }
