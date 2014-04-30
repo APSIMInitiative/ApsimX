@@ -31,7 +31,7 @@ namespace Models.PMF.OilPalm
         ISummary Summary = null;
 
         
-        public string Crop_Type = "";
+        public string Crop_Type = "OilPalm";
 
         public double height = 0.0;
 

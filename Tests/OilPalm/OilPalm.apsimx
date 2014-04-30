@@ -976,7 +976,6 @@
           <Value>30</Value>
         </Constant>
         <plant_status>out</plant_status>
-        <Crop_Type />
         <height>0</height>
         <cover_tot>0</cover_tot>
         <UnderstoryCoverMax>0</UnderstoryCoverMax>
