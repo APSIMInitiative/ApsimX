@@ -62,7 +62,7 @@ namespace Models.PMF.Organs
         protected double InitialWt = 0;
         private double InitStutFraction = 1;
 
-        public event BiomassRemovedDelegate BiomassRemoved;
+        //4public event BiomassRemovedDelegate BiomassRemoved;
 
         public override void Clear()
         {
@@ -138,7 +138,9 @@ namespace Models.PMF.Organs
             Dead.StructuralN += Loss.StructuralN;
             Dead.NonStructuralN += Loss.NonStructuralN;
 
-            double DetachedFrac = DetachmentRateFunction.Value;
+            double DetachedFrac = 0;
+            if (DetachmentRateFunction != null)
+               DetachedFrac = DetachmentRateFunction.Value;
             if (DetachedFrac > 0.0)
             {
                 double DetachedWt = Dead.Wt * DetachedFrac;
@@ -166,7 +168,7 @@ namespace Models.PMF.Organs
                 BiomassRemovedData.dlt_dm_n[0] = (float)DetachedN * 10f;
                 BiomassRemovedData.dlt_dm_p[0] = 0f;
                 BiomassRemovedData.fraction_to_residue[0] = 1f;
-                BiomassRemoved.Invoke(BiomassRemovedData);
+                //BiomassRemoved.Invoke(BiomassRemovedData);
 
             }            
             if (WaterContent != null)
