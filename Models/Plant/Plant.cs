@@ -90,7 +90,7 @@ namespace Models.PMF
         public NewCanopyType CanopyData {get{return LocalCanopyData;}}
         public NewCanopyType LocalCanopyData;
 
-        [Link]
+        [Link(IsOptional=true)]
         Cultivars Cultivars = null;
 
         #region Links
