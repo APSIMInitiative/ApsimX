@@ -114,6 +114,7 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
+    <Compile Include="Plant\Organs\TreeCanopyOLD.cs" />
     <Compile Include="PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />

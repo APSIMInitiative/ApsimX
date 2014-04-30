@@ -8,79 +8,41 @@ using Models.PMF.Functions.SupplyFunctions;
 namespace Models.PMF.Organs
 {
     [Serializable]
-    public class TreeCanopy : BaseOrgan, AboveGround
+    public class TreeCanopy : GenericOrgan, BelowGround
     {
-        [Link]
-        Plant Plant = null;
-
-        [Link]
-        Summary Summary = null;
-
-
 
         private double _WaterAllocation;
         private double EP = 0;
         private double PEP = 0;
-        private double NShortage = 0;   //if an N Shoratge how Much;
-
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-        
-        public event NewCanopyDelegate New_Canopy;
-
-        //[Input]
-        //public NewMetType MetData = null;
-
         public double _Height;         // Height of the canopy (mm) 
         public double _LAI;            // Leaf Area Index (Green)
         public double _LAIDead;        // Leaf Area Index (Dead)
         public double _Frgr;           // Relative Growth Rate Factor
-        
-        
-        [Link] Function DMDemandFunction = null;
-        [Link] Function NitrogenDemandSwitch = null;
-        [Link] Function NConc = null;
-        [Link] Function LAIFunction = null;
-        [Link] RUEModel Photosynthesis = null;
-
-
-
         public double K = 0.5;                      // Extinction Coefficient (Green)
         public double KDead = 0;                  // Extinction Coefficient (Dead)
-        public double DeltaBiomass = 1;
-        public double BiomassYesterday = 0;
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double Demand = 0;
-                if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.Value;
-                else
-                    Demand = 1;
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
+        public double DeltaBiomass = 0;
 
-        public override BiomassSupplyType DMSupply
+        public event NewPotentialGrowthDelegate NewPotentialGrowth;
+        public event NewCanopyDelegate New_Canopy;
+
+        [Link]
+        Function LAIFunction = null;
+        [Link]
+        RUEModel Photosynthesis = null;
+
+
+        [Units("MJ/m^2/day")]
+        [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
+        public double RadIntTot
         {
             get
             {
-                DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+                return CoverGreen * MetData.Radn;
             }
         }
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                Live.StructuralWt += value.Structural;
-            }
-        }
-        
         [Units("mm")]
         public override double WaterDemand { get { return PEP; } }
-        
+
         [Units("mm")]
         public double Transpiration { get { return EP; } }
         public override double WaterAllocation
@@ -92,7 +54,6 @@ namespace Models.PMF.Organs
                 EP = EP + _WaterAllocation;
             }
         }
-        
         public double Frgr
         {
             get { return _Frgr; }
@@ -102,11 +63,6 @@ namespace Models.PMF.Organs
                 PublishNewCanopyEvent();
             }
         }
-        
-
-        
- 
-        
         public double Fw
         {
             get
@@ -123,10 +79,6 @@ namespace Models.PMF.Organs
         {
             get { return 1; } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
         }
-
-
-
-        
         public double LAI
         {
             get
@@ -140,7 +92,6 @@ namespace Models.PMF.Organs
                 PublishNewCanopyEvent();
             }
         }
-        
         public double LAIDead
         {
             get { return _LAIDead; }
@@ -164,7 +115,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-              return 1.0 - Math.Exp(-K * LAI);
+                return 1.0 - Math.Exp(-K * LAI);
             }
         }
         public double CoverTot
@@ -175,21 +126,11 @@ namespace Models.PMF.Organs
         {
             get { return 1.0 - Math.Exp(-KDead * LAIDead); }
         }
-        [Units("MJ/m^2/day")]
-        [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
-        {
-            get
-            {
-                return CoverGreen * MetData.Radn;
-            }
-        }
         public override void OnSow(SowPlant2Type Data)
         {
             PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }
-
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
@@ -242,105 +183,28 @@ namespace Models.PMF.Organs
             }
         }
 
+        #region Arbitrator methods
+
         public override void DoPotentialDM()
         {
+            base.DoPotentialDM();
             if (LAIFunction != null)
                 _LAI = LAIFunction.Value;
         }
-        public override void OnCut()
+        public override void DoActualGrowth()
         {
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
-
-            Live.Clear();
-            Dead.Clear();
+            base.DoActualGrowth();
+            
         }
-
-
-        public override BiomassPoolType NDemand
+        public override BiomassSupplyType DMSupply
         {
             get
             {
-                double NDeficit = 0;
-                if (NitrogenDemandSwitch == null)
-                    NDeficit = 0;
-                if (NitrogenDemandSwitch != null)
-                {
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-                }
-                if (NConc == null)
-                    NDeficit = 0;
-                else
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N);
-                return new BiomassPoolType { Structural = NDeficit };
+                DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
             }
         }
-
-        /*  public override void DoActualGrowth()
-          {
-              // Need to limiet potential growth if low on N and water
-
-           return;
-          }
-          */
-
-
-        public override BiomassAllocationType NAllocation
-        {
-            set
-            {
-                if (NDemand.Structural == 0)
-                    if (value.Structural == 0) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of N");
-
-                if (value.Structural == 0.0)
-                { }// do nothing
-                else
-                {
-                    double NSupplyValue = value.Structural;
-
-                    if ((NSupplyValue > 0))
-                    {
-                        //What do we need to meat demand;
-                        double ReqN = NDemand.Structural;
-
-                        if (ReqN == NSupplyValue)
-                        {
-                            // All OK add and leave
-                            NShortage = 0;
-
-
-                            Live.StructuralN += ReqN;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
-                            return;
-
-                        }
-
-                        if (NSupplyValue > ReqN)
-                            throw new Exception("N allocated to Leaf left over after allocation");
-
-                        //Thorecticaly only option left
-                        if (NSupplyValue < ReqN)
-                        {
-                            NShortage = ReqN - NSupplyValue;
-                            Live.StructuralN += NSupplyValue;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
-                            return;
-                        }
-
-                        throw new Exception("UnKnown Leaf N allocation problem");
-                    }
-                }
-            }
-        }
-
-
+        
+        #endregion
     }
 }
