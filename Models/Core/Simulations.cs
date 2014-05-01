@@ -230,10 +230,12 @@ namespace Models.Core
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
+            jobManager.OnComplete += OnAllSimulationsHaveCompleted;
+
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
             {
-                // As we are going to run all simulations, we can delete all tables in the DataStore. This
+                // As we are goito run all simulations, we can delete all tables in the DataStore. This
                 // will clean up order of columns in the tables and removed unused ones.
                 DataStore store = new DataStore();
                 store.Connect(Path.ChangeExtension(FileName, ".db"), false);
@@ -254,11 +256,22 @@ namespace Models.Core
 
             foreach (Simulation simulation in simulationsToRun)
                 jobManager.AddJob(simulation);
+        }
 
-            foreach (Model model in AllModels)
-                model.OnAllCompleted();
+        /// <summary>
+        /// This gets called everytime a simulation completes. When all are done then
+        /// invoke each model's OnAllCompleted method.
+        /// </summary>
+        private void OnAllSimulationsHaveCompleted(object sender, Utility.JobManager.JobCompleteArgs e)
+        {
+            if (e.PercentComplete == 100)
+            {
+                Utility.JobManager jobManager = sender as Utility.JobManager;
+                jobManager.OnComplete -= OnAllSimulationsHaveCompleted;
 
-
+                foreach (Model model in AllModels)
+                    model.OnAllCompleted();
+            }
         }
     }
 }
