@@ -132,11 +132,17 @@ namespace Models
                             Locks.Add(Filename, new DbMutex());
 
                         Locks[Filename].Aquire();
-                        if (!TableExists("Simulations"))
-                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                        if (!TableExists("Messages"))
-                            Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                        Locks[Filename].Release();
+                        try
+                        {
+                            if (!TableExists("Simulations"))
+                                Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                            if (!TableExists("Messages"))
+                                Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                        }
+                        finally
+                        {
+                            Locks[Filename].Release();
+                        }
                     }
                 }
             }
@@ -202,11 +208,17 @@ namespace Models
             cmd += ")";
             cmd = cmd.Replace("[SimulationID] integer,[SimulationID] integer", "[SimulationID] integer");
             Locks[Filename].Aquire();
-            if (!TableExists(tableName))
-                Connection.ExecuteNonQuery(cmd);
-            else
-                AddMissingColumnsToTable(tableName, names, types);
-            Locks[Filename].Release(); 
+            try
+            {
+                if (!TableExists(tableName))
+                    Connection.ExecuteNonQuery(cmd);
+                else
+                    AddMissingColumnsToTable(tableName, names, types);
+            }
+            finally
+            {
+                Locks[Filename].Release();
+            }
         }
 
         /// <summary>
@@ -257,32 +269,37 @@ namespace Models
             // Create the table.
             CreateTable(tableName, names.ToArray(), types.ToArray());
 
-            Locks[Filename].Aquire(); 
-
-            // prepare the sql
-            names.Insert(0, "SimulationID");
-            IntPtr query = PrepareInsertIntoTable(tableName, names.ToArray());
-
-            // tell SQLite that we're beginning a transaction.
-            Connection.ExecuteNonQuery("BEGIN");
-
-            // Add all rows.
-            object[] values = new object[table.Columns.Count + 1];
-            values[0] = GetSimulationID(simulationName);
-            foreach (DataRow row in table.Rows)
+            Locks[Filename].Aquire();
+            try
             {
-                for (int i = 0; i < table.Columns.Count; i++)
-                    values[i + 1] = row[i];
-                Connection.BindParametersAndRunQuery(query, values);
+
+                // prepare the sql
+                names.Insert(0, "SimulationID");
+                IntPtr query = PrepareInsertIntoTable(tableName, names.ToArray());
+
+                // tell SQLite that we're beginning a transaction.
+                Connection.ExecuteNonQuery("BEGIN");
+
+                // Add all rows.
+                object[] values = new object[table.Columns.Count + 1];
+                values[0] = GetSimulationID(simulationName);
+                foreach (DataRow row in table.Rows)
+                {
+                    for (int i = 0; i < table.Columns.Count; i++)
+                        values[i + 1] = row[i];
+                    Connection.BindParametersAndRunQuery(query, values);
+                }
+
+                // tell SQLite we're ending our transaction.
+                Connection.ExecuteNonQuery("END");
+
+                // finalise our query.
+                Connection.Finalize(query);
             }
-
-            // tell SQLite we're ending our transaction.
-            Connection.ExecuteNonQuery("END");
-
-            // finalise our query.
-            Connection.Finalize(query);
-
-            Locks[Filename].Release(); 
+            finally
+            {
+                Locks[Filename].Release();
+            }
         }
 
         /// <summary>
@@ -411,11 +428,17 @@ namespace Models
         /// </summary>
         public void RunQueryWithNoReturnData(string sql)
         {
-            Locks[Filename].Aquire(); 
+            Locks[Filename].Aquire();
+            try
+            {
 
-            Connection.ExecuteNonQuery(sql);
+                Connection.ExecuteNonQuery(sql);
 
-            Locks[Filename].Release(); 
+            }
+            finally
+            {
+                Locks[Filename].Release();
+            }
         }
 
         /// <summary>
