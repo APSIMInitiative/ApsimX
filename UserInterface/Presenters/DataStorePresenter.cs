@@ -2,6 +2,7 @@
 using UserInterface.Views;
 using Models;
 using System.Data;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -22,11 +23,13 @@ namespace UserInterface.Presenters
 
             DataStoreView.OnTableSelected += OnTableSelected;
             DataStoreView.CreateNowClicked += OnCreateNowClicked;
+            DataStoreView.RunChildModelsClicked += OnRunChildModelsClicked;
 
             DataStoreView.Grid.ReadOnly = true;
             DataStoreView.Grid.AutoFilterOn = true;
             DataStoreView.PopulateTables(DataStore.TableNames);
         }
+
 
         /// <summary>
         /// Detach the model from the view.
@@ -35,6 +38,7 @@ namespace UserInterface.Presenters
         {
             DataStoreView.OnTableSelected -= OnTableSelected;
             DataStoreView.CreateNowClicked -= OnCreateNowClicked;
+            DataStoreView.RunChildModelsClicked -= OnRunChildModelsClicked;
         }
 
         /// <summary>
@@ -69,6 +73,25 @@ namespace UserInterface.Presenters
         void OnCreateNowClicked(object sender, EventArgs e)
         {
             DataStore.WriteOutputFile();
+        }
+
+        /// <summary>
+        /// User has clicked the run child models button.
+        /// </summary>
+        void OnRunChildModelsClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                // Run all child model post processors.
+                foreach (Model child in DataStore.Models)
+                    child.OnAllCompleted();
+            }
+            catch (Exception err)
+            {
+                ExplorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
+            }
+            DataStoreView.PopulateTables(DataStore.TableNames);
+            ExplorerPresenter.ShowMessage("DataStore post processing models have completed", Models.DataStore.ErrorLevel.Information);
         }
 
     }
