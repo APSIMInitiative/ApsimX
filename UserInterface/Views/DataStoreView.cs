@@ -22,6 +22,7 @@ namespace UserInterface.Views
       
         event TableSelectedDelegate OnTableSelected;
         event EventHandler CreateNowClicked;
+        event EventHandler RunChildModelsClicked;
     }
 
 
@@ -30,6 +31,7 @@ namespace UserInterface.Views
 
         public event TableSelectedDelegate OnTableSelected;
         public event EventHandler CreateNowClicked;
+        public event EventHandler RunChildModelsClicked;
 
         /// <summary>
         /// constructor
@@ -81,6 +83,15 @@ namespace UserInterface.Views
         {
             if (CreateNowClicked != null)
                 CreateNowClicked(this, e);
+        }
+
+        /// <summary>
+        /// The user has clicked the run child models button.
+        /// </summary>
+        private void OnRunChildModelsClick(object sender, EventArgs e)
+        {
+            if (RunChildModelsClicked != null)
+                RunChildModelsClicked.Invoke(this, e);
         }
         
     }

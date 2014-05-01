@@ -137,7 +137,7 @@ namespace UserInterface.Views
                 else
                     NodeToSelect = FindNode(value);
 
-                if (TreeView.SelectedNode != NodeToSelect)
+                if (NodeToSelect != null && TreeView.SelectedNode != NodeToSelect)
                 {
                     TreeView.SelectedNode = NodeToSelect;
                     if (NodeSelected != null)
