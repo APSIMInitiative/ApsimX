@@ -115,7 +115,8 @@
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
-    <Compile Include="PredictedObserved.cs" />
+    <Compile Include="PostSimulationTools\TimeSeriesStats.cs" />
+    <Compile Include="PostSimulationTools\PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />
     <Compile Include="Core\Scope.cs" />
@@ -133,6 +134,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PostSimulationTools\Regression.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
@@ -141,7 +143,7 @@
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
-    <Compile Include="Input.cs" />
+    <Compile Include="PostSimulationTools\Input.cs" />
     <Compile Include="Irrigation.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />

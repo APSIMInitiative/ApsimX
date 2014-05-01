@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     /// </summary>
     public class PredictedObservedPresenter : IPresenter
     {
-        private PredictedObserved PredictedObserved;
+        private Models.PostSimulationTools.PredictedObserved PredictedObserved;
         private IPredictedObservedView View;
         private ExplorerPresenter ExplorerPresenter;
         private DataStore DataStore = new DataStore();
@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            PredictedObserved = model as PredictedObserved;
+            PredictedObserved = model as Models.PostSimulationTools.PredictedObserved;
             View = view as IPredictedObservedView;
             ExplorerPresenter = explorerPresenter;
 
