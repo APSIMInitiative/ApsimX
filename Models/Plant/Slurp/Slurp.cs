@@ -60,6 +60,9 @@ namespace Models.PMF.Slurp
         private double RootNConcentration = 0.0;
         private double KNO3 = 0.0;
 
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+        
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnCommencing()
         {
@@ -77,16 +80,16 @@ namespace Models.PMF.Slurp
                 StartSlurp.Invoke(this, new EventArgs());
 
             //Send a NewCanopy event to MicroClimate
-            NewCanopyType NewCanopyType = new NewCanopyType();
-            NewCanopyType.cover = CoverGreen;
-            NewCanopyType.cover_tot = CoverTot;
-            NewCanopyType.depth = Depth;
-            NewCanopyType.height = Height;
-            NewCanopyType.lai = LAI;
-            NewCanopyType.lai_tot = LAItot;
-            NewCanopyType.sender = "Slurp";
+            NewCanopyType LocalCanopyData = new NewCanopyType();
+            LocalCanopyData.cover = CoverGreen;
+            LocalCanopyData.cover_tot = CoverTot;
+            LocalCanopyData.depth = Depth;
+            LocalCanopyData.height = Height;
+            LocalCanopyData.lai = LAI;
+            LocalCanopyData.lai_tot = LAItot;
+            LocalCanopyData.sender = "Slurp";
             if (NewCanopy != null)
-                NewCanopy.Invoke(NewCanopyType);
+                NewCanopy.Invoke(LocalCanopyData);
         }
 
         [EventSubscribe("MiddleOfDay")]

@@ -61,8 +61,37 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  &lt;Plant&gt;
+        ///    &lt;Name&gt;Potato&lt;/Name&gt;
+        ///          &lt;Phenology&gt;
+        ///            &lt;Name&gt;Phenology&lt;/Name&gt;
+        ///            &lt;StageBasedInterpolation&gt;
+        ///              &lt;Name&gt;StageCode&lt;/Name&gt;
+        ///              &lt;Stages&gt;
+        ///                &lt;string&gt;Planting&lt;/string&gt;
+        ///                &lt;string&gt;Peeping&lt;/string&gt;
+        ///                &lt;string&gt;Emergence&lt;/string&gt;
+        ///                &lt;string&gt;TuberInitiation&lt;/string&gt;
+        ///                &lt;string&gt;FinalLeaf&lt;/string&gt;
+        ///                &lt;string&gt;FullSenescence&lt;/string&gt;
+        ///                &lt;string&gt;Maturity&lt;/string&gt;
+        ///   [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Potato {
+            get {
+                return ResourceManager.GetString("Potato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Plant15&gt;
         ///  &lt;Name&gt;Wheat&lt;/Name&gt;
+        ///  &lt;AutoHarvest&gt;false&lt;/AutoHarvest&gt;
+        ///  &lt;CropType&gt;Wheat&lt;/CropType&gt;
+        ///  &lt;EOCropFactor&gt;1.5&lt;/EOCropFactor&gt;
+        ///  &lt;NSupplyPreference&gt;active&lt;/NSupplyPreference&gt;
+        ///  &lt;DoRetranslocationBeforeNDemand&gt;false&lt;/DoRetranslocationBeforeNDemand&gt;
+        ///  &lt;RemovedByAnimal /&gt;
         ///  &lt;Population1&gt;
         ///    &lt;Name&gt;Population&lt;/Name&gt;
         ///    &lt;PhaseBasedSwitch&gt;
@@ -70,17 +99,7 @@ namespace Models.Properties {
         ///      &lt;Start&gt;Emergence&lt;/Start&gt;
         ///      &lt;End&gt;Flowering&lt;/End&gt;
         ///    &lt;/PhaseBasedSwitch&gt;
-        ///    &lt;SoilTemperatureWeightedFunction&gt;
-        ///      &lt;Name&gt;DeathHighTemperatureDuringEmergence&lt;/Name&gt;
-        ///      &lt;XYPairs&gt;
-        ///        &lt;Name&gt;XYPairs&lt;/Name&gt;
-        ///        &lt;X&gt;
-        ///          &lt;double&gt;55&lt;/double&gt;
-        ///          &lt;double&gt;60&lt;/double&gt;
-        ///        &lt;/X&gt;
-        ///        &lt;Y&gt;
-        ///          &lt;double&gt;0&lt;/double&gt;
-        ///       [rest of string was truncated]&quot;;.
+        ///    &lt;SoilTemperatureWeightedFunc [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {

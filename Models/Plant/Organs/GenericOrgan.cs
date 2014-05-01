@@ -24,6 +24,9 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true, MustBeChild = true)]
         Function SenescenceRateFunction = null;
         [Link(IsOptional = true, MustBeChild = true)]
+        Function DetachmentRateFunction = null;
+
+        [Link(IsOptional = true, MustBeChild = true)]
         Function NReallocationFactor = null;
         [Link(IsOptional = true, MustBeChild = true)]
         Function NRetranslocationFactor = null;
@@ -58,6 +61,8 @@ namespace Models.PMF.Organs
         protected double NonStructuralDMDemand = 0;
         protected double InitialWt = 0;
         private double InitStutFraction = 1;
+
+        //4public event BiomassRemovedDelegate BiomassRemoved;
 
         public override void Clear()
         {
@@ -117,14 +122,59 @@ namespace Models.PMF.Organs
         public override void DoActualGrowth()
         {
             base.DoActualGrowth();
+            Biomass Loss = new Biomass();
+            Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
+            Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
+            Loss.StructuralN = Live.StructuralN * SenescenceRate;
+            Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
 
-            Live.StructuralWt *= (1.0 - SenescenceRate);
-            Live.NonStructuralWt *= (1.0 - SenescenceRate);
-            Live.StructuralN *= (1.0 - SenescenceRate);
-            Live.NonStructuralN *= (1.0 - SenescenceRate);
+            Live.StructuralWt -= Loss.StructuralWt;
+            Live.NonStructuralWt -= Loss.NonStructuralWt;
+            Live.StructuralN -= Loss.StructuralN;
+            Live.NonStructuralN -= Loss.NonStructuralN;
 
+            Dead.StructuralWt += Loss.StructuralWt;
+            Dead.NonStructuralWt += Loss.NonStructuralWt;
+            Dead.StructuralN += Loss.StructuralN;
+            Dead.NonStructuralN += Loss.NonStructuralN;
+
+            double DetachedFrac = 0;
+            if (DetachmentRateFunction != null)
+               DetachedFrac = DetachmentRateFunction.Value;
+            if (DetachedFrac > 0.0)
+            {
+                double DetachedWt = Dead.Wt * DetachedFrac;
+                double DetachedN = Dead.N * DetachedFrac;
+
+                Dead.StructuralWt *= (1 - DetachedFrac);
+                Dead.StructuralN *= (1 - DetachedFrac);
+                Dead.NonStructuralWt *= (1 - DetachedFrac);
+                Dead.NonStructuralN *= (1 - DetachedFrac);
+                Dead.MetabolicWt *= (1 - DetachedFrac);
+                Dead.MetabolicN *= (1 - DetachedFrac);
+
+
+                BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
+
+                BiomassRemovedData.crop_type = Plant.CropType;
+                BiomassRemovedData.dm_type = new string[1];
+                BiomassRemovedData.dlt_crop_dm = new float[1];
+                BiomassRemovedData.dlt_dm_n = new float[1];
+                BiomassRemovedData.dlt_dm_p = new float[1];
+                BiomassRemovedData.fraction_to_residue = new float[1];
+
+                BiomassRemovedData.dm_type[0] = "leaf";
+                BiomassRemovedData.dlt_crop_dm[0] = (float)DetachedWt * 10f;
+                BiomassRemovedData.dlt_dm_n[0] = (float)DetachedN * 10f;
+                BiomassRemovedData.dlt_dm_p[0] = 0f;
+                BiomassRemovedData.fraction_to_residue[0] = 1f;
+                //BiomassRemoved.Invoke(BiomassRemovedData);
+
+            }            
             if (WaterContent != null)
                 LiveFWt = Live.Wt / (1 - WaterContent.Value);
+
+
         }
    
         #endregion

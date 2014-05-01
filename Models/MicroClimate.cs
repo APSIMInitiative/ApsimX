@@ -61,6 +61,8 @@ namespace Models
     {
         public KeyValueArraypair_listType[] pair_list;
     }
+    
+    [Serializable]
     public class NewCanopyType
     {
         public string sender = "";

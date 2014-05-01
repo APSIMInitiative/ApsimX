@@ -135,6 +135,8 @@ namespace Models.Soils
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
+            wfpsN2N2O_x = new double[] { 22, 88 };
+            wfpsN2N2O_y = new double[] { 0.1, 1 };
         }
 
         #region Events which we publish

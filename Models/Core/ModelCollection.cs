@@ -157,6 +157,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
+        [XmlElement(typeof(Models.PMF.Cultivars))]
         public List<Model> Models { get; set; }
 
         /// <summary>

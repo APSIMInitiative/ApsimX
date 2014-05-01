@@ -16,7 +16,10 @@ namespace Models.PMF.OilPalm
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OilPalm: ModelCollection, ICrop
     {
-        
+
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+
         public string plant_status = "out";
         [Link]
         Clock Clock = null;
@@ -28,7 +31,7 @@ namespace Models.PMF.OilPalm
         ISummary Summary = null;
 
         
-        public string Crop_Type = "";
+        public string Crop_Type = "OilPalm";
 
         public double height = 0.0;
 
