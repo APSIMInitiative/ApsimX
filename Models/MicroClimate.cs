@@ -484,11 +484,16 @@ namespace Models
             ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
         }
 
-        public override void OnCommencing()
+        public override void OnLoaded()
         {
             ComponentData = new List<ComponentDataStruct>();
             foreach (ComponentDataStruct c in ComponentData)
                 Clear(c);
+            AddCropTypes();
+        }
+
+        public override void OnCommencing()
+        {
             _albedo = albedo;
             windspeed_checked = false;
             netLongWave = 0;
@@ -502,7 +507,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
-            AddCropTypes();
+           
         }
 
 
@@ -609,7 +614,7 @@ namespace Models
             SetupCropTypes("crop", "Crop");
             SetupCropTypes("broccoli", "Crop");
             SetupCropTypes("tree", "Tree");
-            SetupCropTypes("grandis", "Tree");
+            SetupCropTypes("eucalyptus", "Tree");
             SetupCropTypes("oilpalm", "Tree");
             SetupCropTypes("oilmallee", "Tree");
             SetupCropTypes("globulus", "Tree");
@@ -643,6 +648,8 @@ namespace Models
             SetupCropTypes("canola", "Crop");
             SetupCropTypes("kale2", "Crop");
             SetupCropTypes("Carrots4", "Crop");
+            SetupCropTypes("Slurp", "Crop");
+            SetupCropTypes("AgPasture", "Crop");
         }
 
         private void SetupCropTypes(string Name, string Type)
