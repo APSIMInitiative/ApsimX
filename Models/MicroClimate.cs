@@ -61,6 +61,8 @@ namespace Models
     {
         public KeyValueArraypair_listType[] pair_list;
     }
+    
+    [Serializable]
     public class NewCanopyType
     {
         public string sender = "";
@@ -482,10 +484,16 @@ namespace Models
             ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
         }
 
-        public override void OnCommencing()
+        public override void OnLoaded()
         {
+            ComponentData = new List<ComponentDataStruct>();
             foreach (ComponentDataStruct c in ComponentData)
                 Clear(c);
+            AddCropTypes();
+        }
+
+        public override void OnCommencing()
+        {
             _albedo = albedo;
             windspeed_checked = false;
             netLongWave = 0;
@@ -499,7 +507,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
-            AddCropTypes();
+           
         }
 
 
@@ -561,11 +569,14 @@ namespace Models
             public double Height;
             [XmlIgnore]
             public double Depth;
-            public double Albedo = 0.15;
-            public double Emissivity = 0.96;
-            
+            [XmlIgnore]
+            public double Albedo {get; set;}
+            [XmlIgnore]
+            public double Emissivity {get; set;}
+            [XmlIgnore]
             public double Gsmax {get; set;}
-            public double R50 = 200;
+            [XmlIgnore]
+            public double R50 {get; set;}
             [XmlIgnore]
             public double Frgr;
             [XmlIgnore]
@@ -603,7 +614,7 @@ namespace Models
             SetupCropTypes("crop", "Crop");
             SetupCropTypes("broccoli", "Crop");
             SetupCropTypes("tree", "Tree");
-            SetupCropTypes("grandis", "Tree");
+            SetupCropTypes("eucalyptus", "Tree");
             SetupCropTypes("oilpalm", "Tree");
             SetupCropTypes("oilmallee", "Tree");
             SetupCropTypes("globulus", "Tree");
@@ -637,6 +648,8 @@ namespace Models
             SetupCropTypes("canola", "Crop");
             SetupCropTypes("kale2", "Crop");
             SetupCropTypes("Carrots4", "Crop");
+            SetupCropTypes("Slurp", "Crop");
+            SetupCropTypes("AgPasture", "Crop");
         }
 
         private void SetupCropTypes(string Name, string Type)
@@ -644,31 +657,42 @@ namespace Models
             ComponentDataStruct CropType = new ComponentDataStruct();
             CropType.Name = Name;
 
+            //Set defalst
+            CropType.Albedo = 0.15;
+            CropType.Gsmax = 0.01;
+            CropType.Emissivity = 0.96;
+            CropType.R50 = 200;
+
+            //Override type specific values
             if (Type.Equals("Crop"))
             {
                 CropType.Albedo = 0.26;
                 CropType.Gsmax=0.011;
             }
+            if (Type.Equals("Potato"))
+            {
+                CropType.Albedo = 0.26;
+                CropType.Gsmax = 0.03;
+            }
             else if (Type.Equals("Grass"))
             {
-                CropType.Albedo=0.23;
+                CropType.Albedo = 0.23;
             }
             else if (Type.Equals("C4grass"))
             {
-                CropType.Albedo=0.23;
-                CropType.Gsmax=0.015;
-                CropType.R50=150;
+                CropType.Albedo = 0.23;
+                CropType.Gsmax = 0.015;
+                CropType.R50 = 150;
             }
             else if (Type.Equals("Tree"))
             {
-                CropType.Albedo=0.15;
-                CropType.Gsmax=0.005;
+                CropType.Albedo = 0.15;
+                CropType.Gsmax = 0.005;
             }
             else if (Type.Equals("Tree2"))
             {
-                CropType.Albedo=0.15;
-                CropType.Gsmax=0.01;
-                CropType.R50=100;
+                CropType.Albedo = 0.15;
+                CropType.R50 = 100;
             }
 
             ComponentData.Add(CropType);
@@ -699,6 +723,7 @@ namespace Models
         private int numLayers;
 
         [XmlElement("ComponentData")]
+        [XmlIgnore]
         public List<ComponentDataStruct> ComponentData { get; set; }
 
         #endregion
@@ -769,7 +794,7 @@ namespace Models
             if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
             {
                 // crop type
-                ComponentData.Add(new ComponentDataStruct() { Name = name, Albedo = 0.26, Gsmax = 0.011 });
+                ComponentData.Add(new ComponentDataStruct());
                 return ComponentData.Count - 1;
             }
             return -1;

@@ -10,7 +10,6 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 
-
 namespace Models.PMF.OldPlant
 {
     [Serializable]
@@ -95,6 +94,12 @@ namespace Models.PMF.OldPlant
             if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
 
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + cultivar);
+            cultivarObj.ApplyOverrides(this);
+
             if (NewCrop != null)
             {
                 NewCropType Crop = new NewCropType();
@@ -110,6 +115,8 @@ namespace Models.PMF.OldPlant
             WriteSowReport(SowingData);
             OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
+
+
         #endregion
 
 
@@ -193,7 +200,31 @@ namespace Models.PMF.OldPlant
         
         public event NullTypeDelegate Harvesting;
 
-        
+        public double cover_green 
+        { 
+            get 
+            {
+                double green_cover = 0;
+                foreach (Organ1 Organ in Organ1s)
+                    green_cover += Organ.CoverGreen; //Fix me maybe.  Neil thinks this looks wrong 
+                return green_cover;
+            }
+        }
+         
+        public double cover_tot
+        {
+            get
+            {
+                double cover_sen = 0;
+                foreach (Organ1 Organ in Organ1s)
+                    cover_sen += Organ.CoverSen;
+                return cover_green + cover_sen;
+            }
+        }
+
+        public double height
+        { get { return Stem.Height; } }
+
         public string plant_status
         {
             get
@@ -507,6 +538,9 @@ namespace Models.PMF.OldPlant
             DoBiomassRemoved();
         }
 
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+
         private void UpdateCanopy()
         {
             // PUBLISH New_Canopy event
@@ -514,26 +548,25 @@ namespace Models.PMF.OldPlant
             double cover_sen = 0;
             foreach (Organ1 Organ in Organ1s)
             {
-                cover_green += Organ.CoverGreen;
+                cover_green += Organ.CoverGreen; //Fix me maybe.  Neil thinks this looks wrong 
                 cover_sen += Organ.CoverSen;
             }
             double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
-            NewCanopyType NewCanopyData = new NewCanopyType();
-            NewCanopyData.height = (float)Stem.Height;
-            NewCanopyData.depth = (float)Stem.Height;
-            NewCanopyData.lai = (float)Leaf.LAI;
-            NewCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
-            NewCanopyData.cover = (float)cover_green;
-            NewCanopyData.cover_tot = (float)cover_tot;
-            NewCanopyData.sender = Name;
+            LocalCanopyData.height = (float)Stem.Height;
+            LocalCanopyData.depth = (float)Stem.Height;
+            LocalCanopyData.lai = (float)Leaf.LAI;
+            LocalCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
+            LocalCanopyData.cover = (float)cover_green;
+            LocalCanopyData.cover_tot = (float)cover_tot;
+            LocalCanopyData.sender = Name;
 
-            NewCanopy.Invoke(NewCanopyData);
-            Util.Debug("NewCanopy.height=%f", NewCanopyData.height);
-            Util.Debug("NewCanopy.depth=%f", NewCanopyData.depth);
-            Util.Debug("NewCanopy.lai=%f", NewCanopyData.lai);
-            Util.Debug("NewCanopy.lai_tot=%f", NewCanopyData.lai_tot);
-            Util.Debug("NewCanopy.cover=%f", NewCanopyData.cover);
-            Util.Debug("NewCanopy.cover_tot=%f", NewCanopyData.cover_tot);
+            NewCanopy.Invoke(LocalCanopyData);
+            Util.Debug("NewCanopy.height=%f", LocalCanopyData.height);
+            Util.Debug("NewCanopy.depth=%f", LocalCanopyData.depth);
+            Util.Debug("NewCanopy.lai=%f", LocalCanopyData.lai);
+            Util.Debug("NewCanopy.lai_tot=%f", LocalCanopyData.lai_tot);
+            Util.Debug("NewCanopy.cover=%f", LocalCanopyData.cover);
+            Util.Debug("NewCanopy.cover_tot=%f", LocalCanopyData.cover_tot);
         }
 
         private void DoBiomassRemoved()
@@ -653,6 +686,12 @@ namespace Models.PMF.OldPlant
 
             foreach (Organ1 Organ in Organ1s)
                 Organ.OnHarvest(Harvest, BiomassRemovedData);
+
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.UnapplyOverrides(this);
         }
 
         public void OnEndCrop()
@@ -681,8 +720,7 @@ namespace Models.PMF.OldPlant
             Summary.WriteMessage(FullPath, string.Format("                      N  (kg/ha) = {0,22:F2}{1,24:F2}",
                                             AboveGroundBiomass.N, BelowGroundBiomass.N));
         }
-
-
+        
         /// <summary>
         /// Write a sowing report to summary file.
         /// </summary>
@@ -872,6 +910,8 @@ namespace Models.PMF.OldPlant
 
         #endregion
 
+        [Link]
+        Cultivars Cultivars = null;
 
     }
 }

@@ -33,6 +33,7 @@
             this.CreateButton = new System.Windows.Forms.Button();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.GridView = new GridView();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.CreateButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -92,6 +94,16 @@
             this.GridView.Size = new System.Drawing.Size(465, 349);
             this.GridView.TabIndex = 5;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(135, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(163, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Run DataStore child models";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnRunChildModelsClick);
+            // 
             // DataStoreView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -115,5 +127,6 @@
         private System.Windows.Forms.Button CreateButton;
         private System.Windows.Forms.Splitter splitter1;
         private GridView GridView;
+        private System.Windows.Forms.Button button1;
     }
 }

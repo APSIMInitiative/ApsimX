@@ -15,9 +15,6 @@ namespace Models.SurfaceOM
     public partial class SurfaceOrganicMatter : Model
     {
         [Link]
-        SoilWater SoilWater = null;
-
-        [Link]
         Soil Soil = null;
 
         [Link]
@@ -337,7 +334,7 @@ namespace Models.SurfaceOM
             //Get_real_var(unknown_module, "eos", "(mm)", g.eos, numvals, 0.0, 100.0);
             //Get_real_array(unknown_module, "dlayer", max_layer, "(mm)",g.dlayer, numvals, 1.0, 10000.0);
 
-            g.eos = SoilWater.eos;
+            g.eos = Soil.SoilWater.eos;
             g.dlayer = Soil.Thickness;
 
             surfom_check_pond();

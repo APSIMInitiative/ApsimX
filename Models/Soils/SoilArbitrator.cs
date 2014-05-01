@@ -34,7 +34,7 @@ namespace Models.Soils
         [Link]
         Simulation paddock;
 
-        SoilWater SoilWat;
+        Soil Soil;
         RootSystem RootData;
         DataTable AllRootSystems;
 
@@ -105,10 +105,10 @@ namespace Models.Soils
                             RootData.Zones[0].ll = (double[])Root.Get("ll");
                             RootData.Zones[0].kl = (double[])Root.Get("kl");
 
-                            SoilWat = (SoilWater)m.Parent.Find(typeof(SoilWater));
+                            Soil = (Soil)m.Parent.Find(typeof(Soil));
                             SWStrength.Add(m.Name, 1);
 
-                            RootData.Zones[0].dlayer = (double[])SoilWat.Get("dlayer");
+                            RootData.Zones[0].dlayer = (double[])Soil.SoilWater.Get("dlayer");
 
                             AllRootSystems.Rows.Add(RootData.Zones[0].ZoneName, m.Name, RootData.SWDemand, SWStrength, RootData.Zones[0], true);
                             NumLayers = RootData.Zones[0].kl.Length;
@@ -128,9 +128,9 @@ namespace Models.Soils
 //                if (fieldProps == null)
 //                    throw new Exception("Could not find FieldProps component in field " + PaddockName);
 
-                SoilWater Soil = (SoilWater)p.Find(typeof(SoilWater));
-                double[] SWDep = (double[])Soil.Get("sw_dep");
-                double[] dlayer = (double[])Soil.Get("dlayer");
+                Soil Soil = (Soil)p.Find(typeof(Soil));
+                double[] SWDep = (double[])Soil.SoilWater.Get("sw_dep");
+                double[] dlayer = (double[])Soil.SoilWater.Get("dlayer");
                 double[] CropSWDemand = new double[RootZones.Count()];
                 for (int i = 0; i < RootZones.Count(); i++) //get demand for all crops in paddock using relative SW strength
                 {
@@ -193,7 +193,7 @@ namespace Models.Soils
                         SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
                     }
 
-                    Soil.Set("sw_dep", SWDep);
+                    Soil.SoilWater.Set("sw_dep", SWDep);
                 } while (Utility.Math.Sum(LastCropSWDemand) != Utility.Math.Sum(CropSWDemand) && Utility.Math.Sum(LastSWSupply) != Utility.Math.Sum(SWSupply));
             }
         }
@@ -330,15 +330,15 @@ namespace Models.Soils
             double[] SWDeps = new double[RootData.Zones.Length];
             double TotalSW;
             Model p;
-            SoilWater SoilWat;
+            Soil Soil;
 
             for (int i = 0; i < ZoneNames.Length; i++)
             {
                 double[] SWlayers;
                 ZoneNames[i] = RootData.Zones[i].ZoneName;
                 p = (Model)paddock.Find(ZoneNames[i]);
-                SoilWat = (SoilWater)p.Find(typeof(SoilWater));
-                SWlayers = (double[])SoilWat.Get("sw_dep");
+                Soil = (Soil)p.Find(typeof(Soil));
+                SWlayers = (double[])Soil.SoilWater.Get("sw_dep");
                 SWDeps[i] = (double)Utility.Math.Sum(SWlayers);
             }
 

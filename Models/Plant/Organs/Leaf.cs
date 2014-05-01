@@ -306,6 +306,9 @@ namespace Models.PMF.Organs
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
+        [Description("This needs to be here so soilwater can get hight from leaf")]
+        public double Height { get { return Structure.Height; } }
+
         [Units("mm^2/g")]
         public double SpecificArea
         {
@@ -1285,15 +1288,14 @@ namespace Models.PMF.Organs
         {
             if (NewCanopy != null)
             {
-                NewCanopyType Canopy = new NewCanopyType();
-                Canopy.sender = Plant.Name;
-                Canopy.lai = (float)LAI;
-                Canopy.lai_tot = (float)(LAI + LAIDead);
-                Canopy.height = (float)Structure.Height;
-                Canopy.depth = (float)Structure.Height;
-                Canopy.cover = (float)CoverGreen;
-                Canopy.cover_tot = (float)CoverTotal;
-                NewCanopy.Invoke(Canopy);
+                Plant.LocalCanopyData.sender = Plant.Name;
+                Plant.LocalCanopyData.lai = (float)LAI;
+                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                Plant.LocalCanopyData.height = (float)Structure.Height;
+                Plant.LocalCanopyData.depth = (float)Structure.Height;
+                Plant.LocalCanopyData.cover = (float)CoverGreen;
+                Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
+                NewCanopy.Invoke(Plant.LocalCanopyData);
             }
         }
 

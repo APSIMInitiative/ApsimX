@@ -48,6 +48,9 @@ namespace Models.Soils
         private SoilWatTillageType SoilWatTillageType = null;
 
         [Link]
+        Simulation paddock;
+
+        [Link]
         private Soil Soil = null;
 
         [Link]
@@ -1221,52 +1224,33 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-            //also called in prepare event as well
-
-            //*+  Purpose
-            //*      get the value/s of a variable/array.
-
-            //*+  Mission Statement
-            //*     Get crop Variables
-
-#if (APSIMX == false)
-        Double coverLive;
-        Double coverTotal;
-        Double height;
-
-        bool foundCL;
-        bool foundCT;
-        bool foundH;
-
         int i = 0;
-        foreach (Component Comp in MyPaddock.Crops)
-        {
-            foundCL = MyPaddock.Get(Comp.FullName + ".cover_green", out coverLive);
-            foundCT = MyPaddock.Get(Comp.FullName + ".cover_tot", out coverTotal);
-            foundH = MyPaddock.Get(Comp.FullName + ".Height", out height);
+        Model[] models = paddock.FindAll(typeof(ICrop));
+        
+            foreach (Model m in models)
+            {
+                NumberOfCrops = 0;
+                Array.Resize(ref cover_green, NumberOfCrops + 1);
+                Array.Resize(ref cover_tot, NumberOfCrops + 1);
+                Array.Resize(ref canopy_height, NumberOfCrops + 1);
 
-            ////must have at least these three variables to be considered a "crop" component.
-            if (foundCL && foundCT && foundH)
+                ICrop Crop = m as ICrop;
+                if (Crop.CanopyData != null)
                 {
-                num_crops = i + 1;
-                Array.Resize(ref cover_green, num_crops);
-                Array.Resize(ref cover_tot, num_crops);
-                Array.Resize(ref canopy_height, num_crops);
-                cover_green[i] = coverLive;
-                cover_tot[i] = coverTotal;
-                canopy_height[i] = height;
-                i++;
+                    cover_green[NumberOfCrops] = Crop.CanopyData.cover;
+                    cover_tot[NumberOfCrops] = Crop.CanopyData.cover_tot;
+                    canopy_height[NumberOfCrops] = Crop.CanopyData.height;
                 }
-            else
+                else
                 {
-                throw new Exception("Crop Module: " +  Comp.FullName  + 
-                        " is missing one/or more of the following 3 output variables (cover_green, cover_tot, height) " + Environment.NewLine +
-                        "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    cover_green[NumberOfCrops] = 0;
+                    cover_tot[NumberOfCrops] = 0;
+                    canopy_height[NumberOfCrops] = 0;
                 }
-        }
-#endif
+                NumberOfCrops += 1;     
+            }
+         }
 
-        }
 
 
         private void soilwat2_get_solute_variables()
@@ -1407,7 +1391,7 @@ namespace Models.Soils
         private double[] cover_tot = null;     //! total canopy cover of crops (0-1)
         private double[] cover_green = null;   //! green canopy cover of crops (0-1)
         private double[] canopy_height = null; //! canopy heights of each crop (mm)
-        private int num_crops = 0;                //! number of crops ()
+        private int NumberOfCrops = 0;                //! number of crops ()
 
         //TILLAGE EVENT
         private double tillage_cn_red;   //! reduction in CN due to tillage ()   //can either come from the manager module or from the sim file
@@ -1548,7 +1532,7 @@ namespace Models.Soils
             cover_tot = null;                //! total canopy cover of crops (0-1)
             cover_green = null;              //! green canopy cover of crops (0-1)
             canopy_height = null;            //! canopy heights of each crop (mm)
-            num_crops = 0;                          //! number of crops ()
+            NumberOfCrops = 0;                          //! number of crops ()
             sumes1 = 0.0;                           //! cumulative soil evaporation in stage 1 (mm)
             sumes2 = 0.0;                           //! cumulative soil evaporation in stage 2 (mm)
 
@@ -1613,7 +1597,7 @@ namespace Models.Soils
             infiltration = 0.0;
             runoff = 0.0;
             runoff_pot = 0.0;
-            num_crops = 0;
+            NumberOfCrops = 0;
             //obsrunoff = 0.0;
             pond_evap = 0.0;                    //! evaporation from the pond surface (mm)
             real_eo = 0.0;                      //! eo determined before any ponded water is evaporated (mm)
@@ -2461,7 +2445,7 @@ namespace Models.Soils
             //!    0 (no effect) to 1 (full effect)
 
             cover_surface_crop = 0.0;
-            for (crop = 0; crop < num_crops; crop++)
+            for (crop = 0; crop < NumberOfCrops; crop++)
             {
                 if (canopy_height[crop] >= 0.0)
                 {
@@ -2698,7 +2682,7 @@ namespace Models.Soils
             //                ! function of radiation, albedo, and temp.
 
             cover_green_sum = 0.0;
-            for (int crop = 0; crop < num_crops; ++crop)
+            for (int crop = 0; crop < NumberOfCrops; ++crop)
                 cover_green_sum = 1.0 - (1.0 - cover_green_sum) * (1.0 - cover_green[crop]);
 
             albedo = max_albedo - (max_albedo - Salb) * (1.0 - cover_green_sum);
@@ -2787,7 +2771,7 @@ namespace Models.Soils
             //!              ...maximum reduction (at cover =1.0) is 0.183.
 
             cover_tot_sum = 0.0;
-            for (int i = 0; i < num_crops; i++)
+            for (int i = 0; i < NumberOfCrops; i++)
                 cover_tot_sum = 1.0 - (1.0 - cover_tot_sum) * (1.0 - cover_tot[i]);
             eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * cover_tot_sum);
 

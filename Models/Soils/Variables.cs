@@ -35,15 +35,6 @@ namespace Models.Soils
         private Soil Soil = null;
 
         [Link]
-        private Water Water = null;
-
-        [Link]
-        private Analysis Analysis = null;
-
-        [Link]
-        private SoilWater SoilWater = null;
-
-        [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
 
         #endregion
@@ -370,7 +361,7 @@ namespace Models.Soils
         /// If not given fom will be distributed over the whole soil profile
         /// Distribution is homogenous over this depth
         /// </remarks>
-        private double iniFomDepth = 3000;
+        private double iniFomDepth;
         
         [XmlIgnore]
         public double root_depth
@@ -1187,14 +1178,14 @@ namespace Models.Soils
         /// Parameter A in the N2N2O function
         /// </summary>
         [XmlIgnore]
-        public double N2N2O_parmA = 0;
+        public double N2N2O_parmA = 0.16;
 
         /// <summary>
         /// Parameter B in the N2N2O function
         /// </summary>
 
         [XmlIgnore]
-        public double N2N2O_parmB = 0;
+        public double N2N2O_parmB = -0.80;
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for denitrification gas ratio
@@ -2316,7 +2307,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Total net N mineralised (soil plus residues)")]
-        double[] dlt_n_min_tot
+        public double[] dlt_n_min_tot
         {
             get
             {

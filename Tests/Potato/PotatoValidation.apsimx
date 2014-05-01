@@ -6,149 +6,128 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Potato\Observed\Cultivar_node.txt</string>
         <string>C:\ApsimX\Tests\Potato\Observed\potato_observations.txt</string>
       </FileNames>
     </Input>
+    <Input>
+      <Name>InputRadInd</Name>
+      <FileNames>
+        <string>C:\ApsimX\Tests\Potato\Observed\Potato_radint_observations.txt</string>
+      </FileNames>
+    </Input>
+    <Input>
+      <Name>InputNodeNo</Name>
+      <FileNames>
+        <string>C:\ApsimX\Tests\Potato\Observed\cultivar_nodenumber.txt</string>
+      </FileNames>
+    </Input>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Phenology.StageCode.Value</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.LAI</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.CoverGreen</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Leaf.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Stem.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Tuber.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>CultivarCultivarRussetBurbank</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Plant.Root.Live.N</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Experiment>
-    <Name>Cultivar</Name>
+    <Name>Potato</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
         <Name>Cultivar</Name>
         <FactorValue>
-          <Name>RussetBurbank</Name>
-          <Operations>
-            <Name>Operations</Name>
-            <Operation>
-              <Date>2003-10-20T00:00:00</Date>
-              <Action>Fertiliser.Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-25T00:00:00</Date>
-              <Action>Fertiliser.Apply(69, Fertiliser.Types.UreaN,0);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-26T00:00:00</Date>
-              <Action>Irrigation.Apply(15);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-04T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-16T00:00:00</Date>
-              <Action>Irrigation.Apply(15);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-22T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-30T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-08T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-21T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-31T00:00:00</Date>
-              <Action>Irrigation.Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-02-27T00:00:00</Date>
-              <Action>Irrigation.Apply(25);</Action>
-            </Operation>
-          </Operations>
+          <Name>Burbank</Name>
+          <FactorValue>
+            <Name>RussetBurbank</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.2</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>120</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>JerseyBenny</Name>
+          <FactorValue>
+            <Name>JerseyBenny</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3.6</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>160</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>RedRascal</Name>
+          <FactorValue>
+            <Name>RedRascal</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>4.87</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>140</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>Horizon</Name>
+          <FactorValue>
+            <Name>Horizon</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3.2</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>IlamHardy</Name>
+          <FactorValue>
+            <Name>IlamHardy</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>4.63</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>Karaka</Name>
+          <FactorValue>
+            <Name>Karaka</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>Nooksac</Name>
+          <FactorValue>
+            <Name>Nooksac</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.3</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>165</Name>
+          </FactorValue>
+        </FactorValue>
+        <FactorValue>
+          <Name>Rua</Name>
+          <FactorValue>
+            <Name>Rua</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.55</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>140</Name>
+          </FactorValue>
         </FactorValue>
         <Paths>
-          <string>[Operations]</string>
+          <string>[PotatoSowingRule].Script.CultivarName</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth</string>
         </Paths>
       </Factor>
     </Factors>
@@ -384,6 +363,14 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -501,20 +488,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -531,1806 +504,7 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>wheat</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lucerne</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>barley</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>tithonia</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>bambatsi</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>barley</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>broccoli</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>butterflypea</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>camaldulensis</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>canola</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>centro</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>chickpea</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>cowpea</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>danthonia</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>nativepasture</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>pasture</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>globulus</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>grandis</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>oilmallee</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>fababean</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>fieldpea</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>grass</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lablab</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lentil</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lolium_rigidum</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lucerne</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>lupin</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>maize</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>medic</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>millet</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>mucuna</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>mungbean</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>horsegram</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>navybean</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>frenchbean</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>cotton</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>oats</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>oilpalmunderstory</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>orobanche</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>peanut</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>pigeonpea</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>poppies</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>potato</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>raphanus_raphanistrum</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>rice</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>soybean</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>sorghum</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>stylo</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>sugar</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0007</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>sunflower</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>sweetcorn</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>sweetsorghum</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>vetch</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>weed</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>WF_Millet</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0004</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>wheat</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>inert</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>slurp</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>manure</fom_type>
-              <fraction_C>0.08</fraction_C>
-              <po4ppm>10</po4ppm>
-              <nh4ppm>10</nh4ppm>
-              <no3ppm>10</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_c>
-              <fr_n>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_n>
-              <fr_p>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>RuminantDung_PastureFed</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>1250</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>0.2</double>
-              </fr_c>
-              <fr_n>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>0.2</double>
-              </fr_n>
-              <fr_p>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>0.2</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>algae</fom_type>
-              <fraction_C>0.4</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0005</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>fym</fom_type>
-              <fraction_C>0.8</fraction_C>
-              <po4ppm>40</po4ppm>
-              <nh4ppm>10</nh4ppm>
-              <no3ppm>10</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_c>
-              <fr_n>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_n>
-              <fr_p>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>goatmanure</fom_type>
-              <fraction_C>0.8</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>1307</nh4ppm>
-              <no3ppm>481</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.3</double>
-                <double>0.6</double>
-                <double>0.3</double>
-              </fr_c>
-              <fr_n>
-                <double>0.3</double>
-                <double>0.6</double>
-                <double>0.3</double>
-              </fr_n>
-              <fr_p>
-                <double>0.3</double>
-                <double>0.6</double>
-                <double>0.34</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>cm</fom_type>
-              <fraction_C>0.277</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>2558</nh4ppm>
-              <no3ppm>873</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_c>
-              <fr_n>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_n>
-              <fr_p>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>cmA</fom_type>
-              <fraction_C>0.374</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>1307</nh4ppm>
-              <no3ppm>481</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_c>
-              <fr_n>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_n>
-              <fr_p>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>cmB</fom_type>
-              <fraction_C>0.24</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>3009</nh4ppm>
-              <no3ppm>36</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_c>
-              <fr_n>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_n>
-              <fr_p>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>manB</fom_type>
-              <fraction_C>0.08</fraction_C>
-              <po4ppm>5</po4ppm>
-              <nh4ppm>1307</nh4ppm>
-              <no3ppm>481</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.1</double>
-                <double>0.01</double>
-                <double>0.89</double>
-              </fr_c>
-              <fr_n>
-                <double>0.1</double>
-                <double>0.01</double>
-                <double>0.89</double>
-              </fr_n>
-              <fr_p>
-                <double>0.1</double>
-                <double>0.01</double>
-                <double>0.89</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>oilpalm</fom_type>
-              <fraction_C>0.44</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>0.0002</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.05</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-            <ResidueType>
-              <Name>ResidueType</Name>
-              <fom_type>oilpalmstem</fom_type>
-              <fraction_C>0.44</fraction_C>
-              <po4ppm>0</po4ppm>
-              <nh4ppm>0</nh4ppm>
-              <no3ppm>0</no3ppm>
-              <specific_area>5E-06</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_c>
-              <fr_n>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_n>
-              <fr_p>
-                <double>0.2</double>
-                <double>0.7</double>
-                <double>0.1</double>
-              </fr_p>
-            </ResidueType>
-          </ResidueTypes>
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
+          <ResidueTypes />
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -2355,1128 +529,19 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Type>Potato</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.03</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
-          <Phenology>
-            <Name>Phenology</Name>
-            <StageBasedInterpolation>
-              <Name>StageCode</Name>
-              <Stages>
-                <string>Planting</string>
-                <string>Peeping</string>
-                <string>Emergence</string>
-                <string>TuberInitiation</string>
-                <string>FinalLeaf</string>
-                <string>FullSenescence</string>
-                <string>Maturity</string>
-              </Stages>
-              <Codes>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-                <double>5</double>
-                <double>6</double>
-                <double>7</double>
-              </Codes>
-              <Proportional>true</Proportional>
-            </StageBasedInterpolation>
-            <AirTemperatureFunction>
-              <Name>ThermalTime</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>2</double>
-                  <double>20</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>18</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <GenericPhase>
-              <Name>Dormant</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Constant>
-                <Name>Target</Name>
-                <Value>1</Value>
-              </Constant>
-              <Start>Planting</Start>
-              <End>Peeping</End>
-            </GenericPhase>
-            <EmergingPhase>
-              <Name>Sprouting</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>Peeping</Start>
-              <End>Emergence</End>
-              <ShootLag>72</ShootLag>
-              <ShootRate>1.35</ShootRate>
-            </EmergingPhase>
-            <GenericPhase>
-              <Name>Vegetative</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Constant>
-                <Name>Target</Name>
-                <Value>300</Value>
-              </Constant>
-              <Start>Emergence</Start>
-              <End>TuberInitiation</End>
-            </GenericPhase>
-            <LeafAppearancePhase>
-              <Name>EarlyTuber</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>TuberInitiation</Start>
-              <End>FinalLeaf</End>
-            </LeafAppearancePhase>
-            <LeafDeathPhase>
-              <Name>LateTuber</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>FinalLeaf</Start>
-              <End>FullSenescence</End>
-            </LeafDeathPhase>
-            <GenericPhase>
-              <Name>Senesced</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Constant>
-                <Name>Target</Name>
-                <Value>200</Value>
-              </Constant>
-              <Start>FullSenescence</Start>
-              <End>Maturity</End>
-            </GenericPhase>
-            <EndPhase>
-              <Name>Maturity</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>Maturity</Start>
-              <End>Unused</End>
-            </EndPhase>
-          </Phenology>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-          </Arbitrator>
-          <Structure>
-            <Name>Structure</Name>
-            <AirTemperatureFunction>
-              <Name>ThermalTime</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>2</double>
-                  <double>20</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>18</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <PhaseLookupValue>
-              <Name>MainStemPrimordiaInitiationRate</Name>
-              <DivideFunction>
-                <Name>NodeInitiationRateFunction</Name>
-                <VariableReference>
-                  <Name>Phyllochron</Name>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
-                </VariableReference>
-                <Constant>
-                  <Name>PrimordiaPerMainstemNode</Name>
-                  <Value>2</Value>
-                </Constant>
-              </DivideFunction>
-              <Start>Emergence</Start>
-              <End>FinalLeaf</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>MainStemNodeAppearanceRate</Name>
-              <LinearInterpolationFunction>
-                <Name>Phyllochron</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.15</double>
-                    <double>0.74</double>
-                    <double>0.75</double>
-                  </X>
-                  <Y>
-                    <double>5</double>
-                    <double>30</double>
-                    <double>30</double>
-                    <double>60</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Start>Emergence</Start>
-              <End>FinalLeaf</End>
-            </PhaseLookupValue>
-            <Constant>
-              <Name>MainStemFinalNodeNumber</Name>
-              <Value>34</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>HeightModel</Name>
-              <XProperty>[Stem].Live.Wt</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>200</double>
-                  <double>1200</double>
-                  <double>4000</double>
-                </X>
-                <Y>
-                  <double>20</double>
-                  <double>300</double>
-                  <double>700</double>
-                  <double>900</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <MultiplyFunction>
-              <Name>BranchingRate</Name>
-              <LinearInterpolationFunction>
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Structure].MainStemNodeNo</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>7</double>
-                    <double>8</double>
-                    <double>13</double>
-                    <double>14</double>
-                    <double>34</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Leaf].CoverGreen</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.4</double>
-                    <double>0.55</double>
-                    <double>0.8</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.45</double>
-                    <double>0</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-            <Constant>
-              <Name>ShadeInducedBranchMortality</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>DroughtInducedBranchMortality</Name>
-              <Value>0</Value>
-            </Constant>
-            <InitialiseStage>Emergence</InitialiseStage>
-            <PrimaryBudNo>2.2</PrimaryBudNo>
-          </Structure>
-          <Summariser>
-            <Name>Summariser</Name>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-                <string>[Tuber].Live</string>
-                <string>[Tuber].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-                <string>[Tuber].Live</string>
-                <string>[Tuber].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-                <string>[Tuber].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-                <string>[Tuber].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-          </Summariser>
-          <GenericAboveGroundOrgan>
-            <Name>Tuber</Name>
-            <LinearInterpolationFunction>
-              <Name>NitrogenDemandSwitch</Name>
-              <XProperty>[Leaf].LAI</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>0.02</double>
-                  <double>0.0201</double>
-                  <double>10</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PotentialSizeDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>PotentialGrowthIncrement</Name>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>4</double>
-                    <double>4.04</double>
-                    <double>4.32</double>
-                    <double>4.52</double>
-                    <double>4.95</double>
-                    <double>6.54</double>
-                  </X>
-                  <Y>
-                    <double>0.017</double>
-                    <double>0.017</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.018</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <MultiplyFunction>
-                <Name>OrganNumber</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>5</Value>
-                </Constant>
-                <VariableReference>
-                  <Name>VariableReference</Name>
-                  <VariableName>[Structure].MainStemPopn</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>20</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>18</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <AccumulateFunction>
-                <Name>AccumThermalTime</Name>
-                <VariableReference>
-                  <Name>VariableReference</Name>
-                  <VariableName>[Structure].ThermalTime.Value</VariableName>
-                </VariableReference>
-                <StartStageName>TuberInitiation</StartStageName>
-                <EndStageName>Maturity</EndStageName>
-              </AccumulateFunction>
-              <StartStageName>TuberInitiation</StartStageName>
-              <EndStageName>Maturity</EndStageName>
-            </PotentialSizeDemandFunction>
-            <LinearInterpolationFunction>
-              <Name>WaterContent</Name>
-              <XProperty>[Phenology].StageCode.Value</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>3</double>
-                  <double>4</double>
-                  <double>4.1</double>
-                  <double>4.7</double>
-                  <double>5.4</double>
-                  <double>6</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0.1</double>
-                  <double>0.16</double>
-                  <double>0.2</double>
-                  <double>0.22</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>MaximumNConc</Name>
-              <XProperty>[Phenology].StageCode.Value</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>3</double>
-                  <double>4</double>
-                  <double>5</double>
-                  <double>6</double>
-                </X>
-                <Y>
-                  <double>0.023</double>
-                  <double>0.023</double>
-                  <double>0.018</double>
-                  <double>0.015</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>MinimumNConc</Name>
-              <XProperty>[Phenology].StageCode.Value</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>4</double>
-                  <double>4.1</double>
-                  <double>7</double>
-                </X>
-                <Y>
-                  <double>0.02</double>
-                  <double>0.006</double>
-                  <double>0.006</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-          </GenericAboveGroundOrgan>
-          <Root>
-            <Name>Root</Name>
-            <CompositeBiomass>
-              <Name>Live</Name>
-              <Propertys>
-                <string>[Root].LayerLive</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Dead</Name>
-              <Propertys>
-                <string>[Root].LayerDead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>FinalLeaf</End>
-            </PhaseBasedSwitch>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <PhaseLookup>
-              <Name>RootFrontVelocity</Name>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>10</Value>
-                </Constant>
-                <Start>Peeping</Start>
-                <End>FinalLeaf</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <PhaseLookup>
-              <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.3</Value>
-                </Constant>
-                <Start>Emergence</Start>
-                <End>TuberInitiation</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.05</Value>
-                </Constant>
-                <Start>TuberInitiation</Start>
-                <End>FinalLeaf</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>FinalLeaf</Start>
-                <End>FullSenescence</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.01</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>MaxDailyNUptake</Name>
-              <XProperty>[Root].Length</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>0.02</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>6</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.01</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>KLModifier</Name>
-              <XProperty>[Leaf].LAI</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>3</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
-            <KNO3>0.02</KNO3>
-            <KNH4>0</KNH4>
-          </Root>
-          <Leaf>
-            <Name>Leaf</Name>
-            <CompositeBiomass>
-              <Name>Live</Name>
-              <Propertys>
-                <string>[Leaf].CohortLive</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Dead</Name>
-              <Propertys>
-                <string>[Leaf].CohortDead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <InitialLeafValues>
-              <Name>LeafCohortParameters</Name>
-              <LinearInterpolationFunction>
-                <Name>MaxArea</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.15</double>
-                    <double>0.3</double>
-                    <double>0.44</double>
-                    <double>0.59</double>
-                    <double>0.73</double>
-                  </X>
-                  <Y>
-                    <double>2000</double>
-                    <double>18000</double>
-                    <double>27000</double>
-                    <double>15000</double>
-                    <double>6000</double>
-                    <double>1500</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>GrowthDuration</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.3</double>
-                    <double>0.4</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>200</double>
-                    <double>400</double>
-                    <double>400</double>
-                    <double>400</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>LagDuration</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.15</double>
-                    <double>0.3</double>
-                    <double>0.4</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>20</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>SenescenceDuration</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.15</double>
-                    <double>0.3</double>
-                    <double>0.4</double>
-                    <double>0.73</double>
-                    <double>2</double>
-                  </X>
-                  <Y>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>350</double>
-                    <double>100</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Constant>
-                <Name>DetachmentLagDuration</Name>
-                <Value>1000000</Value>
-              </Constant>
-              <Constant>
-                <Name>DetachmentDuration</Name>
-                <Value>1000000</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>SpecificLeafAreaMax</Name>
-                <XProperty>[Structure].RelativeNodeApperance</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>40000</double>
-                    <double>25000</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Constant>
-                <Name>SpecificLeafAreaMin</Name>
-                <Value>25000</Value>
-              </Constant>
-              <Constant>
-                <Name>StructuralFraction</Name>
-                <Value>0.5</Value>
-              </Constant>
-              <Constant>
-                <Name>MaximumNConc</Name>
-                <Value>0.07</Value>
-              </Constant>
-              <Constant>
-                <Name>MinimumNConc</Name>
-                <Value>0.03</Value>
-              </Constant>
-              <Constant>
-                <Name>InitialNConc</Name>
-                <Value>0</Value>
-              </Constant>
-              <Constant>
-                <Name>NReallocationFactor</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>NRetranslocationFactor</Name>
-                <Value>0.01</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>ExpansionStress</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0.5</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Constant>
-                <Name>CriticalNConc</Name>
-                <Value>0.05</Value>
-              </Constant>
-              <Constant>
-                <Name>DMRetranslocationFactor</Name>
-                <Value>0.5</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>ShadeInducedSenescenceRate</Name>
-                <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.5</double>
-                    <double>0.8</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0.03</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Constant>
-                <Name>NonStructuralFraction</Name>
-                <Value>0.2</Value>
-              </Constant>
-            </InitialLeafValues>
-            <RUEModel>
-              <Name>Photosynthesis</Name>
-              <Constant>
-                <Name>RUE</Name>
-                <Value>1.2</Value>
-              </Constant>
-              <RUECO2Function>
-                <Name>FCO2</Name>
-                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-              </RUECO2Function>
-              <LinearInterpolationFunction>
-                <Name>FN</Name>
-                <XProperty>[Leaf].Fn</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <WeightedTemperatureFunction>
-                <Name>FT</Name>
-                <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>2</double>
-                    <double>12</double>
-                    <double>24</double>
-                    <double>34</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </WeightedTemperatureFunction>
-              <LinearInterpolationFunction>
-                <Name>FW</Name>
-                <XProperty>[Leaf].Fw</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.4</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>FVPD</Name>
-                <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>10</double>
-                    <double>50</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-            </RUEModel>
-            <AirTemperatureFunction>
-              <Name>ThermalTime</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>2</double>
-                  <double>20</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>18</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <MultiplyFunction>
-              <Name>ExtinctionCoeff</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.8</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>0.5</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-            <LinearInterpolationFunction>
-              <Name>FrostFraction</Name>
-              <XProperty>[WeatherFile].MinT</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>-1</double>
-                  <double>0</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <ArrayBiomass>
-              <Name>CohortArrayLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-              </Propertys>
-              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-            </ArrayBiomass>
-            <ArrayBiomass>
-              <Name>CohortArrayDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-              </Propertys>
-              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-            </ArrayBiomass>
-            <LeafCohort>
-              <Name>InitialLeaf1</Name>
-              <Rank>1</Rank>
-              <Area>900</Area>
-            </LeafCohort>
-            <LeafCohort>
-              <Name>InitialLeaf2</Name>
-              <Rank>2</Rank>
-              <Area>600</Area>
-            </LeafCohort>
-            <LeafCohort>
-              <Name>InitialLeaf3</Name>
-              <Rank>3</Rank>
-              <Area>300</Area>
-            </LeafCohort>
-            <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
-            <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
-            <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
-            <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
-            <MaxCover>1</MaxCover>
-            <KDead>0.03</KDead>
-          </Leaf>
-          <GenericAboveGroundOrgan>
-            <Name>Stem</Name>
-            <Constant>
-              <Name>NReallocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>NRetranslocationFactor</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>FinalLeaf</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-            </Constant>
-            <InternodeDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <Constant>
-                <Name>InterNodeWt</Name>
-                <Value>0.2</Value>
-              </Constant>
-            </InternodeDemandFunction>
-            <LinearInterpolationFunction>
-              <Name>MaximumNConc</Name>
-              <XProperty>[Phenology].StageCode.Value</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>3</double>
-                  <double>4</double>
-                  <double>5.3</double>
-                </X>
-                <Y>
-                  <double>0.06</double>
-                  <double>0.05</double>
-                  <double>0.025</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.006</Value>
-            </Constant>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-          </GenericAboveGroundOrgan>
-          <CropType>Potato</CropType>
+          <ResourceName>Potato</ResourceName>
+          <LocalCanopyData>
+            <sender>Potato</sender>
+            <height>273.12408447265625</height>
+            <depth>273.12408447265625</depth>
+            <lai>0</lai>
+            <lai_tot>6.897010326385498</lai_tot>
+            <cover>0</cover>
+            <cover_tot>0.18690742552280426</cover_tot>
+          </LocalCanopyData>
         </Plant>
         <Manager>
           <Name>PotatoSowingRule</Name>
@@ -3582,6 +647,145 @@
             <Action>Irrigation.Apply(25);</Action>
           </Operation>
         </Operations>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script>
+            <Name>Script</Name>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] WeatherFile Met;   
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;  
+		[Link] Plant Plant;          
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+		
+		[XmlIgnore] public double AccumTtemerg { get; set; }
+		
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+        public override void OnCommencing()
+        {
+			InitialDay = true;
+		}	   
+		
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+            int layers = Soil.SoilWater.dlayer.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			AccumFert += Fert.NitrogenApplied;
+			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+			AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumIrrigation += Irrig.IrrigationApplied;
+			AccumRainfall += Met.Rain;
+			AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
+			SoilWaterDeficit =  (SWC - DUL);
+			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+			
+			//!!!!!! Thermal time calculation !!!!!!
+			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+			if (Plant.Phenology.StageCode.Value >= 3)
+			AccumTtemerg += Plant.Phenology.ThermalTime.Value;
+		}
+		
+		[EventSubscribe("EndOfDay")]
+		private void OnEndOfDay(object sender, EventArgs e)
+		{
+			AccumEO -= Soil.SoilWater.eo;
+			AccumES -= Soil.SoilWater.es; 
+			AccumDrainage -= Soil.SoilWater.drain;
+			AccumRunoff -= Soil.SoilWater.runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Report>
           <Name>Report</Name>
           <Variables>
@@ -3599,14 +803,14 @@
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>[Plant].Root.NSupplyUptake</string>
-            <string>[SoilWater].eo</string>
-            <string>[SoilWater].es</string>
+            <string>[Soil].SoilWater.eo</string>
+            <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[SoilWater].drain</string>
-            <string>[SoilWater].runoff</string>
+            <string>[Soil].SoilWater.drain</string>
+            <string>[Soil].SoilWater.runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[SoilWater].pond</string>
+            <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
             <string>[ExtraVariables].Script.AccumEP</string>
             <string>[ExtraVariables].Script.AccumES</string>
@@ -3686,8 +890,8 @@
             <string>[Plant].Stem.Live.NonStructuralWt</string>
             <string>[Plant].Leaf.SpecificArea</string>
             <string>[Plant].Leaf.ExpandedCohortNo</string>
-            <string>[SoilWater].sw_dep</string>
-            <string>[SoilNitrogen].no3</string>
+            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>[Plant].Arbitrator.NDemand</string>
             <string>[MicroClimate].ga</string>
@@ -3702,6 +906,7 @@
           </Variables>
           <Events>
             <string>[Clock].EndOfDay</string>
+            <string />
           </Events>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
@@ -3726,12 +931,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
             </Y>
@@ -3746,12 +951,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
             </Y>
@@ -3766,12 +971,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
             </Y>
@@ -3786,12 +991,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumFert</FieldName>
             </Y>
@@ -3806,12 +1011,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
             </Y>
@@ -3826,12 +1031,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
             </Y>
@@ -3846,12 +1051,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
             </Y>
@@ -3866,12 +1071,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
             </Y>
@@ -3899,12 +1104,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.pond</FieldName>
             </Y>
@@ -3919,12 +1124,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumEO</FieldName>
             </Y>
@@ -3939,12 +1144,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumEP</FieldName>
             </Y>
@@ -3959,12 +1164,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumES</FieldName>
             </Y>
@@ -3979,12 +1184,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
             </Y>
@@ -3999,12 +1204,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
             </Y>
@@ -4019,12 +1224,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
             </Y>
@@ -4039,12 +1244,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
             </Y>
@@ -4059,12 +1264,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
             </Y>
@@ -4079,12 +1284,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
             </Y>
@@ -4112,12 +1317,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.Wt</FieldName>
             </Y>
@@ -4132,12 +1337,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.Wt</FieldName>
             </Y>
@@ -4152,12 +1357,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.Wt</FieldName>
             </Y>
@@ -4172,12 +1377,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.Wt</FieldName>
             </Y>
@@ -4192,12 +1397,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.Wt</FieldName>
             </Y>
@@ -4212,12 +1417,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.Wt</FieldName>
             </Y>
@@ -4232,12 +1437,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.Wt</FieldName>
             </Y>
@@ -4252,12 +1457,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.Wt</FieldName>
             </Y>
@@ -4272,12 +1477,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
             </Y>
@@ -4292,12 +1497,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.BelowGround.Wt</FieldName>
             </Y>
@@ -4312,12 +1517,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.Total.Wt</FieldName>
             </Y>
@@ -4345,12 +1550,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.N</FieldName>
             </Y>
@@ -4365,12 +1570,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.N</FieldName>
             </Y>
@@ -4385,12 +1590,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.N</FieldName>
             </Y>
@@ -4405,12 +1610,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.N</FieldName>
             </Y>
@@ -4425,12 +1630,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.N</FieldName>
             </Y>
@@ -4445,12 +1650,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.N</FieldName>
             </Y>
@@ -4465,12 +1670,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.N</FieldName>
             </Y>
@@ -4485,12 +1690,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.N</FieldName>
             </Y>
@@ -4505,12 +1710,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.AboveGround.N</FieldName>
             </Y>
@@ -4525,12 +1730,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.BelowGround.N</FieldName>
             </Y>
@@ -4545,12 +1750,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.Total.N</FieldName>
             </Y>
@@ -4565,12 +1770,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Summariser.TotalLive.N</FieldName>
             </Y>
@@ -4598,12 +1803,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Photosynthesis.FT.Value</FieldName>
             </Y>
@@ -4618,12 +1823,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Fn</FieldName>
             </Y>
@@ -4638,12 +1843,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Fw</FieldName>
             </Y>
@@ -4658,12 +1863,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Photosynthesis.FVPD.Value</FieldName>
             </Y>
@@ -4696,12 +1901,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.WaterSupply</FieldName>
             </Y>
@@ -4716,12 +1921,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.WaterUptake</FieldName>
             </Y>
@@ -4736,12 +1941,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.WaterDemand</FieldName>
             </Y>
@@ -4756,12 +1961,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Transpiration</FieldName>
             </Y>
@@ -4776,12 +1981,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.eo</FieldName>
             </Y>
@@ -4796,12 +2001,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Depth</FieldName>
             </Y>
@@ -4816,12 +2021,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.Height</FieldName>
             </Y>
@@ -4854,12 +2059,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverDead</FieldName>
             </Y>
@@ -4874,12 +2079,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverGreen</FieldName>
             </Y>
@@ -4894,12 +2099,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.CoverTotal</FieldName>
             </Y>
@@ -4914,12 +2119,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LAI</FieldName>
             </Y>
@@ -4934,12 +2139,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LAIDead</FieldName>
             </Y>
@@ -4967,12 +2172,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
             </Y>
@@ -4987,12 +2192,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.TotalStemPopn</FieldName>
             </Y>
@@ -5007,12 +2212,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
             </Y>
@@ -5027,12 +2232,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
             </Y>
@@ -5047,12 +2252,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
             </Y>
@@ -5067,12 +2272,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
             </Y>
@@ -5087,12 +2292,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
             </Y>
@@ -5107,12 +2312,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
             </Y>
@@ -5133,7 +2338,6 @@
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -5145,12 +2349,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Live.NConc</FieldName>
             </Y>
@@ -5165,12 +2369,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.Dead.NConc</FieldName>
             </Y>
@@ -5185,12 +2389,12 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LeafCohortParameters.MinimumNConc.Value</FieldName>
             </Y>
@@ -5200,17 +2404,17 @@
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Leaf.LeafCohortParameters.MaximumNConc.Value</FieldName>
             </Y>
@@ -5220,17 +2424,17 @@
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -5238,146 +2442,6 @@
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
         </Graph>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script>
-            <Name>Script</Name>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.SoilNitrogen SoilN;
-		[Link] Soils.SoilWater SoilWat;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Plant;          
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        public override void OnCommencing()
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(SoilN.fom_n);
-			HumN = Utility.Math.Sum(SoilN.hum_n);
-		    BiomN = Utility.Math.Sum(SoilN.biom_n);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(SoilN.no3);
-			NH4N = Utility.Math.Sum(SoilN.nh4);
-			UreaN = Utility.Math.Sum(SoilN.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = Utility.Math.Sum(SoilN.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(SoilN.dlt_n_min);
-            int layers = SoilWat.dlayer.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - SoilWat.LeachNH4 - SoilWat.LeachNO3 - SoilWat.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(SoilN.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(SoilN.dnit);
-			AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = Utility.Math.Sum(SoilWat.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Plant.Phenology.StageCode.Value >= 3)
-			AccumTtemerg += Plant.Phenology.ThermalTime.Value;
-		}
-		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
-		{
-			AccumEO -= SoilWat.eo;
-			AccumES -= SoilWat.es; 
-			AccumDrainage -= SoilWat.drain;
-			AccumRunoff -= SoilWat.runoff;
-			SWC = Utility.Math.Sum(SoilWat.sw_dep);
-			DUL = Utility.Math.Sum(SoilWat.dul_dep);
-
-		}
-	}
-}
-	   ]]></Code>
-        </Manager>
         <Graph>
           <Name>Stem Nitrogen %</Name>
           <Axis>
@@ -5391,7 +2455,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -5403,12 +2466,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Live.NConc</FieldName>
             </Y>
@@ -5423,12 +2486,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.Dead.NConc</FieldName>
             </Y>
@@ -5443,12 +2506,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.MinimumNConc.Value</FieldName>
             </Y>
@@ -5458,17 +2521,17 @@ namespace Models
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Stem.MaximumNConc.Value</FieldName>
             </Y>
@@ -5478,17 +2541,17 @@ namespace Models
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -5509,7 +2572,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Right</Type>
-            <Title>Stage Code</Title>
             <Inverted>false</Inverted>
           </Axis>
           <Series>
@@ -5521,12 +2583,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Live.NConc</FieldName>
             </Y>
@@ -5541,12 +2603,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.Dead.NConc</FieldName>
             </Y>
@@ -5561,12 +2623,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.MinimumNConc.Value</FieldName>
             </Y>
@@ -5576,17 +2638,17 @@ namespace Models
             <Title>MaximumNConc</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Tuber.MaximumNConc.Value</FieldName>
             </Y>
@@ -5596,17 +2658,17 @@ namespace Models
             <Title>Stage Code</Title>
             <Type>Line</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-65408</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Phenology.StageCode.Value</FieldName>
             </Y>
@@ -5634,12 +2696,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Live.NConc</FieldName>
             </Y>
@@ -5654,12 +2716,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.Dead.NConc</FieldName>
             </Y>
@@ -5674,12 +2736,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.MinimumNConc.Value</FieldName>
             </Y>
@@ -5694,12 +2756,12 @@ namespace Models
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>*</SimulationName>
+              <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Plant.Root.MaximumNConc.Value</FieldName>
             </Y>
@@ -5757,7 +2819,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TotalLiveWt</FieldName>
+          <FieldName>TuberLiveWt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -5813,7 +2875,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>LeafWt</Name>
@@ -6167,17 +3229,17 @@ namespace Models
         <Line>None</Line>
         <X>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputRadInd</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
-          <FieldName>StemLiveN</FieldName>
+          <TableName>InputRadInd</TableName>
+          <FieldName>Cover_tot</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>TuberN%</Name>
@@ -6375,19 +3437,19 @@ namespace Models
         <Line>None</Line>
         <X>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputNodeNo</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
           <SimulationName>*</SimulationName>
-          <TableName>Input</TableName>
+          <TableName>InputNodeNo</TableName>
           <FieldName>LeafNodeNo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
     </Graph>
   </Experiment>
   <Area>0</Area>
-  <ExplorerWidth>324</ExplorerWidth>
+  <ExplorerWidth>271</ExplorerWidth>
 </Simulations>

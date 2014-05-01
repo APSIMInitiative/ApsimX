@@ -109,13 +109,13 @@ namespace Models
                 List<string> linkTypeNames = new List<string>();
                 foreach (Operation operation in Schedule)
                 {
-                    Model modelToLinkTo = this.Find(operation.GetActionModel());
+                    Model modelToLinkTo = this.Find(operation.GetActionModel().Trim());
                     if (modelToLinkTo == null)
                         throw new ApsimXException(FullPath, "Cannot find model '" + operation.GetActionModel() +
                                                             "' as specified in operations schedule");
-                    if (!linkNames.Contains(modelToLinkTo.Name))
+                    if (!linkNames.Contains(modelToLinkTo.Name.Trim()))
                     {
-                        linkNames.Add(modelToLinkTo.Name);
+                        linkNames.Add(modelToLinkTo.Name.Trim());
                         linkTypeNames.Add(modelToLinkTo.GetType().Name);
                     }
                 }

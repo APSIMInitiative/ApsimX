@@ -459,23 +459,26 @@ namespace UserInterface.Presenters
             {
                 object Model = ApsimXFile.Get(View.CurrentNodePath);
 
-                ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
-                PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
-
-                if (AdvancedMode)
+                if (Model != null)
                 {
-                    ViewName = new ViewName("UserInterface.Views.GridView");
-                    PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
-                }
+                    ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
+                    PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
 
-                if (ViewName != null && PresenterName != null)
-                {
-                    UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
-                    CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
-                    if (NewView != null && CurrentRightHandPresenter != null)
+                    if (AdvancedMode)
                     {
-                        View.AddRightHandView(NewView);
-                        CurrentRightHandPresenter.Attach(Model, NewView, this);
+                        ViewName = new ViewName("UserInterface.Views.GridView");
+                        PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
+                    }
+
+                    if (ViewName != null && PresenterName != null)
+                    {
+                        UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
+                        CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
+                        if (NewView != null && CurrentRightHandPresenter != null)
+                        {
+                            View.AddRightHandView(NewView);
+                            CurrentRightHandPresenter.Attach(Model, NewView, this);
+                        }
                     }
                 }
             }

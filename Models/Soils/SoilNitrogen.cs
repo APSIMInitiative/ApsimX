@@ -135,6 +135,8 @@ namespace Models.Soils
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
+            wfpsN2N2O_x = new double[] { 22, 88 };
+            wfpsN2N2O_y = new double[] { 0.1, 1 };
         }
 
         #region Events which we publish
@@ -176,14 +178,14 @@ namespace Models.Soils
             // Variable handling when using APSIMX
             initDone = false;
             dlayer = Soil.Thickness;
-            bd = Water.BD;
-            sat_dep = Utility.Math.Multiply(Water.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Water.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Water.LL15, Soil.Thickness);
+            bd = Soil.Water.BD;
+            sat_dep = Utility.Math.Multiply(Soil.Water.SAT, Soil.Thickness);
+            dul_dep = Utility.Math.Multiply(Soil.Water.DUL, Soil.Thickness);
+            ll15_dep = Utility.Math.Multiply(Soil.Water.LL15, Soil.Thickness);
             sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
             oc = Soil.OC;
-            ph = Analysis.PH;
-            salb = SoilWater.Salb;
+            ph = Soil.Analysis.PH;
+            salb = Soil.SoilWater.Salb;
             no3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
             num_residues = 0;

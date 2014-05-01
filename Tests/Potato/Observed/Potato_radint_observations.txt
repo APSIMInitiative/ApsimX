@@ -1,654 +1,654 @@
-Treatment    title  Experiment  cultivar  dd/mm/yyyy  Cover_tot  Cover_toterror
-()    ()  ()  ()  ()  ()  (StdDev)
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  7/01/1999  0.20  0.016
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  21/01/1999  0.80  0.085
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  27/01/1999  0.92  0.052
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  5/02/1999  0.98  0.014
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  8/02/1999  0.98  0.015
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  8/03/1999  0.99  0.004
-Burbank_Dec98    PYM_Burbank_Dec98  PYM  Burbank  22/03/1999  0.99  0.006
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  16/12/1998  0.19  0.047
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  30/12/1998  0.39  0.132
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  7/01/1999  0.81  0.124
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  21/01/1999  0.97  0.030
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  27/01/1999  0.99  0.006
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  5/02/1999  0.99  0.005
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  8/02/1999  1.00  0.003
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  8/03/1999  1.00  0.002
-Burbank_Nov98    PYM_Burbank_Nov98  PYM  Burbank  22/03/1999  0.98  0.006
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  1/12/1999  0.13  0.020
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  10/12/1999  0.29  0.045
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  16/12/1999  0.38  0.076
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  24/12/1999  0.68  0.156
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  14/01/2000  0.95  0.059
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  20/01/2000  0.95  0.065
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  2/02/2000  0.96  0.044
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  17/02/2000  0.94  0.064
-Burbank_Nov99    PYM_Burbank_Nov99  PYM  Burbank  24/02/2000  0.96  0.044
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  24/11/1999  0.25  0.029
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  1/12/1999  0.46  0.082
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  10/12/1999  0.64  0.107
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  16/12/1999  0.74  0.054
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  24/12/1999  0.96  0.015
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  14/01/2000  0.99  0.011
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  20/01/2000  0.98  0.022
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  2/02/2000  0.97  0.006
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  17/02/2000  0.94  0.032
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  24/02/2000  0.95  0.016
-Burbank_Oct99    PYM_Burbank_Oct99  PYM  Burbank  10/03/2000  0.89  0.019
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  7/01/1999  0.08  0.017
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  21/01/1999  0.36  0.085
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  27/01/1999  0.62  0.089
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  5/02/1999  0.76  0.095
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  8/02/1999  0.97  0.018
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  8/03/1999  1.00  0.001
-Fiana_Dec98    PYM_Fiana_Dec98  PYM  Fiana  22/03/1999  1.00  0.001
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  16/12/1998  0.20  0.068
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  30/12/1998  0.45  0.065
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  7/01/1999  0.60  0.082
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  21/01/1999  0.98  0.009
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  27/01/1999  0.99  0.007
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  5/02/1999  0.99  0.005
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  8/02/1999  0.99  0.005
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  8/03/1999  0.99  0.007
-Fiana_Nov98    PYM_Fiana_Nov98  PYM  Fiana  22/03/1999  0.99  0.006
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  1/12/1999  0.11  0.034
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  10/12/1999  0.25  0.023
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  16/12/1999  0.29  0.051
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  24/12/1999  0.53  0.039
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  14/01/2000  0.82  0.171
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  20/01/2000  0.89  0.132
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  2/02/2000  0.93  0.080
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  17/02/2000  0.97  0.022
-Fianna_Nov99    PYM_Fianna_Nov99  PYM  Fianna  24/02/2000  0.96  0.030
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  24/11/1999  0.23  0.042
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  1/12/1999  0.39  0.063
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  10/12/1999  0.41  0.085
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  16/12/1999  0.48  0.169
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  24/12/1999  0.83  0.123
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  14/01/2000  0.92  0.083
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  20/01/2000  0.92  0.107
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  2/02/2000  0.98  0.007
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  17/02/2000  0.97  0.012
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  24/02/2000  0.95  0.050
-Fianna_Oct99    PYM_Fianna_Oct99  PYM  Fianna  10/03/2000  0.94  0.060
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  7/01/1999  0.19  0.017
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  21/01/1999  0.48  0.156
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  27/01/1999  0.79  0.102
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  5/02/1999  0.91  0.147
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  8/02/1999  0.98  0.030
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  8/03/1999  0.99  0.003
-Ranger_Dec98    PYM_Ranger_Dec98  PYM  Ranger  22/03/1999  0.98  0.013
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  16/12/1998  0.22  0.060
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  30/12/1998  0.41  0.136
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  7/01/1999  0.56  0.025
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  21/01/1999  0.98  0.019
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  27/01/1999  0.99  0.009
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  5/02/1999  1.00  0.001
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  8/02/1999  1.00  0.005
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  8/03/1999  1.00  0.004
-Ranger_Nov98    PYM_Ranger_Nov98  PYM  Ranger  22/03/1999  0.99  0.011
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  1/12/1999  0.17  0.024
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  10/12/1999  0.32  0.045
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  16/12/1999  0.31  0.077
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  24/12/1999  0.60  0.093
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  14/01/2000  0.90  0.075
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  20/01/2000  0.95  0.041
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  2/02/2000  0.95  0.025
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  17/02/2000  0.97  0.017
-Ranger_Nov99    PYM_Ranger_Nov99  PYM  Ranger  24/02/2000  0.96  0.019
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  24/11/1999  0.27  0.023
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  1/12/1999  0.46  0.049
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  10/12/1999  0.61  0.083
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  16/12/1999  0.64  0.043
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  24/12/1999  0.87  0.066
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  14/01/2000  0.95  0.016
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  20/01/2000  0.95  0.010
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  2/02/2000  0.94  0.036
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  17/02/2000  0.94  0.049
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  24/02/2000  0.89  0.063
-Ranger_Oct99    PYM_Ranger_Oct99  PYM  Ranger  10/03/2000  0.88  0.076
-Burbank    Cultivar_Burbank  Cultivar  Burbank  12/11/2003  0.00  0.000
-Burbank    Cultivar_Burbank  Cultivar  Burbank  1/12/2003  0.48  0.033
-Burbank    Cultivar_Burbank  Cultivar  Burbank  8/12/2003  0.72  0.136
-Burbank    Cultivar_Burbank  Cultivar  Burbank  17/12/2003  0.94  0.025
-Burbank    Cultivar_Burbank  Cultivar  Burbank  7/01/2004  1.00  0.000
-Rua    Cultivar_Rua  Cultivar  Rua  14/11/2003  0.00  0.000
-Rua    Cultivar_Rua  Cultivar  Rua  1/12/2003  0.26  0.052
-Rua    Cultivar_Rua  Cultivar  Rua  8/12/2003  0.51  0.063
-Rua    Cultivar_Rua  Cultivar  Rua  17/12/2003  0.84  0.067
-Rua    Cultivar_Rua  Cultivar  Rua  7/01/2004  1.00  0.000
-Karaka    Cultivar_Karaka  Cultivar  Karaka  13/11/2003  0.00  0.000
-Karaka    Cultivar_Karaka  Cultivar  Karaka  1/12/2003  0.53  0.028
-Karaka    Cultivar_Karaka  Cultivar  Karaka  8/12/2003  0.79  0.045
-Karaka    Cultivar_Karaka  Cultivar  Karaka  17/12/2003  0.95  0.029
-Karaka    Cultivar_Karaka  Cultivar  Karaka  7/01/2004  1.00  0.000
-Nooksac    Cultivar_Nooksac  Cultivar  Nooksac  17/11/2003  0.00  0.000
-Nooksac    Cultivar_Nooksac  Cultivar  Nooksac  1/12/2003  0.25  0.016
-Nooksac    Cultivar_Nooksac  Cultivar  Nooksac  8/12/2003  0.53  0.039
-Nooksac    Cultivar_Nooksac  Cultivar  Nooksac  17/12/2003  0.85  0.058
-Nooksac    Cultivar_Nooksac  Cultivar  Nooksac  7/01/2004  1.00  0.000
-Horizon    Cultivar_Horizon  Cultivar  Horizon  13/11/2003  0.00  0.000
-Horizon    Cultivar_Horizon  Cultivar  Horizon  1/12/2003  0.44  0.031
-Horizon    Cultivar_Horizon  Cultivar  Horizon  8/12/2003  0.72  0.053
-Horizon    Cultivar_Horizon  Cultivar  Horizon  17/12/2003  0.95  0.015
-Horizon    Cultivar_Horizon  Cultivar  Horizon  7/01/2004  1.00  0.000
-JerseyBenny    Cultivar_JerseyBenny  Cultivar  JerseyBenny  16/11/2003  0.00  0.000
-JerseyBenny    Cultivar_JerseyBenny  Cultivar  JerseyBenny  1/12/2003  0.43  0.025
-JerseyBenny    Cultivar_JerseyBenny  Cultivar  JerseyBenny  8/12/2003  0.68  0.112
-JerseyBenny    Cultivar_JerseyBenny  Cultivar  JerseyBenny  17/12/2003  0.96  0.023
-JerseyBenny    Cultivar_JerseyBenny  Cultivar  JerseyBenny  7/01/2004  1.00  0.000
-IlamHardy    Cultivar_IlamHardy  Cultivar  IlamHardy  12/11/2003  0.00  0.000
-IlamHardy    Cultivar_IlamHardy  Cultivar  IlamHardy  1/12/2003  0.59  0.048
-IlamHardy    Cultivar_IlamHardy  Cultivar  IlamHardy  8/12/2003  0.84  0.112
-IlamHardy    Cultivar_IlamHardy  Cultivar  IlamHardy  17/12/2003  0.98  0.025
-IlamHardy    Cultivar_IlamHardy  Cultivar  IlamHardy  7/01/2004  1.00  0.000
-RedRascal    Cultivar_RedRascal  Cultivar  RedRascal  14/11/2003  0.00  0.000
-RedRascal    Cultivar_RedRascal  Cultivar  RedRascal  1/12/2003  0.49  0.021
-RedRascal    Cultivar_RedRascal  Cultivar  RedRascal  8/12/2003  0.74  0.035
-RedRascal    Cultivar_RedRascal  Cultivar  RedRascal  17/12/2003  0.96  0.018
-RedRascal    Cultivar_RedRascal  Cultivar  RedRascal  7/01/2004  1.00  0.000
-14Oct_pop4    Baxters_14Oct_pop4  Baxters  Burbank  7/12/1998  0.31  0.165
-14Oct_pop4    Baxters_14Oct_pop4  Baxters  Burbank  20/12/1998  0.78  0.119
-14Oct_pop4    Baxters_14Oct_pop4  Baxters  Burbank  31/12/1998  0.91  0.026
-14Oct_pop2    Baxters_14Oct_pop2  Baxters  Burbank  7/12/1998  0.33  0.133
-14Oct_pop2    Baxters_14Oct_pop2  Baxters  Burbank  20/12/1998  0.65  0.106
-14Oct_pop2    Baxters_14Oct_pop2  Baxters  Burbank  31/12/1998  0.85  0.067
-2Nov_pop4    Baxters_2Nov_pop4  Baxters  Burbank  7/12/1998  0.19  0.012
-2Nov_pop4    Baxters_2Nov_pop4  Baxters  Burbank  20/12/1998  0.51  0.096
-2Nov_pop4    Baxters_2Nov_pop4  Baxters  Burbank  31/12/1998  0.79  0.046
-2Nov_pop2    Baxters_2Nov_pop2  Baxters  Burbank  7/12/1998  0.23  0.020
-2Nov_pop2    Baxters_2Nov_pop2  Baxters  Burbank  20/12/1998  0.46  0.052
-2Nov_pop2    Baxters_2Nov_pop2  Baxters  Burbank  31/12/1998  0.67  0.116
-23Nov_pop4    Baxters_23Nov_pop4  Baxters  Burbank  7/12/1998  0.00  0.000
-23Nov_pop4    Baxters_23Nov_pop4  Baxters  Burbank  20/12/1998  0.12  0.036
-23Nov_pop4    Baxters_23Nov_pop4  Baxters  Burbank  31/12/1998  0.52  0.056
-23Nov_pop2    Baxters_23Nov_pop2  Baxters  Burbank  7/12/1998  0.00  0.000
-23Nov_pop2    Baxters_23Nov_pop2  Baxters  Burbank  20/12/1998  0.11  0.062
-23Nov_pop2    Baxters_23Nov_pop2  Baxters  Burbank  31/12/1998  0.35  0.055
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  14/12/1992  0.33  0.188
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  28/12/1992  0.78  0.077
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  11/01/1993  0.96  0.023
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  25/01/1993  0.97  0.019
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  10/02/1993  0.99  0.013
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  22/02/1993  0.98  0.006
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  8/03/1993  0.93  0.014
-4_300kg_planting    Lynetts_4_300kg_planting  Lynetts  Burbank  26/03/1993  0.51  0.143
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  14/12/1992  0.24  0.154
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  28/12/1992  0.76  0.019
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  11/01/1993  0.91  0.025
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  25/01/1993  0.96  0.024
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  10/02/1993  0.95  0.031
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  22/02/1993  0.92  0.020
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  8/03/1993  0.72  0.162
-1_Nil     Lynetts_1_Nil   Lynetts  Burbank  26/03/1993  0.12  0.055
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  14/12/1992  0.32  0.135
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  28/12/1992  0.81  0.048
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  11/01/1993  0.96  0.010
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  25/01/1993  0.98  0.009
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  10/02/1993  0.97  0.018
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  22/02/1993  0.95  0.025
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  8/03/1993  0.91  0.059
-3_150kg_planting    Lynetts_3_150kg_planting  Lynetts  Burbank  26/03/1993  0.49  0.199
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  14/12/1992  0.34  0.263
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  28/12/1992  0.79  0.046
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  11/01/1993  0.96  0.014
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  25/01/1993  0.99  0.004
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  10/02/1993  0.98  0.006
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  22/02/1993  0.98  0.013
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  8/03/1993  0.93  0.058
-7_300kg_split    Lynetts_7_300kg_split  Lynetts  Burbank  26/03/1993  0.70  0.182
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  14/12/1992  0.46  0.159
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  28/12/1992  0.81  0.027
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  11/01/1993  0.94  0.020
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  25/01/1993  0.98  0.012
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  10/02/1993  0.97  0.009
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  22/02/1993  0.97  0.017
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  8/03/1993  0.86  0.057
-6_150kg_split    Lynetts_6_150kg_split  Lynetts  Burbank  26/03/1993  0.45  0.197
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  14/12/1992  0.38  0.197
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  28/12/1992  0.80  0.013
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  11/01/1993  0.95  0.013
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  25/01/1993  0.98  0.013
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  10/02/1993  0.97  0.013
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  22/02/1993  0.96  0.023
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  8/03/1993  0.89  0.029
-5_75kg_split    Lynetts_5_75kg_split  Lynetts  Burbank  26/03/1993  0.26  0.123
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  14/12/1992  0.26  0.196
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  28/12/1992  0.79  0.021
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  11/01/1993  0.96  0.021
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  25/01/1993  0.97  0.014
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  10/02/1993  0.97  0.019
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  22/02/1993  0.97  0.014
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  8/03/1993  0.88  0.071
-2_75kg_planting    Lynetts_2_75kg_planting  Lynetts  Burbank  26/03/1993  0.24  0.096
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  19/06/1984  0.32  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  20/06/1984  0.42  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  21/06/1984  0.41  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  22/06/1984  0.48  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  23/06/1984  0.43  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  24/06/1984  0.41  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  25/06/1984  0.41  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  26/06/1984  0.43  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  27/06/1984  0.44  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  28/06/1984  0.46  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  29/06/1984  0.48  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  30/06/1984  0.51  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  1/07/1984  0.50  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  2/07/1984  0.51  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  3/07/1984  0.53  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  4/07/1984  0.51  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  5/07/1984  0.49  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  6/07/1984  0.50  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  7/07/1984  0.53  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  8/07/1984  0.62  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  9/07/1984  0.59  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  10/07/1984  0.63  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  11/07/1984  0.51  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  12/07/1984  0.52  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  13/07/1984  0.64  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  14/07/1984  0.65  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  15/07/1984  0.65  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  16/07/1984  0.67  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  17/07/1984  0.67  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  18/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  19/07/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  20/07/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  21/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  22/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  23/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  24/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  25/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  26/07/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  27/07/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  28/07/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  29/07/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  30/07/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  31/07/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  1/08/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  2/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  3/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  4/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  5/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  6/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  7/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  8/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  9/08/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  10/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  11/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  12/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  13/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  14/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  15/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  16/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  17/08/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  18/08/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  19/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  20/08/1984  0.77  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  21/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  22/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  23/08/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  24/08/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  25/08/1984  0.76  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  26/08/1984  0.76  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  27/08/1984  0.76  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  28/08/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  29/08/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  30/08/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  31/08/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  1/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  2/09/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  3/09/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  4/09/1984  0.75  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  5/09/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  6/09/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  7/09/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  8/09/1984  0.74  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  9/09/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  10/09/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  11/09/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  12/09/1984  0.70  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  13/09/1984  0.68  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  14/09/1984  0.67  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  15/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  16/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  17/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  18/09/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  19/09/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  20/09/1984  0.73  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  21/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  22/09/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  23/09/1984  0.71  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  24/09/1984  0.72  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  25/09/1984  0.68  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  26/09/1984  0.64  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  27/09/1984  0.64  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  28/09/1984  0.62  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  29/09/1984  0.58  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  30/09/1984  0.59  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  1/10/1984  0.57  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  2/10/1984  0.57  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  3/10/1984  0.55  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  4/10/1984  0.55  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  5/10/1984  0.51  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  6/10/1984  0.49  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  8/10/1984  0.55  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  9/10/1984  0.59  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  10/10/1984  0.61  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  11/10/1984  0.61  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  12/10/1984  0.60  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  13/10/1984  0.58  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  14/10/1984  0.57  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  15/10/1984  0.58  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  16/10/1984  0.60  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  17/10/1984  0.59  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  18/10/1984  0.54  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  19/10/1984  0.52  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  20/10/1984  0.54  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  21/10/1984  0.55  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  22/10/1984  0.54  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  23/10/1984  0.55  *
-nil    SCRI_84_nil  SCRI_84  Maris_Piper  24/10/1984  0.55  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  19/06/1984  0.36  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  20/06/1984  0.45  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  21/06/1984  0.52  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  22/06/1984  0.55  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  23/06/1984  0.58  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  24/06/1984  0.58  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  25/06/1984  0.61  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  26/06/1984  0.60  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  27/06/1984  0.61  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  28/06/1984  0.65  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  29/06/1984  0.67  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  30/06/1984  0.71  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  1/07/1984  0.72  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  2/07/1984  0.72  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  3/07/1984  0.74  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  4/07/1984  0.73  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  5/07/1984  0.70  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  6/07/1984  0.71  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  7/07/1984  0.74  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  8/07/1984  0.79  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  9/07/1984  0.82  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  10/07/1984  0.82  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  11/07/1984  0.81  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  12/07/1984  0.83  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  13/07/1984  0.85  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  14/07/1984  0.86  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  15/07/1984  0.87  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  16/07/1984  0.88  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  17/07/1984  0.90  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  18/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  19/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  20/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  21/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  22/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  23/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  24/07/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  25/07/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  26/07/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  27/07/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  28/07/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  29/07/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  30/07/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  31/07/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  1/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  2/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  3/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  4/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  5/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  6/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  7/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  8/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  9/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  10/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  11/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  12/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  13/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  14/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  15/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  16/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  17/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  18/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  19/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  20/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  21/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  22/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  23/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  24/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  25/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  26/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  27/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  28/08/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  29/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  30/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  31/08/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  1/09/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  2/09/1984  0.88  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  3/09/1984  0.88  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  4/09/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  5/09/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  6/09/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  7/09/1984  0.95  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  8/09/1984  0.94  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  9/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  10/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  11/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  12/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  13/09/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  14/09/1984  0.89  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  15/09/1984  0.90  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  16/09/1984  0.90  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  17/09/1984  0.88  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  18/09/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  19/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  20/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  21/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  22/09/1984  0.93  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  23/09/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  24/09/1984  0.92  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  25/09/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  26/09/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  27/09/1984  0.91  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  28/09/1984  0.87  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  29/09/1984  0.81  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  30/09/1984  0.86  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  1/10/1984  0.86  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  2/10/1984  0.90  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  3/10/1984  0.89  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  4/10/1984  0.89  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  5/10/1984  0.88  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  6/10/1984  0.87  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  8/10/1984  0.87  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  9/10/1984  0.86  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  10/10/1984  0.87  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  11/10/1984  0.86  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  12/10/1984  0.85  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  13/10/1984  0.83  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  14/10/1984  0.78  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  15/10/1984  0.81  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  16/10/1984  0.81  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  17/10/1984  0.78  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  18/10/1984  0.44  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  19/10/1984  0.10  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  20/10/1984  0.09  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  21/10/1984  0.10  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  22/10/1984  0.10  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  23/10/1984  0.10  *
-240kgN    SCRI_84_240kgN  SCRI_84  Maris_Piper  24/10/1984  0.11  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  21/06/1986  0.00  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  23/06/1986  0.00  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  24/06/1986  0.00  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  25/06/1986  0.00  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  26/06/1986  0.02  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  27/06/1986  0.03  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  28/06/1986  0.07  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  29/06/1986  0.12  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  30/06/1986  0.13  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  1/07/1986  0.17  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  2/07/1986  0.22  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  3/07/1986  0.26  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  4/07/1986  0.30  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  5/07/1986  0.33  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  7/07/1986  0.37  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  8/07/1986  0.42  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  9/07/1986  0.41  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  10/07/1986  0.47  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  11/07/1986  0.50  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  12/07/1986  0.48  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  14/07/1986  0.55  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  15/07/1986  0.56  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  16/07/1986  0.60  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  17/07/1986  0.66  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  18/07/1986  0.62  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  19/07/1986  0.67  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  21/07/1986  0.69  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  22/07/1986  0.71  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  23/07/1986  0.73  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  24/07/1986  0.76  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  25/07/1986  0.75  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  26/07/1986  0.72  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  27/07/1986  0.74  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  28/07/1986  0.76  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  29/07/1986  0.80  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  30/07/1986  0.80  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  31/07/1986  0.78  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  1/08/1986  0.78  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  5/08/1986  0.85  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  6/08/1986  0.85  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  7/08/1986  0.84  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  8/08/1986  0.86  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  9/08/1986  0.86  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  11/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  12/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  13/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  14/08/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  15/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  16/08/1986  0.89  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  18/08/1986  0.89  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  19/08/1986  0.89  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  20/08/1986  0.89  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  21/08/1986  0.90  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  22/08/1986  0.90  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  23/08/1986  0.90  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  25/08/1986  0.90  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  26/08/1986  0.89  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  27/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  28/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  29/08/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  30/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  31/08/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  1/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  2/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  3/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  4/09/1986  0.88  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  5/09/1986  0.90  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  6/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  8/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  9/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  10/09/1986  0.87  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  11/09/1986  0.85  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  12/09/1986  0.84  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  13/09/1986  0.84  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  15/09/1986  0.84  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  16/09/1986  0.83  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  17/09/1986  0.85  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  18/09/1986  0.81  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  19/09/1986  0.84  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  20/09/1986  0.80  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  21/09/1986  0.75  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  22/09/1986  0.77  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  23/09/1986  0.72  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  24/09/1986  0.00  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  25/09/1986  0.08  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  26/09/1986  0.03  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  27/09/1986  0.17  *
-Irr    SCRI_86_Irr  SCRI_86  Maris_Piper  29/09/1986  0.03  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  21/06/1986  0.00  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  23/06/1986  0.00  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  24/06/1986  0.00  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  25/06/1986  0.00  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  26/06/1986  0.07  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  27/06/1986  0.14  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  28/06/1986  0.18  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  29/06/1986  0.25  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  30/06/1986  0.30  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  1/07/1986  0.31  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  2/07/1986  0.38  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  3/07/1986  0.40  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  4/07/1986  0.44  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  5/07/1986  0.44  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  7/07/1986  0.49  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  8/07/1986  0.60  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  9/07/1986  0.59  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  10/07/1986  0.57  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  11/07/1986  0.61  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  12/07/1986  0.63  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  14/07/1986  0.65  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  15/07/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  16/07/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  17/07/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  18/07/1986  0.68  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  19/07/1986  0.70  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  21/07/1986  0.71  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  22/07/1986  0.72  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  23/07/1986  0.74  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  24/07/1986  0.74  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  25/07/1986  0.72  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  26/07/1986  0.73  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  27/07/1986  0.72  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  28/07/1986  0.74  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  29/07/1986  0.74  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  30/07/1986  0.73  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  31/07/1986  0.75  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  1/08/1986  0.75  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  5/08/1986  0.75  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  6/08/1986  0.75  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  7/08/1986  0.75  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  8/08/1986  0.77  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  9/08/1986  0.69  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  11/08/1986  0.64  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  12/08/1986  0.59  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  13/08/1986  0.72  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  14/08/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  15/08/1986  0.71  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  16/08/1986  0.71  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  18/08/1986  0.68  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  19/08/1986  0.71  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  20/08/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  21/08/1986  0.66  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  22/08/1986  0.66  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  23/08/1986  0.67  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  25/08/1986  0.65  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  26/08/1986  0.55  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  27/08/1986  0.48  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  28/08/1986  0.48  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  29/08/1986  0.38  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  30/08/1986  0.40  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  31/08/1986  0.41  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  1/09/1986  0.39  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  2/09/1986  0.43  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  3/09/1986  0.36  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  4/09/1986  0.42  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  5/09/1986  0.39  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  6/09/1986  0.38  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  8/09/1986  0.33  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  9/09/1986  0.39  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  10/09/1986  0.36  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  11/09/1986  0.32  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  12/09/1986  0.27  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  13/09/1986  0.24  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  15/09/1986  0.24  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  16/09/1986  0.21  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  17/09/1986  0.20  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  18/09/1986  0.18  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  19/09/1986  0.21  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  20/09/1986  0.16  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  21/09/1986  0.12  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  22/09/1986  0.13  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  23/09/1986  0.15  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  24/09/1986  0.00  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  25/09/1986  0.08  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  26/09/1986  0.12  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  27/09/1986  0.12  *
-dry    SCRI_86_dry  SCRI_86  Maris_Piper  29/09/1986  0.13  *
+SimulationName  Experiment  cultivar  Clock.Today  Cover_tot  Cover_toterror
+()  ()  ()  (yyyy-mm-dd)  ()  (StdDev)
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-01-07  0.20  0.016
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-01-21  0.80  0.085
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-01-27  0.92  0.052
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-02-05  0.98  0.014
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-02-08  0.98  0.015
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-03-08  0.99  0.004
+PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-03-22  0.99  0.006
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1998-12-16  0.19  0.047
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1998-12-30  0.39  0.132
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-01-07  0.81  0.124
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-01-21  0.97  0.030
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-01-27  0.99  0.006
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-02-05  0.99  0.005
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-02-08  1.00  0.003
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-03-08  1.00  0.002
+PYMCultivarBurbankSowingNov98  PYM  Burbank  1999-03-22  0.98  0.006
+PYMCultivarBurbankSowingNov99  PYM  Burbank  1999-12-01  0.13  0.020
+PYMCultivarBurbankSowingNov99  PYM  Burbank  1999-12-10  0.29  0.045
+PYMCultivarBurbankSowingNov99  PYM  Burbank  1999-12-16  0.38  0.076
+PYMCultivarBurbankSowingNov99  PYM  Burbank  1999-12-24  0.68  0.156
+PYMCultivarBurbankSowingNov99  PYM  Burbank  2000-01-14  0.95  0.059
+PYMCultivarBurbankSowingNov99  PYM  Burbank  2000-01-20  0.95  0.065
+PYMCultivarBurbankSowingNov99  PYM  Burbank  2000-02-02  0.96  0.044
+PYMCultivarBurbankSowingNov99  PYM  Burbank  2000-02-17  0.94  0.064
+PYMCultivarBurbankSowingNov99  PYM  Burbank  2000-02-24  0.96  0.044
+PYMCultivarBurbankSowingOct99  PYM  Burbank  1999-11-24  0.25  0.029
+PYMCultivarBurbankSowingOct99  PYM  Burbank  1999-12-01  0.46  0.082
+PYMCultivarBurbankSowingOct99  PYM  Burbank  1999-12-10  0.64  0.107
+PYMCultivarBurbankSowingOct99  PYM  Burbank  1999-12-16  0.74  0.054
+PYMCultivarBurbankSowingOct99  PYM  Burbank  1999-12-24  0.96  0.015
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-01-14  0.99  0.011
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-01-20  0.98  0.022
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-02-02  0.97  0.006
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-02-17  0.94  0.032
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-02-24  0.95  0.016
+PYMCultivarBurbankSowingOct99  PYM  Burbank  2000-03-10  0.89  0.019
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-01-07  0.08  0.017
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-01-21  0.36  0.085
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-01-27  0.62  0.089
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-02-05  0.76  0.095
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-02-08  0.97  0.018
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-03-08  1.00  0.001
+PYMCultivarFiannaSowingDec98  PYM  Fianna  1999-03-22  1.00  0.001
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1998-12-16  0.20  0.068
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1998-12-30  0.45  0.065
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-01-07  0.60  0.082
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-01-21  0.98  0.009
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-01-27  0.99  0.007
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-02-05  0.99  0.005
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-02-08  0.99  0.005
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-03-08  0.99  0.007
+PYMCultivarFiannaSowingNov98  PYM  Fianna  1999-03-22  0.99  0.006
+PYMCultivarFiannaSowingNov99  PYM  Fianna  1999-12-01  0.11  0.034
+PYMCultivarFiannaSowingNov99  PYM  Fianna  1999-12-10  0.25  0.023
+PYMCultivarFiannaSowingNov99  PYM  Fianna  1999-12-16  0.29  0.051
+PYMCultivarFiannaSowingNov99  PYM  Fianna  1999-12-24  0.53  0.039
+PYMCultivarFiannaSowingNov99  PYM  Fianna  2000-01-14  0.82  0.171
+PYMCultivarFiannaSowingNov99  PYM  Fianna  2000-01-20  0.89  0.132
+PYMCultivarFiannaSowingNov99  PYM  Fianna  2000-02-02  0.93  0.080
+PYMCultivarFiannaSowingNov99  PYM  Fianna  2000-02-17  0.97  0.022
+PYMCultivarFiannaSowingNov99  PYM  Fianna  2000-02-24  0.96  0.030
+PYMCultivarFiannaSowingOct99  PYM  Fianna  1999-11-24  0.23  0.042
+PYMCultivarFiannaSowingOct99  PYM  Fianna  1999-12-01  0.39  0.063
+PYMCultivarFiannaSowingOct99  PYM  Fianna  1999-12-10  0.41  0.085
+PYMCultivarFiannaSowingOct99  PYM  Fianna  1999-12-16  0.48  0.169
+PYMCultivarFiannaSowingOct99  PYM  Fianna  1999-12-24  0.83  0.123
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-01-14  0.92  0.083
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-01-20  0.92  0.107
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-02-02  0.98  0.007
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-02-17  0.97  0.012
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-02-24  0.95  0.050
+PYMCultivarFiannaSowingOct99  PYM  Fianna  2000-03-10  0.94  0.060
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-01-07  0.19  0.017
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-01-21  0.48  0.156
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-01-27  0.79  0.102
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-02-05  0.91  0.147
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-02-08  0.98  0.030
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-03-08  0.99  0.003
+PYMCultivarRangerSowingDec98  PYM  Ranger  1999-03-22  0.98  0.013
+PYMCultivarRangerSowingNov98  PYM  Ranger  1998-12-16  0.22  0.060
+PYMCultivarRangerSowingNov98  PYM  Ranger  1998-12-30  0.41  0.136
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-01-07  0.56  0.025
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-01-21  0.98  0.019
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-01-27  0.99  0.009
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-02-05  1.00  0.001
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-02-08  1.00  0.005
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-03-08  1.00  0.004
+PYMCultivarRangerSowingNov98  PYM  Ranger  1999-03-22  0.99  0.011
+PYMCultivarRangerSowingNov99  PYM  Ranger  1999-12-01  0.17  0.024
+PYMCultivarRangerSowingNov99  PYM  Ranger  1999-12-10  0.32  0.045
+PYMCultivarRangerSowingNov99  PYM  Ranger  1999-12-16  0.31  0.077
+PYMCultivarRangerSowingNov99  PYM  Ranger  1999-12-24  0.60  0.093
+PYMCultivarRangerSowingNov99  PYM  Ranger  2000-01-14  0.90  0.075
+PYMCultivarRangerSowingNov99  PYM  Ranger  2000-01-20  0.95  0.041
+PYMCultivarRangerSowingNov99  PYM  Ranger  2000-02-02  0.95  0.025
+PYMCultivarRangerSowingNov99  PYM  Ranger  2000-02-17  0.97  0.017
+PYMCultivarRangerSowingNov99  PYM  Ranger  2000-02-24  0.96  0.019
+PYMCultivarRangerSowingOct99  PYM  Ranger  1999-11-24  0.27  0.023
+PYMCultivarRangerSowingOct99  PYM  Ranger  1999-12-01  0.46  0.049
+PYMCultivarRangerSowingOct99  PYM  Ranger  1999-12-10  0.61  0.083
+PYMCultivarRangerSowingOct99  PYM  Ranger  1999-12-16  0.64  0.043
+PYMCultivarRangerSowingOct99  PYM  Ranger  1999-12-24  0.87  0.066
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-01-14  0.95  0.016
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-01-20  0.95  0.010
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-02-02  0.94  0.036
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-02-17  0.94  0.049
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-02-24  0.89  0.063
+PYMCultivarRangerSowingOct99  PYM  Ranger  2000-03-10  0.88  0.076
+BaxtersSowing14OctPopulation4  Baxters  Burbank  1998-12-07  0.31  0.165
+BaxtersSowing14OctPopulation4  Baxters  Burbank  1998-12-20  0.78  0.119
+BaxtersSowing14OctPopulation4  Baxters  Burbank  1998-12-31  0.91  0.026
+BaxtersSowing14OctPopulation2  Baxters  Burbank  1998-12-07  0.33  0.133
+BaxtersSowing14OctPopulation2  Baxters  Burbank  1998-12-20  0.65  0.106
+BaxtersSowing14OctPopulation2  Baxters  Burbank  1998-12-31  0.85  0.067
+BaxtersSowing2NovPopulation4  Baxters  Burbank  1998-12-07  0.19  0.012
+BaxtersSowing2NovPopulation4  Baxters  Burbank  1998-12-20  0.51  0.096
+BaxtersSowing2NovPopulation4  Baxters  Burbank  1998-12-31  0.79  0.046
+BaxtersSowing2NovPopulation2  Baxters  Burbank  1998-12-07  0.23  0.020
+BaxtersSowing2NovPopulation2  Baxters  Burbank  1998-12-20  0.46  0.052
+BaxtersSowing2NovPopulation2  Baxters  Burbank  1998-12-31  0.67  0.116
+BaxtersSowing23NovPopulation4  Baxters  Burbank  1998-12-07  0.00  0.000
+BaxtersSowing23NovPopulation4  Baxters  Burbank  1998-12-20  0.12  0.036
+BaxtersSowing23NovPopulation4  Baxters  Burbank  1998-12-31  0.52  0.056
+BaxtersSowing23NovPopulation2  Baxters  Burbank  1998-12-07  0.00  0.000
+BaxtersSowing23NovPopulation2  Baxters  Burbank  1998-12-20  0.11  0.062
+BaxtersSowing23NovPopulation2  Baxters  Burbank  1998-12-31  0.35  0.055
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1992-12-14  0.33  0.188
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1992-12-28  0.78  0.077
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-01-11  0.96  0.023
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-01-25  0.97  0.019
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-02-10  0.99  0.013
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-02-22  0.98  0.006
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-03-08  0.93  0.014
+LynettsFertiliser4_300kg_planting  Lynetts  Burbank  1993-03-26  0.51  0.143
+LynettsFertiliser1_Nil   Lynetts  Burbank  1992-12-14  0.24  0.154
+LynettsFertiliser1_Nil   Lynetts  Burbank  1992-12-28  0.76  0.019
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-01-11  0.91  0.025
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-01-25  0.96  0.024
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-02-10  0.95  0.031
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-02-22  0.92  0.020
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-03-08  0.72  0.162
+LynettsFertiliser1_Nil   Lynetts  Burbank  1993-03-26  0.12  0.055
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1992-12-14  0.32  0.135
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1992-12-28  0.81  0.048
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-01-11  0.96  0.010
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-01-25  0.98  0.009
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-02-10  0.97  0.018
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-02-22  0.95  0.025
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-03-08  0.91  0.059
+LynettsFertiliser3_150kg_planting  Lynetts  Burbank  1993-03-26  0.49  0.199
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1992-12-14  0.34  0.263
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1992-12-28  0.79  0.046
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-01-11  0.96  0.014
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-01-25  0.99  0.004
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-02-10  0.98  0.006
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-02-22  0.98  0.013
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-03-08  0.93  0.058
+LynettsFertiliser7_300kg_split  Lynetts  Burbank  1993-03-26  0.70  0.182
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1992-12-14  0.46  0.159
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1992-12-28  0.81  0.027
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-01-11  0.94  0.020
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-01-25  0.98  0.012
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-02-10  0.97  0.009
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-02-22  0.97  0.017
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-03-08  0.86  0.057
+LynettsFertiliser6_150kg_split  Lynetts  Burbank  1993-03-26  0.45  0.197
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1992-12-14  0.38  0.197
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1992-12-28  0.80  0.013
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-01-11  0.95  0.013
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-01-25  0.98  0.013
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-02-10  0.97  0.013
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-02-22  0.96  0.023
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-03-08  0.89  0.029
+LynettsFertiliser5_75kg_split  Lynetts  Burbank  1993-03-26  0.26  0.123
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1992-12-14  0.26  0.196
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1992-12-28  0.79  0.021
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-01-11  0.96  0.021
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-01-25  0.97  0.014
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-02-10  0.97  0.019
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-02-22  0.97  0.014
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-03-08  0.88  0.071
+LynettsFertiliser2_75kg_planting  Lynetts  Burbank  1993-03-26  0.24  0.096
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-19  0.32  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-20  0.42  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-21  0.41  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-22  0.48  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-23  0.43  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-24  0.41  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-25  0.41  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-26  0.43  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-27  0.44  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-28  0.46  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-29  0.48  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-06-30  0.51  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-01  0.50  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-02  0.51  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-03  0.53  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-04  0.51  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-05  0.49  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-06  0.50  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-07  0.53  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-08  0.62  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-09  0.59  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-10  0.63  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-11  0.51  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-12  0.52  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-13  0.64  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-14  0.65  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-15  0.65  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-16  0.67  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-17  0.67  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-18  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-19  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-20  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-21  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-22  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-23  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-24  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-25  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-26  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-27  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-28  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-29  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-30  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-07-31  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-01  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-02  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-03  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-04  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-05  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-06  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-07  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-08  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-09  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-10  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-11  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-12  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-13  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-14  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-15  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-16  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-17  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-18  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-19  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-20  0.77  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-21  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-22  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-23  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-24  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-25  0.76  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-26  0.76  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-27  0.76  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-28  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-29  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-30  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-08-31  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-01  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-02  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-03  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-04  0.75  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-05  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-06  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-07  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-08  0.74  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-09  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-10  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-11  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-12  0.70  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-13  0.68  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-14  0.67  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-15  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-16  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-17  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-18  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-19  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-20  0.73  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-21  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-22  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-23  0.71  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-24  0.72  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-25  0.68  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-26  0.64  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-27  0.64  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-28  0.62  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-29  0.58  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-09-30  0.59  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-01  0.57  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-02  0.57  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-03  0.55  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-04  0.55  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-05  0.51  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-06  0.49  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-08  0.55  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-09  0.59  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-10  0.61  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-11  0.61  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-12  0.60  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-13  0.58  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-14  0.57  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-15  0.58  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-16  0.60  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-17  0.59  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-18  0.54  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-19  0.52  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-20  0.54  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-21  0.55  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-22  0.54  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-23  0.55  *
+SCRI_84Fertilisernil  SCRI_84  Maris_Piper  1984-10-24  0.55  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-19  0.36  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-20  0.45  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-21  0.52  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-22  0.55  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-23  0.58  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-24  0.58  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-25  0.61  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-26  0.60  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-27  0.61  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-28  0.65  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-29  0.67  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-06-30  0.71  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-01  0.72  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-02  0.72  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-03  0.74  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-04  0.73  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-05  0.70  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-06  0.71  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-07  0.74  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-08  0.79  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-09  0.82  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-10  0.82  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-11  0.81  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-12  0.83  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-13  0.85  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-14  0.86  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-15  0.87  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-16  0.88  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-17  0.90  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-18  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-19  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-20  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-21  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-22  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-23  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-24  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-25  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-26  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-27  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-28  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-29  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-30  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-07-31  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-01  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-02  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-03  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-04  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-05  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-06  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-07  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-08  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-09  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-10  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-11  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-12  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-13  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-14  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-15  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-16  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-17  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-18  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-19  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-20  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-21  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-22  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-23  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-24  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-25  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-26  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-27  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-28  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-29  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-30  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-08-31  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-01  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-02  0.88  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-03  0.88  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-04  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-05  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-06  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-07  0.95  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-08  0.94  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-09  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-10  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-11  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-12  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-13  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-14  0.89  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-15  0.90  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-16  0.90  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-17  0.88  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-18  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-19  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-20  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-21  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-22  0.93  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-23  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-24  0.92  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-25  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-26  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-27  0.91  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-28  0.87  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-29  0.81  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-09-30  0.86  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-01  0.86  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-02  0.90  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-03  0.89  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-04  0.89  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-05  0.88  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-06  0.87  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-08  0.87  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-09  0.86  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-10  0.87  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-11  0.86  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-12  0.85  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-13  0.83  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-14  0.78  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-15  0.81  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-16  0.81  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-17  0.78  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-18  0.44  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-19  0.10  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-20  0.09  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-21  0.10  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-22  0.10  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-23  0.10  *
+SCRI_84Fertiliser240kgN  SCRI_84  Maris_Piper  1984-10-24  0.11  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-21  0.00  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-23  0.00  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-24  0.00  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-25  0.00  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-26  0.02  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-27  0.03  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-28  0.07  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-29  0.12  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-06-30  0.13  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-01  0.17  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-02  0.22  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-03  0.26  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-04  0.30  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-05  0.33  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-07  0.37  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-08  0.42  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-09  0.41  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-10  0.47  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-11  0.50  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-12  0.48  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-14  0.55  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-15  0.56  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-16  0.60  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-17  0.66  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-18  0.62  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-19  0.67  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-21  0.69  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-22  0.71  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-23  0.73  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-24  0.76  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-25  0.75  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-26  0.72  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-27  0.74  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-28  0.76  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-29  0.80  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-30  0.80  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-07-31  0.78  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-01  0.78  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-05  0.85  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-06  0.85  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-07  0.84  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-08  0.86  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-09  0.86  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-11  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-12  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-13  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-14  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-15  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-16  0.89  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-18  0.89  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-19  0.89  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-20  0.89  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-21  0.90  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-22  0.90  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-23  0.90  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-25  0.90  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-26  0.89  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-27  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-28  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-29  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-30  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-08-31  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-01  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-02  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-03  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-04  0.88  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-05  0.90  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-06  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-08  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-09  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-10  0.87  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-11  0.85  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-12  0.84  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-13  0.84  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-15  0.84  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-16  0.83  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-17  0.85  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-18  0.81  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-19  0.84  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-20  0.80  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-21  0.75  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-22  0.77  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-23  0.72  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-24  0.00  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-25  0.08  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-26  0.03  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-27  0.17  *
+SCRI_86IrrigationIrr  SCRI_86  Maris_Piper  1986-09-29  0.03  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-21  0.00  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-23  0.00  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-24  0.00  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-25  0.00  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-26  0.07  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-27  0.14  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-28  0.18  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-29  0.25  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-06-30  0.30  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-01  0.31  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-02  0.38  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-03  0.40  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-04  0.44  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-05  0.44  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-07  0.49  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-08  0.60  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-09  0.59  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-10  0.57  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-11  0.61  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-12  0.63  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-14  0.65  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-15  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-16  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-17  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-18  0.68  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-19  0.70  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-21  0.71  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-22  0.72  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-23  0.74  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-24  0.74  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-25  0.72  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-26  0.73  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-27  0.72  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-28  0.74  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-29  0.74  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-30  0.73  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-07-31  0.75  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-01  0.75  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-05  0.75  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-06  0.75  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-07  0.75  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-08  0.77  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-09  0.69  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-11  0.64  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-12  0.59  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-13  0.72  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-14  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-15  0.71  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-16  0.71  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-18  0.68  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-19  0.71  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-20  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-21  0.66  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-22  0.66  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-23  0.67  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-25  0.65  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-26  0.55  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-27  0.48  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-28  0.48  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-29  0.38  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-30  0.40  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-08-31  0.41  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-01  0.39  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-02  0.43  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-03  0.36  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-04  0.42  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-05  0.39  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-06  0.38  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-08  0.33  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-09  0.39  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-10  0.36  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-11  0.32  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-12  0.27  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-13  0.24  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-15  0.24  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-16  0.21  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-17  0.20  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-18  0.18  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-19  0.21  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-20  0.16  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-21  0.12  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-22  0.13  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-23  0.15  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-24  0.00  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-25  0.08  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-26  0.12  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-27  0.12  *
+SCRI_86Irrigationdry  SCRI_86  Maris_Piper  1986-09-29  0.13  *
+PotatoCultivarBurbank  Potato  Burbank  2003-11-12  0.00  0.000
+PotatoCultivarBurbank  Potato  Burbank  2003-12-01  0.48  0.033
+PotatoCultivarBurbank  Potato  Burbank  2003-12-08  0.72  0.136
+PotatoCultivarBurbank  Potato  Burbank  2003-12-17  0.94  0.025
+PotatoCultivarBurbank  Potato  Burbank  2004-01-07  1.00  0.000
+PotatoCultivarRua  Potato  Rua  2003-11-14  0.00  0.000
+PotatoCultivarRua  Potato  Rua  2003-12-01  0.26  0.052
+PotatoCultivarRua  Potato  Rua  2003-12-08  0.51  0.063
+PotatoCultivarRua  Potato  Rua  2003-12-17  0.84  0.067
+PotatoCultivarRua  Potato  Rua  2004-01-07  1.00  0.000
+PotatoCultivarKaraka  Potato  Karaka  2003-11-13  0.00  0.000
+PotatoCultivarKaraka  Potato  Karaka  2003-12-01  0.53  0.028
+PotatoCultivarKaraka  Potato  Karaka  2003-12-08  0.79  0.045
+PotatoCultivarKaraka  Potato  Karaka  2003-12-17  0.95  0.029
+PotatoCultivarKaraka  Potato  Karaka  2004-01-07  1.00  0.000
+PotatoCultivarNooksac  Potato  Nooksac  2003-11-17  0.00  0.000
+PotatoCultivarNooksac  Potato  Nooksac  2003-12-01  0.25  0.016
+PotatoCultivarNooksac  Potato  Nooksac  2003-12-08  0.53  0.039
+PotatoCultivarNooksac  Potato  Nooksac  2003-12-17  0.85  0.058
+PotatoCultivarNooksac  Potato  Nooksac  2004-01-07  1.00  0.000
+PotatoCultivarHorizon  Potato  Horizon  2003-11-13  0.00  0.000
+PotatoCultivarHorizon  Potato  Horizon  2003-12-01  0.44  0.031
+PotatoCultivarHorizon  Potato  Horizon  2003-12-08  0.72  0.053
+PotatoCultivarHorizon  Potato  Horizon  2003-12-17  0.95  0.015
+PotatoCultivarHorizon  Potato  Horizon  2004-01-07  1.00  0.000
+PotatoCultivarJerseyBenny  Potato  JerseyBenny  2003-11-16  0.00  0.000
+PotatoCultivarJerseyBenny  Potato  JerseyBenny  2003-12-01  0.43  0.025
+PotatoCultivarJerseyBenny  Potato  JerseyBenny  2003-12-08  0.68  0.112
+PotatoCultivarJerseyBenny  Potato  JerseyBenny  2003-12-17  0.96  0.023
+PotatoCultivarJerseyBenny  Potato  JerseyBenny  2004-01-07  1.00  0.000
+PotatoCultivarIlamHardy  Potato  IlamHardy  2003-11-12  0.00  0.000
+PotatoCultivarIlamHardy  Potato  IlamHardy  2003-12-01  0.59  0.048
+PotatoCultivarIlamHardy  Potato  IlamHardy  2003-12-08  0.84  0.112
+PotatoCultivarIlamHardy  Potato  IlamHardy  2003-12-17  0.98  0.025
+PotatoCultivarIlamHardy  Potato  IlamHardy  2004-01-07  1.00  0.000
+PotatoCultivarRedRascal  Potato  RedRascal  2003-11-14  0.00  0.000
+PotatoCultivarRedRascal  Potato  RedRascal  2003-12-01  0.49  0.021
+PotatoCultivarRedRascal  Potato  RedRascal  2003-12-08  0.74  0.035
+PotatoCultivarRedRascal  Potato  RedRascal  2003-12-17  0.96  0.018
+PotatoCultivarRedRascal  Potato  RedRascal  2004-01-07  1.00  0.000

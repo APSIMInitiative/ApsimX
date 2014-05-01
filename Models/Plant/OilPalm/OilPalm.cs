@@ -16,7 +16,10 @@ namespace Models.PMF.OilPalm
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OilPalm: ModelCollection, ICrop
     {
-        
+
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+
         public string plant_status = "out";
         [Link]
         Clock Clock = null;
@@ -25,14 +28,10 @@ namespace Models.PMF.OilPalm
         [Link]
         Soils.Soil Soil = null;
         [Link]
-        Soils.SoilWater SoilWat = null;
-        [Link]
-        Soils.SoilNitrogen SoilN = null;
-        [Link]
         ISummary Summary = null;
 
         
-        public string Crop_Type = "";
+        public string Crop_Type = "OilPalm";
 
         public double height = 0.0;
 
@@ -204,17 +203,17 @@ namespace Models.PMF.OilPalm
         public override void OnCommencing()
         {
             //MyPaddock.Parent.ChildPaddocks
-            PotSWUptake = new double[SoilWat.ll15_dep.Length];
-            SWUptake = new double[SoilWat.ll15_dep.Length];
-            PotNUptake = new double[SoilWat.ll15_dep.Length];
-            NUptake = new double[SoilWat.ll15_dep.Length];
+            PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            SWUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            PotNUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            NUptake = new double[Soil.SoilWater.ll15_dep.Length];
 
-            UnderstoryPotSWUptake = new double[SoilWat.ll15_dep.Length];
-            UnderstorySWUptake = new double[SoilWat.ll15_dep.Length];
-            UnderstoryPotNUptake = new double[SoilWat.ll15_dep.Length];
-            UnderstoryNUptake = new double[SoilWat.ll15_dep.Length];
+            UnderstoryPotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            UnderstorySWUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            UnderstoryPotNUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            UnderstoryNUptake = new double[Soil.SoilWater.ll15_dep.Length];
 
-            for (int i = 0; i < SoilWat.ll15_dep.Length; i++)
+            for (int i = 0; i < Soil.SoilWater.ll15_dep.Length; i++)
             {
                 RootType R = new RootType();
                 Roots.Add(R);
@@ -371,26 +370,26 @@ namespace Models.PMF.OilPalm
             int RootLayer = LayerIndex(RootDepth);
             RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalm")[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
-            RootDepth = Math.Min(Utility.Math.Sum(SoilWat.dlayer), RootDepth);
+            RootDepth = Math.Min(Utility.Math.Sum(Soil.SoilWater.dlayer), RootDepth);
 
             // Calculate Root Activity Values for water and nitrogen
-            double[] RAw = new double[SoilWat.dlayer.Length];
-            double[] RAn = new double[SoilWat.dlayer.Length];
+            double[] RAw = new double[Soil.SoilWater.dlayer.Length];
+            double[] RAn = new double[Soil.SoilWater.dlayer.Length];
             double TotalRAw = 0;
             double TotalRAn = 0;
 
-            for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 if (layer <= LayerIndex(RootDepth))
                     if (Roots[layer].Mass > 0)
                     {
                         RAw[layer] = SWUptake[layer] / Roots[layer].Mass
-                                   * SoilWat.dlayer[layer]
+                                   * Soil.SoilWater.dlayer[layer]
                                    * RootProportion(layer, RootDepth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
                         RAn[layer] = NUptake[layer] / Roots[layer].Mass
-                                   * SoilWat.dlayer[layer]
+                                   * Soil.SoilWater.dlayer[layer]
                                    * RootProportion(layer, RootDepth);
                         RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
 
@@ -409,7 +408,7 @@ namespace Models.PMF.OilPalm
                 TotalRAn += RAn[layer];
             }
             double allocated = 0;
-            for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 if (TotalRAw > 0)
 
@@ -422,9 +421,9 @@ namespace Models.PMF.OilPalm
 
 
             // Do Root Senescence
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[SoilWat.dlayer.Length];
+            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
 
-            for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 double Fr = RootSenescenceRate.Value;
                 double DM = Roots[layer].Mass * Fr * 10.0;
@@ -569,20 +568,20 @@ namespace Models.PMF.OilPalm
         }
         private void DoWaterBalance()
         {
-            PEP = SoilWat.eo * cover_green;
+            PEP = Soil.SoilWater.eo * cover_green;
 
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL("OilPalm")[j] * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL("OilPalm")[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
             EP = 0.0;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                SoilWat.sw_dep[j] = SoilWat.sw_dep[j] - SWUptake[j];
+                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
 
             }
             
@@ -613,22 +612,22 @@ namespace Models.PMF.OilPalm
             Ndemand = StemNDemand + FrondNDemand + RootNDemand + BunchNDemand;  //kg/ha
 
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 double swaf = 0;
-                swaf = (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]) / (SoilWat.dul_dep[j] - SoilWat.ll15_dep[j]);
+                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = SoilN.no3[j] * (100.0 / (Soil.BD[j] * SoilWat.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * SoilN.no3[j] * swaf);
+                double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.SoilNitrogen.no3[j] * swaf);
             }
 
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
-                SoilN.no3[j] = SoilN.no3[j] - NUptake[j];
+                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
             }
            
             Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / BunchNDemand));
@@ -649,14 +648,14 @@ namespace Models.PMF.OilPalm
 
             StemN += StemNDemand / 10 * Fr;
 
-            double[] RootNDef = new double[SoilWat.ll15_dep.Length];
+            double[] RootNDef = new double[Soil.SoilWater.ll15_dep.Length];
             double TotNDef = 1e-20;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 RootNDef[j] = Math.Max(0.0, Roots[j].Mass * RootNConcentration.Value / 100.0 - Roots[j].N);
                 TotNDef += RootNDef[j];
             }
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
                 Roots[j].N += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
 
             foreach (FrondType F in Fronds)
@@ -896,19 +895,19 @@ namespace Models.PMF.OilPalm
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += SoilWat.dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - SoilWat.dlayer[layer];
+                depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
+            depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / SoilWat.dlayer[layer];
+            return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
         }
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < SoilWat.dlayer.Length; i++)
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
             {
-                CumDepth = CumDepth + SoilWat.dlayer[i];
+                CumDepth = CumDepth + Soil.SoilWater.dlayer[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
@@ -952,19 +951,19 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = SoilWat.eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = Soil.SoilWater.eo * UnderstoryCoverGreen * (1 - cover_green);
             
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
-                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKL * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKL * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
 
             double TotUnderstoryPotSWUptake = Utility.Math.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, PEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
-                SoilWat.sw_dep[j] = SoilWat.sw_dep[j] - UnderstorySWUptake[j];
+                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - UnderstorySWUptake[j];
 
             }
             if (UnderstoryPEP > 0.0)
@@ -980,18 +979,18 @@ namespace Models.PMF.OilPalm
             double UnderstoryNdemand = LegumeNdemand + NonLegumeNdemand;
             UnderstoryNFixation = Math.Max(0.0, LegumeNdemand * .44);
             
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
-                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * SoilN.no3[j]);
+                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.SoilNitrogen.no3[j]);
             }
 
             double TotUnderstoryPotNUptake = Utility.Math.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
-                SoilN.no3[j] = SoilN.no3[j] - UnderstoryNUptake[j];
+                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - UnderstoryNUptake[j];
             }
             
             //UnderstoryNFixation += UnderstoryNdemand - Utility.Math.Sum(UnderstoryNUptake);
