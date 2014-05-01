@@ -190,7 +190,7 @@ namespace Models
         /// </summary>
         public void CreateTable(string tableName, string[] names, Type[] types)
         {
-            string cmd = "CREATE TABLE " + tableName + "([SimulationID] integer";
+            string cmd = "CREATE TABLE " + tableName +"([SimulationID] integer";
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -200,6 +200,7 @@ namespace Models
                 cmd += ",[" + names[i] + "] " + columnType;
             }
             cmd += ")";
+            cmd = cmd.Replace("[SimulationID] integer,[SimulationID] integer", "[SimulationID] integer");
             Locks[Filename].Aquire();
             if (!TableExists(tableName))
                 Connection.ExecuteNonQuery(cmd);

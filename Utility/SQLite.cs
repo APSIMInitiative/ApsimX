@@ -220,6 +220,9 @@ namespace Utility
                     for (int i = 0; i < columnCount; i++)
                     {
                         string ColumnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
+                        if (dTable.Columns.Contains(ColumnName))
+                            ColumnName = "Report." + ColumnName;
+
                         int ColType = sqlite3_column_type(stmHandle, i);
                         if (ColType == SQLITE_INTEGER)
                             dTable.Columns.Add(ColumnName, typeof(int));
