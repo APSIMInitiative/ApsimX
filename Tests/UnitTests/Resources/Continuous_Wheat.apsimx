@@ -11,6 +11,7 @@
       <Rain>0</Rain>
       <Radn>0</Radn>
       <vp>0</vp>
+      <wind>0</wind>
       <CO2>350</CO2>
     </WeatherFile>
     <Clock>
@@ -550,6 +551,14 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -929,6 +938,15 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock TimeClock;
+		public override void OnCommencing()
+		{
+			/*
+				
+            nextcrop = 0
+            fallowin = 0
+            
+			*/
+		}
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
@@ -949,15 +967,6 @@ namespace Models
             
 			*/
 		}
-		public override void OnCommencing()
-		{
-			/*
-				
-            nextcrop = 0
-            fallowin = 0
-            
-			*/
-		}
 	}
 }
 ]]></Code>
@@ -975,10 +984,11 @@ namespace Models
 	{
 		[Link] Clock TimeClock;
 		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)  /* unknown event type found here */ 
+		private void OnStartOfDay(object sender, EventArgs e)
 		{
 			/*
-				
+				// ----- [modulename].[eventname] ----- 
+
         [fertmodule] apply amount = [fert_amount_sow] (kg/ha), depth = 50 (mm), type = [fert_type_sow]
             
 			*/
