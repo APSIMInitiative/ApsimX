@@ -7,22 +7,20 @@
      <Cultivar>
        <Name>JerseyBenny</Name>
        <Override>
-         <Name>{Structure].MainStemFinalNodeNumber</Name>
-         <Value>19</Value>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>34</Value>
        </Override>
        <Override>
-         <Name>[Structure].BranchingRate.Potential_Branching_Rate</Name>
-           <XYPairs>
-             <XY>0 0</XY>
-             <XY>6 0</XY>
-             <XY>7 0.5</XY>
-             <XY>10 0.5</XY>
-             <XY>11 0</XY>
-           </XYPairs>
-         </Override>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X</Name>
+         <Value>0 6 7 10 11</Value>
+       </Override>
        <Override>
-         <Name>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem</Name>
-         <Value>3</Value>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y</Name>
+         <Value>0 0 0.5 0.5 0</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value</Name>
+         <Value>5</Value>
        </Override>
      </Cultivar>
      <Cultivar>
@@ -31,35 +29,31 @@
      <Cultivar>
        <Name>MarisPiper</Name>
        <Override>
-         <Name>[Structure].MainStemFinalNodeNumber</Name>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
          <Value>50</Value>
        </Override>
        <Override>
-         <Name>[Structure].BranchingRate.Potential_Branching_Rate</Name>
-         <XYPairs>
-           <XY>0 0</XY>
-           <XY>7 0</XY>
-           <XY>8 1</XY>
-           <XY>9 0</XY>
-         </XYPairs>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X</Name>
+         <Value>0 7 8 9</Value>
        </Override>
        <Override>
-         <Name>[Stem].DMDemandFunction.InternodeWt</Name>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.y</Name>
+         <Value>0 0 1 0</Value>
+       </Override>
+       <Override>
+         <Name>[Stem].DMDemandFunction.InternodeWt.value</Name>
          <Value>0.4</Value>
        </Override>
        <Override>
-         <Name>[Leaf].LagDuration</Name>
-         <XYPairs>
-           <XY>0 500</XY>
-           <XY>0.15 500</XY>
-           <XY>0.3 500</XY>
-           <XY>0.4 500</XY>
-           <XY>0.73 500</XY>
-           <XY>1 20</XY>
-         </XYPairs>
+         <Name>[Leaf].LagDuration.XYPairs.X</Name>
+         <Value>0 0.15 0.3 0.4 0.73 1</Value>
        </Override>
        <Override>
-         <Name>[Leaf].Photosynthesis.RUE</Name>
+           <Name>[Leaf].LagDuration.XYPairs.Y</Name>
+           <Value>0 500 500 500 500 20</Value>
+       </Override>
+       <Override>
+         <Name>[Leaf].Photosynthesis.RUE.value</Name>
          <Value>2.0</Value>
        </Override>
      </Cultivar>
@@ -105,7 +99,7 @@
      <Cultivar>
        <Name>RussetBurbank</Name>
        <Override>
-         <Name>[Structure].MainStemFinalNodeNumber</Name>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
          <Value type="text" description="Value">46</Value>
        </Override>
      </Cultivar>
@@ -401,7 +395,7 @@
             <MultiplyFunction>
               <Name>BranchingRate</Name>
               <LinearInterpolationFunction>
-                <Name>LinearInterpolationFunction</Name>
+                <Name>Potential_Branching_Rate</Name>
                 <XProperty>[Structure].MainStemNodeNo</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
@@ -561,7 +555,7 @@
               <MultiplyFunction>
                 <Name>OrganNumber</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>OrganNumberPerStem</Name>
                   <Value>5</Value>
                 </Constant>
                 <VariableReference>
