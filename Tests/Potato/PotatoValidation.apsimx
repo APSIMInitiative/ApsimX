@@ -21,6 +21,12 @@
         <string>C:\ApsimX\Tests\Potato\Observed\cultivar_nodenumber.txt</string>
       </FileNames>
     </Input>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Input</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
   </DataStore>
   <Experiment>
     <Name>Potato</Name>
@@ -535,12 +541,12 @@
           <ResourceName>Potato</ResourceName>
           <LocalCanopyData>
             <sender>Potato</sender>
-            <height>273.12408447265625</height>
-            <depth>273.12408447265625</depth>
+            <height>155.68289184570313</height>
+            <depth>155.68289184570313</depth>
             <lai>0</lai>
-            <lai_tot>6.897010326385498</lai_tot>
+            <lai_tot>2.8224213123321533</lai_tot>
             <cover>0</cover>
-            <cover_tot>0.18690742552280426</cover_tot>
+            <cover_tot>0.081186980009078979</cover_tot>
           </LocalCanopyData>
         </Plant>
         <Manager>

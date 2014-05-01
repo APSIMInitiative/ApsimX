@@ -97,6 +97,7 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         public double FractionNextleafExpanded = 0;
         public double _ExpandedNodeNo = 0;
+        public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
         #endregion
 
         #region Outputs
@@ -117,6 +118,8 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        public double FractionDied { get; set; }
         public bool CohortsInitialised
         {
             get
@@ -551,7 +554,8 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 1 based rank of the current leaf.
         /// </summary>
-        private int CurrentRank
+        private int CurrentRank { get; set; }
+        /*private int CurrentRank
         {
             get
             {
@@ -568,7 +572,7 @@ namespace Models.PMF.Organs
 
                 return Leaves[i - 1].Rank;
             }
-        }
+        }*/
         private int CohortCounter(string Condition)
         {
             int Count = 0;
@@ -633,10 +637,11 @@ namespace Models.PMF.Organs
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
-            
+       
             bool NextExpandingLeaf = false;
             foreach (LeafCohort L in Leaves)
             {
+                CurrentRank = L.Rank;
                 L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
                 if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                 {
@@ -684,6 +689,14 @@ namespace Models.PMF.Organs
             Structure.UpdateHeight();
 
             PublishNewCanopyEvent();
+
+            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+            FractionDied = 0;
+            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            {
+                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+            }
         }
         public virtual void ZeroLeaves()
         {
