@@ -136,6 +136,9 @@ namespace Models.PMF
             SowingData.CropClass = CropClass;
 
             // Find cultivar and apply cultivar overrides.
+            if (Cultivars == null)
+                throw new ApsimXException(FullPath, "No cultivar definitions found.");
+            
             Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
             if (cultivarObj == null)
                 throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);

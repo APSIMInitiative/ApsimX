@@ -16,21 +16,26 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ExplorerPresenter ExplorerPresenter;
         private Models.DataStore DataStore = new Models.DataStore();
-        private static Color[] colours = {Color.FromArgb(255,255,204),
-                                          Color.FromArgb(217,240,163),
-                                          Color.FromArgb(173,221,142),
-                                          Color.FromArgb(120,198,121),
-                                          Color.FromArgb(65,171,93),
-                                          Color.FromArgb(35,132,67),
-                                          Color.FromArgb(0,104,55),
-                                          Color.FromArgb(0,90,50),
-                                          Color.FromArgb(255,255,212),
-                                          Color.FromArgb(254,227,145),
-                                          Color.FromArgb(254,196,79),
-                                          Color.FromArgb(254,153,41),
-                                          Color.FromArgb(236,112,20),
-                                          Color.FromArgb(204,76,2),
-                                          Color.FromArgb(140,45,4)};
+        private static Color[] colours = {
+                                        Color.FromArgb(228,26,28),
+                                        Color.FromArgb(55,126,184),
+                                        Color.FromArgb(77,175,74),
+                                        Color.FromArgb(152,78,163),
+                                        Color.FromArgb(255,127,0),
+                                        Color.FromArgb(255,255,51),
+                                        Color.FromArgb(166,86,40),
+                                        Color.FromArgb(247,129,191),
+                                        Color.FromArgb(153,153,153),
+                                        Color.FromArgb(251,180,174),
+                                        Color.FromArgb(179,205,227),
+                                        Color.FromArgb(204,235,197),
+                                        Color.FromArgb(222,203,228),
+                                        Color.FromArgb(254,217,166),
+                                        Color.FromArgb(255,255,204),
+                                        Color.FromArgb(229,216,189),
+                                        Color.FromArgb(253,218,236),
+                                        Color.FromArgb(242,242,242)                                         
+                                         };
 
         /// <summary>
         /// Attach the model to the view.
@@ -77,9 +82,10 @@ namespace UserInterface.Presenters
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)
             {
-                int seriesNumber = 1;
                 foreach (Models.Graph.Series S in Graph.Series)
                 {
+                    int seriesNumber = 1;
+                
                     if (S.X != null && S.Y != null)
                     {
                         // We need to handle the case where series X and Y SimulationName member

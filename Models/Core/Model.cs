@@ -497,7 +497,7 @@ namespace Models.Core
         {
             foreach (EventPublisher publisher in FindEventPublishers(null, model))
             {
-                FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                FieldInfo eventAsField = FindEventField(publisher); 
                 Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
                 if (eventDelegate != null)
                 {
@@ -508,6 +508,22 @@ namespace Models.Core
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Locate and return the event backing field for the specified event. Returns
+        /// null if not found.
+        /// </summary>
+        private static FieldInfo FindEventField(EventPublisher publisher)
+        {
+            Type t = publisher.Model.GetType();
+            FieldInfo eventAsField = t.GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            while (eventAsField == null && t.BaseType != typeof(Object))
+            {
+                t = t.BaseType;
+                eventAsField = t.GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            return eventAsField;
         }
 
         //public static void DisconnectSubscriptions(Model model)

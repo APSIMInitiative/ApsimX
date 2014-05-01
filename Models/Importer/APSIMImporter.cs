@@ -880,7 +880,11 @@ namespace Importer
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock TimeClock;\n"); 
+            code.Append("\t\t[Link] Clock TimeClock;\n");
+
+            List<string> startofdayScripts = new List<string>();
+            List<string> endofdayScripts = new List<string>();
+            List<string> initScripts = new List<string>();
 
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
@@ -895,30 +899,61 @@ namespace Importer
                 {
                     if (eventNode.InnerText.ToLower() == "init")
                     {
-                        code.Append("\t\tpublic override void OnCommencing()\n");
+                        initScripts.Add(textNode.InnerText);
                     }
                     else if (eventNode.InnerText.ToLower() == "start_of_day")
                     {
-                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
-                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
+                        startofdayScripts.Add(textNode.InnerText);
                     }
                     else if (eventNode.InnerText.ToLower() == "end_of_day")
                     {
-                        code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
-                        code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                        endofdayScripts.Add(textNode.InnerText);
                     }
                     else
                     {
                         // use the StartOfDay as a default when the event name is unknown
-                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
-                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)  /* unknown event type found here */ \n");
+                        startofdayScripts.Add("// ----- " + eventNode.InnerText + " ----- \n" + textNode.InnerText);
                     }
-                    code.Append("\t\t{\n");
-                    code.Append("\t\t\t/*\n");
-                    code.Append("\t\t\t\t" + textNode.InnerText + "\n");
-                    code.Append("\t\t\t*/\n");
-                    code.Append("\t\t}\n");
                 }
+            }
+            // append all the scripts for each type
+            if (initScripts.Count > 0)
+            {
+                code.Append("\t\tpublic override void OnCommencing()\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in initScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
+            }
+            if (startofdayScripts.Count > 0)
+            {
+                code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
+                code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in startofdayScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
+            }
+            if (endofdayScripts.Count > 0)
+            {
+                code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
+                code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in endofdayScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
             }
             code.Append("\t}\n}\n");
            
@@ -934,6 +969,21 @@ namespace Importer
             destParent = ImportManagerMemos(compNode, destParent);
             
             return newNode;
+        }
+
+        private string AddScriptToCode(string attr, string declar, string scriptText)
+        {
+            StringBuilder code = new StringBuilder();
+            if (attr.Length > 0)
+                code.Append("\t\t" + attr + "\n");
+            code.Append("\t\t" + declar + "\n");
+            code.Append("\t\t{\n");
+            code.Append("\t\t\t/*\n");
+            code.Append("\t\t\t\t" + scriptText + "\n");
+            code.Append("\t\t\t*/\n");
+            code.Append("\t\t}\n");
+
+            return code.ToString();
         }
 
         /// <summary>
