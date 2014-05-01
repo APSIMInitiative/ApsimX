@@ -1221,4 +1221,9 @@
             </Biomass>
           </GenericAboveGroundOrgan>
           <CropType>Potato</CropType>
-</Plant>
+   <Cultivars>
+     <Cultivar>
+       <Name>RussetBurbank</Name>
+     </Cultivar>
+   </Cultivars>
+   </Plant>

@@ -21,9 +21,10 @@ namespace Models.PMF
         /// </summary>
         public Cultivar FindCultivar(string cultivar)
         {
-            foreach (Cultivar cult in CultivarDefinitions)
-                if (cult.Name.Equals(cultivar, StringComparison.CurrentCultureIgnoreCase))
-                    return cult;
+            if (CultivarDefinitions != null)
+                foreach (Cultivar cult in CultivarDefinitions)
+                    if (cult.Name.Equals(cultivar, StringComparison.CurrentCultureIgnoreCase))
+                        return cult;
             return null;
         }
     }

@@ -4,17 +4,28 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Models.Core;
+using Models.PMF.Functions;
+
 namespace Models.PMF.Organs
 {
     [Serializable]
     public class Nodule : GenericOrgan, BelowGround
     {
         #region Paramater Input Classes
-        [Link] Function FixationMetabolicCost = null;
-        [Link] Function SpecificNitrogenaseActivity = null;
-        [Link] Function FT = null;
-        [Link] Function FW = null;
-        [Link] Function FWlog = null;
+        [Link]
+        Function FixationMetabolicCost = null;
+        [Link]
+        Function SpecificNitrogenaseActivity = null;
+        [Link]
+        Function FT = null;
+        [Link]
+        Function FW = null;
+        [Link]
+        Function FWlog = null;
         #endregion
 
         #region Class Fields
@@ -39,7 +50,7 @@ namespace Models.PMF.Organs
                 _NFixed = value.Fixation;    // now get our fixation value.
             }
         }
-        
+
         public double RespiredWtFixation
         {
             get
@@ -69,7 +80,7 @@ namespace Models.PMF.Organs
                 RespiredWt = value.Respired;    // Now get the respired value for ourselves.
             }
         }
-        
+
         public double NFixed
         {
             get

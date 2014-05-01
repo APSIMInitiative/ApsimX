@@ -90,6 +90,9 @@ namespace Models.PMF
         public NewCanopyType CanopyData {get{return LocalCanopyData;}}
         public NewCanopyType LocalCanopyData;
 
+        [Link(IsOptional=true)]
+        Cultivars Cultivars = null;
+
         #region Links
         [Link]
         ISummary Summary = null;
@@ -132,6 +135,12 @@ namespace Models.PMF
             SowingData.RowSpacing = RowSpacing;
             SowingData.CropClass = CropClass;
 
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.ApplyOverrides(this);
+
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -163,6 +172,12 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
+
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.UnapplyOverrides(this);
         }
 
         /// <summary>
