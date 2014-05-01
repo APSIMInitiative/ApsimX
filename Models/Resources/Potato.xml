@@ -1,6 +1,66 @@
  <Plant>
     <Name>Potato</Name>
-          <Phenology>
+   <Cultivars>
+     <Cultivar>
+       <Name>RussetBurbank</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>JerseyBenny</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>IlamHardy</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>MarisPiper</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Horizon</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Karaka</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Nooksac</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>RedRascal</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Rua</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Fianna</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>RussetRanger</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Nadine</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Coliban</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Moonlight</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Agria</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Bondi</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>Crop39</Name>
+     </Cultivar>
+     <Cultivar>
+       <Name>RussetBurbank</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value type="text" description="Value">46</Value>
+       </Override>
+     </Cultivar>
+   </Cultivars>
+   <Phenology>
             <Name>Phenology</Name>
             <StageBasedInterpolation>
               <Name>StageCode</Name>
@@ -291,7 +351,7 @@
             <MultiplyFunction>
               <Name>BranchingRate</Name>
               <LinearInterpolationFunction>
-                <Name>LinearInterpolationFunction</Name>
+                <Name>Potential_Branching_Rate</Name>
                 <XProperty>[Structure].MainStemNodeNo</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
@@ -451,7 +511,7 @@
               <MultiplyFunction>
                 <Name>OrganNumber</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>OrganNumberPerStem</Name>
                   <Value>5</Value>
                 </Constant>
                 <VariableReference>
