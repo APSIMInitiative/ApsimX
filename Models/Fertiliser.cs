@@ -30,10 +30,12 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         // Parameters
+        [XmlIgnore]
         public List<FertiliserType> Definitions { get; set; }
 
         private void AddDefinitions()
         {
+            Definitions = new List<FertiliserType>();
             Definitions.Add(new FertiliserType { Name = "CalciteCA", Description = "Ca as finely ground Agricultural Lime", FractionCa = 1.0 });
             Definitions.Add(new FertiliserType { Name = "CalciteFine", Description = "finely ground Agricultural Lime", FractionCa = 0.4 });
             Definitions.Add(new FertiliserType { Name = "Dolomite", Description = "finely ground dolomite", FractionCa = 0.22 });

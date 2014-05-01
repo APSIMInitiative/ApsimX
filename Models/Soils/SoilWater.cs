@@ -1229,25 +1229,25 @@ namespace Models.Soils
         
             foreach (Model m in models)
             {
-                int CropNumber = 0;
-                Array.Resize(ref cover_green, CropNumber +1);
-                Array.Resize(ref cover_tot, CropNumber + 1);
-                Array.Resize(ref canopy_height, CropNumber + 1);
+                NumberOfCrops = 0;
+                Array.Resize(ref cover_green, NumberOfCrops + 1);
+                Array.Resize(ref cover_tot, NumberOfCrops + 1);
+                Array.Resize(ref canopy_height, NumberOfCrops + 1);
 
                 ICrop Crop = m as ICrop;
                 if (Crop.CanopyData != null)
                 {
-                    cover_green[CropNumber] = Crop.CanopyData.cover;
-                    cover_tot[CropNumber] = Crop.CanopyData.cover_tot;
-                    canopy_height[CropNumber] = Crop.CanopyData.height;
+                    cover_green[NumberOfCrops] = Crop.CanopyData.cover;
+                    cover_tot[NumberOfCrops] = Crop.CanopyData.cover_tot;
+                    canopy_height[NumberOfCrops] = Crop.CanopyData.height;
                 }
                 else
                 {
-                    cover_green[CropNumber] = 0;
-                    cover_tot[CropNumber] = 0;
-                    canopy_height[CropNumber] = 0;
+                    cover_green[NumberOfCrops] = 0;
+                    cover_tot[NumberOfCrops] = 0;
+                    canopy_height[NumberOfCrops] = 0;
                 }
-                CropNumber += 1;     
+                NumberOfCrops += 1;     
             }
          }
 
@@ -1391,7 +1391,7 @@ namespace Models.Soils
         private double[] cover_tot = null;     //! total canopy cover of crops (0-1)
         private double[] cover_green = null;   //! green canopy cover of crops (0-1)
         private double[] canopy_height = null; //! canopy heights of each crop (mm)
-        private int num_crops = 0;                //! number of crops ()
+        private int NumberOfCrops = 0;                //! number of crops ()
 
         //TILLAGE EVENT
         private double tillage_cn_red;   //! reduction in CN due to tillage ()   //can either come from the manager module or from the sim file
@@ -1532,7 +1532,7 @@ namespace Models.Soils
             cover_tot = null;                //! total canopy cover of crops (0-1)
             cover_green = null;              //! green canopy cover of crops (0-1)
             canopy_height = null;            //! canopy heights of each crop (mm)
-            num_crops = 0;                          //! number of crops ()
+            NumberOfCrops = 0;                          //! number of crops ()
             sumes1 = 0.0;                           //! cumulative soil evaporation in stage 1 (mm)
             sumes2 = 0.0;                           //! cumulative soil evaporation in stage 2 (mm)
 
@@ -1597,7 +1597,7 @@ namespace Models.Soils
             infiltration = 0.0;
             runoff = 0.0;
             runoff_pot = 0.0;
-            num_crops = 0;
+            NumberOfCrops = 0;
             //obsrunoff = 0.0;
             pond_evap = 0.0;                    //! evaporation from the pond surface (mm)
             real_eo = 0.0;                      //! eo determined before any ponded water is evaporated (mm)
@@ -2445,7 +2445,7 @@ namespace Models.Soils
             //!    0 (no effect) to 1 (full effect)
 
             cover_surface_crop = 0.0;
-            for (crop = 0; crop < num_crops; crop++)
+            for (crop = 0; crop < NumberOfCrops; crop++)
             {
                 if (canopy_height[crop] >= 0.0)
                 {
@@ -2682,7 +2682,7 @@ namespace Models.Soils
             //                ! function of radiation, albedo, and temp.
 
             cover_green_sum = 0.0;
-            for (int crop = 0; crop < num_crops; ++crop)
+            for (int crop = 0; crop < NumberOfCrops; ++crop)
                 cover_green_sum = 1.0 - (1.0 - cover_green_sum) * (1.0 - cover_green[crop]);
 
             albedo = max_albedo - (max_albedo - Salb) * (1.0 - cover_green_sum);
@@ -2771,7 +2771,7 @@ namespace Models.Soils
             //!              ...maximum reduction (at cover =1.0) is 0.183.
 
             cover_tot_sum = 0.0;
-            for (int i = 0; i < num_crops; i++)
+            for (int i = 0; i < NumberOfCrops; i++)
                 cover_tot_sum = 1.0 - (1.0 - cover_tot_sum) * (1.0 - cover_tot[i]);
             eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * cover_tot_sum);
 

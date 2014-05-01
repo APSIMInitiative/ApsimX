@@ -6,27 +6,91 @@
      </Cultivar>
      <Cultivar>
        <Name>JerseyBenny</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>19</Value>
+       </Override>
+       <Override>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X</Name>
+         <Value>0 6 7 10 11</Value>
+       </Override>
+       <Override>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y</Name>
+         <Value>0 0 0.5 0.5 0</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value</Name>
+         <Value>3</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>IlamHardy</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>26</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>MarisPiper</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>50</Value>
+       </Override>
+       <Override>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X</Name>
+         <Value>0 7 8 9</Value>
+       </Override>
+       <Override>
+         <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.y</Name>
+         <Value>0 0 1 0</Value>
+       </Override>
+       <Override>
+         <Name>[Stem].DMDemandFunction.InternodeWt.value</Name>
+         <Value>0.4</Value>
+       </Override>
+       <Override>
+         <Name>[Leaf].LagDuration.XYPairs.X</Name>
+         <Value>0 0.15 0.3 0.4 0.73 1</Value>
+       </Override>
+       <Override>
+           <Name>[Leaf].LagDuration.XYPairs.Y</Name>
+           <Value>0 500 500 500 500 20</Value>
+       </Override>
+       <Override>
+         <Name>[Leaf].Photosynthesis.RUE.value</Name>
+         <Value>2.0</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Horizon</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>28</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Karaka</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>29</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Nooksac</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>36</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>RedRascal</Name>
      </Cultivar>
      <Cultivar>
        <Name>Rua</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>29</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Fianna</Name>
@@ -728,6 +792,21 @@
                 </Y>
               </XYPairs>
             </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>SenescenceRate</Name>
+              <XProperty>[Leaf].FractionDied</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0.1</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
             <InitialDM>5</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3>0.02</KNO3>
@@ -825,7 +904,7 @@
                     <double>0.3</double>
                     <double>0.4</double>
                     <double>0.73</double>
-                    <double>2</double>
+                    <double>1</double>
                   </X>
                   <Y>
                     <double>350</double>
