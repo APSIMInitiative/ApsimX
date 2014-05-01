@@ -486,6 +486,7 @@ namespace Models
 
         public override void OnCommencing()
         {
+            ComponentData = new List<ComponentDataStruct>();
             foreach (ComponentDataStruct c in ComponentData)
                 Clear(c);
             _albedo = albedo;
@@ -701,6 +702,7 @@ namespace Models
         private int numLayers;
 
         [XmlElement("ComponentData")]
+        [XmlIgnore]
         public List<ComponentDataStruct> ComponentData { get; set; }
 
         #endregion

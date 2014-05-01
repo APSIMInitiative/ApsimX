@@ -110,30 +110,104 @@
         <Name>Cultivar</Name>
         <FactorValue>
           <Name>Burbank</Name>
+          <FactorValue>
+            <Name>RussetBurbank</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.2</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>120</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>JerseyBenny</Name>
+          <FactorValue>
+            <Name>JerseyBenny</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3.6</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>160</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>RedRascal</Name>
+          <FactorValue>
+            <Name>RedRascal</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>4.87</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>140</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>Horizon</Name>
+          <FactorValue>
+            <Name>Horizon</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3.2</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>IlamHardy</Name>
+          <FactorValue>
+            <Name>IlamHardy</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>4.63</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>Karaka</Name>
+          <FactorValue>
+            <Name>Karaka</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>3</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>135</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>Nooksac</Name>
+          <FactorValue>
+            <Name>Nooksac</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.3</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>165</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>Rua</Name>
+          <FactorValue>
+            <Name>Rua</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2.55</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>140</Name>
+          </FactorValue>
         </FactorValue>
         <Paths>
           <string>[PotatoSowingRule].Script.CultivarName</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth</string>
         </Paths>
       </Factor>
     </Factors>
@@ -494,358 +568,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>CalciteCA</Name>
-              <Description>Ca as finely ground Agricultural Lime</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>1</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>CalciteFine</Name>
-              <Description>finely ground Agricultural Lime</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0.4</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>Dolomite</Name>
-              <Description>finely ground dolomite</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0.22</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <Description>N as nitrate</Description>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4N</Name>
-              <Description>N as ammonium</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>1</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4NO3N</Name>
-              <Description>ammonium nitrate</Description>
-              <FractionNO3>0.5</FractionNO3>
-              <FractionNH4>0.5</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>DAP</Name>
-              <Description>di-ammonium phosphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0.18</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>MAP</Name>
-              <Description>mono-ammonium phosphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0.11</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <Description>N as urea</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>UreaNO3</Name>
-              <Description>N as urea</Description>
-              <FractionNO3>0.5</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0.5</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>Urea</Name>
-              <Description>Urea fertiliser</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0.46</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4SO4N</Name>
-              <Description>ammonium sulphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>1</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>RockP</Name>
-              <Description>Rock phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0.8</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0.2</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>BandedP</Name>
-              <Description>Banded phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>1</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>BroadcastP</Name>
-              <Description>Broadcast phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>1</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>CalciteCA</Name>
-              <Description>Ca as finely ground Agricultural Lime</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>1</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>CalciteFine</Name>
-              <Description>finely ground Agricultural Lime</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0.4</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>Dolomite</Name>
-              <Description>finely ground dolomite</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0.22</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <Description>N as nitrate</Description>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4N</Name>
-              <Description>N as ammonium</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>1</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4NO3N</Name>
-              <Description>ammonium nitrate</Description>
-              <FractionNO3>0.5</FractionNO3>
-              <FractionNH4>0.5</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>DAP</Name>
-              <Description>di-ammonium phosphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0.18</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>MAP</Name>
-              <Description>mono-ammonium phosphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0.11</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <Description>N as urea</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>UreaNO3</Name>
-              <Description>N as urea</Description>
-              <FractionNO3>0.5</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0.5</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>Urea</Name>
-              <Description>Urea fertiliser</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0.46</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NH4SO4N</Name>
-              <Description>ammonium sulphate</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>1</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>RockP</Name>
-              <Description>Rock phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0.8</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0.2</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>BandedP</Name>
-              <Description>Banded phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>1</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>BroadcastP</Name>
-              <Description>Broadcast phosphorus</Description>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>1</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -863,10 +585,6 @@
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
           <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -891,543 +609,18 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.03</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>crop</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>broccoli</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>tree</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>grandis</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oilpalm</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oilmallee</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>globulus</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>camaldulensis</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>grass</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>wheat</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>barley</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>canola</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>raphanus_raphanistrum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>lolium_rigidum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>chickpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>weed</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oats</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>chickpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>fieldpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>sugar</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>potato</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>frenchbean</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>bambatsi</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>150</R50>
-            <Gsmax>0.015</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>lucerne</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>maize</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>banksia</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>understorey</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>ryegrass</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>vine</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>saltbush</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>sorghum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>danthonia</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>nativepasture</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>raphanus_raphanistrum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>canola</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>kale2</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>Carrots4</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>crop</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>broccoli</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>tree</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>grandis</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oilpalm</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oilmallee</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>globulus</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>camaldulensis</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>grass</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>wheat</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>barley</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>canola</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>raphanus_raphanistrum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>lolium_rigidum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>chickpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>weed</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>oats</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>chickpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>fieldpea</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>sugar</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>potato</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>frenchbean</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>bambatsi</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>150</R50>
-            <Gsmax>0.015</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>lucerne</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>maize</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>banksia</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>understorey</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>ryegrass</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>vine</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>saltbush</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.005</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>sorghum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>danthonia</Name>
-            <Albedo>0.23</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>nativepasture</Name>
-            <Albedo>0.15</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>raphanus_raphanistrum</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>canola</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>kale2</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
-          <ComponentData>
-            <Name>Carrots4</Name>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <LocalCanopyData>
             <sender>Potato</sender>
-            <height>265.47341918945312</height>
-            <depth>265.47341918945312</depth>
+            <height>263.74932861328125</height>
+            <depth>263.74932861328125</depth>
             <lai>0</lai>
-            <lai_tot>5.893211841583252</lai_tot>
+            <lai_tot>7.6905741691589355</lai_tot>
             <cover>0</cover>
-            <cover_tot>0.16204959154129028</cover_tot>
+            <cover_tot>0.20603606104850769</cover_tot>
           </LocalCanopyData>
         </Plant>
         <Manager>
@@ -1793,6 +986,7 @@ namespace Models
           </Variables>
           <Events>
             <string>[Clock].EndOfDay</string>
+            <string />
           </Events>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
@@ -3761,7 +2955,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>LeafWt</Name>
@@ -4125,7 +3319,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>TuberN%</Name>
@@ -4333,9 +3527,9 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
     </Graph>
   </Experiment>
   <Area>0</Area>
-  <ExplorerWidth>339</ExplorerWidth>
+  <ExplorerWidth>271</ExplorerWidth>
 </Simulations>
