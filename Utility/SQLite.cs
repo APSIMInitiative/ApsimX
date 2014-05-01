@@ -220,6 +220,9 @@ namespace Utility
                     for (int i = 0; i < columnCount; i++)
                     {
                         string ColumnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
+                        if (dTable.Columns.Contains(ColumnName))
+                            ColumnName = "Report." + ColumnName;
+
                         int ColType = sqlite3_column_type(stmHandle, i);
                         if (ColType == SQLITE_INTEGER)
                             dTable.Columns.Add(ColumnName, typeof(int));
@@ -332,74 +335,6 @@ namespace Utility
                     }
                 }
             }
-
-
-            // Clone datatable to fix data types.
-            // Need to do this to overcome SQLite limitation where first row contains NULL
-    /*        if (dTable != null)
-            {
-                System.Data.DataTable fixedTypes = new System.Data.DataTable();
-
-                int tryInt;
-                double tryDouble;
-
-                for (int i = 0; i < dTable.Columns.Count; i++)
-                    for (int j = 0; j < dTable.Rows.Count; j++)
-                    {
-                        string dtype;
-
-                        if (dTable.Rows[j][i] is DBNull)
-                        {
-                            if (j == dTable.Columns.Count - 1) //entire column is null so make it a generic object type
-                            {
-                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(object));
-                                continue; // this means go to next loop (added for Hamish and Neil)
-                            }
-                            else
-                                dtype = "";
-                        }
-                        else
-                            dtype = (string)dTable.Rows[j][i];
-
-                        if (dtype.ToString().Equals(""))
-                            continue; 
-
-                        // found a value, try to convert it using most restrictive data type (int) first
-                        if (Int32.TryParse(dtype, out tryInt))
-                        {
-                            fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(int));
-                            break;
-                        }
-                        else if (Double.TryParse(dtype, out tryDouble)) // double
-                        {
-                            fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(double));
-                            break;
-                        }
-                        else 
-                        {
-                            DateTime tryDate;
-                            if (DateTime.TryParse(dtype, out tryDate))
-                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(DateTime));
-                            else
-                                fixedTypes.Columns.Add(dTable.Columns[i].ColumnName, typeof(string));
-                            break;
-                        }
-                    }
-
-                for (int i = 0; i < dTable.Rows.Count; i++)
-                {
-                    object[] drow = new object[dTable.Columns.Count];
-                    for (int j = 0; j < dTable.Columns.Count; j++)
-                    {
-                        drow[j] = dTable.Rows[i][j];
-                    }
-                    fixedTypes.Rows.Add(drow);
-                }
-                return fixedTypes;
-            }
-            else 
-                return null;*/
-
             return dTable;
         }
 
