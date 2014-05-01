@@ -564,11 +564,14 @@ namespace Models
             public double Height;
             [XmlIgnore]
             public double Depth;
-            public double Albedo = 0.15;
-            public double Emissivity = 0.96;
-            
+            [XmlIgnore]
+            public double Albedo {get; set;}
+            [XmlIgnore]
+            public double Emissivity {get; set;}
+            [XmlIgnore]
             public double Gsmax {get; set;}
-            public double R50 = 200;
+            [XmlIgnore]
+            public double R50 {get; set;}
             [XmlIgnore]
             public double Frgr;
             [XmlIgnore]
@@ -647,31 +650,42 @@ namespace Models
             ComponentDataStruct CropType = new ComponentDataStruct();
             CropType.Name = Name;
 
+            //Set defalst
+            CropType.Albedo = 0.15;
+            CropType.Gsmax = 0.01;
+            CropType.Emissivity = 0.96;
+            CropType.R50 = 200;
+
+            //Override type specific values
             if (Type.Equals("Crop"))
             {
                 CropType.Albedo = 0.26;
                 CropType.Gsmax=0.011;
             }
+            if (Type.Equals("Potato"))
+            {
+                CropType.Albedo = 0.26;
+                CropType.Gsmax = 0.03;
+            }
             else if (Type.Equals("Grass"))
             {
-                CropType.Albedo=0.23;
+                CropType.Albedo = 0.23;
             }
             else if (Type.Equals("C4grass"))
             {
-                CropType.Albedo=0.23;
-                CropType.Gsmax=0.015;
-                CropType.R50=150;
+                CropType.Albedo = 0.23;
+                CropType.Gsmax = 0.015;
+                CropType.R50 = 150;
             }
             else if (Type.Equals("Tree"))
             {
-                CropType.Albedo=0.15;
-                CropType.Gsmax=0.005;
+                CropType.Albedo = 0.15;
+                CropType.Gsmax = 0.005;
             }
             else if (Type.Equals("Tree2"))
             {
-                CropType.Albedo=0.15;
-                CropType.Gsmax=0.01;
-                CropType.R50=100;
+                CropType.Albedo = 0.15;
+                CropType.R50 = 100;
             }
 
             ComponentData.Add(CropType);
@@ -773,7 +787,7 @@ namespace Models
             if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
             {
                 // crop type
-                ComponentData.Add(new ComponentDataStruct() { Name = name, Albedo = 0.26, Gsmax = 0.011 });
+                ComponentData.Add(new ComponentDataStruct());
                 return ComponentData.Count - 1;
             }
             return -1;

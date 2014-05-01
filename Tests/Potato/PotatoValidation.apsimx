@@ -615,12 +615,12 @@
           <ResourceName>Potato</ResourceName>
           <LocalCanopyData>
             <sender>Potato</sender>
-            <height>263.74932861328125</height>
-            <depth>263.74932861328125</depth>
+            <height>273.12408447265625</height>
+            <depth>273.12408447265625</depth>
             <lai>0</lai>
-            <lai_tot>7.6905741691589355</lai_tot>
+            <lai_tot>6.897010326385498</lai_tot>
             <cover>0</cover>
-            <cover_tot>0.20603606104850769</cover_tot>
+            <cover_tot>0.18690742552280426</cover_tot>
           </LocalCanopyData>
         </Plant>
         <Manager>
