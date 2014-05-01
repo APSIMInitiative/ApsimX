@@ -17,7 +17,8 @@
         <Name>[Phenology].Vernalisation.PhotopSens</Name>
         <Value>3.5</Value>
       </Override>
-    </Cultivar>    <Cultivar>
+    </Cultivar>    
+    <Cultivar>
       <Name>Hartog</Name>
       <Override>
         <Name>[Phenology].Vernalisation.VernSens</Name>

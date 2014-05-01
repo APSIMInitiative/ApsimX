@@ -21,9 +21,10 @@ namespace Models.PMF
         /// </summary>
         public Cultivar FindCultivar(string cultivar)
         {
-            foreach (Cultivar cult in CultivarDefinitions)
-                if (cult.Name.Equals(cultivar, StringComparison.CurrentCultureIgnoreCase))
-                    return cult;
+            if (CultivarDefinitions != null)
+                foreach (Cultivar cult in CultivarDefinitions)
+                    if (cult.Name.Equals(cultivar, StringComparison.CurrentCultureIgnoreCase))
+                        return cult;
             return null;
         }
     }
@@ -44,7 +45,14 @@ namespace Models.PMF
             OldValue = model.Get(Name);
             if (OldValue == null)
                 throw new ApsimXException(model.FullPath, "In cultivar " + model.Name + ", cannot find variable " + Name);
-            object objValue = Convert.ChangeType(Value, OldValue.GetType());
+            object objValue;
+            if (OldValue.GetType() == typeof(double[]))
+            {
+                string[] stringValues = Value.Split(" ".ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
+                objValue = Utility.Math.StringsToDoubles(stringValues);
+            }
+            else
+                objValue = Convert.ChangeType(Value, OldValue.GetType());
             model.Set(Name, objValue);
         }
         public void Unapply(Model model)
