@@ -367,7 +367,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Return all data from the specified simulation and table name. If simulatinName = "*"
+        /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
         public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)

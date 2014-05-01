@@ -58,10 +58,25 @@ namespace Models
 
                 dataStore.DeleteTable(this.Name);
                 
-                DataTable predictedData = dataStore.GetData("*", PredictedTableName);
-                DataTable observedData = dataStore.GetData("*", ObservedTableName);
+                DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
+                DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
-                DataTable predictedObservedData = GetPredictedObservedData();
+                IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
+                                               join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
+                                               select p["name"] as string;
+
+                StringBuilder query = new StringBuilder("SELECT ");
+                foreach (string s in commonCols)
+                {
+                    query.Append("I.'@field' AS 'Observerd.@field', R.'@field' AS 'Predicted.@field', ");
+                    query.Replace("@field", s);
+                }
+
+                query.Append("FROM Input I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
+                query.Replace(", FROM", " FROM"); // get rid of the last comma
+                query.Replace("I.'SimulationID' AS 'Observerd.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID',", ""); // get rid of sim IDs
+
+                DataTable predictedObservedData = GetPredictedObservedData(query.ToString());
 
                 if (predictedObservedData != null)
                     dataStore.WriteTable(Simulations.Name, this.Name, predictedObservedData);
@@ -73,18 +88,18 @@ namespace Models
         /// Perform the matching of observed data with predicted data and return the resulting
         /// DataTable. Returns null if no matches.
         /// </summary>
-        private DataTable GetPredictedObservedData()
+        private DataTable GetPredictedObservedData(string query)
         {
-            string sql = "SELECT * FROM Input I INNER JOIN Report R USING (SimulationID) WHERE I.'@field' = R.'@field'";
-            sql = sql.Replace("@field", FieldNameUsedForMatch);
-
             Utility.SQLite dbHandler = new Utility.SQLite();
             if (!dbHandler.IsOpen)
                 dbHandler.OpenDatabase(Path.ChangeExtension(Simulations.FileName, ".db"), true);
 
-            System.Data.DataTable predictedObserved = dbHandler.ExecuteQuery(sql);
+            query = query.Replace("@match", FieldNameUsedForMatch);
 
-                return predictedObserved;
+            System.Data.DataTable predictedObserved = dbHandler.ExecuteQuery(query);
+            dbHandler.CloseDatabase();
+
+            return predictedObserved;
         }
 
 

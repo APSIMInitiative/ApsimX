@@ -6,10 +6,10 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Wheat\APS6Timeseries.txt</string>
-        <string>Tests\Wheat\APS14TimeSeries.txt</string>
-        <string>Tests\Wheat\APS26TimeSeries.txt</string>
-        <string>Tests\Wheat\WheatObservedData.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\APS6Timeseries.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\APS14TimeSeries.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\APS26TimeSeries.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -5159,15 +5159,15 @@ private void OnStartOfDay(object sender, EventArgs e)
     </Graph>
   </Experiment>
   <Graph>
-    <Name>Graph</Name>
+    <Name>Yield</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>X axis title 2</Title>
+      <Title>Observed Yield</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Y axis title</Title>
+      <Title>Predicted Yield</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
@@ -5180,12 +5180,12 @@ private void OnStartOfDay(object sender, EventArgs e)
       <X>
         <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
-        <FieldName>Wheat.Grain.Wt</FieldName>
+        <FieldName>Observerd.Wheat.Grain.Wt</FieldName>
       </X>
       <Y>
         <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
-        <FieldName>Report.Wheat.Grain.Wt</FieldName>
+        <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
     </Series>
