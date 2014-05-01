@@ -20,11 +20,11 @@ namespace Models
                 string commandLineSwitch = null;
 
                 // Check the command line arguments.
-                if (args.Length > 1)
+                if (args.Length >= 1)
                     fileName = args[0];
                 if (args.Length == 2)
                     commandLineSwitch = args[1];
-                if (args.Length <= 1 || args.Length > 2)
+                if (args.Length < 1 || args.Length > 2)
                     throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse]");
 
                 // Create a instance of a job that will go find .apsimx files. Then
