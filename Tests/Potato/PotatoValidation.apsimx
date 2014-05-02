@@ -27,6 +27,10 @@
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
+    <TimeSeriesStats>
+      <Name>TimeSeriesStats</Name>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
   </DataStore>
   <Experiment>
     <Name>Potato</Name>
@@ -2832,7 +2836,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TuberLiveWt</FieldName>
+          <FieldName>Tuber.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2884,7 +2888,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>LeafLAI</FieldName>
+          <FieldName>Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2936,7 +2940,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>LeafLiveWt</FieldName>
+          <FieldName>Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2988,7 +2992,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>StemLiveWt</FieldName>
+          <FieldName>Stem.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3040,7 +3044,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TotalLiveWt</FieldName>
+          <FieldName>Summariser.Total.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
