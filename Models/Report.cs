@@ -346,7 +346,7 @@ namespace Models
         {
             // Unsubscribe to all events.
             foreach (string Event in Events)
-                if (Event != "")
+                if ( (Event != null) && (Event != "") )
                     Unsubscribe(Event);
         }
 

@@ -734,7 +734,6 @@
       </SurfaceOrganicMatter>
       <Fertiliser>
         <Name>fertiliser</Name>
-        <Definitions />
       </Fertiliser>
       <Plant>
         <Name>wheat</Name>
@@ -920,8 +919,10 @@
           <StartFractionExpanded>0</StartFractionExpanded>
           <FractionNextleafExpanded>0</FractionNextleafExpanded>
           <_ExpandedNodeNo>0</_ExpandedNodeNo>
+          <DeadNodesYesterday>0</DeadNodesYesterday>
           <MaxCover>0</MaxCover>
           <KDead>0</KDead>
+          <FractionDied>0</FractionDied>
         </Leaf>
       </Plant>
       <Folder>
@@ -983,16 +984,16 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock TimeClock;
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
+		//[EventSubscribe("unknown")]
+		//private void OnUnknown(object sender, EventArgs e)
+		//{
 			/*
 				// ----- [modulename].[eventname] ----- 
 
         [fertmodule] apply amount = [fert_amount_sow] (kg/ha), depth = 50 (mm), type = [fert_type_sow]
             
 			*/
-		}
+		//}
 	}
 }
 ]]></Code>
