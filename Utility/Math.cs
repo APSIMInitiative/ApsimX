@@ -849,6 +849,53 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// A structure for holding time series stats.
+        /// </summary>
+        public class Stats
+        {
+            public double Residual { get { return PredictedMean - ObservedMean; } }
+            public double ResidualSquared { get { return System.Math.Pow(Residual, 2.0); } }
+            public double SDs { get { return System.Math.Sqrt((1 / Count) * Y_YSquared); } }
+            public double SDm { get { return System.Math.Sqrt((1 / Count) * X_XSquared); } }
+            public double R { get { return (1 / Count) * Y_YxX_X / (SDs * SDm); } }
+            public double LCS { get { return 2 * SDs * SDm * (1 - R); } }
+            public double SDSD { get { return System.Math.Pow(SDs - SDm, 2); } }
+            public double RMSD { get { return ResidualSquared + SDSD + LCS; } }
+            public double Percent { get { return RMSD / ObservedMean; } }
+
+            // Low level pre calculations.
+            public double ObservedMean;
+            public double PredictedMean;
+            public double X_XSquared; // sum of (observed - observedmean) ^ 2
+            public double Y_YSquared; // sum of (predicted - predictedmean) ^ 2
+            public double Y_YxX_X;    // sum of (predicted - predictedmean) * (observed - observedmean)
+            public int Count;
+        }
+
+        /// <summary>
+        /// Calculate stats on the specified column.
+        /// </summary>
+        public static Stats CalcTimeSeriesStats(double[] observed, double[] predicted)
+        {
+            if (observed.Length != predicted.Length)
+                throw new Exception("The number of observed points does not match the number of predicted points in CalcTimeSeriesStats");
+
+            Stats stats = new Stats();
+            stats.Count = observed.Length;
+            stats.ObservedMean = Average(observed);
+            stats.PredictedMean = Average(predicted);
+
+            for (int i = 0; i < stats.Count; i++)
+            {
+                stats.X_XSquared += System.Math.Pow(observed[i] - stats.ObservedMean, 2);
+                stats.Y_YSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
+                stats.Y_YxX_X += stats.Y_YSquared * stats.X_XSquared;
+            }
+
+            return stats;
+        }
+
     }
 
 }

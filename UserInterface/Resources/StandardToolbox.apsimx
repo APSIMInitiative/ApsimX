@@ -21,6 +21,9 @@
       <Name>Input</Name>
     </Input>
     <PredictedObserved/>
+    <TimeSeriesStats>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>

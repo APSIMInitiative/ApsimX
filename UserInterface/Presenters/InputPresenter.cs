@@ -12,7 +12,7 @@ namespace UserInterface.Presenters
     /// </summary>
     public class InputPresenter : IPresenter
     {
-        private Input Input;
+        private Models.PostSimulationTools.Input Input;
         private IInputView View;
         private ExplorerPresenter ExplorerPresenter;
 
@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Input = model as Input;
+            Input = model as Models.PostSimulationTools.Input;
             View = view as IInputView;
             ExplorerPresenter = explorerPresenter;
 
