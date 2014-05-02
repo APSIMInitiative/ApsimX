@@ -541,12 +541,12 @@
           <ResourceName>Potato</ResourceName>
           <LocalCanopyData>
             <sender>Potato</sender>
-            <height>155.68289184570313</height>
-            <depth>155.68289184570313</depth>
+            <height>270.89981079101562</height>
+            <depth>270.89981079101562</depth>
             <lai>0</lai>
-            <lai_tot>2.8224213123321533</lai_tot>
+            <lai_tot>6.8983821868896484</lai_tot>
             <cover>0</cover>
-            <cover_tot>0.081186980009078979</cover_tot>
+            <cover_tot>0.18694089353084564</cover_tot>
           </LocalCanopyData>
         </Plant>
         <Manager>
@@ -780,6 +780,11 @@ namespace Models
 		[EventSubscribe("EndOfDay")]
 		private void OnEndOfDay(object sender, EventArgs e)
 		{
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			
+			
 			AccumEO -= Soil.SoilWater.eo;
 			AccumES -= Soil.SoilWater.es; 
 			AccumDrainage -= Soil.SoilWater.drain;
@@ -900,12 +905,14 @@ namespace Models
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>[Plant].Arbitrator.NDemand</string>
-            <string>[MicroClimate].ga</string>
-            <string>[MicroClimate].gc</string>
             <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].dryleaffraction</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
+            <string>[ExtraVariables].Script.FomN</string>
+            <string>[ExtraVariables].Script.HumN</string>
+            <string>[ExtraVariables].Script.BiomN</string>
+            <string>[ExtraVariables].Script.DltNMinRes</string>
+            <string>[ExtraVariables].Script.DltNMinTot</string>
             <string />
             <string />
             <string />
@@ -3085,7 +3092,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TuberLiveN</FieldName>
+          <FieldName>Tuber.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3137,7 +3144,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>leafLiveN</FieldName>
+          <FieldName>leaf.LiveN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3189,7 +3196,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>StemLiveN</FieldName>
+          <FieldName>Stem.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3241,7 +3248,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>InputRadInd</TableName>
-          <FieldName>Cover_tot</FieldName>
+          <FieldName>Leaf.CoverGreen</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3293,7 +3300,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>TuberLiveNconc</FieldName>
+          <FieldName>Tuber.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3345,7 +3352,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>LeafLiveNconc</FieldName>
+          <FieldName>Leaf.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3397,7 +3404,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>StemLiveNconc</FieldName>
+          <FieldName>Stem.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3449,7 +3456,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>InputNodeNo</TableName>
-          <FieldName>LeafNodeNo</FieldName>
+          <FieldName>Leaf.AppearedCohortNo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>

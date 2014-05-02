@@ -1,4 +1,4 @@
-SimulationName  Clock.Today  LeafNodeNo  LeafNodeNoerror  LeafBranchNo
+SimulationName  Clock.Today  Leaf.AppearedCohortNo  LeafNodeNoerror  LeafBranchNo
 ()  (yyyy-mm-dd)  ()  (std_dev)  ()
 PotatoCultivarHorizon  2003-11-24  8.5  1.0  8.50
 PotatoCultivarIlamHardy  2003-11-24  9.2  0.8  9.17

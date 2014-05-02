@@ -1,4 +1,4 @@
-SimulationName  Experiment  cultivar  Clock.Today  Cover_tot  Cover_toterror
+SimulationName  Experiment  cultivar  Clock.Today  Leaf.CoverGreen  Cover_toterror
 ()  ()  ()  (yyyy-mm-dd)  ()  (StdDev)
 PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-01-07  0.20  0.016
 PYMCultivarBurbankSowingDec98  PYM  Burbank  1999-01-21  0.80  0.085
