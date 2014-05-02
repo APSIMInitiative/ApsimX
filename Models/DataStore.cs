@@ -196,17 +196,18 @@ namespace Models
         /// </summary>
         public void CreateTable(string tableName, string[] names, Type[] types)
         {
-            string cmd = "CREATE TABLE " + tableName +"([SimulationID] integer";
+            string cmd = "CREATE TABLE " + tableName +"(";
 
             for (int i = 0; i < names.Length; i++)
             {
                 string columnType = null;
                 columnType = GetSQLColumnType(types[i]);
 
-                cmd += ",[" + names[i] + "] " + columnType;
+                if (i != 0)
+                    cmd += ",";
+                cmd += "[" + names[i] + "] " + columnType;
             }
             cmd += ")";
-            cmd = cmd.Replace("[SimulationID] integer,[SimulationID] integer", "[SimulationID] integer");
             Locks[Filename].Aquire();
             try
             {
@@ -257,13 +258,25 @@ namespace Models
         /// </summary>
         public void WriteTable(string simulationName, string tableName, DataTable table)
         {
+            // If the table has a SimulationName column then add in an ID column.
+            if (simulationName != null)
+            {
+                int id = GetSimulationID(simulationName);
+                table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
+                foreach (DataRow row in table.Rows)
+                    row["SimulationID"] = id;
+            }
+            else if (table.Columns.Contains("SimulationName"))
+                AddSimulationIDColumnToTable(table);
+
+            
             // Add all columns.
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();
             foreach (DataColumn column in table.Columns)
             {
-                names.Add(column.ColumnName);
-                types.Add(column.DataType);
+               names.Add(column.ColumnName);
+               types.Add(column.DataType);
             }
 
             // Create the table.
@@ -272,21 +285,18 @@ namespace Models
             Locks[Filename].Aquire();
             try
             {
-
                 // prepare the sql
-                names.Insert(0, "SimulationID");
                 IntPtr query = PrepareInsertIntoTable(tableName, names.ToArray());
 
                 // tell SQLite that we're beginning a transaction.
                 Connection.ExecuteNonQuery("BEGIN");
 
                 // Add all rows.
-                object[] values = new object[table.Columns.Count + 1];
-                values[0] = GetSimulationID(simulationName);
+                object[] values = new object[names.Count];
                 foreach (DataRow row in table.Rows)
                 {
                     for (int i = 0; i < table.Columns.Count; i++)
-                        values[i + 1] = row[i];
+                        values[i] = row[i];
                     Connection.BindParametersAndRunQuery(query, values);
                 }
 
@@ -299,6 +309,34 @@ namespace Models
             finally
             {
                 Locks[Filename].Release();
+            }
+        }
+
+
+        /// <summary>
+        /// Using the SimulationName column in the specified 'table', add a
+        /// SimulationID column.
+        /// </summary>
+        /// <param name="table"></param>
+        private void AddSimulationIDColumnToTable(DataTable table)
+        {
+            DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
+            if (idTable == null)
+                throw new ApsimXException(FullPath, "Cannot find Simulations table");
+            double[] ids = Utility.DataTable.GetColumnAsDoubles(idTable, "ID");
+            string[] simulationNames = Utility.DataTable.GetColumnAsStrings(idTable, "Name");
+
+            table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
+            foreach (DataRow row in table.Rows)
+            {
+                string simulationName = row["SimulationName"].ToString();
+                if (simulationName != null)
+                {
+                    int index = Array.IndexOf(simulationNames, simulationName);
+                    if (index != -1)
+                        row["SimulationID"] = ids[index];
+                }
+                    
             }
         }
 

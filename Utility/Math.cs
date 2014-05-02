@@ -856,11 +856,11 @@ namespace Utility
         {
             public double Residual { get { return PredictedMean - ObservedMean; } }
             public double ResidualSquared { get { return System.Math.Pow(Residual, 2.0); } }
-            public double SDs { get { return System.Math.Sqrt((1 / Count) * Y_YSquared); } }
-            public double SDm { get { return System.Math.Sqrt((1 / Count) * X_XSquared); } }
-            public double R { get { return (1 / Count) * Y_YxX_X / (SDs * SDm); } }
-            public double LCS { get { return 2 * SDs * SDm * (1 - R); } }
-            public double SDSD { get { return System.Math.Pow(SDs - SDm, 2); } }
+            public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
+            public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
+            public double R { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            public double LCS { get { return 2.0 * SDs * SDm * (1.0 - R); } }
+            public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
             public double RMSD { get { return ResidualSquared + SDSD + LCS; } }
             public double Percent { get { return RMSD / ObservedMean; } }
 

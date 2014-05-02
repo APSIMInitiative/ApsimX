@@ -68,18 +68,18 @@ namespace Models.PostSimulationTools
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
                 {
-                    query.Append("I.'@field' AS 'Observerd.@field', R.'@field' AS 'Predicted.@field', ");
+                    query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
                     query.Replace("@field", s);
                 }
 
                 query.Append("FROM Input I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("I.'SimulationID' AS 'Observerd.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID',", ""); // get rid of sim IDs
+                query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 
                 DataTable predictedObservedData = GetPredictedObservedData(query.ToString());
 
                 if (predictedObservedData != null)
-                    dataStore.WriteTable(Simulations.Name, this.Name, predictedObservedData);
+                    dataStore.WriteTable(null, this.Name, predictedObservedData);
                 dataStore.Disconnect();
             }
         }
