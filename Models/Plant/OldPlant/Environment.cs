@@ -6,7 +6,8 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    public class Environment
+    [Serializable]
+    public class Environment : Model
     {
 
         [Link]

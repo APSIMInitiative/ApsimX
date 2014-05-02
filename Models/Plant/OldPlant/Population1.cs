@@ -8,7 +8,8 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.OldPlant
 {
-    public class Population1 : Model
+    [Serializable]
+    public class Population1 : ModelCollection
     {
         [Link]
         Plant15 Plant = null;
@@ -30,8 +31,7 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
+        public void OnSow(SowPlant2Type Sow)
         {
             _Plants = Sow.Population;
         }
@@ -48,17 +48,17 @@ namespace Models.PMF.OldPlant
         [Link] Function CropFailureStressPeriod = null;
         [Link] Function DeathHighTemperatureDuringEmergence = null;
 
-        public double LeafNumberCritical = 0;
+        public double LeafNumberCritical { get; set; }
 
-        public double TTEmergenceLimit = 0;
+        public double TTEmergenceLimit { get; set; }
 
-        public double DaysToGerminationLimit = 0;
+        public double DaysToGerminationLimit { get; set; }
 
-        public double SWStressPhenoLimit = 0;
+        public double SWStressPhenoLimit { get; set; }
 
-        public double SWStressPhotoLimit = 0;
+        public double SWStressPhotoLimit { get; set; }
 
-        public double SWStressPhotoRate = 0;
+        public double SWStressPhotoRate { get; set; }
 
         private int das;
         private double dlt_plants_failure_germ;

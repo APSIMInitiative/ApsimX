@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
     [Serializable]
-    public class VernalisationCW
+    public class VernalisationCW : ModelCollection
     {
         [Link]
         Phenology Phenology = null;
@@ -15,15 +16,16 @@ namespace Models.PMF.Phen
         [Link]
         Function Photoperiod = null;
 
-        
-        private double PhotopEff;
-        
-        private double VernEff;
+
+        [XmlIgnore]
+        public double PhotopEff { get; set; }
+        [XmlIgnore]
+        public double VernEff { get; set; }
         private const double Snow = 0.0;
         private double Maxt = 0;
         private double Mint = 0;
-        public double VernSens = 0;
-        public double PhotopSens = 0;
+        public double VernSens { get; set; }
+        public double PhotopSens { get; set; }
         public string StartStageForEffects = "";
         public string EndStageForEffects = "";
         public string StartStageForCumulativeVD = "";
@@ -32,10 +34,10 @@ namespace Models.PMF.Phen
         private double CumulativeVD = 0;
 
         /// <summary>
-        /// Trap the NewMet event.
+        /// Trap the NewWeatherDataAvailable event.
         /// </summary>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(Models.WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
             Maxt = NewMet.maxt;
             Mint = NewMet.mint;
@@ -45,7 +47,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialise everything
         /// </summary>
-        public void OnCommencing()
+        public override void OnCommencing()
         {
             CumulativeVD = 0;
             VernEff = 1;

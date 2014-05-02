@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             this.CommandHistory = new CommandHistory();
             this.ApsimXFile = Model as Simulations;
@@ -124,26 +124,29 @@ namespace UserInterface.Presenters
             {
                 if (ApsimXFile != null)
                 {
-                // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                // serialise ApsimXFile to buffer
-                string newSim = Utility.Xml.Serialise(ApsimXFile, true);
-                StreamReader simStream = new StreamReader(ApsimXFile.FileName);
-                string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                simStream.Close();
+                    // need to test is ApsimXFile has changed and only prompt when changes have occured.
+                    // serialise ApsimXFile to buffer
+                    StringWriter o = new StringWriter();
+                    ApsimXFile.Write(o);
+                    string newSim = o.ToString();
 
-                Int32 choice = 1;                           // no save
-                if (String.Compare(newSim, origSim) != 0)   // do comparison
-                {
-                    choice = View.AskToSave(); 
-                }
-                if (choice == -1)                           // cancel
-                    result = false;
-                else if (choice == 0)                       // save
-                {
+                    StreamReader simStream = new StreamReader(ApsimXFile.FileName);
+                    string origSim = simStream.ReadToEnd(); // read original file to buffer2
+                    simStream.Close();
+
+                    Int32 choice = 1;                           // no save
+                    if (String.Compare(newSim, origSim) != 0)   // do comparison
+                    {
+                        choice = View.AskToSave();
+                    }
+                    if (choice == -1)                           // cancel
+                        result = false;
+                    else if (choice == 0)                       // save
+                    {
                         WriteSimulation();
-                    result = true;
-            }
-            }
+                        result = true;
+                    }
+                }
             }
             catch (Exception err)
             {
@@ -204,6 +207,14 @@ namespace UserInterface.Presenters
         //        View.ShowMessage(message, DataStore.ErrorLevel.Error);
         //    }
         //}
+
+        /// <summary>
+        /// Add a status message to the explorer window
+        /// </summary>
+        public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
+        {
+            View.ShowMessage(Message, errorLevel);
+        }
 
 
         #region Events from view
@@ -288,7 +299,8 @@ namespace UserInterface.Presenters
                 {
                     ModelCollection modelCollection = Model as ModelCollection;
                     foreach (Model ChildModel in modelCollection.Models)
-                        e.Descriptions.Add(GetNodeDescription(ChildModel));
+                        if (!ChildModel.HiddenModel)
+                            e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }
         }
@@ -320,10 +332,14 @@ namespace UserInterface.Presenters
             Model Obj = ApsimXFile.Get(e.NodePath) as Model;
             if (Obj != null)
             {
+                StringWriter writer = new StringWriter();
+                Obj.Write(writer);
+                Clipboard.SetText(writer.ToString());
+
                 DragObject DragObject = new DragObject();
                 DragObject.NodePath = e.NodePath;
                 DragObject.ModelType = Obj.GetType();
-                DragObject.Xml = Utility.Xml.Serialise(Obj, false);
+                DragObject.Xml = writer.ToString();
                 e.DragObject = DragObject;
             }
         }
@@ -417,7 +433,7 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            description.HasChildren = Model is ModelCollection;
+            description.HasChildren = (Model is ModelCollection && (Model as ModelCollection).Models.Count > 0);
             return description;
         }
 
@@ -443,23 +459,26 @@ namespace UserInterface.Presenters
             {
                 object Model = ApsimXFile.Get(View.CurrentNodePath);
 
-                ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
-                PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
-
-                if (AdvancedMode)
+                if (Model != null)
                 {
-                    ViewName = new ViewName("UserInterface.Views.GridView");
-                    PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
-                }
+                    ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
+                    PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
 
-                if (ViewName != null && PresenterName != null)
-                {
-                    UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
-                    CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
-                    if (NewView != null && CurrentRightHandPresenter != null)
+                    if (AdvancedMode)
                     {
-                        View.AddRightHandView(NewView);
-                        CurrentRightHandPresenter.Attach(Model, NewView, CommandHistory);
+                        ViewName = new ViewName("UserInterface.Views.GridView");
+                        PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
+                    }
+
+                    if (ViewName != null && PresenterName != null)
+                    {
+                        UserControl NewView = Assembly.GetExecutingAssembly().CreateInstance(ViewName.ToString()) as UserControl;
+                        CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
+                        if (NewView != null && CurrentRightHandPresenter != null)
+                        {
+                            View.AddRightHandView(NewView);
+                            CurrentRightHandPresenter.Attach(Model, NewView, this);
+                        }
                     }
                 }
             }

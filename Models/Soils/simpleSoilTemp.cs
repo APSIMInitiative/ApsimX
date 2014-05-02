@@ -117,7 +117,7 @@ public class simpleSoilTemp
         _tav = tav;
         _amp = amp;
 
-        double ave_temp = (maxt + mint) * 0.5;
+        ave_temp = (maxt + mint) * 0.5;
         clear();
     }
 

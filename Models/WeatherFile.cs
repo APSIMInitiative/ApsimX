@@ -25,9 +25,12 @@ namespace Models
         private int MinTIndex;
         private int RadnIndex;
         private int RainIndex;
+        private int VPIndex;
+        private int WindIndex;
         private NewMetType TodaysMetData = new NewMetType();
         private bool DoSeek;
-
+        private double co2 = 350;
+        
         public WeatherFile()
         {
         }
@@ -50,11 +53,11 @@ namespace Models
             }
             set
             {
-                FileName = value;
+                FileName = Utility.PathUtils.OSFilePath(value);
                 WtrFile = null; // ensure it is reopened
                 // try and convert to path relative to the Simulations.FileName.
                 if (FileName != null)
-                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + @"\", "");
+                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
             }
         }
 
@@ -83,27 +86,31 @@ namespace Models
         public struct NewMetType
         {
             public double today;
-            public float radn;
-            public float maxt;
-            public float mint;
-            public float rain;
-            public float vp;
+            public double radn;
+            public double maxt;
+            public double mint;
+            public double rain;
+            public double vp;
+            public double wind;
         }
-        public delegate void NewMetDelegate(NewMetType Data); 
-        public event NewMetDelegate NewMet;
+        public delegate void NewMetDelegate(NewMetType Data);
+        public event EventHandler PreparingNewWeatherData;
+        public event NewMetDelegate NewWeatherDataAvailable;
 
         // Outputs
         public NewMetType MetData { get { return TodaysMetData; } }
-        public double MaxT { get { return MetData.maxt; } }
-        public double MinT { get { return MetData.mint; } }
-        public double Rain { get { return MetData.rain; } }
-        public double Radn { get { return MetData.radn; } }
-        public double vp { get { return MetData.vp; } }
+        public double MaxT { get { return MetData.maxt; } set { TodaysMetData.maxt = value; } }
+        public double MinT { get { return MetData.mint; } set { TodaysMetData.mint = value; } }
+        public double Rain { get { return MetData.rain; } set { TodaysMetData.rain = value; } }
+        public double Radn { get { return MetData.radn; } set { TodaysMetData.radn = value; } }
+        public double vp { get { return MetData.vp; } set { TodaysMetData.vp = value; } }
+        public double wind { get { return MetData.wind; } set { TodaysMetData.wind = value; } }
+        public double CO2 { get { return co2; } set { co2 = value; } }
         public double Latitude
         {
             get
             {
-                if (WtrFile.Constant("Latitude") == null)
+                if (WtrFile == null || WtrFile.Constant("Latitude") == null)
                     return 0;
                 else
                     return Convert.ToDouble(WtrFile.Constant("Latitude").Value);
@@ -113,7 +120,9 @@ namespace Models
         {
             get
             {
-                if (WtrFile.Constant("tav") == null)
+                if (WtrFile == null)
+                    return 0;
+                else if (WtrFile.Constant("tav") == null)
                 {
                     //this constant has not been found so do a calculation
                     CalcTAVAMP();
@@ -125,7 +134,9 @@ namespace Models
         {
             get
             {
-                if (WtrFile.Constant("amp") == null)
+                if (WtrFile == null)
+                    return 0;
+                else if (WtrFile.Constant("amp") == null)
                 {
                     //this constant has not been found so do a calculation
                     CalcTAVAMP();
@@ -189,6 +200,8 @@ namespace Models
                     MinTIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Mint");
                     RadnIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Radn");
                     RainIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Rain");
+                    VPIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "VP");
+                    WindIndex = Utility.String.IndexOfCaseInsensitive(WtrFile.Headings, "Wind");
                     if (MaxTIndex == -1)
                         throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
                     if (MinTIndex == -1)
@@ -216,6 +229,28 @@ namespace Models
         }
 
         /// <summary>
+        /// Read data for the first day of the simulation
+        /// Handy for component which need this data for their initialisation,
+        /// but use sparingly
+        /// </summary>
+        public Boolean ReadFirstDay()
+        {
+            if (!OpenDataFile())
+                return false;
+            WtrFile.SeekToDate(Clock.StartDate);
+            object[] Values = WtrFile.GetNextLineOfData();
+
+            TodaysMetData.today = (double)Clock.StartDate.Ticks;
+            TodaysMetData.radn = Convert.ToSingle(Values[RadnIndex]);
+            TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
+            TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
+            TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
+            TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
+            return true;
+        }
+
+        /// <summary>
         /// An event handler for the tick event.
         /// </summary>
         [EventSubscribe("Tick")]
@@ -240,8 +275,20 @@ namespace Models
             TodaysMetData.maxt = Convert.ToSingle(Values[MaxTIndex]);
             TodaysMetData.mint = Convert.ToSingle(Values[MinTIndex]);
             TodaysMetData.rain = Convert.ToSingle(Values[RainIndex]);
-            if (NewMet != null)
-                NewMet.Invoke(MetData);
+            if (VPIndex == -1) //If VP is not present in the weather file assign a defalt value
+                TodaysMetData.vp = Math.Max(0,Utility.Met.svp(MetData.mint));
+            else
+                TodaysMetData.vp = Convert.ToSingle(Values[VPIndex]);
+            if (WindIndex == -1) //If Wind is not present in the weather file assign a defalt value
+                TodaysMetData.wind = 3.0;
+            else
+            TodaysMetData.wind = Convert.ToSingle(Values[WindIndex]);
+
+            if (PreparingNewWeatherData != null)
+                PreparingNewWeatherData.Invoke(this, new EventArgs());
+
+            if (NewWeatherDataAvailable != null)
+                NewWeatherDataAvailable.Invoke(MetData);
         }
         //=====================================================================
         /// <summary>
@@ -411,68 +458,76 @@ namespace Models
         /// <param name="LTAvMonthly"></param>
         private void YearlyRain(out double[] YearlyTotals, out double[] LTAvMonthly)
         {
-            double rain;
-
-            //get dataset size
-            DateTime start = WtrFile.FirstDate;
-            DateTime last = WtrFile.LastDate;
-            int nyears = last.Year - start.Year + 1;
-            //temp storage arrays
-            double[,] monthlySums = new double[12, nyears];
-            int[,] monthlyDays = new int[12, nyears];
-            //return values
-            YearlyTotals = new double[nyears];
-            LTAvMonthly = new double[12];
-
-            WtrFile.SeekToDate(start); //goto start of data set
-
-            //read the daily data from the met file
-            object[] Values;
-            DateTime curDate;
-            int curYear = 0;
-            int curMonth = 0;
-            Boolean moreData = true;
-            while (moreData)
+            if (WtrFile != null)
             {
-                Values = WtrFile.GetNextLineOfData();
-                curDate = WtrFile.GetDateFromValues(Values);
-                curMonth = curDate.Month;
-                int yrIdx = curDate.Year - start.Year;
-                rain = Convert.ToDouble(Values[RainIndex]);
-                //accumulate the yearly rainfal
-                if (curYear != curDate.Year) //if next year then
+                double rain;
+
+                //get dataset size
+                DateTime start = WtrFile.FirstDate;
+                DateTime last = WtrFile.LastDate;
+                int nyears = last.Year - start.Year + 1;
+                //temp storage arrays
+                double[,] monthlySums = new double[12, nyears];
+                int[,] monthlyDays = new int[12, nyears];
+                //return values
+                YearlyTotals = new double[nyears];
+                LTAvMonthly = new double[12];
+
+                WtrFile.SeekToDate(start); //goto start of data set
+
+                //read the daily data from the met file
+                object[] Values;
+                DateTime curDate;
+                int curYear = 0;
+                int curMonth = 0;
+                Boolean moreData = true;
+                while (moreData)
                 {
-                    curYear = curDate.Year;
-                    YearlyTotals[yrIdx] = 0;    //initialise the total for next year
-                    for (int m = 0; m < 12; m++)
+                    Values = WtrFile.GetNextLineOfData();
+                    curDate = WtrFile.GetDateFromValues(Values);
+                    curMonth = curDate.Month;
+                    int yrIdx = curDate.Year - start.Year;
+                    rain = Convert.ToDouble(Values[RainIndex]);
+                    //accumulate the yearly rainfal
+                    if (curYear != curDate.Year) //if next year then
                     {
-                        monthlySums[curMonth - 1, yrIdx] = 0;
-                        monthlyDays[curMonth - 1, yrIdx] = 0;
+                        curYear = curDate.Year;
+                        YearlyTotals[yrIdx] = 0;    //initialise the total for next year
+                        for (int m = 0; m < 12; m++)
+                        {
+                            monthlySums[curMonth - 1, yrIdx] = 0;
+                            monthlyDays[curMonth - 1, yrIdx] = 0;
+                        }
                     }
+                    monthlySums[curMonth - 1, yrIdx] += rain;
+                    monthlyDays[curMonth - 1, yrIdx] += 1;
+                    YearlyTotals[yrIdx] += rain;
+                    if (curDate >= last)    //if have read last record
+                        moreData = false;
                 }
-                monthlySums[curMonth - 1, yrIdx] += rain;
-                monthlyDays[curMonth - 1, yrIdx] += 1;
-                YearlyTotals[yrIdx] += rain;
-                if (curDate >= last)    //if have read last record
-                    moreData = false;
+                //now calculate the long term av month rainfall
+                int yrCount;
+                double sum;
+                for (int m = 0; m < 12; m++)
+                {
+                    sum = 0;
+                    yrCount = 0;
+                    for (int y = 0; y < nyears; y++)
+                    {
+                        if (monthlyDays[m, y] > 0)  //don't use 0 rainfall for non existent months
+                        {
+                            sum += monthlySums[m, y];
+                            yrCount++;
+                        }
+                    }
+                    if (yrCount > 0)
+                        LTAvMonthly[m] = sum / yrCount;
+                }
             }
-            //now calculate the long term av month rainfall
-            int yrCount;
-            double sum;
-            for (int m = 0; m < 12; m++)
+            else
             {
-                sum = 0;
-                yrCount = 0;
-                for (int y = 0; y < nyears; y++)
-                {
-                    if (monthlyDays[m, y] > 0)  //don't use 0 rainfall for non existent months
-                    {
-                        sum += monthlySums[m, y];
-                        yrCount++;
-                    }
-                }
-                if (yrCount > 0)
-                    LTAvMonthly[m] = sum / yrCount;
+                YearlyTotals = new double[0];
+                LTAvMonthly = new double[0];
             }
         }
     }

@@ -201,7 +201,7 @@ namespace Models.Core
                     // Don't go beyond simulation.
                 }
 
-                else if (relativeTo is Zone)
+                else// if (relativeTo is Zone)
                 {
                     // Walk the parent but not all child models recursively.
                     ModelCollection parent = relativeTo.Parent;
@@ -210,14 +210,16 @@ namespace Models.Core
                         WalkParent(parent, comparer, firstOnly, matches, relativeTo);
                         if (parent is Simulation)
                             break;
+                        else if (parent is Models.Factorial.Experiment)
+                            Walk(parent, comparer, firstOnly, matches, relativeTo);
                         parent = parent.Parent;
                     }
                 }
-                else
-                {
-                    // When walking the parent, tell it to exclude 'relativeTo' as we've already done it.
-                    Walk(relativeTo.Parent, comparer, firstOnly, matches, relativeTo);
-                }
+                //else
+                //{
+                //    // When walking the parent, tell it to exclude 'relativeTo' as we've already done it.
+                //    Walk(relativeTo.Parent, comparer, firstOnly, matches, relativeTo);
+                //}
             }
         }
 

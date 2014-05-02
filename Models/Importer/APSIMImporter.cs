@@ -7,6 +7,7 @@ namespace Importer
     using System.IO;
     using System.Xml;
     using System.Text.RegularExpressions;
+    using System.Reflection;
     using Models.Core;
     using ApsimFile;
 
@@ -28,14 +29,35 @@ namespace Importer
         /// </summary>
         private bool SurfOMExists = false;
         private bool SoilWaterExists = false;
+        private bool MicroClimateExists = false;
+
+        // fertiliser type conversion lookups
+        Dictionary<string, string> Fertilisers;
 
         /// <summary>
         /// Original path that is substituted for %apsim%
         /// </summary>
-        public string ApsimPath;
+        public string ApsimPath = "";
 
         public APSIMImporter()
         {
+            // fertiliser type strings that are mapped to Fertiliser.Types
+            Fertilisers = new Dictionary<string, string>();
+            Fertilisers.Add("calcite_ca", "CalciteCA");
+            Fertilisers.Add("calcite_fine", "CalciteFine");
+            Fertilisers.Add("dolomite", "Dolomite");
+            Fertilisers.Add("NO3_N", "NO3N");
+            Fertilisers.Add("NH4_N", "NH4N");
+            Fertilisers.Add("NH4NO3", "NH4NO3N");
+            Fertilisers.Add("DAP", "DAP");
+            Fertilisers.Add("MAP", "MAP");
+            Fertilisers.Add("urea_N", "UreaN");
+            Fertilisers.Add("urea_no3", "UreaNO3");
+            Fertilisers.Add("urea", "Urea");
+            Fertilisers.Add("nh4so4_n", "NH4SO4N");
+            Fertilisers.Add("rock_p", "RockP");
+            Fertilisers.Add("banded_p", "BandedP");
+            Fertilisers.Add("broadcast_p", "BroadcastP");
 
         }
 
@@ -56,6 +78,7 @@ namespace Importer
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    throw new Exception(e.Message);
                 }
             }
             else
@@ -92,24 +115,34 @@ namespace Importer
 
             try
             {
-                // Get the types.xml
-                string xml = Properties.Resources.Types;
+                ApsimFile infile;
 
-                // Create a temporary file.
-                string tempFileName = Path.GetTempFileName();
-                StreamWriter f = new StreamWriter(tempFileName);
-                f.Write(xml);
-                f.Close();                
+                // initialise the configuration for ApsimFile               
+                if (ApsimPath.Length > 0)
+                {
+                    Configuration.SetApsimDir(ApsimPath);
+                    PlugIns.LoadAll();  // loads the plugins from apsim.xml and types from other xml files
+                    // open and resolve all the links
+                    infile = new ApsimFile(filename);
+                }
+                else
+                {
+                    // Get the types.xml from built-in resources
+                    string xml = Properties.Resources.Types;
 
-                // initialise the configuration for ApsimFile
-                Configuration.SetApsimDir(ApsimPath);
-                PlugIns.Load(tempFileName);
+                    // Create a temporary file.
+                    string tempFileName = Path.GetTempFileName();
+                    StreamWriter f = new StreamWriter(tempFileName);
+                    f.Write(xml);
+                    f.Close();
 
-                // open and resolve all the links
-                ApsimFile infile = new ApsimFile();
-                XmlDocument filedoc = new XmlDocument();
-                filedoc.Load(filename);
-                infile.Open(filedoc.DocumentElement);
+                    PlugIns.Load(tempFileName);
+
+                    infile = new ApsimFile();
+                    XmlDocument filedoc = new XmlDocument();
+                    filedoc.Load(filename);
+                    infile.Open(filedoc.DocumentElement);
+                }
                 string concretexml = infile.RootComponent.FullXMLNoShortCuts();
 
                 //open the .apsim file
@@ -128,7 +161,7 @@ namespace Importer
                 newNode.InnerText = "Simulations";
 
                 XmlNode rootNode = doc.DocumentElement;     // get first folder
-                AddChildComponents(rootNode, xdocNode);
+                AddFoldersAndSimulations(rootNode, xdocNode);
                 AddDataStore(xdocNode);                     // each file must contain a DataStore
 
                 //write to temporary xfile
@@ -138,7 +171,7 @@ namespace Importer
 
                 try
                 {
-                    newSimulations = Simulations.Read(xfile);   // construct a Simulations object
+                    newSimulations = Simulations.Read(xfile);
                 }
                 catch (Exception exp)
                 {
@@ -151,6 +184,28 @@ namespace Importer
                 throw new Exception("Cannot create a simulation from " + filename + " : Error - " + exp.Message + "\n");
             }
             return newSimulations;
+        }
+
+        /// <summary>
+        /// At the top level we only want to add folder and simulation nodes, not nodes
+        /// under 'shared' folders eg. wheat validation.
+        /// </summary>
+        /// <param name="systemNode"></param>
+        /// <param name="destParent"></param>
+        private void AddFoldersAndSimulations(XmlNode systemNode, XmlNode destParent)
+        {
+            XmlNode child = systemNode.FirstChild;
+            while (child != null)
+            {
+                if (child.Name == "simulation")
+                    AddComponent(child, ref destParent);
+                else if (child.Name == "folder")
+                {
+                    XmlNode newFolder = AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(child));
+                    AddFoldersAndSimulations(child, newFolder);
+                }
+                child = child.NextSibling;
+            }
         }
 
         /// <summary>
@@ -240,6 +295,8 @@ namespace Importer
                 {
                     newNode = ImportSoilWater(compNode, destParent, newNode);
                     SoilWaterExists = (newNode != null);
+                    AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
+                    // may need to copy more details for SoilNitrogen
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -260,12 +317,22 @@ namespace Importer
                 else if (compNode.Name == "area")
                 {
                     newNode = AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    XmlNode newPaddockNode = newNode;
+
+                    string area = GetInnerText(compNode, "paddock_area");
+                    if (area == "")
+                    {
+                        Utility.Xml.SetValue(compNode, "paddock_area", "1.0");
+                    }
+                    CopyNodeAndValue(compNode, newPaddockNode, "paddock_area", "Area", true);
                     SurfOMExists = false;
                     SoilWaterExists = false;
-                    AddChildComponents(compNode, newNode);
+                    MicroClimateExists = false;
+                    // copy all the children in this paddock
+                    AddChildComponents(compNode, newPaddockNode);
                     if (SoilWaterExists && !SurfOMExists)   // if it contains a soilwater then
                     {
-                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newNode));
+                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newPaddockNode));
                         Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
 
                         mysom.PoolName = "wheat_stubble";
@@ -275,7 +342,12 @@ namespace Importer
                         mysom.cpr = "0";
                         mysom.standing_fraction = "0.0";
 
-                        newNode = ImportObject(newNode, newNode, mysom, "SurfaceOrganicMatter");
+                        newNode = ImportObject(newPaddockNode, newNode, mysom, "SurfaceOrganicMatter");
+                    }
+                    // alway ensure that MicroClimate exists in this paddock
+                    if (!MicroClimateExists)
+                    {
+                        newNode = ImportMicromet(null, newPaddockNode, newNode);    // create a new node from no source
                     }
                 }
                 else if (compNode.Name == "surfaceom")
@@ -297,15 +369,21 @@ namespace Importer
                 {
                     // all other components not listed above will be handled by this
                     // code and some test used to try to determine what type of object it is
-                    XmlNode ApsimToSim = Types.Instance.ApsimToSim(compNode.Name);
-                    if (ApsimToSim != null)
+                    string show = Types.Instance.MetaData(compNode.Name, "ShowInMainTree"); 
+                    if (String.Compare(show, "yes", true) == 0)
                     {
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
-                        if (Types.Instance.IsCrop(compNode.Name))
-                            classname = "Plant";
-
-                        newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                        string compClass = Types.Instance.MetaData(compNode.Name, "class");
+                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 0) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
+                        if (Types.Instance.IsCrop(compNode.Name) &&  usePlantClass)
+                        {
+                            ImportPlant(compNode, destParent, newNode);
+                        }
+                        else
+                        {
+                            newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                        }
                     }
                 }
             }
@@ -317,23 +395,142 @@ namespace Importer
         }
 
         /// <summary>
+        /// Import a Plant component
+        /// </summary>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
+        /// <param name="destParent"></param>
+        /// <param name="plantNode"></param>
+        /// <returns></returns>
+        private XmlNode ImportPlant(XmlNode compNode, XmlNode destParent, XmlNode plantNode)
+        {
+            Models.PMF.Plant myplant = new Models.PMF.Plant();
+
+            // Attempt to create a usable plant class in xml. 
+            // This doesn't always work and it does not yet copy all the settings from 
+            // the imported component. (*** There must be a better way!)
+            plantNode = ImportObject(destParent, plantNode, myplant, Utility.Xml.NameAttr(compNode));
+
+            AddPhenologyClass(plantNode);
+
+            AddCompNode(plantNode, "Arbitrator", "Arbitrator");
+
+            XmlNode structNode = AddCompNode(plantNode, "Structure", "Structure");
+            AddCompNode(structNode, "AirTemperatureFunction", "ThermalTime");
+            AddCompNode(structNode, "PhaseLookupValue", "MainStemPrimordiaInitiationRate");
+            AddCompNode(structNode, "PhaseLookupValue", "MainStemNodeAppearanceRate");
+            AddCompNode(structNode, "Constant", "MainStemFinalNodeNumber");
+            AddCompNode(structNode, "Constant", "ShadeInducedBranchMortality");
+            AddCompNode(structNode, "Constant", "DroughtInducedBranchMortality");
+            AddCompNode(structNode, "LinearInterpolationFunction", "HeightModel");
+            AddCompNode(structNode, "MultiplyFunction", "BranchingRate");
+            
+            
+            XmlNode leafNode = AddCompNode(plantNode, "Leaf", "Leaf");
+            AddCompNode(leafNode, "CompositeBiomass", "Live");
+            AddCompNode(leafNode, "CompositeBiomass", "Dead");
+            AddCompNode(leafNode, "CompositeBiomass", "Total");
+            AddCompNode(leafNode, "MultiplyFunction", "ExtinctionCoeff");
+            AddCompNode(leafNode, "LinearInterpolationFunction", "FrostFraction");
+            AddCompNode(leafNode, "AirTemperatureFunction", "ThermalTime");
+
+            XmlNode rueNode = AddCompNode(leafNode, "RUEModel", "Photosynthesis");
+            AddCompNode(rueNode, "Constant", "RUE");
+            AddCompNode(rueNode, "RUECO2Function", "FCO2");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FN");
+            AddCompNode(rueNode, "WeightedTemperatureFunction", "FT");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FW");
+            AddCompNode(rueNode, "LinearInterpolationFunction", "FVPD");
+
+            XmlNode cohortNode = AddCompNode(leafNode, "InitialLeafValues", "LeafCohortParameters");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaxArea");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "GrowthDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "LagDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SenescenceDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentLagDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentDuration");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMax");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMin");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaximumNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "MinimumNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "InitialNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NReallocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NRetranslocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "ExpansionStress");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "CriticalNConc");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "DMRetranslocationFactor");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "ShadeInducedSenescenceRate");
+            AddCompNode(cohortNode, "LinearInterpolationFunction", "NonStructuralFraction");
+            AddCompNode(cohortNode, "Constant", "StructuralFraction");
+            
+            return plantNode;
+        }
+
+        /// <summary>
+        /// Add the Phenology object
+        /// </summary>
+        /// <param name="destParent"></param>
+        /// <returns></returns>
+        private XmlNode AddPhenologyClass(XmlNode destParent)
+        {
+            XmlNode phenNode = AddCompNode(destParent, "Phenology", "Phenology");
+            AddCompNode(phenNode, "StageBasedInterpolation", "StageCode");
+            AddCompNode(phenNode, "AirTemperatureFunction", "ThermalTime");
+
+            return phenNode;
+        }
+
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <param name="plantNode"></param>
+        /// <param name="model"></param>
+        private void AddLinkedObjects(XmlNode plantNode, Object model)
+        {
+
+            // Go looking for [Link]s
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
+                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
+                                                                        BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                if (link != null)
+                {
+                    if (!field.FieldType.IsAbstract && !link.IsOptional)
+                    {
+                        // get the type here and add a tag?
+                        XmlNode newNode = AddCompNode(plantNode, field.FieldType.Name, field.Name);
+
+                        Object obj = Activator.CreateInstance(field.FieldType);
+                        AddLinkedObjects(newNode, obj);
+                    }
+                } 
+            } 
+        }
+
+        /// <summary>
         /// Import a micromet component
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
         private XmlNode ImportMicromet(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
             Models.MicroClimate mymicro = new Models.MicroClimate();
+            string newName = "MicroClimate";
 
-            mymicro.soil_albedo = GetChildDouble(compNode, "soilalbedo", 0);
-            mymicro.a_interception = GetChildDouble(compNode, "a_interception", 0);
-            mymicro.b_interception = GetChildDouble(compNode, "b_interception", 0);
-            mymicro.c_interception = GetChildDouble(compNode, "c_interception", 0);
-            mymicro.d_interception = GetChildDouble(compNode, "d_interception", 0);
+            if (compNode != null)
+            {
+                mymicro.soil_albedo = GetChildDouble(compNode, "soilalbedo", 0);
+                mymicro.a_interception = GetChildDouble(compNode, "a_interception", 0);
+                mymicro.b_interception = GetChildDouble(compNode, "b_interception", 0);
+                mymicro.c_interception = GetChildDouble(compNode, "c_interception", 0);
+                mymicro.d_interception = GetChildDouble(compNode, "d_interception", 0);
+                newName = Utility.Xml.NameAttr(compNode);
+            }
+            newNode = ImportObject(destParent, newNode, mymicro, newName);
 
-            newNode = ImportObject(destParent, newNode, mymicro, Utility.Xml.NameAttr(compNode));
+            MicroClimateExists = true; // has been added
 
             return newNode;
         }     
@@ -341,7 +538,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -361,7 +558,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -384,7 +581,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -402,7 +599,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -429,7 +626,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -450,7 +647,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -459,6 +656,12 @@ namespace Importer
             newNode = AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
+            CopyNodeAndValue(compNode, newNode, "RootCN", "RootCN", true);
+            CopyNodeAndValue(compNode, newNode, "RootWt", "RootWt", true);
+            CopyNodeAndValue(compNode, newNode, "SoilCN", "SoilCN", true);
+            CopyNodeAndValue(compNode, newNode, "EnrACoeff", "EnrACoeff", true);
+            CopyNodeAndValue(compNode, newNode, "EnrBCoeff", "EnrBCoeff", true);
+
             // thickness array
             childNode = Utility.Xml.Find(compNode, "Thickness");
             CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
@@ -475,7 +678,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -527,7 +730,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -561,7 +764,7 @@ namespace Importer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -586,13 +789,16 @@ namespace Importer
             childNode = Utility.Xml.Find(compNode, "SW");
             CopyNodeAndValueArray(childNode, newNode, "SW", "SW");
 
+            CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
+            CopyNodeAndValue(compNode, newNode, "NH4Units", "NH4Units", false);
+
             return newNode;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="compNode"></param>
+        /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
@@ -607,12 +813,18 @@ namespace Importer
 
             newNode = AddCompNode(destParent, "Soil", Utility.Xml.NameAttr(compNode));
 
-            CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType");
-            CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName");
-            CopyNodeAndValue(compNode, newNode, "Site", "Site");
-            CopyNodeAndValue(compNode, newNode, "NearestTown", "NearestTown");
-            CopyNodeAndValue(compNode, newNode, "Region", "Region");
-            CopyNodeAndValue(compNode, newNode, "NaturalVegetation", "NaturalVegetation");
+            CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
+            CopyNodeAndValue(compNode, newNode, "NH4Units", "NH4Units", false);
+            CopyNodeAndValue(compNode, newNode, "SWUnits", "SWUnits", false);
+            CopyNodeAndValue(compNode, newNode, "OCUnits", "OCUnits", false);
+            CopyNodeAndValue(compNode, newNode, "PHUnits", "PHUnits", false);
+
+            CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType", true);
+            CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName", true);
+            CopyNodeAndValue(compNode, newNode, "Site", "Site", true);
+            CopyNodeAndValue(compNode, newNode, "NearestTown", "NearestTown", true);
+            CopyNodeAndValue(compNode, newNode, "Region", "Region", true);
+            CopyNodeAndValue(compNode, newNode, "NaturalVegetation", "NaturalVegetation", true);
 
             AddChildComponents(compNode, newNode);
 
@@ -688,7 +900,12 @@ namespace Importer
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock TimeClock;\n"); 
+            code.Append("\t\t[Link] Clock TimeClock;\n");
+
+            List<string> startofdayScripts = new List<string>();
+            List<string> endofdayScripts = new List<string>();
+            List<string> initScripts = new List<string>();
+            List<string> unknownHandlerScripts = new List<string>();
 
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
@@ -703,31 +920,74 @@ namespace Importer
                 {
                     if (eventNode.InnerText.ToLower() == "init")
                     {
-                        code.Append("\t\t[EventSubscribe(\"Initialised\")]\n");
-                        code.Append("\t\tprivate void OnInitialised(object sender, EventArgs e)\n");
+                        initScripts.Add(textNode.InnerText);
                     }
                     else if (eventNode.InnerText.ToLower() == "start_of_day")
                     {
-                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
-                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
+                        startofdayScripts.Add(textNode.InnerText);
                     }
                     else if (eventNode.InnerText.ToLower() == "end_of_day")
                     {
-                        code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
-                        code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                        endofdayScripts.Add(textNode.InnerText);
                     }
                     else
                     {
                         // use the StartOfDay as a default when the event name is unknown
-                        code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
-                        code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)  /* unknown event type found here */ \n");
+                        unknownHandlerScripts.Add("// ----- " + eventNode.InnerText + " ----- \n" + textNode.InnerText);
                     }
-                    code.Append("\t\t{\n");
-                    code.Append("\t\t\t/*\n");
-                    code.Append("\t\t\t\t" + textNode.InnerText + "\n");
-                    code.Append("\t\t\t*/\n");
-                    code.Append("\t\t}\n");
                 }
+            }
+            // append all the scripts for each type
+            if (initScripts.Count > 0)
+            {
+                code.Append("\t\tpublic override void OnCommencing()\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in initScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
+            }
+            if (startofdayScripts.Count > 0)
+            {
+                code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
+                code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in startofdayScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
+            }
+            if (endofdayScripts.Count > 0)
+            {
+                code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
+                code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t{\n");
+                foreach (string scripttext in endofdayScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t}\n");
+            }
+            if (unknownHandlerScripts.Count > 0)
+            {
+                code.Append("\t\t//[EventSubscribe(\"unknown\")]\n");
+                code.Append("\t\t//private void OnUnknown(object sender, EventArgs e)\n");
+                code.Append("\t\t//{\n");
+                foreach (string scripttext in unknownHandlerScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t//}\n");
             }
             code.Append("\t}\n}\n");
            
@@ -801,19 +1061,8 @@ namespace Importer
             newNode = AddCompNode(destParent, "WeatherFile", Utility.Xml.NameAttr(compNode));
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
-            string metfilepath = GetInnerText(compNode, "filename");
-
-            //resolve shortcut ?
-            XmlNode filenameNode = Utility.Xml.Find(compNode, "filename");
-            if (filenameNode != null)
-            {
-                string attrValue = AttributeText(filenameNode, "shortcut");
-                if (attrValue != "")
-                {
-                    //resolve shortcut
-                }
-            }
-                
+            string metfilepath = Utility.PathUtils.OSFilePath(GetInnerText(compNode, "filename"));
+              
             anode.InnerText = metfilepath.Replace("%apsim%", ApsimPath);
 
             return newNode;
@@ -862,14 +1111,89 @@ namespace Importer
                 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
-                childText = "";
+                childText = " ";
                 childNode = Utility.Xml.Find(oper, "action");
                 if (childNode != null)
-                    childText = "// " + childNode.InnerText;    //comment out the operations code for now
+                {
+                    childText = childNode.InnerText;    
+
+                    // parse the operation and determine if this can be converted to an apsimx function call
+                    // ** This code makes a BIG assumption that the fertiliser component has that name. Also the irrigation component!
+                    // if this name is not found then the conversion is not done as expected.
+                    childText = childText.Trim();
+                    int index = childText.IndexOf(" ");
+                    if (index > 0)
+                    {
+                        string operationOn = childText.Substring(0, index);
+                        if ((String.Compare(operationOn, "fertiliser", true) == 0) && ((childText.IndexOf(" apply") > 0) || (childText.IndexOf(" Apply") > 0)))
+                        {
+                            string amount = "0", type = "", depth = "0";
+
+                            FindTokenValue("amount", childText, ref amount);
+                            FindTokenValue("type", childText, ref type);
+
+                            string newtype;
+                            Fertilisers.TryGetValue(type, out newtype);
+                            type = "Fertiliser.Types." + newtype;
+                            FindTokenValue("depth", childText, ref depth);
+
+                            childText = String.Format("Fertiliser.Apply({0}, {1}, {2});", amount, type, depth);
+                        }
+                        else
+                        {
+                            if ((String.Compare(operationOn, "irrigation", true) == 0) && ((childText.IndexOf(" apply") > 0) || (childText.IndexOf(" Apply") > 0)))
+                            {
+                                string amount = "0";
+
+                                FindTokenValue("amount", childText, ref amount);
+
+                                childText = String.Format("Irrigation.Apply({0});", amount);
+                            }
+                            else
+                            {
+                                childText = " // " + childText; // for default comment out the operations code for now
+                            }
+                        }
+                    }
+                }
                 actionNode.InnerText = childText;
             } // next operation
 
             return newNode;
+        }
+
+        /// <summary>
+        /// Rough method for parsing an old manager script function call to obtain
+        /// the parameter values.
+        /// </summary>
+        /// <param name="name">Name of parameter</param>
+        /// <param name="line">Input function call line text</param>
+        /// <param name="value">The value found for the parameter. Contains the original value if not found.</param>
+        /// <returns>Index of the parameter name found or -1 if not found</returns>
+        private int FindTokenValue(string name, string line, ref string value)
+        {
+            int index = -1; // not found
+            index = line.IndexOf(name);
+            if (index > 0)
+            {
+                value = "";
+                int i = index + name.Length;
+                while ((i < line.Length) && (line[i] == ' '))
+                    i++;
+                // find =
+                while ((i < line.Length) && (line[i] != '='))   
+                    i++;
+                i++;
+                while ((i < line.Length) && (line[i] == ' '))
+                    i++;
+                // now build the value parameter
+                while ((i < line.Length) && (line[i] != ' ') && (line[i] != '(') && (line[i] != ','))
+                {
+                    value = value + line[i];
+                    i++;
+                }
+            }
+            return index;
         }
 
         /// <summary>
@@ -916,12 +1240,24 @@ namespace Importer
         /// <param name="destParentNode"></param>
         /// <param name="srcName"></param>
         /// <param name="destName"></param>
-        private void CopyNodeAndValue(XmlNode srcParentNode, XmlNode destParentNode, string srcName, string destName)
+        /// <param name="forceCreate">Always create the node even if the source is not found</param>
+        private void CopyNodeAndValue(XmlNode srcParentNode, XmlNode destParentNode, string srcName, string destName, bool forceCreate)
         {
             if (srcParentNode != null)
             {
-                XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
-                childNode.InnerText = GetInnerText(srcParentNode, srcName);
+                XmlNode srcChildNode = Utility.Xml.Find(srcParentNode, srcName);
+                if ( forceCreate || (srcChildNode != null))
+                {
+                    XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
+                    if (srcChildNode != null)
+                    {
+                        childNode.InnerText = srcChildNode.InnerText;
+                    }
+                    else
+                    {
+                        childNode.InnerText = "";
+                    }
+                }
             }
         }
 

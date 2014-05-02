@@ -74,12 +74,15 @@ namespace Models
         /// </summary>
         public void WriteWarning(string FullPath, string Message)
         {
-            DataRow newRow = Messages.NewRow();
-            newRow["ComponentName"] = FullPath;
-            newRow["Date"] = Clock.Today;
-            newRow["Message"] = Message;
-            newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
-            Messages.Rows.Add(newRow);
+            if (Messages != null)
+            {
+                DataRow newRow = Messages.NewRow();
+                newRow["ComponentName"] = FullPath;
+                newRow["Date"] = Clock.Today;
+                newRow["Message"] = Message;
+                newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
+                Messages.Rows.Add(newRow);
+            }
         }
 
         /// <summary>
@@ -97,12 +100,16 @@ namespace Models
         /// </summary>
         public void CreateReportFile(bool baseline)
         {
+            string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
+                                           Simulation.Name + this.Name + ".csv.");
+
             StreamWriter report;
             if (baseline)
-                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".baseline.csv"));
-            else
-                report = new StreamWriter(Path.ChangeExtension(Simulation.FileName, ".csv"));
+                fileName = fileName.Replace(".csv", ".baseline.csv");
+            
+            report = new StreamWriter(fileName);
             WriteSummary(report, Simulation.Name, null);
+            report.Close();
         }
 
         #region Summary report generation
@@ -112,51 +119,54 @@ namespace Models
         /// </summary>
         public void WriteSummary(TextWriter report, string simulationName, string apsimSummaryImageFileName)
         {
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
-
-            if (html)
+            if (Simulation.FileName != null)
             {
-                report.WriteLine("<!DOCTYPE html>");
-                report.WriteLine("<html>");
-                report.WriteLine("<body>");
-               
-                report.WriteLine("<style type=\"text/css\">");
-                report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
-                report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
-                report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
-                report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
+                DataStore DataStore = new DataStore();
+                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
 
-                report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
-                report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                if (html)
+                {
+                    report.WriteLine("<!DOCTYPE html>");
+                    report.WriteLine("<html>");
+                    report.WriteLine("<body>");
 
-                report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
-                report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-                
-                report.WriteLine("</style>");
+                    report.WriteLine("<style type=\"text/css\">");
+                    report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
+                    report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
+                    report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
+                    report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
 
-                report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
+                    report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                    report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                    report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
+                    report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+
+                    report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
+                    report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
+
+                    report.WriteLine("</style>");
+
+                    report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
+                }
+
+                // Write out all properties.
+                WriteProperties(report, simulationName);
+
+                // Write out all messages.
+                if (html)
+                    report.WriteLine("<hr>");
+                WriteHeading(report, "Simulation log:", html);
+                DataTable messageTable = GetMessageTable(DataStore, simulationName);
+                WriteTable(report, messageTable, html, false, "PropertyTable");
+
+                if (html)
+                {
+                    report.WriteLine("</body>");
+                    report.WriteLine("</html>");
+                }
+                DataStore.Disconnect();
+                DataStore = null;
             }
-
-            // Write out all properties.
-            WriteProperties(report, simulationName);
-            
-            // Write out all messages.
-            if (html)
-                report.WriteLine("<hr>");
-            WriteHeading(report, "Simulation log:", html);
-            DataTable messageTable = GetMessageTable(DataStore, simulationName);
-            WriteTable(report, messageTable, html, false, "PropertyTable");
-
-            if (html)
-            {
-                report.WriteLine("</body>");
-                report.WriteLine("</html>");
-            }
-            DataStore.Disconnect();
-            DataStore = null;
         }
 
         /// <summary>
@@ -179,9 +189,9 @@ namespace Models
                     string message = (string)row[3];
                     Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
 
-                    if (errorLevel == DataStore.ErrorLevel.Error)
+                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
                         message = "FATAL ERROR: " + message;
-                    else if (errorLevel == DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
                         message = "WARNING: " + message;
 
                     messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
@@ -237,7 +247,7 @@ namespace Models
             if (value is double || value is float)
                 return String.Format("{0:F3}", value);
             else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-mm-dd");
+                return ((DateTime)value).ToString("yyyy-MM-dd");
             else
                 return value.ToString();
         }

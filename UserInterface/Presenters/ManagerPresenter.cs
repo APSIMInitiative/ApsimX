@@ -13,18 +13,18 @@ namespace UserInterface.Presenters
         private PropertyPresenter PropertyPresenter = new PropertyPresenter();
         private Manager Manager;
         private IManagerView ManagerView;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             Manager = Model as Manager;
             ManagerView = View as IManagerView;
-            this.CommandHistory = CommandHistory;
+            ExplorerPresenter = explorerPresenter;
 
-            PropertyPresenter.Attach(Manager.Script, ManagerView.GridView, CommandHistory);
+            PropertyPresenter.Attach(Manager.Script, ManagerView.GridView, ExplorerPresenter);
 
             ManagerView.Editor.Text = Manager.Code;
             ManagerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -38,6 +38,8 @@ namespace UserInterface.Presenters
         {
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
+
+            Manager.RebuildScriptModel();
         }
 
         /// <summary>
@@ -70,6 +72,7 @@ namespace UserInterface.Presenters
                         e.Items.Add(Property.Name);
                     foreach (MethodInfo Method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
                         e.Items.Add(Method.Name);
+                    e.Items.Sort();
                 }
             }
         }
@@ -79,9 +82,20 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnEditorLeave(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
-            CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            try
+            {
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
+            }
+            catch (Exception err)
+            {
+                string Msg = err.Message;
+                if (err.InnerException != null)
+                    ExplorerPresenter.ShowMessage(err.InnerException.Message, DataStore.ErrorLevel.Error);
+                else
+                    ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+            }
+            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             PropertyPresenter.PopulateGrid(Manager.Script);
         }
 

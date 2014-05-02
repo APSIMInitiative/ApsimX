@@ -31,29 +31,29 @@ namespace Models.PMF.Organs
         [Serializable]
         public class InitialLeafValues : ModelCollection
         {
-            [Link] public Function MaxArea = null;
-            [Link] public Function GrowthDuration = null;
-            [Link] public Function LagDuration = null;
-            [Link] public Function SenescenceDuration = null;
-            [Link] public Function DetachmentLagDuration = null;
-            [Link] public Function DetachmentDuration = null;
-            [Link] public Function SpecificLeafAreaMax = null;
-            [Link] public Function SpecificLeafAreaMin = null;
-            [Link] public Function StructuralFraction = null;
-            [Link] public Function MaximumNConc = null;
-            [Link] public Function MinimumNConc = null;
-            [Link(IsOptional=true)] public Function StructuralNConc = null;
-            [Link] public Function InitialNConc = null;
-            [Link] public Function NReallocationFactor = null;
-            [Link(IsOptional=true)] public Function DMReallocationFactor = null;
-            [Link] public Function NRetranslocationFactor = null;
-            [Link] public Function ExpansionStress = null;
-            [Link] public Function CriticalNConc = null;
-            [Link] public Function DMRetranslocationFactor = null;
-            [Link] public Function ShadeInducedSenescenceRate = null;
-            [Link(IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
-            [Link] public Function NonStructuralFraction = null;
-            [Link(IsOptional=true)] public Function CellDivisionStress = null;
+            [Link(MustBeChild = true)] public Function MaxArea = null;
+            [Link(MustBeChild = true)] public Function GrowthDuration = null;
+            [Link(MustBeChild = true)] public Function LagDuration = null;
+            [Link(MustBeChild = true)] public Function SenescenceDuration = null;
+            [Link(MustBeChild = true)] public Function DetachmentLagDuration = null;
+            [Link(MustBeChild = true)] public Function DetachmentDuration = null;
+            [Link(MustBeChild = true)] public Function SpecificLeafAreaMax = null;
+            [Link(MustBeChild = true)] public Function SpecificLeafAreaMin = null;
+            [Link(MustBeChild = true)] public Function StructuralFraction = null;
+            [Link(MustBeChild = true)] public Function MaximumNConc = null;
+            [Link(MustBeChild = true)] public Function MinimumNConc = null;
+            [Link(IsOptional=true, MustBeChild = true)] public Function StructuralNConc = null;
+            [Link(MustBeChild = true)] public Function InitialNConc = null;
+            [Link(MustBeChild = true)] public Function NReallocationFactor = null;
+            [Link(MustBeChild = true, IsOptional=true)] public Function DMReallocationFactor = null;
+            [Link(MustBeChild = true)] public Function NRetranslocationFactor = null;
+            [Link(MustBeChild = true)] public Function ExpansionStress = null;
+            [Link(MustBeChild = true)] public Function CriticalNConc = null;
+            [Link(MustBeChild = true)] public Function DMRetranslocationFactor = null;
+            [Link(MustBeChild = true)] public Function ShadeInducedSenescenceRate = null;
+            [Link(MustBeChild = true, IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
+            [Link(MustBeChild = true)] public Function NonStructuralFraction = null;
+            [Link(MustBeChild = true, IsOptional=true)] public Function CellDivisionStress = null;
         }
         #endregion
 
@@ -66,17 +66,17 @@ namespace Models.PMF.Organs
 
         [XmlIgnore]
         public List<LeafCohort> InitialLeaves { get { return ModelsMatching<LeafCohort>(); } }
-        [Link] InitialLeafValues LeafCohortParameters = null;
-        [Link] RUEModel Photosynthesis = null;
-        [Link] Function ThermalTime = null;
-        [Link] Function ExtinctionCoeff = null;
-        [Link] Function FrostFraction = null;
+        [Link(MustBeChild = true)] InitialLeafValues LeafCohortParameters = null;
+        [Link(MustBeChild = true)] RUEModel Photosynthesis = null;
+        [Link(MustBeChild = true)] Function ThermalTime = null;
+        [Link(MustBeChild = true)] Function ExtinctionCoeff = null;
+        [Link(MustBeChild = true)] Function FrostFraction = null;
         //[Link] Function ExpansionStress = null;
         //[Link] Function CriticalNConc = null;
         //[Link] Function MaximumNConc = null;
         //[Link] Function MinimumNConc = null;
-        [Link] Function StructuralFraction = null;
-        [Link(IsOptional=true)] Function DMDemandFunction = null;
+        [Link(MustBeChild = true)] Function StructuralFraction = null;
+        [Link(MustBeChild = true, IsOptional=true)] Function DMDemandFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;
@@ -97,6 +97,7 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         public double FractionNextleafExpanded = 0;
         public double _ExpandedNodeNo = 0;
+        public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
         #endregion
 
         #region Outputs
@@ -117,6 +118,8 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        public double FractionDied { get; set; }
         public bool CohortsInitialised
         {
             get
@@ -221,7 +224,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                     if ((L.IsAppeared) && (!L.Finished))
                         n += L.CohortPopulation;
-                return n / Structure.Population;
+                return n / Plant.Population;
             }
         }
 
@@ -305,6 +308,9 @@ namespace Models.PMF.Organs
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+
+        [Description("This needs to be here so soilwater can get hight from leaf")]
+        public double Height { get { return Structure.Height; } }
 
         [Units("mm^2/g")]
         public double SpecificArea
@@ -548,7 +554,8 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 1 based rank of the current leaf.
         /// </summary>
-        private int CurrentRank
+        private int CurrentRank { get; set; }
+        /*private int CurrentRank
         {
             get
             {
@@ -565,7 +572,7 @@ namespace Models.PMF.Organs
 
                 return Leaves[i - 1].Rank;
             }
-        }
+        }*/
         private int CohortCounter(string Condition)
         {
             int Count = 0;
@@ -630,10 +637,11 @@ namespace Models.PMF.Organs
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
-            
+       
             bool NextExpandingLeaf = false;
             foreach (LeafCohort L in Leaves)
             {
+                CurrentRank = L.Rank;
                 L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
                 if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                 {
@@ -681,6 +689,14 @@ namespace Models.PMF.Organs
             Structure.UpdateHeight();
 
             PublishNewCanopyEvent();
+
+            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+            FractionDied = 0;
+            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            {
+                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+            }
         }
         public virtual void ZeroLeaves()
         {
@@ -1285,15 +1301,14 @@ namespace Models.PMF.Organs
         {
             if (NewCanopy != null)
             {
-                NewCanopyType Canopy = new NewCanopyType();
-                Canopy.sender = Plant.Name;
-                Canopy.lai = (float)LAI;
-                Canopy.lai_tot = (float)(LAI + LAIDead);
-                Canopy.height = (float)Structure.Height;
-                Canopy.depth = (float)Structure.Height;
-                Canopy.cover = (float)CoverGreen;
-                Canopy.cover_tot = (float)CoverTotal;
-                NewCanopy.Invoke(Canopy);
+                Plant.LocalCanopyData.sender = Plant.Name;
+                Plant.LocalCanopyData.lai = (float)LAI;
+                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                Plant.LocalCanopyData.height = (float)Structure.Height;
+                Plant.LocalCanopyData.depth = (float)Structure.Height;
+                Plant.LocalCanopyData.cover = (float)CoverGreen;
+                Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
+                NewCanopy.Invoke(Plant.LocalCanopyData);
             }
         }
 

@@ -10,7 +10,7 @@ namespace Models.PMF.Phen
     public class GerminatingPhase : Phase
     {
         [Link]
-        Soils.SoilWater SoilWater = null;
+        Soils.Soil Soil = null;
 
         /// <summary>
         /// Do our timestep development
@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
         public override double DoTimeStep(double PropOfDayToUse)
         {
 
-            bool CanGerminate = !Phenology.OnDayOf("Sowing") && SoilWater.esw > 0;
+            bool CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.esw > 0;
 
             if (CanGerminate)
                 return 0.999;

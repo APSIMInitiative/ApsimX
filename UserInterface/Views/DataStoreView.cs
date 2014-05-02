@@ -9,15 +9,20 @@ using System.Windows.Forms;
 
 namespace UserInterface.Views
 {
-    public delegate void TableSelectedDelegate(string SimulationName, string TableName);
+    public delegate void TableSelectedDelegate(string TableName);
 
     interface IDataStoreView
     {
-        void PopulateTables(string[] Simulations, string[] TableNames);
-        void PopulateData(DataTable Data);
+        void PopulateTables(string[] TableNames);
+
+        /// <summary>
+        /// Provide access the the main grid
+        /// </summary>
+        IGridView Grid { get; }
       
         event TableSelectedDelegate OnTableSelected;
         event EventHandler CreateNowClicked;
+        event EventHandler RunChildModelsClicked;
     }
 
 
@@ -26,6 +31,7 @@ namespace UserInterface.Views
 
         public event TableSelectedDelegate OnTableSelected;
         public event EventHandler CreateNowClicked;
+        public event EventHandler RunChildModelsClicked;
 
         /// <summary>
         /// constructor
@@ -38,53 +44,28 @@ namespace UserInterface.Views
         /// <summary>
         /// populate the tables list in the view.
         /// </summary>
-        public void PopulateTables(string[] Simulations, string[] TableNames)
+        public void PopulateTables(string[] TableNames)
         {
-            foreach (string SimulationName in Simulations)
+            TableList.Items.Clear();
+            bool isFirstItem = true;
+            foreach (string TableName in TableNames)
             {
-                ListViewGroup Group = TableList.Groups.Add(SimulationName, SimulationName);
-
-                foreach (string TableName in TableNames)
+                if (TableName != "Messages")
                 {
                     ListViewItem NewItem = new ListViewItem();
                     NewItem.Text = TableName;
-                    NewItem.Group = Group;
                     TableList.Items.Add(NewItem);
+                    NewItem.Selected = isFirstItem;
+                    isFirstItem = false;
                 }
-
             }
-            TableList.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-            Grid.ReadOnly = true;
+
         }
 
         /// <summary>
-        /// Populate the grid with the specified data.
+        /// Provide access the the main grid
         /// </summary>
-        public void PopulateData(DataTable Data)
-        {
-            Grid.DataSource = Data;
-            if (Data != null)
-            {
-                Grid.Columns[0].Visible = false;
-                FormatGrid();
-            }
-        }
-
-        /// <summary>
-        /// Format the grid.
-        /// </summary>
-        private void FormatGrid()
-        {
-            DataTable Data = Grid.DataSource as DataTable;
-            for (int i = 0; i < Data.Columns.Count; i++)
-            {
-                if (Data.Columns[i].DataType == typeof(float) || Data.Columns[i].DataType == typeof(double))
-                    Grid.Columns[i].DefaultCellStyle.Format = "N3";
-            }
-
-            foreach (DataGridViewColumn Col in Grid.Columns)
-                Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-        }
+        public IGridView Grid { get { return GridView; } }
 
         /// <summary>
         /// User has selected a simulation/table pair.
@@ -92,7 +73,7 @@ namespace UserInterface.Views
         private void OnTableSelectedInGrid(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (e.IsSelected && OnTableSelected != null)
-                OnTableSelected.Invoke(e.Item.Group.Name, e.Item.Text);
+                OnTableSelected.Invoke(e.Item.Text);
         }
 
         /// <summary>
@@ -102,6 +83,15 @@ namespace UserInterface.Views
         {
             if (CreateNowClicked != null)
                 CreateNowClicked(this, e);
+        }
+
+        /// <summary>
+        /// The user has clicked the run child models button.
+        /// </summary>
+        private void OnRunChildModelsClick(object sender, EventArgs e)
+        {
+            if (RunChildModelsClicked != null)
+                RunChildModelsClicked.Invoke(this, e);
         }
         
     }

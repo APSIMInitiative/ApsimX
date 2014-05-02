@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 
 namespace Models.Core
 {
@@ -16,6 +17,7 @@ namespace Models.Core
         [XmlElement(typeof(Simulations))]
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
+        [XmlElement(typeof(ModelCollectionFromResource))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
@@ -26,7 +28,9 @@ namespace Models.Core
         [XmlElement(typeof(Clock))]
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]
-        [XmlElement(typeof(Input))]
+        [XmlElement(typeof(Models.PostSimulationTools.Input))]
+        [XmlElement(typeof(Models.PostSimulationTools.PredictedObserved))]
+        [XmlElement(typeof(Models.PostSimulationTools.TimeSeriesStats))]
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
@@ -56,6 +60,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.LayerStructure))]
         [XmlElement(typeof(Soils.SoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature2))]
+        [XmlElement(typeof(Soils.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(Models.PMF.Arbitrator))]
         [XmlElement(typeof(Models.PMF.Structure))]
@@ -77,15 +82,19 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Root))]
         [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
+        [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
         [XmlElement(typeof(Models.PMF.Phen.EndPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GenericPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GerminatingPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GotoPhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafAppearancePhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafDeathPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
+        [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AddFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AgeCalculatorFunction))]
@@ -131,6 +140,25 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Environment))]
+        [XmlElement(typeof(Models.PMF.OldPlant.GenericArbitratorXY))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Grain))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Leaf1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.LeafNumberPotential3))]
+        [XmlElement(typeof(Models.PMF.OldPlant.NStress))]
+        [XmlElement(typeof(Models.PMF.OldPlant.NUptake3))]
+        [XmlElement(typeof(Models.PMF.OldPlant.PlantSpatial1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Pod))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Population1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.PStress))]
+        [XmlElement(typeof(Models.PMF.OldPlant.RadiationPartitioning))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Root1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.RUEModel1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
+        [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
+        [XmlElement(typeof(Models.PMF.SimpleTree))]
+        [XmlElement(typeof(Models.PMF.Cultivars))]
         public List<Model> Models { get; set; }
 
         /// <summary>
@@ -176,6 +204,17 @@ namespace Models.Core
         {
             foreach (Model child in Models)
                 if (modelType.IsAssignableFrom(child.GetType()))
+                    return child;
+            return null;
+        }
+
+        /// <summary>
+        /// Return a child model that matches the specified 'name'. Returns null if not found.
+        /// </summary>
+        public Model ModelMatching(string name)
+        {
+            foreach (Model child in Models)
+                if (child.Name == name)
                     return child;
             return null;
         }
@@ -255,9 +294,6 @@ namespace Models.Core
                 Scope.ClearCache(this);
                 Variables.ClearCache(this);
 
-                // Call the model's OnLoaded method.
-                CallOnLoaded(newModel);
-
                 oldModel.Parent = null;
 
                 // Completely wipe out all link and event connections as the new model may
@@ -266,6 +302,10 @@ namespace Models.Core
                 Simulation.AllModels.ForEach(ConnectEventPublishers);
                 Simulation.AllModels.ForEach(UnresolveLinks);
                 Simulation.AllModels.ForEach(ResolveLinks);
+
+                // Call the model's OnLoaded method.
+                CallOnLoaded(newModel);
+
                 return true;
             }
             return false;
@@ -303,6 +343,25 @@ namespace Models.Core
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public override void Write(TextWriter stream)
+        {
+            foreach (Model model in AllModels)
+                model.OnSerialising(xmlSerialisation: true);
+
+            try
+            {
+                stream.Write(Utility.Xml.Serialise(this, true));
+            }
+            finally
+            {
+                foreach (Model model in AllModels)
+                    model.OnSerialised(xmlSerialisation: true);
+            }
         }
 
         /// <summary>
@@ -344,7 +403,7 @@ namespace Models.Core
 
 
         /// <summary>
-        /// Recursively go through all child models are correctly set their parent field.
+        /// Recursively go through all child models and correctly set their parent field.
         /// </summary>
         protected static void ParentAllModels(ModelCollection parent)
         {

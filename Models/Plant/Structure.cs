@@ -15,6 +15,8 @@ namespace Models.PMF
     {
         #region Links
         [Link]
+        Plant Plant = null;
+        [Link]
         Leaf Leaf = null;
         [Link]
         private Phenology Phenology = null;
@@ -40,10 +42,7 @@ namespace Models.PMF
         #endregion
 
         #region States
-        [XmlIgnore]
-        [Description("Number of plants per meter2")]
-        [Units("/m2")]
-        public double Population { get; set; }
+
 
         [XmlIgnore]
         [Description("Number of stems per meter including main and branch stems")]
@@ -77,7 +76,6 @@ namespace Models.PMF
 
         public void Clear()
         {
-            Population = 0;
             TotalStemPopn = 0;
             MainStemPrimordiaNo = 0;
             MainStemNodeNo = 0;
@@ -93,7 +91,7 @@ namespace Models.PMF
         [XmlIgnore]
         [Description("Number of mainstems per meter")]
         [Units("/m2")]
-        public double MainStemPopn { get { return Population * PrimaryBudNo; } }
+        public double MainStemPopn { get { return Plant.Population * PrimaryBudNo; } }
         
         [Description("Number of leaves yet to appear")]
         public double RemainingNodeNo { get { return MainStemFinalNodeNo - MainStemNodeNo; } }
@@ -166,8 +164,8 @@ namespace Models.PMF
             //Reduce plant population incase of mortality
             if (PlantMortality != null)
             {
-                double DeltaPopn = Population * PlantMortality.Value;
-                Population -= DeltaPopn;
+                double DeltaPopn = Plant.Population * PlantMortality.Value;
+                Plant.Population -= DeltaPopn;
                 TotalStemPopn -= DeltaPopn;
                 ProportionPlantMortality = PlantMortality.Value;
             }
@@ -179,7 +177,7 @@ namespace Models.PMF
             if (ShadeInducedBranchMortality != null)
                 PropnMortality += ShadeInducedBranchMortality.Value;
             {
-                double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Population);
+                double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                 TotalStemPopn -= DeltaPopn;
                 ProportionBranchMortality = PropnMortality;
             }
@@ -187,7 +185,7 @@ namespace Models.PMF
         public void DoActualGrowth()
         {
             //Set PlantTotalNodeNo    
-            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Population;
+            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
         }
         #endregion
 
@@ -207,9 +205,7 @@ namespace Models.PMF
         public override void OnCommencing()
         {
             Clear();
-            string initial = "yes";
-            MainStemFinalNodeNumber.UpdateVariables(initial);
-            MaximumNodeNumber = (int) MainStemFinalNodeNumber.Value;
+
         }
         public void OnSow(SowPlant2Type Sow)
         {
@@ -217,8 +213,10 @@ namespace Models.PMF
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             PrimaryBudNo = Sow.BudNumber;
-            Population = Sow.Population;
-            TotalStemPopn = Population * PrimaryBudNo;
+            TotalStemPopn = Sow.Population * PrimaryBudNo;
+            string initial = "yes";
+            MainStemFinalNodeNumber.UpdateVariables(initial);
+            MaximumNodeNumber = (int)MainStemFinalNodeNumber.Value;
         }
         #endregion
     }

@@ -8,6 +8,13 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
+        <MaxT>12.199999809265137</MaxT>
+        <MinT>9.3999996185302734</MinT>
+        <Rain>0.60000002384185791</Rain>
+        <Radn>3.2999999523162842</Radn>
+        <vp>11.800000190734863</vp>
+        <wind>2.7999999523162842</wind>
+        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -25,316 +32,8 @@
         <Irrigation>
           <Name>Irrigation</Name>
         </Irrigation>
-        <AgPasture>
-          <Name>AgPasture</Name>
-          <SP>
-            <Species>
-              <speciesName>ryegrass</speciesName>
-              <micrometType>grass</micrometType>
-              <isAnnual>false</isAnnual>
-              <isLegume>false</isLegume>
-              <photoPath>3</photoPath>
-              <dayEmerg>0</dayEmerg>
-              <monEmerg>0</monEmerg>
-              <dayAnth>0</dayAnth>
-              <monAnth>0</monAnth>
-              <daysToMature>0</daysToMature>
-              <dRootDepth>50</dRootDepth>
-              <maxRootDepth>900</maxRootDepth>
-              <allocationSeasonF>0.8</allocationSeasonF>
-              <NdilutCoeff>0.5</NdilutCoeff>
-              <rootDepth>900</rootDepth>
-              <growthTmin>2</growthTmin>
-              <growthTmax>32</growthTmax>
-              <growthTopt>20</growthTopt>
-              <growthTq>2</growthTq>
-              <heatOnsetT>60</heatOnsetT>
-              <heatFullT>70</heatFullT>
-              <heatSumT>50</heatSumT>
-              <coldOnsetT>-20</coldOnsetT>
-              <coldFullT>-30</coldFullT>
-              <coldSumT>20</coldSumT>
-              <Pm>1</Pm>
-              <maintRespiration>3</maintRespiration>
-              <growthEfficiency>0.75</growthEfficiency>
-              <massFluxTmin>2</massFluxTmin>
-              <massFluxTopt>20</massFluxTopt>
-              <massFluxW0>2</massFluxW0>
-              <massFluxWopt>0.5</massFluxWopt>
-              <SLA>20</SLA>
-              <lightExtCoeff>0.5</lightExtCoeff>
-              <rue>1.65</rue>
-              <maxAssimiRate>330</maxAssimiRate>
-              <rateLive2Dead>0.05</rateLive2Dead>
-              <rateDead2Litter>0.11</rateDead2Litter>
-              <rateRootSen>0.02</rateRootSen>
-              <stockParameter>0.05</stockParameter>
-              <maxSRratio>3</maxSRratio>
-              <leafRate>3</leafRate>
-              <fLeaf>0.7</fLeaf>
-              <fStolon>0</fStolon>
-              <digestLive>0.6</digestLive>
-              <digestDead>0.2</digestDead>
-              <dmroot>248.4311830855286</dmroot>
-              <dmlitter>200</dmlitter>
-              <dmgreenmin>500</dmgreenmin>
-              <Frgr>1</Frgr>
-              <CO2PmaxScale>700</CO2PmaxScale>
-              <CO2NScale>600</CO2NScale>
-              <CO2NMin>0.7</CO2NMin>
-              <CO2NCurvature>2</CO2NCurvature>
-              <waterStressFactor>1</waterStressFactor>
-              <soilSatFactor>0.1</soilSatFactor>
-              <NcstemFr>0.5</NcstemFr>
-              <NcstolFr>0.5</NcstolFr>
-              <NcrootFr>0.5</NcrootFr>
-              <NcleafOpt>0.04</NcleafOpt>
-              <NcleafMax>0.05</NcleafMax>
-              <NcleafMin>0.012</NcleafMin>
-              <MaxFix>0</MaxFix>
-              <MinFix>0</MinFix>
-              <dmtotal>921.82701548783211</dmtotal>
-            </Species>
-            <Species>
-              <speciesName>whiteclover</speciesName>
-              <micrometType>grass</micrometType>
-              <isAnnual>false</isAnnual>
-              <isLegume>true</isLegume>
-              <photoPath>3</photoPath>
-              <dayEmerg>1</dayEmerg>
-              <monEmerg>3</monEmerg>
-              <dayAnth>1</dayAnth>
-              <monAnth>11</monAnth>
-              <daysToMature>0</daysToMature>
-              <dRootDepth>50</dRootDepth>
-              <maxRootDepth>300</maxRootDepth>
-              <allocationSeasonF>0.8</allocationSeasonF>
-              <NdilutCoeff>1</NdilutCoeff>
-              <rootDepth>300</rootDepth>
-              <growthTmin>4</growthTmin>
-              <growthTmax>32</growthTmax>
-              <growthTopt>20</growthTopt>
-              <growthTq>2</growthTq>
-              <heatOnsetT>60</heatOnsetT>
-              <heatFullT>70</heatFullT>
-              <heatSumT>50</heatSumT>
-              <coldOnsetT>-20</coldOnsetT>
-              <coldFullT>-30</coldFullT>
-              <coldSumT>20</coldSumT>
-              <Pm>1</Pm>
-              <maintRespiration>3</maintRespiration>
-              <growthEfficiency>0.75</growthEfficiency>
-              <massFluxTmin>2</massFluxTmin>
-              <massFluxTopt>20</massFluxTopt>
-              <massFluxW0>2</massFluxW0>
-              <massFluxWopt>0.5</massFluxWopt>
-              <SLA>20</SLA>
-              <lightExtCoeff>0.8</lightExtCoeff>
-              <rue>1.65</rue>
-              <maxAssimiRate>330</maxAssimiRate>
-              <rateLive2Dead>0.05</rateLive2Dead>
-              <rateDead2Litter>0.11</rateDead2Litter>
-              <rateRootSen>0.02</rateRootSen>
-              <stockParameter>0.05</stockParameter>
-              <maxSRratio>3</maxSRratio>
-              <leafRate>3</leafRate>
-              <fLeaf>0.7</fLeaf>
-              <fStolon>0.2</fStolon>
-              <digestLive>0.6</digestLive>
-              <digestDead>0.2</digestDead>
-              <dmroot>25.603145242049948</dmroot>
-              <dmlitter>50</dmlitter>
-              <dmgreenmin>50</dmgreenmin>
-              <Frgr>1</Frgr>
-              <CO2PmaxScale>700</CO2PmaxScale>
-              <CO2NScale>600</CO2NScale>
-              <CO2NMin>0.7</CO2NMin>
-              <CO2NCurvature>2</CO2NCurvature>
-              <waterStressFactor>1</waterStressFactor>
-              <soilSatFactor>0.1</soilSatFactor>
-              <NcstemFr>0.5</NcstemFr>
-              <NcstolFr>0.5</NcstolFr>
-              <NcrootFr>0.5</NcrootFr>
-              <NcleafOpt>0.045</NcleafOpt>
-              <NcleafMax>0.055</NcleafMax>
-              <NcleafMin>0.012</NcleafMin>
-              <MaxFix>0.6</MaxFix>
-              <MinFix>0.2</MinFix>
-              <dmtotal>170.14936158661521</dmtotal>
-            </Species>
-            <Species>
-              <speciesName>paspalum</speciesName>
-              <micrometType>grass</micrometType>
-              <isAnnual>false</isAnnual>
-              <isLegume>false</isLegume>
-              <photoPath>4</photoPath>
-              <dayEmerg>1</dayEmerg>
-              <monEmerg>3</monEmerg>
-              <dayAnth>1</dayAnth>
-              <monAnth>1</monAnth>
-              <daysToMature>0</daysToMature>
-              <dRootDepth>50</dRootDepth>
-              <maxRootDepth>900</maxRootDepth>
-              <allocationSeasonF>0.8</allocationSeasonF>
-              <NdilutCoeff>0.5</NdilutCoeff>
-              <rootDepth>900</rootDepth>
-              <growthTmin>10</growthTmin>
-              <growthTmax>40</growthTmax>
-              <growthTopt>20</growthTopt>
-              <growthTq>1.2</growthTq>
-              <heatOnsetT>60</heatOnsetT>
-              <heatFullT>70</heatFullT>
-              <heatSumT>50</heatSumT>
-              <coldOnsetT>-20</coldOnsetT>
-              <coldFullT>-30</coldFullT>
-              <coldSumT>50</coldSumT>
-              <Pm>1.2</Pm>
-              <maintRespiration>3</maintRespiration>
-              <growthEfficiency>0.75</growthEfficiency>
-              <massFluxTmin>5</massFluxTmin>
-              <massFluxTopt>20</massFluxTopt>
-              <massFluxW0>2</massFluxW0>
-              <massFluxWopt>0.5</massFluxWopt>
-              <SLA>20</SLA>
-              <lightExtCoeff>0.6</lightExtCoeff>
-              <rue>1.65</rue>
-              <maxAssimiRate>330</maxAssimiRate>
-              <rateLive2Dead>0.05</rateLive2Dead>
-              <rateDead2Litter>0.11</rateDead2Litter>
-              <rateRootSen>0.02</rateRootSen>
-              <stockParameter>0.05</stockParameter>
-              <maxSRratio>3</maxSRratio>
-              <leafRate>3.5</leafRate>
-              <fLeaf>0.7</fLeaf>
-              <fStolon>0</fStolon>
-              <digestLive>0.6</digestLive>
-              <digestDead>0.2</digestDead>
-              <dmroot>47.727868783996719</dmroot>
-              <dmlitter>10</dmlitter>
-              <dmgreenmin>20</dmgreenmin>
-              <Frgr>1</Frgr>
-              <CO2PmaxScale>150</CO2PmaxScale>
-              <CO2NScale>600</CO2NScale>
-              <CO2NMin>0.7</CO2NMin>
-              <CO2NCurvature>2</CO2NCurvature>
-              <waterStressFactor>1</waterStressFactor>
-              <soilSatFactor>0.1</soilSatFactor>
-              <NcstemFr>0.5</NcstemFr>
-              <NcstolFr>0</NcstolFr>
-              <NcrootFr>0.5</NcrootFr>
-              <NcleafOpt>0.03</NcleafOpt>
-              <NcleafMax>0.035</NcleafMax>
-              <NcleafMin>0.008</NcleafMin>
-              <MaxFix>0</MaxFix>
-              <MinFix>0</MinFix>
-              <dmtotal>275.48032356768391</dmtotal>
-            </Species>
-          </SP>
-          <IntRadn>1.2873672246932983</IntRadn>
-          <FVPDFunction>
-            <X>
-              <double>0</double>
-              <double>10</double>
-              <double>50</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </FVPDFunction>
-          <HeightMassFN>
-            <X>
-              <double>0</double>
-              <double>1000</double>
-              <double>2000</double>
-              <double>3000</double>
-              <double>4000</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>25</double>
-              <double>75</double>
-              <double>150</double>
-              <double>250</double>
-            </Y>
-          </HeightMassFN>
-          <rlvp>
-            <double>0.05</double>
-            <double>0.05</double>
-            <double>0.03</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </rlvp>
-          <kl>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.06</double>
-            <double>0.06</double>
-            <double>0.06</double>
-            <double>0.06</double>
-            <double>0.06</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </kl>
-          <ll>
-            <double>0.2</double>
-            <double>0.23</double>
-            <double>0.23</double>
-            <double>0.23</double>
-            <double>0.23</double>
-            <double>0.23</double>
-            <double>0.23</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </ll>
-          <xf>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0.8</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </xf>
-          <NUptakeSource>calc</NUptakeSource>
-          <alt_N_uptake>no</alt_N_uptake>
-          <UseRootProportion>1</UseRootProportion>
-          <actualUptake>0.2344387620687485</actualUptake>
-          <Nsp>3</Nsp>
-          <thisCropName>AgPasture</thisCropName>
-          <WaterUptakeSource>calc</WaterUptakeSource>
-        </AgPasture>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
@@ -345,8 +44,8 @@
             <string>[WeatherFile].MinT</string>
             <string>[WeatherFile].Radn</string>
             <string>[WeatherFile].Rain</string>
-            <string>[SoilWater].sw_dep</string>
-            <string>[SoilNitrogen].no3</string>
+            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilNitrogen.no3</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
             <string>[AgPasture].Biomass</string>
             <string />
@@ -355,6 +54,7 @@
           <Events>
             <string>[Clock].EndOfDay</string>
           </Events>
+          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -439,7 +139,7 @@
               <double>0.49</double>
             </SAT>
             <SoilCrop>
-              <Name>WheatSoilCrop</Name>
+              <Name>Wheat</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -481,7 +181,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>BarleySoilCrop</Name>
+              <Name>Barley</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -523,7 +223,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>PotatoSoilCrop</Name>
+              <Name>Potato</Name>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -674,25 +374,6 @@
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <NPartitionApproach>BasedOnLayerConcentration</NPartitionApproach>
-            <n2o_approach>0</n2o_approach>
-            <wnmm_n_alpha>0.002</wnmm_n_alpha>
-            <wnmm_dn_alpha>0.5</wnmm_dn_alpha>
-            <nemis_dn_km>22</nemis_dn_km>
-            <nemis_dn_pot>7.194</nemis_dn_pot>
-            <cent_n_soilt_ave>15</cent_n_soilt_ave>
-            <cent_n_maxt_ave>25</cent_n_maxt_ave>
-            <cent_n_wfps_ave>0.7</cent_n_wfps_ave>
-            <cent_n_max_rate>0.1</cent_n_max_rate>
-            <ureappm_min>0</ureappm_min>
-            <nh4ppm_min>0</nh4ppm_min>
-            <no3ppm_min>0</no3ppm_min>
-            <fom_min>0</fom_min>
-            <ini_FOMtype>default</ini_FOMtype>
-            <oc2om_factor>0</oc2om_factor>
-            <ini_pH>0</ini_pH>
-            <WarningThreshold>0</WarningThreshold>
-            <FatalThreshold>0</FatalThreshold>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -725,80 +406,14 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <ef_res>0.4</ef_res>
-            <fr_res_biom>0.9</fr_res_biom>
-            <min_depth>100</min_depth>
-            <rd_carb>
-              <double>0.2</double>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
               <double>0.1</double>
-            </rd_carb>
-            <rd_cell>
-              <double>0.05</double>
-              <double>0.25</double>
-            </rd_cell>
-            <rd_lign>
-              <double>0.0095</double>
-              <double>0.003</double>
-            </rd_lign>
-            <ef_fom>0.4</ef_fom>
-            <fr_fom_biom>0.9</fr_fom_biom>
-            <cnrf_coeff>0.693</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
-            <rd_biom>
-              <double>0.0081</double>
-              <double>0.004</double>
-            </rd_biom>
-            <ef_biom>0.4</ef_biom>
-            <fr_biom_biom>0.6</fr_biom_biom>
-            <rd_hum>
-              <double>0.00015</double>
-              <double>7E-05</double>
-            </rd_hum>
-            <ef_hum>0.4</ef_hum>
-            <opt_temp>
-              <double>32</double>
-              <double>32</double>
-            </opt_temp>
-            <wfmin_index>
-              <double>0</double>
-              <double>0.5</double>
               <double>1</double>
-              <double>2</double>
-            </wfmin_index>
-            <wfmin_values>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0.5</double>
-            </wfmin_values>
-            <potHydrol_min>0</potHydrol_min>
-            <potHydrol_parmA>0</potHydrol_parmA>
-            <potHydrol_parmB>0</potHydrol_parmB>
-            <potHydrol_parmC>0</potHydrol_parmC>
-            <potHydrol_parmD>0</potHydrol_parmD>
-            <nitrification_pot>0</nitrification_pot>
-            <nh4_at_half_pot>0</nh4_at_half_pot>
-            <dnit_rate_coeff>0</dnit_rate_coeff>
-            <dnit_nitrf_loss>0</dnit_nitrf_loss>
-            <dnit_k1>0</dnit_k1>
-            <dnit_wf_power>0</dnit_wf_power>
-            <actC_parmB>0</actC_parmB>
-            <actC_parmA>0</actC_parmA>
-            <N2N2O_parmA>0</N2N2O_parmA>
-            <N2N2O_parmB>0</N2N2O_parmB>
-            <soiltype>standard</soiltype>
-            <allow_simpleSoilTemp>no</allow_simpleSoilTemp>
-            <profile_reduction>no</profile_reduction>
-            <use_organic_solutes>no</use_organic_solutes>
-            <c_in_fom>0.4</c_in_fom>
-            <minPatchArea>1</minPatchArea>
-            <mcn>8</mcn>
-            <root_depth>3000</root_depth>
-            <root_cn_pool>
-              <double>40</double>
-              <double>40</double>
-              <double>40</double>
-            </root_cn_pool>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -984,33 +599,7 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes>
-            <ResidueType>
-              <Name>grass</Name>
-              <fraction_C>0.08</fraction_C>
-              <po4ppm>10</po4ppm>
-              <nh4ppm>10</nh4ppm>
-              <no3ppm>10</no3ppm>
-              <specific_area>0.0001</specific_area>
-              <cf_contrib>1</cf_contrib>
-              <pot_decomp_rate>0.1</pot_decomp_rate>
-              <fr_c>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_c>
-              <fr_n>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_n>
-              <fr_p>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.4</double>
-              </fr_p>
-            </ResidueType>
-          </ResidueTypes>
+          <ResidueTypes />
           <TillageTypes>
             <Name>TillageTypes</Name>
             <TillageType />
@@ -1039,15 +628,299 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>AgPasture</Name>
-            <Type>grass</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <Gsmax>0.011</Gsmax>
-            <R50>200</R50>
-          </ComponentData>
         </MicroClimate>
+        <AgPasture>
+          <Name>AgPasture</Name>
+          <SP>
+            <Species>
+              <speciesName>ryegrass</speciesName>
+              <micrometType>grass</micrometType>
+              <isAnnual>false</isAnnual>
+              <isLegume>false</isLegume>
+              <photoPath>3</photoPath>
+              <dayEmerg>0</dayEmerg>
+              <monEmerg>0</monEmerg>
+              <dayAnth>0</dayAnth>
+              <monAnth>0</monAnth>
+              <daysToMature>0</daysToMature>
+              <dRootDepth>50</dRootDepth>
+              <maxRootDepth>900</maxRootDepth>
+              <allocationSeasonF>0.8</allocationSeasonF>
+              <NdilutCoeff>0.5</NdilutCoeff>
+              <rootDepth>900</rootDepth>
+              <growthTmin>2</growthTmin>
+              <growthTmax>32</growthTmax>
+              <growthTopt>20</growthTopt>
+              <growthTq>2</growthTq>
+              <heatOnsetT>60</heatOnsetT>
+              <heatFullT>70</heatFullT>
+              <heatSumT>50</heatSumT>
+              <coldOnsetT>-20</coldOnsetT>
+              <coldFullT>-30</coldFullT>
+              <coldSumT>20</coldSumT>
+              <Pm>1</Pm>
+              <maintRespiration>3</maintRespiration>
+              <growthEfficiency>0.75</growthEfficiency>
+              <massFluxTmin>2</massFluxTmin>
+              <massFluxTopt>20</massFluxTopt>
+              <massFluxW0>2</massFluxW0>
+              <massFluxWopt>0.5</massFluxWopt>
+              <SLA>20</SLA>
+              <lightExtCoeff>0.5</lightExtCoeff>
+              <rue>1.65</rue>
+              <maxAssimiRate>330</maxAssimiRate>
+              <rateLive2Dead>0.05</rateLive2Dead>
+              <rateDead2Litter>0.11</rateDead2Litter>
+              <rateRootSen>0.02</rateRootSen>
+              <stockParameter>0.05</stockParameter>
+              <maxSRratio>3</maxSRratio>
+              <leafRate>3</leafRate>
+              <fLeaf>0.7</fLeaf>
+              <fStolon>0</fStolon>
+              <digestLive>0.6</digestLive>
+              <digestDead>0.2</digestDead>
+              <dmrootInit>450</dmrootInit>
+              <dmlitterInit>200</dmlitterInit>
+              <dmtotalInit>1500</dmtotalInit>
+              <dmgreenmin>500</dmgreenmin>
+              <Frgr>1</Frgr>
+              <CO2PmaxScale>700</CO2PmaxScale>
+              <CO2NScale>600</CO2NScale>
+              <CO2NMin>0.7</CO2NMin>
+              <CO2NCurvature>2</CO2NCurvature>
+              <waterStressFactor>1</waterStressFactor>
+              <soilSatFactor>0.1</soilSatFactor>
+              <NcstemFr>0.5</NcstemFr>
+              <NcstolFr>0.5</NcstolFr>
+              <NcrootFr>0.5</NcrootFr>
+              <NcleafOpt>0.04</NcleafOpt>
+              <NcleafMax>0.05</NcleafMax>
+              <NcleafMin>0.012</NcleafMin>
+              <MaxFix>0</MaxFix>
+              <MinFix>0</MinFix>
+            </Species>
+            <Species>
+              <speciesName>whiteclover</speciesName>
+              <micrometType>grass</micrometType>
+              <isAnnual>false</isAnnual>
+              <isLegume>true</isLegume>
+              <photoPath>3</photoPath>
+              <dayEmerg>1</dayEmerg>
+              <monEmerg>3</monEmerg>
+              <dayAnth>1</dayAnth>
+              <monAnth>11</monAnth>
+              <daysToMature>0</daysToMature>
+              <dRootDepth>50</dRootDepth>
+              <maxRootDepth>300</maxRootDepth>
+              <allocationSeasonF>0.8</allocationSeasonF>
+              <NdilutCoeff>1</NdilutCoeff>
+              <rootDepth>300</rootDepth>
+              <growthTmin>4</growthTmin>
+              <growthTmax>32</growthTmax>
+              <growthTopt>20</growthTopt>
+              <growthTq>2</growthTq>
+              <heatOnsetT>60</heatOnsetT>
+              <heatFullT>70</heatFullT>
+              <heatSumT>50</heatSumT>
+              <coldOnsetT>-20</coldOnsetT>
+              <coldFullT>-30</coldFullT>
+              <coldSumT>20</coldSumT>
+              <Pm>1</Pm>
+              <maintRespiration>3</maintRespiration>
+              <growthEfficiency>0.75</growthEfficiency>
+              <massFluxTmin>2</massFluxTmin>
+              <massFluxTopt>20</massFluxTopt>
+              <massFluxW0>2</massFluxW0>
+              <massFluxWopt>0.5</massFluxWopt>
+              <SLA>20</SLA>
+              <lightExtCoeff>0.8</lightExtCoeff>
+              <rue>1.65</rue>
+              <maxAssimiRate>330</maxAssimiRate>
+              <rateLive2Dead>0.05</rateLive2Dead>
+              <rateDead2Litter>0.11</rateDead2Litter>
+              <rateRootSen>0.02</rateRootSen>
+              <stockParameter>0.05</stockParameter>
+              <maxSRratio>3</maxSRratio>
+              <leafRate>3</leafRate>
+              <fLeaf>0.7</fLeaf>
+              <fStolon>0.2</fStolon>
+              <digestLive>0.6</digestLive>
+              <digestDead>0.2</digestDead>
+              <dmrootInit>120</dmrootInit>
+              <dmlitterInit>50</dmlitterInit>
+              <dmtotalInit>350</dmtotalInit>
+              <dmgreenmin>50</dmgreenmin>
+              <Frgr>1</Frgr>
+              <CO2PmaxScale>700</CO2PmaxScale>
+              <CO2NScale>600</CO2NScale>
+              <CO2NMin>0.7</CO2NMin>
+              <CO2NCurvature>2</CO2NCurvature>
+              <waterStressFactor>1</waterStressFactor>
+              <soilSatFactor>0.1</soilSatFactor>
+              <NcstemFr>0.5</NcstemFr>
+              <NcstolFr>0.5</NcstolFr>
+              <NcrootFr>0.5</NcrootFr>
+              <NcleafOpt>0.045</NcleafOpt>
+              <NcleafMax>0.055</NcleafMax>
+              <NcleafMin>0.012</NcleafMin>
+              <MaxFix>0.6</MaxFix>
+              <MinFix>0.2</MinFix>
+            </Species>
+            <Species>
+              <speciesName>paspalum</speciesName>
+              <micrometType>grass</micrometType>
+              <isAnnual>false</isAnnual>
+              <isLegume>false</isLegume>
+              <photoPath>4</photoPath>
+              <dayEmerg>1</dayEmerg>
+              <monEmerg>3</monEmerg>
+              <dayAnth>1</dayAnth>
+              <monAnth>1</monAnth>
+              <daysToMature>0</daysToMature>
+              <dRootDepth>50</dRootDepth>
+              <maxRootDepth>900</maxRootDepth>
+              <allocationSeasonF>0.8</allocationSeasonF>
+              <NdilutCoeff>0.5</NdilutCoeff>
+              <rootDepth>900</rootDepth>
+              <growthTmin>10</growthTmin>
+              <growthTmax>40</growthTmax>
+              <growthTopt>20</growthTopt>
+              <growthTq>1.2</growthTq>
+              <heatOnsetT>60</heatOnsetT>
+              <heatFullT>70</heatFullT>
+              <heatSumT>50</heatSumT>
+              <coldOnsetT>-20</coldOnsetT>
+              <coldFullT>-30</coldFullT>
+              <coldSumT>50</coldSumT>
+              <Pm>1.2</Pm>
+              <maintRespiration>3</maintRespiration>
+              <growthEfficiency>0.75</growthEfficiency>
+              <massFluxTmin>5</massFluxTmin>
+              <massFluxTopt>20</massFluxTopt>
+              <massFluxW0>2</massFluxW0>
+              <massFluxWopt>0.5</massFluxWopt>
+              <SLA>20</SLA>
+              <lightExtCoeff>0.6</lightExtCoeff>
+              <rue>1.65</rue>
+              <maxAssimiRate>330</maxAssimiRate>
+              <rateLive2Dead>0.05</rateLive2Dead>
+              <rateDead2Litter>0.11</rateDead2Litter>
+              <rateRootSen>0.02</rateRootSen>
+              <stockParameter>0.05</stockParameter>
+              <maxSRratio>3</maxSRratio>
+              <leafRate>3.5</leafRate>
+              <fLeaf>0.7</fLeaf>
+              <fStolon>0</fStolon>
+              <digestLive>0.6</digestLive>
+              <digestDead>0.2</digestDead>
+              <dmrootInit>30</dmrootInit>
+              <dmlitterInit>10</dmlitterInit>
+              <dmtotalInit>100</dmtotalInit>
+              <dmgreenmin>20</dmgreenmin>
+              <Frgr>1</Frgr>
+              <CO2PmaxScale>150</CO2PmaxScale>
+              <CO2NScale>600</CO2NScale>
+              <CO2NMin>0.7</CO2NMin>
+              <CO2NCurvature>2</CO2NCurvature>
+              <waterStressFactor>1</waterStressFactor>
+              <soilSatFactor>0.1</soilSatFactor>
+              <NcstemFr>0.5</NcstemFr>
+              <NcstolFr>0</NcstolFr>
+              <NcrootFr>0.5</NcrootFr>
+              <NcleafOpt>0.03</NcleafOpt>
+              <NcleafMax>0.035</NcleafMax>
+              <NcleafMin>0.008</NcleafMin>
+              <MaxFix>0</MaxFix>
+              <MinFix>0</MinFix>
+            </Species>
+          </SP>
+          <FVPDFunction>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>50</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </FVPDFunction>
+          <HeightMassFN>
+            <X>
+              <double>0</double>
+              <double>1000</double>
+              <double>2000</double>
+              <double>3000</double>
+              <double>4000</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>25</double>
+              <double>75</double>
+              <double>150</double>
+              <double>250</double>
+            </Y>
+          </HeightMassFN>
+          <rlvp>
+            <double>0.05</double>
+            <double>0.05</double>
+            <double>0.03</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </rlvp>
+          <kl>
+            <double>0.1</double>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </kl>
+          <ll>
+            <double>0.2</double>
+            <double>0.23</double>
+            <double>0.23</double>
+            <double>0.23</double>
+            <double>0.23</double>
+            <double>0.23</double>
+            <double>0.23</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </ll>
+          <xf>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0.8</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </xf>
+          <NUptakeSource>calc</NUptakeSource>
+          <alt_N_uptake>no</alt_N_uptake>
+          <UseRootProportion>1</UseRootProportion>
+          <Nsp>3</Nsp>
+          <thisCropName>AgPasture</thisCropName>
+          <WaterUptakeSource>calc</WaterUptakeSource>
+        </AgPasture>
         <Manager>
           <Name>IrrigationRule</Name>
           <Script>
@@ -1076,7 +949,7 @@
                private void OnStartOfDay(object sender, EventArgs e)
                {
 				if (Clock.Today.Date.Equals(ApplicationDate))
-                    Irrigation.Apply(Amount:ApplicationAmount);
+                    Irrigation.Apply(amount:ApplicationAmount);
                   //Irrigation.Apply(Amount:a, Depth:b, Efficiency:c, willRunoff:"d");
                   //a is a double and can be represented by a variable name or a number representing the amount (mm) of irrigation to apply
 			      //b is an optional double and can be represented by a variable name or a number representing the depth (mm) at which irrigation is applied
@@ -1150,6 +1023,7 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-8388544</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
@@ -1160,7 +1034,9 @@
               <TableName>Report</TableName>
               <FieldName>SoilNitrogen.no3(1)</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
+          <LegendPosition>TopLeft</LegendPosition>
         </Graph>
         <Graph>
           <Name>Graph</Name>
@@ -1180,12 +1056,14 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <FieldName>[Soil].AirDry</FieldName>
             </X>
             <Y>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
           <Series>
             <Type>Line</Type>
@@ -1193,12 +1071,14 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <FieldName>[Soil].DUL</FieldName>
             </X>
             <Y>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
           <Series>
             <Type>Line</Type>
@@ -1206,12 +1086,14 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-16711681</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <FieldName>[Soil].SW</FieldName>
             </X>
             <Y>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
           <Series>
             <Type>Line</Type>
@@ -1219,12 +1101,14 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-16760704</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <FieldName>[Soil].SAT</FieldName>
             </X>
             <Y>
               <FieldName>[Soil].DepthMidPoints</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
           <Series>
             <Type>Line</Type>
@@ -1232,19 +1116,21 @@
             <YAxis>Left</YAxis>
             <ColourArgb>-32768</ColourArgb>
             <Marker>None</Marker>
+            <Line>Solid</Line>
             <X>
               <FieldName>[Soil].LL15</FieldName>
             </X>
             <Y>
               <FieldName>[Soil]l.DepthMidPoints</FieldName>
             </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
+          <LegendPosition>TopLeft</LegendPosition>
         </Graph>
         <Area>0</Area>
       </Zone>
       <Input>
         <Name>Observed</Name>
-        <FileName>TestObserved.txt</FileName>
       </Input>
       <Area>0</Area>
     </Simulation>
@@ -1252,7 +1138,6 @@
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoCreateReport>false</AutoCreateReport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -1283,6 +1168,7 @@
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
+      <Line>Solid</Line>
       <X>
         <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
@@ -1293,6 +1179,7 @@
         <TableName>Report</TableName>
         <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Series>
     <Series>
       <Title>Observed data</Title>
@@ -1301,6 +1188,7 @@
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>FilledCircle</Marker>
+      <Line>Solid</Line>
       <X>
         <SimulationName>Test</SimulationName>
         <TableName>Observed</TableName>
@@ -1311,7 +1199,9 @@
         <TableName>Observed</TableName>
         <FieldName>sw(1)</FieldName>
       </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Series>
+    <LegendPosition>TopLeft</LegendPosition>
   </Graph>
   <Memo>
     <Name>Memo</Name>

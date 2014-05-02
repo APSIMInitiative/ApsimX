@@ -25,7 +25,7 @@ namespace Models.Soils
         public double[] bd;
     }
     public delegate void NewProfileDelegate(NewProfileType Data);
-
+      
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model
@@ -46,6 +46,9 @@ namespace Models.Soils
 
         //[Link]
         private SoilWatTillageType SoilWatTillageType = null;
+
+        [Link]
+        Simulation paddock;
 
         [Link]
         private Soil Soil = null;
@@ -454,6 +457,21 @@ namespace Models.Soils
         [Description("Drainage rate from bottom layer")]
         public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNO3 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachNH4 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        [Description("Drainage rate from bottom layer")]
+        public double LeachUrea { get; set; }         //! Leaching from bottom layer (kg/ha) // 
+
 
         [XmlIgnore]
         [Units("mm")]
@@ -534,6 +552,7 @@ namespace Models.Soils
 
 
         private double[] _dlayer = null;
+        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
@@ -601,6 +620,7 @@ namespace Models.Soils
         }
 
 
+        [UserInterfaceIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Saturated water content for layer")]
@@ -633,6 +653,7 @@ namespace Models.Soils
             }
         }
 
+        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -729,6 +750,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [XmlIgnore]
+        [UserInterfaceIgnore]
         [Description("15 bar lower limit of extractable soil water for each soil layer")]
         public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
@@ -766,6 +788,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [Description("Air dry soil water content")]
+        [UserInterfaceIgnore]
         private double[] air_dry   //! air dry soil water content
         {
             get
@@ -824,11 +847,6 @@ namespace Models.Soils
         [Description("Soil water conductivity constant")]
         public double[] SWCON { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Impermeable soil layer indicator")]
-        public double[] MWCON { get; set; }     //! impermeable soil layer indicator
-
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
         public double[] KLAT { get; set; }
@@ -852,12 +870,10 @@ namespace Models.Soils
 
         //sv- Lateral Flow profile   //sv- also from Lateral_read_param()
 
-
-
-
         private double[] _sat_dep;
         [Units("mm")]
         [Description("Sat * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
@@ -878,6 +894,7 @@ namespace Models.Soils
         private double[] _dul_dep;
         [Units("mm")]
         [Description("dul * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
@@ -906,7 +923,8 @@ namespace Models.Soils
             get { return _sw_dep; }
             set
             {
-                soilwat2_zero_default_variables();
+                //do we need this now? It actually resets anything passed into sw_dep.
+    //            soilwat2_zero_default_variables();
                 numvals_sw = value.Length;          //used in soilwat2_set_default()
                 _sw_dep = new double[value.Length];
                 Array.Copy(value, _sw_dep, value.Length);
@@ -924,6 +942,7 @@ namespace Models.Soils
         private double[] _ll15_dep;
         [Units("mm")]
         [Description("ll15 * dlayer")]
+        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
@@ -944,6 +963,7 @@ namespace Models.Soils
 
         private double[] _air_dry_dep;
         [Units("mm")]
+        [UserInterfaceIgnore]
         [Description("air_dry * dlayer")]
         private double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
         {
@@ -981,15 +1001,15 @@ namespace Models.Soils
         [Description("Depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)")]
         public double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
-
+        [XmlIgnore]
         [Units("mm")]
         [Description("Initially, water moving downward into layer i (mm), then water moving downward out of layer i (saturated flow)")]
-        private double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
-
+        public double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
         [XmlIgnore]
         [Units("mm")]
         [Description("flow_water[layer] = flux[layer] - flow[layer]")]
+        [UserInterfaceIgnore]
         public double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
         {
             get
@@ -1002,6 +1022,37 @@ namespace Models.Soils
             }
         }
 
+        //private double[] _flow2;
+        [XmlIgnore]
+        [Units("mm")]
+        [Description("Nasty cludge to get flow reporting without a massive refactor")]
+        public double[] flow2
+        {
+            get;
+            set;
+            /*   get { return _flow2; }
+               set
+               {
+                   flow2 = new double[value.Length];
+                   Array.Copy(value, _flow2, value.Length);
+               }*/
+        }
+        
+       // private double[] _flux2;
+        [XmlIgnore]
+        [Units("mm")]
+        [Description("Nasty cludge to get fluw reporting without a massive refactor")]
+        public double[] flux2
+        {
+            get;
+            set;
+            /* get { return _flux2; }
+            set
+            {
+                flux2 = new double[value.Length];
+                Array.Copy(value, _flux2, value.Length);
+            }*/
+        }
 
         //Soilwat2Globals
 
@@ -1173,52 +1224,33 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-            //also called in prepare event as well
-
-            //*+  Purpose
-            //*      get the value/s of a variable/array.
-
-            //*+  Mission Statement
-            //*     Get crop Variables
-
-#if (APSIMX == false)
-        Double coverLive;
-        Double coverTotal;
-        Double height;
-
-        bool foundCL;
-        bool foundCT;
-        bool foundH;
-
         int i = 0;
-        foreach (Component Comp in MyPaddock.Crops)
-        {
-            foundCL = MyPaddock.Get(Comp.FullName + ".cover_green", out coverLive);
-            foundCT = MyPaddock.Get(Comp.FullName + ".cover_tot", out coverTotal);
-            foundH = MyPaddock.Get(Comp.FullName + ".Height", out height);
+        Model[] models = paddock.FindAll(typeof(ICrop));
+        
+            foreach (Model m in models)
+            {
+                NumberOfCrops = 0;
+                Array.Resize(ref cover_green, NumberOfCrops + 1);
+                Array.Resize(ref cover_tot, NumberOfCrops + 1);
+                Array.Resize(ref canopy_height, NumberOfCrops + 1);
 
-            ////must have at least these three variables to be considered a "crop" component.
-            if (foundCL && foundCT && foundH)
+                ICrop Crop = m as ICrop;
+                if (Crop.CanopyData != null)
                 {
-                num_crops = i + 1;
-                Array.Resize(ref cover_green, num_crops);
-                Array.Resize(ref cover_tot, num_crops);
-                Array.Resize(ref canopy_height, num_crops);
-                cover_green[i] = coverLive;
-                cover_tot[i] = coverTotal;
-                canopy_height[i] = height;
-                i++;
+                    cover_green[NumberOfCrops] = Crop.CanopyData.cover;
+                    cover_tot[NumberOfCrops] = Crop.CanopyData.cover_tot;
+                    canopy_height[NumberOfCrops] = Crop.CanopyData.height;
                 }
-            else
+                else
                 {
-                throw new Exception("Crop Module: " +  Comp.FullName  + 
-                        " is missing one/or more of the following 3 output variables (cover_green, cover_tot, height) " + Environment.NewLine +
-                        "These 3 output variables are needed by the SoilWater module (for evaporation, runoff etc.");
+                    cover_green[NumberOfCrops] = 0;
+                    cover_tot[NumberOfCrops] = 0;
+                    canopy_height[NumberOfCrops] = 0;
                 }
-        }
-#endif
+                NumberOfCrops += 1;     
+            }
+         }
 
-        }
 
 
         private void soilwat2_get_solute_variables()
@@ -1359,7 +1391,7 @@ namespace Models.Soils
         private double[] cover_tot = null;     //! total canopy cover of crops (0-1)
         private double[] cover_green = null;   //! green canopy cover of crops (0-1)
         private double[] canopy_height = null; //! canopy heights of each crop (mm)
-        private int num_crops = 0;                //! number of crops ()
+        private int NumberOfCrops = 0;                //! number of crops ()
 
         //TILLAGE EVENT
         private double tillage_cn_red;   //! reduction in CN due to tillage ()   //can either come from the manager module or from the sim file
@@ -1500,7 +1532,7 @@ namespace Models.Soils
             cover_tot = null;                //! total canopy cover of crops (0-1)
             cover_green = null;              //! green canopy cover of crops (0-1)
             canopy_height = null;            //! canopy heights of each crop (mm)
-            num_crops = 0;                          //! number of crops ()
+            NumberOfCrops = 0;                          //! number of crops ()
             sumes1 = 0.0;                           //! cumulative soil evaporation in stage 1 (mm)
             sumes2 = 0.0;                           //! cumulative soil evaporation in stage 2 (mm)
 
@@ -1565,7 +1597,7 @@ namespace Models.Soils
             infiltration = 0.0;
             runoff = 0.0;
             runoff_pot = 0.0;
-            num_crops = 0;
+            NumberOfCrops = 0;
             //obsrunoff = 0.0;
             pond_evap = 0.0;                    //! evaporation from the pond surface (mm)
             real_eo = 0.0;                      //! eo determined before any ponded water is evaporated (mm)
@@ -1893,14 +1925,6 @@ namespace Models.Soils
 
             if (!initDone) // If this is actual initialisation, establish whether we will use ks
             {
-                //sv- with mwcon: 0 is impermeable and 1 is permeable.
-                //sv- if mwcon is not specified then set it to 1 and don't use ks. If it is specified then use mwcon and use ks. 
-                //c dsg - if there is NO impermeable layer specified, then mwcon must be set to '1' in all layers by default.
-                if (MWCON != null)
-                {
-                    IssueWarning("mwcon is being replaced with a saturated conductivity (ks). " + "\n"
-                                        + "See documentation for details.");
-                }
 
                 //for (klat == null) see Lateral_init().
 
@@ -2421,7 +2445,7 @@ namespace Models.Soils
             //!    0 (no effect) to 1 (full effect)
 
             cover_surface_crop = 0.0;
-            for (crop = 0; crop < num_crops; crop++)
+            for (crop = 0; crop < NumberOfCrops; crop++)
             {
                 if (canopy_height[crop] >= 0.0)
                 {
@@ -2658,7 +2682,7 @@ namespace Models.Soils
             //                ! function of radiation, albedo, and temp.
 
             cover_green_sum = 0.0;
-            for (int crop = 0; crop < num_crops; ++crop)
+            for (int crop = 0; crop < NumberOfCrops; ++crop)
                 cover_green_sum = 1.0 - (1.0 - cover_green_sum) * (1.0 - cover_green[crop]);
 
             albedo = max_albedo - (max_albedo - Salb) * (1.0 - cover_green_sum);
@@ -2747,7 +2771,7 @@ namespace Models.Soils
             //!              ...maximum reduction (at cover =1.0) is 0.183.
 
             cover_tot_sum = 0.0;
-            for (int i = 0; i < num_crops; i++)
+            for (int i = 0; i < NumberOfCrops; i++)
                 cover_tot_sum = 1.0 - (1.0 - cover_tot_sum) * (1.0 - cover_tot[i]);
             eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * cover_tot_sum);
 
@@ -3142,41 +3166,11 @@ namespace Models.Soils
                 //! get water draining out of layer (mm)
                 if (excess > 0.0)
                 {
-                    if (Soil.MWCON == null || Soil.MWCON[layer] >= 1.0)
-                    {
                         //! all this excess goes on down so do nothing
                         w_out = excess + w_drain;
                         new_sw_dep[layer] = _sw_dep[layer] + w_in - w_out;
                         flux[layer] = w_out;
-                    }
-                    else
-                    {
-                        //! Calculate amount of water to backup and push down
-                        //! Firstly top up this layer (to saturation)
-                        add = Math.Min(excess, w_drain);
-                        excess = excess - add;
-                        new_sw_dep[layer] = _sat_dep[layer] - w_drain + add;
 
-                        //! partition between flow back up and flow down
-                        backup = (1.0 - Soil.MWCON[layer]) * excess;
-                        excess = Soil.MWCON[layer] * excess;
-
-                        w_out = excess + w_drain;
-                        flux[layer] = w_out;
-
-                        //! now back up to saturation for this layer up out of the
-                        //! backup water keeping account for reduction of actual
-                        //! flow rates (flux) for N movement.         
-                        for (i = layer - 1; i >= 0; i--)
-                        {
-                            flux[i] = flux[i] - backup;
-                            add = Math.Min((_sat_dep[i] - new_sw_dep[i]), backup);
-                            new_sw_dep[i] = new_sw_dep[i] + add;
-                            backup = backup - add;
-                        }
-
-                        ExtraRunoff = ExtraRunoff + backup;
-                    }
                 }
                 else
                 {
@@ -3244,7 +3238,8 @@ namespace Models.Soils
 
             //! *** calculate unsaturated flow below drained upper limit (flow)***   
             flow = new double[num_layers];
-
+            
+            
             //! second_last_layer is bottom layer but 1.
             second_last_layer = num_layers - 1;
 
@@ -3317,14 +3312,6 @@ namespace Models.Soils
                 {
                     flow[layer] = 0.0;
                 }
-
-                //c dsg 260202
-                //c dsg    this code will stop unsaturated flow downwards through an impermeable layer, but will allow flow up
-                if ((Soil.MWCON != null) && (Soil.MWCON[layer] == 0) && (flow[layer] < 0.0))
-                {
-                    flow[layer] = 0.0;
-                }
-
 
                 if (flow[layer] < 0.0)
                 {
@@ -3402,11 +3389,12 @@ namespace Models.Soils
             num_layers = _dlayer.Length;
             solute_out = new double[num_layers];
             in_solute = 0.0;
-
+                
             for (layer = 0; layer < num_layers; layer++)
             {
                 //! get water draining out of layer and n content of layer includes that leaching down         
                 out_w = flux[layer];
+                flux2[layer] = flux[layer]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
                 solute_kg_layer = solute_kg[layer] + in_solute;
 
                 //! n leaching out of layer is proportional to the water draining out.
@@ -3492,6 +3480,7 @@ namespace Models.Soils
 
                 //! get water moving up and out of layer to the one above
                 out_w = flow[layer - 1];
+                flow2[layer] = flow[layer]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
                 if (out_w <= 0.0)
                 {
                     out_solute = 0.0;
@@ -3713,8 +3702,17 @@ namespace Models.Soils
                     soilwat2_solute_flux(ref solutes[solnum].leach, solutes[solnum].amount);               //calc leaching
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].amount);      //use leaching to set new solute values
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].delta);       //use leaching to set new delta (change in) solute values
+
+                    if(solutes[solnum].name == "no3")
+                        LeachNO3 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "nh4")
+                        LeachNH4 = solutes[solnum].leach[num_layers - 1];
+                    if (solutes[solnum].name == "urea")
+                        LeachUrea = solutes[solnum].leach[num_layers - 1];
                 }
             }
+
+            
         }
 
 
@@ -3843,13 +3841,6 @@ namespace Models.Soils
                 if ((_sat_dep[layer] - _sw_dep[layer]) <= margin)
                 {
                     sat_layer = layer + 1;
-                    break;
-                }
-                //Or if mwcon is set to be impermeable for this layer and above sw is above dul then consider this layer as saturated.
-                else if ((Soil.MWCON != null) && (Soil.MWCON[layer] < 1.0) && (_sw_dep[layer] > _dul_dep[layer]))
-                {
-                    //!  dsg 150302     also check whether impermeable layer is above dul. If so then consider it to be saturated
-                    sat_layer = layer;
                     break;
                 }
                 else
@@ -4200,6 +4191,8 @@ namespace Models.Soils
                 soilwat2_delta_state();
             }
             initDone = true;
+            flux2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
+            flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
         [EventSubscribe("StartOfDay")]
@@ -4227,6 +4220,8 @@ namespace Models.Soils
             //! potential: sevap + transpiration:
             soilwat2_pot_evapotranspiration();
             real_eo = eo;  //! store for reporting
+
+
         }
 
 
@@ -4417,8 +4412,8 @@ namespace Models.Soils
 
         #region Met, Irrig, Solute, Plants Event Handlers
 
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(WeatherFile.NewMetType NewMet)
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMet)
         {
             //*     ===========================================================
             //      subroutine soilwat2_ONnewmet (variant)

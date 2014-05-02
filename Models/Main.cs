@@ -54,7 +54,8 @@ namespace Models
         /// </summary>
         static void OnError(object sender, Utility.JobManager.JobCompleteArgs e)
         {
-            Console.WriteLine(e.ErrorMessage);
+            if (e.ErrorMessage != null)
+                Console.WriteLine(e.ErrorMessage);
         }
 
 
@@ -107,8 +108,7 @@ namespace Models
                 foreach (string apsimxFileName in Files)
                 {
                     Simulations simulations = Simulations.Read(apsimxFileName);
-                    foreach (Simulation simulation in Simulations.FindAllSimulationsToRun(simulations))
-                        jobManager.AddJob(simulation);
+                    jobManager.AddJob(simulations);
                 }
             }
         }

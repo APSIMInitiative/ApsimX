@@ -137,7 +137,7 @@ namespace UserInterface.Views
                 else
                     NodeToSelect = FindNode(value);
 
-                if (TreeView.SelectedNode != NodeToSelect)
+                if (NodeToSelect != null && TreeView.SelectedNode != NodeToSelect)
                 {
                     TreeView.SelectedNode = NodeToSelect;
                     if (NodeSelected != null)
@@ -170,8 +170,7 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            Node.Nodes.Clear();
-            if (Description.HasChildren)
+            if (Node.Nodes.Count == 0 && Description.HasChildren)
                 Node.Nodes.Add("Loading...");
         }
 
@@ -309,7 +308,8 @@ namespace UserInterface.Views
             if (!Message.EndsWith("\n"))
                 Message = Message + "\n";
             StatusWindow.Visible = Message != null;
-            StatusWindow.Select(0, 0);
+            //StatusWindow.Select(0, 0);
+            StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
                 StatusWindow.SelectionColor = Color.Red;
@@ -319,6 +319,7 @@ namespace UserInterface.Views
                 StatusWindow.SelectionColor = Color.Blue;
 
             StatusWindow.SelectedText = Message;
+            StatusWindow.ScrollToCaret();
             //StatusWindow.Select(0, Message.Length);
 
             Application.DoEvents();

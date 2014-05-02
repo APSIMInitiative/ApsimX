@@ -35,15 +35,6 @@ namespace Models.Soils
         private Soil Soil = null;
 
         [Link]
-        private Water Water = null;
-
-        [Link]
-        private Analysis Analysis = null;
-
-        [Link]
-        private SoilWater SoilWater = null;
-
-        [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
 
         #endregion
@@ -89,7 +80,7 @@ namespace Models.Soils
         public string useMultiFactors4MinerFOM
         { set { useFactorsByFOMpool = value.ToLower().Contains("yes"); } }
 
-
+        [XmlIgnore]
         public string NPartitionApproach = "BasedOnLayerConcentration";
 
         #endregion
@@ -99,7 +90,6 @@ namespace Models.Soils
 
         // soil texture by layer: COARSE = 1.0;/MEDIUM = 2.0; FINE = 3.0; VERYFINE = 4.0;
         double[] SoilTextureID = null;
-        [Bounds(Lower = 1.0, Upper = 4.0)]
         public double[] texture
         {
             set
@@ -115,34 +105,34 @@ namespace Models.Soils
         }
 
         //Alternative N2O emission
-        [Bounds(Lower = 0, Upper = 10)]
+        [XmlIgnore]
         public int n2o_approach = 0;           // Approches used for nitri/denitri process for n2o emission 
 
         //WNMM
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double wnmm_n_alpha = 0.002;             // maximum fraction of nitrification rate as N2O
 
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double wnmm_dn_alpha = 0.5;            // maximum fraction of denitrification rate at wfps = 0.8
 
         //NWMIS
-        [Bounds(Lower = 0.0, Upper = 50.0)]
+        [XmlIgnore]
         public double nemis_dn_km = 22;              // half-saturation consntant for NO3 reduction (unit ppm = mgN/kg)
 
-        [Bounds(Lower = 0.0, Upper = 50.0)]
+        [XmlIgnore]
         public double nemis_dn_pot = 7.194; 	        // default = 7.194; potential denitrification rate at 20C, on undisturbed soil 
         // saturated with water in the lab and placed at a nitrate content near to 200 mgN/kg
         //CENTURY
-        [Bounds(Lower = 0.0, Upper = 60.0)]
+        [XmlIgnore]
         public double cent_n_soilt_ave = 15;             // average soil surface temperature
 
-        [Bounds(Lower = 0.0, Upper = 60.0)]
+        [XmlIgnore]
         public double cent_n_maxt_ave = 25; 	            // long term average maximum monthly temperature of the hottest month	
 
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double cent_n_wfps_ave = 0.7;              // default = 0.7; average wfps in top nitrifyDepth of soil
 
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double cent_n_max_rate = 0.1;              // default = 0.1, maximum fraction of ammonium to NO3 during nitrification (gN/m2)
         #endregion
 
@@ -158,6 +148,7 @@ namespace Models.Soils
         /// </remarks>
         private string SoilCNParameterSet = "standard";
 
+        [XmlIgnore]
         public string soiltype
         {
             get { return SoilCNParameterSet; }
@@ -173,6 +164,7 @@ namespace Models.Soils
         /// </remarks>
         private bool AllowsimpleSoilTemp = false;
 
+        [XmlIgnore]
         public string allow_simpleSoilTemp
         {
             get { return (AllowsimpleSoilTemp) ? "yes" : "no"; }
@@ -184,6 +176,7 @@ namespace Models.Soils
         /// </summary> 
         private bool AllowProfileReduction = false;
 
+        [XmlIgnore]
         public string profile_reduction
         {
             get { return (AllowProfileReduction) ? "yes" : "no"; }
@@ -198,6 +191,7 @@ namespace Models.Soils
         /// </remarks>
         private bool useOrganicSolutes = false;
 
+        [XmlIgnore]
         public string use_organic_solutes
         {
             get { return (useOrganicSolutes) ? "yes" : "no"; }
@@ -207,37 +201,38 @@ namespace Models.Soils
         /// <summary>
         /// Minimum allowable Urea content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        public double ureappm_min;
+        [XmlIgnore]
+        public double ureappm_min = 0.0;
 
         /// <summary>
         /// Minimum allowable NH4 content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        public double nh4ppm_min;
+        [XmlIgnore]
+        public double nh4ppm_min = 0.0;
 
         /// <summary>
         /// Minimum allowable NO3 content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        public double no3ppm_min;
+        [XmlIgnore]
+        public double no3ppm_min = 0.0;
 
         /// <summary>
         /// Minimum allowable FOM content (kg/ha)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double fom_min;
+        [XmlIgnore]
+        public double fom_min = 0.0;
 
         /// <summary>
         /// FOM type for initalisation
         /// </summary>
+        [XmlIgnore]
         public string ini_FOMtype = "default";
 
         /// <summary>
         /// Factor to convert from OC to OM
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 3.0)]
-        public double oc2om_factor;
+        [XmlIgnore]
+        public double oc2om_factor = 0.0;
 
         /// <summary>
         /// Default weight fraction of C in carbohydrates
@@ -246,7 +241,7 @@ namespace Models.Soils
         /// Used to convert FOM amount into fom_c
         /// </remarks>
         private double defaultFOMCarbonContent = 0.4;
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double c_in_fom
         {
             get { return defaultFOMCarbonContent; }
@@ -256,14 +251,16 @@ namespace Models.Soils
         /// <summary>
         /// Defaul value for initialising soil pH
         /// </summary>
-
-        public double ini_pH;
+        
+        [XmlIgnore]
+        public double ini_pH = 0.0;
 
         /// <summary>
         /// Minimum relative area (fraction of paddock) for any patch
         /// </summary>
         private double MinimumPatchArea = 1.0;
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        
+        [XmlIgnore]
         public double minPatchArea
         {
             get { return MinimumPatchArea; }
@@ -273,14 +270,15 @@ namespace Models.Soils
         /// <summary>
         /// Absolute threshold value to trigger a warning message when negative values are detected
         /// </summary>
-
-        public double WarningThreshold;
+        [XmlIgnore]
+        public double WarningThreshold = 0.0;
 
         /// <summary>
         /// Absolute threshold value to trigger a fatal error when negative values are detected
         /// </summary>
 
-        public double FatalThreshold;
+        [XmlIgnore]
+        public double FatalThreshold = 0.0;
 
         #endregion
 
@@ -312,7 +310,6 @@ namespace Models.Soils
         /// <summary>
         /// The C:N ratio of the soil OM, from xml/GUI (actually of humus)
         /// </summary>
-        [Bounds(Lower = 1.0, Upper = 25.0)]
         private double soil_cn
         {
             get { return hum_cn; }
@@ -326,7 +323,7 @@ namespace Models.Soils
         /// Remains fixed throughout the simulation
         /// </remarks>
         private double biom_cn = 8.0;
-        [Bounds(Lower = 1.0, Upper = 50.0)]
+        [XmlIgnore]
         public double mcn
         {
             get { return biom_cn; }
@@ -336,13 +333,11 @@ namespace Models.Soils
         /// <summary>
         /// Proportion of biomass-C in the initial mineralizable humic-C (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
         private double[] fbiom;
 
         /// <summary>
         /// Proportion of the initial total soil C that is inert, not subject to mineralisation (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
         private double[] finert;
 
         #endregion
@@ -353,7 +348,6 @@ namespace Models.Soils
         /// Initial weight of fom in the soil (kgDM/ha)
         /// </summary>
         private double iniFomWt = 0.0;
-        [Bounds(Lower = 0.0, Upper = 100000.0)]
         private double root_wt
         {
             get { return iniFomWt; }
@@ -367,8 +361,9 @@ namespace Models.Soils
         /// If not given fom will be distributed over the whole soil profile
         /// Distribution is homogenous over this depth
         /// </remarks>
-        private double iniFomDepth = 0.0;
-        [Bounds(Lower = 0.0, Upper = 5000.0)]
+        private double iniFomDepth;
+        
+        [XmlIgnore]
         public double root_depth
         {
             get { return iniFomDepth; }
@@ -379,7 +374,6 @@ namespace Models.Soils
         /// Initial C:N ratio of roots (actually FOM)
         /// </summary>
         private double iniFomCNratio = 0.0;
-        [Bounds(Lower = 0.1, Upper = 750.0)]
         private double root_cn
         {
             get { return iniFomCNratio; }
@@ -393,12 +387,9 @@ namespace Models.Soils
         /// Case not given, iniFomCNratio is used
         /// </remarks>
         private double[] fomPoolsCNratio = null;
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        public double[] root_cn_pool
-        {
-            get { return fomPoolsCNratio; }
-            set { fomPoolsCNratio = value; }
-        }
+        
+        [XmlIgnore]
+        public double[] root_cn_pool = {40, 40, 40};
 
         /// <summary>
         /// List of available FOM types names
@@ -410,18 +401,15 @@ namespace Models.Soils
         /// <summary>
         /// Fraction of carbohydrate in FOM (0-1), for each FOM type
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] fract_carb = { 0.2, 0.3, 0.54, 0.57, 0.45, 0.0 };
 
         /// <summary>
         /// Fraction of cellulose in FOM (0-1), for each FOM type
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] fract_cell = { 0.7, 0.3, 0.37, 0.37, 0.47, 0.1 };
         /// <summary>
         /// Fraction of lignin in FOM (0-1), for each FOM type
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] fract_lign = { 0.1, 0.4, 0.09, 0.06, 0.08, 0.9 };
 
         #endregion
@@ -433,7 +421,7 @@ namespace Models.Soils
         /// <summary>
         /// Fraction of residue C mineralised retained in system (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double ef_res = 0.4;
 
         /// <summary>
@@ -442,13 +430,13 @@ namespace Models.Soils
         /// <remarks>
         /// Remaining will got into humus
         /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double fr_res_biom = 0.9;
 
         /// <summary>
         /// Depth from which mineral N can be immobilised when decomposing surface residues (mm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
+        [XmlIgnore]
         public double min_depth = 100.0;
 
         #endregion
@@ -458,31 +446,31 @@ namespace Models.Soils
         /// <summary>
         /// Optimum rate constant for decomposition of FOM pools [carbohydrate component] (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] rd_carb = { 0.2, 0.1 };
 
         /// <summary>
         /// Optimum rate constant for decomposition of FOM pools [cellulose component] (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] rd_cell = { 0.05, 0.25 };
 
         /// <summary>
         /// Optimum rate constant for decomposition of FOM pools [lignin component] (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] rd_lign = { 0.0095, 0.003 };
 
         /// <summary>
         /// Fraction of FOM C mineralised retained in system (0-1) 
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double ef_fom = 0.4;
 
         /// <summary>
         /// Fraction of retained FOM C transferred to biomass (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double fr_fom_biom = 0.9;
 
         #region Old parameters
@@ -490,13 +478,13 @@ namespace Models.Soils
         /// <summary>
         /// Coeff. to determine the magnitude of C:N effects on decomposition of FOM
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [XmlIgnore]
         public double cnrf_coeff = 0.693;
 
         /// <summary>
         /// C:N above which decomposition rate of FOM declines
         /// </summary>
-        [Bounds(Lower = 5.0, Upper = 100.0)]
+        [XmlIgnore]
         public double cnrf_optcn = 25.0;
 
         #endregion
@@ -576,31 +564,31 @@ namespace Models.Soils
         /// <summary>
         /// Potential rate of soil biomass mineralisation (fraction per day)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] rd_biom = {0.0081, 0.004};
 
         /// <summary>
         /// Fraction of biomass C mineralised retained in system (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double ef_biom = 0.4;
 
         /// <summary>
         /// Fraction of retained biomass C returned to biomass (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double fr_biom_biom = 0.6;
 
         /// <summary>
         /// Potential rate of humus mineralisation (per day)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] rd_hum = {0.00015, 0.00007};
 
         /// <summary>
         /// Fraction of humic C mineralised retained in system (0-1)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double ef_hum = 0.4;
 
         #region Old parameters
@@ -608,19 +596,19 @@ namespace Models.Soils
         /// <summary>
         /// Soil temperature above which there is no further effect on mineralisation and nitrification (oC)
         /// </summary>
-        [Bounds(Lower = 5.0, Upper = 100.0)]
+        [XmlIgnore]
         public double[] opt_temp = { 32.0, 32.0 };
 
         /// <summary>
         /// Index specifying water content for computing moisture factor for mineralisation
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 2.0)]
+        [XmlIgnore]
         public double[] wfmin_index = { 0.0, 0.5, 1.0, 2.0 };
 
         /// <summary>
         /// Value of moisture factor (for mineralisation) function at given index values
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double[] wfmin_values = { 0.0, 1.0, 1.0, 0.5 };
 
         #endregion
@@ -894,31 +882,36 @@ namespace Models.Soils
         /// Minimum value for hydrolysis rate
         /// </summary>
 
-        public double potHydrol_min;
+        [XmlIgnore]
+        public double potHydrol_min = 0.0;
 
         /// <summary>
         /// Paramter A of the function determining potential urea hydrolysis
         /// </summary>
 
-        public double potHydrol_parmA;
+        [XmlIgnore]
+        public double potHydrol_parmA = 0.0;
 
         /// <summary>
         /// Paramter B of the function determining potential urea hydrolysis
         /// </summary>
 
-        public double potHydrol_parmB;
+        [XmlIgnore]
+        public double potHydrol_parmB = 0.0;
 
         /// <summary>
         /// Paramter C of the function determining potential urea hydrolysis
         /// </summary>
 
-        public double potHydrol_parmC;
+        [XmlIgnore]
+        public double potHydrol_parmC = 0.0;
 
         /// <summary>
         /// Paramter D of the function determining potential urea hydrolysis
         /// </summary>
 
-        public double potHydrol_parmD;
+        [XmlIgnore]
+        public double potHydrol_parmD = 0.0;
 
         #endregion
 
@@ -931,8 +924,8 @@ namespace Models.Soils
         /// This is the parameter M on Michaelis-Menten equation
         /// r = MC/(k+C)
         /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        public double nitrification_pot;
+        [XmlIgnore]
+        public double nitrification_pot = 40;
 
         /// <summary>
         /// NH4 conc. at half potential rate (ppm)
@@ -941,34 +934,34 @@ namespace Models.Soils
         /// This is the parameter k on Michaelis-Menten equation
         /// r = MC/(k+C)
         /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 200.0)]
-        public double nh4_at_half_pot;
+        [XmlIgnore]
+        public double nh4_at_half_pot = 90;
 
         #region Old parameters
 
         /// <summary>
         /// Index specifying water content for water factor for nitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 2.0)]
-        public double[] wfnit_index;
+        [XmlIgnore]
+        public double[] wfnit_index = { 0.0, 0.25, 1.0, 2.0 };
 
         /// <summary>
         /// Value of water factor (for nitrification) function at given index values
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] wfnit_values;
+        [XmlIgnore]
+        public double[] wfnit_values = { 0.0, 1.0, 1.0, 0.0 };
 
         /// <summary>
         /// pH values for specifying pH factor for nitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 14.0)]
-        public double[] pHf_nit_pH;
+        [XmlIgnore]
+        public double[] pHf_nit_pH = { 4.5, 6, 8, 9 };
 
         /// <summary>
         /// Value of pH factor (for nitrification) function for given pH values
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] pHf_nit_values;
+        [XmlIgnore]
+        public double[] pHf_nit_values = { 0.0, 1.0, 1.0, 0.0 };
 
         #endregion
 
@@ -1068,40 +1061,40 @@ namespace Models.Soils
         /// <summary>
         /// Denitrification rate coefficient (kg/mg)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double dnit_rate_coeff;
+        [XmlIgnore]
+        public double dnit_rate_coeff = 0.0006;
 
         /// <summary>
         /// Fraction of nitrification lost as denitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double dnit_nitrf_loss;
+        [XmlIgnore]
+        public double dnit_nitrf_loss = 0.0;
 
         /// <summary>
         /// Parameter k1 from Thorburn et al (2010) for N2O model
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        public double dnit_k1;
+        [XmlIgnore]
+        public double dnit_k1 = 25.1;
 
         #region Old parameters
 
         /// <summary>
         /// Power term to calculate water factor for denitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 5.0)]
-        public double dnit_wf_power;
+        [XmlIgnore]
+        public double dnit_wf_power = 1.0;
 
         /// <summary>
         /// Values of WFPS for calculating the N2O fraction of denitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        public double[] dnit_wfps;
+        [XmlIgnore]
+        public double[] dnit_wfps = { 21.333, 100 };  //Alert these parameter values need to be checked
 
         /// <summary>
         /// Values of WFPS factor for N2O fraction of denitrification
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        public double[] dnit_n2o_factor;
+        [XmlIgnore]
+        public double[] dnit_n2o_factor = { 0, 1.18 };  //Alert these parameter values need to be checked
 
         #endregion
 
@@ -1111,13 +1104,15 @@ namespace Models.Soils
         /// Parameter A to compute active carbon (for denitrification)
         /// </summary>
 
-        public double actC_parmB;
+        [XmlIgnore]
+        public double actC_parmB = 0;
 
         /// <summary>
         /// Parameter B to compute active carbon (for denitrification)
         /// </summary>
 
-        public double actC_parmA;
+        [XmlIgnore]
+        public double actC_parmA = 0;
 
         /// <summary>
         /// Parameters to calculate the temperature effect on denitrification
@@ -1182,14 +1177,15 @@ namespace Models.Soils
         /// <summary>
         /// Parameter A in the N2N2O function
         /// </summary>
-
-        public double N2N2O_parmA;
+        [XmlIgnore]
+        public double N2N2O_parmA = 0.16;
 
         /// <summary>
         /// Parameter B in the N2N2O function
         /// </summary>
 
-        public double N2N2O_parmB;
+        [XmlIgnore]
+        public double N2N2O_parmB = -0.80;
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for denitrification gas ratio
@@ -1283,7 +1279,6 @@ namespace Models.Soils
         /// <summary>
         /// pH of soil (assumed equivalent to a 1:1 soil-water slurry)
         /// </summary>
-        [Bounds(Lower = 3.5, Upper = 11.0)]
         private double[] ph;
 
         #endregion
@@ -1348,8 +1343,6 @@ namespace Models.Soils
         /// <summary>
         /// Soil urea nitrogen content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-
         [Units("mg/kg")]
         [Description("Soil urea nitrogen content")]
         [XmlIgnore]
@@ -1428,8 +1421,6 @@ namespace Models.Soils
         /// <summary>
         /// Soil ammonium nitrogen content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-
         [Units("mg/kg")]
         [Description("Soil ammonium nitrogen content")]
         [XmlIgnore]
@@ -1508,8 +1499,6 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen content (ppm)
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-
         [Units("mg/kg")]
         [Description("Soil nitrate nitrogen content")]
         [XmlIgnore]
@@ -2318,7 +2307,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Total net N mineralised (soil plus residues)")]
-        double[] dlt_n_min_tot
+        public double[] dlt_n_min_tot
         {
             get
             {

@@ -12,19 +12,19 @@ namespace UserInterface.Presenters
     {
         private Factor Factor;
         private IFactorView FactorView;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
 
-        public void Attach(object model, object view, CommandHistory commandHistory)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Factor = model as Factor;
             FactorView = view as IFactorView;
-            CommandHistory = commandHistory;
+            ExplorerPresenter = explorerPresenter;
 
             FactorView.Editor.Lines = Factor.Paths.ToArray();
 
             FactorView.Editor.TextHasChangedByUser += OnTextHasChangedByUser;
             FactorView.Editor.ContextItemsNeeded += OnContextItemsNeeded;
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
 
@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         {
             FactorView.Editor.TextHasChangedByUser -= OnTextHasChangedByUser;
             FactorView.Editor.ContextItemsNeeded -= OnContextItemsNeeded;
-            CommandHistory.ModelChanged -= OnModelChanged;            
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;            
         }
 
         /// <summary>
@@ -48,6 +48,7 @@ namespace UserInterface.Presenters
             {
                 foreach (Utility.IVariable Property in Utility.ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                     e.Items.Add(Property.Name);
+                e.Items.Sort();
             }
         }
 
@@ -56,13 +57,13 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             List<string> newPaths = new List<string>();
             newPaths.AddRange(FactorView.Editor.Lines);
-            CommandHistory.Add(new Commands.ChangePropertyCommand(Factor, "Paths", newPaths));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Factor, "Paths", newPaths));
 
-            CommandHistory.ModelChanged += OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
 

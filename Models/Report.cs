@@ -232,11 +232,12 @@ namespace Models
         private List<VariableMember> Members = null;
 
         [Link]
-        Simulation Simulation = null;
+        public Simulation Simulation = null;
 
         // Properties read in.
         public string[] Variables {get; set;}
         public string[] Events { get; set; }
+        public bool AutoCreateCSV { get; set; }
 
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
@@ -245,19 +246,8 @@ namespace Models
         {
             foreach (string Event in Events)
             {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
-
-                if (ComponentName == null)
-                    throw new Exception("Invalid syntax for reporting event: " + Event);
-                object Component = Get(ComponentName);
-                if (Component == null)
-                    throw new Exception(Name + " can not find the component: " + ComponentName);
-                EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                if (ComponentEvent == null)
-                    throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
-
-                ComponentEvent.AddEventHandler(Component, new EventHandler(OnReport));
+                if (Event != "")
+                    Subscribe(Event, OnReport);
             }
         }
 
@@ -336,6 +326,15 @@ namespace Models
                 Members.Clear();
                 Members = null;
 
+                // If user wants a csv file written, then write it.
+                if (AutoCreateCSV)
+                {
+                    string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
+                                                   Simulation.Name + this.Name + ".csv.");
+                    StreamWriter writer = new StreamWriter(fileName);
+                    writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
+                    writer.Close();
+                }
             }
 
             UnsubscribeAllEventHandlers();
@@ -347,17 +346,8 @@ namespace Models
         {
             // Unsubscribe to all events.
             foreach (string Event in Events)
-            {
-                string ComponentName = Utility.String.ParentName(Event, '.');
-                string EventName = Utility.String.ChildName(Event, '.');
-
-                object Component = Get(ComponentName);
-                if (Component != null)
-                {
-                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                    ComponentEvent.RemoveEventHandler(Component, new EventHandler(OnReport));
-                }
-            }
+                if (Event != "")
+                    Unsubscribe(Event);
         }
 
     }

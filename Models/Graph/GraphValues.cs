@@ -29,43 +29,11 @@ namespace Models.Graph
         public GraphValues() { }
 
         /// <summary>
-        /// Return values to caller.
-        /// </summary>
-        public IEnumerable Values(Graph graph)
-        {
-            IEnumerable Data = null;
-            if (SimulationName == null && TableName == null && FieldName != null)
-            {
-                // Use reflection to access a property.
-                object Obj = graph.Get(FieldName);
-                if (Obj != null && Obj.GetType().IsArray)
-                {
-                    Array A = Obj as Array;
-                    return A;
-                }
-            }
-            else if (graph.DataStore != null && SimulationName != null && TableName != null && FieldName != null)
-            {
-                System.Data.DataTable DataSource = graph.DataStore.GetData(SimulationName, TableName);
-                if (DataSource != null && FieldName != null && DataSource.Columns[FieldName] != null)
-                {
-                    if (DataSource.Columns[FieldName].DataType == typeof(DateTime))
-                        return Utility.DataTable.GetColumnAsDates(DataSource, FieldName);
-                    else if (DataSource.Columns[FieldName].DataType == typeof(string))
-                        return Utility.DataTable.GetColumnAsStrings(DataSource, FieldName);
-                    else
-                        return Utility.DataTable.GetColumnAsDoubles(DataSource, FieldName);
-                }
-            }
-            return Data;
-        }
-
-        /// <summary>
         /// Return a list of valid fieldnames.
         /// </summary>
         public string[] ValidFieldNames(Graph graph)
         {
-            if (graph.DataStore != null && SimulationName != null && TableName != null && TableName != "")
+            if (graph.DataStore != null && TableName != null && TableName != "")
             {
                 List<string> Names = new List<string>();
                 Names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData(SimulationName, TableName)));

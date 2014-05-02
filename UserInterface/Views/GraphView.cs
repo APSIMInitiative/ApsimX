@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using OxyPlot.WindowsForms;
 using OxyPlot.Series;
@@ -12,7 +8,7 @@ using OxyPlot;
 using OxyPlot.Axes;
 using Models.Graph;
 using System.Collections;
-using Models.Core;
+using OxyPlot.Annotations;
 
 namespace UserInterface.Views
 {
@@ -23,23 +19,61 @@ namespace UserInterface.Views
         event ClickDelegate OnPlotClick;
         event ClickAxisDelegate OnAxisClick;
         event ClickDelegate OnLegendClick;
-
-        /// <summary>
-        /// Draw the graph based on the Graph model passed in.
-        /// </summary>
-        void DrawGraph(Graph Graph);
+        event ClickDelegate OnTitleClick;
 
         /// <summary>
         /// Show the specified editor.
         /// </summary>
         void ShowEditorPanel(UserControl Editor);
 
+        /// <summary>
+        /// Clear the graph of everything.
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Refresh the graph.
+        /// </summary>
+        void Refresh();
+
+        /// <summary>
+        ///  Draw a line and markers series with the specified arguments.
+        /// </summary>
+        void DrawLineAndMarkers(string title, IEnumerable x, IEnumerable y, 
+                                Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType, 
+                                Color colour, 
+                                Models.Graph.Series.LineType lineType, Models.Graph.Series.MarkerType markerType);
+
+        /// <summary>
+        /// Draw a bar series with the specified arguments.
+        /// </summary>
+        void DrawBar(string title, IEnumerable x, IEnumerable y, Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType, Color colour);
+
+        /// <summary>
+        /// Draw text on the graph at the specified coordinates.
+        /// </summary>
+        void DrawText(string text, double x, double y,
+                      Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType,
+                      Color colour);
+
+        /// <summary>
+        /// Format the specified axis.
+        /// </summary>
+        void FormatAxis(Models.Graph.Axis.AxisType axisType, string p, bool p_2);
+
+        /// <summary>
+        /// Format the legend.
+        /// </summary>
+        void FormatLegend(Graph.LegendPositionType legendPositionType);
+
+        /// <summary>
+        /// Format the title.
+        /// </summary>
+        void FormatTitle(string text);
     }
 
     public partial class GraphView : UserControl, IGraphView
     {
-        private Graph Graph;
-
         /// <summary>
         /// constructor
         /// </summary>
@@ -54,201 +88,216 @@ namespace UserInterface.Views
         public event ClickDelegate OnPlotClick;
         public event ClickAxisDelegate OnAxisClick;
         public event ClickDelegate OnLegendClick;
+        public event ClickDelegate OnTitleClick;
+
 
         /// <summary>
-        /// Draw the graph based on the Graph model passed in.
+        /// Clear the graph of everything.
         /// </summary>
-        public void DrawGraph(Graph graph)
+        public void Clear()
         {
-            Graph = graph;
-
             plot1.Model.Series.Clear();
             plot1.Model.Axes.Clear();
-            if (Graph != null)
+        }
+
+        /// <summary>
+        /// Refresh the graph.
+        /// </summary>
+        public override void Refresh()
+        {
+            plot1.Model.PlotAreaBorderThickness = 0;
+            plot1.Model.LegendBorder = OxyColors.Black;
+            plot1.Model.LegendBackground = OxyColors.White;
+            plot1.Model.RefreshPlot(true);
+        }
+
+        /// <summary>
+        /// Draw a line and markers series with the specified arguments.
+        /// </summary>
+        public void DrawLineAndMarkers(string title, IEnumerable x, IEnumerable y, 
+                                       Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType, 
+                                       Color colour, 
+                                       Models.Graph.Series.LineType lineType, Models.Graph.Series.MarkerType markerType)
+        {
+            if (x != null && y != null)
             {
-                if (Graph.Series != null)
+                LineSeries series = new LineSeries(title);
+                series.Color = ConverterExtensions.ToOxyColor(colour);
+                series.ItemsSource = PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
+
+                bool filled = false;
+                string oxyMarkerName = markerType.ToString();
+                if (oxyMarkerName.StartsWith("Filled"))
                 {
-                    foreach (Models.Graph.Series S in Graph.Series)
-                    {
-                        if (S.X != null && S.Y != null)
-                        {
-                            // We need to handle the case where series X and Y SimulationName member
-                            // may be a wildcard '*'. If found then it duplicates the creating of
-                            // graph series for each simulation found in the datastore.
-                            bool simulationWildCard = S.X.SimulationName == "*";
-                            List<string> simulationNames = new List<string>();
-                            if (simulationWildCard)
-                            {
-                                foreach (Simulation simulation in graph.FindAll(typeof(Simulation)))
-                                    simulationNames.Add(simulation.Name);
-                            }
-                            else
-                                simulationNames.Add(S.X.SimulationName);
-
-                            Color originalColour = S.Colour;
-                            string originalSeriesTitle = S.Title;
-
-                            Color seriesColour = S.Colour;
-                            for (int i = 0; i < simulationNames.Count; i++)
-                            {
-                                // Change the simulation name as it may be a wildcard.
-                                S.X.SimulationName = simulationNames[i];
-                                S.Y.SimulationName = simulationNames[i];
-
-                                // lighten the series colour for all series after the first one.
-                                if (i > 0)
-                                    seriesColour = ChangeColorBrightness(seriesColour, 0.4);
-                                S.Colour = seriesColour;
-                                
-                                // If this is a wildcard series then add the simulation name to the
-                                // title of the series.
-                                if (simulationWildCard)
-                                    S.Title = originalSeriesTitle + " [" + simulationNames[i] + "]";
-
-                                // Create the series and populate it with data.
-                                ItemsSeries Series = null;
-                                if (S.Type == Models.Graph.Series.SeriesType.Line || S.Type == Models.Graph.Series.SeriesType.Scatter)
-                                    Series = CreateLineSeries(S);
-                                else if (S.Type == Models.Graph.Series.SeriesType.Bar)
-                                    Series = CreateBarSeries(S);
-                                Series.ItemsSource = PopulateDataPointSeries(S.X, S.Y, S.XAxis, S.YAxis);
-                                plot1.Model.Series.Add(Series);
-                            }
-
-                            // Restore the series simulation names and colour if this is a wildcard
-                            // series.
-                            if (simulationWildCard)
-                            {
-                                S.X.SimulationName = "*";
-                                S.Y.SimulationName = "*";
-                                S.Colour = originalColour;
-                                S.Title = originalSeriesTitle;
-                            }
-                        }
-                    }
+                    oxyMarkerName = oxyMarkerName.Remove(0, 6);
+                    filled = true;
                 }
-                foreach (Models.Graph.Axis A in Graph.Axes)
-                    FormatAxis(A);
-                plot1.Model.RefreshPlot(true);
+
+                // Line type.
+                LineStyle oxyLineType;
+                if (Enum.TryParse<LineStyle>(lineType.ToString(), out oxyLineType))
+                    series.LineStyle = oxyLineType;
+                
+                // Marker type.
+                MarkerType type;
+                if (Enum.TryParse<MarkerType>(oxyMarkerName, out type))
+                    series.MarkerType = type;
+
+                //series.Color = OxyColors.White;
+                series.MarkerSize = 7.0;
+                series.MarkerStroke = ConverterExtensions.ToOxyColor(colour);
+                if (filled)
+                {
+                    series.MarkerFill = ConverterExtensions.ToOxyColor(colour);
+                    series.MarkerStroke = OxyColors.White;
+                }
+                plot1.Model.Series.Add(series);
             }
         }
 
         /// <summary>
-        /// Create a line series with the specified attributes.
+        /// Draw a bar series with the specified arguments.
         /// </summary>
-        private ItemsSeries CreateLineSeries(Models.Graph.Series S)
+        public void DrawBar(string title, IEnumerable x, IEnumerable y,
+                            Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType,
+                            Color colour)
         {
-            if (S.X != null && S.Y != null)
+            Utility.ColumnXYSeries series = new Utility.ColumnXYSeries();
+            series.FillColor = ConverterExtensions.ToOxyColor(colour);
+            series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
+            series.ItemsSource = PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+            plot1.Model.Series.Add(series);
+        }
+
+        /// <summary>
+        /// Draw text on the graph at the specified coordinates.
+        /// </summary>
+        public void DrawText(string text, double x, double y, 
+                             Models.Graph.Axis.AxisType xAxisType, Models.Graph.Axis.AxisType yAxisType,
+                             Color colour)
+        {
+            TextAnnotation annotation = new TextAnnotation();
+            annotation.Text = text;
+            annotation.HorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
+            annotation.VerticalAlignment = VerticalAlignment.Top;
+            annotation.Stroke = OxyColors.White;
+            annotation.Position = new DataPoint(x, y);
+            annotation.XAxis = GetAxis(xAxisType);
+            annotation.YAxis = GetAxis(yAxisType);
+            annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
+            plot1.Model.Annotations.Add(annotation);
+
+        }
+
+        /// <summary>
+        /// Format the specified axis.
+        /// </summary>
+        public void FormatAxis(Models.Graph.Axis.AxisType axisType, string title, bool inverted)
+        {
+            OxyPlot.Axes.Axis oxyAxis = GetAxis(axisType);
+            if (oxyAxis != null)
             {
-                LineSeries Series = new LineSeries(S.Title);
-
-                bool Filled = false;
-                string OxyMarkerName = S.Marker.ToString();
-                if (OxyMarkerName.StartsWith("Filled"))
+                oxyAxis.Title = title;
+                oxyAxis.MinorTickSize = 0;
+                oxyAxis.AxislineStyle = LineStyle.Solid;
+                if (inverted)
                 {
-                    OxyMarkerName = OxyMarkerName.Remove(0, 6);
-                    Filled = true;
-                }
-                MarkerType Type;
-                if (Enum.TryParse<MarkerType>(OxyMarkerName, out Type))
-                    Series.MarkerType = Type;
-
-                if (S.Type == Models.Graph.Series.SeriesType.Scatter)
-                {
-                    Series.LineStyle = LineStyle.None;
-                    Series.Color = OxyColors.White;
+                    oxyAxis.StartPosition = 1;
+                    oxyAxis.EndPosition = 0;
                 }
                 else
-                    Series.Color = ConverterExtensions.ToOxyColor(S.Colour);
-                Series.MarkerSize = 7.0;
-                Series.MarkerStroke = ConverterExtensions.ToOxyColor(S.Colour);
-                if (Filled)
                 {
-                    Series.MarkerFill = ConverterExtensions.ToOxyColor(S.Colour);
-                    Series.MarkerStroke = OxyColors.White;
+                    oxyAxis.StartPosition = 0;
+                    oxyAxis.EndPosition = 1;
                 }
-                return Series;
             }
-            return null;
+        }
+
+
+        /// <summary>
+        /// Format the legend.
+        /// </summary>
+        public void FormatLegend(Graph.LegendPositionType legendPositionType)
+        {
+            LegendPosition oxyLegendPosition;
+            if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
+                plot1.Model.LegendPosition = oxyLegendPosition;
         }
 
         /// <summary>
-        /// Create a bar series with the specified attributes.
+        /// Format the title.
         /// </summary>
-        private ItemsSeries CreateBarSeries(Models.Graph.Series S)
+        public void FormatTitle(string text)
         {
-            Utility.ColumnXYSeries Series = new Utility.ColumnXYSeries();
-            Series.FillColor = ConverterExtensions.ToOxyColor(S.Colour);
-            Series.StrokeColor = ConverterExtensions.ToOxyColor(S.Colour);
-            return Series;
+            plot1.Model.Title = text;
         }
 
 
         /// <summary>
         /// Populate the specified DataPointSeries with data from the data table.
         /// </summary>
-        private List<DataPoint> PopulateDataPointSeries(GraphValues X, GraphValues Y,
-                                                        Models.Graph.Axis.AxisType XAxisType, 
-                                                        Models.Graph.Axis.AxisType YAxisType)
+        private List<DataPoint> PopulateDataPointSeries(IEnumerable x, IEnumerable y,
+                                                        Models.Graph.Axis.AxisType xAxisType, 
+                                                        Models.Graph.Axis.AxisType yAxisType)
         {
-            List<string> XLabels = new List<string>();
-            List<string> YLabels = new List<string>();
-            Type XDataType = null;
-            Type YDataType = null;
+            List<string> xLabels = new List<string>();
+            List<string> yLabels = new List<string>();
+            Type xDataType = null;
+            Type yDataType = null;
             List<DataPoint> Points = new List<DataPoint>();
-            IEnumerable XValues = Graph.GetValues(X);
-            IEnumerable YValues = Graph.GetValues(Y);
-            if (X != null && Y != null && XValues != null && YValues != null)
+            if (x != null && y != null && x != null && y != null)
             {
-                IEnumerator XEnum = XValues.GetEnumerator();
-                IEnumerator YEnum = YValues.GetEnumerator();
-                while (XEnum.MoveNext() && YEnum.MoveNext())
+                IEnumerator xEnum = x.GetEnumerator();
+                IEnumerator yEnum = y.GetEnumerator();
+                while (xEnum.MoveNext() && yEnum.MoveNext())
                 {
                     DataPoint P = new DataPoint();
-                    if (XEnum.Current.GetType() == typeof(DateTime))
+                    if (xEnum.Current.GetType() == typeof(DateTime))
                     {
-                        P.X = DateTimeAxis.ToDouble(Convert.ToDateTime(XEnum.Current));
-                        XDataType = typeof(DateTime);
+                        P.X = DateTimeAxis.ToDouble(Convert.ToDateTime(xEnum.Current));
+                        xDataType = typeof(DateTime);
                     }
-                    else if (XEnum.Current.GetType() == typeof(double) || XEnum.Current.GetType() == typeof(float))
+                    else if (xEnum.Current.GetType() == typeof(double) || xEnum.Current.GetType() == typeof(float))
                     {
-                        P.X = Convert.ToDouble(XEnum.Current);
-                        XDataType = typeof(double);
+                        P.X = Convert.ToDouble(xEnum.Current);
+                        xDataType = typeof(double);
                     }
                     else
                     {
-                        XLabels.Add(XEnum.Current.ToString());
-                        XDataType = typeof(string);
+                        xLabels.Add(xEnum.Current.ToString());
+                        xDataType = typeof(string);
 
                     }
-                    if (YEnum.Current.GetType() == typeof(DateTime))
+                    if (yEnum.Current.GetType() == typeof(DateTime))
                     {
-                        P.Y = DateTimeAxis.ToDouble(Convert.ToDateTime(YEnum.Current));
-                        YDataType = typeof(DateTime);
+                        P.Y = DateTimeAxis.ToDouble(Convert.ToDateTime(yEnum.Current));
+                        yDataType = typeof(DateTime);
                     }
-                    else if (YEnum.Current.GetType() == typeof(double) || YEnum.Current.GetType() == typeof(float))
+                    else if (yEnum.Current.GetType() == typeof(double) || yEnum.Current.GetType() == typeof(float))
                     {
-                        P.Y = Convert.ToDouble(YEnum.Current);
-                        YDataType = typeof(double);
+                        P.Y = Convert.ToDouble(yEnum.Current);
+                        yDataType = typeof(double);
                     }
                     else
                     {
-                        YLabels.Add(YEnum.Current.ToString());
-                        YDataType = typeof(string);
+                        yLabels.Add(yEnum.Current.ToString());
+                        yDataType = typeof(string);
 
                     } 
                     Points.Add(P);
                 }
 
                 // Get the axes right for this data.
-                if (XDataType != null)
-                    EnsureAxisExists(XAxisType, XDataType);
-                if (YDataType != null)
-                    EnsureAxisExists(YAxisType, YDataType);
-                if (XLabels.Count > 0)
-                    (GetAxis(XAxisType) as CategoryAxis).Labels = XLabels;
-                if (YLabels.Count > 0)
-                    (GetAxis(YAxisType) as CategoryAxis).Labels = YLabels;
+                if (xDataType != null)
+                    EnsureAxisExists(xAxisType, xDataType);
+                if (yDataType != null)
+                    EnsureAxisExists(yAxisType, yDataType);
+                if (xLabels.Count > 0)
+                    (GetAxis(xAxisType) as CategoryAxis).Labels = xLabels;
+                if (yLabels.Count > 0)
+                    (GetAxis(yAxisType) as CategoryAxis).Labels = yLabels;
 
                 return Points;
             }
@@ -281,29 +330,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Format the axis according to the Axis model passed in.
-        /// </summary>
-        private void FormatAxis(Models.Graph.Axis Axis)
-        {
-            OxyPlot.Axes.Axis OxyAxis = GetAxis(Axis.Type);
-            if (Axis != null && OxyAxis != null)
-            {
-                OxyAxis.Title = Axis.Title;
-                OxyAxis.MinorTickSize = 0;
-                if (Axis.Inverted)
-                {
-                    OxyAxis.StartPosition = 1;
-                    OxyAxis.EndPosition = 0;
-                }
-                else
-                {
-                    OxyAxis.StartPosition = 0;
-                    OxyAxis.EndPosition = 1;
-                }
-            }
-        }
-
-        /// <summary>
         /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn
         /// to determine the type of axis.
         /// </summary>
@@ -313,12 +339,15 @@ namespace UserInterface.Views
             if (GetAxis(AxisType) == null)
             {
                 AxisPosition Position = AxisTypeToPosition(AxisType);
+                OxyPlot.Axes.Axis axisToAdd;
                 if (DataType == typeof(DateTime))
-                    plot1.Model.Axes.Add(new DateTimeAxis(Position));
+                    axisToAdd = new DateTimeAxis(Position);
                 else if (DataType == typeof(double))
-                    plot1.Model.Axes.Add(new LinearAxis(Position));
+                    axisToAdd = new LinearAxis(Position);
                 else
-                    plot1.Model.Axes.Add(new CategoryAxis(Position));
+                    axisToAdd = new CategoryAxis(Position);
+                axisToAdd.Key = AxisType.ToString();
+                plot1.Model.Axes.Add(axisToAdd);
             }
         }
 
@@ -371,12 +400,30 @@ namespace UserInterface.Views
             {
                 Rectangle LeftAxisArea = new Rectangle(0, PlotArea.Y,
                                                        PlotArea.X, PlotArea.Height);
-                Rectangle TopAxisArea = new Rectangle(PlotArea.X, 0,
+
+                Rectangle TitleArea = new Rectangle(PlotArea.X, 0,
                                                        PlotArea.Width, PlotArea.Y);
+                Rectangle TopAxisArea = new Rectangle(PlotArea.X, 0,
+                                                       PlotArea.Width, 0);
+
+                if (GetAxis(Models.Graph.Axis.AxisType.Top) != null)
+                {
+                    TitleArea = new Rectangle(PlotArea.X, 0,
+                                              PlotArea.Width, PlotArea.Y / 2);
+                    TopAxisArea = new Rectangle(PlotArea.X, PlotArea.Y / 2,
+                                                       PlotArea.Width, PlotArea.Y / 2);
+                }
+
                 Rectangle RightAxisArea = new Rectangle(PlotArea.Right, PlotArea.Top,
                                                         Width - PlotArea.Right, PlotArea.Height);
                 Rectangle BottomAxisArea = new Rectangle(PlotArea.Left, PlotArea.Bottom,
                                                          PlotArea.Width, Height - PlotArea.Bottom);
+                if (TitleArea.Contains(e.Location))
+                {
+                    if (OnTitleClick != null)
+                        OnTitleClick();
+                }
+                
                 if (OnAxisClick != null)
                 {
                     if (LeftAxisArea.Contains(e.Location))
@@ -391,37 +438,6 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>
-        /// Creates color with corrected brightness.
-        /// </summary>
-        /// <param name="color">Color to correct.</param>
-        /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1. 
-        /// Negative values produce darker colors.</param>
-        /// <returns>
-        /// Corrected <see cref="Color"/> structure.
-        /// </returns>
-        private static Color ChangeColorBrightness(Color color, double correctionFactor)
-        {
-            float red = (float)color.R;
-            float green = (float)color.G;
-            float blue = (float)color.B;
-
-            if (correctionFactor < 0)
-            {
-                correctionFactor = 1 + correctionFactor;
-                red *= (float)correctionFactor;
-                green *= (float)correctionFactor;
-                blue *= (float)correctionFactor;
-            }
-            else
-            {
-                red = (float)((255 - red) * correctionFactor + red);
-                green = (float)((255 - green) * correctionFactor + green);
-                blue = (float)((255 - blue) * correctionFactor + blue);
-            }
-
-            return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
-        }
 
     }
 }

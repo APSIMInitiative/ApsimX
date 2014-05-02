@@ -64,10 +64,17 @@ namespace UserInterface.Presenters
             string FileName = View.AskUserForFileName("*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
-            importer.ProcessFile(FileName);
+            try
+            {
+                importer.ProcessFile(FileName);
 
-            string newFileName = Path.ChangeExtension(FileName, ".apsimx");
-            OpenApsimXFileInTab(newFileName);
+                string newFileName = Path.ChangeExtension(FileName, ".apsimx");
+                OpenApsimXFileInTab(newFileName);
+            }
+            catch (Exception exp)
+            {
+                throw new Exception("Failed import: " + exp.Message);
+            }
         }
 
         /// <summary>
@@ -123,7 +130,8 @@ namespace UserInterface.Presenters
 
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(Contents);
-            Presenter.Attach(Utility.Xml.Deserialise(Doc.DocumentElement), ExplorerView, null);
+            Simulations simulations = Simulations.Read(Doc.DocumentElement);
+            Presenter.Attach(simulations, ExplorerView, null);
 
             View.AddTab(Name, Properties.Resources.apsim_logo32, ExplorerView, true);
         }

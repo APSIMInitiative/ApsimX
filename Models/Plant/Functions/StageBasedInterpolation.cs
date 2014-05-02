@@ -11,6 +11,8 @@ namespace Models.PMF.Functions
     [Description("A value is linearly interpolated between phenological growth stages")]
     public class StageBasedInterpolation : Function
     {
+        private bool _Proportional = true;
+
         [Link]
         Phenology Phenology = null;
 
@@ -21,8 +23,7 @@ namespace Models.PMF.Functions
         // States
         private int[] StageCodes = null;
 
-        [XmlIgnore]
-        public bool Proportional = true;
+        public bool Proportional { get { return _Proportional; } set { _Proportional = value; } }
 
         /// <summary>
         /// Initialise ourselves.

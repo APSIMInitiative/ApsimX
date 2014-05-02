@@ -669,6 +669,7 @@ namespace Models.Soils
 
             private double[] nh4_yesterday;                 // yesterday's ammonium nitrogen(kg/ha)
             private double[] no3_yesterday;                 // yesterday's nitrate nitrogen (kg/ha)
+            [XmlIgnore]
             public int fom_type;
             private int num_residues = 0;                   // number of residues decomposing   
             private string[] residue_name;                  // name of residues decomposing

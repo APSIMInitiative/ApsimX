@@ -61,6 +61,7 @@ namespace Models.Soils
         [Link] public Water Water = null;
         [Link] public SoilWater SoilWater = null;
         [Link] public SoilOrganicMatter SoilOrganicMatter = null;
+        [Link] public SoilNitrogen SoilNitrogen = null;
         [Link] public Analysis Analysis = null;
         [Link(IsOptional=true)] public InitialWater InitialWater = null;
         [Link(IsOptional=true)] public Phosphorus Phosphorus = null;
@@ -238,19 +239,6 @@ namespace Models.Soils
                 return Map(SoilWater.SWCON, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
             } 
         }
-
-        /// <summary>
-        /// MWCON at standard thickness. Units: 0-1
-        /// </summary>
-        internal double[] MWCON 
-        { 
-            get 
-            {
-                if (SoilWater == null) return null;
-                return Map(SoilWater.MWCON, SoilWater.Thickness, Thickness, MapType.Concentration); 
-            } 
-        }
-
 
         /// <summary>
         /// Return the plant available water CAPACITY at standard thickness. Units: mm/mm

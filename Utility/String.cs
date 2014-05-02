@@ -471,6 +471,8 @@ namespace Utility
         /// </summary>
         public static string BuildString(string[] Values, string separator)
         {
+            if (Values == null)
+                return "";
             string ReturnString = "";
             for (int i = 0; i < Values.Length; i++)
             {

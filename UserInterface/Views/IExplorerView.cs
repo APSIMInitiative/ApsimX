@@ -97,7 +97,7 @@ namespace UserInterface.Views
     /// NB: All node paths are compatible with XmlHelper node paths.
     /// e.g.  /simulations/test/clock
     /// </summary>
-    interface IExplorerView
+    public interface IExplorerView
     {
         /// <summary>
         /// ExplorerView will invoke this event when it wants the presenter to populate 

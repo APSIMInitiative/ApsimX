@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics.IO">
+      <HintPath>..\..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.IO.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -41,6 +47,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -65,12 +72,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\Continuous Wheat.apsim" />
+    <None Include="Resources\Continuous_Wheat.apsimx" />
     <None Include="Resources\Goondiwindi.met" />
     <None Include="Resources\Test3.apsimxForUnitTest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Models\Importer\Importer.csproj">
+      <Project>{075F2644-F14E-4010-BA52-35E4B0011835}</Project>
+      <Name>Importer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Models\Models.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>

@@ -6,7 +6,8 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
-    class LeafNumberPotential3
+    [Serializable]
+    public class LeafNumberPotential3 : Model
     {
         //[Link]
         //Function NodeFormationPeriod = null;

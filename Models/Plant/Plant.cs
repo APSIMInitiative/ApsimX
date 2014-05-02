@@ -38,7 +38,7 @@ namespace Models.PMF
     {
         public Single KillFraction;
     }
-    public delegate void NewCanopyDelegate(NewCanopyType Data);
+    public delegate void NewCanopyDelegate(NewCanopyType NewCanopyData);
     public delegate void FOMLayerDelegate(FOMLayerType Data);
     public delegate void NullTypeDelegate();
     public delegate void NewCropDelegate(NewCropType Data);
@@ -70,13 +70,15 @@ namespace Models.PMF
         public String sender = "";
         public String crop_type = "";
     }
+
+
     [Serializable]
-    public class Plant : ModelCollection
+    public class Plant : ModelCollectionFromResource, ICrop
     {
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
-        [Link] public Structure Structure = null;
+        [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
         public SowPlant2Type SowingData;
@@ -84,6 +86,12 @@ namespace Models.PMF
         [XmlIgnore]
         public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
 
+        [XmlIgnore]
+        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        public NewCanopyType LocalCanopyData;
+
+        [Link(IsOptional=true)]
+        Cultivars Cultivars = null;
 
         #region Links
         [Link]
@@ -104,6 +112,12 @@ namespace Models.PMF
 
         [XmlIgnore]
         public double WaterSupplyDemandRatio { get; private set; }
+
+        [XmlIgnore]
+        [Description("Number of plants per meter2")]
+        [Units("/m2")]
+        public double Population { get; set; }
+        
         #endregion
 
         #region Public functions
@@ -121,16 +135,31 @@ namespace Models.PMF
             SowingData.RowSpacing = RowSpacing;
             SowingData.CropClass = CropClass;
 
+            // Find cultivar and apply cultivar overrides.
+            if (Cultivars == null)
+                throw new ApsimXException(FullPath, "No cultivar definitions found.");
+            
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.ApplyOverrides(this);
+
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
+            this.Population = Population;
+
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnSow(SowingData);
-            Structure.OnSow(SowingData);
+            if (Structure != null)
+               Structure.OnSow(SowingData);
             Phenology.OnSow();
 
+            //Set up CanopyData tyep
+            LocalCanopyData = new NewCanopyType();
+       
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
 
@@ -146,6 +175,12 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
+
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
+            if (cultivarObj == null)
+                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
+            cultivarObj.UnapplyOverrides(this);
         }
 
         /// <summary>
@@ -198,7 +233,9 @@ namespace Models.PMF
         {
             SowingData = null;
             WaterSupplyDemandRatio = 0;
-            Structure.Clear();
+            Population = 0;
+            if (Structure != null)
+               Structure.Clear();
             Phenology.Clear();
             Arbitrator.Clear();
         }

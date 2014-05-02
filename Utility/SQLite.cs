@@ -220,6 +220,9 @@ namespace Utility
                     for (int i = 0; i < columnCount; i++)
                     {
                         string ColumnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
+                        if (dTable.Columns.Contains(ColumnName))
+                            ColumnName = "Report." + ColumnName;
+
                         int ColType = sqlite3_column_type(stmHandle, i);
                         if (ColType == SQLITE_INTEGER)
                             dTable.Columns.Add(ColumnName, typeof(int));
@@ -236,7 +239,8 @@ namespace Utility
                                 dTable.Columns.Add(ColumnName, typeof(string));
                         }
                         else
-                            dTable.Columns.Add(ColumnName, typeof(byte));
+                            dTable.Columns.Add(ColumnName, typeof(object));
+                      //  dTable.Columns.Add(ColumnName, typeof(string));
                     }
                 }
 
@@ -248,25 +252,89 @@ namespace Utility
                     {
                         IntPtr iptr = sqlite3_column_text(stmHandle, i);
                         string Value = Marshal.PtrToStringAnsi(iptr);
-                        row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
+                        if (Value != null)
+                            row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
                     }
                     else if (dTable.Columns[i].DataType == typeof(int))
                         row[i] = sqlite3_column_int(stmHandle, i);
                     else if (dTable.Columns[i].DataType == typeof(double))
                         row[i] = sqlite3_column_double(stmHandle, i);
-                    else if (dTable.Columns[i].DataType == typeof(string))
+                    else if (dTable.Columns[i].DataType == typeof(string) ||
+                             dTable.Columns[i].DataType == typeof(object))
                     {
                         IntPtr iptr = sqlite3_column_text(stmHandle, i);
                         row[i] = Marshal.PtrToStringAnsi(iptr);
                     }
-                    else if (dTable.Columns[i].DataType == typeof(byte))
-                        row[i] = null;
                 }
                 dTable.Rows.Add(row);
             }
 
             Finalize(stmHandle);
 
+            if (dTable != null)
+            {
+                for (int i = dTable.Columns.Count - 1; i >= 0; i--)
+                {
+                    if (dTable.Columns[i].DataType.Equals(typeof(object)))
+                    {
+                        int tryInt;
+                        double tryDouble;
+
+                        foreach (DataRow dr in dTable.Rows)
+                        {
+                            DataColumn dc = dTable.Columns[i];
+                            if (dr[dc].ToString().Equals(""))
+                                continue;
+
+                            dc.ColumnName = dc.ColumnName + "_";
+                            // found a value, try to convert it using most restrictive data type (int) first
+                            if (Int32.TryParse(dr[dc].ToString(), out tryInt))
+                            {
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(int));
+                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                {
+                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                }
+                                dTable.Columns.Remove(dc);
+                                break;
+                            }
+                            else if (Double.TryParse(dr[dc].ToString(), out tryDouble)) // double
+                            {
+                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(double));
+                                for (int j = 0; j < dTable.Rows.Count; j++)
+                                {
+                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                }
+                                dTable.Columns.Remove(dc);
+                                break;
+                            }
+                            else
+                            {
+                                DateTime tryDate;
+                                if (DateTime.TryParse(dr[dc].ToString(), out tryDate))
+                                {
+                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(DateTime));
+                                    for (int j = 0; j < dTable.Rows.Count; j++)
+                                    {
+                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                    }
+                                    dTable.Columns.Remove(dc);
+                                }
+                                else
+                                {
+                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(string));
+                                    for (int j = 0; j < dTable.Rows.Count; j++)
+                                    {
+                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
+                                    }
+                                    dTable.Columns.Remove(dc);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             return dTable;
         }
 

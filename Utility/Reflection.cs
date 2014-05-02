@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.CodeDom.Compiler;
 using System.Runtime.Serialization;
@@ -256,9 +254,13 @@ namespace Utility
             return null;
         }
 
-        public static Assembly CompileTextToAssembly(string Code, string assemblyFileName)
+        /// <summary>
+        /// Complile the specified 'code' into an executable assembly. If 'assemblyFileName'
+        /// is null then compile to an in-memory assembly.
+        /// </summary>
+        public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
         {
-            bool VB = Code.IndexOf("Imports System") != -1;
+            bool VB = code.IndexOf("Imports System") != -1;
             string Language;
             if (VB)
                 Language = CodeDomProvider.GetLanguageFromExtension(".vb");
@@ -271,9 +273,14 @@ namespace Utility
                 if (Provider != null)
                 {
                     CompilerParameters Params = new CompilerParameters();
-                    Params.GenerateInMemory = false;      //Assembly is created in memory
-                    if (assemblyFileName != null)
+                    
+                    if (assemblyFileName == null)
+                        Params.GenerateInMemory = true;
+                    else
+                    {
+                        Params.GenerateInMemory = false;      
                         Params.OutputAssembly = assemblyFileName;
+                    }
                     Params.TreatWarningsAsErrors = false;
                     Params.WarningLevel = 2;
                     Params.ReferencedAssemblies.Add("System.dll");
@@ -283,7 +290,7 @@ namespace Utility
                     Params.TempFiles = new TempFileCollection(".");
                     Params.TempFiles.KeepFiles = false;
                     string[] source = new string[1];
-                    source[0] = Code;
+                    source[0] = code;
                     CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
                     string Errors = "";
                     foreach (CompilerError err in results.Errors)
@@ -302,48 +309,6 @@ namespace Utility
             throw new Exception("Cannot compile manager script to an assembly");
         }
 
-        /// <summary>
-        /// Perform a deep Copy of the object.
-        /// </summary>
-        /// <typeparam name="T">The type of object being copied.</typeparam>
-        /// <param name="source">The object instance to copy.</param>
-        /// <returns>The copied object.</returns>
-        public static T Clone<T>(T source)
-        {
-            if (!typeof(T).IsSerializable)
-            {
-                throw new ArgumentException("The type must be serializable.", "source");
-            }
-
-            // Don't serialize a null object, simply return the default for that object
-            if (Object.ReferenceEquals(source, null))
-            {
-                return default(T);
-            }
-
-            // If source is a Model then get rid of it's parent as we don't want to serialise that.
-            Models.Core.ModelCollection parent = null;
-            if (source is Models.Core.Model)
-            {
-                Models.Core.Model model = source as Models.Core.Model;
-                parent = model.Parent;
-                model.Parent = null;
-            }
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                formatter.Serialize(stream, source);
-                stream.Seek(0, SeekOrigin.Begin);
-                T returnObject = (T)formatter.Deserialize(stream);
-
-                if (parent != null)
-                    (source as Models.Core.Model).Parent = parent;
-                return returnObject;
-            }
-
-        }
 
         /// <summary>
         /// Binary serialise the object and return the resulting stream.

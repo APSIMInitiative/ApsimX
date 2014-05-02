@@ -216,8 +216,6 @@ namespace Models.PMF.Organs
         }
         public override void OnSow(SowPlant2Type Data)
         {
-            if (structure != null) //could be optional ?
-                structure.Population = Data.Population;
             PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }
@@ -268,15 +266,14 @@ namespace Models.PMF.Organs
         {
             if (New_Canopy != null)
             {
-                NewCanopyType Canopy = new NewCanopyType();
-                Canopy.sender = Plant.Name;
-                Canopy.lai = (float)LAI;
-                Canopy.lai_tot = (float)(LAI + LAIDead);
-                Canopy.height = (float)Height;
-                Canopy.depth = (float)Height;
-                Canopy.cover = (float)CoverGreen;
-                Canopy.cover_tot = (float)CoverTot;
-                New_Canopy.Invoke(Canopy);
+                Plant.LocalCanopyData.sender = Plant.Name;
+                Plant.LocalCanopyData.lai = (float)LAI;
+                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                Plant.LocalCanopyData.height = (float)Height;
+                Plant.LocalCanopyData.depth = (float)Height;
+                Plant.LocalCanopyData.cover = (float)CoverGreen;
+                Plant.LocalCanopyData.cover_tot = (float)CoverTot;
+                New_Canopy.Invoke(Plant.LocalCanopyData);
             }
         }
 

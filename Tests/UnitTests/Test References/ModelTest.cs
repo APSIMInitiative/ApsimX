@@ -7,6 +7,7 @@ using Models;
 using Models.Graph;
 using Models.Soils;
 using System.Reflection;
+using Importer;
 
 namespace ModelTests
 {
@@ -26,6 +27,10 @@ namespace ModelTests
         [TestInitialize]
         public void Initialise()
         {
+            FileStream oldfile = new FileStream("Continuous_Wheat.apsim", FileMode.Create);
+            oldfile.Write(Properties.Resources.Continuous_Wheat, 0, Properties.Resources.Continuous_Wheat.Length);
+            oldfile.Close();
+            
             FileStream F = new FileStream("Test.apsimx", FileMode.Create);
             F.Write(Properties.Resources.TestFile, 0, Properties.Resources.TestFile.Length);
             F.Close();
@@ -157,22 +162,17 @@ namespace ModelTests
 
             // Test the models that are in scope of zone2.graph
             Model[] inScopeForGraph = graph.FindAll();
-            Assert.AreEqual(inScopeForGraph.Length, 15);
+            Assert.AreEqual(inScopeForGraph.Length, 10);
             Assert.AreEqual(inScopeForGraph[0].FullPath, ".Simulations.Test.Field2.Graph1");
-            Assert.AreEqual(inScopeForGraph[1].FullPath, ".Simulations.Test.Field2");
-            Assert.AreEqual(inScopeForGraph[2].FullPath, ".Simulations.Test.Field2.Soil");
-            Assert.AreEqual(inScopeForGraph[3].FullPath, ".Simulations.Test.Field2.Soil.Water");
-            Assert.AreEqual(inScopeForGraph[4].FullPath, ".Simulations.Test.Field2.Soil.SoilWater");
-            Assert.AreEqual(inScopeForGraph[5].FullPath, ".Simulations.Test.Field2.Soil.SoilOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[6].FullPath, ".Simulations.Test.Field2.Soil.Analysis");
-            Assert.AreEqual(inScopeForGraph[7].FullPath, ".Simulations.Test.Field2.SurfaceOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[8].FullPath, ".Simulations.Test.Field2.Field2SubZone");
-            Assert.AreEqual(inScopeForGraph[9].FullPath, ".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport");
-            Assert.AreEqual(inScopeForGraph[10].FullPath, ".Simulations.Test.WeatherFile");
-            Assert.AreEqual(inScopeForGraph[11].FullPath, ".Simulations.Test.Clock");
-            Assert.AreEqual(inScopeForGraph[12].FullPath, ".Simulations.Test.Summary");
-            Assert.AreEqual(inScopeForGraph[13].FullPath, ".Simulations.Test.Field1");
-            Assert.AreEqual(inScopeForGraph[14].FullPath, ".Simulations.Test");
+            Assert.AreEqual(inScopeForGraph[1].FullPath, ".Simulations.Test.Field2.Soil");
+            Assert.AreEqual(inScopeForGraph[2].FullPath, ".Simulations.Test.Field2.SurfaceOrganicMatter");
+            Assert.AreEqual(inScopeForGraph[3].FullPath, ".Simulations.Test.Field2.Field2SubZone");
+            Assert.AreEqual(inScopeForGraph[4].FullPath, ".Simulations.Test.Field2");
+            Assert.AreEqual(inScopeForGraph[5].FullPath, ".Simulations.Test.WeatherFile");
+            Assert.AreEqual(inScopeForGraph[6].FullPath, ".Simulations.Test.Clock");
+            Assert.AreEqual(inScopeForGraph[7].FullPath, ".Simulations.Test.Summary");
+            Assert.AreEqual(inScopeForGraph[8].FullPath, ".Simulations.Test.Field1");
+            Assert.AreEqual(inScopeForGraph[9].FullPath, ".Simulations.Test");
 
        }
 
@@ -280,6 +280,21 @@ namespace ModelTests
                     Assert.AreEqual(avmonth[11], 62.8259, 0.001, "LTAV12 Monthly");
                 }
             }
+        }
+        [TestMethod]
+        public void ImportOldAPSIM()
+        {
+            // test the importing of an example simulation from APSIM 7.6
+            APSIMImporter importer = new APSIMImporter();
+            importer.ProcessFile("Continuous_Wheat.apsim");
+
+            Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
+
+            Assert.AreEqual(74, testrunSimulations.AllModels.Count, "Wrong number of objects in the simulation");    
+            Assert.IsNotNull(testrunSimulations.Find("wheat"));
+            Assert.IsNotNull(testrunSimulations.Find("clock"));
+            Assert.IsNotNull(testrunSimulations.Find("SoilNitrogen"));
+            Assert.IsNotNull(testrunSimulations.Find("SoilWater"));
         }
     }
 }

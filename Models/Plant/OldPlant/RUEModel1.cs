@@ -7,7 +7,8 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
-    class RUEModel1
+    [Serializable]
+    public class RUEModel1 : ModelCollection
     {
         [Link]
         Plant15 Plant = null;
@@ -54,7 +55,8 @@ namespace Models.PMF.OldPlant
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
-            PublishNewPotentialGrowth();
+            if (Plant.SowingData != null)
+                PublishNewPotentialGrowth();
         }
     }
 }

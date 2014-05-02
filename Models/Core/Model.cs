@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Reflection;
 using System.Collections;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 
 namespace Models.Core
@@ -14,6 +17,10 @@ namespace Models.Core
     public class Model
     {
         private string _Name = null;
+
+
+        [NonSerialized]
+        private List<DynamicEventSubscriber> eventSubscriptions;
 
         /// <summary>
         /// Called immediately after the model is XML deserialised.
@@ -29,6 +36,36 @@ namespace Models.Core
         /// Called just after a simulation has completed.
         /// </summary>
         public virtual void OnCompleted() { }
+
+        /// <summary>
+        /// Invoked immediately before all simulations begin running.
+        /// </summary>
+        public virtual void OnAllCommencing() {}
+
+        /// <summary>
+        /// Invoked after all simulations finish running.
+        /// </summary>
+        public virtual void OnAllCompleted() {}
+
+        /// <summary>
+        /// Called immediately before deserialising.
+        /// </summary>
+        public virtual void OnDeserialising(bool xmlSerialisation) { }
+
+        /// <summary>
+        /// Called immediately after deserialisation.
+        /// </summary>
+        public virtual void OnDeserialised(bool xmlSerialisation) { }
+
+        /// <summary>
+        /// Called immediately before serialising.
+        /// </summary>
+        public virtual void OnSerialising(bool xmlSerialisation) { }
+
+        /// <summary>
+        /// Called immediately after serialisation.
+        /// </summary>
+        public virtual void OnSerialised(bool xmlSerialisation) { }
 
         /// <summary>
         /// Get or set the name of the model
@@ -53,6 +90,12 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public ModelCollection Parent { get; set; }
+
+        /// <summary>
+        /// Is this model hidden in the GUI?
+        /// </summary>
+        [XmlIgnore]
+        public bool HiddenModel { get; set; }
 
         /// <summary>
         /// Get the model's full path. 
@@ -119,14 +162,100 @@ namespace Models.Core
                 variable.Value = value;
         }
 
+        /// <summary>
+        /// Subscribe to an event. Will throw if namePath doesn't point to a event publisher.
+        /// </summary>
+        public void Subscribe(string namePath, EventHandler handler)
+        {
+            if (eventSubscriptions == null)
+                eventSubscriptions = new List<DynamicEventSubscriber>();
+            DynamicEventSubscriber eventSubscription = new DynamicEventSubscriber(namePath, handler, this);
+            eventSubscriptions.Add(eventSubscription);
+            eventSubscription.Connect(this);
+        }
+
+        /// <summary>
+        /// Unsubscribe an event. Throws if not found.
+        /// </summary>
+        public void Unsubscribe(string namePath)
+        {
+            foreach (DynamicEventSubscriber eventSubscription in eventSubscriptions)
+            {
+                if (eventSubscription.publishedEventPath == namePath)
+                {
+                    eventSubscription.Disconnect(this);
+                    eventSubscriptions.Remove(eventSubscription);
+                    return;
+                }
+            }
+
+            throw new ApsimXException(FullPath, "Cannot disconnect from event: " + namePath);
+        }
+
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public virtual void Write(TextWriter stream)
+        {
+            stream.Write(Utility.Xml.Serialise(this, true));
+        }
 
         #region Internals
+
+
+        /// <summary>
+        /// Perform a deep Copy of the 'source' model.
+        /// </summary>
+        public static Model Clone(Model source)
+        {
+            // Don't serialize a null object, simply return the default for that object
+            if (Object.ReferenceEquals(source, null))
+                throw new ApsimXException("", "Trying to clone a null model");
+
+            // Get a list of all child models that we need to notify about the (de)serialisation.
+            List<Model> modelsToNotify;
+            if (source is ModelCollection)
+                modelsToNotify = (source as ModelCollection).AllModels;
+            else
+                modelsToNotify = new List<Model>();
+
+            // Get rid of source's parent as we don't want to serialise that.
+            Models.Core.ModelCollection parent = source.Parent;
+            source.Parent = null;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialising(xmlSerialisation:false);
+
+                formatter.Serialize(stream, source);
+
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialised(xmlSerialisation: false);
+                
+                stream.Seek(0, SeekOrigin.Begin);
+
+                foreach (Model model in modelsToNotify)
+                    model.OnDeserialising(xmlSerialisation: false);
+                Model returnObject = (Model)formatter.Deserialize(stream);
+                foreach (Model model in modelsToNotify)
+                    model.OnDeserialised(xmlSerialisation: false);
+
+                source.Parent = parent;
+                return returnObject;
+            }
+        }
 
         /// <summary>
         /// Resolve all [Link] fields in this model.
         /// </summary>
         public static void ResolveLinks(Model model)
         {
+            string errorMsg = "";
+            //Console.WriteLine(model.FullPath + ":");
+
             // Go looking for [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
@@ -136,53 +265,53 @@ namespace Models.Core
                 if (link != null)
                 {
                     object linkedObject = null;
-                    if (link.NamePath != null)
-                        linkedObject = Scope.Find(model, link.NamePath);
-                    else if (model is ModelCollection)
-                    {
-                        // Try and get a match from a child.
-                        ModelCollection modelAsCollection = model as ModelCollection;
-                        List<Model> matchingModels = modelAsCollection.AllModelsMatching(field.FieldType);
-                        if (matchingModels.Count == 1)
-                            linkedObject = matchingModels[0];  // only 1 match of the required type.
-                        else
-                        {
-                            // This is primarily for PLANT where matches for things link Functions should
-                            // only come from children and not somewhere else in Plant.
-                            // e.g. EmergingPhase in potato has an optional link for 'Target'
-                            // Potato doesn't have a target child so we don't want to use scoping 
-                            // rules to find the target for some other phase.
-
-                            // more that one match so use name to match.
-                            foreach (Model matchingModel in matchingModels)
-                                if (matchingModel.Name == field.Name)
-                                {
-                                    linkedObject = matchingModel;
-                                    break;
-                                }
-                        }
-                    }
                     
-                    if (linkedObject == null)
+                    // NEW SECTION
+                    Model[] allMatches;
+                    if (link.MustBeChild && model is ModelCollection)
+                        allMatches = (model as ModelCollection).AllModelsMatching(field.FieldType).ToArray();
+                    else
+                        allMatches = model.FindAll(field.FieldType);
+                    if (!link.MustBeChild && allMatches.Length == 1)
+                        linkedObject = allMatches[0];
+                    else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
                     {
-                        Model[] allMatches = model.FindAll(field.FieldType);
-                        if (allMatches.Length == 1)
-                            linkedObject = allMatches[0];
-                        else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
+                        // Doesn't matter what the link is being connected to if the the model passed
+                        // into ResolveLinks is sitting under a FactorValue. It won't be run from
+                        // under FactorValue anyway.
+                        linkedObject = allMatches[0];
+                    }
+                    else
+                    {
+                        // This is primarily for PLANT where matches for things link Functions should
+                        // only come from children and not somewhere else in Plant.
+                        // e.g. EmergingPhase in potato has an optional link for 'Target'
+                        // Potato doesn't have a target child so we don't want to use scoping 
+                        // rules to find the target for some other phase.
+
+                        // more that one match so use name to match.
+                        foreach (Model matchingModel in allMatches)
+                            if (matchingModel.Name == field.Name)
+                            {
+                                linkedObject = matchingModel;
+                                break;
+                            }
+                        if ((linkedObject == null) && (!link.IsOptional))
                         {
-                            // Doesn't matter what the link is being connected to if the the model passed
-                            // into ResolveLinks is sitting under a FactorValue. It won't be run from
-                            // under FactorValue anyway.
-                            linkedObject = allMatches[0];
+                            errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Length, field.FieldType.FullName, field.Name);
                         }
                     }
-                     //   linkedObject = model.Find(field.FieldType);
 
                     if (linkedObject != null)
+                    {
+                        //if (linkedObject is Model)
+                        //    Console.WriteLine("    " + field.Name + " linked to " + (linkedObject as Model).FullPath);
+
                         field.SetValue(model, linkedObject);
+                    }
                     else if (!link.IsOptional)
                         throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() +
-                                                            "' in class '" + model.FullPath + "'");
+                                                            "' in class '" + model.FullPath + "'" + errorMsg);
                 }
             }
         }
@@ -233,6 +362,7 @@ namespace Models.Core
             }
         }
 
+
         #endregion
 
         #region Event functions
@@ -240,15 +370,74 @@ namespace Models.Core
         {
             public Model Model;
             public MethodInfo MethodInfo;
-            public string Name
+
+
+            public virtual Delegate GetDelegate(EventPublisher publisher)
             {
-                get
-                {
-                    EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(MethodInfo, typeof(EventSubscribe), false);
-                    return subscriberAttribute.Name;
-                }
+                return Delegate.CreateDelegate(publisher.EventHandlerType, Model, MethodInfo);
             }
         }
+
+        private class DynamicEventSubscriber : EventSubscriber
+        {
+            public string publishedEventPath;
+            public EventHandler subscriber;
+            public Model parent;
+            public Model matchingModel;
+            string ComponentName;
+            string EventName;
+
+            public DynamicEventSubscriber(string namePath, EventHandler handler, Model parentModel)
+            {
+                publishedEventPath = namePath;
+                subscriber = handler;
+                parent = parentModel;
+
+                ComponentName = Utility.String.ParentName(publishedEventPath, '.');
+                if (ComponentName == null)
+                    throw new Exception("Invalid syntax for event: " + publishedEventPath);
+
+                EventName = Utility.String.ChildName(publishedEventPath, '.');
+            }
+
+            public void Connect(Model model)
+            {
+                object Component = model.Get(ComponentName);
+                if (Component == null)
+                    throw new Exception(model.FullPath + " can not find the component: " + ComponentName);
+                EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
+                if (ComponentEvent == null)
+                    throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
+
+                ComponentEvent.AddEventHandler(Component, subscriber);
+            }
+
+            public void Disconnect(Model model)
+            {
+                object Component = model.Get(ComponentName);
+                if (Component != null)
+                {
+                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
+                    if (ComponentEvent != null)
+                        ComponentEvent.RemoveEventHandler(Component, subscriber);
+                }
+            }
+
+            public override Delegate GetDelegate(EventPublisher publisher)
+            {
+                return subscriber;
+            }
+
+            public bool IsMatch(EventPublisher publisher)
+            {
+                if (matchingModel == null)
+                    matchingModel = parent.Get(ComponentName) as Model;
+                
+                return publisher.Model.FullPath == matchingModel.FullPath && EventName == publisher.Name;
+            }
+        }
+
+
         private class EventPublisher
         {
             public Model Model;
@@ -272,7 +461,7 @@ namespace Models.Core
                 foreach (EventSubscriber subscriber in FindEventSubscribers(publisher))
                 {
                     // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
+                    Delegate eventdelegate = subscriber.GetDelegate(publisher);
                     publisher.AddEventHandler(model, eventdelegate);
                 }
             }
@@ -282,29 +471,33 @@ namespace Models.Core
         /// Connect all event subscribers in the specified model.
         /// </summary>
         /// <param name="model"></param>
-        public static void ConnectEventSubscribers(Model model)
-        {
-            // Go through all subscribers in the specified model and find the event publisher to connect to.
-            foreach (EventSubscriber subscriber in FindEventSubscribers(null, model))
-            {
-                foreach (EventPublisher publisher in FindEventPublishers(subscriber))
-                {
-                    // connect subscriber to the event.
-                    Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
-                    publisher.AddEventHandler(publisher.Model, eventdelegate);
-                }
-            }
+        //public static void ConnectEventSubscribers(Model model)
+        //{
+        //    // Connect all dynamic eventsubscriptions.
+        //    foreach (EventSubscription eventSubscription in model.eventSubscriptions)
+        //        eventSubscription.Connect(model);
 
-        }
+        //    // Go through all subscribers in the specified model and find the event publisher to connect to.
+        //    foreach (EventSubscriber subscriber in FindEventSubscribers(null, model))
+        //    {
+        //        foreach (EventPublisher publisher in FindEventPublishers(subscriber))
+        //        {
+        //            // connect subscriber to the event.
+        //            Delegate eventdelegate = Delegate.CreateDelegate(publisher.EventHandlerType, subscriber.Model, subscriber.MethodInfo);
+        //            publisher.AddEventHandler(publisher.Model, eventdelegate);
+        //        }
+        //    }
+
+        //}
 
         /// <summary>
-        /// Disconnect all events in all models that are in scope of 'model'
+        /// Disconnect all published events in all models that are in scope of 'model'
         /// </summary>
         public static void DisconnectEvents(Model model)
         {
             foreach (EventPublisher publisher in FindEventPublishers(null, model))
             {
-                FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                FieldInfo eventAsField = FindEventField(publisher); 
                 Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
                 if (eventDelegate != null)
                 {
@@ -318,16 +511,93 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Locate and return the event backing field for the specified event. Returns
+        /// null if not found.
+        /// </summary>
+        private static FieldInfo FindEventField(EventPublisher publisher)
+        {
+            Type t = publisher.Model.GetType();
+            FieldInfo eventAsField = t.GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            while (eventAsField == null && t.BaseType != typeof(Object))
+            {
+                t = t.BaseType;
+                eventAsField = t.GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            return eventAsField;
+        }
+
+        //public static void DisconnectSubscriptions(Model model)
+        //{
+        //    if (model != null)
+        //    {
+        //        foreach (EventSubscriber subscription in FindEventSubscribers(null, model))
+        //        {
+        //            foreach (EventPublisher publisher in FindEventPublishers(subscription))
+        //            {
+        //                FieldInfo eventAsField = publisher.Model.GetType().GetField(publisher.Name, BindingFlags.Instance | BindingFlags.NonPublic);
+        //                Delegate eventDelegate = eventAsField.GetValue(publisher.Model) as Delegate;
+        //                if (eventDelegate != null)
+        //                {
+        //                    foreach (Delegate del in eventDelegate.GetInvocationList())
+        //                    {
+        //                        if (del.Target == model)
+        //                            publisher.EventInfo.RemoveEventHandler(publisher.Model, del);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+        /// <summary>
         /// Look through and return all models in scope for event subscribers with the specified event name.
         /// If eventName is null then all will be returned.
         /// </summary>
         private static List<EventSubscriber> FindEventSubscribers(EventPublisher publisher)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in publisher.Model.FindAll())
+            foreach (Model model in GetModelsVisibleToEvents(publisher.Model))
+            {
                 subscribers.AddRange(FindEventSubscribers(publisher.Name, model));
+
+                // Add dynamic subscriptions if they match
+                if (model.eventSubscriptions != null)
+                    foreach (DynamicEventSubscriber subscriber in model.eventSubscriptions)
+                    {
+                        if (subscriber.IsMatch(publisher))
+                            subscribers.Add(subscriber);
+                    }
+
+            }
             return subscribers;
 
+        }
+
+        private static List<Model> GetModelsVisibleToEvents(Model model)
+        {
+            List<Model> models = new List<Model>();
+
+            // Find our parent Simulation or Zone.
+            Model obj = model;
+            while (obj != null && !(obj is Zone) && !(obj is Simulation))
+            {
+                obj = obj.Parent;
+            }
+            if (obj == null)
+                throw new ApsimXException(model.FullPath, "Cannot find models to connect events to");
+            if (obj is Simulation)
+            {
+                models.AddRange((obj as Simulation).AllModels);
+            }
+            else
+            {
+                // return all models in zone and all direct children of zones parent.
+                models.AddRange((obj as Zone).AllModels);
+                if (obj.Parent != null)
+                    models.AddRange(obj.Parent.Models);
+            }
+
+            return models;
         }
 
         /// <summary>
@@ -346,18 +616,18 @@ namespace Models.Core
             return subscribers;
         }
 
-        /// <summary>
-        /// Look through and return all models in scope for event publishers with the specified event name.
-        /// If eventName is null then all will be returned.
-        /// </summary>
-        private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
-        {
-            List<EventPublisher> publishers = new List<EventPublisher>();
-            foreach (Model model in subscriber.Model.FindAll())
-                publishers.AddRange(FindEventPublishers(subscriber.Name, model));
-            return publishers;
+        ///// <summary>
+        ///// Look through and return all models in scope for event publishers with the specified event name.
+        ///// If eventName is null then all will be returned.
+        ///// </summary>
+        //private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
+        //{
+        //    List<EventPublisher> publishers = new List<EventPublisher>();
+        //    foreach (Model model in subscriber.Model.FindAll())
+        //        publishers.AddRange(FindEventPublishers(subscriber.Name, model));
+        //    return publishers;
 
-        }
+        //}
 
         /// <summary>
         /// Look through the specified model and return all event publishers that match the event name. If

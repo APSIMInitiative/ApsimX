@@ -134,9 +134,8 @@ namespace Utility
             // If user clicks a '.' then display contextlist.
             if (e.KeyCode == Keys.OemPeriod && e.Shift == false && ContextItemsNeeded != null)
             {
-                TextBox.ActiveTextAreaControl.TextArea.InsertChar('.');
-                ShowCompletionWindow();
-                e.Handled = false;
+                if (ShowCompletionWindow())
+                    e.Handled = false;
             }
 
             else
@@ -158,9 +157,9 @@ namespace Utility
         }
 
         /// <summary>
-        /// Show the context list.
+        /// Show the context list. Return true if popup box shown
         /// </summary>
-        private void ShowCompletionWindow()
+        private bool ShowCompletionWindow()
         {
             // Get a list of items to show and put into completion window.
             string TextBeforePeriod = GetWordBeforePosition(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset);
@@ -169,23 +168,30 @@ namespace Utility
             CompletionList.Items.Clear();
             CompletionList.Items.AddRange(Items.ToArray());
 
-            // Turn readonly on so that the editing window doesn't process keystrokes.
-            TextBox.Document.ReadOnly = true;
-
-            // Work out where to put the completion window.
-            Point p = TextBox.ActiveTextAreaControl.TextArea.Caret.ScreenPosition;
-            Point EditorLocation = TextBox.PointToScreen(p);
-
-            // Display completion window.
-            CompletionForm.Parent = TextBox.ActiveTextAreaControl;
-            CompletionForm.Left = p.X;
-            CompletionForm.Top = p.Y + 20;  // Would be nice not to use a constant number of pixels.
-            CompletionForm.Show();
-            CompletionForm.BringToFront();
-            CompletionForm.Controls[0].Focus();
-
             if (CompletionList.Items.Count > 0)
-                CompletionList.SelectedIndex = 0;
+            {
+                TextBox.ActiveTextAreaControl.TextArea.InsertChar('.');
+
+                // Turn readonly on so that the editing window doesn't process keystrokes.
+                TextBox.Document.ReadOnly = true;
+
+                // Work out where to put the completion window.
+                Point p = TextBox.ActiveTextAreaControl.TextArea.Caret.ScreenPosition;
+                Point EditorLocation = TextBox.PointToScreen(p);
+
+                // Display completion window.
+                CompletionForm.Parent = TextBox.ActiveTextAreaControl;
+                CompletionForm.Left = p.X;
+                CompletionForm.Top = p.Y + 20;  // Would be nice not to use a constant number of pixels.
+                CompletionForm.Show();
+                CompletionForm.BringToFront();
+                CompletionForm.Controls[0].Focus();
+
+                if (CompletionList.Items.Count > 0)
+                    CompletionList.SelectedIndex = 0;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

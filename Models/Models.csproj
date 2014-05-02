@@ -56,10 +56,18 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics.IO">
+      <HintPath>..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.IO.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -104,6 +112,11 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Core\ModelCollectionFromResource.cs" />
+    <Compile Include="Plant\Cultivar.cs" />
+    <Compile Include="Plant\Organs\TreeCanopy.cs" />
+    <Compile Include="PostSimulationTools\TimeSeriesStats.cs" />
+    <Compile Include="PostSimulationTools\PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />
     <Compile Include="Core\Scope.cs" />
@@ -114,12 +127,23 @@
     <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="NullSummary.cs" />
+    <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Plant\Slurp\Slurp.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PostSimulationTools\Regression.cs" />
+    <Compile Include="Soils\PatchHandler.cs" />
+    <Compile Include="Soils\SoilArbitrator.cs" />
+    <Compile Include="Soils\soilCNPatch.cs" />
+    <Compile Include="Soils\Variables.cs" />
     <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Utility\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
-    <Compile Include="Input.cs" />
+    <Compile Include="PostSimulationTools\Input.cs" />
     <Compile Include="Irrigation.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
@@ -235,7 +259,6 @@
     <Compile Include="Plant\Summary.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
@@ -244,7 +267,6 @@
     <Compile Include="Soils\Sample.cs" />
     <Compile Include="Soils\simpleSoilTemp.cs" />
     <Compile Include="Soils\Soil.cs" />
-    <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilOrganicMatter.cs" />
@@ -255,7 +277,6 @@
     <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
-    <Compile Include="Soils\Variables.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
@@ -290,6 +311,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -312,6 +334,18 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Wheat.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Potato.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

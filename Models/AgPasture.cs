@@ -72,20 +72,19 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgPasture : Model
+    public class AgPasture : Model, ICrop
     {
         [Link]
         private Clock clock = null;
 
         [Link]
-        private Soils.SoilNitrogen SoilN = null;
-
-        [Link]
-        private Soils.SoilWater SoilWat = null;
+        private Soils.Soil Soil = null;
 
         [Link]
         private WeatherFile MetData = null;
 
+        [Link]
+        private ISummary Summary = null;
         private int Debug_Level = 0;
         public Species[] SP = new Species[3] { 
             new Species { 
@@ -298,8 +297,10 @@ namespace Models
         //component constant
         private const double SVPfrac = 0.66;
         //private WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();  // Daily Met Data
+        private double _IntRadn;    // Intercepted Radn   
+
         [Units("MJ")]
-        public double IntRadn;    // Intercepted Radn   
+        public double IntRadn { get { return _IntRadn; }}
 
         //Parameters that get initial values from the .xml    
         private int _Nsp = 3;
@@ -502,6 +503,7 @@ namespace Models
             // This hack uses rlvp as interface to pass distribution parameters and then recalc rlvp
             // This is not what I would call good pratice due to the parameters technically changing meaning during
             // initilisation, but it will do in the interim.
+            Nsp = SP.Length;
             if (rlvp.Length == Nsp)
             {
                 //Console.Out.WriteLine("Using two parameter root distribution model (root depth + distribution parameter)");
@@ -509,33 +511,66 @@ namespace Models
                 rootDist = new double[rlvp.Length];
                 rlvp.CopyTo(rootDist, 0); //Store distribution parameter values
                 // Calculate actual rlvp values
-                rlvp = new double[SoilWat.dlayer.Length];
-                for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+                rlvp = new double[Soil.SoilWater.dlayer.Length];
+                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
                     rlvp[layer] = RootProportion(layer, p_rootFrontier);
                 }
             }
-            else if (rlvp.Length == SoilWat.dlayer.Length)
+            else if (rlvp.Length == Soil.SoilWater.dlayer.Length)
             {
                 //Console.Out.WriteLine("Using real rlvp data values - original method");
                 UseRootProportion = 1; //using corrected depth calculation method
             }
             else
             {
-                Array.Resize(ref rlvp, SoilWat.dlayer.Length);
-                Array.Resize(ref ll, SoilWat.dlayer.Length);
-                Array.Resize(ref kl, SoilWat.dlayer.Length);
-                Array.Resize(ref xf, SoilWat.dlayer.Length);
+                Array.Resize(ref rlvp, Soil.SoilWater.dlayer.Length);
+                Array.Resize(ref ll, Soil.SoilWater.dlayer.Length);
+                Array.Resize(ref kl, Soil.SoilWater.dlayer.Length);
+                Array.Resize(ref xf, Soil.SoilWater.dlayer.Length);
                 //throw new Exception("AgPasture: Incorrect number of values passed to RLVP exception");
             }
 
+            //init
+            p_dGrowthPot = 0.0;
+            p_dGrowthW = 0.0;
+            p_dGrowth = 0.0;
+            p_dHerbage = 0.0;
+            p_height = 0.0;
+
+            p_dLitter = 0.0;         //daily litter formation  
+            p_dRootSen = 0.0;        //daily root senescence
+            p_dNLitter = 0.0;        //daily litter formation N
+            p_dNRootSen = 0.0;       //daily root senescence N
+            p_bottomRootLayer = 0;
+
+            //Parameters for environmental factors 
+            p_soilNdemand = 0;
+            p_soilNavailable = 0;
+            p_soilNuptake = 0;
+            p_gfn = 0;
+            p_Nfix = 0.0;
+            p_gftemp = 0.0;
+            p_gfwater = 0.0;
+            p_harvestN = 0.0;
+
+            p_waterSupply = 0;
+            p_waterDemand = 0;
+            p_waterUptake = 0;
+            p_gfwater = 0;
+            _IntRadn = 0.0;
+            actualUptake = 0.0;
+
+            month = clock.Today.Month;
+            year = clock.Today.Year;
+            day_of_month = clock.Today.Day;
 
             //Create and initialise each species  
             //Nsp = (int)Nspecies;
             ftArray = new double[Nsp];
 
             //SP = new Species[Nsp];         //species of the pasture
-            //pSP = new Species[Nsp];        //For storing species status at previous day     
+            pSP = new Species[Nsp];        //For storing species status at previous day     
             for (int s = 0; s < Nsp; s++)
             {
                 //SP[s] = new Species();
@@ -546,6 +581,10 @@ namespace Models
             //Initialising the aggregated pasture parameters from initial valuses of each species  
             p_rootFrontier = 0.0;
             p_rootMass = 0.0;
+            p_greenLAI = 0.0;
+            p_deadLAI = 0.0;
+            p_greenDM = 0.0;
+            p_deadDM = 0.0;
             double sum_fShoot = 0.0;
             double sum_lightExtCoeff = 0.0;
 
@@ -578,26 +617,6 @@ namespace Models
             if (p_totalLAI == 0) { p_lightExtCoeff = 0.5; }
             else { p_lightExtCoeff = sum_lightExtCoeff / p_totalLAI; }
 
-            //init
-            p_dGrowthPot = 0.0;
-            p_dGrowthW = 0.0;
-            p_dGrowth = 0.0;
-
-            p_dLitter = 0.0;         //daily litter formation  
-            p_dRootSen = 0.0;        //daily root senescence
-            p_dNLitter = 0.0;        //daily litter formation N
-            p_dNRootSen = 0.0;       //daily root senescence N
-
-            //Parameters for environmental factors 
-            p_soilNdemand = 0;
-            p_soilNavailable = 0;
-            p_soilNuptake = 0;
-            p_gfn = 0;
-
-            p_waterDemand = 0;
-            p_waterUptake = 0;
-            p_gfwater = 0;
-
             //if (rlvp.Length != dlayer.Length)
             //{
             //    String msg = "Warning: Number of layers specified for root length density (rlvp) is different ";
@@ -618,10 +637,10 @@ namespace Models
 
             SP[s].InitValues();
 
-            SWSupply = new double[SoilWat.dlayer.Length];
-            SWUptake = new double[SoilWat.dlayer.Length];
-            SNSupply = new double[SoilWat.dlayer.Length];
-            SNUptake = new double[SoilWat.dlayer.Length];
+            SWSupply = new double[Soil.SoilWater.dlayer.Length];
+            SWUptake = new double[Soil.SoilWater.dlayer.Length];
+            SNSupply = new double[Soil.SoilWater.dlayer.Length];
+            SNUptake = new double[Soil.SoilWater.dlayer.Length];
         }
 
         //---------------------------------------------------------------------------
@@ -632,14 +651,14 @@ namespace Models
         private bool SetSpeciesMetData()
         {
             //pass metData & day_length to species (same to all species)
-            Species.dayLength = day_length;
+            Species.dayLength = day_length = MetData.DayLength;
             Species.latitude = MetData.Latitude;
             Species.MetData = MetData.MetData;
             Species.day_of_month = day_of_month;
             Species.month = month;
             Species.year = year;
             Species.CO2 = co2;
-            Species.PIntRadn = IntRadn;
+            Species.PIntRadn = _IntRadn;
             Species.PCoverGreen = Cover_green;
             Species.PLightExtCoeff = p_lightExtCoeff;
             Species.Pdmshoot = AboveGroundWt;   //dm_shoot;
@@ -663,7 +682,7 @@ namespace Models
                 else
                 {
                     SP[s].intRadnFrac = SP[s].coverGreen / sumRadnIntercept;
-                    SP[s].intRadn = IntRadn * SP[s].intRadnFrac;
+                    SP[s].intRadn = _IntRadn * SP[s].intRadnFrac;
                 }
             }
 
@@ -715,14 +734,14 @@ namespace Models
                 double Sat = 0;     //water content at saturation
                 double FC = 0;      //water contenct at field capacity      
 
-                for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
-                    spDepth += SoilWat.dlayer[layer];
+                    spDepth += Soil.SoilWater.dlayer[layer];
                     if (spDepth <= p_rootFrontier)
                     {
-                        SW += SoilWat.sw_dep[layer];
-                        Sat += SoilWat.sat_dep[layer];
-                        FC += SoilWat.dul_dep[layer];
+                        SW += Soil.SoilWater.sw_dep[layer];
+                        Sat += Soil.SoilWater.sat_dep[layer];
+                        FC += Soil.SoilWater.dul_dep[layer];
                     }
                 }
                 if (SW > FC) //if saturated 
@@ -884,7 +903,7 @@ namespace Models
                 // Send out New Crop Event to tell other modules who I am and what I am
                 PMF.NewCropType EventData = new PMF.NewCropType();
                 EventData.crop_type = SP[0].micrometType;  // need to separate crop type for micromet & canopy name !!  
-                EventData.sender = thisCropName;        // 
+                EventData.sender = Name;        // 
                 NewCrop.Invoke(EventData);
             }
 
@@ -894,22 +913,23 @@ namespace Models
         /// <summary>
         /// Event publication - new canopy 
         /// </summary>
+        
+        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        NewCanopyType LocalCanopyData = new NewCanopyType();
+                
         private void DoNewCanopyEvent()
         {
             if (NewCanopy != null)
             {
-                NewCanopyType canopy = new NewCanopyType();
-                canopy.sender = thisCropName;
-                canopy.lai = p_greenLAI;
-                canopy.lai_tot = p_totalLAI;
+                LocalCanopyData.sender = Name;
+                LocalCanopyData.lai = p_greenLAI;
+                LocalCanopyData.lai_tot = p_totalLAI;
                 p_height = HeightfromDM;
-                canopy.height = (int)p_height;             // height effect, mm 
-                canopy.depth = (int)p_height;              // canopy depth 
-                canopy.cover = Cover_green;
-                canopy.cover_tot = Cover_tot;
-
-
-                NewCanopy.Invoke(canopy);
+                LocalCanopyData.height = (int)p_height;             // height effect, mm 
+                LocalCanopyData.depth = (int)p_height;              // canopy depth 
+                LocalCanopyData.cover = Cover_green;
+                LocalCanopyData.cover_tot = Cover_tot;
+                NewCanopy.Invoke(LocalCanopyData);
             }
         }
 
@@ -922,7 +942,7 @@ namespace Models
             if (NewPotentialGrowth != null)
             {
                 NewPotentialGrowthType EventData = new NewPotentialGrowthType();
-                EventData.sender = thisCropName;
+                EventData.sender = Name;
                 p_gftemp = 0;     //weighted average   
 
 
@@ -967,7 +987,8 @@ namespace Models
         {
             InitParameters();            // Init parameters after reading the data           
 
-            //SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
+            if (MetData.StartDate != new DateTime(0) || MetData.ReadFirstDay())
+              SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
 
             DoNewCropEvent();            // Tell other modules that I exist
             DoNewCanopyEvent();          // Tell other modules about my canopy
@@ -1003,17 +1024,17 @@ namespace Models
             DoNewPotentialGrowthEvent();
         }
 
-/*        //---------------------------------------------------------------------
-        /// <summary>
-        /// Get new meteo- data
-        /// </summary>
-        /// <param name="NewMetData"></param>
-        [EventSubscribe("NewMet")]
-        private void OnNewMet(WeatherFile.NewMetType NewMetData)
-        {
-            MetData = NewMetData;
-        }
- */
+        /*        //---------------------------------------------------------------------
+                /// <summary>
+                /// Get new meteo- data
+                /// </summary>
+                /// <param name="NewMetData"></param>
+                [EventSubscribe("NewWeatherDataAvailable")]
+                private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMetData)
+                {
+                    MetData = NewMetData;
+                }
+         */
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -1043,12 +1064,12 @@ namespace Models
             {
                 if (LP.Interception[i].name.ToUpper() == thisCropName.ToUpper())  //TO: species by species, and get the total?
                 {
-                    IntRadn = 0;
+                    _IntRadn = 0;
                     for (int j = 0; j < LP.Interception[i].layer.Length; j++)
                     {
-                        IntRadn += LP.Interception[i].layer[j].amount;
+                        _IntRadn += LP.Interception[i].layer[j].amount;
                     }
-                    canopiesRadn[i] = IntRadn;
+                    canopiesRadn[i] = _IntRadn;
                 }
                 else //Radn intercepted possibly by other canopies used for a rough IL estimation,
                 {    //potenital use when species were specified separately in pasture. (not used of now.11Mar10 )                    
@@ -1310,11 +1331,8 @@ namespace Models
             OnGraze(GZ);
         }
 
-        //----------------------------------------------------------------------
-        [EventSubscribe("graze")]
-        private void OnGraze(GrazeType GZ)
+        public void Graze(string type, double amount)
         {
-            Console.WriteLine("Agpasture.ongraze");
             if ((!p_Live) || p_totalDM == 0)
                 return;
 
@@ -1324,9 +1342,9 @@ namespace Models
             double remove_amt = 0;
 
             //case 1: remove untill the residue reaches the specified amount
-            if (GZ.type == "residue")
+            if (type == "residue")
             {
-                residue_amt = GZ.amount;
+                residue_amt = amount;
                 if (herbage_mass > residue_amt)
                 {
                     remove_amt = herbage_mass - residue_amt;
@@ -1337,9 +1355,9 @@ namespace Models
                 }
             }
             //case 2: remove the specified amount
-            else if (GZ.type == "removal")
+            else if (type == "removal")
             {
-                remove_amt = GZ.amount;
+                remove_amt = amount;
 
                 if (herbage_mass > min_residue)
                 {
@@ -1376,7 +1394,16 @@ namespace Models
                 if (remove_amt > 0)
                     p_harvestDigest += SP[s].digestDefoliated * amt / remove_amt;
             }
+        }
 
+
+        //----------------------------------------------------------------------
+        [EventSubscribe("Graze")]
+        private void OnGraze(GrazeType GZ)
+        {
+            Summary.WriteMessage(FullPath, "Agpasture.OnGraze");
+            //Console.WriteLine("");
+            Graze(GZ.type, GZ.amount);
         }
 
         //----------------------------------------------------------
@@ -1401,7 +1428,7 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
-        [EventSubscribe("sow")]
+        [EventSubscribe("Sow")]
         private void OnSow(SowType PSow)
         {
             /*SowType is our type and is defined like this:
@@ -1474,7 +1501,7 @@ namespace Models
             p_soilNavailable = 0;
             double spDepth = 0;         // depth before next soil layer
             int sLayer = 0;
-            for (sLayer = 0; sLayer < SoilWat.dlayer.Length; sLayer++)
+            for (sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -1488,8 +1515,8 @@ namespace Models
                     SNSupply[sLayer] = (no3[sLayer] * KNO3 + nh4[sLayer] * KNH4 ) * (float)swaf;
                     */
                     //original below
-                    p_soilNavailable += (SoilN.no3[sLayer] + SoilN.nh4[sLayer]);
-                    SNSupply[sLayer] = (SoilN.no3[sLayer] + SoilN.nh4[sLayer]);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[sLayer] + Soil.SoilNitrogen.nh4[sLayer]);
+                    SNSupply[sLayer] = (Soil.SoilNitrogen.no3[sLayer] + Soil.SoilNitrogen.nh4[sLayer]);
                 }
                 else
                 {
@@ -1497,7 +1524,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += SoilWat.dlayer[sLayer];
+                spDepth += Soil.SoilWater.dlayer[sLayer];
 
             }
 
@@ -1513,7 +1540,7 @@ namespace Models
             p_soilNavailable = 0;
             double spDepth = 0;         // depth before next soil layer
             int sLayer = 0;
-            for (sLayer = 0; sLayer < SoilWat.dlayer.Length; sLayer++)
+            for (sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -1521,10 +1548,10 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (SoilWat.sw_dep[sLayer] - ll[sLayer]) / (SoilWat.dul[sLayer] - ll[sLayer]);
+                    swaf = (Soil.SoilWater.sw_dep[sLayer] - ll[sLayer]) / (Soil.SoilWater.dul[sLayer] - ll[sLayer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (SoilN.no3[sLayer] * KNO3 + SoilN.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[sLayer] = (SoilN.no3[sLayer] * KNO3 + SoilN.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[sLayer] * KNO3 + Soil.SoilNitrogen.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[sLayer] = (Soil.SoilNitrogen.no3[sLayer] * KNO3 + Soil.SoilNitrogen.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
                     //p_soilNavailable += (no3[sLayer] + nh4[sLayer]);
@@ -1536,7 +1563,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += SoilWat.dlayer[sLayer];
+                spDepth += Soil.SoilWater.dlayer[sLayer];
 
             }
 
@@ -2237,7 +2264,7 @@ namespace Models
                 for (int layer = 0; layer < rlv.Length; layer++)
                 {
                     //Recalculate the rlv values           
-                    rlv[layer] = rlvp[layer] * Total_Rlength / (sum_rlvp * SoilWat.dlayer[layer]);
+                    rlv[layer] = rlvp[layer] * Total_Rlength / (sum_rlvp * Soil.SoilWater.dlayer[layer]);
                 }
                 return rlv;
             }
@@ -2249,7 +2276,8 @@ namespace Models
             get { return p_waterDemand; }
         }
 
-        public double actualUptake;
+        private double actualUptake;
+
         [Units("mm")]
         public double ep   //sw_demand          // Daily Soil Water Demand (mm)
         {
@@ -2533,10 +2561,10 @@ namespace Models
 
             //find out soil available water
             p_waterSupply = 0;
-            for (int layer = 0; layer < SoilWat.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 SWSupply[layer] = Math.Max(0.0,
-                                  kl[layer] * (SoilWat.sw_dep[layer] - ll[layer] * (SoilWat.dlayer[layer]))) * RootProportion(layer, p_rootFrontier);
+                                  kl[layer] * (Soil.SoilWater.sw_dep[layer] - ll[layer] * (Soil.SoilWater.dlayer[layer]))) * RootProportion(layer, p_rootFrontier);
 
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];
@@ -2544,7 +2572,7 @@ namespace Models
 
             //uptake in proportion
             PMF.WaterChangedType WaterUptake = new PMF.WaterChangedType();
-            WaterUptake.DeltaWater = new double[SoilWat.dlayer.Length];
+            WaterUptake.DeltaWater = new double[Soil.SoilWater.dlayer.Length];
             //float[] SWUptake = new float[dlayer.Length];
             double Fraction = Math.Min(1.0, p_waterDemand / p_waterSupply);
             actualUptake = 0.0;
@@ -2573,21 +2601,21 @@ namespace Models
                         double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
                         // Implementation Section ----------------------------------
                         for (int i = 0; i <= layer; i++)
-                            depth_to_layer_bottom += SoilWat.dlayer[i];
-                        depth_to_layer_top = depth_to_layer_bottom - SoilWat.dlayer[layer];
+                            depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
+                        depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
                         depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
                         depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-                        return depth_of_root_in_layer / SoilWat.dlayer[layer];
+                        return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
                     }
                 case 2:
                     { // "broken stick"
                         double depth_to_layer_bottom = 0;
                         for (int i = 0; i <= layer; i++)
                         {
-                            depth_to_layer_bottom += SoilWat.dlayer[i];
+                            depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
                         }
-                        double depth_to_layer_top = depth_to_layer_bottom - SoilWat.dlayer[layer];
+                        double depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
 
                         double dX0 = rootDist[0] * root_depth; //TODO allow this to be set via Root Distribution Parameter
                         double dX1 = root_depth;
@@ -2652,10 +2680,10 @@ namespace Models
         {
             //Uptake from the root_zone
             Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
-            NUptake.Sender = "AgPasture";
+            NUptake.Sender = Name;
             NUptake.SenderType = "Plant";
-            NUptake.DeltaNO3 = new double[SoilWat.dlayer.Length];
-            NUptake.DeltaNH4 = new double[SoilWat.dlayer.Length];
+            NUptake.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
+            NUptake.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
 
             double Fraction = 0;
             if (p_soilNavailable > 0)
@@ -2672,27 +2700,27 @@ namespace Models
                     totSWUptake = SWUptake.Sum();
 
                 double[]
-                    availableNH4_bylayer = new double[SoilWat.dlayer.Length],
-                    availableNO3_bylayer = new double[SoilWat.dlayer.Length],
-                    diffNH4_bylayer = new double[SoilWat.dlayer.Length],
-                    diffNO3_bylayer = new double[SoilWat.dlayer.Length];
+                    availableNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
+                    availableNO3_bylayer = new double[Soil.SoilWater.dlayer.Length],
+                    diffNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
+                    diffNO3_bylayer = new double[Soil.SoilWater.dlayer.Length];
 
-                for (int sLayer = 0; sLayer < SoilWat.dlayer.Length; sLayer++)
+                for (int sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
                 {
                     double
-                        totN = SoilN.nh4[sLayer] + SoilN.no3[sLayer],
+                        totN = Soil.SoilNitrogen.nh4[sLayer] + Soil.SoilNitrogen.no3[sLayer],
                         fracH2O = SWUptake[sLayer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[sLayer] = fracH2O * SoilN.nh4[sLayer] / totN;
-                        availableNO3_bylayer[sLayer] = fracH2O * SoilN.no3[sLayer] / totN;
+                        availableNH4_bylayer[sLayer] = fracH2O * Soil.SoilNitrogen.nh4[sLayer] / totN;
+                        availableNO3_bylayer[sLayer] = fracH2O * Soil.SoilNitrogen.no3[sLayer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = SoilN.nh4[sLayer] * SoilN.no3[sLayer] > 0 ? Math.Min(uptake_multiplier, SoilN.nh4[sLayer] / availableNH4_bylayer[sLayer]) : 0;
+                        uptake_multiplier = Soil.SoilNitrogen.nh4[sLayer] * Soil.SoilNitrogen.no3[sLayer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[sLayer] / availableNH4_bylayer[sLayer]) : 0;
                     }
                     else
                     {
@@ -2706,8 +2734,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = SoilN.nh4.Select((x, sLayer) => Math.Max(0, x - availableNH4_bylayer[sLayer])).ToArray();
-                diffNO3_bylayer = SoilN.no3.Select((x, sLayer) => Math.Max(0, x - availableNO3_bylayer[sLayer])).ToArray();
+                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, sLayer) => Math.Max(0, x - availableNH4_bylayer[sLayer])).ToArray();
+                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, sLayer) => Math.Max(0, x - availableNO3_bylayer[sLayer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -2735,7 +2763,7 @@ namespace Models
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                     n_uptake += SNUptake[layer] = (NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]) * -1;
 
-                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(SoilN.no3[i] + x + 0.00000001, 0)).ToArray();
+                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.no3[i] + x + 0.00000001, 0)).ToArray();
                 if (diffs.Any(x => x == 0))
                     throw new Exception();
 
@@ -2754,11 +2782,11 @@ namespace Models
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                 {   //N are taken up only in top layers that root can reach (including buffer Zone).                               
-                    n_uptake += (SoilN.no3[layer] + SoilN.nh4[layer]) * Fraction;
-                    SNUptake[layer] = (SoilN.no3[layer] + SoilN.nh4[layer]) * Fraction;
+                    n_uptake += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
+                    SNUptake[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
 
-                    NUptake.DeltaNO3[layer] = -SoilN.no3[layer] * Fraction;
-                    NUptake.DeltaNH4[layer] = -SoilN.nh4[layer] * Fraction;
+                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
+                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
                 }
             }
 
@@ -2815,12 +2843,12 @@ namespace Models
         /// <param name="NinRootSen"></param>
         private void DoIncorpFomEvent(double rootSen, double NinRootSen)
         {
-            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[SoilWat.dlayer.Length];
+            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
 
             //considering root_zone only or minimum root
             int minLayer = rlvp.Length;
-            if (minLayer > SoilWat.dlayer.Length)
-                minLayer = SoilWat.dlayer.Length;
+            if (minLayer > Soil.SoilWater.dlayer.Length)
+                minLayer = Soil.SoilWater.dlayer.Length;
 
             //Console.WriteLine("rlvp layers should match the number of soil layers.");
             //throw new Exception("..");
@@ -2832,12 +2860,12 @@ namespace Models
                 if (i >= p_bottomRootLayer)
                     break;
 
-                sum_rlvp += rlvp[i] * SoilWat.dlayer[i];
+                sum_rlvp += rlvp[i] * Soil.SoilWater.dlayer[i];
             }
 
             double dAmtLayer = 0.0; //amount of root litter in a layer
             double dNLayer = 0.0;
-            for (int i = 0; i < SoilWat.dlayer.Length; i++)
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
             {
                 if (sum_rlvp == 0.0 || (i >= minLayer)) //no root distribution if (i > minLayer)
                 {
@@ -2845,8 +2873,8 @@ namespace Models
                 }
                 else
                 {
-                    dAmtLayer = rootSen * rlvp[i] * SoilWat.dlayer[i] / sum_rlvp;
-                    dNLayer = NinRootSen * rlvp[i] * SoilWat.dlayer[i] / sum_rlvp;
+                    dAmtLayer = rootSen * rlvp[i] * Soil.SoilWater.dlayer[i] / sum_rlvp;
+                    dNLayer = NinRootSen * rlvp[i] * Soil.SoilWater.dlayer[i] / sum_rlvp;
                 }
                 double amt = dAmtLayer;
 
@@ -2902,7 +2930,7 @@ namespace Models
             double sumLAI = 0;
             for (int i = 0; i < canopiesNum; i++)
             {
-                double cover = Cover_green * canopiesRadn[i] / IntRadn;
+                double cover = Cover_green * canopiesRadn[i] / _IntRadn;
                 sumCov += cover;
                 sumLAI += -Math.Log(1 - cover) / p_lightExtCoeff;
 
@@ -2980,7 +3008,7 @@ namespace Models
     public class Species
     {
 
-        internal DMPools pS = new DMPools();              //for remember the status of previous day
+        internal DMPools pS;                //for remember the status of previous day
         //constants                        
         const double CD2C = 12.0 / 44.0;    //convert CO2 into C 
         const double C2DM = 2.5;            //C to DM convertion
@@ -3096,10 +3124,15 @@ namespace Models
         internal double dmstol1;	//stolon 1 (kg/ha)
         internal double dmstol2;	//stolon 2 (kg/ha)
         internal double dmstol3;	//stolon 3 (kg/ha)
-        public double dmroot;	//root (kg/ha)
-        public double dmlitter;	//Litter pool (kg/ha)
-        public double dmgreenmin; // minimum grenn dm
+        internal double dmroot;	    //root (kg/ha)
+        internal double dmlitter;	//Litter pool (kg/ha)
+
+        public double dmrootInit;   // Intial value for dmroot
+        public double dmlitterInit;
+        public double dmtotalInit;
+        public double dmgreenmin;   // minimum grenn dm
         public double Frgr;
+
 
         //CO2
         public double CO2PmaxScale;
@@ -3166,7 +3199,7 @@ namespace Models
 
         //calculated 
         //DM
-        public double dmtotal;      //=dmgreen + dmdead
+        internal double dmtotal;      //=dmgreen + dmdead
         internal double dmgreen;
         internal double dmdead;
         internal double dmleaf;
@@ -3262,6 +3295,36 @@ namespace Models
 
         public void InitValues()
         {
+            pS = new DMPools();
+            Nremob = 0.0;
+            Cremob = 0;
+            Nfix = 0.0;
+            Ncfactor = 0.0;
+            Ndemand = 0.0;
+            soilNdemand = 0.0;
+            soilNuptake = 0.0;
+            dmdefoliated = 0.0;
+            Ndefoliated = 0;
+            digestHerbage = 0;
+            digestDefoliated = 0;
+            dLitter = 0.0;
+            dNLitter = 0.0;
+            dRootSen = 0.0;
+            dNrootSen = 0.0;
+            gfn = 0.0;
+            gftemp = 0.0;
+            gfwater = 0.0;
+            phenoFactor = 1.0;
+            intRadn = 0.0;
+            intRadnFrac = 0.0;
+            newGrowthN = 0.0;
+            Pgross = 0.0;
+            NdemandOpt = 0.0;
+            remob2NewGrowth = 0.0;
+            Resp_m = 0.0;
+            NrootRemob = 0.0;
+            IL1 = 0.0;
+
             if (isAnnual) //calulate days from Emg to Antheis        
                 CalcDaysEmgToAnth();
 
@@ -3270,10 +3333,14 @@ namespace Models
             leafPref = 1;
             if (isLegume) leafPref = 1.5;        //Init DM (is partitioned to different pools)
 
+            dmtotal = dmtotalInit;
+            dmroot = dmrootInit;
+            dmlitter = dmlitterInit;
+
             if (dmtotal == 0.0) phenoStage = 0;
             else phenoStage = 1;
 
-            if (isLegume)
+            if (!isLegume)
             {
                 dmleaf1 = 0.15 * dmtotal;
                 dmleaf2 = 0.25 * dmtotal;

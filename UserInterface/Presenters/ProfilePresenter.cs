@@ -184,7 +184,7 @@ namespace UserInterface.Presenters
         // Privates
         private Model Model;
         private IProfileView View;
-        private CommandHistory CommandHistory;
+        private ExplorerPresenter ExplorerPresenter;
         private GraphPresenter GraphPresenter;
         private PropertyPresenter PropertyPresenter;
         private List<ProfileProperty> PropertiesInGrid = new List<ProfileProperty>();
@@ -194,15 +194,15 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, CommandHistory CommandHistory)
+        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             this.Model = Model as Model;
             this.View = View as IProfileView;
-            this.CommandHistory = CommandHistory;
+            this.ExplorerPresenter = explorerPresenter;
 
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             PropertyPresenter = new PropertyPresenter();
-            PropertyPresenter.Attach(Model, this.View.PropertyGrid, CommandHistory);
+            PropertyPresenter.Attach(Model, this.View.PropertyGrid, ExplorerPresenter);
             this.View.ShowPropertyGrid(!PropertyPresenter.IsEmpty);
 
             // Create a list of profile (array) properties. Create a table from them and 
@@ -226,7 +226,7 @@ namespace UserInterface.Presenters
                     ParentZone.AddModel(g);
                     this.View.ShowGraph(true);
                     GraphPresenter = new GraphPresenter();
-                    GraphPresenter.Attach(g, this.View.Graph, CommandHistory);
+                    GraphPresenter.Attach(g, this.View.Graph, ExplorerPresenter);
                 }
             }
         }

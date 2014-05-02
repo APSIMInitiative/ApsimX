@@ -9,11 +9,12 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
-    class GenericArbitratorXY: Model
+    [Serializable]
+    public class GenericArbitratorXY : ModelCollection
     {
-        public string[] PartitionOrgans = null;
+        public string[] PartitionOrgans { get; set; }
 
-        public string[] PartitionRules = null;
+        public string[] PartitionRules { get; set; }
 
         [Link]
         Function RatioRootShoot = null;
