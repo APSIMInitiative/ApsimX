@@ -31,6 +31,12 @@
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <PredictedObserved>
+      <Name>FinalYields</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Input</ObservedTableName>
+      <FieldNameUsedForMatch>ExtraVariables.Final</FieldNameUsedForMatch>
+    </PredictedObserved>
   </DataStore>
   <Experiment>
     <Name>Potato</Name>
@@ -146,18 +152,18 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>lincoln.met</FileName>
-        <MaxT>12.199999809265137</MaxT>
-        <MinT>9.3999996185302734</MinT>
-        <Rain>0.60000002384185791</Rain>
-        <Radn>3.2999999523162842</Radn>
-        <vp>11.800000190734863</vp>
-        <wind>2.7999999523162842</wind>
+        <MaxT>9.1000003814697266</MaxT>
+        <MinT>-0.20000000298023224</MinT>
+        <Rain>0</Rain>
+        <Radn>1.8999999761581421</Radn>
+        <vp>8.3999996185302734</vp>
+        <wind>4.03000020980835</wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>
-        <EndDate>2004-05-23T00:00:00</EndDate>
+        <EndDate>2004-06-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
@@ -727,6 +733,9 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
+		[XmlIgnore] public string FinalYeildTag { get; set;}
+		[XmlIgnore] public bool FinalYieldObtained {get; set;}
+		
         public override void OnCommencing()
         {
 			InitialDay = true;
@@ -754,6 +763,8 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
+				FinalYeildTag = "";
+				FinalYieldObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -795,7 +806,9 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-
+			
+			if ((Plant.Phenology.StageCode.Value>=7)&&(FinalYieldObtained==false))
+				FinalYeildTag = "yield";
 		}
 	}
 }
@@ -917,6 +930,8 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[ExtraVariables].Script.FinalYeildTag</string>
+            <string />
             <string />
             <string />
             <string />
@@ -2794,15 +2809,16 @@ namespace Models
       <Name>TuberWt</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Tuber live weight (g DM/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Prediceted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2822,6 +2838,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2836,7 +2853,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Tuber.Live.Wt</FieldName>
+          <FieldName>Plant.Tuber.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2846,15 +2863,16 @@ namespace Models
       <Name>LAI</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Leaf Area Index (m2/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2874,6 +2892,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2888,7 +2907,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Leaf.LAI</FieldName>
+          <FieldName>Plant.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2898,15 +2917,16 @@ namespace Models
       <Name>LeafWt</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Leaf live weight (g DM/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2926,6 +2946,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2940,25 +2961,26 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Leaf.Live.Wt</FieldName>
+          <FieldName>Plant.Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>StemWt</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Stem  live weight (g DM/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2978,6 +3000,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2992,7 +3015,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Stem.Live.Wt</FieldName>
+          <FieldName>Plant.Stem.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3002,15 +3025,16 @@ namespace Models
       <Name>TotalWt</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Total  live weight (g DM/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3030,6 +3054,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3044,7 +3069,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Summariser.Total.Live.Wt</FieldName>
+          <FieldName>Plant.Summariser.Total.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3054,15 +3079,16 @@ namespace Models
       <Name>TuberN</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Tuber live nitrogen (g N/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3082,6 +3108,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3096,7 +3123,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Tuber.Live.N</FieldName>
+          <FieldName>Plant.Tuber.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3106,15 +3133,16 @@ namespace Models
       <Name>LeafN</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Leaf live nitrogen (g N/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3134,6 +3162,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3148,25 +3177,26 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>leaf.LiveN</FieldName>
+          <FieldName>Plant.leaf.LiveN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>StemN</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Stem live nitrogen (g N/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3186,6 +3216,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3200,7 +3231,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Stem.Live.N</FieldName>
+          <FieldName>Plant.Stem.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3210,15 +3241,16 @@ namespace Models
       <Name>Cover</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Canopy Cover (0-1)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3238,6 +3270,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3262,15 +3295,16 @@ namespace Models
       <Name>TuberN%</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Tuber nitrogen content (g N/g DM)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3290,6 +3324,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3304,7 +3339,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Tuber.Live.Nconc</FieldName>
+          <FieldName>Plant.Tuber.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3314,15 +3349,16 @@ namespace Models
       <Name>LeafN%</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Leaf  nitrogen content (g N/g DM)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3342,6 +3378,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3356,25 +3393,26 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Leaf.Live.Nconc</FieldName>
+          <FieldName>Plant.Leaf.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>StemN%</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title> Stem nitrogen content (g N/g DM)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3394,6 +3432,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Predicted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3408,22 +3447,22 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Stem.Live.Nconc</FieldName>
+          <FieldName>Plant.Stem.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>Leafnumber</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title>Date</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Appeared leaves</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -3460,7 +3499,59 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>InputNodeNo</TableName>
-          <FieldName>Leaf.AppearedCohortNo</FieldName>
+          <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>BottomRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>TuberDMConc</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Appeared leaves</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Tuber.DMconcerror</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
