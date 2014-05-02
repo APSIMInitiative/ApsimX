@@ -453,7 +453,7 @@ namespace Utility
             int columnCount = sqlite3_column_count(stmHandle);
 
             List<string> columnNames = new List<string>();
-            for(int i = 1; i < columnCount; i++)
+            for(int i = 0; i < columnCount; i++)
             {
                 string columnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
                 columnNames.Add(columnName);    
