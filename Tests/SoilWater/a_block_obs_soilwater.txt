@@ -1,4 +1,4 @@
-SimulationName   Clock.Today   SoilWater.sw_dep(1)   SoilWater.sw_dep(2)   SoilWater.sw_dep(3)   ExtraVariables.SWDep60
+SimulationName   Clock.Today   Soil.SoilWater.sw_dep(1)   Soil.SoilWater.sw_dep(2)   Soil.SoilWater.sw_dep(3)   ExtraVariables.Script.SWDep60
 ()   (yyyy-mm-dd)   ()   ()   ()   ()
 ResiduesCoverStandingStubble   2010-02-25   44.44   30.2   25.95   100.59
 ResiduesCoverStandingStubble   2010-02-26   43.48   29.76   25.75   98.99
