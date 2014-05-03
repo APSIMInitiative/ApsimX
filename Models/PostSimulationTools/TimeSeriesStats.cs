@@ -48,8 +48,10 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SimulationName", typeof(string));
             statsData.Columns.Add("VariableName", typeof(string));
             statsData.Columns.Add("residual", typeof(double));
+            statsData.Columns.Add("R^2", typeof(double));
             statsData.Columns.Add("RMSD", typeof(double));
             statsData.Columns.Add("%", typeof(double));
+            statsData.Columns.Add("MSD", typeof(double));
             statsData.Columns.Add("SB", typeof(double));
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
@@ -112,9 +114,11 @@ namespace Models.PostSimulationTools
                 if (!double.IsNaN(stats.Residual))
                 {
                     newRow["residual"] = stats.Residual;
+                    newRow["R^2"] = stats.R2;
                     newRow["RMSD"] = stats.RMSD;
                     newRow["%"] = stats.Percent;
-                    newRow["SB"] = stats.ResidualSquared;
+                    newRow["MSD"] = stats.MSD;
+                    newRow["SB"] = stats.SB;
                     newRow["SDSD"] = stats.SDSD;
                     newRow["LCS"] = stats.LCS;
                 }

@@ -855,14 +855,16 @@ namespace Utility
         public class Stats
         {
             public double Residual { get { return PredictedMean - ObservedMean; } }
-            public double ResidualSquared { get { return System.Math.Pow(Residual, 2.0); } }
             public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
             public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
-            public double R { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
-            public double LCS { get { return 2.0 * SDs * SDm * (1.0 - R); } }
+            public double r { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            public double R2 { get { return System.Math.Pow(r, 2); } }
+            public double LCS { get { return 2.0 * SDs * SDm * (1.0 - r); } }
             public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
-            public double RMSD { get { return ResidualSquared + SDSD + LCS; } }
-            public double Percent { get { return RMSD / ObservedMean; } }
+            public double SB { get { return System.Math.Pow(PredictedMean - ObservedMean, 2); } }
+            public double MSD { get { return SB + SDSD + LCS; } }
+            public double RMSD { get { return System.Math.Sqrt(MSD); } }
+            public double Percent { get { return (RMSD / ObservedMean)*100; } }
 
             // Low level pre calculations.
             public double ObservedMean;
@@ -888,9 +890,9 @@ namespace Utility
 
             for (int i = 0; i < stats.Count; i++)
             {
-                stats.X_XSquared += System.Math.Pow(observed[i] - stats.ObservedMean, 2);
-                stats.Y_YSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
-                stats.Y_YxX_X += stats.Y_YSquared * stats.X_XSquared;
+                stats.Y_YSquared += System.Math.Pow(observed[i] - stats.ObservedMean, 2);
+                stats.X_XSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
+                stats.Y_YxX_X += (predicted[i] - stats.PredictedMean) * (observed[i] - stats.ObservedMean);
             }
 
             return stats;

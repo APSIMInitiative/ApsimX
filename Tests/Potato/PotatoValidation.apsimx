@@ -32,10 +32,10 @@
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <PredictedObserved>
-      <Name>FinalYields</Name>
+      <Name>FinalYieldData</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
-      <FieldNameUsedForMatch>ExtraVariables.Final</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>ExtraVariables.Script.FinalTag</FieldNameUsedForMatch>
     </PredictedObserved>
   </DataStore>
   <Experiment>
@@ -152,12 +152,12 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>lincoln.met</FileName>
-        <MaxT>9.1000003814697266</MaxT>
-        <MinT>-0.20000000298023224</MinT>
+        <MaxT>17.299999237060547</MaxT>
+        <MinT>5.5999999046325684</MinT>
         <Rain>0</Rain>
-        <Radn>1.8999999761581421</Radn>
-        <vp>8.3999996185302734</vp>
-        <wind>4.03000020980835</wind>
+        <Radn>3.2999999523162842</Radn>
+        <vp>9.1999998092651367</vp>
+        <wind>5.4800000190734863</wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -580,7 +580,7 @@
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
-               [Link] Plant Plant;
+               [Link] Plant Potato;
                [Link] Clock Clock;
 
                [Description("Spacing (mm) between plants within rows")]
@@ -602,8 +602,8 @@
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
-                //Plant.Sow(... Contains the following arguements:
+                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
                 //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
@@ -687,7 +687,7 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Plant;          
+		[Link] Plant Potato;          
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -733,8 +733,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public string FinalYeildTag { get; set;}
-		[XmlIgnore] public bool FinalYieldObtained {get; set;}
+		[XmlIgnore] public string FinalTag { get; set;}
+		[XmlIgnore] public bool FinalYeildObtained {get; set;}
 		
         public override void OnCommencing()
         {
@@ -763,15 +763,15 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalYeildTag = "";
-				FinalYieldObtained = false;
+				FinalTag = "";
+				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
+			AccumPlantN -= (double)this.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -781,15 +781,15 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
+			AccumEP -= (double)this.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Plant.Phenology.StageCode.Value >= 3)
-			AccumTtemerg += Plant.Phenology.ThermalTime.Value;
+			if (Potato.Phenology.StageCode.Value >= 3)
+			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
 		[EventSubscribe("EndOfDay")]
@@ -807,8 +807,12 @@ namespace Models
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
 			
-			if ((Plant.Phenology.StageCode.Value>=7)&&(FinalYieldObtained==false))
-				FinalYeildTag = "yield";
+			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
+				{
+					FinalTag = "yield";
+					FinalYeildObtained = true;
+				}
+			else FinalTag = "";
 		}
 	}
 }
@@ -819,8 +823,8 @@ namespace Models
           <Variables>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Plant].Phenology.CurrentPhaseName</string>
-            <string>[Plant].Phenology.StageCode.Value</string>
+            <string>[Potato].Phenology.CurrentPhaseName</string>
+            <string>[Potato].Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -830,7 +834,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Plant].Root.NSupplyUptake</string>
+            <string>[Potato].Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -848,80 +852,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Plant].Summariser.AboveGround.Wt</string>
-            <string>[Plant].Summariser.BelowGround.Wt</string>
-            <string>[Plant].Summariser.Total.Wt</string>
-            <string>[Plant].Summariser.TotalDead.Wt</string>
-            <string>[Plant].Summariser.TotalLive.Wt</string>
-            <string>[Plant].Leaf.Dead.Wt</string>
-            <string>[Plant].Leaf.Live.Wt</string>
-            <string>[Plant].Stem.Dead.Wt</string>
-            <string>[Plant].Stem.Live.Wt</string>
-            <string>[Plant].Tuber.Dead.Wt</string>
-            <string>[Plant].Tuber.Live.Wt</string>
-            <string>[Plant].Root.Dead.Wt</string>
-            <string>[Plant].Root.Live.Wt</string>
-            <string>[Plant].Summariser.AboveGround.N</string>
-            <string>[Plant].Summariser.BelowGround.N</string>
-            <string>[Plant].Summariser.Total.N</string>
-            <string>[Plant].Summariser.TotalLive.N</string>
-            <string>[Plant].Summariser.TotalDead.N</string>
-            <string>[Plant].Leaf.Dead.N</string>
-            <string>[Plant].Leaf.Live.N</string>
-            <string>[Plant].Stem.Dead.N</string>
-            <string>[Plant].Stem.Live.N</string>
-            <string>[Plant].Tuber.Dead.N</string>
-            <string>[Plant].Tuber.Live.N</string>
-            <string>[Plant].Root.Live.N</string>
-            <string>[Plant].Root.Dead.N</string>
-            <string>[Plant].Leaf.Live.NConc</string>
-            <string>[Plant].Leaf.Dead.NConc</string>
-            <string>[Plant].Stem.Live.NConc</string>
-            <string>[Plant].Stem.Dead.NConc</string>
-            <string>[Plant].Tuber.Live.NConc</string>
-            <string>[Plant].Tuber.Dead.NConc</string>
-            <string>[Plant].Root.Live.NConc</string>
-            <string>[Plant].Root.Dead.NConc</string>
-            <string>[Plant].Root.WaterSupply</string>
-            <string>[Plant].Root.WaterUptake</string>
-            <string>[Plant].Leaf.Transpiration</string>
-            <string>[Plant].Leaf.WaterDemand</string>
-            <string>[Plant].Root.Depth</string>
-            <string>[Plant].Leaf.CoverGreen</string>
-            <string>[Plant].Leaf.CoverTotal</string>
-            <string>[Plant].Leaf.CoverDead</string>
-            <string>[Plant].Leaf.LAI</string>
-            <string>[Plant].Leaf.LAIDead</string>
-            <string>[Plant].Structure.Height</string>
-            <string>[Plant].Leaf.Fn</string>
-            <string>[Plant].Leaf.Fw</string>
-            <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Plant].Structure.PlantTotalNodeNo</string>
-            <string>[Plant].Structure.TotalStemPopn</string>
-            <string>[Plant].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Plant].Leaf.ExpandingCohortNo</string>
-            <string>[Plant].Leaf.AppearedCohortNo</string>
-            <string>[Plant].Leaf.DeadCohortNo</string>
-            <string>[Plant].Structure.MainStemNodeNo</string>
-            <string>[Plant].Leaf.SenescingCohortNo</string>
-            <string>[Plant].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Plant].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Plant].Stem.MinimumNConc.Value</string>
-            <string>[Plant].Tuber.MinimumNConc.Value</string>
-            <string>[Plant].Root.MinimumNConc.Value</string>
-            <string>[Plant].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Plant].Stem.MaximumNConc.Value</string>
-            <string>[Plant].Tuber.MaximumNConc.Value</string>
-            <string>[Plant].Root.MaximumNConc.Value</string>
-            <string>[Plant].Stem.Live.StructuralWt</string>
-            <string>[Plant].Stem.Live.NonStructuralWt</string>
-            <string>[Plant].Leaf.SpecificArea</string>
-            <string>[Plant].Leaf.ExpandedCohortNo</string>
+            <string>[Potato].Summariser.AboveGround.Wt</string>
+            <string>[Potato].Summariser.BelowGround.Wt</string>
+            <string>[Potato].Summariser.Total.Wt</string>
+            <string>[Potato].Summariser.TotalDead.Wt</string>
+            <string>[Potato].Summariser.TotalLive.Wt</string>
+            <string>[Potato].Leaf.Dead.Wt</string>
+            <string>[Potato].Leaf.Live.Wt</string>
+            <string>[Potato].Stem.Dead.Wt</string>
+            <string>[Potato].Stem.Live.Wt</string>
+            <string>[Potato].Tuber.Dead.Wt</string>
+            <string>[Potato].Tuber.Live.Wt</string>
+            <string>[Potato].Root.Dead.Wt</string>
+            <string>[Potato].Root.Live.Wt</string>
+            <string>[Potato].Summariser.AboveGround.N</string>
+            <string>[Potato].Summariser.BelowGround.N</string>
+            <string>[Potato].Summariser.Total.N</string>
+            <string>[Potato].Summariser.TotalLive.N</string>
+            <string>[Potato].Summariser.TotalDead.N</string>
+            <string>[Potato].Leaf.Dead.N</string>
+            <string>[Potato].Leaf.Live.N</string>
+            <string>[Potato].Stem.Dead.N</string>
+            <string>[Potato].Stem.Live.N</string>
+            <string>[Potato].Tuber.Dead.N</string>
+            <string>[Potato].Tuber.Live.N</string>
+            <string>[Potato].Root.Live.N</string>
+            <string>[Potato].Root.Dead.N</string>
+            <string>[Potato].Leaf.Live.NConc</string>
+            <string>[Potato].Leaf.Dead.NConc</string>
+            <string>[Potato].Stem.Live.NConc</string>
+            <string>[Potato].Stem.Dead.NConc</string>
+            <string>[Potato].Tuber.Live.NConc</string>
+            <string>[Potato].Tuber.Dead.NConc</string>
+            <string>[Potato].Root.Live.NConc</string>
+            <string>[Potato].Root.Dead.NConc</string>
+            <string>[Potato].Root.WaterSupply</string>
+            <string>[Potato].Root.WaterUptake</string>
+            <string>[Potato].Leaf.Transpiration</string>
+            <string>[Potato].Leaf.WaterDemand</string>
+            <string>[Potato].Root.Depth</string>
+            <string>[Potato].Leaf.CoverGreen</string>
+            <string>[Potato].Leaf.CoverTotal</string>
+            <string>[Potato].Leaf.CoverDead</string>
+            <string>[Potato].Leaf.LAI</string>
+            <string>[Potato].Leaf.LAIDead</string>
+            <string>[Potato].Structure.Height</string>
+            <string>[Potato].Leaf.Fn</string>
+            <string>[Potato].Leaf.Fw</string>
+            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
+            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[Potato].Structure.PlantTotalNodeNo</string>
+            <string>[Potato].Structure.TotalStemPopn</string>
+            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
+            <string>[Potato].Leaf.ExpandingCohortNo</string>
+            <string>[Potato].Leaf.AppearedCohortNo</string>
+            <string>[Potato].Leaf.DeadCohortNo</string>
+            <string>[Potato].Structure.MainStemNodeNo</string>
+            <string>[Potato].Leaf.SenescingCohortNo</string>
+            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
+            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>[Potato].Stem.MinimumNConc.Value</string>
+            <string>[Potato].Tuber.MinimumNConc.Value</string>
+            <string>[Potato].Root.MinimumNConc.Value</string>
+            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>[Potato].Stem.MaximumNConc.Value</string>
+            <string>[Potato].Tuber.MaximumNConc.Value</string>
+            <string>[Potato].Root.MaximumNConc.Value</string>
+            <string>[Potato].Stem.Live.StructuralWt</string>
+            <string>[Potato].Stem.Live.NonStructuralWt</string>
+            <string>[Potato].Leaf.SpecificArea</string>
+            <string>[Potato].Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Plant].Arbitrator.NDemand</string>
+            <string>[Potato].Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -930,7 +934,14 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalYeildTag</string>
+            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[Potato].Tuber.LiveFWt</string>
+            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
             <string />
             <string />
             <string />
@@ -1356,7 +1367,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Live.Wt</FieldName>
+              <FieldName>Potato.Leaf.Live.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1376,7 +1387,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Live.Wt</FieldName>
+              <FieldName>Potato.Stem.Live.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1396,7 +1407,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Live.Wt</FieldName>
+              <FieldName>Potato.Tuber.Live.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1416,7 +1427,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Live.Wt</FieldName>
+              <FieldName>Potato.Root.Live.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1436,7 +1447,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Dead.Wt</FieldName>
+              <FieldName>Potato.Leaf.Dead.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1456,7 +1467,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Dead.Wt</FieldName>
+              <FieldName>Potato.Stem.Dead.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1476,7 +1487,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Dead.Wt</FieldName>
+              <FieldName>Potato.Tuber.Dead.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1496,7 +1507,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Dead.Wt</FieldName>
+              <FieldName>Potato.Root.Dead.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1516,7 +1527,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
+              <FieldName>Potato.Summariser.AboveGround.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1536,7 +1547,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.BelowGround.Wt</FieldName>
+              <FieldName>Potato.Summariser.BelowGround.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1556,7 +1567,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.Total.Wt</FieldName>
+              <FieldName>Potato.Summariser.Total.Wt</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1589,7 +1600,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Live.N</FieldName>
+              <FieldName>Potato.Leaf.Live.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1609,7 +1620,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Live.N</FieldName>
+              <FieldName>Potato.Stem.Live.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1629,7 +1640,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Live.N</FieldName>
+              <FieldName>Potato.Tuber.Live.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1649,7 +1660,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Live.N</FieldName>
+              <FieldName>Potato.Root.Live.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1669,7 +1680,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Dead.N</FieldName>
+              <FieldName>Potato.Leaf.Dead.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1689,7 +1700,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Dead.N</FieldName>
+              <FieldName>Potato.Stem.Dead.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1709,7 +1720,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Dead.N</FieldName>
+              <FieldName>Potato.Tuber.Dead.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1729,7 +1740,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Dead.N</FieldName>
+              <FieldName>Potato.Root.Dead.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1749,7 +1760,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.AboveGround.N</FieldName>
+              <FieldName>Potato.Summariser.AboveGround.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1769,7 +1780,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.BelowGround.N</FieldName>
+              <FieldName>Potato.Summariser.BelowGround.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1789,7 +1800,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.Total.N</FieldName>
+              <FieldName>Potato.Summariser.Total.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1809,7 +1820,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Summariser.TotalLive.N</FieldName>
+              <FieldName>Potato.Summariser.TotalLive.N</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1842,7 +1853,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Photosynthesis.FT.Value</FieldName>
+              <FieldName>Potato.Leaf.Photosynthesis.FT.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1862,7 +1873,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Fn</FieldName>
+              <FieldName>Potato.Leaf.Fn</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1882,7 +1893,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Fw</FieldName>
+              <FieldName>Potato.Leaf.Fw</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1902,7 +1913,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Photosynthesis.FVPD.Value</FieldName>
+              <FieldName>Potato.Leaf.Photosynthesis.FVPD.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1940,7 +1951,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.WaterSupply</FieldName>
+              <FieldName>Potato.Root.WaterSupply</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1960,7 +1971,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.WaterUptake</FieldName>
+              <FieldName>Potato.Root.WaterUptake</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -1980,7 +1991,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.WaterDemand</FieldName>
+              <FieldName>Potato.Leaf.WaterDemand</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2000,7 +2011,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Transpiration</FieldName>
+              <FieldName>Potato.Leaf.Transpiration</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2040,7 +2051,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Depth</FieldName>
+              <FieldName>Potato.Root.Depth</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2060,7 +2071,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Structure.Height</FieldName>
+              <FieldName>Potato.Structure.Height</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2098,7 +2109,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.CoverDead</FieldName>
+              <FieldName>Potato.Leaf.CoverDead</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2118,7 +2129,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.CoverGreen</FieldName>
+              <FieldName>Potato.Leaf.CoverGreen</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2138,7 +2149,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.CoverTotal</FieldName>
+              <FieldName>Potato.Leaf.CoverTotal</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2158,7 +2169,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.LAI</FieldName>
+              <FieldName>Potato.Leaf.LAI</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2178,7 +2189,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.LAIDead</FieldName>
+              <FieldName>Potato.Leaf.LAIDead</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2211,7 +2222,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.SenescingCohortNo</FieldName>
+              <FieldName>Potato.Leaf.SenescingCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2231,7 +2242,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Structure.TotalStemPopn</FieldName>
+              <FieldName>Potato.Structure.TotalStemPopn</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2251,7 +2262,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.ExpandingCohortNo</FieldName>
+              <FieldName>Potato.Leaf.ExpandingCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2271,7 +2282,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Structure.PlantTotalNodeNo</FieldName>
+              <FieldName>Potato.Structure.PlantTotalNodeNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2291,7 +2302,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.DeadCohortNo</FieldName>
+              <FieldName>Potato.Leaf.DeadCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2311,7 +2322,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+              <FieldName>Potato.Leaf.AppearedCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2331,7 +2342,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.PlantAppearedGreenLeafNo</FieldName>
+              <FieldName>Potato.Leaf.PlantAppearedGreenLeafNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2351,7 +2362,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.ExpandedCohortNo</FieldName>
+              <FieldName>Potato.Leaf.ExpandedCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2388,7 +2399,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Live.NConc</FieldName>
+              <FieldName>Potato.Leaf.Live.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2408,7 +2419,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.Dead.NConc</FieldName>
+              <FieldName>Potato.Leaf.Dead.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2428,7 +2439,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.LeafCohortParameters.MinimumNConc.Value</FieldName>
+              <FieldName>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2448,7 +2459,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Leaf.LeafCohortParameters.MaximumNConc.Value</FieldName>
+              <FieldName>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2468,7 +2479,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Phenology.StageCode.Value</FieldName>
+              <FieldName>Potato.Phenology.StageCode.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2505,7 +2516,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Live.NConc</FieldName>
+              <FieldName>Potato.Stem.Live.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2525,7 +2536,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.Dead.NConc</FieldName>
+              <FieldName>Potato.Stem.Dead.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2545,7 +2556,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.MinimumNConc.Value</FieldName>
+              <FieldName>Potato.Stem.MinimumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2565,7 +2576,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Stem.MaximumNConc.Value</FieldName>
+              <FieldName>Potato.Stem.MaximumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2585,7 +2596,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Phenology.StageCode.Value</FieldName>
+              <FieldName>Potato.Phenology.StageCode.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2622,7 +2633,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Live.NConc</FieldName>
+              <FieldName>Potato.Tuber.Live.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2642,7 +2653,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.Dead.NConc</FieldName>
+              <FieldName>Potato.Tuber.Dead.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2662,7 +2673,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.MinimumNConc.Value</FieldName>
+              <FieldName>Potato.Tuber.MinimumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2682,7 +2693,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Tuber.MaximumNConc.Value</FieldName>
+              <FieldName>Potato.Tuber.MaximumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2702,7 +2713,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Phenology.StageCode.Value</FieldName>
+              <FieldName>Potato.Phenology.StageCode.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2735,7 +2746,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Live.NConc</FieldName>
+              <FieldName>Potato.Root.Live.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2755,7 +2766,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.Dead.NConc</FieldName>
+              <FieldName>Potato.Root.Dead.NConc</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2775,7 +2786,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.MinimumNConc.Value</FieldName>
+              <FieldName>Potato.Root.MinimumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2795,7 +2806,7 @@ namespace Models
             <Y>
               <SimulationName>PotatoCultivarBurbank</SimulationName>
               <TableName>Report</TableName>
-              <FieldName>Plant.Root.MaximumNConc.Value</FieldName>
+              <FieldName>Potato.Root.MaximumNConc.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
           </Series>
@@ -2833,7 +2844,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Tuber.Live.Wt</FieldName>
+          <FieldName>Potato.Tuber.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2853,7 +2864,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Tuber.Live.Wt</FieldName>
+          <FieldName>Potato.Tuber.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2887,7 +2898,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.LAI</FieldName>
+          <FieldName>Potato.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2907,7 +2918,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Leaf.LAI</FieldName>
+          <FieldName>Potato.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2941,7 +2952,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.Live.Wt</FieldName>
+          <FieldName>Potato.Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2961,7 +2972,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Leaf.Live.Wt</FieldName>
+          <FieldName>Potato.Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2995,7 +3006,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Stem.Live.Wt</FieldName>
+          <FieldName>Potato.Stem.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3015,7 +3026,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Stem.Live.Wt</FieldName>
+          <FieldName>Potato.Stem.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3049,7 +3060,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Summariser.TotalLive.Wt</FieldName>
+          <FieldName>Potato.Summariser.TotalLive.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3069,7 +3080,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Summariser.Total.Live.Wt</FieldName>
+          <FieldName>Potato.Summariser.Total.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3103,7 +3114,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Tuber.Live.N</FieldName>
+          <FieldName>Potato.Tuber.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3123,7 +3134,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Tuber.Live.N</FieldName>
+          <FieldName>Potato.Tuber.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3157,7 +3168,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.Live.N</FieldName>
+          <FieldName>Potato.Leaf.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3177,7 +3188,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.leaf.LiveN</FieldName>
+          <FieldName>Potato.leaf.LiveN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3211,7 +3222,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Stem.Live.N</FieldName>
+          <FieldName>Potato.Stem.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3231,7 +3242,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Stem.Live.N</FieldName>
+          <FieldName>Potato.Stem.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3265,7 +3276,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.CoverGreen</FieldName>
+          <FieldName>Potato.Leaf.CoverGreen</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3285,7 +3296,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>InputRadInd</TableName>
-          <FieldName>Leaf.CoverGreen</FieldName>
+          <FieldName>Potato.Leaf.CoverGreen</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3319,7 +3330,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Tuber.Live.NConc</FieldName>
+          <FieldName>Potato.Tuber.Live.NConc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3339,7 +3350,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Tuber.Live.Nconc</FieldName>
+          <FieldName>Potato.Tuber.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3373,7 +3384,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.Live.NConc</FieldName>
+          <FieldName>Potato.Leaf.Live.NConc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3393,7 +3404,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Leaf.Live.Nconc</FieldName>
+          <FieldName>Potato.Leaf.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3427,7 +3438,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Stem.Live.NConc</FieldName>
+          <FieldName>Potato.Stem.Live.NConc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3447,7 +3458,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Plant.Stem.Live.Nconc</FieldName>
+          <FieldName>Potato.Stem.Live.Nconc</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3480,7 +3491,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+          <FieldName>Potato.Leaf.AppearedCohortNo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3499,14 +3510,14 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>InputNodeNo</TableName>
-          <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+          <FieldName>Potato.Leaf.AppearedCohortNo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
     </Graph>
     <Graph>
-      <Name>TuberDMConc</Name>
+      <Name>TuberFreshWeight</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -3514,10 +3525,11 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Appeared leaves</Title>
+        <Title>Tuber fresh live weight (g DM/m2)</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
+        <Title>Prediceted</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3532,11 +3544,12 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Plant.Leaf.AppearedCohortNo</FieldName>
+          <FieldName>Potato.Tuber.LiveFWt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
+        <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3551,13 +3564,135 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Tuber.DMconcerror</FieldName>
+          <FieldName>Potato.Tuber.LiveFWt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
-      <LegendPosition>BottomRight</LegendPosition>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>DryMatterContent</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Tuber fresh live weight (g DM/m2)</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Prediceted</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Potato.Tuber.DryMatterContent.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title>Observed</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Potato.Tuber.DMconc</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Tuber Yield Comparison</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Fresh Tuber Yield (g/m2)</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Observed</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>FinalYieldData</TableName>
+          <FieldName>Observed.Potato.Tuber.LiveFWt</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>FinalYieldData</TableName>
+          <FieldName>Predicted.Potato.Tuber.LiveFWt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
     </Graph>
   </Experiment>
+  <Graph>
+    <Name>Tuber Yield Comparison</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Observed Fresh Tuber Yield (g/m2)</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>Observed</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>FinalYieldData</TableName>
+        <FieldName>Observed.Potato.Tuber.LiveFWt</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>FinalYieldData</TableName>
+        <FieldName>Predicted.Potato.Tuber.LiveFWt</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
   <Area>0</Area>
-  <ExplorerWidth>271</ExplorerWidth>
+  <ExplorerWidth>387</ExplorerWidth>
 </Simulations>
