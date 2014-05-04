@@ -3693,6 +3693,40 @@ namespace Models
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
+  <Graph>
+    <Name>Tuber Biomass Comparison</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Observed Fresh Tuber Yield (g/m2)</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>Observed</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>FinalYieldData</TableName>
+        <FieldName>Observed.Potato.Tuber.Live.Wt</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>FinalYieldData</TableName>
+        <FieldName>Predicted.Potato.Tuber.Live.Wt</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
   <Area>0</Area>
   <ExplorerWidth>387</ExplorerWidth>
 </Simulations>
