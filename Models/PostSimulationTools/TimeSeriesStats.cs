@@ -47,6 +47,7 @@ namespace Models.PostSimulationTools
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
             statsData.Columns.Add("VariableName", typeof(string));
+            statsData.Columns.Add("n", typeof(string));
             statsData.Columns.Add("residual", typeof(double));
             statsData.Columns.Add("R^2", typeof(double));
             statsData.Columns.Add("RMSD", typeof(double));
@@ -113,6 +114,7 @@ namespace Models.PostSimulationTools
                 newRow["VariableName"] = observedColumnName.Replace("Observed.", "");
                 if (!double.IsNaN(stats.Residual))
                 {
+                    newRow["n"] = stats.Count;
                     newRow["residual"] = stats.Residual;
                     newRow["R^2"] = stats.R2;
                     newRow["RMSD"] = stats.RMSD;
