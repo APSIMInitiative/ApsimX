@@ -12,7 +12,10 @@ namespace Models.PMF
     {
         #region Class Members
         // Input paramaters
-        
+
+        [Link]
+        public Plant Plant = null;
+
         [Description("Select method used for Arbitration")]
         public string NArbitrationOption = "";
         [Description("Select method used for DMArbitration")]
@@ -130,7 +133,10 @@ namespace Models.PMF
         {
             get
             {
-                return N.TotalPlantDemand;
+                if (Plant.InGround)
+                    return N.TotalPlantDemand;
+                else
+                    return 0.0;
             }
         }
         
