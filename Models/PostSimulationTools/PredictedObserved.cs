@@ -61,6 +61,12 @@ namespace Models.PostSimulationTools
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
+                if (observedDataNames == null)
+                {
+                    Console.WriteLine("Could not find observed data table: " + ObservedTableName);
+                    return;
+                }
+
                 IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
                                                join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
                                                select p["name"] as string;
