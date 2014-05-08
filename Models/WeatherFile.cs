@@ -48,16 +48,23 @@ namespace Models
             {
                 string FullFileName = FileName;
                 if (FileName != null && Simulation != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                {
                     FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
+                    if (!File.Exists(FullFileName))
+                        FullFileName = Path.Combine(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), FileName);
+                }
                 return FullFileName;
             }
             set
             {
                 FileName = Utility.PathUtils.OSFilePath(value);
                 WtrFile = null; // ensure it is reopened
-                // try and convert to path relative to the Simulations.FileName.
+                // try and convert to path relative to the Simulations.FileName or ApsimX install directory.
                 if (FileName != null)
+                {
+                    FileName = FileName.Replace( Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
                     FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
+                }
             }
         }
 

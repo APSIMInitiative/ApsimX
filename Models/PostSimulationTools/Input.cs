@@ -24,7 +24,21 @@ namespace Models.PostSimulationTools
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model
     {
-        public string[] FileNames { get; set; }
+        private string[] fileNames;
+        public string[] FileNames
+        {
+            get
+            {
+                return fileNames;
+            }
+            set
+            {
+                //attempt to use relative path for files in ApsimX install directory
+                fileNames = new string[value.Length];
+                for (int i = 0; i < fileNames.Length; i++)
+                    fileNames[i] = value[i].Replace(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
+            }
+        }
 
         /// <summary>
         /// Go find the top level simulations object.
@@ -88,13 +102,15 @@ namespace Models.PostSimulationTools
                     if (FileNames[i] == null)
                         continue;
 
+                    string file;
                     if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                        file = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                    else file = FileNames[i];
 
-                    if ( File.Exists(FileNames[i]))
+                    if ( File.Exists(file))
                     {
                         Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                        textFile.Open(FileNames[i]);
+                        textFile.Open(file);
                         DataTable table = textFile.ToTable();
                         textFile.Close();
 
