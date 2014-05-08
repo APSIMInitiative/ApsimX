@@ -95,11 +95,13 @@ namespace Models
 
                 string fileSpecNoPath = Path.GetFileName(FileSpec);
 
-                string[] Files;
+                List<string> Files;
                 if (Recurse)
-                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.AllDirectories);
+                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.AllDirectories).ToList();
                 else
-                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.TopDirectoryOnly);
+                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.TopDirectoryOnly).ToList();
+
+                Files.RemoveAll(s => s.Contains("UnitTests"));
 
                 // Get a reference to the JobManager so that we can add jobs to it.
                 Utility.JobManager jobManager = e.Argument as Utility.JobManager;
