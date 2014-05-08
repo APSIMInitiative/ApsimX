@@ -43,7 +43,7 @@ namespace Models
                 // Write out the number of simulations run to the console.
                 int numSimulations = jobManager.NumberOfJobs - 1;
                 timer.Stop();
-                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00"));
+                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalMinutes.ToString("#.00"));
             }
             catch (Exception err)
             {

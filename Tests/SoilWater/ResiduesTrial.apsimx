@@ -6,13 +6,13 @@
     <Input>
       <Name>ObservedResidues</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\SoilWater\A_block_obs_residual.txt</string>
+        <string>Tests\SoilWater\A_block_obs_residual.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>ObservedSoilWater</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\SoilWater\a_block_obs_soilwater.txt</string>
+        <string>Tests\SoilWater\a_block_obs_soilwater.txt</string>
       </FileNames>
     </Input>
   </DataStore>
@@ -679,28 +679,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -746,14 +724,6 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Type>Potato</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
