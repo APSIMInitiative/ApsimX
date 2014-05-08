@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 using Models.Core;
 
 namespace Models
@@ -31,6 +32,8 @@ namespace Models
                 // pass the job to a job runner.
                 RunDirectoryOfApsimFiles runApsim = new RunDirectoryOfApsimFiles(fileName, commandLineSwitch == "/Recurse");
 
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
                 Utility.JobManager jobManager = new Utility.JobManager();
                 jobManager.OnComplete += OnError;
                 jobManager.AddJob(runApsim);
@@ -39,7 +42,8 @@ namespace Models
 
                 // Write out the number of simulations run to the console.
                 int numSimulations = jobManager.NumberOfJobs - 1;
-                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations");
+                timer.Stop();
+                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00"));
             }
             catch (Exception err)
             {
