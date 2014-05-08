@@ -6,10 +6,10 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Wheat\APS6Timeseries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\APS14TimeSeries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\APS26TimeSeries.txt</string>
-        <string>C:\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
+        <string>Tests\Wheat\APS6Timeseries.txt</string>
+        <string>Tests\Wheat\APS14TimeSeries.txt</string>
+        <string>Tests\Wheat\APS26TimeSeries.txt</string>
+        <string>Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -202,28 +202,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Manager>
           <Name>ApplyFertiliser</Name>
@@ -781,14 +759,6 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <PredictedObserved>
           <Name>PredictedObserved</Name>
@@ -994,28 +964,6 @@ namespace Models
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Soil>
           <Name>APS6Field</Name>
@@ -1534,14 +1482,6 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <PredictedObserved>
           <Name>PredictedObserved</Name>
@@ -1789,28 +1729,6 @@ namespace Models
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Soil>
           <Name>APS14Field</Name>
@@ -2303,14 +2221,6 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Operations>
           <Name>FertiliserSchedule</Name>
@@ -3512,39 +3422,9 @@ private void OnStartOfDay(object sender, EventArgs e)
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Operations>
           <Name>FertiliserOperations</Name>
@@ -3686,14 +3566,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Area>1</Area>
       </Zone>
@@ -4082,7 +3954,7 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Summary>
       <WeatherFile>
         <Name>met</Name>
-        <FileName>MER-73.met</FileName>
+        <FileName>Tests\WeatherFiles\MER-73.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
         <Rain>0</Rain>
@@ -4626,39 +4498,9 @@ private void OnStartOfDay(object sender, EventArgs e)
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Wheat</Name>
-            <Type>Wheat</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Operations>
           <Name>FertiliserOperations</Name>
