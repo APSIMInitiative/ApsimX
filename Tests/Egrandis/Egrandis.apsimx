@@ -3238,8 +3238,8 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Egrandis\CoffsHarbourValidationData.txt</string>
-        <string>C:\ApsimX\Tests\Egrandis\EucalyptusValidationData.txt</string>
+        <string>Tests\Egrandis\CoffsHarbourValidationData.txt</string>
+        <string>Tests\Egrandis\EucalyptusValidationData.txt</string>
       </FileNames>
     </Input>
   </DataStore>

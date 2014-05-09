@@ -14,6 +14,9 @@ namespace Models.Core
     {
         private bool _IsRunning = false;
 
+        [NonSerialized]
+        private Stopwatch timer;
+
         /// <summary>
         /// Cache to speed up scope lookups.
         /// </summary>
@@ -46,11 +49,6 @@ namespace Models.Core
         /// Return true if the simulation is running.
         /// </summary>
         public bool IsRunning { get { return _IsRunning; } }
-
-
-
-
-
 
 
         /// <summary>
@@ -139,9 +137,12 @@ namespace Models.Core
         /// </summary>
         public void StartRun()
         {
+            timer = new Stopwatch();
             _IsRunning = true;
             VariableCache.Clear();
             ScopeCache.Clear();
+            Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
+            timer.Start();
             AllModels.ForEach(CallOnCommencing);
         }
 
@@ -163,6 +164,8 @@ namespace Models.Core
         {
             CallOnCompleted(this);
             AllModels.ForEach(CallOnCompleted);
+            timer.Stop();
+            Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
             _IsRunning = false;
         }
 

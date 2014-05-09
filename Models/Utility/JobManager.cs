@@ -101,8 +101,7 @@ namespace Utility
             string NumOfProcessorsString = Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS");
             if (NumOfProcessorsString != null)
                 MaximumNumOfProcessors = Convert.ToInt32(NumOfProcessorsString);
-            //Temp limit while I fix database concurrency issue.
-            MaximumNumOfProcessors = 4; // System.Math.Max(MaximumNumOfProcessors, 1);
+            MaximumNumOfProcessors = System.Math.Max(MaximumNumOfProcessors, 1);
             SomeHadErrors = false;
         }
 
