@@ -6016,7 +6016,7 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Summary>
       <WeatherFile>
         <Name>met</Name>
-        <FileName>C:\ApsimX\Tests\WeatherFiles\lincoln.met</FileName>
+        <FileName>lincoln.met</FileName>
         <MaxT>21.100000381469727</MaxT>
         <MinT>11</MinT>
         <Rain>0</Rain>
