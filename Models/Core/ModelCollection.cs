@@ -243,24 +243,14 @@ namespace Models.Core
             Scope.ClearCache(this);
             Variables.ClearCache(this);
 
+            if (IsConnected)
+            {
+                model.IsConnected = true;
+                Connect(model);
+            }
+
             // Call the model's OnLoaded method.
             CallOnLoaded(model);
-
-            // We need to resolve all links in all models as 
-            // the new model may be a better fit for an existing link.
-            Simulation simulationToReLink = null;
-            if (model is Simulation)
-                simulationToReLink = model as Simulation;
-            else
-                simulationToReLink = Simulation;
-
-            if (simulationToReLink != null)
-            {
-                simulationToReLink.AllModels.ForEach(DisconnectEvents);
-                simulationToReLink.AllModels.ForEach(UnresolveLinks);
-                simulationToReLink.AllModels.ForEach(ResolveLinks);
-                simulationToReLink.AllModels.ForEach(ConnectEventPublishers);
-            }
         }
 
         /// <summary>
@@ -274,10 +264,9 @@ namespace Models.Core
             if (index != -1)
             {
                 Model oldModel = Models[index];
-                // unresolve the links in the old model and then tell the Simulation to
-                // resolve all links in all models.
-                UnresolveLinks(oldModel);
-                DisconnectEvents(oldModel);
+
+                if (oldModel.IsConnected)
+                    Disconnect(oldModel);
 
                 // remove the existing model.
                 Models.RemoveAt(index);
@@ -296,12 +285,12 @@ namespace Models.Core
 
                 oldModel.Parent = null;
 
-                // Completely wipe out all link and event connections as the new model may
-                // offer different links and events.
-                Simulation.AllModels.ForEach(DisconnectEvents);
-                Simulation.AllModels.ForEach(ConnectEventPublishers);
-                Simulation.AllModels.ForEach(UnresolveLinks);
-                Simulation.AllModels.ForEach(ResolveLinks);
+                // If we are connected then connect our new child.
+                if (IsConnected)
+                {
+                    newModel.IsConnected = true;
+                    Connect(newModel);
+                }
 
                 // Call the model's OnLoaded method.
                 CallOnLoaded(newModel);
@@ -329,17 +318,9 @@ namespace Models.Core
                 Scope.ClearCache(this);
                 Variables.ClearCache(this);
 
-                // unresolve the links in the old model
-                UnresolveLinks(oldModel);
-                // Completely wipe out all link and event connections as the deleted model may
-                // affect other model's links and events.
-                if (Simulation != null)
-                {
-                    Simulation.AllModels.ForEach(DisconnectEvents);
-                    Simulation.AllModels.ForEach(ConnectEventPublishers);
-                    Simulation.AllModels.ForEach(UnresolveLinks);
-                    Simulation.AllModels.ForEach(ResolveLinks);
-                }
+                if (oldModel.IsConnected)
+                    Disconnect(oldModel);
+
                 return true;
             }
             return false;

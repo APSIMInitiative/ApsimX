@@ -6,10 +6,10 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Wheat\APS6Timeseries.txt</string>
-        <string>Tests\Wheat\APS14TimeSeries.txt</string>
-        <string>Tests\Wheat\APS26TimeSeries.txt</string>
-        <string>Tests\Wheat\WheatObservedData.txt</string>
+        <string>APS6Timeseries.txt</string>
+        <string>APS14TimeSeries.txt</string>
+        <string>APS26TimeSeries.txt</string>
+        <string>WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -3954,7 +3954,7 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Summary>
       <WeatherFile>
         <Name>met</Name>
-        <FileName>Tests\WeatherFiles\MER-73.met</FileName>
+        <FileName>MER-73.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
         <Rain>0</Rain>

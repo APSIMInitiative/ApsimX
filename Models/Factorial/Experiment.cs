@@ -23,23 +23,19 @@ namespace Models.Factorial
         /// </summary>
         public Simulation[] Create()
         {
-            // remove event connections and links from the base simulation before we clone.
-            Base.AllModels.ForEach(DisconnectEvents);
-            Base.AllModels.ForEach(UnresolveLinks);
-
             List<List<FactorValue>> allCombinations = AllCombinations();
+            Simulation baseSimulation = Base;
+            // disconnect all models in all simulations
+            Parent.AllModels.ForEach(Disconnect);
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Model.Clone(Base) as Simulation;
+                Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
                 newSimulation.Name = Name;
 
                 // Connect events and links in our new  simulation.
-                newSimulation.AllModels.ForEach(DisconnectEvents);
-                newSimulation.AllModels.ForEach(UnresolveLinks);
-                newSimulation.AllModels.ForEach(ConnectEventPublishers);
-                newSimulation.AllModels.ForEach(ResolveLinks);
+                newSimulation.AllModels.ForEach(Connect);
                 newSimulation.AllModels.ForEach(CallOnLoaded);
 
                 foreach (FactorValue value in combination)
@@ -48,9 +44,8 @@ namespace Models.Factorial
                 simulations.Add(newSimulation);
             }
 
-            // reconnect events and links in the base simulation.
-            Base.AllModels.ForEach(ConnectEventPublishers);
-            Base.AllModels.ForEach(ResolveLinks);
+            // reconnect all models.
+            Parent.AllModels.ForEach(Connect);
 
             return simulations.ToArray();
         }

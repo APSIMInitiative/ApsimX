@@ -67,8 +67,7 @@ namespace Models.Core
                 ParentAllModels(simulations);
 
                 // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
+                simulations.AllModels.ForEach(Connect);
 
                 // Call OnLoaded in all models.
                 simulations.AllModels.ForEach(CallOnLoaded);
@@ -100,8 +99,7 @@ namespace Models.Core
                 ParentAllModels(simulations);
 
                 // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
+                simulations.AllModels.ForEach(Connect);
 
                 // Call OnLoaded in all models.
                 simulations.AllModels.ForEach(CallOnLoaded);
