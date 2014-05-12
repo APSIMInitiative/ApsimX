@@ -6,15 +6,25 @@
     <Input>
       <Name>ObservedResidues</Name>
       <FileNames>
-        <string>Tests\SoilWater\A_block_obs_residual.txt</string>
+        <string>C:\ApsimX\Tests\SoilWater\A_block_obs_residual.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>ObservedSoilWater</Name>
       <FileNames>
-        <string>Tests\SoilWater\a_block_obs_soilwater.txt</string>
+        <string>C:\ApsimX\Tests\SoilWater\a_block_obs_soilwater.txt</string>
       </FileNames>
     </Input>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ObservedSoilWater</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <TimeSeriesStats>
+      <Name>TimeSeriesStats</Name>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -1228,7 +1238,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -1281,7 +1291,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>SoilWater.sw_dep(2)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -1334,7 +1344,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>SoilWater.sw_dep(3)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
