@@ -3397,7 +3397,7 @@ private void OnStartOfDay(object sender, EventArgs e)
           <Name>SowingOperations</Name>
           <Operation>
             <Date>1986-05-29T00:00:00</Date>
-            <Action>Wheat.Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); // Gutha</Action>
+            <Action>Wheat.Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); </Action>
           </Operation>
         </Operations>
         <Plant15>
@@ -4473,7 +4473,7 @@ private void OnStartOfDay(object sender, EventArgs e)
           <Name>SowingOperations</Name>
           <Operation>
             <Date>1986-05-29T00:00:00</Date>
-            <Action>Wheat.Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); // Gutha</Action>
+            <Action>Wheat.Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); </Action>
           </Operation>
         </Operations>
         <Plant15>
