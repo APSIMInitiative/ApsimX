@@ -23,8 +23,6 @@ namespace Models
         [NonSerialized] private XmlElement[] _elements;
 
         [NonSerialized] private string CompiledCode = "";
-        [Link]
-        Simulation Simulation = null;
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
@@ -90,7 +88,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Serialisation has completed. Readd our 'Script' model if necessary.
+        /// Serialisation has completed. Read our 'Script' model if necessary.
         /// </summary>
         public override void OnSerialised(bool xmlSerialisation)
         {
@@ -103,7 +101,7 @@ namespace Models
         /// </summary>
         public void RebuildScriptModel()
         {
-            if (HasDeserialised && Simulation != null)
+            if (HasDeserialised)
             {
                 // Capture the current values of all parameters.
                 EnsureParametersAreCurrent();

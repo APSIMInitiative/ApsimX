@@ -96,6 +96,7 @@ namespace Models.Core
                 StartRun();
                 DoRun(sender);
                 CleanupRun();
+                AllModels.ForEach(Disconnect);
             }
             catch (ApsimXException err)
             {
@@ -137,6 +138,8 @@ namespace Models.Core
         /// </summary>
         public void StartRun()
         {
+            AllModels.ForEach(Connect);
+
             timer = new Stopwatch();
             _IsRunning = true;
             VariableCache.Clear();
@@ -167,6 +170,8 @@ namespace Models.Core
             timer.Stop();
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
             _IsRunning = false;
+
+            AllModels.ForEach(Disconnect);
         }
 
 

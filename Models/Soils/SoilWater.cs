@@ -4122,7 +4122,7 @@ namespace Models.Soils
 
         public override void OnLoaded()
         {
-            Initialise();
+            //Initialise();
         }
 
         public override void OnCommencing()

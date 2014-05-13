@@ -15,18 +15,13 @@ namespace Models.Factorial
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     public class Experiment : ModelCollection
     {
-        [Link] Factors Factors = null;
-        [Link] Simulation Base = null;
-
         /// <summary>
         /// Create all simulations.
         /// </summary>
         public Simulation[] Create()
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
-            Simulation baseSimulation = Base;
-            // disconnect all models in all simulations
-            Parent.AllModels.ForEach(Disconnect);
+            Simulation baseSimulation = ModelMatching(typeof(Simulation)) as Simulation;
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
@@ -35,7 +30,6 @@ namespace Models.Factorial
                 newSimulation.Name = Name;
 
                 // Connect events and links in our new  simulation.
-                newSimulation.AllModels.ForEach(Connect);
                 newSimulation.AllModels.ForEach(CallOnLoaded);
 
                 foreach (FactorValue value in combination)
@@ -43,9 +37,6 @@ namespace Models.Factorial
 
                 simulations.Add(newSimulation);
             }
-
-            // reconnect all models.
-            Parent.AllModels.ForEach(Connect);
 
             return simulations.ToArray();
         }
@@ -80,6 +71,8 @@ namespace Models.Factorial
         /// </summary>
         private List<List<FactorValue>> AllCombinations()
         {
+            Factors Factors = ModelMatching(typeof(Factors)) as Factors;
+
             // Create a list of list of factorValuse so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
