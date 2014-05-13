@@ -566,7 +566,8 @@ namespace Models
                         }
 
                         string sql = String.Format("SELECT Name, {0} FROM Simulations, {1} " +
-                                                   "WHERE Simulations.ID = {1}.SimulationID",
+                                                   "WHERE Simulations.ID = {1}.SimulationID " +
+                                                   "ORDER BY Name",
                                                    fieldNamesString, tableName);
                         DataTable data = RunQuery(sql);
                         if (data != null && data.Rows.Count > 0)

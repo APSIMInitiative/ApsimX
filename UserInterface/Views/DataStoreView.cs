@@ -50,14 +50,11 @@ namespace UserInterface.Views
             bool isFirstItem = true;
             foreach (string TableName in TableNames)
             {
-                if (TableName != "Messages")
-                {
-                    ListViewItem NewItem = new ListViewItem();
-                    NewItem.Text = TableName;
-                    TableList.Items.Add(NewItem);
-                    NewItem.Selected = isFirstItem;
-                    isFirstItem = false;
-                }
+                ListViewItem NewItem = new ListViewItem();
+                NewItem.Text = TableName;
+                TableList.Items.Add(NewItem);
+                NewItem.Selected = isFirstItem;
+                isFirstItem = false;
             }
 
         }
