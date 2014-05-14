@@ -154,9 +154,11 @@ namespace Models.Core
                 }
             }
             // Make sure each simulation has it's filename set correctly.
-            string fileName = RootSimulations(parent).FileName;
             foreach (Simulation simulation in simulations)
-                simulation.FileName = fileName;
+            {
+                if (simulation.FileName == null)
+                    simulation.FileName = RootSimulations(parent).FileName;
+            }
             return simulations.ToArray();
         }
 

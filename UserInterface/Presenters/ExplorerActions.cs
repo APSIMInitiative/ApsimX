@@ -203,7 +203,7 @@ namespace UserInterface.Presenters
         public void RunAPSIM(object Sender, EventArgs e)
         {
             Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
-            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node, ExplorerView);
+            RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node, ExplorerPresenter);
             C.Do(null);
         }
 

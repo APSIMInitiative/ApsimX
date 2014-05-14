@@ -41,7 +41,37 @@ namespace Models.Factorial
             return simulations.ToArray();
         }
 
+        /// <summary>
+        /// Create a specific simulation.
+        /// </summary>
+        public Simulation CreateSpecificSimulation(string name)
+        {
+            List<List<FactorValue>> allCombinations = AllCombinations();
+            Simulation baseSimulation = ModelMatching(typeof(Simulation)) as Simulation;
 
+            foreach (List<FactorValue> combination in allCombinations)
+            {
+                string newSimulationName = Name;
+                foreach (FactorValue value in combination)
+                    value.AddToName(ref newSimulationName);
+
+                if (newSimulationName == name)
+                {
+                    Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
+                    newSimulation.Name = Name;
+
+                    // Connect events and links in our new  simulation.
+                    newSimulation.AllModels.ForEach(CallOnLoaded);
+
+                    foreach (FactorValue value in combination)
+                        value.ApplyToSimulation(newSimulation);
+
+                    return newSimulation;
+                }
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Return a list of simulation names.

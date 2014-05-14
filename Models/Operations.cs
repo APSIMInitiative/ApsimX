@@ -108,6 +108,14 @@ namespace Models
                                 parameterValues[argumentIndex] = Convert.ToInt32(value);
                             else if (parameters[argumentIndex].ParameterType == typeof(string))
                                 parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
+                            else if (parameters[argumentIndex].ParameterType.IsEnum)
+                            {
+                                value = value.Trim();
+                                int posLastPeriod = value.LastIndexOf('.');
+                                if (posLastPeriod != -1)
+                                    value = value.Substring(posLastPeriod+1);
+                                parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
+                            }
                         }
                     }
 

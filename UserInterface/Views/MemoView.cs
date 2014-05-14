@@ -9,6 +9,17 @@ namespace UserInterface.Views
     interface IMemoView
     {
         event EventHandler<EditorArgs> MemoUpdate;
+
+        /// <summary>
+        /// Add an action (on context menu) on the memo.
+        /// </summary>
+        void AddContextAction(string ButtonText, System.EventHandler OnClick);
+
+        /// <summary>
+        /// Return the current cursor position in the memo.
+        /// </summary>
+        Point CurrentPosition { get; }
+
         string MemoText { get; set; }
         string[] MemoLines { get; set; }
         bool ReadOnly { get; set; }
@@ -21,6 +32,7 @@ namespace UserInterface.Views
     public partial class MemoView : UserControl, IMemoView
     {
         public event EventHandler<EditorArgs> MemoUpdate;
+        public event EventHandler OnPopup;
 
         public MemoView()
         {
@@ -78,6 +90,31 @@ namespace UserInterface.Views
                 MemoUpdate(this, args);
             }
         }
+
+        /// <summary>
+        /// Add an action (on context menu) on the memo.
+        /// </summary>
+        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        {
+            contextMenuStrip1.Items.Add(buttonText);
+            contextMenuStrip1.Items[0].Click += onClick;
+            richTextBox1.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        /// <summary>
+        /// Return the current cursor position in the memo.
+        /// </summary>
+        public Point CurrentPosition
+        {
+            get
+            {
+                int lineNumber = richTextBox1.GetLineFromCharIndex(richTextBox1.SelectionStart);
+                int firstCharOfLine = richTextBox1.GetFirstCharIndexFromLine(lineNumber);
+                int colNumber = richTextBox1.SelectionStart - firstCharOfLine;
+                return new Point(colNumber, lineNumber);
+            }
+        }
+
 
     }
 
