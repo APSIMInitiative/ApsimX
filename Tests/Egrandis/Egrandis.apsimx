@@ -28,7 +28,7 @@
     <Zone>
       <Name>Plantation</Name>
       <Soil>
-        <Name>soil</Name>
+        <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
           <FractionFull>0.8</FractionFull>
@@ -544,8 +544,8 @@
           <CompositeBiomass>
             <Name>AboveGround</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Live</string>
               <string>[Stem].Dead</string>
             </Propertys>
@@ -560,8 +560,8 @@
           <CompositeBiomass>
             <Name>Total</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Live</string>
               <string>[Stem].Dead</string>
               <string>[Root].Live</string>
@@ -571,7 +571,7 @@
           <CompositeBiomass>
             <Name>TotalLive</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
+              <string>[Leaf].Live</string>
               <string>[Stem].Live</string>
               <string>[Root].Live</string>
             </Propertys>
@@ -580,17 +580,17 @@
             <Name>IndividualTreeLiveWt</Name>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Summariser.TotalLive.Wt</VariableName>
+              <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Population</VariableName>
+              <VariableName>[Eucalyptus].Population</VariableName>
             </VariableReference>
           </DivideFunction>
           <CompositeBiomass>
             <Name>TotalDead</Name>
             <Propertys>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Dead</string>
               <string>[Root].Dead</string>
             </Propertys>
@@ -620,7 +620,7 @@
             </Constant>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Population</VariableName>
+              <VariableName>[Eucalyptus].Population</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -711,7 +711,7 @@
             </RUECO2Function>
             <LinearInterpolationFunction>
               <Name>FN</Name>
-              <XProperty>[TreeCanopy].Fn</XProperty>
+              <XProperty>[Leaf].Fn</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -747,7 +747,7 @@
             </WeightedTemperatureFunction>
             <LinearInterpolationFunction>
               <Name>FW</Name>
-              <XProperty>[TreeCanopy].Fw</XProperty>
+              <XProperty>[Leaf].Fw</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -864,7 +864,7 @@
           </Constant>
           <LinearInterpolationFunction>
             <Name>KLModifier</Name>
-            <XProperty>[TreeCanopy].LAI</XProperty>
+            <XProperty>[Leaf].LAI</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -2624,67 +2624,67 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[Plant].Phenology.CurrentPhaseName</string>
-          <string>[Plant].Phenology.StageCode.Value</string>
-          <string>[Plant].Root.NSupplyUptake</string>
+          <string>[Eucalyptus].Phenology.CurrentPhaseName</string>
+          <string>[Eucalyptus].Phenology.StageCode.Value</string>
+          <string>[Eucalyptus].Root.NSupplyUptake</string>
           <string>[Soil].SoilWater.eo</string>
           <string>[Soil].SoilWater.es</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.runoff</string>
           <string>[Soil].SoilWater.pond</string>
-          <string>[Plant].Summariser.AboveGround.Wt</string>
-          <string>[Plant].Summariser.BelowGround.Wt</string>
-          <string>[Plant].Summariser.Total.Wt</string>
-          <string>[Plant].Leaf.Dead.Wt</string>
-          <string>[Plant].Leaf.Live.Wt</string>
-          <string>[Plant].Stem.Dead.Wt</string>
-          <string>[Plant].Stem.Live.Wt</string>
-          <string>[Plant].Root.Dead.Wt</string>
-          <string>[Plant].Root.Live.Wt</string>
-          <string>[Plant].Summariser.AboveGround.N</string>
-          <string>[Plant].Summariser.BelowGround.N</string>
-          <string>[Plant].Summariser.Total.N</string>
-          <string>[Plant].Summariser.TotalLive.N</string>
-          <string>[Plant].Summariser.TotalDead.N</string>
-          <string>[Plant].Leaf.Dead.N</string>
-          <string>[Plant].Leaf.Live.N</string>
-          <string>[Plant].Stem.Dead.N</string>
-          <string>[Plant].Stem.Live.N</string>
-          <string>[Plant].Root.Live.N</string>
-          <string>[Plant].Root.Dead.N</string>
-          <string>[Plant].Leaf.Live.NConc</string>
-          <string>[Plant].Leaf.Dead.NConc</string>
-          <string>[Plant].Stem.Live.NConc</string>
-          <string>[Plant].Root.Live.NConc</string>
-          <string>[Plant].Root.WaterSupply</string>
-          <string>[Plant].Root.WaterUptake</string>
-          <string>[Plant].Leaf.Transpiration</string>
-          <string>[Plant].Leaf.WaterDemand</string>
-          <string>[Plant].Root.Depth</string>
-          <string>[Plant].Leaf.CoverGreen</string>
-          <string>[Plant].Leaf.CoverTotal</string>
-          <string>[Plant].Leaf.CoverDead</string>
-          <string>[Plant].Leaf.LAI</string>
-          <string>[Plant].Leaf.LAIDead</string>
-          <string>[Plant].Leaf.Fn</string>
-          <string>[Plant].Leaf.Fw</string>
-          <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
-          <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
-          <string>[Plant].Stem.MinimumNConc.Value</string>
-          <string>[Plant].Root.MinimumNConc.Value</string>
-          <string>[Plant].Stem.MaximumNConc.Value</string>
-          <string>[Plant].Root.MaximumNConc.Value</string>
-          <string>[Plant].Summariser.TotalLive.Wt</string>
-          <string>[Plant].Stem.Live.StructuralWt</string>
-          <string>[Plant].Stem.Live.NonStructuralWt</string>
-          <string>[Plant].Leaf.SpecificArea</string>
-          <string>[Plant].Summariser.TotalDead.Wt</string>
+          <string>[Eucalyptus].Summariser.AboveGround.Wt</string>
+          <string>[Eucalyptus].Summariser.BelowGround.Wt</string>
+          <string>[Eucalyptus].Summariser.Total.Wt</string>
+          <string>[Eucalyptus].Leaf.Dead.Wt</string>
+          <string>[Eucalyptus].Leaf.Live.Wt</string>
+          <string>[Eucalyptus].Stem.Dead.Wt</string>
+          <string>[Eucalyptus].Stem.Live.Wt</string>
+          <string>[Eucalyptus].Root.Dead.Wt</string>
+          <string>[Eucalyptus].Root.Live.Wt</string>
+          <string>[Eucalyptus].Summariser.AboveGround.N</string>
+          <string>[Eucalyptus].Summariser.BelowGround.N</string>
+          <string>[Eucalyptus].Summariser.Total.N</string>
+          <string>[Eucalyptus].Summariser.TotalLive.N</string>
+          <string>[Eucalyptus].Summariser.TotalDead.N</string>
+          <string>[Eucalyptus].Leaf.Dead.N</string>
+          <string>[Eucalyptus].Leaf.Live.N</string>
+          <string>[Eucalyptus].Stem.Dead.N</string>
+          <string>[Eucalyptus].Stem.Live.N</string>
+          <string>[Eucalyptus].Root.Live.N</string>
+          <string>[Eucalyptus].Root.Dead.N</string>
+          <string>[Eucalyptus].Leaf.Live.NConc</string>
+          <string>[Eucalyptus].Leaf.Dead.NConc</string>
+          <string>[Eucalyptus].Stem.Live.NConc</string>
+          <string>[Eucalyptus].Root.Live.NConc</string>
+          <string>[Eucalyptus].Root.WaterSupply</string>
+          <string>[Eucalyptus].Root.WaterUptake</string>
+          <string>[Eucalyptus].Leaf.Transpiration</string>
+          <string>[Eucalyptus].Leaf.WaterDemand</string>
+          <string>[Eucalyptus].Root.Depth</string>
+          <string>[Eucalyptus].Leaf.CoverGreen</string>
+          <string>[Eucalyptus].Leaf.CoverTotal</string>
+          <string>[Eucalyptus].Leaf.CoverDead</string>
+          <string>[Eucalyptus].Leaf.LAI</string>
+          <string>[Eucalyptus].Leaf.LAIDead</string>
+          <string>[Eucalyptus].Leaf.Fn</string>
+          <string>[Eucalyptus].Leaf.Fw</string>
+          <string>[Eucalyptus].Leaf.Photosynthesis.FT.Value</string>
+          <string>[Eucalyptus].Leaf.Photosynthesis.FVPD.Value</string>
+          <string>[Eucalyptus].Stem.MinimumNConc.Value</string>
+          <string>[Eucalyptus].Root.MinimumNConc.Value</string>
+          <string>[Eucalyptus].Stem.MaximumNConc.Value</string>
+          <string>[Eucalyptus].Root.MaximumNConc.Value</string>
+          <string>[Eucalyptus].Summariser.TotalLive.Wt</string>
+          <string>[Eucalyptus].Stem.Live.StructuralWt</string>
+          <string>[Eucalyptus].Stem.Live.NonStructuralWt</string>
+          <string>[Eucalyptus].Leaf.SpecificArea</string>
+          <string>[Eucalyptus].Summariser.TotalDead.Wt</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
-          <string>[Plant].Arbitrator.NDemand</string>
-          <string>[Plant].Leaf.LAIFunction.SpecificLeafArea.Value</string>
-          <string>[Plant].Summariser.IndividualTreeLiveWt.Value</string>
-          <string>[Plant].Age.Value</string>
+          <string>[Eucalyptus].Arbitrator.NDemand</string>
+          <string>[Eucalyptus].Leaf.LAIFunction.SpecificLeafArea.Value</string>
+          <string>[Eucalyptus].Summariser.IndividualTreeLiveWt.Value</string>
+          <string>[Eucalyptus].Age.Value</string>
           <string />
           <string />
         </Variables>
@@ -3273,7 +3273,7 @@
     <Zone>
       <Name>Plantation</Name>
       <Soil>
-        <Name>soil</Name>
+        <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
           <FractionFull>0.8</FractionFull>
@@ -3789,8 +3789,8 @@
           <CompositeBiomass>
             <Name>AboveGround</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Live</string>
               <string>[Stem].Dead</string>
             </Propertys>
@@ -3805,8 +3805,8 @@
           <CompositeBiomass>
             <Name>Total</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Live</string>
               <string>[Stem].Dead</string>
               <string>[Root].Live</string>
@@ -3816,7 +3816,7 @@
           <CompositeBiomass>
             <Name>TotalLive</Name>
             <Propertys>
-              <string>[TreeCanopy].Live</string>
+              <string>[Leaf].Live</string>
               <string>[Stem].Live</string>
               <string>[Root].Live</string>
             </Propertys>
@@ -3825,17 +3825,17 @@
             <Name>IndividualTreeLiveWt</Name>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Summariser.TotalLive.Wt</VariableName>
+              <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Population</VariableName>
+              <VariableName>[Eucalyptus].Population</VariableName>
             </VariableReference>
           </DivideFunction>
           <CompositeBiomass>
             <Name>TotalDead</Name>
             <Propertys>
-              <string>[TreeCanopy].Dead</string>
+              <string>[Leaf].Dead</string>
               <string>[Stem].Dead</string>
               <string>[Root].Dead</string>
             </Propertys>
@@ -3865,7 +3865,7 @@
             </Constant>
             <VariableReference>
               <Name>Population</Name>
-              <VariableName>[Plant].Population</VariableName>
+              <VariableName>[Eucalyptus].Population</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -3956,7 +3956,7 @@
             </RUECO2Function>
             <LinearInterpolationFunction>
               <Name>FN</Name>
-              <XProperty>[TreeCanopy].Fn</XProperty>
+              <XProperty>[Leaf].Fn</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -3992,7 +3992,7 @@
             </WeightedTemperatureFunction>
             <LinearInterpolationFunction>
               <Name>FW</Name>
-              <XProperty>[TreeCanopy].Fw</XProperty>
+              <XProperty>[Leaf].Fw</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -4109,7 +4109,7 @@
           </Constant>
           <LinearInterpolationFunction>
             <Name>KLModifier</Name>
-            <XProperty>[TreeCanopy].LAI</XProperty>
+            <XProperty>[Leaf].LAI</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -5869,67 +5869,67 @@
         <Name>Report</Name>
         <Variables>
           <string>[Clock].Today</string>
-          <string>[Plant].Phenology.CurrentPhaseName</string>
-          <string>[Plant].Phenology.StageCode.Value</string>
-          <string>[Plant].Root.NSupplyUptake</string>
+          <string>[Eucalyptus].Phenology.CurrentPhaseName</string>
+          <string>[Eucalyptus].Phenology.StageCode.Value</string>
+          <string>[Eucalyptus].Root.NSupplyUptake</string>
           <string>[Soil].SoilWater.eo</string>
           <string>[Soil].SoilWater.es</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.runoff</string>
           <string>[Soil].SoilWater.pond</string>
-          <string>[Plant].Summariser.AboveGround.Wt</string>
-          <string>[Plant].Summariser.BelowGround.Wt</string>
-          <string>[Plant].Summariser.Total.Wt</string>
-          <string>[Plant].Leaf.Dead.Wt</string>
-          <string>[Plant].Leaf.Live.Wt</string>
-          <string>[Plant].Stem.Dead.Wt</string>
-          <string>[Plant].Stem.Live.Wt</string>
-          <string>[Plant].Root.Dead.Wt</string>
-          <string>[Plant].Root.Live.Wt</string>
-          <string>[Plant].Summariser.AboveGround.N</string>
-          <string>[Plant].Summariser.BelowGround.N</string>
-          <string>[Plant].Summariser.Total.N</string>
-          <string>[Plant].Summariser.TotalLive.N</string>
-          <string>[Plant].Summariser.TotalDead.N</string>
-          <string>[Plant].Leaf.Dead.N</string>
-          <string>[Plant].Leaf.Live.N</string>
-          <string>[Plant].Stem.Dead.N</string>
-          <string>[Plant].Stem.Live.N</string>
-          <string>[Plant].Root.Live.N</string>
-          <string>[Plant].Root.Dead.N</string>
-          <string>[Plant].Leaf.Live.NConc</string>
-          <string>[Plant].Leaf.Dead.NConc</string>
-          <string>[Plant].Stem.Live.NConc</string>
-          <string>[Plant].Root.Live.NConc</string>
-          <string>[Plant].Root.WaterSupply</string>
-          <string>[Plant].Root.WaterUptake</string>
-          <string>[Plant].Leaf.Transpiration</string>
-          <string>[Plant].Leaf.WaterDemand</string>
-          <string>[Plant].Root.Depth</string>
-          <string>[Plant].Leaf.CoverGreen</string>
-          <string>[Plant].Leaf.CoverTotal</string>
-          <string>[Plant].Leaf.CoverDead</string>
-          <string>[Plant].Leaf.LAI</string>
-          <string>[Plant].Leaf.LAIDead</string>
-          <string>[Plant].Leaf.Fn</string>
-          <string>[Plant].Leaf.Fw</string>
-          <string>[Plant].Leaf.Photosynthesis.FT.Value</string>
-          <string>[Plant].Leaf.Photosynthesis.FVPD.Value</string>
-          <string>[Plant].Stem.MinimumNConc.Value</string>
-          <string>[Plant].Root.MinimumNConc.Value</string>
-          <string>[Plant].Stem.MaximumNConc.Value</string>
-          <string>[Plant].Root.MaximumNConc.Value</string>
-          <string>[Plant].Summariser.TotalLive.Wt</string>
-          <string>[Plant].Stem.Live.StructuralWt</string>
-          <string>[Plant].Stem.Live.NonStructuralWt</string>
-          <string>[Plant].Leaf.SpecificArea</string>
-          <string>[Plant].Summariser.TotalDead.Wt</string>
+          <string>[Eucalyptus].Summariser.AboveGround.Wt</string>
+          <string>[Eucalyptus].Summariser.BelowGround.Wt</string>
+          <string>[Eucalyptus].Summariser.Total.Wt</string>
+          <string>[Eucalyptus].Leaf.Dead.Wt</string>
+          <string>[Eucalyptus].Leaf.Live.Wt</string>
+          <string>[Eucalyptus].Stem.Dead.Wt</string>
+          <string>[Eucalyptus].Stem.Live.Wt</string>
+          <string>[Eucalyptus].Root.Dead.Wt</string>
+          <string>[Eucalyptus].Root.Live.Wt</string>
+          <string>[Eucalyptus].Summariser.AboveGround.N</string>
+          <string>[Eucalyptus].Summariser.BelowGround.N</string>
+          <string>[Eucalyptus].Summariser.Total.N</string>
+          <string>[Eucalyptus].Summariser.TotalLive.N</string>
+          <string>[Eucalyptus].Summariser.TotalDead.N</string>
+          <string>[Eucalyptus].Leaf.Dead.N</string>
+          <string>[Eucalyptus].Leaf.Live.N</string>
+          <string>[Eucalyptus].Stem.Dead.N</string>
+          <string>[Eucalyptus].Stem.Live.N</string>
+          <string>[Eucalyptus].Root.Live.N</string>
+          <string>[Eucalyptus].Root.Dead.N</string>
+          <string>[Eucalyptus].Leaf.Live.NConc</string>
+          <string>[Eucalyptus].Leaf.Dead.NConc</string>
+          <string>[Eucalyptus].Stem.Live.NConc</string>
+          <string>[Eucalyptus].Root.Live.NConc</string>
+          <string>[Eucalyptus].Root.WaterSupply</string>
+          <string>[Eucalyptus].Root.WaterUptake</string>
+          <string>[Eucalyptus].Leaf.Transpiration</string>
+          <string>[Eucalyptus].Leaf.WaterDemand</string>
+          <string>[Eucalyptus].Root.Depth</string>
+          <string>[Eucalyptus].Leaf.CoverGreen</string>
+          <string>[Eucalyptus].Leaf.CoverTotal</string>
+          <string>[Eucalyptus].Leaf.CoverDead</string>
+          <string>[Eucalyptus].Leaf.LAI</string>
+          <string>[Eucalyptus].Leaf.LAIDead</string>
+          <string>[Eucalyptus].Leaf.Fn</string>
+          <string>[Eucalyptus].Leaf.Fw</string>
+          <string>[Eucalyptus].Leaf.Photosynthesis.FT.Value</string>
+          <string>[Eucalyptus].Leaf.Photosynthesis.FVPD.Value</string>
+          <string>[Eucalyptus].Stem.MinimumNConc.Value</string>
+          <string>[Eucalyptus].Root.MinimumNConc.Value</string>
+          <string>[Eucalyptus].Stem.MaximumNConc.Value</string>
+          <string>[Eucalyptus].Root.MaximumNConc.Value</string>
+          <string>[Eucalyptus].Summariser.TotalLive.Wt</string>
+          <string>[Eucalyptus].Stem.Live.StructuralWt</string>
+          <string>[Eucalyptus].Stem.Live.NonStructuralWt</string>
+          <string>[Eucalyptus].Leaf.SpecificArea</string>
+          <string>[Eucalyptus].Summariser.TotalDead.Wt</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
-          <string>[Plant].Arbitrator.NDemand</string>
-          <string>[Plant].Leaf.LAIFunction.SpecificLeafArea.Value</string>
-          <string>[Plant].Summariser.IndividualTreeLiveWt.Value</string>
-          <string>[Plant].Age.Value</string>
+          <string>[Eucalyptus].Arbitrator.NDemand</string>
+          <string>[Eucalyptus].Leaf.LAIFunction.SpecificLeafArea.Value</string>
+          <string>[Eucalyptus].Summariser.IndividualTreeLiveWt.Value</string>
+          <string>[Eucalyptus].Age.Value</string>
           <string />
           <string />
         </Variables>

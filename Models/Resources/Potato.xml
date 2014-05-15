@@ -989,7 +989,7 @@
               </Constant>
               <LinearInterpolationFunction>
                 <Name>ExpansionStress</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
@@ -1139,7 +1139,7 @@
               </Constant>
               <LinearInterpolationFunction>
                 <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>

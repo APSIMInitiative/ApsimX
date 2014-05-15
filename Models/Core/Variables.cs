@@ -111,16 +111,7 @@ namespace Models.Core
                 // namePath has a [type] at its beginning.
                 int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
                 string typeName = namePath.Substring(1, pos - 1);
-                Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
-                Model modelInScope;
-                if (t == null)
-                    modelInScope = Scope.Find(relativeTo, typeName);
-                else
-                {
-                    modelInScope = Scope.Find(relativeTo, t);
-                    if (modelInScope == null)
-                        modelInScope = Scope.Find(relativeTo, typeName);
-                }
+                Model modelInScope = Scope.Find(relativeTo, typeName);
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);

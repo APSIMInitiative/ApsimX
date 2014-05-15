@@ -270,8 +270,11 @@ namespace Models.Core
                 NumCompleted++;
                 RunAllCompleted = NumCompleted == NumToRun;
                 if (RunAllCompleted)
+                {
+                    Console.WriteLine(FileName);
                     foreach (Model model in AllModels)
                         model.OnAllCompleted();
+                }
 
             }
         }

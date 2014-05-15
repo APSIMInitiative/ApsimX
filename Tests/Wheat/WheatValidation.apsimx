@@ -145,7 +145,7 @@
     <Simulation>
       <Name>APS26NRate160WaterWet</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1995-06-13T00:00:00</StartDate>
         <EndDate>1995-10-31T00:00:00</EndDate>
       </Clock>
@@ -156,7 +156,7 @@
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>APS26.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
@@ -907,7 +907,7 @@ namespace Models
     <Simulation>
       <Name>APS6NRate0</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1992-06-14T00:00:00</StartDate>
         <EndDate>1992-11-17T00:00:00</EndDate>
       </Clock>
@@ -918,7 +918,7 @@ namespace Models
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>APS6.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
@@ -1666,7 +1666,7 @@ namespace Models
     <Simulation>
       <Name>APS14StubbleBareNRate0</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1993-06-02T00:00:00</StartDate>
         <EndDate>1993-11-26T00:00:00</EndDate>
       </Clock>
@@ -1677,7 +1677,7 @@ namespace Models
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>APS14.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
@@ -2872,7 +2872,7 @@ private void OnStartOfDay(object sender, EventArgs e)
     <Simulation>
       <Name>Base</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1986-05-01T00:00:00</StartDate>
         <EndDate>1986-11-30T00:00:00</EndDate>
       </Clock>
@@ -2883,7 +2883,7 @@ private void OnStartOfDay(object sender, EventArgs e)
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>MER-86.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
@@ -3948,7 +3948,7 @@ private void OnStartOfDay(object sender, EventArgs e)
     <Simulation>
       <Name>Base</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1973-05-01T00:00:00</StartDate>
         <EndDate>1973-11-30T00:00:00</EndDate>
       </Clock>
@@ -3959,7 +3959,7 @@ private void OnStartOfDay(object sender, EventArgs e)
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>MER-73.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
@@ -6004,7 +6004,7 @@ private void OnStartOfDay(object sender, EventArgs e)
     <Simulation>
       <Name>Control_full_irrig</Name>
       <Clock>
-        <Name>clock</Name>
+        <Name>Clock</Name>
         <StartDate>1991-06-08T00:00:00</StartDate>
         <EndDate>1992-01-26T00:00:00</EndDate>
       </Clock>
@@ -6015,7 +6015,7 @@ private void OnStartOfDay(object sender, EventArgs e)
         <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
-        <Name>met</Name>
+        <Name>WeatherFile</Name>
         <FileName>lincoln.met</FileName>
         <MaxT>21.100000381469727</MaxT>
         <MinT>11</MinT>

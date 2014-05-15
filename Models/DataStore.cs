@@ -148,9 +148,9 @@ namespace Models
                         Locks[Filename].Aquire();
                         try
                         {
-                            if (!TableExists("Simulations"))
+                            if (!TableExists(Connection, "Simulations"))
                                 Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                            if (!TableExists("Messages"))
+                            if (!TableExists(Connection, "Messages"))
                                 Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
                         }
                         finally
@@ -200,9 +200,9 @@ namespace Models
                 types.Add(typeof(int));
                 foreach (TableToWrite table in tables)
                 {
-                    // If the table has a simulationname then go find it ID for later
+                    // If the table has a simulationname then go find its ID for later
                     if (TablesToWrite[0].SimulationName != null)
-                        table.SimulationID = GetSimulationID(TablesToWrite[0].SimulationName);
+                        table.SimulationID = GetSimulationID(connection, table.SimulationName);
                     else
                         AddSimulationIDColumnToTable(TablesToWrite[0].Data);
 
@@ -238,7 +238,7 @@ namespace Models
                             if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
                                 values[i] = table.SimulationID;
                             else if (table.Data.Columns.Contains(names[i]))
-                                values[i] = table.Data.Columns[names[i]];
+                                values[i] = row[names[i]];
                         }
 
                         // Write the row to the .db
@@ -270,7 +270,7 @@ namespace Models
             {
                 if (!simulationNamesToKeep.Contains(simulationNameInDB))
                 {
-                    int id = GetSimulationID(simulationNameInDB);
+                    int id = GetSimulationID(Connection, simulationNameInDB);
 
                     RunQueryWithNoReturnData("DELETE FROM Simulations WHERE ID = " + id.ToString());
                     foreach (string tableName in TableNames)
@@ -285,9 +285,9 @@ namespace Models
         /// <summary>
         /// Determine whether a table exists in the database
         /// </summary>
-        public bool TableExists(string tableName)
+        public bool TableExists(Utility.SQLite connection, string tableName)
         {
-            return (Connection != null) && Connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
+            return (connection != null) && connection.ExecuteQueryReturnInt("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + 
                                                     tableName + "'", 0) > 0;
         }
 
@@ -311,7 +311,7 @@ namespace Models
             Locks[Filename].Aquire();
             try
             {
-                if (!TableExists(tableName))
+                if (!TableExists(connection, tableName))
                     connection.ExecuteNonQuery(cmd);
                 else
                     AddMissingColumnsToTable(connection, tableName, names, types);
@@ -327,7 +327,7 @@ namespace Models
         /// </summary>
         public void DeleteTable(string tableName)
         {
-            if (TableExists(tableName))
+            if (TableExists(Connection, tableName))
             {
                 string cmd = "DROP TABLE " + tableName;
                 RunQueryWithNoReturnData(cmd);
@@ -407,7 +407,7 @@ namespace Models
 
             string sql = string.Format("INSERT INTO Messages (SimulationID, ComponentName, Date, Message, MessageType) " +
                                        "VALUES ({0}, {1}, {2}, {3}, {4})",
-                                       new object[] { GetSimulationID(simulationName),
+                                       new object[] { GetSimulationID(Connection, simulationName),
                                                       "\"" + componentName + "\"",
                                                       date.ToString("yyyy-MM-dd"),
                                                       "\"" + message + "\"",
@@ -423,7 +423,7 @@ namespace Models
         {
             get
             {
-                if (!TableExists("Simulations"))
+                if (!TableExists(Connection, "Simulations"))
                     return new string[0];
 
                 try
@@ -484,7 +484,7 @@ namespace Models
         /// </summary>
         public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
-            if (Connection == null || !TableExists("Simulations") || tableName == null || !TableExists(tableName))
+            if (Connection == null || !TableExists(Connection, "Simulations") || tableName == null || !TableExists(Connection, tableName))
                 return null;
             try
             {
@@ -498,7 +498,7 @@ namespace Models
                 else
                 {
                     sql = "SELECT * FROM " + tableName;
-                    int simulationID = GetSimulationID(simulationName);
+                    int simulationID = GetSimulationID(Connection, simulationName);
                     sql += " WHERE SimulationID = " + simulationID.ToString();
                 }
 
@@ -541,9 +541,9 @@ namespace Models
         /// </summary>
         public void DeleteOldContentInTable(string simulationName, string tableName)
         {
-            if (TableExists(tableName))
+            if (TableExists(Connection, tableName))
             {
-                int id = GetSimulationID(simulationName);
+                int id = GetSimulationID(Connection, simulationName);
                 string sql = "DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString();
                 RunQueryWithNoReturnData(sql);
             }
@@ -587,16 +587,16 @@ namespace Models
         /// If this name doesn't exist in the table then append a new row to the table and 
         /// returns its id.
         /// </summary>
-        private int GetSimulationID(string simulationName)
+        private int GetSimulationID(Utility.SQLite connection, string simulationName)
         {
-            if (!TableExists("Simulations"))
+            if (!TableExists(connection, "Simulations"))
                 return -1;
 
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            int ID = connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             if (ID == -1 && !ReadOnly)
             {
-                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+                connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
+                ID = connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             }
             return ID;
         }

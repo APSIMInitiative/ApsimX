@@ -174,7 +174,7 @@
       <Zone>
         <Name>Field</Name>
         <Soil>
-          <Name>Templeton</Name>
+          <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -3765,7 +3765,7 @@ namespace Models
       <Zone>
         <Name>Field</Name>
         <Soil>
-          <Name>Baxters_compact</Name>
+          <Name>Soil</Name>
           <Analysis>
             <Name>Analysis</Name>
             <Thickness>
@@ -6430,7 +6430,7 @@ namespace Models
           <Name>SetIntergerCropParameter</Name>
           <Script>
             <Name>Script</Name>
-            <OverRidePath>[Plant].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>34</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -7415,7 +7415,7 @@ namespace Models
       <Zone>
         <Name>Field</Name>
         <Soil>
-          <Name>Templeton</Name>
+          <Name>Soil</Name>
           <Analysis>
             <Name>Analysis</Name>
             <Thickness>
