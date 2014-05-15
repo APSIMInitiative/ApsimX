@@ -18,7 +18,7 @@ namespace Models.PMF.Organs
         [Link]
         public Plant Plant = null;
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
         [Link]
         public Arbitrator Arbitrator = null;
         [Link]

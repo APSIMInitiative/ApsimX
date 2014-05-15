@@ -20,7 +20,7 @@ namespace Models.PMF.Phen
     {
         #region Links
         [Link]
-        private Summary Summary = null;
+        private ISummary Summary = null;
         [Link]
         private Clock Clock = null;
         [Link(IsOptional = true)]

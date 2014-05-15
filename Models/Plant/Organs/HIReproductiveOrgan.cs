@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
         Plant Plant = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         public Biomass AboveGround { get; set; }
 

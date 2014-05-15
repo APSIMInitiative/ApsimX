@@ -15,7 +15,7 @@ namespace Models.PMF.OldPlant
         Plant15 Plant = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         double _Plants;
 

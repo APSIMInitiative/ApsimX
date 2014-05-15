@@ -17,7 +17,7 @@ namespace Models.PMF
         [Link] Biomass TotalDead   = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
         [Link]
         Phenology Phenology = null;
 

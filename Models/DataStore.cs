@@ -28,6 +28,20 @@ namespace Models
         [NonSerialized]
         private string Filename;
 
+        class TableToWrite
+        {
+            public string SimulationName;
+            public int SimulationID = int.MaxValue;
+            public string TableName;
+            public DataTable Data;
+        }
+
+        /// <summary>
+        /// A collection of datatables that need writing.
+        /// </summary>
+        private static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
+
+
         /// <summary>
         /// This class encapsulates a simple lock mechanism. It is used by DataStore to 
         /// apply file level locking.
@@ -161,6 +175,92 @@ namespace Models
         }
 
         /// <summary>
+        /// All simulations have run - write all tables
+        /// </summary>
+        public override void OnAllCompleted()
+        {
+            Utility.SQLite connection = new Utility.SQLite();
+            connection.OpenDatabase(Filename, readOnly:false);
+
+            // loop through all 'TablesToWrite' and write them to the .db
+            while (TablesToWrite.Count > 0)
+            {
+                string tableName = TablesToWrite[0].TableName;
+
+                // Get a list of tables that have the same name as 'tableName'
+                List<TableToWrite> tables = new List<TableToWrite>();
+                foreach (TableToWrite table in TablesToWrite)
+                    if (table.TableName == tableName)
+                        tables.Add(table);
+
+                // Get a list of all names and datatypes for each field in this table.
+                List<string> names = new List<string>();
+                List<Type> types = new List<Type>();
+                names.Add("SimulationID");
+                types.Add(typeof(int));
+                foreach (TableToWrite table in tables)
+                {
+                    // If the table has a simulationname then go find it ID for later
+                    if (TablesToWrite[0].SimulationName != null)
+                        table.SimulationID = GetSimulationID(TablesToWrite[0].SimulationName);
+                    else
+                        AddSimulationIDColumnToTable(TablesToWrite[0].Data);
+
+                    // Go through all columns for this table and add to 'names' and 'types'
+                    foreach (DataColumn column in table.Data.Columns)
+                    {
+                        if (!names.Contains(column.ColumnName) && column.ColumnName != "SimulationName")
+                        {
+                            names.Add(column.ColumnName);
+                            types.Add(column.DataType);
+                        }
+                    }
+                }
+
+                // Create the table.
+                CreateTable(connection, tableName, names.ToArray(), types.ToArray());
+
+                // Prepare the insert query sql
+                IntPtr query = PrepareInsertIntoTable(connection, tableName, names.ToArray());
+
+                // Tell SQLite that we're beginning a transaction.
+                connection.ExecuteNonQuery("BEGIN");
+
+                // Go through all tables and write the data.
+                foreach (TableToWrite table in tables)
+                {
+                    // Write each row to the .db
+                    object[] values = new object[names.Count];
+                    foreach (DataRow row in table.Data.Rows)
+                    {
+                        for (int i = 0; i < names.Count; i++)
+                        {
+                            if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
+                                values[i] = table.SimulationID;
+                            else if (table.Data.Columns.Contains(names[i]))
+                                values[i] = table.Data.Columns[names[i]];
+                        }
+
+                        // Write the row to the .db
+                        connection.BindParametersAndRunQuery(query, values);
+                    }
+
+                    // Remove the table from 'TablesToWrite' 
+                    TablesToWrite.Remove(table);
+                }
+
+                // tell SQLite we're ending our transaction.
+                connection.ExecuteNonQuery("END");
+
+                // finalise our query.
+                connection.Finalize(query);
+            }
+
+            connection.CloseDatabase();
+        }
+
+
+        /// <summary>
         /// Remove all unwanted simulations from the database.
         /// </summary>
         public void RemoveUnwantedSimulations(Simulations simulations)
@@ -194,7 +294,7 @@ namespace Models
         /// <summary>
         ///  Go create a table in the DataStore with the specified field names and types.
         /// </summary>
-        public void CreateTable(string tableName, string[] names, Type[] types)
+        public void CreateTable(Utility.SQLite connection, string tableName, string[] names, Type[] types)
         {
             string cmd = "CREATE TABLE " + tableName +"(";
 
@@ -212,9 +312,9 @@ namespace Models
             try
             {
                 if (!TableExists(tableName))
-                    Connection.ExecuteNonQuery(cmd);
+                    connection.ExecuteNonQuery(cmd);
                 else
-                    AddMissingColumnsToTable(tableName, names, types);
+                    AddMissingColumnsToTable(connection, tableName, names, types);
             }
             finally
             {
@@ -258,58 +358,15 @@ namespace Models
         /// </summary>
         public void WriteTable(string simulationName, string tableName, DataTable table)
         {
-            // If the table has a SimulationName column then add in an ID column.
-            if (simulationName != null)
-            {
-                int id = GetSimulationID(simulationName);
-                table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
-                foreach (DataRow row in table.Rows)
-                    row["SimulationID"] = id;
-            }
-            else if (table.Columns.Contains("SimulationName"))
-                AddSimulationIDColumnToTable(table);
-
-            
-            // Add all columns.
-            List<string> names = new List<string>();
-            List<Type> types = new List<Type>();
-            foreach (DataColumn column in table.Columns)
-            {
-               names.Add(column.ColumnName);
-               types.Add(column.DataType);
-            }
-
-            // Create the table.
-            CreateTable(tableName, names.ToArray(), types.ToArray());
-
-            Locks[Filename].Aquire();
-            try
-            {
-                // prepare the sql
-                IntPtr query = PrepareInsertIntoTable(tableName, names.ToArray());
-
-                // tell SQLite that we're beginning a transaction.
-                Connection.ExecuteNonQuery("BEGIN");
-
-                // Add all rows.
-                object[] values = new object[names.Count];
-                foreach (DataRow row in table.Rows)
+            lock (TablesToWrite)
+                TablesToWrite.Add(new TableToWrite()
                 {
-                    for (int i = 0; i < table.Columns.Count; i++)
-                        values[i] = row[i];
-                    Connection.BindParametersAndRunQuery(query, values);
-                }
+                    SimulationName = simulationName,
+                    TableName = tableName,
+                    Data = table
+                });
 
-                // tell SQLite we're ending our transaction.
-                Connection.ExecuteNonQuery("END");
 
-                // finalise our query.
-                Connection.Finalize(query);
-            }
-            finally
-            {
-                Locks[Filename].Release();
-            }
         }
 
 
@@ -587,9 +644,9 @@ namespace Models
         /// Go through the specified names and add them to the specified table if they are not 
         /// already there.
         /// </summary>
-        private void AddMissingColumnsToTable(string tableName, string[] names, Type[] types)
+        private static void AddMissingColumnsToTable(Utility.SQLite connection, string tableName, string[] names, Type[] types)
         {
-            List<string> columnNames = Connection.GetColumnNames(tableName);
+            List<string> columnNames = connection.GetColumnNames(tableName);
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -597,7 +654,7 @@ namespace Models
                 {
                     string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
                     sql += names[i] + "] " + GetSQLColumnType(types[i]);
-                    Connection.ExecuteNonQuery(sql);    
+                    connection.ExecuteNonQuery(sql);    
                 }
             }
         }
@@ -605,7 +662,7 @@ namespace Models
         /// <summary>
         ///  Go prepare an insert into query and return the query.
         /// </summary>
-        private IntPtr PrepareInsertIntoTable(string tableName, string[] names)
+        private static IntPtr PrepareInsertIntoTable(Utility.SQLite Connection, string tableName, string[] names)
         {
             string Cmd = "INSERT INTO " + tableName + "(";
 

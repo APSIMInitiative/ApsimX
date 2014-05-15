@@ -63,7 +63,7 @@ namespace UserInterface.Commands
         {
             if (ExplorerPresenter != null && e.ErrorMessage != null)
                 ExplorerPresenter.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
-            if (JobManager.AllJobsFinished)
+            if (e.PercentComplete == 100)
             {
                 if (JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);

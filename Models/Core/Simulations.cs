@@ -216,6 +216,9 @@ namespace Models.Core
         [XmlIgnore]
         public Model SimulationToRun { get; set; }
 
+        private int NumToRun;
+        private int NumCompleted;
+
         /// <summary>
         /// Run all simulations.
         /// </summary>
@@ -223,8 +226,6 @@ namespace Models.Core
         {
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
-
-            jobManager.OnComplete += OnAllSimulationsHaveCompleted;
 
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
@@ -248,24 +249,26 @@ namespace Models.Core
             foreach (Model model in AllModels)
                 model.OnAllCommencing();
 
+            NumToRun = simulationsToRun.Length;
+            NumCompleted = 0;
             foreach (Simulation simulation in simulationsToRun)
+            {
+                simulation.OnCompleted += OnSimulationCompleted;
                 jobManager.AddJob(simulation);
+            }
         }
 
         /// <summary>
         /// This gets called everytime a simulation completes. When all are done then
         /// invoke each model's OnAllCompleted method.
         /// </summary>
-        private void OnAllSimulationsHaveCompleted(object sender, Utility.JobManager.JobCompleteArgs e)
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (e.PercentComplete == 100)
-            {
-                Utility.JobManager jobManager = sender as Utility.JobManager;
-                jobManager.OnComplete -= OnAllSimulationsHaveCompleted;
-
+            NumCompleted++;
+            if (NumCompleted == NumToRun)
                 foreach (Model model in AllModels)
                     model.OnAllCompleted();
-            }
+            
         }
     }
 }

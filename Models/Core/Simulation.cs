@@ -17,6 +17,8 @@ namespace Models.Core
         [NonSerialized]
         private Stopwatch timer;
 
+        public event EventHandler OnCompleted;
+
         /// <summary>
         /// Cache to speed up scope lookups.
         /// </summary>
@@ -167,11 +169,16 @@ namespace Models.Core
         {
             CallOnCompleted(this);
             AllModels.ForEach(CallOnCompleted);
+
+            if (OnCompleted != null)
+                OnCompleted.Invoke(this, null);
+
             timer.Stop();
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
             _IsRunning = false;
 
             AllModels.ForEach(Disconnect);
+
         }
 
 

@@ -9,7 +9,7 @@ namespace Models.PMF.Organs
     public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
         
         public event NullTypeDelegate Harvesting;
         public override void OnHarvest()
