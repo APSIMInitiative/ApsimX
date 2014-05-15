@@ -269,11 +269,11 @@ namespace Models.Core
             {
                 NumCompleted++;
                 RunAllCompleted = NumCompleted == NumToRun;
+                if (RunAllCompleted)
+                    foreach (Model model in AllModels)
+                        model.OnAllCompleted();
+
             }
-            if (RunAllCompleted)
-                foreach (Model model in AllModels)
-                    model.OnAllCompleted();
-            
         }
     }
 }
