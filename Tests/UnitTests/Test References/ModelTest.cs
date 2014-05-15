@@ -254,7 +254,7 @@ namespace ModelTests
             Assert.AreEqual(graph.Get("[Soil].Water.Name"), "Water");
         }
 
-        [TestMethod]
+         [TestMethod]
         public void WeatherSummary()
         {
             Simulation Sim = S.Models[0] as Simulation;
