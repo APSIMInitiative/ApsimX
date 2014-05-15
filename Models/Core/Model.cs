@@ -193,7 +193,7 @@ namespace Models.Core
                 }
             }
 
-            throw new ApsimXException(FullPath, "Cannot disconnect from event: " + namePath);
+            //throw new ApsimXException(FullPath, "Cannot disconnect from event: " + namePath);
         }
 
         /// <summary>
