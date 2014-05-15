@@ -201,7 +201,7 @@ namespace Models
                 foreach (TableToWrite table in tables)
                 {
                     // If the table has a simulationname then go find its ID for later
-                    if (TablesToWrite[0].SimulationName != null)
+                    if (table.SimulationName != null)
                         table.SimulationID = GetSimulationID(connection, table.SimulationName);
                     else
                         AddSimulationIDColumnToTable(TablesToWrite[0].Data);
