@@ -264,7 +264,10 @@ namespace Models.Core
         /// </summary>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            NumCompleted++;
+            lock (this)
+            {
+                NumCompleted++;
+            }
             if (NumCompleted == NumToRun)
                 foreach (Model model in AllModels)
                     model.OnAllCompleted();
