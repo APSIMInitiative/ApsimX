@@ -94,7 +94,7 @@ namespace Models.Core
             return variable;
         }
 
-
+    
 
         /// <summary>
         /// Return the specified 'namePath' as an absolute one.
