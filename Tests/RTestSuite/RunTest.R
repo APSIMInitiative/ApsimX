@@ -160,5 +160,5 @@ if (length(args) > 1){
     print(noquote("Uploading complete."))
 }
 
-#write.csv(buildRecord,"c:\\temp\\output.csv") # used for testing
+write.csv(buildRecord,"Tests/Test Output.csv")
 if (haveTestsPassed == FALSE) stop("One or more tests failed.")
