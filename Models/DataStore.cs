@@ -30,6 +30,7 @@ namespace Models
 
         class TableToWrite
         {
+            public string FileName;
             public string SimulationName;
             public int SimulationID = int.MaxValue;
             public string TableName;
@@ -174,6 +175,12 @@ namespace Models
             }
         }
 
+        public override void OnAllCommencing()
+        {
+            base.OnAllCommencing();
+            TablesToWrite.Clear();
+        }
+
         /// <summary>
         /// All simulations have run - write all tables
         /// </summary>
@@ -182,14 +189,22 @@ namespace Models
             Utility.SQLite connection = new Utility.SQLite();
             connection.OpenDatabase(Filename, readOnly:false);
 
-            // loop through all 'TablesToWrite' and write them to the .db
-            while (TablesToWrite.Count > 0)
+            List<TableToWrite> tablesForOurFile = new List<TableToWrite>();
+            lock (TablesToWrite)
             {
-                string tableName = TablesToWrite[0].TableName;
+                foreach (TableToWrite table in TablesToWrite)
+                    if (table.FileName == Filename)
+                        tablesForOurFile.Add(table);
+            }
+
+            // loop through all 'TablesToWrite' and write them to the .db
+            while (tablesForOurFile.Count > 0)
+            {
+                string tableName = tablesForOurFile[0].TableName;
 
                 // Get a list of tables that have the same name as 'tableName'
                 List<TableToWrite> tables = new List<TableToWrite>();
-                foreach (TableToWrite table in TablesToWrite)
+                foreach (TableToWrite table in tablesForOurFile)
                     if (table.TableName == tableName)
                         tables.Add(table);
 
@@ -204,7 +219,7 @@ namespace Models
                     if (table.SimulationName != null)
                         table.SimulationID = GetSimulationID(connection, table.SimulationName);
                     else
-                        AddSimulationIDColumnToTable(TablesToWrite[0].Data);
+                        AddSimulationIDColumnToTable(table.Data);
 
                     // Go through all columns for this table and add to 'names' and 'types'
                     foreach (DataColumn column in table.Data.Columns)
@@ -245,8 +260,7 @@ namespace Models
                         connection.BindParametersAndRunQuery(query, values);
                     }
 
-                    // Remove the table from 'TablesToWrite' 
-                    TablesToWrite.Remove(table);
+                    tablesForOurFile.Remove(table);
                 }
 
                 // tell SQLite we're ending our transaction.
@@ -256,6 +270,11 @@ namespace Models
                 connection.Finalize(query);
             }
 
+            //lock (TablesToWrite)
+            //{
+            //    foreach (TableToWrite table in TablesToWrite)
+            //        TablesToWrite.Remove(table);
+            //}
             connection.CloseDatabase();
         }
 
@@ -361,6 +380,7 @@ namespace Models
             lock (TablesToWrite)
                 TablesToWrite.Add(new TableToWrite()
                 {
+                    FileName = Filename,
                     SimulationName = simulationName,
                     TableName = tableName,
                     Data = table
