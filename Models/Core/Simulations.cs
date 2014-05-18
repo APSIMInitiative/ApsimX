@@ -253,6 +253,7 @@ namespace Models.Core
             NumCompleted = 0;
             foreach (Simulation simulation in simulationsToRun)
             {
+                simulation.OnCompleted -= OnSimulationCompleted;
                 simulation.OnCompleted += OnSimulationCompleted;
                 jobManager.AddJob(simulation);
             }
