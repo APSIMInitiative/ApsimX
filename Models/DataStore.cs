@@ -175,12 +175,6 @@ namespace Models
             }
         }
 
-        public override void OnAllCommencing()
-        {
-            base.OnAllCommencing();
-            TablesToWrite.Clear();
-        }
-
         /// <summary>
         /// All simulations have run - write all tables
         /// </summary>
@@ -270,11 +264,11 @@ namespace Models
                 connection.Finalize(query);
             }
 
-            //lock (TablesToWrite)
-            //{
-            //    foreach (TableToWrite table in TablesToWrite)
-            //        TablesToWrite.Remove(table);
-            //}
+            lock (TablesToWrite)
+            {
+                foreach (TableToWrite table in tablesForOurFile)
+                    TablesToWrite.Remove(table);
+            }
             connection.CloseDatabase();
         }
 
