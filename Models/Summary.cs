@@ -91,6 +91,7 @@ namespace Models
         public string GetSummary(string apsimSummaryImageFileName)
         {
             StringWriter st = new StringWriter();
+            Simulation = ParentOfType(typeof(Simulation)) as Simulation;
             WriteSummary(st, Simulation.Name, apsimSummaryImageFileName);
             return st.ToString();
         }

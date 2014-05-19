@@ -140,7 +140,7 @@
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\Variables.cs" />
     <Compile Include="Utility\JobManager.cs" />
-    <Compile Include="Utility\Variable.cs" />
+    <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
     <Compile Include="PostSimulationTools\Input.cs" />
@@ -301,7 +301,6 @@
     <Compile Include="Utility\DataTableSerialiser.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
-    <Compile Include="Utility\ModelFunctions.cs" />
     <Compile Include="WeatherFile.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Main.cs" />

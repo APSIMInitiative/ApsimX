@@ -476,8 +476,17 @@ namespace UserInterface.Presenters
                         CurrentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(PresenterName.ToString()) as IPresenter;
                         if (NewView != null && CurrentRightHandPresenter != null)
                         {
-                            View.AddRightHandView(NewView);
-                            CurrentRightHandPresenter.Attach(Model, NewView, this);
+                            try
+                            {
+                                View.AddRightHandView(NewView);
+                                CurrentRightHandPresenter.Attach(Model, NewView, this);
+                            }
+                            catch (Exception err)
+                            {
+                                string message = err.Message;
+                                message += "\r\n" + err.StackTrace;
+                                ShowMessage(message, DataStore.ErrorLevel.Error);
+                            }
                         }
                     }
                 }

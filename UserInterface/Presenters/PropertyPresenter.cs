@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
         private IGridView Grid;
         private Model Model;
         private ExplorerPresenter ExplorerPresenter;
-        private List<Utility.IVariable> Properties = new List<Utility.IVariable>();
+        private List<PropertyInfo> Properties = new List<PropertyInfo>();
 
         /// <summary>
         /// Attach the model to the view.
@@ -68,14 +68,24 @@ namespace UserInterface.Presenters
             Properties.Clear();
             if (Model != null)
             {
-                foreach (Utility.IVariable parameter in Utility.ModelFunctions.Parameters(Model))
+                foreach (PropertyInfo parameter in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                 {
-                    string PropertyName = parameter.Name;
-                    if (parameter.Description != null)
-                        PropertyName = parameter.Description;
-                    Table.Rows.Add(new object[] { PropertyName, parameter.Value });
-                    Properties.Add(parameter);
+                    // Ignore properties that have an [XmlIgnore], are an array or are 'Name'
+                    Attribute XmlIgnore = Utility.Reflection.GetAttribute(parameter, typeof(System.Xml.Serialization.XmlIgnoreAttribute), true);
+                    bool ignoreProperty = XmlIgnore != null;                                 // No [XmlIgnore]
+                    ignoreProperty |= parameter.PropertyType.GetInterface("IList") != null;   // No List<T>
+                    ignoreProperty |= parameter.Name == "Name";   // No Name properties.
+                    ignoreProperty |= !parameter.CanWrite;         // Must be readwrite
 
+                    if (!ignoreProperty)
+                    {
+                        string PropertyName = parameter.Name;
+                        Attribute description = Utility.Reflection.GetAttribute(parameter, typeof(Description), true);
+                        if (description != null)
+                            PropertyName = description.ToString();
+                        Table.Rows.Add(new object[] { PropertyName, parameter.GetValue(Model, null) });
+                        Properties.Add(parameter);
+                    }
                 }
             }
         }
@@ -86,10 +96,9 @@ namespace UserInterface.Presenters
         private void FormatGrid()
         {
             for (int i = 0; i < Properties.Count; i++)
-                Grid.SetCellEditor(1, i, Properties[i].Value);
+                Grid.SetCellEditor(1, i, Properties[i].GetValue(Model, null));
             Grid.SetColumnSize(0);
             Grid.SetColumnSize(1);
-            
             Grid.SetColumnReadOnly(0, true);
         }
 
@@ -101,7 +110,7 @@ namespace UserInterface.Presenters
             Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model,
                                                                                     Properties[Row].Name,
                                                                                     NewValue);
-            //Stop the recursion. The users entry is the updated value in the grid.
+            // Stop the recursion. The users entry is the updated value in the grid.
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             ExplorerPresenter.CommandHistory.Add(Cmd, true);
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;

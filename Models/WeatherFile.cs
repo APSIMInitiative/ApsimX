@@ -16,7 +16,6 @@ namespace Models
     {
         // Links
         [Link] private Clock Clock = null;
-        [Link] private Simulation Simulation = null;
 
         // Privates
         private Utility.ApsimTextFile WtrFile = null;
@@ -46,10 +45,12 @@ namespace Models
         {
             get
             {
+                Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                    
                 string FullFileName = FileName;
-                if (FileName != null && Simulation != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                if (FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
                 {
-                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
+                    FullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);
                     if (!File.Exists(FullFileName))
                         FullFileName = Path.Combine(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), FileName);
                 }
@@ -62,8 +63,9 @@ namespace Models
                 // try and convert to path relative to the Simulations.FileName or ApsimX install directory.
                 if (FileName != null)
                 {
+                    Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
                     FileName = FileName.Replace( Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
-                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
+                    FileName = FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, "");
                 }
             }
         }

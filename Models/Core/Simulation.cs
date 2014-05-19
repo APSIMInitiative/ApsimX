@@ -29,7 +29,7 @@ namespace Models.Core
         /// Cache to speed up variable lookups.
         /// </summary>
         [NonSerialized]
-        private Dictionary<string, Utility.IVariable> _VariableCache = null;
+        private Dictionary<string, IVariable> _VariableCache = null;
 
         /// <summary>
         /// Get a reference to the clock model.
@@ -78,12 +78,12 @@ namespace Models.Core
         /// Return a reference to the variable cache.
         /// </summary>
         [XmlIgnore]
-        public Dictionary<string, Utility.IVariable> VariableCache 
+        public Dictionary<string, IVariable> VariableCache 
         { 
             get 
             { 
                 if (_VariableCache == null)
-                    _VariableCache = new Dictionary<string, Utility.IVariable>();
+                    _VariableCache = new Dictionary<string, IVariable>();
                 return _VariableCache; 
             } 
         }

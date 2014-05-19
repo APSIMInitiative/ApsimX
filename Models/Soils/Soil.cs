@@ -58,17 +58,17 @@ namespace Models.Soils
         //[UILargeText]
         public string Comments { get; set; }
 
-        [Link] public Water Water = null;
-        [Link] public SoilWater SoilWater = null;
-        [Link] public SoilOrganicMatter SoilOrganicMatter = null;
-        [Link] public SoilNitrogen SoilNitrogen = null;
-        [Link] public Analysis Analysis = null;
-        [Link(IsOptional=true)] public InitialWater InitialWater = null;
-        [Link(IsOptional=true)] public Phosphorus Phosphorus = null;
-        [Link(IsOptional=true)] public Swim Swim = null;
-        [Link(IsOptional=true)] public LayerStructure LayerStructure = null;
-        [Link(IsOptional=true)] public SoilTemperature SoilTemperature = null;
-        [Link(IsOptional=true)] public SoilTemperature2 SoilTemperature2 = null;
+        public Water Water { get { return ModelMatching(typeof(Water)) as Water; } }
+        public SoilWater SoilWater { get { return ModelMatching(typeof(SoilWater)) as SoilWater; } }
+        public SoilOrganicMatter SoilOrganicMatter { get { return ModelMatching(typeof(SoilOrganicMatter)) as SoilOrganicMatter; } }
+        public SoilNitrogen SoilNitrogen { get { return ModelMatching(typeof(SoilNitrogen)) as SoilNitrogen; } }
+        public Analysis Analysis { get { return ModelMatching(typeof(Analysis)) as Analysis; } }
+        public InitialWater InitialWater { get { return ModelMatching(typeof(InitialWater)) as InitialWater; } }
+        public Phosphorus Phosphorus { get { return ModelMatching(typeof(Phosphorus)) as Phosphorus; } }
+        public Swim Swim { get { return ModelMatching(typeof(Swim)) as Swim; } }
+        public LayerStructure LayerStructure { get { return ModelMatching(typeof(LayerStructure)) as LayerStructure; } }
+        public SoilTemperature SoilTemperature { get { return ModelMatching(typeof(SoilTemperature)) as SoilTemperature; } }
+        public SoilTemperature2 SoilTemperature2 { get { return ModelMatching(typeof(SoilTemperature2)) as SoilTemperature2; } }
 
         [XmlIgnore]
         public List<Sample> Samples 

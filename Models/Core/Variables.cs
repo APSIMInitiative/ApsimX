@@ -29,7 +29,7 @@ namespace Models.Core
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public static Utility.IVariable Get(Model relativeTo, string namePath)
+        public static IVariable Get(Model relativeTo, string namePath)
         {
             // Look in cache first.
             Simulation simulation = GetSimulation(relativeTo);
@@ -82,11 +82,11 @@ namespace Models.Core
             }
 
             // Now we can create our return variable.
-            Utility.IVariable variable;
+            IVariable variable;
             if (propertyInfo == null)
-                variable = new Utility.VariableObject(obj);
+                variable = new VariableObject(obj);
             else
-                variable = new Utility.VariableProperty(obj, propertyInfo);
+                variable = new VariableProperty(obj, propertyInfo);
 
             // Add to our cache.
             if (useCache)

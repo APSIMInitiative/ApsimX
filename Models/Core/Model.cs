@@ -21,6 +21,7 @@ namespace Models.Core
         /// <summary>
         /// Returns true if this model is has all events and links connected.
         /// </summary>
+        [XmlIgnore]
         public bool IsConnected { get; set; }
 
         [NonSerialized]
@@ -96,6 +97,19 @@ namespace Models.Core
         public ModelCollection Parent { get; set; }
 
         /// <summary>
+        /// Return a parent node of the specified type 't'. Will throw if not found.
+        /// </summary>
+        public ModelCollection ParentOfType(Type t)
+        {
+            Model obj = this;
+            while (obj.Parent != null && obj.GetType() != t)
+                obj = obj.Parent;
+            if (obj == null)
+                throw new ApsimXException(FullPath, "Cannot find a parent of type: " + t.Name);
+            return obj as ModelCollection;
+        }
+        
+        /// <summary>
         /// Is this model hidden in the GUI?
         /// </summary>
         [XmlIgnore]
@@ -147,7 +161,7 @@ namespace Models.Core
         /// </summary>
         public object Get(string namePath)
         {
-            Utility.IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(this, namePath);
             if (variable == null)
                 return null;
             else
@@ -159,7 +173,7 @@ namespace Models.Core
         /// </summary>
         public void Set(string namePath, object value)
         {
-            Utility.IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(this, namePath);
             if (variable == null)
                 throw new ApsimXException(FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             else
@@ -202,6 +216,23 @@ namespace Models.Core
         public virtual void Write(TextWriter stream)
         {
             stream.Write(Utility.Xml.Serialise(this, true));
+        }
+
+        /// <summary>
+        /// Return a list of all parameters (that are not references to child models). Never returns null. Can
+        /// return an empty array. A parameter is a class property that is public and read/writtable
+        /// </summary>
+        public static IVariable[] FieldsAndProperties(object model, BindingFlags flags)
+        {
+            List<IVariable> allProperties = new List<IVariable>();
+            foreach (PropertyInfo property in model.GetType().UnderlyingSystemType.GetProperties(flags))
+            {
+                if (property.CanRead)
+                    allProperties.Add(new VariableProperty(model, property));
+            }
+            foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(flags))
+                allProperties.Add(new VariableField(model, field));
+            return allProperties.ToArray();
         }
 
         #region Internals
