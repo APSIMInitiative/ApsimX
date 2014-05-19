@@ -504,8 +504,6 @@ namespace Models
                     Disconnect();
 
                     ForWriting = forWriting;
-                    Connection = new Utility.SQLite();
-                    Connection.OpenDatabase(Filename, !forWriting);
 
                     if (!Locks.ContainsKey(Filename))
                         Locks.Add(Filename, new DbMutex());
@@ -513,15 +511,32 @@ namespace Models
                     Locks[Filename].Aquire();
                     try
                     {
-                        if (!TableExists("Simulations"))
+                        if (!File.Exists(Filename))
+                        {
+                            Connection = new Utility.SQLite();
+                            Connection.OpenDatabase(Filename, readOnly: false);
                             Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                        if (!TableExists("Messages"))
                             Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+
+                            if (!forWriting)
+                            {
+                                Connection.CloseDatabase();
+                                Connection.OpenDatabase(Filename, readOnly: !forWriting);
+                            }
+                        }
+                        else
+                        {
+                            Connection = new Utility.SQLite();
+                            Connection.OpenDatabase(Filename, readOnly: !forWriting);
+                        }
+
                     }
                     finally
                     {
                         Locks[Filename].Release();
                     }
+
+
                 }
             }
         }
