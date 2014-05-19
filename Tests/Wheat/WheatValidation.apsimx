@@ -6,7 +6,7 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\Users\hol353\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
+        <string>Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -18,7 +18,7 @@
     <Input>
       <Name>NZObservations</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Wheat\RainShelterBiomass.txt</string>
+        <string>Tests\Wheat\RainShelterBiomass.txt</string>
       </FileNames>
     </Input>
   </DataStore>
