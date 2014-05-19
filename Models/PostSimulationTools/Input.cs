@@ -22,7 +22,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
-    public class Input : Model
+    public class Input : Model, IPostSimulationTool
     {
         private string[] fileNames;
         public string[] FileNames
@@ -41,28 +41,14 @@ namespace Models.PostSimulationTools
         }
 
         /// <summary>
-        /// Go find the top level simulations object.
+        /// Main run method for performing our calculations and storing data.
         /// </summary>
-        protected Simulations Simulations
-        {
-            get
-            {
-                Model obj = this;
-                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
-                    obj = obj.Parent;
-                if (obj == null)
-                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
-                return obj as Simulations;
-            }
-        }
-
-
-        public override void OnAllCompleted()
-        {
+        public void Run(DataStore dataStore)
+        {     
             if (FileNames != null)
             {
-                DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
+                Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
+
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable();
                 for (int i=0;i< FileNames.Length; i++)
@@ -74,17 +60,8 @@ namespace Models.PostSimulationTools
                         FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
 
                     if (File.Exists(FileNames[i]))
-                    {
-                        string[] simulationNames = Utility.DataTable.GetDistinctValues(data, "SimulationName").ToArray();
-                        foreach (string simulationName in simulationNames)
-                        {
-                            DataView filteredData = new DataView(data);
-                            filteredData.RowFilter = "SimulationName = '" + simulationName + "'";
-                            dataStore.WriteTable(simulationName, this.Name, filteredData.ToTable());
-                        }
-                    }
+                        dataStore.WriteTable(null, this.Name, data);
                 }
-                dataStore.Disconnect();
             }
         }
 
@@ -124,6 +101,8 @@ namespace Models.PostSimulationTools
             return returnDataTable;
 
         }
+
+
 
     }
 

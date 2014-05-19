@@ -29,8 +29,7 @@ namespace UserInterface.Presenters
             if (RootModel != null && RootModel is Models.Core.Simulations)
             {
                 Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
-                DataStore = new Models.DataStore();
-                DataStore.Connect(Path.ChangeExtension(simulations.FileName, ".db"), readOnly: true);
+                DataStore = new Models.DataStore(Tests);
             }
 
             PopulateGrid();

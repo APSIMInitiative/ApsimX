@@ -84,8 +84,7 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (Model child in DataStore.Models)
-                    child.OnAllCompleted();
+                DataStore.RunPostProcessingTools();
             }
             catch (Exception err)
             {

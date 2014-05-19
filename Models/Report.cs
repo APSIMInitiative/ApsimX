@@ -284,8 +284,7 @@ namespace Models
         public override void OnCompleted()
         {
             // Get rid of old data in .db
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
+            DataStore DataStore = new DataStore(this);
             DataStore.DeleteOldContentInTable(Simulation.Name, Name);
 
             // Write and store a table in the DataStore

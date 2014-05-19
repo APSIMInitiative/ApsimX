@@ -6,10 +6,7 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>APS6Timeseries.txt</string>
-        <string>APS14TimeSeries.txt</string>
-        <string>APS26TimeSeries.txt</string>
-        <string>WheatObservedData.txt</string>
+        <string>C:\Users\hol353\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -789,75 +786,10 @@ namespace Models
       </Axis>
       <Series>
         <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.Grain.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.Grain.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Biomass</Name>
-      <Title>APS26 Predicted vs Observed Biomass</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed biomass</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Biomass</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.AboveGround.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Temp</Name>
-      <Title>APS26 Predicted vs Observed Yield</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16744448</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -868,9 +800,44 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
-          <FieldName>Wheat.Leaf.LAI</FieldName>
+          <FieldName>Wheat.Grain.Wt</FieldName>
         </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowRegressionLine>true</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Biomass</Name>
+      <Title>APS26 Predicted vs Observed Biomass</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -1497,72 +1464,6 @@ namespace Models
       </Zone>
       <Area>0</Area>
     </Simulation>
-    <Graph>
-      <Name>Grain yield</Name>
-      <Title>APS26 Predicted vs Observed Yield</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.Grain.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.Grain.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Biomass</Name>
-      <Title>APS26 Predicted vs Observed Biomass</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed biomass</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Biomass</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.AboveGround.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
   </Experiment>
   <Experiment>
     <Name>APS14</Name>
@@ -2427,140 +2328,6 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Zone>
       <Area>0</Area>
     </Simulation>
-    <Graph>
-      <Name>Grain Wt</Name>
-      <Title>APS14 Pre vs Obs GrainWt</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744320</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.Grain.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.Grain.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Biomass</Name>
-      <Title>APS14 Pre vs Obs GrainWt</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744320</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>ObservedWheat.AboveGround.Wt</FieldName>
-        </X>
-        <Y>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>PredictedWheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>LAI</Name>
-      <Title>APS14 Pre vs Obs GrainWt</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Leaf.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>NO3</Name>
-      <Title>APS14 Pre vs Obs GrainWt</Title>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <SimulationName>*</SimulationName>
-          <TableName>Report</TableName>
-          <FieldName>ExtraVariables.Script.TotalNO3</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
     <Graph>
       <Name>NH4</Name>
       <Title>Total NH4</Title>
@@ -6835,36 +6602,35 @@ public class Script : Model
       <Inverted>false</Inverted>
     </Axis>
     <Series>
+      <Title>Grain weight</Title>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>Circle</Marker>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
-        <FieldName>Observerd.Wheat.Grain.Wt</FieldName>
+        <FieldName>Observed.Wheat.Grain.Wt</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
     </Series>
-    <LegendPosition>BottomRight</LegendPosition>
+    <LegendPosition>TopLeft</LegendPosition>
   </Graph>
   <Graph>
     <Name>Biomass</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Observed Yield</Title>
+      <Title>Observed Above Ground Wt</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Predicted Yield</Title>
+      <Title>Predicted Above Ground Wt</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
@@ -6872,15 +6638,13 @@ public class Script : Model
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
-      <Marker>Circle</Marker>
+      <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
-        <FieldName>Observerd.Wheat.AboveGround.Wt</FieldName>
+        <FieldName>Observed.Wheat.AboveGround.Wt</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
       </Y>

@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
         private Report Report;
         private IReportView View;
         private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = new DataStore();
+        private DataStore DataStore;
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -37,7 +37,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
             Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
-            DataStore.Connect(Path.ChangeExtension(simulation.FileName, ".db"), readOnly: true);
+            DataStore = new DataStore(Report);
 
             PopulateDataGrid();
             this.View.AutoCreate = Report.AutoCreateCSV;

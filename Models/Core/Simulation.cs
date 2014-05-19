@@ -102,8 +102,7 @@ namespace Models.Core
             }
             catch (ApsimXException err)
             {
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
+                DataStore store = new DataStore(this);
 
                 string Msg = err.Message;
                 if (err.InnerException != null)
@@ -112,14 +111,13 @@ namespace Models.Core
                     Msg += "\r\n" + err.StackTrace;
 
                 store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
-
+                store.Disconnect();
                 CleanupRun();
                 throw new Exception(Msg);
             }
             catch (Exception err)
             {
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
+                DataStore store = new DataStore(this);
 
                 string Msg = err.Message;
                 if (err.InnerException != null)
@@ -128,6 +126,7 @@ namespace Models.Core
                     Msg += "\r\n" + err.StackTrace;
 
                 store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
+                store.Disconnect();
 
                 CleanupRun();
                 throw new Exception(Msg);

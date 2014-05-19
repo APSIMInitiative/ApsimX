@@ -227,14 +227,17 @@ namespace Models.Core
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
+            // Get a reference to our child DataStore.
+            DataStore store = ModelMatching(typeof(DataStore)) as DataStore;
+
+            // Remove old simulation data.
+            store.RemoveUnwantedSimulations(this);
+
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
             {
-                // As we are goito run all simulations, we can delete all tables in the DataStore. This
+                // As we are going to run all simulations, we can delete all tables in the DataStore. This
                 // will clean up order of columns in the tables and removed unused ones.
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), false);
-
                 foreach (string tableName in store.TableNames)
                     if (tableName != "Simulations" && tableName != "Messages")
                         store.DeleteTable(tableName);

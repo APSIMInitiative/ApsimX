@@ -50,20 +50,7 @@ namespace Models.Graph
             get
             {
                 if (_DataStore == null)
-                {
-                    // Find root component.
-                    Model rootComponent = this;
-                    while (rootComponent.Parent != null)
-                        rootComponent = rootComponent.Parent;
-
-                    if (rootComponent == null || !(rootComponent is Simulations))
-                        return null;
-
-                    Simulations simulations = rootComponent as Simulations;
-                    _DataStore = new DataStore();
-                    string dbName = Path.ChangeExtension(simulations.FileName, ".db");
-                    _DataStore.Connect(dbName, readOnly: File.Exists(dbName));
-                }
+                    _DataStore = new DataStore(this);
                 return _DataStore;
             }
         }
