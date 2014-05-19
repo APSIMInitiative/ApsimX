@@ -180,6 +180,7 @@ namespace Models
                         tables.Add(table);
 
                 WriteTable(tables.ToArray());
+
             }
 
             lock (TablesToWrite)
@@ -500,29 +501,26 @@ namespace Models
                     if (Filename == null)
                         throw new ApsimXException(FullPath, "Cannot find name of .db file");
 
-                    if (File.Exists(Filename))
+                    Disconnect();
+
+                    ForWriting = forWriting;
+                    Connection = new Utility.SQLite();
+                    Connection.OpenDatabase(Filename, !forWriting);
+
+                    if (!Locks.ContainsKey(Filename))
+                        Locks.Add(Filename, new DbMutex());
+
+                    Locks[Filename].Aquire();
+                    try
                     {
-                        Disconnect();
-
-                        ForWriting = forWriting;
-                        Connection = new Utility.SQLite();
-                        Connection.OpenDatabase(Filename, !forWriting);
-
-                        if (!Locks.ContainsKey(Filename))
-                            Locks.Add(Filename, new DbMutex());
-
-                        Locks[Filename].Aquire();
-                        try
-                        {
-                            if (!TableExists("Simulations"))
-                                Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
-                            if (!TableExists("Messages"))
-                                Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                        }
-                        finally
-                        {
-                            Locks[Filename].Release();
-                        }
+                        if (!TableExists("Simulations"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                        if (!TableExists("Messages"))
+                            Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                    }
+                    finally
+                    {
+                        Locks[Filename].Release();
                     }
                 }
             }
@@ -548,6 +546,7 @@ namespace Models
             }
             cmd += ")";
             Locks[Filename].Aquire();
+
             try
             {
                 if (!TableExists(tableName))
@@ -599,6 +598,7 @@ namespace Models
                         types.Add(column.DataType);
                     }
                 }
+
             }
 
             // Create the table.
