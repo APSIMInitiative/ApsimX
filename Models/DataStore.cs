@@ -168,11 +168,11 @@ namespace Models
                         tablesForOurFile.Add(table);
             }
 
-            // loop through all our tables and write them to the .db
-            while (tablesForOurFile.Count > 0)
-            {
-                string tableName = tablesForOurFile[0].TableName;
+            IEnumerable<string> distinctTableNames = tablesForOurFile.Select(t => t.TableName).Distinct();
 
+            // loop through all our tables and write them to the .db
+            foreach (string tableName in distinctTableNames)
+            {
                 // Get a list of tables that have the same name as 'tableName'
                 List<TableToWrite> tables = new List<TableToWrite>();
                 foreach (TableToWrite table in tablesForOurFile)
@@ -180,9 +180,6 @@ namespace Models
                         tables.Add(table);
 
                 WriteTable(tables.ToArray());
-
-                foreach (TableToWrite table in tables)
-                    tablesForOurFile.Remove(table);
             }
 
             lock (TablesToWrite)

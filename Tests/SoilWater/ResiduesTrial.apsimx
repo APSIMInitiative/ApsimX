@@ -6,13 +6,13 @@
     <Input>
       <Name>ObservedResidues</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\SoilWater\A_block_obs_residual.txt</string>
+        <string>C:\Users\hol353\ApsimX\Tests\SoilWater\A_block_obs_residual.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>ObservedSoilWater</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\SoilWater\a_block_obs_soilwater.txt</string>
+        <string>C:\Users\hol353\ApsimX\Tests\SoilWater\a_block_obs_soilwater.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
