@@ -22,33 +22,33 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
-    public class Input : Model
+    public class Input : Model, IPostSimulationTool
     {
-        public string[] FileNames { get; set; }
-
-        /// <summary>
-        /// Go find the top level simulations object.
-        /// </summary>
-        protected Simulations Simulations
+        private string[] fileNames;
+        public string[] FileNames
         {
             get
             {
-                Model obj = this;
-                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
-                    obj = obj.Parent;
-                if (obj == null)
-                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
-                return obj as Simulations;
+                return fileNames;
+            }
+            set
+            {
+                //attempt to use relative path for files in ApsimX install directory
+                fileNames = new string[value.Length];
+                for (int i = 0; i < fileNames.Length; i++)
+                    fileNames[i] = value[i].Replace(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
             }
         }
 
-
-        public override void OnAllCompleted()
-        {
+        /// <summary>
+        /// Main run method for performing our calculations and storing data.
+        /// </summary>
+        public void Run(DataStore dataStore)
+        {     
             if (FileNames != null)
             {
-                DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
+                Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
+
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable();
                 for (int i=0;i< FileNames.Length; i++)
@@ -60,17 +60,8 @@ namespace Models.PostSimulationTools
                         FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
 
                     if (File.Exists(FileNames[i]))
-                    {
-                        string[] simulationNames = Utility.DataTable.GetDistinctValues(data, "SimulationName").ToArray();
-                        foreach (string simulationName in simulationNames)
-                        {
-                            DataView filteredData = new DataView(data);
-                            filteredData.RowFilter = "SimulationName = '" + simulationName + "'";
-                            dataStore.WriteTable(simulationName, this.Name, filteredData.ToTable());
-                        }
-                    }
+                        dataStore.WriteTable(null, this.Name, data);
                 }
-                dataStore.Disconnect();
             }
         }
 
@@ -88,13 +79,15 @@ namespace Models.PostSimulationTools
                     if (FileNames[i] == null)
                         continue;
 
+                    string file;
                     if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                        file = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                    else file = FileNames[i];
 
-                    if ( File.Exists(FileNames[i]))
+                    if ( File.Exists(file))
                     {
                         Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                        textFile.Open(FileNames[i]);
+                        textFile.Open(file);
                         DataTable table = textFile.ToTable();
                         textFile.Close();
 
@@ -108,6 +101,8 @@ namespace Models.PostSimulationTools
             return returnDataTable;
 
         }
+
+
 
     }
 

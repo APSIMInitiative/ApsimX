@@ -10,7 +10,7 @@ namespace Models.PMF.Phen
     public class GenericPhase : Phase
     {
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         [Link(IsOptional=true, MustBeChild = true)]
         private Function Target = null;

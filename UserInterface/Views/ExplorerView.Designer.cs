@@ -141,6 +141,7 @@
             this.StatusWindow.Size = new System.Drawing.Size(600, 96);
             this.StatusWindow.TabIndex = 0;
             this.StatusWindow.Text = "";
+            this.StatusWindow.WordWrap = false;
             // 
             // StatusWindowPopup
             // 

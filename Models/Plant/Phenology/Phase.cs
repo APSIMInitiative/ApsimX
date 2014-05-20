@@ -19,7 +19,7 @@ namespace Models.PMF.Phen
         protected Phenology Phenology = null;
 
         [Link]
-        private Summary Summary = null;
+        private ISummary Summary = null;
 
         // ThermalTime is optional because GerminatingPhase doesn't require it.
         [Link(IsOptional=true)] public Function ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.

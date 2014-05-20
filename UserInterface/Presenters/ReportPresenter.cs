@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
         private Report Report;
         private IReportView View;
         private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = new DataStore();
+        private DataStore DataStore;
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -36,7 +36,8 @@ namespace UserInterface.Presenters
             this.View.OnAutoCreateClick += OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
-            DataStore.Connect(Path.ChangeExtension(Report.Simulation.FileName, ".db"), readOnly: true);
+            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            DataStore = new DataStore(Report);
 
             PopulateDataGrid();
             this.View.AutoCreate = Report.AutoCreateCSV;
@@ -67,7 +68,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (Utility.IVariable Property in Utility.ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in Model.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                 {
                     e.Items.Add(Property.Name);
                 }
@@ -127,7 +128,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateDataGrid()
         {
-            View.DataGrid.DataSource = DataStore.GetData(Report.Simulation.Name, Report.Name);
+            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            
+            View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
 
             if (View.DataGrid.DataSource != null)
             {

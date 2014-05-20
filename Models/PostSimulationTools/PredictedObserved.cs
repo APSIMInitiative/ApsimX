@@ -22,44 +22,27 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.PredictedObservedView")]
     [PresenterName("UserInterface.Presenters.PredictedObservedPresenter")]
-    public class PredictedObserved : Model
+    public class PredictedObserved : Model, IPostSimulationTool
     {
         public string PredictedTableName { get; set; }
         public string ObservedTableName { get; set; }
-
         public string FieldNameUsedForMatch { get; set; }
 
 
         /// <summary>
-        /// Go find the top level simulations object.
+        /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public Simulations Simulations
-        {
-            get
-            {
-                Model obj = this;
-                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
-                    obj = obj.Parent;
-                if (obj == null)
-                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
-                return obj as Simulations;
-            }
-        }
-
-        /// <summary>
-        /// Simulation has completed. Create a predicted observed data in the data store.
-        /// </summary>
-        public override void OnAllCompleted()
+        public void Run(DataStore dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
-                DataStore dataStore = new DataStore();
-                dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
-
                 dataStore.DeleteTable(this.Name);
                 
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
+
+                if (observedDataNames == null)
+                    throw new ApsimXException(FullPath, "Could not find observed data table: " + ObservedTableName);
 
                 IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
                                                join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
@@ -68,44 +51,22 @@ namespace Models.PostSimulationTools
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
                 {
-                    query.Append("I.'@field' AS 'Observerd.@field', R.'@field' AS 'Predicted.@field', ");
+                    query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
                     query.Replace("@field", s);
                 }
-
-                query.Append("FROM Input I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
+                
+                query.Append("FROM " + ObservedTableName + " I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("I.'SimulationID' AS 'Observerd.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID',", ""); // get rid of sim IDs
+                query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 
-                DataTable predictedObservedData = GetPredictedObservedData(query.ToString());
+                query = query.Replace("@match", FieldNameUsedForMatch);
+
+                DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
                 if (predictedObservedData != null)
-                    dataStore.WriteTable(Simulations.Name, this.Name, predictedObservedData);
+                    dataStore.WriteTable(null, this.Name, predictedObservedData);
                 dataStore.Disconnect();
             }
         }
-
-        /// <summary>
-        /// Perform the matching of observed data with predicted data and return the resulting
-        /// DataTable. Returns null if no matches.
-        /// </summary>
-        private DataTable GetPredictedObservedData(string query)
-        {
-            Utility.SQLite dbHandler = new Utility.SQLite();
-            if (!dbHandler.IsOpen)
-                dbHandler.OpenDatabase(Path.ChangeExtension(Simulations.FileName, ".db"), true);
-
-            query = query.Replace("@match", FieldNameUsedForMatch);
-
-            System.Data.DataTable predictedObserved = dbHandler.ExecuteQuery(query);
-            dbHandler.CloseDatabase();
-
-            return predictedObserved;
-        }
-
-
     }
-
-
-
-
 }

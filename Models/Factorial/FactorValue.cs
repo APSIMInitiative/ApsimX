@@ -127,17 +127,12 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
         {
-            DisconnectEvents(value);
-            UnresolveLinks(value);
             Model newModel = Model.Clone(value);
             Model modelToReplace = newSimulation.Get(path) as Model;
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
 
             modelToReplace.Parent.ReplaceModel(modelToReplace, newModel);
-
-            ConnectEventPublishers(value);
-            ResolveLinks(value);
         }
 
         /// <summary>

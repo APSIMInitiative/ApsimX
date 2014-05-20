@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         Structure structure = null;
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
 
 

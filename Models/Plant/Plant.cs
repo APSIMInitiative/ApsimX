@@ -88,6 +88,7 @@ namespace Models.PMF
 
         [XmlIgnore]
         public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        [XmlIgnore]
         public NewCanopyType LocalCanopyData;
 
         [Link(IsOptional=true)]

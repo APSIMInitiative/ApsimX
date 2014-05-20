@@ -866,13 +866,17 @@ namespace Importer
             i = 0;
             foreach (XmlNode _event in nodes)
             {
-                if (_event.InnerText == "end_day")
+                if (String.Compare(_event.InnerText, "end_day", true) == 0)
                 {
                     myreport.Events[i] = "[Clock].EndOfDay";
                 }
-                else if (_event.InnerText == "daily")
+                else if (String.Compare(_event.InnerText, "daily", true) == 0)
                 {
                     myreport.Events[i] = "[Clock].StartOfDay";
+                }
+                else
+                {
+                    myreport.Events[i] = "[Clock].EndOfDay";
                 }
                 i++;
             }

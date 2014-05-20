@@ -17,7 +17,7 @@ namespace Models.PMF.OldPlant
     {
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         #region Parameters read from XML file and links to other functions.
         [Link]

@@ -250,12 +250,11 @@ namespace ModelTests
             Assert.AreEqual(Field1.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), "Field2SubZoneReport");
             
             // Test the in scope capability of get.
-            Assert.AreEqual(soil.Get("[Graph].Name"), "Graph1");
+            Assert.AreEqual(soil.Get("[Graph1].Name"), "Graph1");
             Assert.AreEqual(graph.Get("[Soil].Water.Name"), "Water");
-            Assert.AreEqual(graph.Get("[Simulation].Name"), "Test");
         }
 
-        [TestMethod]
+         [TestMethod]
         public void WeatherSummary()
         {
             Simulation Sim = S.Models[0] as Simulation;

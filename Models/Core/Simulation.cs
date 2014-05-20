@@ -14,6 +14,11 @@ namespace Models.Core
     {
         private bool _IsRunning = false;
 
+        [NonSerialized]
+        private Stopwatch timer;
+
+        public event EventHandler OnCompleted;
+
         /// <summary>
         /// Cache to speed up scope lookups.
         /// </summary>
@@ -24,7 +29,7 @@ namespace Models.Core
         /// Cache to speed up variable lookups.
         /// </summary>
         [NonSerialized]
-        private Dictionary<string, Utility.IVariable> _VariableCache = null;
+        private Dictionary<string, IVariable> _VariableCache = null;
 
         /// <summary>
         /// Get a reference to the clock model.
@@ -46,11 +51,6 @@ namespace Models.Core
         /// Return true if the simulation is running.
         /// </summary>
         public bool IsRunning { get { return _IsRunning; } }
-
-
-
-
-
 
 
         /// <summary>
@@ -78,12 +78,12 @@ namespace Models.Core
         /// Return a reference to the variable cache.
         /// </summary>
         [XmlIgnore]
-        public Dictionary<string, Utility.IVariable> VariableCache 
+        public Dictionary<string, IVariable> VariableCache 
         { 
             get 
             { 
                 if (_VariableCache == null)
-                    _VariableCache = new Dictionary<string, Utility.IVariable>();
+                    _VariableCache = new Dictionary<string, IVariable>();
                 return _VariableCache; 
             } 
         }
@@ -98,11 +98,11 @@ namespace Models.Core
                 StartRun();
                 DoRun(sender);
                 CleanupRun();
+                AllModels.ForEach(Disconnect);
             }
             catch (ApsimXException err)
             {
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
+                DataStore store = new DataStore(this);
 
                 string Msg = err.Message;
                 if (err.InnerException != null)
@@ -111,14 +111,13 @@ namespace Models.Core
                     Msg += "\r\n" + err.StackTrace;
 
                 store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
-
+                store.Disconnect();
                 CleanupRun();
                 throw new Exception(Msg);
             }
             catch (Exception err)
             {
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), readOnly: false);
+                DataStore store = new DataStore(this);
 
                 string Msg = err.Message;
                 if (err.InnerException != null)
@@ -127,6 +126,7 @@ namespace Models.Core
                     Msg += "\r\n" + err.StackTrace;
 
                 store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
+                store.Disconnect();
 
                 CleanupRun();
                 throw new Exception(Msg);
@@ -139,9 +139,14 @@ namespace Models.Core
         /// </summary>
         public void StartRun()
         {
+            AllModels.ForEach(Connect);
+
+            timer = new Stopwatch();
             _IsRunning = true;
             VariableCache.Clear();
             ScopeCache.Clear();
+            Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
+            timer.Start();
             AllModels.ForEach(CallOnCommencing);
         }
 
@@ -163,7 +168,16 @@ namespace Models.Core
         {
             CallOnCompleted(this);
             AllModels.ForEach(CallOnCompleted);
+
+            if (OnCompleted != null)
+                OnCompleted.Invoke(this, null);
+
+            timer.Stop();
+            Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
             _IsRunning = false;
+
+            AllModels.ForEach(Disconnect);
+
         }
 
 

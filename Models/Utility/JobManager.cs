@@ -39,6 +39,12 @@ namespace Utility
             /// Percentage complete
             /// </summary>
             public int PercentComplete;
+
+            /// <summary>
+            /// True if this completed arguments instance has been dispatched to 
+            /// BackgroundWorker.ReportProgress
+            /// </summary>
+            public bool Reported;
         }
 
 
@@ -83,8 +89,7 @@ namespace Utility
         /// A list of pending completions that we need to advertise through invokes
         /// to OnComplete event.
         /// </summary>
-        private Queue<JobCompleteArgs> PendingCompletedJobs = new Queue<JobCompleteArgs>();
-
+        private List<JobCompleteArgs> PendingCompletedJobs = new List<JobCompleteArgs>();
 
         #endregion
 
@@ -211,23 +216,27 @@ namespace Utility
                         worker.DoWork += jobToRun.Run;
                         worker.RunWorkerCompleted += OnJobCompleted;
                         worker.WorkerSupportsCancellation = true;
-                        worker.WorkerReportsProgress = true;
                         worker.RunWorkerAsync(this);
                         Threads.Add(worker);
                     }
                 }
+                else
+                    Thread.Sleep(100);
+
 
                 // See if there are any pending completes that we need to report.
                 lock (this)
                 {
-                    while (PendingCompletedJobs.Count > 0)
+                    for (int i = 0; i < PendingCompletedJobs.Count; i++)
                     {
-                        JobCompleteArgs completeArgs = PendingCompletedJobs.Dequeue();
-                        bw.ReportProgress(completeArgs.PercentComplete, completeArgs);
+                        JobCompleteArgs completeArgs = PendingCompletedJobs[i];
+                        if (!completeArgs.Reported)
+                        {
+                            completeArgs.Reported = true;
+                            bw.ReportProgress(completeArgs.PercentComplete, completeArgs);
+                        }
                     }
                 }
-
-                Thread.Sleep(100);
             }
         }
 
@@ -237,7 +246,13 @@ namespace Utility
         private void OnProgress(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             if (OnComplete != null)
-                OnComplete(this, e.UserState as JobCompleteArgs);
+            {
+                JobCompleteArgs jobCompleteArgs = e.UserState as JobCompleteArgs;
+                jobCompleteArgs.PercentComplete = Convert.ToInt32((NumJobsCompleted * 1.0) / Jobs.Count * 100.0);
+                OnComplete(this, jobCompleteArgs);
+            }
+            lock (this)
+                PendingCompletedJobs.Remove(e.UserState as JobCompleteArgs);
         }
 
 
@@ -262,9 +277,8 @@ namespace Utility
                     }
                     else
                         completeArgs.Name = Utility.Reflection.Name(e.Result);
-                    
-                    completeArgs.PercentComplete = Convert.ToInt32((NumJobsCompleted * 1.0) / Jobs.Count * 100.0);
-                    PendingCompletedJobs.Enqueue(completeArgs);
+
+                    PendingCompletedJobs.Add(completeArgs);
                 }
             }
         }

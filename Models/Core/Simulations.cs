@@ -66,10 +66,6 @@ namespace Models.Core
                 // Parent all models.
                 ParentAllModels(simulations);
 
-                // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
-
                 // Call OnLoaded in all models.
                 simulations.AllModels.ForEach(CallOnLoaded);
             }
@@ -98,10 +94,6 @@ namespace Models.Core
 
                 // Parent all models.
                 ParentAllModels(simulations);
-
-                // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
 
                 // Call OnLoaded in all models.
                 simulations.AllModels.ForEach(CallOnLoaded);
@@ -162,9 +154,11 @@ namespace Models.Core
                 }
             }
             // Make sure each simulation has it's filename set correctly.
-            string fileName = RootSimulations(parent).FileName;
             foreach (Simulation simulation in simulations)
-                simulation.FileName = fileName;
+            {
+                if (simulation.FileName == null)
+                    simulation.FileName = RootSimulations(parent).FileName;
+            }
             return simulations.ToArray();
         }
 
@@ -222,6 +216,9 @@ namespace Models.Core
         [XmlIgnore]
         public Model SimulationToRun { get; set; }
 
+        private int NumToRun;
+        private int NumCompleted;
+
         /// <summary>
         /// Run all simulations.
         /// </summary>
@@ -230,16 +227,17 @@ namespace Models.Core
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
-            jobManager.OnComplete += OnAllSimulationsHaveCompleted;
+            // Get a reference to our child DataStore.
+            DataStore store = ModelMatching(typeof(DataStore)) as DataStore;
+
+            // Remove old simulation data.
+            store.RemoveUnwantedSimulations(this);
 
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
             {
-                // As we are goito run all simulations, we can delete all tables in the DataStore. This
+                // As we are going to run all simulations, we can delete all tables in the DataStore. This
                 // will clean up order of columns in the tables and removed unused ones.
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), false);
-
                 foreach (string tableName in store.TableNames)
                     if (tableName != "Simulations" && tableName != "Messages")
                         store.DeleteTable(tableName);
@@ -254,21 +252,31 @@ namespace Models.Core
             foreach (Model model in AllModels)
                 model.OnAllCommencing();
 
+            NumToRun = simulationsToRun.Length;
+            NumCompleted = 0;
             foreach (Simulation simulation in simulationsToRun)
+            {
+                simulation.OnCompleted -= OnSimulationCompleted;
+                simulation.OnCompleted += OnSimulationCompleted;
                 jobManager.AddJob(simulation);
+            }
         }
 
         /// <summary>
         /// This gets called everytime a simulation completes. When all are done then
         /// invoke each model's OnAllCompleted method.
         /// </summary>
-        private void OnAllSimulationsHaveCompleted(object sender, Utility.JobManager.JobCompleteArgs e)
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (e.PercentComplete == 100)
+            bool RunAllCompleted = false;
+            lock (this)
             {
-                Utility.JobManager jobManager = sender as Utility.JobManager;
-                jobManager.OnComplete -= OnAllSimulationsHaveCompleted;
-
+                NumCompleted++;
+                RunAllCompleted = NumCompleted == NumToRun;
+            }
+            if (RunAllCompleted)
+            {
+                Console.WriteLine(FileName);
                 foreach (Model model in AllModels)
                     model.OnAllCompleted();
             }

@@ -29,7 +29,7 @@ namespace Models.Core
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public static Utility.IVariable Get(Model relativeTo, string namePath)
+        public static IVariable Get(Model relativeTo, string namePath)
         {
             // Look in cache first.
             Simulation simulation = GetSimulation(relativeTo);
@@ -82,11 +82,11 @@ namespace Models.Core
             }
 
             // Now we can create our return variable.
-            Utility.IVariable variable;
+            IVariable variable;
             if (propertyInfo == null)
-                variable = new Utility.VariableObject(obj);
+                variable = new VariableObject(obj);
             else
-                variable = new Utility.VariableProperty(obj, propertyInfo);
+                variable = new VariableProperty(obj, propertyInfo);
 
             // Add to our cache.
             if (useCache)
@@ -94,7 +94,7 @@ namespace Models.Core
             return variable;
         }
 
-
+    
 
         /// <summary>
         /// Return the specified 'namePath' as an absolute one.
@@ -111,16 +111,7 @@ namespace Models.Core
                 // namePath has a [type] at its beginning.
                 int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
                 string typeName = namePath.Substring(1, pos - 1);
-                Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
-                Model modelInScope;
-                if (t == null)
-                    modelInScope = Scope.Find(relativeTo, typeName);
-                else
-                {
-                    modelInScope = Scope.Find(relativeTo, t);
-                    if (modelInScope == null)
-                        modelInScope = Scope.Find(relativeTo, typeName);
-                }
+                Model modelInScope = Scope.Find(relativeTo, typeName);
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);

@@ -254,59 +254,72 @@ namespace Utility
             return null;
         }
 
+
+        public static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
+
         /// <summary>
-        /// Complile the specified 'code' into an executable assembly. If 'assemblyFileName'
+        /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
         /// is null then compile to an in-memory assembly.
         /// </summary>
         public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
         {
-            bool VB = code.IndexOf("Imports System") != -1;
-            string Language;
-            if (VB)
-                Language = CodeDomProvider.GetLanguageFromExtension(".vb");
-            else
-                Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+            // See if we've already compiled this code. If so then return the assembly.
+            if (AssemblyCache.ContainsKey(code))
+                return AssemblyCache[code];
 
-            if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
+            lock (AssemblyCache)
             {
-                CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
-                if (Provider != null)
+                if (AssemblyCache.ContainsKey(code))
+                    return AssemblyCache[code];
+                bool VB = code.IndexOf("Imports System") != -1;
+                string Language;
+                if (VB)
+                    Language = CodeDomProvider.GetLanguageFromExtension(".vb");
+                else
+                    Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+
+                if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
                 {
-                    CompilerParameters Params = new CompilerParameters();
-                    
-                    if (assemblyFileName == null)
-                        Params.GenerateInMemory = true;
-                    else
+                    CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
+                    if (Provider != null)
                     {
-                        Params.GenerateInMemory = false;      
-                        Params.OutputAssembly = assemblyFileName;
-                    }
-                    Params.TreatWarningsAsErrors = false;
-                    Params.WarningLevel = 2;
-                    Params.ReferencedAssemblies.Add("System.dll");
-                    Params.ReferencedAssemblies.Add("System.Xml.dll");
-                    Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
+                        CompilerParameters Params = new CompilerParameters();
 
-                    Params.TempFiles = new TempFileCollection(".");
-                    Params.TempFiles.KeepFiles = false;
-                    string[] source = new string[1];
-                    source[0] = code;
-                    CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
-                    string Errors = "";
-                    foreach (CompilerError err in results.Errors)
-                    {
+                        if (assemblyFileName == null)
+                            Params.GenerateInMemory = true;
+                        else
+                        {
+                            Params.GenerateInMemory = false;
+                            Params.OutputAssembly = assemblyFileName;
+                        }
+                        Params.TreatWarningsAsErrors = false;
+                        Params.WarningLevel = 2;
+                        Params.ReferencedAssemblies.Add("System.dll");
+                        Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
+
+                        Params.TempFiles = new TempFileCollection(".");
+                        Params.TempFiles.KeepFiles = false;
+                        string[] source = new string[1];
+                        source[0] = code;
+                        CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
+                        string Errors = "";
+                        foreach (CompilerError err in results.Errors)
+                        {
+                            if (Errors != "")
+                                Errors += "\r\n";
+
+                            Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        }
                         if (Errors != "")
-                            Errors += "\r\n";
+                            throw new Exception(Errors);
 
-                        Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        AssemblyCache.Add(code, results.CompiledAssembly);
+                        return results.CompiledAssembly;
                     }
-                    if (Errors != "")
-                        throw new Exception(Errors);
-
-                    return results.CompiledAssembly;
                 }
+                throw new Exception("Cannot compile manager script to an assembly");
             }
-            throw new Exception("Cannot compile manager script to an assembly");
         }
 
 

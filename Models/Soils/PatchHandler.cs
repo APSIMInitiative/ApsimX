@@ -38,7 +38,7 @@ namespace Models.Soils
         }
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
 
 

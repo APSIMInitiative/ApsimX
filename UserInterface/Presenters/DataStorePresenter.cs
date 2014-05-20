@@ -3,6 +3,7 @@ using UserInterface.Views;
 using Models;
 using System.Data;
 using Models.Core;
+using System.Collections.Generic;
 
 namespace UserInterface.Presenters
 {
@@ -83,8 +84,7 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (Model child in DataStore.Models)
-                    child.OnAllCompleted();
+                DataStore.RunPostProcessingTools();
             }
             catch (Exception err)
             {

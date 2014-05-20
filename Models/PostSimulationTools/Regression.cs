@@ -41,13 +41,13 @@ namespace Models.PostSimulationTools
         /// </summary>
         public override void OnAllCompleted()
         {
-            DataStore dataStore = new DataStore();
-            dataStore.Connect(Path.ChangeExtension(Simulations.FileName, ".db"), readOnly: false);
+            DataStore dataStore = new DataStore(this);
 
             dataStore.DeleteTable(this.Name);
 
             DataTable data = dataStore.GetData("*", TableName);
-            
+
+            dataStore.Disconnect();
         }
     }
 }

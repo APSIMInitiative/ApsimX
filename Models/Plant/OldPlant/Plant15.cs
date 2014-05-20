@@ -67,7 +67,7 @@ namespace Models.PMF.OldPlant
         Phenology Phenology = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         public bool AutoHarvest { get; set; }
 

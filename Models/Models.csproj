@@ -48,12 +48,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>TRACE;APSIMX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics">
@@ -112,6 +112,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Core\IPostSimulationTool.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\Variables.cs" />
     <Compile Include="Utility\JobManager.cs" />
-    <Compile Include="Utility\Variable.cs" />
+    <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
     <Compile Include="PostSimulationTools\Input.cs" />
@@ -301,7 +302,6 @@
     <Compile Include="Utility\DataTableSerialiser.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
-    <Compile Include="Utility\ModelFunctions.cs" />
     <Compile Include="WeatherFile.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Main.cs" />
@@ -345,7 +345,9 @@
     <None Include="Resources\Wheat.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Potato.xml" />
+    <None Include="Resources\Potato.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

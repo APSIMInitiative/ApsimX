@@ -17,7 +17,7 @@ namespace UserInterface.Presenters
         private Models.PostSimulationTools.PredictedObserved PredictedObserved;
         private IPredictedObservedView View;
         private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = new DataStore();
+        private DataStore DataStore;
 
         /// <summary>
         /// Attaches an Input model to an Input View.
@@ -29,7 +29,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter = explorerPresenter;
 
             // Need a datastore.
-            DataStore.Connect(Path.ChangeExtension(PredictedObserved.Simulations.FileName, ".db"), readOnly: true);
+            DataStore = new DataStore(PredictedObserved);
 
             PopulateView();
 

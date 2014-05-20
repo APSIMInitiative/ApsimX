@@ -44,16 +44,13 @@ namespace Models
         /// </summary>
         public override void OnCompleted()
         {
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
+            DataStore DataStore = new DataStore(this);
             DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
             DataStore.WriteTable(Simulation.Name, "Messages", Messages);
             DataStore.Disconnect();
-            DataStore = null;
 
             if (AutoCreate)
                 CreateReportFile(false);
-
         }
 
         /// <summary>
@@ -91,6 +88,7 @@ namespace Models
         public string GetSummary(string apsimSummaryImageFileName)
         {
             StringWriter st = new StringWriter();
+            Simulation = ParentOfType(typeof(Simulation)) as Simulation;
             WriteSummary(st, Simulation.Name, apsimSummaryImageFileName);
             return st.ToString();
         }
@@ -121,8 +119,7 @@ namespace Models
         {
             if (Simulation.FileName != null)
             {
-                DataStore DataStore = new DataStore();
-                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
+                DataStore DataStore = new DataStore(this);
 
                 if (html)
                 {
