@@ -187,13 +187,14 @@ namespace Models.Core
             List<Model> allModels = new List<Model>();
 
             // Get a list of children (recursively) of this zone.
-            foreach (Model child in Models)
-            {
-                if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
-                    allModels.Add(child);
-                if (child is ModelCollection)
-                    allModels.AddRange((child as ModelCollection).AllModelsMatching(modelType));
-            }
+            if (Models != null)
+                foreach (Model child in Models)
+                {
+                    if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
+                        allModels.Add(child);
+                    if (child is ModelCollection)
+                        allModels.AddRange((child as ModelCollection).AllModelsMatching(modelType));
+                }
             return allModels;
         }
 
@@ -240,8 +241,8 @@ namespace Models.Core
             Models.Add(model);
             model.Parent = this;
             ParentAllModels(this);
-            Scope.ClearCache(this);
-            Variables.ClearCache(this);
+            Scope.ClearCache(ParentSimulation, this);
+            Variables.ClearCache(ParentSimulation, this);
 
             if (IsConnected)
             {
@@ -280,8 +281,8 @@ namespace Models.Core
                 Models.Insert(index, newModel);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                Scope.ClearCache(ParentSimulation, this);
+                Variables.ClearCache(ParentSimulation, this);
 
                 oldModel.Parent = null;
 
@@ -315,8 +316,8 @@ namespace Models.Core
                 Models.RemoveAt(index);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                Scope.ClearCache(ParentSimulation, this);
+                Variables.ClearCache(ParentSimulation, this);
 
                 if (oldModel.IsConnected)
                     Disconnect(oldModel);
@@ -386,8 +387,10 @@ namespace Models.Core
         /// <summary>
         /// Recursively go through all child models and correctly set their parent field.
         /// </summary>
-        protected static void ParentAllModels(ModelCollection parent)
+        public static void ParentAllModels(ModelCollection parent)
         {
+            if (parent is Simulations)
+                parent.Parent = null;
             foreach (Model child in parent.Models)
             {
                 child.Parent = parent;

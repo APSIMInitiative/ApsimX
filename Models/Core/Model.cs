@@ -17,6 +17,8 @@ namespace Models.Core
     public class Model
     {
         private string _Name = null;
+        private ModelCollection _Parent = null;
+        private Simulation _Simulation = null;
 
         /// <summary>
         /// Returns true if this model is has all events and links connected.
@@ -87,6 +89,10 @@ namespace Models.Core
             set
             {
                 _Name = value;
+                CalcFullPath();
+                if (this is ModelCollection)
+                    foreach (Model child in (this as ModelCollection).AllModels)
+                        child.CalcFullPath();
             }
         }
 
@@ -94,7 +100,18 @@ namespace Models.Core
         /// Get or set the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public ModelCollection Parent { get; set; }
+        public ModelCollection Parent 
+        {
+            get
+            {
+                return _Parent;
+            }
+            set
+            {
+                _Parent = value;
+                CalcFullPath();
+            }
+        }
 
         /// <summary>
         /// Return a parent node of the specified type 't'. Will throw if not found.
@@ -116,17 +133,24 @@ namespace Models.Core
         public bool HiddenModel { get; set; }
 
         /// <summary>
-        /// Get the model's full path. 
+        /// Return the full path of the model.
         /// Format: Simulations.SimName.PaddockName.ChildName
         /// </summary>
-        public string FullPath
+        [XmlIgnore]
+        public string FullPath { get; private set; }
+
+        /// <summary>
+        /// Calculate the model's full path. 
+        /// Format: Simulations.SimName.PaddockName.ChildName
+        /// </summary>
+        private void CalcFullPath()
         {
-            get
+            FullPath = "." + Name;
+            Model parent = Parent;
+            while (parent != null)
             {
-                if (Parent == null)
-                    return "." + Name;
-                else
-                    return Parent.FullPath + "." + Name;
+                FullPath = FullPath.Insert(0, "." + parent.Name);
+                parent = parent.Parent;
             }
         }
 
@@ -135,7 +159,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(Type modelType)
         {
-            return Scope.Find(this, modelType);
+            return Scope.Find(ParentSimulation, this, modelType);
         }
 
         /// <summary>
@@ -143,7 +167,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(string modelNameToFind)
         {
-            return Scope.Find(this, modelNameToFind);
+            return Scope.Find(ParentSimulation, this, modelNameToFind);
         }
 
         /// <summary>
@@ -153,7 +177,7 @@ namespace Models.Core
         /// </summary>
         public Model[] FindAll(Type modelType = null)
         {
-            return Scope.FindAll(this, modelType); 
+            return Scope.FindAll(ParentSimulation, this, modelType); 
         }
 
         /// <summary>
@@ -161,7 +185,7 @@ namespace Models.Core
         /// </summary>
         public object Get(string namePath)
         {
-            IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(ParentSimulation, this, namePath);
             if (variable == null)
                 return null;
             else
@@ -173,7 +197,7 @@ namespace Models.Core
         /// </summary>
         public void Set(string namePath, object value)
         {
-            IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(ParentSimulation, this, namePath);
             if (variable == null)
                 throw new ApsimXException(FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             else
@@ -457,6 +481,18 @@ namespace Models.Core
                 ResolveLinks(externalModel, typeof(Model));
         }
 
+        /// <summary>
+        /// Return the parent simulation. Returns null if not found.
+        /// </summary>
+        protected Simulation ParentSimulation
+        {
+            get
+            {
+                if (_Simulation == null)
+                    _Simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                return _Simulation;
+            }
+        }
         #endregion
 
         #region Event functions

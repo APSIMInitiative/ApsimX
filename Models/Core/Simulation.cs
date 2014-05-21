@@ -131,7 +131,8 @@ namespace Models.Core
                 CleanupRun();
                 throw new Exception(Msg);
             }
-            e.Result = this;
+            if (e != null)
+                e.Result = this;
         }
 
         /// <summary>

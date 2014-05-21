@@ -35,6 +35,7 @@ namespace Models
             private List<Type> _Types = new List<Type>();
             private List<object> _Values = new List<object>();
             private int MaxNumArrayElements;
+            private Type TypeOfThisMember;
 
             /// <summary>
             /// Constructor
@@ -51,9 +52,9 @@ namespace Models
             public void Analyse()
             {
                 // Work out the type of data we're dealing with.
-                Type T = DetermineType();
+                TypeOfThisMember = DetermineType();
 
-                if (T != null && _Values.Count > 0 && T.IsArray)
+                if (TypeOfThisMember != null && _Values.Count > 0 && TypeOfThisMember.IsArray)
                     {
                         // Array - calculate the maximum number of array elements and analyse each array element
                         // on row 0 for a name and type.
@@ -101,10 +102,7 @@ namespace Models
             {
                 List<object> AllValues = new List<object>();
 
-                // Work out the type of data we're dealing with.
-                Type T = DetermineType();
-
-                if (T != null && T.IsArray)
+                if (TypeOfThisMember != null && TypeOfThisMember.IsArray)
                     {
                         // Add required columns
                         Array Arr = _Values[Row] as Array;

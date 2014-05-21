@@ -15,9 +15,8 @@ namespace Models.Core
         /// <summary>
         /// Clear the scope cache if 'relativeTo' is sitting under a simulation.
         /// </summary>
-        public static void ClearCache(Model relativeTo)
+        public static void ClearCache(Simulation simulation, Model relativeTo)
         {
-            Simulation simulation = GetSimulation(relativeTo);
             if (simulation != null)
                 simulation.ScopeCache.Clear();
         }
@@ -25,16 +24,13 @@ namespace Models.Core
         /// <summary>
         /// Return a model with the specified name is in scope. Returns null if none found.
         /// </summary>
-        public static Model Find(Model relativeTo, string modelNameToFind)
+        public static Model Find(Simulation simulation, Model relativeTo, string modelNameToFind)
         {
-            // Get the simulation
-            Simulation simulation = GetSimulation(relativeTo);
-
             // If it is in the cache then return it.
             string cacheKey = null;
             if (simulation != null)
             {
-                cacheKey = GetCacheKey(relativeTo, modelNameToFind, singleMatch: true);
+                cacheKey = GetCacheKey(simulation, relativeTo, modelNameToFind, singleMatch: true);
                 if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
                     return simulation.ScopeCache[cacheKey][0];
             }
@@ -56,16 +52,13 @@ namespace Models.Core
         /// <summary>
         /// Return a model of the specified type that is in scope. Returns null if none found.
         /// </summary>
-        public static Model Find(Model relativeTo, Type modelType)
+        public static Model Find(Simulation simulation, Model relativeTo, Type modelType)
         {
-            // Get the simulation
-            Simulation simulation = GetSimulation(relativeTo);
-
             // If it is in the cache then return it.
             string cacheKey = null;
             if (simulation != null)
             {
-                cacheKey = GetCacheKey(relativeTo, modelType.Name, singleMatch: true);
+                cacheKey = GetCacheKey(simulation, relativeTo, modelType.Name, singleMatch: true);
                 if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
                     return simulation.ScopeCache[cacheKey][0];
             }
@@ -88,19 +81,16 @@ namespace Models.Core
         /// of that type will be returned. Never returns null. May return an empty array. Does not
         /// return models outside of a simulation.
         /// </summary>
-        public static Model[] FindAll(Model relativeTo, Type modelType = null)
+        public static Model[] FindAll(Simulation simulation, Model relativeTo, Type modelType = null)
         {
-            // Get the simulation
-            Simulation simulation = GetSimulation(relativeTo);
-
             // If it is in the cache then return it.
             string cacheKey = null;
             if (simulation != null)
             {
                 if (modelType == null)
-                    cacheKey = GetCacheKey(relativeTo, null, singleMatch: false);
+                    cacheKey = GetCacheKey(simulation, relativeTo, null, singleMatch: false);
                 else
-                    cacheKey = GetCacheKey(relativeTo, modelType.Name, singleMatch: false);
+                    cacheKey = GetCacheKey(simulation, relativeTo, modelType.Name, singleMatch: false);
                 if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
                     return simulation.ScopeCache[cacheKey];
             }
@@ -119,11 +109,8 @@ namespace Models.Core
         /// <summary>
         /// Return a unique cache key or null if cache shouldn't be used.
         /// </summary>
-        private static string GetCacheKey(Model relativeTo, string modelName, bool singleMatch)
+        private static string GetCacheKey(Simulation simulation, Model relativeTo, string modelName, bool singleMatch)
         {
-            // Look in cache first.
-            Simulation simulation = GetSimulation(relativeTo);
-
             // If this is a simulation variable then try and use the cache.
             bool useCache = simulation != null;
  
@@ -215,11 +202,6 @@ namespace Models.Core
                         parent = parent.Parent;
                     }
                 }
-                //else
-                //{
-                //    // When walking the parent, tell it to exclude 'relativeTo' as we've already done it.
-                //    Walk(relativeTo.Parent, comparer, firstOnly, matches, relativeTo);
-                //}
             }
         }
 
@@ -260,35 +242,5 @@ namespace Models.Core
                 matches.Add(relativeTo);
         }
 
-
-
-        /// <summary>
-        /// Find the parent zone and return it. Will throw if not found.
-        /// </summary>
-        private Zone ParentZone(Model relativeTo)
-        {
-            // Go looking for a zone or Simulation.
-            ModelCollection parentZone = relativeTo.Parent;
-            while (parentZone != null && !typeof(Zone).IsAssignableFrom(parentZone.GetType()))
-                parentZone = parentZone.Parent;
-            if (parentZone == null || !(parentZone is Zone))
-                throw new ApsimXException(relativeTo.FullPath, "Cannot find a parent zone for model '" + relativeTo.FullPath + "'");
-            return parentZone as Zone;
-        }
-
-        /// <summary>
-        /// Locate the parent with the specified type. Returns null if not found.
-        /// </summary>
-        private static Simulation GetSimulation(Model relativeTo)
-        {
-            Model m = relativeTo;
-            while (m != null && m.Parent != null && !(m is Simulation))
-                m = m.Parent;
-
-            if (m == null || !(m is Simulation))
-                return null;
-            else
-                return m as Simulation;
-        }
     }
 }

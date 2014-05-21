@@ -58,29 +58,19 @@ namespace Models.Soils
         //[UILargeText]
         public string Comments { get; set; }
 
-        public Water Water { get { return ModelMatching(typeof(Water)) as Water; } }
-        public SoilWater SoilWater { get { return ModelMatching(typeof(SoilWater)) as SoilWater; } }
-        public SoilOrganicMatter SoilOrganicMatter { get { return ModelMatching(typeof(SoilOrganicMatter)) as SoilOrganicMatter; } }
-        public SoilNitrogen SoilNitrogen { get { return ModelMatching(typeof(SoilNitrogen)) as SoilNitrogen; } }
-        public Analysis Analysis { get { return ModelMatching(typeof(Analysis)) as Analysis; } }
-        public InitialWater InitialWater { get { return ModelMatching(typeof(InitialWater)) as InitialWater; } }
-        public Phosphorus Phosphorus { get { return ModelMatching(typeof(Phosphorus)) as Phosphorus; } }
-        public Swim Swim { get { return ModelMatching(typeof(Swim)) as Swim; } }
-        public LayerStructure LayerStructure { get { return ModelMatching(typeof(LayerStructure)) as LayerStructure; } }
-        public SoilTemperature SoilTemperature { get { return ModelMatching(typeof(SoilTemperature)) as SoilTemperature; } }
-        public SoilTemperature2 SoilTemperature2 { get { return ModelMatching(typeof(SoilTemperature2)) as SoilTemperature2; } }
+        [XmlIgnore] public Water Water { get; private set; }
+        [XmlIgnore] public SoilWater SoilWater { get; private set; }
+        [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
+        [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
+        [XmlIgnore] public Analysis Analysis { get; private set; }
+        [XmlIgnore] public InitialWater InitialWater { get; private set; }
+        [XmlIgnore] public Phosphorus Phosphorus { get; private set; }
+        [XmlIgnore] public Swim Swim { get; private set; }
+        [XmlIgnore] public LayerStructure LayerStructure { get; private set; }
+        [XmlIgnore] public SoilTemperature SoilTemperature { get; private set; }
+        [XmlIgnore] public SoilTemperature2 SoilTemperature2 { get; private set; }
 
-        [XmlIgnore]
-        public List<Sample> Samples 
-        { 
-            get 
-            {
-                List<Sample> samples = new List<Sample>();
-                foreach (Sample sample in AllModelsMatching(typeof(Sample)))
-                    samples.Add(sample);
-                return samples;
-            } 
-        }
+        [XmlIgnore] public List<Sample> Samples { get; private set; }
         
         /// <summary>
         /// Constructor
@@ -99,6 +89,40 @@ namespace Models.Soils
             XmlSerializer x = new XmlSerializer(typeof(Soil));
             StringReader F = new StringReader(Xml);
             return x.Deserialize(F) as Soil;
+        }
+
+        public override void OnLoaded()
+        {
+            FindChildren();
+        }
+
+        public override void OnAllCommencing()
+        {
+            FindChildren();
+        }
+
+        /// <summary>
+        /// Find our children.
+        /// </summary>
+        private void FindChildren()
+        {        
+            Water = ModelMatching(typeof(Water)) as Water;
+            SoilWater = ModelMatching(typeof(SoilWater)) as SoilWater;
+            SoilOrganicMatter = ModelMatching(typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoilNitrogen = ModelMatching(typeof(SoilNitrogen)) as SoilNitrogen;
+            Analysis = ModelMatching(typeof(Analysis)) as Analysis;
+            InitialWater = ModelMatching(typeof(InitialWater)) as InitialWater;
+            Phosphorus = ModelMatching(typeof(Phosphorus)) as Phosphorus;
+            Swim = ModelMatching(typeof(Swim)) as Swim;
+            LayerStructure = ModelMatching(typeof(LayerStructure)) as LayerStructure;
+            SoilTemperature = ModelMatching(typeof(SoilTemperature)) as SoilTemperature;
+            SoilTemperature2 = ModelMatching(typeof(SoilTemperature2)) as SoilTemperature2;
+
+            if (Samples == null)
+                Samples = new List<Sample>();
+            Samples.Clear();
+            foreach (Sample sample in AllModelsMatching(typeof(Sample)))
+                Samples.Add(sample);
         }
 
         /// <summary>
