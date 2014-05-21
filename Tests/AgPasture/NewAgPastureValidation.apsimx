@@ -1049,7 +1049,7 @@
             <Type>Line</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
+            <ColourArgb>-16711872</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
