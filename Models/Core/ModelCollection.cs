@@ -388,6 +388,8 @@ namespace Models.Core
         /// </summary>
         protected static void ParentAllModels(ModelCollection parent)
         {
+            if (parent is Simulations)
+                parent.Parent = null;
             foreach (Model child in parent.Models)
             {
                 child.Parent = parent;

@@ -101,15 +101,21 @@ namespace Models.Core
         /// </summary>
         private static string ToAbsolute(string namePath, Model relativeTo)
         {
-            if (namePath.StartsWith("."))
+            if (namePath.Length == 0)
+                return namePath;
+
+            if (namePath[0] == '.')
             {
                 // Absolute path
                 return namePath;
             }
-            else if (namePath.StartsWith("[", StringComparison.CurrentCulture) && namePath.Contains(']'))
+            else if (namePath[0] == '[')
             {
                 // namePath has a [type] at its beginning.
-                int pos = namePath.IndexOf("]", StringComparison.CurrentCulture);
+                int pos = namePath.IndexOf(']');
+                if (pos == -1)
+                    throw new ApsimXException(relativeTo.FullPath, "Invalid path found: " + namePath);
+
                 string typeName = namePath.Substring(1, pos - 1);
                 Model modelInScope = Scope.Find(relativeTo, typeName);
 
