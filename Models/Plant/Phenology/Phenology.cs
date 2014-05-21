@@ -156,11 +156,13 @@ namespace Models.PMF.Phen
         public override void OnCommencing()
         {
             Clear();
+            Phases = ModelsMatching<Phase>();
         }
 
         public void OnSow()
         {
             Clear();
+            Phases = ModelsMatching<Phase>();
         }
 
         /// <summary>

@@ -112,6 +112,7 @@ namespace Models.PMF.OldPlant
                 Sowing.Invoke(this, new EventArgs());
 
             Population.OnSow(SowingData);
+            Phenology.OnSow();
             WriteSowReport(SowingData);
             OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
@@ -198,7 +199,7 @@ namespace Models.PMF.OldPlant
         public event NewPotentialGrowthDelegate NewPotentialGrowth;
 
         
-        public event NullTypeDelegate Harvesting;
+        public event EventHandler Harvesting;
 
         public double cover_green 
         { 
@@ -653,7 +654,7 @@ namespace Models.PMF.OldPlant
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
-                Harvesting.Invoke();
+                Harvesting.Invoke(this, new EventArgs());
 
             // Check some bounds
             if (Harvest.Remove < 0 || Harvest.Remove > 1.0)

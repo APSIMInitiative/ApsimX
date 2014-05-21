@@ -31,8 +31,12 @@ namespace Models.Core
             if (simulation != null)
             {
                 cacheKey = GetCacheKey(simulation, relativeTo, modelNameToFind, singleMatch: true);
-                if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
-                    return simulation.ScopeCache[cacheKey][0];
+                if (cacheKey != null)
+                {
+                    Model[] matches;
+                    if (simulation.ScopeCache.TryGetValue(cacheKey, out matches))
+                        return matches[0];
+                }
             }
 
             // Not in cache so look for it and add to cache.
@@ -59,8 +63,12 @@ namespace Models.Core
             if (simulation != null)
             {
                 cacheKey = GetCacheKey(simulation, relativeTo, modelType.Name, singleMatch: true);
-                if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
-                    return simulation.ScopeCache[cacheKey][0];
+                if (cacheKey != null)
+                {
+                    Model[] matches;
+                    if (simulation.ScopeCache.TryGetValue(cacheKey, out matches))
+                        return matches[0];
+                }
             }
 
             // Not in cache so look for it and add to cache.
@@ -117,15 +125,16 @@ namespace Models.Core
             if (!useCache) 
                 return null;
 
-            string cacheKey = null;
-            cacheKey = relativeTo.FullPath;
             if (singleMatch)
-                cacheKey += "|SINGLE";
+                if (modelName != null)
+                    return relativeTo.FullPath + modelName;
+                else
+                    return relativeTo.FullPath;
             else
-                cacheKey += "|MANY";
-            if (modelName != null)
-                cacheKey += "|" + modelName;
-            return cacheKey;
+                if (modelName != null)
+                    return relativeTo.FullPath + "|MANY|" + modelName;
+                else
+                    return relativeTo.FullPath + "|MANY";
         }
 
         /// <summary>

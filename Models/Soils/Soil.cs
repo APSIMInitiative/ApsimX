@@ -1420,6 +1420,9 @@ namespace Models.Soils
             if (FValues == null || FThickness == null || FValues.Length != FThickness.Length)
                 return null;
 
+            if (Utility.Math.AreEqual(FThickness, ToThickness))
+                return FValues;
+
             double[] FromThickness = (double[]) FThickness.Clone();
             double[] FromValues = (double[])FValues.Clone();
 
