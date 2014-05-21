@@ -7,13 +7,13 @@
       <Name>Test</Name>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>Tests\WeatherFiles\Ruakura.met</FileName>
-        <MaxT>14.5</MaxT>
-        <MinT>6.1999998092651367</MinT>
-        <Rain>0.699999988079071</Rain>
-        <Radn>6.4000000953674316</Radn>
-        <vp>9.1899995803833</vp>
-        <wind>3</wind>
+        <FileName>Tests\WeatherFiles\lincoln.met</FileName>
+        <MaxT>8.3999996185302734</MaxT>
+        <MinT>-0.10000000149011612</MinT>
+        <Rain>9.5</Rain>
+        <Radn>4.1100001335144043</Radn>
+        <vp>6</vp>
+        <wind>7.46999979019165</wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Summary>
