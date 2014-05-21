@@ -241,8 +241,8 @@ namespace Models.Core
             Models.Add(model);
             model.Parent = this;
             ParentAllModels(this);
-            Scope.ClearCache(this);
-            Variables.ClearCache(this);
+            Scope.ClearCache(ParentSimulation, this);
+            Variables.ClearCache(ParentSimulation, this);
 
             if (IsConnected)
             {
@@ -281,8 +281,8 @@ namespace Models.Core
                 Models.Insert(index, newModel);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                Scope.ClearCache(ParentSimulation, this);
+                Variables.ClearCache(ParentSimulation, this);
 
                 oldModel.Parent = null;
 
@@ -316,8 +316,8 @@ namespace Models.Core
                 Models.RemoveAt(index);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                Scope.ClearCache(ParentSimulation, this);
+                Variables.ClearCache(ParentSimulation, this);
 
                 if (oldModel.IsConnected)
                     Disconnect(oldModel);

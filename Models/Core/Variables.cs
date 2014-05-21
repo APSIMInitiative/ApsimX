@@ -18,9 +18,8 @@ namespace Models.Core
         /// <summary>
         /// Clear the variable cache.
         /// </summary>
-        public static void ClearCache(Model relativeTo)
+        public static void ClearCache(Simulation simulation, Model relativeTo)
         {
-            Simulation simulation = GetSimulation(relativeTo);
             if (simulation != null)
                 simulation.VariableCache.Clear();
         }
@@ -29,15 +28,13 @@ namespace Models.Core
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public static IVariable Get(Model relativeTo, string namePath)
+        public static IVariable Get(Simulation simulation, Model relativeTo, string namePath)
         {
             // Look in cache first.
-            Simulation simulation = GetSimulation(relativeTo);
-
             // If this is a simulation variable then try and use the cache.
             bool useCache = simulation != null;
 
-            string absolutePath = ToAbsolute(namePath, relativeTo);
+            string absolutePath = ToAbsolute(simulation, namePath, relativeTo);
             string cacheKey = null;
             if (useCache)
             {
@@ -99,7 +96,7 @@ namespace Models.Core
         /// <summary>
         /// Return the specified 'namePath' as an absolute one.
         /// </summary>
-        private static string ToAbsolute(string namePath, Model relativeTo)
+        private static string ToAbsolute(Simulation simulation, string namePath, Model relativeTo)
         {
             if (namePath.Length == 0)
                 return namePath;
@@ -117,7 +114,7 @@ namespace Models.Core
                     throw new ApsimXException(relativeTo.FullPath, "Invalid path found: " + namePath);
 
                 string typeName = namePath.Substring(1, pos - 1);
-                Model modelInScope = Scope.Find(relativeTo, typeName);
+                Model modelInScope = Scope.Find(simulation, relativeTo, typeName);
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);
@@ -127,23 +124,6 @@ namespace Models.Core
             else
                 return relativeTo.FullPath + "." + namePath;
         }
-
-
-        /// <summary>
-        /// Locate the parent with the specified type. Returns null if not found.
-        /// </summary>
-        private static Simulation GetSimulation(Model relativeTo)
-        {
-            Model m = relativeTo;
-            while (m != null && m.Parent != null && !(m is Simulation))
-                m = m.Parent;
-
-            if (m == null || !(m is Simulation))
-                return null;
-            else
-                return m as Simulation;
-        }
-
 
         /// <summary>
         /// Locate the parent simulation Returns null if not found.

@@ -18,6 +18,7 @@ namespace Models.Core
     {
         private string _Name = null;
         private ModelCollection _Parent = null;
+        private Simulation _Simulation = null;
 
         /// <summary>
         /// Returns true if this model is has all events and links connected.
@@ -158,7 +159,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(Type modelType)
         {
-            return Scope.Find(this, modelType);
+            return Scope.Find(ParentSimulation, this, modelType);
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace Models.Core
         /// </summary>
         public Model Find(string modelNameToFind)
         {
-            return Scope.Find(this, modelNameToFind);
+            return Scope.Find(ParentSimulation, this, modelNameToFind);
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Models.Core
         /// </summary>
         public Model[] FindAll(Type modelType = null)
         {
-            return Scope.FindAll(this, modelType); 
+            return Scope.FindAll(ParentSimulation, this, modelType); 
         }
 
         /// <summary>
@@ -184,7 +185,7 @@ namespace Models.Core
         /// </summary>
         public object Get(string namePath)
         {
-            IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(ParentSimulation, this, namePath);
             if (variable == null)
                 return null;
             else
@@ -196,7 +197,7 @@ namespace Models.Core
         /// </summary>
         public void Set(string namePath, object value)
         {
-            IVariable variable = Variables.Get(this, namePath);
+            IVariable variable = Variables.Get(ParentSimulation, this, namePath);
             if (variable == null)
                 throw new ApsimXException(FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             else
@@ -480,6 +481,18 @@ namespace Models.Core
                 ResolveLinks(externalModel, typeof(Model));
         }
 
+        /// <summary>
+        /// Return the parent simulation. Returns null if not found.
+        /// </summary>
+        protected Simulation ParentSimulation
+        {
+            get
+            {
+                if (_Simulation == null)
+                    _Simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                return _Simulation;
+            }
+        }
         #endregion
 
         #region Event functions
