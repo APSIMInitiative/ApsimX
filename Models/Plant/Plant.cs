@@ -75,6 +75,7 @@ namespace Models.PMF
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
+        private List<Organ> _Organs = null;
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
@@ -84,7 +85,16 @@ namespace Models.PMF
         public SowPlant2Type SowingData;
 
         [XmlIgnore]
-        public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
+        public List<Organ> Organs 
+        { 
+            get 
+
+            { 
+                if (_Organs == null)
+                    _Organs = ModelsMatching<Organ>();
+                return _Organs;
+            } 
+        }
 
         [XmlIgnore]
         public NewCanopyType CanopyData {get{return LocalCanopyData;}}

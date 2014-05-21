@@ -10,12 +10,15 @@ namespace Models.PMF.Functions
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
     public class DivideFunction : Function
     {
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private List<Function> Children { get; set; }
 
         public override double Value
         {
             get
             {
+                if (Children == null)
+                    Children = ModelsMatching<Function>();
+
                 double returnValue = 0.0;
                 if (Children.Count > 0)
                 {

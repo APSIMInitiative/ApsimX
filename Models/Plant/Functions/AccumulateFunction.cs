@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     {
         //Class members
         private double AccumulatedValue = 0;
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private List<Function> Children { get; set; }
 
         [Link]
         Phenology Phenology = null;
@@ -30,6 +30,9 @@ namespace Models.PMF.Functions
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
+            if (Children == null)
+                Children = ModelsMatching<Function>();
+
             if (Phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
@@ -47,6 +50,9 @@ namespace Models.PMF.Functions
         {
             get
             {
+                if (Children == null)
+                    Children = ModelsMatching<Function>();
+
                 return AccumulatedValue;
             }
         }

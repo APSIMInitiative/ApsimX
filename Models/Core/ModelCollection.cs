@@ -187,13 +187,14 @@ namespace Models.Core
             List<Model> allModels = new List<Model>();
 
             // Get a list of children (recursively) of this zone.
-            foreach (Model child in Models)
-            {
-                if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
-                    allModels.Add(child);
-                if (child is ModelCollection)
-                    allModels.AddRange((child as ModelCollection).AllModelsMatching(modelType));
-            }
+            if (Models != null)
+                foreach (Model child in Models)
+                {
+                    if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
+                        allModels.Add(child);
+                    if (child is ModelCollection)
+                        allModels.AddRange((child as ModelCollection).AllModelsMatching(modelType));
+                }
             return allModels;
         }
 

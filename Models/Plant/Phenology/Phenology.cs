@@ -41,7 +41,7 @@ namespace Models.PMF.Phen
         [Link] public Function ThermalTime = null;
 
         [XmlIgnore]
-        public List<Phase> Phases { get { return ModelsMatching<Phase>(); } }
+        public List<Phase> Phases { get; private set; }
 
         #endregion
 
@@ -147,6 +147,11 @@ namespace Models.PMF.Phen
         /// Constructor
         /// </summary>
         public Phenology() { }
+
+        public override void OnLoaded()
+        {
+            Phases = ModelsMatching<Phase>();
+        }
 
         public override void OnCommencing()
         {
