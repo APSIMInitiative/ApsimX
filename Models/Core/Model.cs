@@ -17,7 +17,6 @@ namespace Models.Core
     public class Model
     {
         private string _Name = null;
-        private ModelCollection _Parent = null;
 
         /// <summary>
         /// Returns true if this model is has all events and links connected.
@@ -95,18 +94,7 @@ namespace Models.Core
         /// Get or set the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public ModelCollection Parent 
-        {
-            get
-            {
-                return _Parent;
-            }
-            set
-            {
-                _Parent = value;
-                FullPath = CalcFullPath();
-            }
-        }
+        public ModelCollection Parent { get; set; }
 
         /// <summary>
         /// Return a parent node of the specified type 't'. Will throw if not found.
@@ -128,22 +116,18 @@ namespace Models.Core
         public bool HiddenModel { get; set; }
 
         /// <summary>
-        /// Return the full path of the model.
+        /// Get the model's full path. 
         /// Format: Simulations.SimName.PaddockName.ChildName
         /// </summary>
-        [XmlIgnore]
-        public string FullPath { get; private set; }
-
-        /// <summary>
-        /// Calculate the model's full path. 
-        /// Format: Simulations.SimName.PaddockName.ChildName
-        /// </summary>
-        private string CalcFullPath()
+        public string FullPath
         {
-            if (Parent == null)
-                return "." + Name;
-            else
-                return Parent.CalcFullPath() + "." + Name;
+            get
+            {
+                if (Parent == null)
+                    return "." + Name;
+                else
+                    return Parent.FullPath + "." + Name;
+            }
         }
 
         /// <summary>
@@ -344,10 +328,6 @@ namespace Models.Core
                 source.Parent = parent;
 
                 returnObject.IsConnected = false;
-                if (returnObject is ModelCollection)
-                    ModelCollection.ParentAllModels(returnObject as ModelCollection);
-                returnObject.Parent = null;
-                
                 return returnObject;
             }
         }
