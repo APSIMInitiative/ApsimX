@@ -344,6 +344,10 @@ namespace Models.Core
                 source.Parent = parent;
 
                 returnObject.IsConnected = false;
+                if (returnObject is ModelCollection)
+                    ModelCollection.ParentAllModels(returnObject as ModelCollection);
+                returnObject.Parent = null;
+                
                 return returnObject;
             }
         }

@@ -386,7 +386,7 @@ namespace Models.Core
         /// <summary>
         /// Recursively go through all child models and correctly set their parent field.
         /// </summary>
-        protected static void ParentAllModels(ModelCollection parent)
+        public static void ParentAllModels(ModelCollection parent)
         {
             if (parent is Simulations)
                 parent.Parent = null;
