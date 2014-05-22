@@ -787,8 +787,11 @@ namespace Models
             DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
             if (idTable == null)
                 throw new ApsimXException(FullPath, "Cannot find Simulations table");
-            double[] ids = Utility.DataTable.GetColumnAsDoubles(idTable, "ID");
-            string[] simulationNames = Utility.DataTable.GetColumnAsStrings(idTable, "Name");
+            List<double> ids = new List<double>();
+            ids.AddRange(Utility.DataTable.GetColumnAsDoubles(idTable, "ID"));
+
+            List<string> simulationNames = new List<string>();
+            simulationNames.AddRange(Utility.DataTable.GetColumnAsStrings(idTable, "Name"));
 
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
             foreach (DataRow row in table.Rows)
@@ -796,19 +799,17 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = Array.IndexOf(simulationNames, simulationName);
+                    int index = simulationNames.IndexOf(simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
                     else
                     {
                         int id = GetSimulationID(simulationName);
+                        ids.Add(id);
+                        simulationNames.Add(simulationName);
                         row["SimulationID"] = id;
                     }
                 }
-                else
-                {
-                }
-
             }
         }
 
