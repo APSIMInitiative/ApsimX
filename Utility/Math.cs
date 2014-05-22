@@ -413,6 +413,23 @@ namespace Utility
             return ReturnValues;
         }
 
+        // --------------------------------------------------
+        // Convert an array of strings to an array of integers
+        // --------------------------------------------------
+        static public int[] StringsToIntegers(IList Values)
+        {
+            int[] ReturnValues = new int[Values.Count];
+
+            for (int Index = 0; Index != Values.Count; Index++)
+            {
+                if (Values[Index].ToString() == "" || Values[Index].ToString() == "NaN")
+                    ReturnValues[Index] = int.MinValue;
+                else
+                    ReturnValues[Index] = Convert.ToInt32(Values[Index]);
+            }
+            return ReturnValues;
+        }
+
         static public double[] ProbabilityDistribution(int NumPoints, bool Exceed)
         {
             double[] Probability = new double[NumPoints];

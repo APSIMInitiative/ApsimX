@@ -116,7 +116,16 @@ namespace Models
                     }
 
                     // Compile the code.
-                    Assembly compiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                    Assembly compiledAssembly;
+                    try
+                    {
+                        compiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                    }
+                    catch (Exception err)
+                    {
+                        throw new ApsimXException(FullPath, err.Message);
+                    }
+
                     CompiledCode = _Code;
 
                     // Get the script 'Type' from the compiled assembly.

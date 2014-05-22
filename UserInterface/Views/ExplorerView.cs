@@ -92,6 +92,17 @@ namespace UserInterface.Views
         public event EventHandler<NodeRenameArgs> Rename;
 
         /// <summary>
+        /// Invoked then a node is moved down
+        /// </summary>
+        public event EventHandler<EventArgs> OnMoveDown;
+
+        /// <summary>
+        /// Invoked then a node is moved up
+        /// </summary>
+        public event EventHandler<EventArgs> OnMoveUp;
+
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public ExplorerView()
@@ -621,6 +632,18 @@ namespace UserInterface.Views
         {
             get { return TreeView.Width; }
             set { TreeView.Width = value; }
+        }
+
+        /// <summary>
+        /// User has pressed a key.
+        /// </summary>
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Up && OnMoveUp != null)
+                OnMoveUp.Invoke(this, new EventArgs());
+            else if (e.Control && e.KeyCode == Keys.Down && OnMoveDown != null)
+                OnMoveDown.Invoke(this, new EventArgs());
+
         }
     }
 }

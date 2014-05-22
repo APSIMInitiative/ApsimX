@@ -67,7 +67,19 @@ namespace Models.Core
                 ParentAllModels(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.AllModels.ForEach(CallOnLoaded);
+                simulations.LoadErrors = new List<ApsimXException>();
+                foreach (Model child in simulations.AllModels)
+                {
+                    try
+                    {
+                        child.OnLoaded();
+                    }
+                    catch (ApsimXException err)
+                    {
+                        simulations.LoadErrors.Add(err);
+                    }
+
+                }
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
