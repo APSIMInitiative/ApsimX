@@ -445,10 +445,6 @@ namespace Models
                 int id = GetSimulationID(simulationName);
                 string sql = "DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString();
                 RunQueryWithNoReturnData(sql);
-
-                // If there is no more data left then get rid of table.
-                if (Connection.ExecuteQueryReturnInt("SELECT SimulationID FROM " + tableName + " LIMIT 1", 0) == -1)
-                    DeleteTable(tableName);
             }
         }
 
