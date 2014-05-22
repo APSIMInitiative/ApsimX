@@ -13,34 +13,12 @@ namespace Models.PostSimulationTools
     /// A simple post processing model that produces some time series stats.
     /// </summary>
     [Serializable]
-    public class TimeSeriesStats : Model
+    public class TimeSeriesStats : Model, IPostSimulationTool
     {
         public string TableName { get; set; }
 
-
-        /// <summary>
-        /// Go find the top level simulations object.
-        /// </summary>
-        public Simulations Simulations
+        public void Run(DataStore dataStore)
         {
-            get
-            {
-                Model obj = this;
-                while (obj.Parent != null && obj.GetType() != typeof(Simulations))
-                    obj = obj.Parent;
-                if (obj == null)
-                    throw new ApsimXException(FullPath, "Cannot find a root simulations object");
-                return obj as Simulations;
-            }
-        }
-
-        /// <summary>
-        /// Simulation has completed. Create a regression table in the data store.
-        /// </summary>
-        public override void OnAllCompleted()
-        {
-            DataStore dataStore = new DataStore(this);
-
             dataStore.DeleteTable(this.Name);
 
             DataTable statsData = new DataTable();
@@ -93,8 +71,6 @@ namespace Models.PostSimulationTools
                 }
                 dataStore.WriteTable(null, Name, statsData);
             }
-
-            dataStore.Disconnect();
         }
 
         /// <summary>
@@ -102,30 +78,43 @@ namespace Models.PostSimulationTools
         /// </summary>
         private static void CalcStatsRow(DataView view, string observedColumnName, string predictedColumnName, string seriesName, DataTable statsData)
         {
-            double[] observedData = Utility.DataTable.GetColumnAsDoubles(view, observedColumnName);
-            double[] predictedData = Utility.DataTable.GetColumnAsDoubles(view, predictedColumnName);
+            List<double> observedData = new List<double>();
+            List<double> predictedData = new List<double>();
 
-            Utility.Math.Stats stats = Utility.Math.CalcTimeSeriesStats(observedData, predictedData);
-
-            // Put stats into our stats DataTable
-            if (stats.Count > 0)
+            for (int row = 0; row != view.Count; row++)
             {
-                DataRow newRow = statsData.NewRow();
-                newRow["SimulationName"] = view[0]["SimName"];
-                newRow["VariableName"] = observedColumnName.Replace("Observed.", "");
-                if (!double.IsNaN(stats.Residual))
+                if (!Convert.IsDBNull(view[row][observedColumnName]) &&
+                    !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    newRow["n"] = stats.Count;
-                    newRow["residual"] = stats.Residual;
-                    newRow["R^2"] = stats.R2;
-                    newRow["RMSD"] = stats.RMSD;
-                    newRow["%"] = stats.Percent;
-                    newRow["MSD"] = stats.MSD;
-                    newRow["SB"] = stats.SB;
-                    newRow["SDSD"] = stats.SDSD;
-                    newRow["LCS"] = stats.LCS;
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName]));
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName]));
                 }
-                statsData.Rows.Add(newRow);
+            }
+            if (observedData.Count > 0)
+            {
+                Utility.Math.Stats stats = Utility.Math.CalcTimeSeriesStats(observedData.ToArray(),
+                                                                            predictedData.ToArray());
+
+                // Put stats into our stats DataTable
+                if (stats.Count > 0)
+                {
+                    DataRow newRow = statsData.NewRow();
+                    newRow["SimulationName"] = view[0]["SimName"];
+                    newRow["VariableName"] = observedColumnName.Replace("Observed.", "");
+                    if (!double.IsNaN(stats.Residual))
+                    {
+                        newRow["n"] = stats.Count;
+                        newRow["residual"] = stats.Residual;
+                        newRow["R^2"] = stats.R2;
+                        newRow["RMSD"] = stats.RMSD;
+                        newRow["%"] = stats.Percent;
+                        newRow["MSD"] = stats.MSD;
+                        newRow["SB"] = stats.SB;
+                        newRow["SDSD"] = stats.SDSD;
+                        newRow["LCS"] = stats.LCS;
+                    }
+                    statsData.Rows.Add(newRow);
+                }
             }
         }
         
