@@ -67,6 +67,7 @@
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />

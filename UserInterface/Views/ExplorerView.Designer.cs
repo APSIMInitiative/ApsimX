@@ -106,6 +106,7 @@
             this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeViewNodeMouseClick);
             this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
             this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.OnDragOver);
+            this.TreeView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // PopupMenu
             // 

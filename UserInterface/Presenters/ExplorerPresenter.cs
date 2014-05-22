@@ -77,6 +77,8 @@ namespace UserInterface.Presenters
             this.View.AllowDrop += OnAllowDrop;
             this.View.Drop += OnDrop;
             this.View.Rename += OnRename;
+            this.View.OnMoveDown += OnMoveDown;
+            this.View.OnMoveUp += OnMoveUp;
 
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
 
@@ -102,6 +104,9 @@ namespace UserInterface.Presenters
             View.AllowDrop -= OnAllowDrop;
             View.Drop -= OnDrop;
             View.Rename -= OnRename;
+            View.OnMoveDown -= OnMoveDown;
+            View.OnMoveUp -= OnMoveUp;
+
             CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
         }
 
@@ -418,6 +423,36 @@ namespace UserInterface.Presenters
                 View.CurrentNodePath = ParentModelPath + "." + e.NewName;
                 ShowRightHandPanel();
             }            
+        }
+
+        /// <summary>
+        /// User has attempted to move the current node up.
+        /// </summary>
+        private void OnMoveUp(object sender, EventArgs e)
+        {
+            Model model = ApsimXFile.Get(View.CurrentNodePath) as Model;
+            
+            if (model != null && model.Parent != null)
+            {
+                Model firstModel = model.Parent.Models[0];
+                if (model != firstModel)
+                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(View, model, up: true));
+            }
+        }
+
+        /// <summary>
+        /// User has attempted to move the current node down.
+        /// </summary>
+        private void OnMoveDown(object sender, EventArgs e)
+        {
+            Model model = ApsimXFile.Get(View.CurrentNodePath) as Model;
+
+            if (model != null && model.Parent != null)
+            {
+                Model lastModel = model.Parent.Models[model.Parent.Models.Count-1];
+                if (model != lastModel)
+                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(View, model, up: false));
+            }
         }
 
 
