@@ -203,20 +203,42 @@ namespace Models
         {
             Open(forWriting: true);
             string[] simulationNamesToKeep = simulationsToKeep.FindAllSimulationNames();
+
+            // Get a list of simulation IDs that we are to delete.
+            List<int> idsToDelete = new List<int>();
             foreach (string simulationNameInDB in SimulationNames)
-            {
                 if (!simulationNamesToKeep.Contains(simulationNameInDB))
                 {
-                    int id = GetSimulationID(simulationNameInDB);
-
-                    RunQueryWithNoReturnData("DELETE FROM Simulations WHERE ID = " + id.ToString());
-                    foreach (string tableName in TableNames)
-                    {
-                        // delete this simulation
-                        RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString());
-                    }
+                    idsToDelete.Add(GetSimulationID(simulationNameInDB));
                 }
+
+            if (idsToDelete.Count == 0)
+                return;
+
+            // create an SQL WHERE clause with all IDs
+            string idString = "";
+            for (int i = 0; i < idsToDelete.Count; i++)
+            {
+                if (i > 0)
+                    idString += " OR ";
+                idString += "ID = " + idsToDelete[i].ToString();
             }
+
+            RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+
+            idString = "";
+            for (int i = 0; i < idsToDelete.Count; i++)
+            {
+                if (i > 0)
+                    idString += " OR ";
+                idString += "SimulationID = " + idsToDelete[i].ToString();
+            }
+            foreach (string tableName in TableNames)
+            {
+                // delete this simulation
+                RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+            }
+            
         }
 
         /// <summary>
@@ -423,6 +445,10 @@ namespace Models
                 int id = GetSimulationID(simulationName);
                 string sql = "DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString();
                 RunQueryWithNoReturnData(sql);
+
+                // If there is no more data left then get rid of table.
+                if (Connection.ExecuteQueryReturnInt("SELECT SimulationID FROM " + tableName + " LIMIT 1", 0) == -1)
+                    DeleteTable(tableName);
             }
         }
 
