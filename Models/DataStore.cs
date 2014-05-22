@@ -799,6 +799,14 @@ namespace Models
                     int index = Array.IndexOf(simulationNames, simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
+                    else
+                    {
+                        int id = GetSimulationID(simulationName);
+                        row["SimulationID"] = id;
+                    }
+                }
+                else
+                {
                 }
 
             }

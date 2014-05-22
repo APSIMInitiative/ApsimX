@@ -55,13 +55,13 @@ namespace Models.PostSimulationTools
                                 string[] simulationNames = dataStore.SimulationNames;
                                 foreach (string simulationName in simulationNames)
                                 {
-                                    string seriesName = observedColumnName.Replace("Observed.", "");
+                                    string seriesName = simulationName;
                                     view.RowFilter = "SimName = '" + simulationName + "'";
                                     CalcStatsRow(view, observedColumnName, predictedColumnName, seriesName, statsData);
                                 }
 
                                 // Calc stats for all data.
-                                string overallSeriesName = "Overall." + observedColumnName.Replace("Observed.", "");
+                                string overallSeriesName = "Combined";
                                 view.RowFilter = null;
                                 CalcStatsRow(view, observedColumnName, predictedColumnName, overallSeriesName, statsData);
                             }
@@ -99,7 +99,7 @@ namespace Models.PostSimulationTools
                 if (stats.Count > 0)
                 {
                     DataRow newRow = statsData.NewRow();
-                    newRow["SimulationName"] = view[0]["SimName"];
+                    newRow["SimulationName"] = seriesName;
                     newRow["VariableName"] = observedColumnName.Replace("Observed.", "");
                     if (!double.IsNaN(stats.Residual))
                     {

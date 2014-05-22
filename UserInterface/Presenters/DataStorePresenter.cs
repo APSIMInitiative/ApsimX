@@ -27,7 +27,7 @@ namespace UserInterface.Presenters
             DataStoreView.RunChildModelsClicked += OnRunChildModelsClicked;
 
             DataStoreView.Grid.ReadOnly = true;
-            //DataStoreView.Grid.AutoFilterOn = true;
+            DataStoreView.Grid.AutoFilterOn = true;
             DataStoreView.Grid.FloatingPointFormat = "N3";
             DataStoreView.PopulateTables(DataStore.TableNames);
         }

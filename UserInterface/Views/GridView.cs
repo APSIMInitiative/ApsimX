@@ -182,6 +182,8 @@ namespace UserInterface.Views
             Grid.DataSource = null;
             Grid.Columns.Clear();
             Grid.Rows.Clear();
+
+            Cursor.Current = Cursors.WaitCursor;
             
             if (DataSource != null)
             {
@@ -197,10 +199,19 @@ namespace UserInterface.Views
                 // If autofilter is on then use a data bound grid.
                 if (AutoFilterIsOn)
                 {
+                    Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     Grid.DataSource = new BindingSource(Data, null);
-
                     foreach (DataGridViewColumn column in Grid.Columns)
+                    {
                         column.HeaderCell = new DataGridViewAutoFilterColumnHeaderCell(column.HeaderCell);
+                        column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                        if (FloatingPointFormat != null &&
+                            Data.Columns[column.HeaderText].DataType == typeof(double) ||
+                            Data.Columns[column.HeaderText].DataType == typeof(float))
+                            column.DefaultCellStyle.Format = FloatingPointFormat;
+                    }
                 }
                 else
                 {
@@ -256,6 +267,8 @@ namespace UserInterface.Views
             }
             else
                 Grid.Columns.Clear();
+
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
