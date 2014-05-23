@@ -10908,12 +10908,10 @@ namespace Models
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>FinalYieldData</TableName>
         <FieldName>Observed.Potato.Tuber.LiveFWt</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.LiveFWt</FieldName>
       </Y>
@@ -10942,12 +10940,10 @@ namespace Models
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>FinalYieldData</TableName>
         <FieldName>Observed.Potato.Tuber.Live.Wt</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.Live.Wt</FieldName>
       </Y>
