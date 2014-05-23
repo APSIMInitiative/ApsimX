@@ -58,7 +58,7 @@ namespace Models.SurfaceOM
         }
 
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             if (ResidueTypes == null)
                 ResidueTypes = new SurfaceOM.ResidueTypes();

@@ -34,7 +34,7 @@ namespace Models.PMF
             fields = "Field, Field1, Field2";
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             fieldList = fields.Split(',');
             //check field names are valid

@@ -202,7 +202,7 @@ namespace Models.PMF
 
         #region Event Handlers
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
 

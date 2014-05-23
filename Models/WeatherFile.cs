@@ -232,7 +232,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             DoSeek = true; 
         }
@@ -303,7 +303,7 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             if (WtrFile != null)
             {

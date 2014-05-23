@@ -43,7 +43,7 @@ namespace Models.Soils
 
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             AllRootSystems = new DataTable();
             AllRootSystems.Columns.Add("ZoneName", typeof(string));

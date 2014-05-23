@@ -64,7 +64,7 @@ namespace Models.PMF.Slurp
         NewCanopyType LocalCanopyData = new NewCanopyType();
         
         // The following event handler will be called once at the beginning of the simulation
-        public override void  OnCommencing()
+        public override void  OnSimulationCommencing()
         {
             kl = new double[Soil.SoilWater.sw_dep.Length];
             PotSWUptake = new double[kl.Length];

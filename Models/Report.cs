@@ -240,7 +240,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             foreach (string Event in Events)
             {
@@ -279,7 +279,7 @@ namespace Models
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             // Get rid of old data in .db
             DataStore DataStore = new DataStore(this);

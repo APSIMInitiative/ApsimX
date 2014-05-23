@@ -4125,7 +4125,7 @@ namespace Models.Soils
             //Initialise();
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Initialise();
         }

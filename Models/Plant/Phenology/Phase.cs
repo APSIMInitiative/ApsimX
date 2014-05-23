@@ -70,7 +70,7 @@ namespace Models.PMF.Phen
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }
         abstract public double FractionComplete { get; }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         { ResetPhase(); }
         public virtual void ResetPhase()
         {

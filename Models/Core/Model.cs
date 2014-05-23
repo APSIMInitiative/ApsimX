@@ -37,12 +37,12 @@ namespace Models.Core
         /// <summary>
         /// Called just before a simulation commences.
         /// </summary>
-        public virtual void OnCommencing() { }
+        public virtual void OnSimulationCommencing() { }
 
         /// <summary>
         /// Called just after a simulation has completed.
         /// </summary>
-        public virtual void OnCompleted() { }
+        public virtual void OnSimulationCompleted() { }
 
         /// <summary>
         /// Invoked immediately before all simulations begin running.
@@ -446,7 +446,7 @@ namespace Models.Core
         /// </summary>
         protected static void CallOnCommencing(Model model)
         {
-            model.OnCommencing();
+            model.OnSimulationCommencing();
         }
 
         /// <summary>
@@ -454,7 +454,7 @@ namespace Models.Core
         /// </summary>
         protected static void CallOnCompleted(Model model)
         {
-            model.OnCompleted();
+            model.OnSimulationCompleted();
         }
 
         /// <summary>

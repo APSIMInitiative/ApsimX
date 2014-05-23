@@ -330,7 +330,7 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
             foreach (Organ o in Organs)

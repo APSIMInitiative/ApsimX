@@ -167,7 +167,7 @@ namespace Models.Soils
         /// <summary>
         /// Performs the initial checks and setup
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);

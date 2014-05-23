@@ -492,7 +492,7 @@ namespace Models
             AddCropTypes();
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             _albedo = albedo;
             windspeed_checked = false;

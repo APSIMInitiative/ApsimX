@@ -540,10 +540,20 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                if (Utility.Math.Sum(sw_avail_pot) == 0)
-                    return 1.0;
+                bool valuesFound = false;
+                double ratio = 0.0;
+                for (int i = 0; i < sw_avail_pot.Length; i++)
+                {
+                    if (sw_avail_pot[i] > 0)
+                    {
+                        ratio += sw_avail[i] / sw_avail_pot[i];
+                        valuesFound = true;
+                    }
+                }
+                if (valuesFound)
+                    return ratio;
                 else
-                    return Utility.Math.Sum(Utility.Math.Divide(sw_avail, sw_avail_pot));
+                    return 1.0;
             }
         }
         public double WetRootFraction
@@ -747,7 +757,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             SwimIsPresent = swim3 > 0;
             if (SwimIsPresent)

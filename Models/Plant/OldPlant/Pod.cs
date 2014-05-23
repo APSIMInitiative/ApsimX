@@ -357,7 +357,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Growth = new Biomass();
             Senescing = new Biomass();

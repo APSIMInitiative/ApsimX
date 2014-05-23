@@ -1000,7 +1000,7 @@ namespace Models
                     throw new Exception("When working with multiple species, 'ValsMode' must ALWAYS be 'none'");
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Initialise();
         }

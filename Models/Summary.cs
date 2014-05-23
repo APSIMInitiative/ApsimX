@@ -30,7 +30,7 @@ namespace Models
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Messages = new DataTable("Messages");
             Messages.Columns.Add("ComponentName", typeof(string));
@@ -42,7 +42,7 @@ namespace Models
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             DataStore DataStore = new DataStore(this);
             DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
