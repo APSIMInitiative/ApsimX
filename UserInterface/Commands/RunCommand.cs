@@ -50,8 +50,12 @@ namespace UserInterface.Commands
                 Simulation simulation = ModelClicked as Simulation;
                 try
                 {
+                    foreach (Model model in Simulations.AllModels)
+                        model.OnAllCommencing();
                     simulation.Run(null, null);
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
+                    foreach (Model model in Simulations.AllModels)
+                        model.OnAllCompleted();
                 }
                 catch (Exception err)
                 {

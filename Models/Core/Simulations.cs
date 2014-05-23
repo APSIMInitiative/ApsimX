@@ -261,8 +261,8 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
-            //foreach (Model model in AllModels)
-            //    model.OnAllCommencing();
+            foreach (Model model in AllModels)
+                model.OnAllCommencing();
 
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
