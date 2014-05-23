@@ -3,6 +3,7 @@ using Models.Core;
 using System.Media;
 using System;
 using UserInterface.Presenters;
+using System.Diagnostics;
 
 namespace UserInterface.Commands
 {
@@ -12,6 +13,7 @@ namespace UserInterface.Commands
         private Simulations Simulations;
         private Utility.JobManager JobManager;
         private ExplorerPresenter ExplorerPresenter;
+        private Stopwatch Timer = new Stopwatch(); 
         public bool ok { get; set; }
 
         /// <summary>
@@ -35,6 +37,8 @@ namespace UserInterface.Commands
         {
             if (ExplorerPresenter != null)
                 ExplorerPresenter.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
+
+            Timer.Start();
 
             if (ModelClicked is Simulations)
             {
@@ -65,10 +69,13 @@ namespace UserInterface.Commands
                 ExplorerPresenter.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
             if (e.PercentComplete == 100)
             {
+                Timer.Stop();
+
                 if (JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete", Models.DataStore.ErrorLevel.Information);
+                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete " 
+                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)
