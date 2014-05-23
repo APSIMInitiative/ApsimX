@@ -944,7 +944,7 @@ namespace Importer
             // append all the scripts for each type
             if (initScripts.Count > 0)
             {
-                code.Append("\t\tpublic override void OnCommencing()\n");
+                code.Append("\t\tpublic override void OnSimulationCommencing()\n");
                 code.Append("\t\t{\n");
                 foreach (string scripttext in initScripts)
                 {
