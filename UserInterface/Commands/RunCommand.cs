@@ -4,6 +4,7 @@ using System.Media;
 using System;
 using UserInterface.Presenters;
 using System.Diagnostics;
+using System.Threading;
 
 namespace UserInterface.Commands
 {
@@ -44,11 +45,32 @@ namespace UserInterface.Commands
             {
                 Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
             }
+            else if (ModelClicked is Simulation)
+            {
+                Simulation simulation = ModelClicked as Simulation;
+                try
+                {
+                    simulation.Run(null, null);
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
+                }
+                catch (Exception err)
+                {
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
+                }
+                return;
+            }
             else
             {
-                Simulations.SimulationToRun = ModelClicked;
+                //Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                //Simulations.SimulationToRun = ModelClicked;
+                
+                (ModelClicked as Simulation).Run(null, null);
+                Timer.Stop();
+                ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
+                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                return;
             }
-
+           
             JobManager.AddJob(Simulations);
             JobManager.Start(waitUntilFinished: false);
         }

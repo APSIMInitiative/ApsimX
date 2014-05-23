@@ -94,6 +94,14 @@ namespace Models.PMF.OldPlant
             if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
 
+            // Find organs
+            Organ1s = new List<Organ1>();
+            foreach (Model model in this.Models)
+            {
+                if (model is Organ1)
+                    Organ1s.Add(model as Organ1);
+            }
+
             // Find cultivar and apply cultivar overrides.
             Cultivar cultivarObj = Cultivars.FindCultivar(cultivar);
             if (cultivarObj == null)
@@ -266,19 +274,7 @@ namespace Models.PMF.OldPlant
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
 
         [XmlIgnore]
-        public List<Organ1> Organ1s 
-        { 
-            get 
-            {
-                List<Organ1> organs = new List<Organ1>();
-                foreach (Model model in this.Models)
-                {
-                    if (model is Organ1)
-                        organs.Add(model as Organ1);
-                }
-                return organs;
-            }
-        }
+        public List<Organ1> Organ1s { get; set; }
         
         [XmlIgnore]
         public List<Organ1> Tops
