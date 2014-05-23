@@ -280,7 +280,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
         }

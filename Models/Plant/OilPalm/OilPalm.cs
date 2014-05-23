@@ -200,7 +200,7 @@ namespace Models.PMF.OilPalm
         }
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];

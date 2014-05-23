@@ -203,20 +203,42 @@ namespace Models
         {
             Open(forWriting: true);
             string[] simulationNamesToKeep = simulationsToKeep.FindAllSimulationNames();
+
+            // Get a list of simulation IDs that we are to delete.
+            List<int> idsToDelete = new List<int>();
             foreach (string simulationNameInDB in SimulationNames)
-            {
                 if (!simulationNamesToKeep.Contains(simulationNameInDB))
                 {
-                    int id = GetSimulationID(simulationNameInDB);
-
-                    RunQueryWithNoReturnData("DELETE FROM Simulations WHERE ID = " + id.ToString());
-                    foreach (string tableName in TableNames)
-                    {
-                        // delete this simulation
-                        RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE SimulationID = " + id.ToString());
-                    }
+                    idsToDelete.Add(GetSimulationID(simulationNameInDB));
                 }
+
+            if (idsToDelete.Count == 0)
+                return;
+
+            // create an SQL WHERE clause with all IDs
+            string idString = "";
+            for (int i = 0; i < idsToDelete.Count; i++)
+            {
+                if (i > 0)
+                    idString += " OR ";
+                idString += "ID = " + idsToDelete[i].ToString();
             }
+
+            RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+
+            idString = "";
+            for (int i = 0; i < idsToDelete.Count; i++)
+            {
+                if (i > 0)
+                    idString += " OR ";
+                idString += "SimulationID = " + idsToDelete[i].ToString();
+            }
+            foreach (string tableName in TableNames)
+            {
+                // delete this simulation
+                RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+            }
+            
         }
 
         /// <summary>
@@ -765,8 +787,11 @@ namespace Models
             DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
             if (idTable == null)
                 throw new ApsimXException(FullPath, "Cannot find Simulations table");
-            double[] ids = Utility.DataTable.GetColumnAsDoubles(idTable, "ID");
-            string[] simulationNames = Utility.DataTable.GetColumnAsStrings(idTable, "Name");
+            List<double> ids = new List<double>();
+            ids.AddRange(Utility.DataTable.GetColumnAsDoubles(idTable, "ID"));
+
+            List<string> simulationNames = new List<string>();
+            simulationNames.AddRange(Utility.DataTable.GetColumnAsStrings(idTable, "Name"));
 
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
             foreach (DataRow row in table.Rows)
@@ -774,11 +799,17 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = Array.IndexOf(simulationNames, simulationName);
+                    int index = simulationNames.IndexOf(simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
+                    else
+                    {
+                        int id = GetSimulationID(simulationName);
+                        ids.Add(id);
+                        simulationNames.Add(simulationName);
+                        row["SimulationID"] = id;
+                    }
                 }
-
             }
         }
 

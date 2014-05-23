@@ -266,11 +266,22 @@ namespace Models.Core
 
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
-            foreach (Simulation simulation in simulationsToRun)
+
+            if (NumToRun == 1)
             {
-                simulation.OnCompleted -= OnSimulationCompleted;
-                simulation.OnCompleted += OnSimulationCompleted;
-                jobManager.AddJob(simulation);
+                // Skip running in another thread.
+                simulationsToRun[0].OnCompleted -= OnSimulationCompleted;
+                simulationsToRun[0].OnCompleted += OnSimulationCompleted;
+                simulationsToRun[0].Run(null, null);
+            }
+            else
+            {
+                foreach (Simulation simulation in simulationsToRun)
+                {
+                    simulation.OnCompleted -= OnSimulationCompleted;
+                    simulation.OnCompleted += OnSimulationCompleted;
+                    jobManager.AddJob(simulation);
+                }
             }
         }
 

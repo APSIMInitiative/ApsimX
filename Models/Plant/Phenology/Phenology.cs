@@ -153,7 +153,7 @@ namespace Models.PMF.Phen
             Phases = ModelsMatching<Phase>();
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
             Phases = ModelsMatching<Phase>();
@@ -185,7 +185,7 @@ namespace Models.PMF.Phen
         {
             // If this is the first time through here then setup some variables.
             if (Phases == null || Phases.Count == 0)
-                OnCommencing();
+                OnSimulationCommencing();
 
             CurrentlyOnFirstDayOfPhase = "";
             if (JustInitialised)

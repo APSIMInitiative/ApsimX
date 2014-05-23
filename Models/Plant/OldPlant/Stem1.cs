@@ -314,7 +314,7 @@ namespace Models.PMF.OldPlant
 
         #region Event handlers
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Senescing = new Biomass();
             Retranslocation = new Biomass();

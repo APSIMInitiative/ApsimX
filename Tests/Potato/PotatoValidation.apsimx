@@ -658,7 +658,7 @@ namespace Models
 		[XmlIgnore] public string FinalTag { get; set;}
 		[XmlIgnore] public bool FinalYeildObtained {get; set;}
 		
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   
@@ -4276,7 +4276,7 @@ namespace Models
 		[XmlIgnore] public string FinalTag { get; set;}
 		[XmlIgnore] public bool FinalYeildObtained {get; set;}
 		
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   
@@ -7926,7 +7926,7 @@ namespace Models
 		[XmlIgnore] public string FinalTag { get; set;}
 		[XmlIgnore] public bool FinalYeildObtained {get; set;}
 		
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   

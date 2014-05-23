@@ -28,6 +28,7 @@ namespace UserInterface.Presenters
 
             DataStoreView.Grid.ReadOnly = true;
             DataStoreView.Grid.AutoFilterOn = true;
+            DataStoreView.Grid.FloatingPointFormat = "N3";
             DataStoreView.PopulateTables(DataStore.TableNames);
         }
 
@@ -52,19 +53,19 @@ namespace UserInterface.Presenters
             if (DataStoreView.Grid.DataSource != null)
             {
 
-                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                    DataStoreView.Grid.SetColumnSize(col.Ordinal, 50);
+                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                //    DataStoreView.Grid.SetColumnSize(col.Ordinal, 50);
 
                 // Make all numeric columns have a format of N3
-                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                {
-                    //DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
-                    if (col.DataType == typeof(double))
-                        DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
-                }
+                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                //{
+                //    //DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
+                //    if (col.DataType == typeof(double))
+                //        DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
+                //}
 
-                foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                    DataStoreView.Grid.SetColumnSize(col.Ordinal, -1);
+                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
+                //    DataStoreView.Grid.SetColumnSize(col.Ordinal, -1);
             }
         }
 

@@ -106,6 +106,9 @@ namespace Utility
         public static extern string sqlite3_bind_int(IntPtr Query, int ParameterNumber, int Value);
 
         [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern string sqlite3_bind_null(IntPtr Query, int ParameterNumber);
+
+        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr sqlite3_bind_text(IntPtr Query, int ParameterNumber, string Value, int n, IntPtr CallBack);
 
         [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
@@ -248,22 +251,26 @@ namespace Utility
                 object[] row = new object[columnCount];
                 for (int i = 0; i < columnCount; i++)
                 {
-                    if (dTable.Columns[i].DataType == typeof(DateTime))
+                    int colType = sqlite3_column_type(stmHandle, i);
+                    if (colType != SQLITE_NULL)
                     {
-                        IntPtr iptr = sqlite3_column_text(stmHandle, i);
-                        string Value = Marshal.PtrToStringAnsi(iptr);
-                        if (Value != null)
-                            row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
-                    }
-                    else if (dTable.Columns[i].DataType == typeof(int))
-                        row[i] = sqlite3_column_int(stmHandle, i);
-                    else if (dTable.Columns[i].DataType == typeof(double))
-                        row[i] = sqlite3_column_double(stmHandle, i);
-                    else if (dTable.Columns[i].DataType == typeof(string) ||
-                             dTable.Columns[i].DataType == typeof(object))
-                    {
-                        IntPtr iptr = sqlite3_column_text(stmHandle, i);
-                        row[i] = Marshal.PtrToStringAnsi(iptr);
+                        if (dTable.Columns[i].DataType == typeof(DateTime))
+                        {
+                            IntPtr iptr = sqlite3_column_text(stmHandle, i);
+                            string Value = Marshal.PtrToStringAnsi(iptr);
+                            if (Value != null)
+                                row[i] = DateTime.ParseExact(Value, "yyyy-MM-dd hh:mm:ss", null);
+                        }
+                        else if (dTable.Columns[i].DataType == typeof(int))
+                            row[i] = sqlite3_column_int(stmHandle, i);
+                        else if (dTable.Columns[i].DataType == typeof(double))
+                            row[i] = sqlite3_column_double(stmHandle, i);
+                        else if (dTable.Columns[i].DataType == typeof(string) ||
+                                 dTable.Columns[i].DataType == typeof(object))
+                        {
+                            IntPtr iptr = sqlite3_column_text(stmHandle, i);
+                            row[i] = Marshal.PtrToStringAnsi(iptr);
+                        }
                     }
                 }
                 dTable.Rows.Add(row);
@@ -399,9 +406,9 @@ namespace Utility
         {
             for (int i = 0; i < Values.Length; i++)
             {
-                if (Values[i] == null)
+                if (Convert.IsDBNull(Values[i]) || Values[i] == null)
                 {
-                    // Do nothing
+                    sqlite3_bind_null(Query, i+1);
                 }
                 else if (Values[i].GetType().ToString() == "System.DateTime")
                 {

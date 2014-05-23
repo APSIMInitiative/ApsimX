@@ -50,7 +50,7 @@ namespace Models
                     numSimulations = jobManager.NumberOfJobs - 1;
                 }
                 timer.Stop();
-                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalMinutes.ToString("#.00") + " minutes.");
+                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
             }
             catch (Exception err)
             {

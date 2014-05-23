@@ -114,7 +114,7 @@ namespace Models
             NitrogenApplied = 0;
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             NitrogenApplied = 0;
             AddDefinitions();

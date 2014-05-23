@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
         /// <summary>
         /// Initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             StageCodes = null;
         }

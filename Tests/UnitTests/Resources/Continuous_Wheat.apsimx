@@ -939,7 +939,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock TimeClock;
-		public override void OnCommencing()
+		public override void OnSimulationCommencing()
 		{
 			/*
 				

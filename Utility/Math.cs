@@ -14,10 +14,7 @@ namespace Utility
         //------------------------------------------------
         // Returns true if specified value is 'missing'
         // -----------------------------------------------
-        public static double MissingValue
-        {
-            get { return 999999; }
-        }
+        public const double MissingValue = 999999;
 
         //-------------------------------------------------------------------------
         //
@@ -240,7 +237,9 @@ namespace Utility
             int iIndex = 0;
             foreach (double Value in Values)
             {
-                if (iIndex >= iStartIndex && iIndex < iEndIndex && Value != MissingValue)
+                if (iIndex >= iEndIndex)
+                    return result;
+                if (iIndex >= iStartIndex && Value != MissingValue)
                     result += Value;
                 iIndex++;
             }

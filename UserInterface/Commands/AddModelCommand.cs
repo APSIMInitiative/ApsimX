@@ -51,7 +51,7 @@ namespace UserInterface.Commands
                 if (sim != null)
                 {
                     sim.OnLoaded();
-                    sim.OnCommencing();
+                    sim.OnSimulationCommencing();
                 }
 
                 ModelAdded = true;

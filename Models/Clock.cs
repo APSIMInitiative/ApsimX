@@ -33,7 +33,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Today = StartDate;
         }

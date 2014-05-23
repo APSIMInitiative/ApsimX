@@ -3,6 +3,8 @@ using Models.Core;
 using System.Media;
 using System;
 using UserInterface.Presenters;
+using System.Diagnostics;
+using System.Threading;
 
 namespace UserInterface.Commands
 {
@@ -12,6 +14,7 @@ namespace UserInterface.Commands
         private Simulations Simulations;
         private Utility.JobManager JobManager;
         private ExplorerPresenter ExplorerPresenter;
+        private Stopwatch Timer = new Stopwatch(); 
         public bool ok { get; set; }
 
         /// <summary>
@@ -36,15 +39,42 @@ namespace UserInterface.Commands
             if (ExplorerPresenter != null)
                 ExplorerPresenter.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
 
+            Timer.Start();
+
             if (ModelClicked is Simulations)
             {
                 Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
             }
+            else if (ModelClicked is Simulation)
+            {
+                Simulation simulation = ModelClicked as Simulation;
+                try
+                {
+                    foreach (Model model in Simulations.AllModels)
+                        model.OnAllCommencing();
+                    simulation.Run(null, null);
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
+                    foreach (Model model in Simulations.AllModels)
+                        model.OnAllCompleted();
+                }
+                catch (Exception err)
+                {
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
+                }
+                return;
+            }
             else
             {
-                Simulations.SimulationToRun = ModelClicked;
+                //Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                //Simulations.SimulationToRun = ModelClicked;
+                
+                (ModelClicked as Simulation).Run(null, null);
+                Timer.Stop();
+                ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
+                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                return;
             }
-
+           
             JobManager.AddJob(Simulations);
             JobManager.Start(waitUntilFinished: false);
         }
@@ -65,10 +95,13 @@ namespace UserInterface.Commands
                 ExplorerPresenter.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
             if (e.PercentComplete == 100)
             {
+                Timer.Stop();
+
                 if (JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete", Models.DataStore.ErrorLevel.Information);
+                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete " 
+                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)

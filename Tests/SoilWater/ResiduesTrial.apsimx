@@ -1037,7 +1037,7 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   

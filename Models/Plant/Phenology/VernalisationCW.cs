@@ -47,7 +47,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialise everything
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             CumulativeVD = 0;
             VernEff = 1;

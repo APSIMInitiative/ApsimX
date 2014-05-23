@@ -83,6 +83,17 @@ namespace Models.PMF.OldPlant
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        public override void OnLoaded()
+        {
+            // Find organs
+            Organ1s = new List<Organ1>();
+            foreach (Model model in this.Models)
+            {
+                if (model is Organ1)
+                    Organ1s.Add(model as Organ1);
+            }  
+        }
+
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
         {
             SowingData = new SowPlant2Type();
@@ -266,19 +277,7 @@ namespace Models.PMF.OldPlant
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
 
         [XmlIgnore]
-        public List<Organ1> Organ1s 
-        { 
-            get 
-            {
-                List<Organ1> organs = new List<Organ1>();
-                foreach (Model model in this.Models)
-                {
-                    if (model is Organ1)
-                        organs.Add(model as Organ1);
-                }
-                return organs;
-            }
-        }
+        public List<Organ1> Organ1s { get; set; }
         
         [XmlIgnore]
         public List<Organ1> Tops

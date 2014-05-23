@@ -24,7 +24,7 @@ namespace Models
         /// <summary>
         /// Initialise the model.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             if (Simulation.FileName != null)
             {
@@ -36,7 +36,7 @@ namespace Models
         /// <summary>
         /// Simulation has completed.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             Writer.Close();
         }
