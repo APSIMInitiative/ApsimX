@@ -83,6 +83,17 @@ namespace Models.PMF.OldPlant
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        public override void OnLoaded()
+        {
+            // Find organs
+            Organ1s = new List<Organ1>();
+            foreach (Model model in this.Models)
+            {
+                if (model is Organ1)
+                    Organ1s.Add(model as Organ1);
+            }  
+        }
+
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
         {
             SowingData = new SowPlant2Type();
@@ -93,14 +104,6 @@ namespace Models.PMF.OldPlant
 
             if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
-
-            // Find organs
-            Organ1s = new List<Organ1>();
-            foreach (Model model in this.Models)
-            {
-                if (model is Organ1)
-                    Organ1s.Add(model as Organ1);
-            }
 
             // Find cultivar and apply cultivar overrides.
             Cultivar cultivarObj = Cultivars.FindCultivar(cultivar);
