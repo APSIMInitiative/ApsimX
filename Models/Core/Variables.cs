@@ -39,8 +39,9 @@ namespace Models.Core
             if (useCache)
             {
                 cacheKey = absolutePath;
-                if (simulation.VariableCache.ContainsKey(cacheKey))
-                    return simulation.VariableCache[cacheKey];
+                IVariable returnVariable;
+                if (simulation.VariableCache.TryGetValue(cacheKey, out returnVariable))
+                    return returnVariable;
             }
 
             Model rootModel = GetRootModelOf(relativeTo);
@@ -74,7 +75,11 @@ namespace Models.Core
                 {
                     propertyInfo = obj.GetType().GetProperty(pathBit);
                     if (propertyInfo == null)
+                    {
+                        if (useCache)
+                            simulation.VariableCache[cacheKey] = new VariableObject(null);
                         return null;
+                    }
                 }
             }
 

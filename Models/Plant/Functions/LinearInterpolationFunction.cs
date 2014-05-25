@@ -12,31 +12,36 @@ namespace Models.PMF.Functions
     [Description("returns a y value that corresponds to the position of the value of XProperty in the specified xy matrix")]
     public class LinearInterpolationFunction : Function
     {
+        private bool YsAreAllTheSame = false;
         public XYPairs XYPairs { get; set; }
-
         public string XProperty = "";
 
-        
+        public override void OnLoaded()
+        {
+            for (int i = 1; i < XYPairs.Y.Length; i++)
+                if (XYPairs.Y[i] != XYPairs.Y[i - 1])
+                {
+                    YsAreAllTheSame = false;
+                    return;
+                }
+
+            // If we get this far then the Y values must all be the same.
+            YsAreAllTheSame = XYPairs.Y.Length > 0;
+        }
+
         public override double Value
         {
             get
             {
+                // Shortcut exit when the Y values are all the same. Runs quicker.
+                if (YsAreAllTheSame)
+                    return XYPairs.Y[0];
+
                 string PropertyName = XProperty;
-                string ArraySpec;
-                bool ArrayFound = PropertyName.Contains("[") && !PropertyName.StartsWith("[");
-                if (ArrayFound)
-                    ArraySpec = Utility.String.SplitOffBracketedValue(ref PropertyName, '[', ']');
-                double XValue = 0;
-                try
-                {
-                    object v = Util.GetVariable(PropertyName, this);
-                    if (v == null)
-                        throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                    XValue = Convert.ToDouble(v);
-                }
-                catch (IndexOutOfRangeException)
-                {
-                }
+                object v = Util.GetVariable(PropertyName, this);
+                if (v == null)
+                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
+                double XValue = (double) v;
                 return XYPairs.ValueIndexed(XValue);
             }
         }
@@ -52,18 +57,14 @@ namespace Models.PMF.Functions
             {
                 string PropertyName = XProperty;
 
-                object v = this.Get(XProperty);
+                double[] v = (double[]) this.Get(XProperty);
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array)
                 {
-                    Array A = v as Array;
-                    double[] ReturnValues = new double[A.Length];
-                    for (int i = 0; i < A.Length; i++)
-                    {
-                        double XValue = Convert.ToDouble(A.GetValue(i));
-                        ReturnValues[i] = XYPairs.ValueIndexed(XValue);
-                    }
+                    double[] ReturnValues = new double[v.Length];
+                    for (int i = 0; i < v.Length; i++)
+                        ReturnValues[i] = XYPairs.ValueIndexed(v[i]);
                     return ReturnValues;
                 }
                 else

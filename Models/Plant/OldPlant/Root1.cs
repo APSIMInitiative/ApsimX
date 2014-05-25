@@ -664,13 +664,15 @@ namespace Models.PMF.OldPlant
 
             double[] rlv_factor = new double[Soil.SoilWater.dlayer.Length];    // relative rooting factor for all layers
 
+            double[] relativeRootRate = RelativeRootRate.Values;
+            double[] sWFactorRootLength = SWFactorRootLength.Values;
 
             double rlv_factor_tot = 0.0;
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                double branching_factor = RelativeRootRate.Values[layer];
+                double branching_factor = relativeRootRate[layer];
 
-                rlv_factor[layer] = SWFactorRootLength.Values[layer] *
+                rlv_factor[layer] = sWFactorRootLength[layer] *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
                                     Utility.Math.Divide(Soil.SoilWater.dlayer[layer], RootDepth, 0.0);   // space weighting factor
