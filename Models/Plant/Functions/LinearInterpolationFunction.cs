@@ -18,15 +18,18 @@ namespace Models.PMF.Functions
 
         public override void OnLoaded()
         {
-            for (int i = 1; i < XYPairs.Y.Length; i++)
-                if (XYPairs.Y[i] != XYPairs.Y[i - 1])
-                {
-                    YsAreAllTheSame = false;
-                    return;
-                }
+            if (XYPairs != null)
+            {
+                for (int i = 1; i < XYPairs.Y.Length; i++)
+                    if (XYPairs.Y[i] != XYPairs.Y[i - 1])
+                    {
+                        YsAreAllTheSame = false;
+                        return;
+                    }
 
-            // If we get this far then the Y values must all be the same.
-            YsAreAllTheSame = XYPairs.Y.Length > 0;
+                // If we get this far then the Y values must all be the same.
+                YsAreAllTheSame = XYPairs.Y.Length > 0;
+            }
         }
 
         public override double Value
