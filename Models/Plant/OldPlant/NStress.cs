@@ -7,7 +7,7 @@ using Models.Core;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    public class NStress : ModelCollection
+    public class NStress : Model
     {
         [Link]
         Leaf1 Leaf = null;

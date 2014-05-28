@@ -11,14 +11,14 @@ namespace UserInterface.Commands
     class AddModelCommand : ICommand
     {
         private string FromModelXml;
-        private ModelCollection ToParent;
+        private Model ToParent;
         private Model FromModel;
         private bool ModelAdded;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AddModelCommand(string FromModelXml, ModelCollection ToParent)
+        public AddModelCommand(string FromModelXml, Model ToParent)
         {
             this.FromModelXml = FromModelXml;
             this.ToParent = ToParent;
@@ -35,7 +35,7 @@ namespace UserInterface.Commands
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 FromModel.Parent = ToParent;
-                ToParent.AddModel(FromModel);
+                ToParent.Children.Add(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
 
                 // ensure the simulations have all the events connected and links resolved
@@ -71,7 +71,7 @@ namespace UserInterface.Commands
         {
             if (ModelAdded && FromModel != null)
             {
-                ToParent.RemoveModel(FromModel);
+                ToParent.Children.Remove(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
         }

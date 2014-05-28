@@ -13,16 +13,19 @@ namespace Models.PMF.Functions
         public double A = 1.0;
         public double B = 1.0;
         public double C = 1.0;
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private Model[] ChildFunctions;
 
         
         public override double Value
         {
             get
             {
-                if (Children.Count == 1)
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
+                if (ChildFunctions.Length == 1)
                 {
-                    Function F = Children[0] as Function;
+                    Function F = ChildFunctions[0] as Function;
 
                     return A + B * Math.Exp(C * F.Value);
                 }

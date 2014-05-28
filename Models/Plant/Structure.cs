@@ -11,7 +11,7 @@ namespace Models.PMF
 {
     [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
-    public class Structure : ModelCollection
+    public class Structure : Model
     {
         #region Links
         [Link]

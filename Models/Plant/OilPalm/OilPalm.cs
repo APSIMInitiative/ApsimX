@@ -14,7 +14,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm: ModelCollection, ICrop
+    public class OilPalm: Model, ICrop
     {
 
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }

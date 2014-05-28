@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Factor.Get(e.ObjectName);
+            object o = Factor.Variables.Get(e.ObjectName);
 
             if (o != null)
             {

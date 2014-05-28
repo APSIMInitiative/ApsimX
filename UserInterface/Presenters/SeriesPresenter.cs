@@ -303,7 +303,7 @@ namespace UserInterface.Presenters
             if (NewDataSource.StartsWith("."))
             {
 
-                Model M = Graph.Get(NewDataSource) as Model;
+                Model M = Graph.Variables.Get(NewDataSource) as Model;
                 SeriesView.DataGrid.DataSource = GetAllArrayProperties(M);
             }
             else if (!NewDataSource.Contains("."))

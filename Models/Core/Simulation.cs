@@ -142,13 +142,15 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            AllModels.ForEach(Connect);
+            Connect();
+            foreach (Model child in Children.AllRecursively())
+                child.Connect();
 
             _IsRunning = true;
             VariableCache.Clear();
             ScopeCache.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
-            AllModels.ForEach(CallOnCommencing);
+            Children.AllRecursively().ForEach(CallOnCommencing);
         }
 
         /// <summary>
@@ -168,14 +170,16 @@ namespace Models.Core
         public void CleanupRun()
         {
             CallOnCompleted(this);
-            AllModels.ForEach(CallOnCompleted);
+            Children.AllRecursively().ForEach(CallOnCompleted);
 
             if (OnCompleted != null)
                 OnCompleted.Invoke(this, null);
 
             _IsRunning = false;
 
-            AllModels.ForEach(Disconnect);
+            Disconnect();
+            foreach (Model child in Children.AllRecursively())
+                child.Disconnect();
 
             timer.Stop();
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");

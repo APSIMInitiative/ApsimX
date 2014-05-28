@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    public class RUEModel1 : ModelCollection
+    public class RUEModel1 : Model
     {
         [Link]
         Plant15 Plant = null;

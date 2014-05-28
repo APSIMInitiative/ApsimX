@@ -1008,7 +1008,7 @@ namespace Models
             double windspeed = windspeed_default;
             if (!windspeed_checked)
             {
-                object val = this.Get("windspeed");
+                object val = this.Variables.Get("windspeed");
                 use_external_windspeed = val != null;
                 if (use_external_windspeed)
                     windspeed = (double)val;

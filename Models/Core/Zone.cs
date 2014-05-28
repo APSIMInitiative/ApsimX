@@ -17,7 +17,7 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    public class Zone : ModelCollection
+    public class Zone : Model
     {
         /// <summary>
         /// Area of the zone.

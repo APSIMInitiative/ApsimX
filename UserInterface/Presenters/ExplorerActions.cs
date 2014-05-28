@@ -122,11 +122,11 @@ namespace UserInterface.Presenters
         [ContextMenuName("Copy")]
         public void OnCopyClick(object Sender, EventArgs e)
         {
-            Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+            Model Model = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null)
             {
                 StringWriter writer = new StringWriter();
-                Model.Write(writer);
+                writer.Write(Utility.Xml.Serialise(Model, true));
                 Clipboard.SetText(writer.ToString());
             }
         }
@@ -144,7 +144,7 @@ namespace UserInterface.Presenters
                 object NewModel = Utility.Xml.Deserialise(Doc.DocumentElement);
 
                 // See if the presenter is happy with this model being added.
-                ModelCollection ParentModel = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
+                Model ParentModel = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
                 AllowDropArgs AllowDropArgs = new Views.AllowDropArgs();
                 AllowDropArgs.NodePath = ExplorerView.CurrentNodePath;
                 AllowDropArgs.DragObject = new DragObject()
@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Delete")]
         public void OnDeleteClick(object Sender, EventArgs e)
         {
-            Model Model = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+            Model Model = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null && Model.GetType().Name != "Simulations")
             {
                 DeleteModelCommand Cmd = new DeleteModelCommand(Model);
@@ -202,7 +202,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Run APSIM")]
         public void RunAPSIM(object Sender, EventArgs e)
         {
-            Model Node = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Model;
+            Model Node = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             RunCommand C = new Commands.RunCommand(ExplorerPresenter.ApsimXFile, Node, ExplorerPresenter);
             C.Do(null);
         }
@@ -214,7 +214,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Check Soil")]
         public void CheckSoil(object Sender, EventArgs e)
         {
-            Soil CurrentSoil = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as Soil;
+            Soil CurrentSoil = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Soil;
             if (CurrentSoil != null)
             {
                 string ErrorMessages = CurrentSoil.Check(false);
@@ -293,7 +293,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Add factor value")]
         public void AddFactorValue(object Sender, EventArgs e)
         {
-            ModelCollection Factor = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
+            Model Factor = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             if (Factor != null)
             {
                 AddModelCommand Cmd = new AddModelCommand("<FactorValue/>", Factor);
@@ -305,7 +305,7 @@ namespace UserInterface.Presenters
         [ContextMenuName("Add factor")]
         public void AddFactor(object Sender, EventArgs e)
         {
-            ModelCollection Factors = ExplorerPresenter.ApsimXFile.Get(ExplorerView.CurrentNodePath) as ModelCollection;
+            Model Factors = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             if (Factors != null)
             {
                 AddModelCommand Cmd = new AddModelCommand("<Factor/>", Factors);

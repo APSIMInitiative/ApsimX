@@ -1225,7 +1225,7 @@ namespace Models.Soils
         private void soilwat2_get_crop_variables()
         {
         int i = 0;
-        Model[] models = paddock.FindAll(typeof(ICrop));
+        Model[] models = paddock.Scope.FindAll(typeof(ICrop));
         
             foreach (Model m in models)
             {
@@ -1264,7 +1264,7 @@ namespace Models.Soils
                     propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
                 else
                     propName = solutes[solnum].name;
-                object objValue = this.Get(propName);
+                object objValue = this.Variables.Get(propName);
                 if (objValue != null)
                 {
                     Value = objValue as double[];

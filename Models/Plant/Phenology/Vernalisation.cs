@@ -6,7 +6,7 @@ namespace Models.PMF.Phen
 {
 
     [Serializable]
-    public class Vernalisation : ModelCollection
+    public class Vernalisation : Model
     {
         [Link]
         Phenology Phenology = null;
