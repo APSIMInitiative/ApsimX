@@ -49,7 +49,7 @@ namespace Utility
             System.Data.DataTable previousTable = null;
 
             List<IVariable> properties = new List<IVariable>();
-            properties.AddRange(Model.FieldsAndProperties(obj, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
+            properties.AddRange(ModelFunctions.FieldsAndProperties(obj, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
             
             foreach (IVariable property in properties)
             {

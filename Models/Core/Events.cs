@@ -146,9 +146,49 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Connect all events. Usually only called by the APSIMX infrastructure.
+        /// </summary>
+        public void Connect()
+        {
+            Simulation simulation = RelativeTo.ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null)
+            {
+                if (simulation.IsRunning)
+                {
+                    // This model is being asked to connect itself AFTER events and links
+                    // have already been connected.  We have to go through all event declarations
+                    // event handlers, all links in this model and all links other other models
+                    // that refer to this model. This will be time consuming.
+
+                    // 1. connect all event declarations.
+                    ConnectEventPublishers();
+
+                    // 2. connect all event handlers.
+                    ConnectEventSubscribers();
+                }
+                else
+                {
+                    // we can take the quicker approach and simply connect event declarations
+                    // (publish) with their event handlers and assume that our event handlers will
+                    // be connected by whichever model that is publishing that event.
+                    ConnectEventPublishers();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Disconnect all events. Usually only called by the APSIMX infrastructure.
+        /// </summary>
+        public void Disconnect()
+        {
+            DisconnectEventPublishers();
+            DisconnectEventSubscribers();
+        }
+
+        /// <summary>
         /// Connect all event publishers for this model.
         /// </summary>
-        public void ConnectEventPublishers()
+        private void ConnectEventPublishers()
         {
             // Go through all events in the specified model and attach them to subscribers.
             foreach (EventPublisher publisher in FindEventPublishers(null, RelativeTo))
@@ -165,7 +205,7 @@ namespace Models.Core
         /// <summary>
         /// Connect all event subscribers for this model.
         /// </summary>
-        public void ConnectEventSubscribers()
+        private void ConnectEventSubscribers()
         {
             // Connect all dynamic eventsubscriptions.
             if (EventSubscriptions != null)
@@ -188,7 +228,7 @@ namespace Models.Core
         /// <summary>
         /// Disconnect all published events in the specified 'model'
         /// </summary>
-        public void DisconnectEventPublishers()
+        private void DisconnectEventPublishers()
         {
             foreach (EventPublisher publisher in FindEventPublishers(null, RelativeTo))
             {
@@ -208,7 +248,7 @@ namespace Models.Core
         /// <summary>
         /// Disconnect all subscribed events in the specified 'model'
         /// </summary>
-        public void DisconnectEventSubscribers()
+        private void DisconnectEventSubscribers()
         {
             foreach (EventSubscriber subscription in FindEventSubscribers(null, RelativeTo))
             {

@@ -13,7 +13,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.PredictedObservedView")]
     [PresenterName("UserInterface.Presenters.PredictedObservedPresenter")]
-    public class Regression : Model
+    public class Regression : Model, IPostSimulationTool
     {
         public string TableName { get; set; }
         public string XFieldName { get; set; }
@@ -39,15 +39,10 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Simulation has completed. Create a regression table in the data store.
         /// </summary>
-        public override void OnAllCompleted()
+        public void Run(DataStore dataStore)
         {
-            DataStore dataStore = new DataStore(this);
-
             dataStore.DeleteTable(this.Name);
-
             DataTable data = dataStore.GetData("*", TableName);
-
-            dataStore.Disconnect();
         }
     }
 }

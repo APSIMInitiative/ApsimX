@@ -127,7 +127,7 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
         {
-            Model newModel = Model.Clone(value);
+            Model newModel = value.Clone();
             Model modelToReplace = newSimulation.Variables.Get(path) as Model;
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);

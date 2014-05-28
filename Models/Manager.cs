@@ -150,9 +150,6 @@ namespace Models
 
                     // Add the new script model to our models collection.
                     Children.Add(Script);
-                    Script.HiddenModel = true;
-
-
                 }
             }
         }

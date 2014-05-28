@@ -204,12 +204,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Cultivars))]
         public List<Model> Models { get; set; }
 
-        /// <summary>
-        /// Returns true if this model has all events and links connected.
-        /// </summary>
-        [XmlIgnore]
-        public bool IsConnected { get; set; }
-
         #region Methods than can be overridden
         /// <summary>
         /// Called immediately after the model is XML deserialised.
@@ -217,24 +211,20 @@ namespace Models.Core
         public virtual void OnLoaded() { }
 
         /// <summary>
-        /// Called just before a simulation commences.
+        /// Called just before the simulation commences.
         /// </summary>
         public virtual void OnSimulationCommencing() { }
 
         /// <summary>
-        /// Called just after a simulation has completed.
+        /// Called just after the simulation has completed.
         /// </summary>
         public virtual void OnSimulationCompleted() { }
 
         /// <summary>
-        /// Invoked immediately before all simulations begin running.
+        /// Invoked after all simulations finish running. This allows
+        /// for post simulation analysis models to run.
         /// </summary>
-        public virtual void OnAllCommencing() {}
-
-        /// <summary>
-        /// Invoked after all simulations finish running.
-        /// </summary>
-        public virtual void OnAllCompleted() {}
+        public virtual void OnAllSimulationsCompleted() {}
 
         /// <summary>
         /// Called immediately before deserialising.
@@ -258,8 +248,6 @@ namespace Models.Core
 
         #endregion
 
-
-
         /// <summary>
         /// Get or set the parent of the model.
         /// </summary>
@@ -278,21 +266,6 @@ namespace Models.Core
                 _Events = new Core.Events(this);
                 CalcFullPath();
             }
-        }
-
-        /// <summary>
-        /// Parent all child models.
-        /// </summary>
-        public void ParentAllChildren()
-        {
-            CalcFullPath();
-
-            if (Models != null)
-                foreach (Model child in Models)
-                {
-                    child.Parent = this;
-                    child.ParentAllChildren();
-                }
         }
 
         /// <summary>
@@ -337,50 +310,74 @@ namespace Models.Core
         public Events Events { get { return _Events; } }
 
         /// <summary>
-        /// Return a list of all parameters (that are not references to child models). Never returns null. Can
-        /// return an empty array. A parameter is a class property that is public and read/writtable
+        /// Connect this model to the others in the simulation.
         /// </summary>
-        public static IVariable[] FieldsAndProperties(object model, BindingFlags flags)
+        public void ResolveLinks()
         {
-            List<IVariable> allProperties = new List<IVariable>();
-            foreach (PropertyInfo property in model.GetType().UnderlyingSystemType.GetProperties(flags))
+            Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null)
             {
-                if (property.CanRead)
-                    allProperties.Add(new VariableProperty(model, property));
+                if (simulation.IsRunning)
+                {
+                    // Resolve links in this model.
+                    ResolveLinksInternal(this);
+
+                    // Resolve links in other models that point to this model.
+                    ResolveExternalLinks(this);
+                }
+                else
+                    ResolveLinksInternal(this);
             }
-            foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(flags))
-                allProperties.Add(new VariableField(model, field));
-            return allProperties.ToArray();
         }
 
         /// <summary>
-        /// Write the specified simulation set to the specified 'stream'
+        /// Connect this model to the others in the simulation.
         /// </summary>
-        public void Write(TextWriter stream)
+        public void UnResolveLinks()
         {
-            foreach (Model model in Children.AllRecursively())
-                model.OnSerialising(xmlSerialisation: true);
-
-            try
-            {
-                stream.Write(Utility.Xml.Serialise(this, true));
-            }
-            finally
-            {
-                foreach (Model model in Children.AllRecursively())
-                    model.OnSerialised(xmlSerialisation: true);
-            }
+            UnresolveLinks(this);
         }
 
-
         /// <summary>
-        /// Is this model hidden in the GUI?
+        /// Perform a deep Copy of the this model.
         /// </summary>
-        [XmlIgnore]
-        public bool HiddenModel { get; set; }
+        public Model Clone()
+        {
+            // Get a list of all child models that we need to notify about the (de)serialisation.
+            List<Model> modelsToNotify = Children.AllRecursively();
+
+            // Get rid of our parent temporarily as we don't want to serialise that.
+            Models.Core.Model parent = Parent;
+            Parent = null;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialising(xmlSerialisation: false);
+
+                formatter.Serialize(stream, this);
+
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialised(xmlSerialisation: false);
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                foreach (Model model in modelsToNotify)
+                    model.OnDeserialising(xmlSerialisation: false);
+                Model returnObject = (Model)formatter.Deserialize(stream);
+                foreach (Model model in modelsToNotify)
+                    model.OnDeserialised(xmlSerialisation: false);
+
+                // Reinstate parent
+                Parent = parent;
+
+                return returnObject;
+            }
+        }
 
         #region Internals
-
 
         /// <summary>
         /// Calculate the model's full path. 
@@ -403,100 +400,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Connect this model to the others in the simulation.
-        /// </summary>
-        public void Connect()
-        {
-            if (IsConnected)
-            {
-                // This model is being asked to connect itself AFTER events and links
-                // have already been connected.  We have to go through all event declarations
-                // event handlers, all links in this model and all links other other models
-                // that refer to this model. This will be time consuming.
-
-                // 1. connect all event declarations.
-                Events.ConnectEventPublishers();
-
-                // 2. connect all event handlers.
-                Events.ConnectEventSubscribers();
-
-                // 3. resolve links in this model.
-                ResolveLinks(this);
-
-                // 4. resolve links in other models that point to this model.
-                ResolveExternalLinks(this);
-            }
-            else
-            {
-                // we can take the quicker approach and simply connect event declarations
-                // (publish) with their event handlers and assume that our event handlers will
-                // be connected by whichever model that is publishing that event.
-                Events.ConnectEventPublishers();
-
-                // Resolve all links.
-                ResolveLinks(this);
-            }
-            this.IsConnected = true;
-        }
-        
-        /// <summary>
-        /// Connect this model to the others in the simulation.
-        /// </summary>
-        public void Disconnect()
-        {
-            Events.DisconnectEventPublishers();
-            Events.DisconnectEventSubscribers();
-            UnresolveLinks(this);
-            this.IsConnected = false;
-        }
-
-        /// <summary>
-        /// Perform a deep Copy of the 'source' model.
-        /// </summary>
-        public static Model Clone(Model source)
-        {
-            // Don't serialize a null object, simply return the default for that object
-            if (Object.ReferenceEquals(source, null))
-                throw new ApsimXException("", "Trying to clone a null model");
-
-            // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<Model> modelsToNotify = source.Children.AllRecursively();
-
-            // Get rid of source's parent as we don't want to serialise that.
-            Models.Core.Model parent = source.Parent;
-            source.Parent = null;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                foreach (Model model in modelsToNotify)
-                    model.OnSerialising(xmlSerialisation:false);
-
-                formatter.Serialize(stream, source);
-
-                foreach (Model model in modelsToNotify)
-                    model.OnSerialised(xmlSerialisation: false);
-                
-                stream.Seek(0, SeekOrigin.Begin);
-
-                foreach (Model model in modelsToNotify)
-                    model.OnDeserialising(xmlSerialisation: false);
-                Model returnObject = (Model)formatter.Deserialize(stream);
-                foreach (Model model in modelsToNotify)
-                    model.OnDeserialised(xmlSerialisation: false);
-
-                source.Parent = parent;
-
-                returnObject.IsConnected = false;
-                return returnObject;
-            }
-        }
-
-        /// <summary>
         /// Resolve all [Link] fields in this model.
         /// </summary>
-        private static void ResolveLinks(Model model, Type linkTypeToMatch = null)
+        private static void ResolveLinksInternal(Model model, Type linkTypeToMatch = null)
         {
             string errorMsg = "";
             //Console.WriteLine(model.FullPath + ":");
@@ -579,43 +485,13 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Call OnCommencing in the specified model and all child models.
-        /// </summary>
-        protected static void CallOnCommencing(Model model)
-        {
-            model.OnSimulationCommencing();
-        }
-
-        /// <summary>
-        /// Call OnCompleted in the specified model and all child models.
-        /// </summary>
-        protected static void CallOnCompleted(Model model)
-        {
-            model.OnSimulationCompleted();
-        }
-
-        /// <summary>
-        /// Call OnLoaded in the specified model and all child models.
-        /// </summary>
-        protected static void CallOnLoaded(Model model)
-        {
-            try
-            {
-                model.OnLoaded();
-            }
-            catch (ApsimXException)
-            {
-            }
-        }
-
-        /// <summary>
         /// Go through all other models looking for a [Linl] to the specified 'model'.
         /// Connect any links found.
         /// </summary>
         private static void ResolveExternalLinks(Model model)
         {
             foreach (Model externalModel in model.Scope.FindAll())
-                ResolveLinks(externalModel, typeof(Model));
+                ResolveLinksInternal(externalModel, typeof(Model));
         }
 
         #endregion

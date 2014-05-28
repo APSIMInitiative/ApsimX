@@ -96,7 +96,7 @@ namespace Models.Soils
             FindChildren();
         }
 
-        public override void OnAllCommencing()
+        public override void OnSimulationCommencing()
         {
             FindChildren();
         }

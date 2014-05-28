@@ -27,7 +27,7 @@ namespace Models.Core
         public ModelCollection(Model model)
         {
             Model = model;
-        }
+        } 
 
         /// <summary>
         /// Return a list of child models.
@@ -102,14 +102,14 @@ namespace Models.Core
             Model.Scope.ClearCache();
             Model.Variables.ClearCache();
 
-            if (Model.IsConnected)
+            if (model.Models == null)
+                model.Models = new List<Core.Model>();
+            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null && simulation.IsRunning)
             {
-                if (model.Models == null)
-                    model.Models = new List<Core.Model>();
-                model.IsConnected = true;
-                model.Connect();
+                model.Events.Connect();
+                model.ResolveLinks();
             }
-
             // Call the model's OnLoaded method.
             Model.OnLoaded();
         }
@@ -126,8 +126,8 @@ namespace Models.Core
             {
                 Model oldModel = Model.Models[index];
 
-                if (oldModel.IsConnected)
-                    oldModel.Disconnect();
+                oldModel.Events.Disconnect();
+                oldModel.UnResolveLinks();
 
                 // remove the existing model.
                 Model.Models.RemoveAt(index);
@@ -146,13 +146,14 @@ namespace Models.Core
 
                 oldModel.Parent = null;
 
-                // If we are connected then connect our new child.
-                if (Model.IsConnected)
-                {
-                    newModel.IsConnected = true;
-                    newModel.Connect();
-                }
 
+                // Connect our new child.
+                Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+                if (simulation != null && simulation.IsRunning)
+                {
+                    newModel.Events.Connect();
+                    newModel.ResolveLinks();
+                }
                 newModel.OnLoaded();
 
                 return true;
@@ -178,8 +179,8 @@ namespace Models.Core
                 Model.Scope.ClearCache();
                 Model.Variables.ClearCache();
 
-                if (oldModel.IsConnected)
-                    oldModel.Disconnect();
+                oldModel.Events.Disconnect();
+                oldModel.UnResolveLinks();
 
                 return true;
             }

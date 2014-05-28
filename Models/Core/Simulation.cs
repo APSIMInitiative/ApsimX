@@ -142,15 +142,21 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            Connect();
+            Events.Connect();
+            ResolveLinks();
             foreach (Model child in Children.AllRecursively())
-                child.Connect();
+            {
+                child.Events.Connect();
+                child.ResolveLinks();
+            }
 
             _IsRunning = true;
+            
             VariableCache.Clear();
             ScopeCache.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
-            Children.AllRecursively().ForEach(CallOnCommencing);
+            foreach (Model child in Children.AllRecursively())
+                child.OnSimulationCommencing();
         }
 
         /// <summary>
@@ -169,17 +175,22 @@ namespace Models.Core
         /// </summary>
         public void CleanupRun()
         {
-            CallOnCompleted(this);
-            Children.AllRecursively().ForEach(CallOnCompleted);
+            _IsRunning = false;
+
+            OnSimulationCompleted();
+            foreach (Model child in Children.AllRecursively())
+                child.OnSimulationCompleted();
 
             if (OnCompleted != null)
                 OnCompleted.Invoke(this, null);
 
-            _IsRunning = false;
-
-            Disconnect();
+            Events.Disconnect();
+            UnResolveLinks();
             foreach (Model child in Children.AllRecursively())
-                child.Disconnect();
+            {
+                child.Events.Disconnect();
+                child.UnResolveLinks();
+            }
 
             timer.Stop();
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
