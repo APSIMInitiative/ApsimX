@@ -1,3 +1,9 @@
+# syntax: Tests\RTestSuite\RunTest.R %OS% %BUILD_NUMBER% -l
+# -l: run local; do not try to connect to results storage database
+#
+# Will find all .apsimx files under the working directory.
+# Ignores any .apsimx files in UnitTest directory.
+
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
@@ -8,7 +14,7 @@ library("RSQLite")
 library("RODBC")
 
 args <- commandArgs(TRUE)
-#args <- c("Windows_NT", -1) # for testing only 
+#args <- c("Windows_NT", -1, "-l") # for testing only 
 
 if(length(args) == 0)
   stop("Usage: rscript RunTest.R <path to .apsimx>")
@@ -33,9 +39,9 @@ for (fileNumber in 1:length(files)){
   
   print(noquote(files[fileNumber]))
   
-  # get connection string used to store test output
-  if(length(args) > 1){
-    dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
+  # get connection string used to store test output, not used if -l (local) argument given
+  if(length(args) > 1 & ! "-l" %in% args){
+    dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE)) # only needed for machines submitting results to main database
     connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
   } 
 
@@ -153,8 +159,8 @@ for (fileNumber in 1:length(files)){
   odbcCloseAll()
 }
 
-if (length(args) > 1){
-    # this line does the save to the external database. comment out to stop this happening for testing
+if (length(args) > 1 & length(args) > 1 & !"-l" %in% args){
+    # this line does the save to the external database. Ignore if -l specified
     print(noquote("Uploading test results."))
     sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
     print(noquote("Uploading complete."))
