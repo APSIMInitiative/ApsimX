@@ -16,39 +16,79 @@ namespace Models.Core
     public class Variables
     {
         /// <summary>
-        /// Clear the variable cache.
+        /// A reference to the simulation holding the variable cache.
         /// </summary>
-        public static void ClearCache(Simulation simulation, Model relativeTo)
+        private Simulation Simulation;
+
+        /// <summary>
+        /// The model that we are working for.
+        /// </summary>
+        private Model RelativeTo;
+
+        ////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Variables(Model relativeTo)
         {
-            if (simulation != null)
-                simulation.VariableCache.Clear();
+            RelativeTo = relativeTo;
+            Simulation = relativeTo.ParentOfType(typeof(Simulation)) as Simulation;
         }
 
+        /// <summary>
+        /// Clear the variable cache.
+        /// </summary>
+        public void ClearCache()
+        {
+            Simulation.VariableCache.Clear();
+        }
+
+        /// <summary>
+        /// Return a model or variable using the specified NamePath. Returns null if not found.
+        /// </summary>
+        public object Get(string namePath)
+        {
+            IVariable variable = GetInternal(namePath);
+            if (variable == null)
+                return null;
+            else
+                return variable.Value;
+        }
+
+        /// <summary>
+        /// Set the value of a variable. Will throw if variable doesn't exist.
+        /// </summary>
+        public void Set(string namePath, object value)
+        {
+            IVariable variable = GetInternal(namePath); 
+            if (variable == null)
+                throw new ApsimXException(RelativeTo.FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
+            else
+                variable.Value = value;
+        }
 
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        public static IVariable Get(Simulation simulation, Model relativeTo, string namePath)
+        private IVariable GetInternal(string namePath)
         {
             // Look in cache first.
-            // If this is a simulation variable then try and use the cache.
-            bool useCache = simulation != null;
-
-            string absolutePath = ToAbsolute(simulation, namePath, relativeTo);
+            string absolutePath = ToAbsolute(Simulation, namePath, RelativeTo);
             string cacheKey = null;
-            if (useCache)
+            cacheKey = absolutePath;
+            if (Simulation != null)
             {
-                cacheKey = absolutePath;
                 IVariable returnVariable;
-                if (simulation.VariableCache.TryGetValue(cacheKey, out returnVariable))
+                if (Simulation.VariableCache.TryGetValue(cacheKey, out returnVariable))
                     return returnVariable;
             }
-
-            Model rootModel = GetRootModelOf(relativeTo);
+            // Not found in cache so go find variable.
+            Model rootModel = GetRootModelOf(RelativeTo);
 
             // Make the absolute path relative to the simulation.
             if (!absolutePath.StartsWith(rootModel.FullPath))
-                throw new ApsimXException(relativeTo.FullPath, "Invalid path found while trying to do a get. Path is '" + absolutePath + "'");
+                throw new ApsimXException(RelativeTo.FullPath, "Invalid path found while trying to do a get. Path is '" + absolutePath + "'");
             string pathRelativeToSimulations = absolutePath.Remove(0, rootModel.FullPath.Length);
 
             object obj = rootModel;
@@ -65,9 +105,9 @@ namespace Models.Core
                 }
 
                 object localObj = null;
-                ModelCollection modelCollecion = obj as ModelCollection;
-                if (modelCollecion != null)
-                    localObj = modelCollecion.Models.FirstOrDefault(m => m.Name == pathBit);
+                Model model = obj as Model;
+                if (model != null)
+                    localObj = model.Children.All.FirstOrDefault(m => m.Name == pathBit);
 
                 if (localObj != null)
                     obj = localObj;
@@ -76,8 +116,8 @@ namespace Models.Core
                     propertyInfo = obj.GetType().GetProperty(pathBit);
                     if (propertyInfo == null)
                     {
-                        if (useCache)
-                            simulation.VariableCache[cacheKey] = new VariableObject(null);
+                        if (Simulation != null)
+                            Simulation.VariableCache[cacheKey] = new VariableObject(null);
                         return null;
                     }
                 }
@@ -91,12 +131,10 @@ namespace Models.Core
                 variable = new VariableProperty(obj, propertyInfo);
 
             // Add to our cache.
-            if (useCache)
-                simulation.VariableCache[cacheKey] = variable;
+            if (Simulation != null)
+                Simulation.VariableCache[cacheKey] = variable;
             return variable;
         }
-
-    
 
         /// <summary>
         /// Return the specified 'namePath' as an absolute one.
@@ -119,7 +157,7 @@ namespace Models.Core
                     throw new ApsimXException(relativeTo.FullPath, "Invalid path found: " + namePath);
 
                 string typeName = namePath.Substring(1, pos - 1);
-                Model modelInScope = Scope.Find(simulation, relativeTo, typeName);
+                Model modelInScope = relativeTo.Scope.Find(typeName);
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);

@@ -10,14 +10,17 @@ namespace Models.PMF.Functions
     [Description("Returns the Minimum value of all children functions")]
     public class MinimumFunction : Function
     {
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private Model[] ChildFunctions;
 
         public override double Value
         {
             get
             {
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
                 double ReturnValue = 999999999;
-                foreach (Function F in Children)
+                foreach (Function F in ChildFunctions)
                 {
                     ReturnValue = Math.Min(ReturnValue, F.Value);
                 }

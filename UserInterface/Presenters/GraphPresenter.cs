@@ -232,7 +232,7 @@ namespace UserInterface.Presenters
             if (simulationName == null && tableName == null && fieldName != null)
             {
                 // Use reflection to access a property.
-                object Obj = Graph.Get(fieldName);
+                object Obj = Graph.Variables.Get(fieldName);
                 if (Obj != null && Obj.GetType().IsArray)
                     return Obj as Array;
             }

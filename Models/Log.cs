@@ -45,7 +45,7 @@ namespace Models
         private void OnTick(object sender, EventArgs e)
         {
             Writer.WriteLine("Date: " + Clock.Today.ToString());
-            Model[] models = this.FindAll();
+            Model[] models = this.Scope.FindAll();
 
             foreach (Model model in models)
                 Summary.WriteModelProperties(Writer, model, false, true);

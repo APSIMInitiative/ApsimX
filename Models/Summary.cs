@@ -186,9 +186,9 @@ namespace Models
                     string message = (string)row[3];
                     Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
 
-                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                    if (errorLevel == DataStore.ErrorLevel.Error)
                         message = "FATAL ERROR: " + message;
-                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == DataStore.ErrorLevel.Warning)
                         message = "WARNING: " + message;
 
                     messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
@@ -206,7 +206,7 @@ namespace Models
 
             if (Simulation != null)
             {
-                Model[] models = Simulation.FindAll();
+                Model[] models = Simulation.Scope.FindAll();
                 foreach (Model model in models)
                     WriteModelProperties(report, model, html, StateVariables);
             }

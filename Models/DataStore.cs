@@ -14,7 +14,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    public class DataStore : ModelCollection
+    public class DataStore : Model
     {
         /// <summary>
         /// A SQLite connection shared between all instances of this DataStore.

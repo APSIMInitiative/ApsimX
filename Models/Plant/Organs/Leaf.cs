@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
 
         #region Structures
         [Serializable]
-        public class InitialLeafValues : ModelCollection
+        public class InitialLeafValues : Model
         {
             [Link(MustBeChild = true)] public Function MaxArea = null;
             [Link(MustBeChild = true)] public Function GrowthDuration = null;
@@ -64,8 +64,7 @@ namespace Models.PMF.Organs
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
-        [XmlIgnore]
-        public List<LeafCohort> InitialLeaves { get { return ModelsMatching<LeafCohort>(); } }
+        private LeafCohort[] InitialLeaves;
         [Link(MustBeChild = true)] InitialLeafValues LeafCohortParameters = null;
         [Link(MustBeChild = true)] RUEModel Photosynthesis = null;
         [Link(MustBeChild = true)] Function ThermalTime = null;
@@ -85,6 +84,15 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
 
         #endregion
+
+        public override void OnLoaded()
+        {
+            base.OnLoaded();
+            List<LeafCohort> initialLeaves = new List<LeafCohort>();
+            foreach (LeafCohort initialLeaf in Children.MatchingMultiple(typeof(LeafCohort)))
+                initialLeaves.Add(initialLeaf);
+            InitialLeaves = initialLeaves.ToArray();
+        }
 
         #region States
         
@@ -665,7 +673,7 @@ namespace Models.PMF.Organs
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
             Leaves = new List<LeafCohort>();
-            CopyLeaves(InitialLeaves.ToArray(), Leaves);
+            CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
                 if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day

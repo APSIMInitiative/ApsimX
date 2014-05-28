@@ -12,7 +12,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    public class Manager : ModelCollection
+    public class Manager : Model
     {
         // ----------------- Privates
         private string _Code;
@@ -111,7 +111,7 @@ namespace Models
                     // If a script model already exists, then get rid of it.
                     if (Script != null)
                     {
-                        RemoveModel(Script);
+                        Children.Remove(Script);
                         Script = null;
                     }
 
@@ -134,15 +134,30 @@ namespace Models
                         throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
 
                     // Create a new script model.
-                    XmlSerializer newSerial = new XmlSerializer(scriptType);
-                    Script = newSerial.Deserialize(new StringReader(elementsAsXml)) as Model;
+                    Script = compiledAssembly.CreateInstance("Models.Script") as Model;
+                    Script.Models = new System.Collections.Generic.List<Model>();
+                    Script.Name = "Script";
+                    XmlElement parameters;
+                    if (elements == null || elements[0] == null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(elementsAsXml);
+                        parameters = doc.DocumentElement;
+                    }
+                    else
+                        parameters = elements[0];
+                    SetParametersInObject(Script, parameters);
 
                     // Add the new script model to our models collection.
-                    AddModel(Script);
+                    Children.Add(Script);
                     Script.HiddenModel = true;
+
+
                 }
             }
         }
+
+
 
         /// <summary>
         /// Return true if the code needs to be recompiled.
@@ -159,19 +174,49 @@ namespace Models
         {
             if (Script != null)
             {
-                XmlSerializer oldSerial = new XmlSerializer(Script.GetType());
-                elementsAsXml = Utility.Xml.Serialise(Script, true);
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(elementsAsXml);
-                Utility.Xml.DeleteAttribute(doc.DocumentElement, "xmlns:xsi");
                 if (elements == null)
                     elements = new XmlElement[1];
-                elements[0] = doc.DocumentElement;
+                elements[0] = GetParametersInObject(Script);
             }
             else if (elementsAsXml == null && elements != null && elements.Length >= 1)
                 elementsAsXml = elements[0].OuterXml;
             else if (elementsAsXml == null)
                 elementsAsXml = "<Script />";
+        }
+
+        /// <summary>
+        /// Set the scripts parameters from the 'xmlElement' passed in.
+        /// </summary>
+        private void SetParametersInObject(Model script, XmlElement xmlElement)
+        {
+            foreach (XmlElement element in xmlElement.ChildNodes)
+            {
+                PropertyInfo property = Script.GetType().GetProperty(element.Name);
+                if (property != null)
+                    property.SetValue(script, Utility.Reflection.StringToObject(property.PropertyType, element.InnerText), null);
+            }
+        }
+
+        /// <summary>
+        /// Get the scripts parameters as a returned xmlElement.
+        /// </summary>
+        private XmlElement GetParametersInObject(Model script)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.AppendChild(doc.CreateElement("Script"));
+            foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
+            {
+                if (property.CanRead && property.CanWrite && 
+                    Utility.Reflection.GetAttribute(property, typeof(XmlIgnoreAttribute), false) == null)
+                {
+                    object value = property.GetValue(script, null);
+                    if (value == null)
+                        value = "";
+                    Utility.Xml.SetValue(doc.DocumentElement, property.Name, 
+                                         Utility.Reflection.ObjectToString(value));
+                }
+            }
+            return doc.DocumentElement;
         }
 
 

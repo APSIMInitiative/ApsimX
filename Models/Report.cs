@@ -233,10 +233,14 @@ namespace Models
         public Simulation Simulation = null;
 
         // Properties read in.
-        public string[] Variables {get; set;}
-        public string[] Events { get; set; }
+        public new string[] Variables {get; set;}
+        public new string[] Events { get; set; }
         public bool AutoCreateCSV { get; set; }
 
+        public object Get(string name)
+        {
+            return base.Variables.Get(name);
+        }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
@@ -245,7 +249,7 @@ namespace Models
             foreach (string Event in Events)
             {
                 if (Event != "")
-                    Subscribe(Event, OnReport);
+                    base.Events.Subscribe(Event, OnReport);
             }
         }
 
@@ -344,7 +348,7 @@ namespace Models
             // Unsubscribe to all events.
             foreach (string Event in Events)
                 if ( (Event != null) && (Event != "") )
-                    Unsubscribe(Event);
+                    base.Events.Unsubscribe(Event);
         }
 
     }

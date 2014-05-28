@@ -9,16 +9,16 @@ namespace Models.PMF.Functions
     [Description("Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.")]
     public class PhaseLookup : Function
     {
-        private List<Function> Children { get; set; }
+        private Model[] ChildFunctions;
 
         public override double Value
         {
             get
             {
-                if (Children == null)
-                    Children = ModelsMatching<Function>();
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
 
-                foreach (Function F in Children)
+                foreach (Function F in ChildFunctions)
                 {
                     PhaseLookupValue P = F as PhaseLookupValue;
                     if (P.InPhase)

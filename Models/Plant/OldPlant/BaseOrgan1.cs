@@ -8,13 +8,13 @@ using System.Xml.Serialization;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    abstract public class BaseOrgan1 : ModelCollection, Organ1
+    abstract public class BaseOrgan1 : Model, Organ1
     {
         public Biomass Live 
         { 
             get 
             { 
-                return ModelMatching("Live") as Biomass;
+                return Children.Matching("Live") as Biomass;
             }
             set
             {
@@ -25,7 +25,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return ModelMatching("Dead") as Biomass;
+                return Children.Matching("Dead") as Biomass;
             }
             set
             {

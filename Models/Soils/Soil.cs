@@ -21,7 +21,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Soil : ModelCollection
+    public class Soil : Model
     {
         private static bool PathFixed = false;
 
@@ -106,22 +106,22 @@ namespace Models.Soils
         /// </summary>
         private void FindChildren()
         {        
-            Water = ModelMatching(typeof(Water)) as Water;
-            SoilWater = ModelMatching(typeof(SoilWater)) as SoilWater;
-            SoilOrganicMatter = ModelMatching(typeof(SoilOrganicMatter)) as SoilOrganicMatter;
-            SoilNitrogen = ModelMatching(typeof(SoilNitrogen)) as SoilNitrogen;
-            Analysis = ModelMatching(typeof(Analysis)) as Analysis;
-            InitialWater = ModelMatching(typeof(InitialWater)) as InitialWater;
-            Phosphorus = ModelMatching(typeof(Phosphorus)) as Phosphorus;
-            Swim = ModelMatching(typeof(Swim)) as Swim;
-            LayerStructure = ModelMatching(typeof(LayerStructure)) as LayerStructure;
-            SoilTemperature = ModelMatching(typeof(SoilTemperature)) as SoilTemperature;
-            SoilTemperature2 = ModelMatching(typeof(SoilTemperature2)) as SoilTemperature2;
+            Water = Children.Matching(typeof(Water)) as Water;
+            SoilWater = Children.Matching(typeof(SoilWater)) as SoilWater;
+            SoilOrganicMatter = Children.Matching(typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoilNitrogen = Children.Matching(typeof(SoilNitrogen)) as SoilNitrogen;
+            Analysis = Children.Matching(typeof(Analysis)) as Analysis;
+            InitialWater = Children.Matching(typeof(InitialWater)) as InitialWater;
+            Phosphorus = Children.Matching(typeof(Phosphorus)) as Phosphorus;
+            Swim = Children.Matching(typeof(Swim)) as Swim;
+            LayerStructure = Children.Matching(typeof(LayerStructure)) as LayerStructure;
+            SoilTemperature = Children.Matching(typeof(SoilTemperature)) as SoilTemperature;
+            SoilTemperature2 = Children.Matching(typeof(SoilTemperature2)) as SoilTemperature2;
 
             if (Samples == null)
                 Samples = new List<Sample>();
             Samples.Clear();
-            foreach (Sample sample in AllModelsMatching(typeof(Sample)))
+            foreach (Sample sample in Children.MatchingMultiple(typeof(Sample)))
                 Samples.Add(sample);
         }
 

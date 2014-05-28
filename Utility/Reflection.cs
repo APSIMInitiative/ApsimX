@@ -352,5 +352,62 @@ namespace Utility
             return formatter.Deserialize(stream);
         }
 
+
+        /// <summary>
+        /// Convert the specified 'stringValue' into an object of the specified 'type'.
+        /// Will throw if cannot convert type.
+        /// </summary>
+        public static object StringToObject(Type type, string stringValue)
+        {
+            if (type.IsArray)
+            {
+                string[] stringValues = stringValue.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (type == typeof(double[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(int[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(string[]))
+                    return stringValues;
+                else
+                    throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
+            }
+            else if (type == typeof(double))
+                return Convert.ToDouble(stringValue);
+            else if (type == typeof(float))
+                return Convert.ToSingle(stringValue);
+            else if (type == typeof(int))
+                return Convert.ToInt32(stringValue);
+            else if (type == typeof(DateTime))
+                return Convert.ToDateTime(stringValue);
+            else if (type == typeof(string))
+                return stringValue;
+            else if (type.IsEnum)
+                return Enum.Parse(type, stringValue, true);
+
+            throw new Exception("Cannot convert the string '" + stringValue + "' to a " + type.ToString());
+        }
+
+        /// <summary>
+        /// Convert the specified 'obj' into a string.
+        /// </summary>
+        public static string ObjectToString(object obj)
+        {
+            if (obj.GetType().IsArray)
+            {
+                string stringValue = "";
+                Array arr = obj as Array;
+                for (int j = 0; j < arr.Length; j++)
+                {
+                    if (j > 0)
+                        stringValue += ",";
+                    stringValue += arr.GetValue(j).ToString();
+                }
+                return stringValue;
+            }
+            else
+                return obj.ToString();
+        }
+
+
     }
 }

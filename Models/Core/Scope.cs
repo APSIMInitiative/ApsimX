@@ -10,43 +10,58 @@ namespace Models.Core
     /// </summary>
     public class Scope
     {
+        /// <summary>
+        /// A reference to the simulation holding the variable cache.
+        /// </summary>
+        private Simulation Simulation;
 
+        /// <summary>
+        /// The model that we are working for.
+        /// </summary>
+        private Model RelativeTo;
+
+        ////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Scope(Model relativeTo)
+        {
+            RelativeTo = relativeTo;
+            Simulation = relativeTo.ParentOfType(typeof(Simulation)) as Simulation;
+        }
 
         /// <summary>
         /// Clear the scope cache if 'relativeTo' is sitting under a simulation.
         /// </summary>
-        public static void ClearCache(Simulation simulation, Model relativeTo)
+        public void ClearCache()
         {
-            if (simulation != null)
-                simulation.ScopeCache.Clear();
+            Simulation.ScopeCache.Clear();
         }
 
         /// <summary>
         /// Return a model with the specified name is in scope. Returns null if none found.
         /// </summary>
-        public static Model Find(Simulation simulation, Model relativeTo, string modelNameToFind)
+        public Model Find(string modelNameToFind)
         {
             // If it is in the cache then return it.
             string cacheKey = null;
-            if (simulation != null)
+            cacheKey = GetCacheKey(Simulation, RelativeTo, modelNameToFind, singleMatch: true);
+            if (cacheKey != null)
             {
-                cacheKey = GetCacheKey(simulation, relativeTo, modelNameToFind, singleMatch: true);
-                if (cacheKey != null)
-                {
-                    Model[] matches;
-                    if (simulation.ScopeCache.TryGetValue(cacheKey, out matches))
-                        return matches[0];
-                }
+                Model[] matches;
+                if (Simulation.ScopeCache.TryGetValue(cacheKey, out matches))
+                    return matches[0];
             }
 
             // Not in cache so look for it and add to cache.
             List<Model> modelsInScope = new List<Model>();
-            Walk(relativeTo, new Comparer(modelNameToFind), true, modelsInScope, null);
+            Walk(RelativeTo, new Comparer(modelNameToFind), true, modelsInScope, null);
 
             if (modelsInScope.Count >= 1)
             {
-                if (simulation != null)
-                    AddToCache(simulation, cacheKey, new Model[1] { modelsInScope[0] });
+                if (Simulation != null)
+                    AddToCache(Simulation, cacheKey, new Model[1] { modelsInScope[0] });
                 return modelsInScope[0];
             }
             return null;
@@ -56,29 +71,26 @@ namespace Models.Core
         /// <summary>
         /// Return a model of the specified type that is in scope. Returns null if none found.
         /// </summary>
-        public static Model Find(Simulation simulation, Model relativeTo, Type modelType)
+        public Model Find(Type modelType)
         {
             // If it is in the cache then return it.
             string cacheKey = null;
-            if (simulation != null)
+            cacheKey = GetCacheKey(Simulation, RelativeTo, modelType.Name, singleMatch: true);
+            if (cacheKey != null)
             {
-                cacheKey = GetCacheKey(simulation, relativeTo, modelType.Name, singleMatch: true);
-                if (cacheKey != null)
-                {
-                    Model[] matches;
-                    if (simulation.ScopeCache.TryGetValue(cacheKey, out matches))
-                        return matches[0];
-                }
+                Model[] matches;
+                if (Simulation.ScopeCache.TryGetValue(cacheKey, out matches))
+                    return matches[0];
             }
 
             // Not in cache so look for it and add to cache.
             List<Model> modelsInScope = new List<Model>();
-            Walk(relativeTo, new Comparer(modelType), true, modelsInScope, null);
+            Walk(RelativeTo, new Comparer(modelType), true, modelsInScope, null);
 
             if (modelsInScope.Count >= 1)
             {
-                if (simulation != null) 
-                    AddToCache(simulation, cacheKey, modelsInScope.ToArray());
+                if (Simulation != null)
+                    AddToCache(Simulation, cacheKey, modelsInScope.ToArray());
                 return modelsInScope[0];
             }
             return null;
@@ -89,27 +101,25 @@ namespace Models.Core
         /// of that type will be returned. Never returns null. May return an empty array. Does not
         /// return models outside of a simulation.
         /// </summary>
-        public static Model[] FindAll(Simulation simulation, Model relativeTo, Type modelType = null)
+        public Model[] FindAll(Type modelType = null)
         {
             // If it is in the cache then return it.
             string cacheKey = null;
-            if (simulation != null)
-            {
-                if (modelType == null)
-                    cacheKey = GetCacheKey(simulation, relativeTo, null, singleMatch: false);
-                else
-                    cacheKey = GetCacheKey(simulation, relativeTo, modelType.Name, singleMatch: false);
-                if (cacheKey != null && simulation.ScopeCache.ContainsKey(cacheKey))
-                    return simulation.ScopeCache[cacheKey];
-            }
+            if (modelType == null)
+                cacheKey = GetCacheKey(Simulation, RelativeTo, null, singleMatch: false);
+            else
+                cacheKey = GetCacheKey(Simulation, RelativeTo, modelType.Name, singleMatch: false);
+            if (cacheKey != null && Simulation.ScopeCache.ContainsKey(cacheKey))
+                return Simulation.ScopeCache[cacheKey];
+
             // Not in cache so look for matching models.
             List<Model> modelsInScope = new List<Model>();
-            Walk(relativeTo, new Comparer(modelType), false, modelsInScope, null);
+            Walk(RelativeTo, new Comparer(modelType), false, modelsInScope, null);
 
             // Add matching models to cache and return.
-            if (modelsInScope.Count >= 1 && simulation != null)
+            if (modelsInScope.Count >= 1 && Simulation != null)
             {
-                AddToCache(simulation, cacheKey, modelsInScope.ToArray());
+                AddToCache(Simulation, cacheKey, modelsInScope.ToArray());
             }
             return modelsInScope.ToArray();
         }
@@ -184,10 +194,7 @@ namespace Models.Core
             if (comparer.DoesMatch(relativeTo) && !matches.Contains(relativeTo))
                 matches.Add(relativeTo);
 
-            if (relativeTo is ModelCollection)
-            {
-                WalkChildren(relativeTo, comparer, firstOnly, matches, excludeChild);
-            }
+            WalkChildren(relativeTo, comparer, firstOnly, matches, excludeChild);
          
             bool haveFinished = firstOnly && matches.Count > 0;
             if (!haveFinished && relativeTo.Parent != null)
@@ -197,10 +204,10 @@ namespace Models.Core
                     // Don't go beyond simulation.
                 }
 
-                else// if (relativeTo is Zone)
+                else
                 {
                     // Walk the parent but not all child models recursively.
-                    ModelCollection parent = relativeTo.Parent;
+                    Model parent = relativeTo.Parent;
                     while (parent != null)
                     {
                         WalkParent(parent, comparer, firstOnly, matches, relativeTo);
@@ -214,17 +221,18 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Walk the children of 'relativeTo' recursively
+        /// </summary>
         private static void WalkChildren(Model relativeTo, Comparer comparer, bool firstOnly, List<Model> matches, Model excludeChild)
         {
-            foreach (Model child in (relativeTo as ModelCollection).Models)
+            foreach (Model child in relativeTo.Children.All)
             {
                 if (excludeChild == null || child != excludeChild)
                 {
                     if (comparer.DoesMatch(child) && !matches.Contains(child))
                         matches.Add(child);
-
-                    if (child is ModelCollection)
-                        WalkChildren(child, comparer, firstOnly, matches, null);
+                    WalkChildren(child, comparer, firstOnly, matches, null);
                 }
                 if (firstOnly && matches.Count > 0)
                     return;
@@ -234,7 +242,7 @@ namespace Models.Core
         /// <summary>
         /// Walk the specified modelCollection but don't recursively walk down the child hierarchy.
         /// </summary>
-        private static void WalkParent(ModelCollection relativeTo, Comparer comparer, bool firstOnly, List<Model> matches, Model excludeChild)
+        private static void WalkParent(Model relativeTo, Comparer comparer, bool firstOnly, List<Model> matches, Model excludeChild)
         {
             foreach (Model child in relativeTo.Models)
             {

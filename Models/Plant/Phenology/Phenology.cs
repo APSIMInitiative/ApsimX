@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
         public String NewPhaseName = "";
     }
     [Serializable]
-    public class Phenology : ModelCollection
+    public class Phenology : Model
     {
         #region Links
         [Link]
@@ -40,8 +40,7 @@ namespace Models.PMF.Phen
         [Link] public Function StageCode = null;
         [Link] public Function ThermalTime = null;
 
-        [XmlIgnore]
-        public List<Phase> Phases { get; private set; }
+        private List<Phase> Phases;
 
         #endregion
 
@@ -63,21 +62,13 @@ namespace Models.PMF.Phen
         {
             Stage = 1;
             _AccumulatedTT = 0;
-            Phases.Clear();
             JustInitialised = true;
             SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = "";
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
-            foreach (object ChildObject in this.Models)
-            {
-                Phase Child = ChildObject as Phase;
-                if (Child != null)
-                {
-                    Phases.Add(Child);
-                    Child.ResetPhase();
-                }
-            }
+            foreach (Phase phase in Phases)
+                phase.ResetPhase();
         }
 
         #endregion
@@ -150,19 +141,19 @@ namespace Models.PMF.Phen
 
         public override void OnLoaded()
         {
-            Phases = ModelsMatching<Phase>();
+            Phases = new List<Phase>();
+            foreach (Phase phase in Children.MatchingMultiple(typeof(Phase)))
+                Phases.Add(phase);
         }
 
         public override void OnSimulationCommencing()
         {
             Clear();
-            Phases = ModelsMatching<Phase>();
         }
 
         public void OnSow()
         {
             Clear();
-            Phases = ModelsMatching<Phase>();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using Models.PMF.Phen;
 namespace Models.PMF
 {
     [Serializable]
-    public class Summariser : ModelCollection
+    public class Summariser : Model
     {
         [Link] Biomass AboveGround = null;
         [Link] Biomass BelowGround = null;

@@ -75,7 +75,7 @@ namespace Models.PMF
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
-        private List<Organ> _Organs = null;
+        private Organ[] _Organs = null;
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
@@ -85,13 +85,18 @@ namespace Models.PMF
         public SowPlant2Type SowingData;
 
         [XmlIgnore]
-        public List<Organ> Organs 
+        public Organ[] Organs 
         { 
             get 
 
-            { 
+            {
                 if (_Organs == null)
-                    _Organs = ModelsMatching<Organ>();
+                {
+                    List<Organ> organs = new List<Organ>();
+                    foreach (Organ organ in Children.MatchingMultiple(typeof(Organ)))
+                        organs.Add(organ);
+                    _Organs = organs.ToArray();
+                }
                 return _Organs;
             } 
         }
@@ -206,11 +211,11 @@ namespace Models.PMF
 
             BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
             BiomassRemovedData.crop_type = CropType;
-            BiomassRemovedData.dm_type = new string[Organs.Count];
-            BiomassRemovedData.dlt_crop_dm = new float[Organs.Count];
-            BiomassRemovedData.dlt_dm_n = new float[Organs.Count];
-            BiomassRemovedData.dlt_dm_p = new float[Organs.Count];
-            BiomassRemovedData.fraction_to_residue = new float[Organs.Count];
+            BiomassRemovedData.dm_type = new string[Organs.Length];
+            BiomassRemovedData.dlt_crop_dm = new float[Organs.Length];
+            BiomassRemovedData.dlt_dm_n = new float[Organs.Length];
+            BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
+            BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
             int i = 0;
             foreach (Organ O in Organs)
             {
