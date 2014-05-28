@@ -300,7 +300,7 @@ namespace UserInterface.Presenters
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Children.All)
-                        if (!ChildModel.HiddenModel)
+                        if (!(ChildModel.Name == "Script"))
                             e.Descriptions.Add(GetNodeDescription(ChildModel));
                 }
             }

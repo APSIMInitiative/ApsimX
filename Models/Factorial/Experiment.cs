@@ -26,13 +26,14 @@ namespace Models.Factorial
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
+                Simulation newSimulation = baseSimulation.Clone() as Simulation;
                 newSimulation.Name = Name;
                 newSimulation.Parent = null;
-                newSimulation.ParentAllChildren();
+                ModelFunctions.ParentAllChildren(newSimulation);
 
                 // Call OnLoaded in all models.
-                newSimulation.Children.AllRecursively().ForEach(CallOnLoaded);
+                foreach (Model child in newSimulation.Children.AllRecursively())
+                    child.OnLoaded();
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
@@ -59,11 +60,14 @@ namespace Models.Factorial
 
                 if (newSimulationName == name)
                 {
-                    Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
+                    Simulation newSimulation = baseSimulation.Clone() as Simulation;
                     newSimulation.Name = Name;
+                    newSimulation.Parent = null;
+                    ModelFunctions.ParentAllChildren(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    newSimulation.Children.AllRecursively().ForEach(CallOnLoaded);
+                    foreach (Model child in newSimulation.Children.AllRecursively())
+                        child.OnLoaded();
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

@@ -65,7 +65,7 @@ namespace Models.Core
 
                 // Parent all models.
                 simulations.Parent = null;
-                simulations.ParentAllChildren();
+                ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
                 simulations.LoadErrors = new List<ApsimXException>();
@@ -107,11 +107,11 @@ namespace Models.Core
 
                 // Parent all models.
                 simulations.Parent = null;
-                simulations.ParentAllChildren();
-
+                ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.Children.AllRecursively().ForEach(CallOnLoaded);
+                foreach (Model child in simulations.Children.AllRecursively())
+                    child.OnLoaded();
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -137,6 +137,25 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
+        }
+
+        /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public void Write(TextWriter stream)
+        {
+            foreach (Model model in Children.AllRecursively())
+                model.OnSerialising(xmlSerialisation: true);
+
+            try
+            {
+                stream.Write(Utility.Xml.Serialise(this, true));
+            }
+            finally
+            {
+                foreach (Model model in Children.AllRecursively())
+                    model.OnSerialised(xmlSerialisation: true);
+            }
         }
 
         /// <summary>
@@ -263,9 +282,6 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
-            foreach (Model model in Children.AllRecursively())
-                model.OnAllCommencing();
-
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
 
@@ -303,8 +319,10 @@ namespace Models.Core
             {
                 Console.WriteLine(FileName);
                 foreach (Model model in Children.AllRecursively())
-                    model.OnAllCompleted();
+                    model.OnAllSimulationsCompleted();
             }
         }
+
+
     }
 }

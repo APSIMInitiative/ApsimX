@@ -154,7 +154,7 @@ namespace Models
         /// <summary>
         /// All simulations have run - write all tables
         /// </summary>
-        public override void OnAllCompleted()
+        public override void OnAllSimulationsCompleted()
         {
             // Open the .db for writing.
             Open(forWriting: true);
