@@ -32,14 +32,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Clear the scope cache if 'relativeTo' is sitting under a simulation.
-        /// </summary>
-        public void ClearCache()
-        {
-            Simulation.ScopeCache.Clear();
-        }
-
-        /// <summary>
         /// Return a model with the specified name is in scope. Returns null if none found.
         /// </summary>
         public Model Find(string modelNameToFind)

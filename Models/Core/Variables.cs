@@ -37,14 +37,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Clear the variable cache.
-        /// </summary>
-        public void ClearCache()
-        {
-            Simulation.VariableCache.Clear();
-        }
-
-        /// <summary>
         /// Return a model or variable using the specified NamePath. Returns null if not found.
         /// </summary>
         public object Get(string namePath)

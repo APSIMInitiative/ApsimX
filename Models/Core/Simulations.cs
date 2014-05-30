@@ -60,7 +60,7 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
-                foreach (Model model in simulations.Children.AllRecursively())
+                foreach (Model model in simulations.Children.AllRecursively)
                     model.OnDeserialised(true);
 
                 // Parent all models.
@@ -69,7 +69,7 @@ namespace Models.Core
 
                 // Call OnLoaded in all models.
                 simulations.LoadErrors = new List<ApsimXException>();
-                foreach (Model child in simulations.Children.AllRecursively())
+                foreach (Model child in simulations.Children.AllRecursively)
                 {
                     try
                     {
@@ -102,7 +102,7 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnSerialised method in each model.
-                foreach (Model model in simulations.Children.AllRecursively())
+                foreach (Model model in simulations.Children.AllRecursively)
                     model.OnDeserialised(true);
 
                 // Parent all models.
@@ -110,7 +110,7 @@ namespace Models.Core
                 ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                foreach (Model child in simulations.Children.AllRecursively())
+                foreach (Model child in simulations.Children.AllRecursively)
                     child.OnLoaded();
             }
             else
@@ -144,7 +144,7 @@ namespace Models.Core
         /// </summary>
         public void Write(TextWriter stream)
         {
-            foreach (Model model in Children.AllRecursively())
+            foreach (Model model in Children.AllRecursively)
                 model.OnSerialising(xmlSerialisation: true);
 
             try
@@ -153,7 +153,7 @@ namespace Models.Core
             }
             finally
             {
-                foreach (Model model in Children.AllRecursively())
+                foreach (Model model in Children.AllRecursively)
                     model.OnSerialised(xmlSerialisation: true);
             }
         }
@@ -177,7 +177,7 @@ namespace Models.Core
             else
             {
                 // Look for simulations.
-                foreach (Model model in parent.Children.AllRecursively())
+                foreach (Model model in parent.Children.AllRecursively)
                 {
                     if (model is Experiment)
                         simulations.AddRange((model as Experiment).Create());
@@ -202,7 +202,7 @@ namespace Models.Core
         {
             List<string> simulations = new List<string>();
             // Look for simulations.
-            foreach (Model Model in Children.AllRecursively())
+            foreach (Model Model in Children.AllRecursively)
             {
                 if (Model is Simulation)
                 {
@@ -213,7 +213,7 @@ namespace Models.Core
             }
 
             // Look for experiments and get them to create their simulations.
-            foreach (Model experiment in Children.AllRecursively())
+            foreach (Model experiment in Children.AllRecursively)
             {
                 if (experiment is Experiment)
                     simulations.AddRange((experiment as Experiment).Names());
@@ -228,7 +228,7 @@ namespace Models.Core
         /// </summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model simulation in Children.AllRecursively())
+            foreach (Model simulation in Children.AllRecursively)
                 if (simulation is Simulation)
                     (simulation as Simulation).FileName = FileName;
         }
@@ -318,7 +318,7 @@ namespace Models.Core
             if (RunAllCompleted)
             {
                 Console.WriteLine(FileName);
-                foreach (Model model in Children.AllRecursively())
+                foreach (Model model in Children.AllRecursively)
                     model.OnAllSimulationsCompleted();
             }
         }

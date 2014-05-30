@@ -32,7 +32,7 @@ namespace Models.Factorial
                 ModelFunctions.ParentAllChildren(newSimulation);
 
                 // Call OnLoaded in all models.
-                foreach (Model child in newSimulation.Children.AllRecursively())
+                foreach (Model child in newSimulation.Children.AllRecursively)
                     child.OnLoaded();
 
                 foreach (FactorValue value in combination)
@@ -66,7 +66,7 @@ namespace Models.Factorial
                     ModelFunctions.ParentAllChildren(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    foreach (Model child in newSimulation.Children.AllRecursively())
+                    foreach (Model child in newSimulation.Children.AllRecursively)
                         child.OnLoaded();
 
                     foreach (FactorValue value in combination)

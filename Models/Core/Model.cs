@@ -344,7 +344,7 @@ namespace Models.Core
         public Model Clone()
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<Model> modelsToNotify = Children.AllRecursively();
+            List<Model> modelsToNotify = Children.AllRecursively;
 
             // Get rid of our parent temporarily as we don't want to serialise that.
             Models.Core.Model parent = Parent;
@@ -421,7 +421,7 @@ namespace Models.Core
                     // NEW SECTION
                     Model[] allMatches;
                     if (link.MustBeChild)
-                        allMatches = model.Children.AllRecursively(field.FieldType).ToArray();
+                        allMatches = model.Children.AllRecursivelyMatching(field.FieldType).ToArray();
                     else
                         allMatches = model.Scope.FindAll(field.FieldType);
                     if (!link.MustBeChild && allMatches.Length == 1)

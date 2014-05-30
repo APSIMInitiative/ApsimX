@@ -25,8 +25,8 @@ namespace Models.PMF.Functions
         /// <summary>
         /// EventHandler for OnPrepare.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             DayBeforeYesterday = Yesterday;
             Yesterday = Today;

@@ -35,11 +35,33 @@ namespace Models.Core
         public List<Model> All { get { return Model.Models; } }
 
         /// <summary>
-        /// Return a list of all child models recursively. If a 'typeFilter' is 
-        /// specified then only models of that type will be returned. Never returns
+        /// Return a list of all child models recursively. Never returns
         /// null. Can return an empty list.
         /// </summary>
-        public List<Model> AllRecursively(Type typeFilter = null)
+        public List<Model> AllRecursively
+        {
+            get
+            {
+                List<Model> models = new List<Model>();
+
+                if (Model.Models != null)
+                {
+                    foreach (Model child in Model.Models)
+                    {
+                        models.Add(child);
+                        models.AddRange(child.Children.AllRecursively);
+                    }
+                }
+                return models;
+            }
+        }
+
+        /// <summary>
+        /// Return a list of all child models recursively. Only models of 
+        /// the specified 'typeFilter' will be returned. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        public List<Model> AllRecursivelyMatching(Type typeFilter)
         {
             List<Model> models = new List<Model>();
 
@@ -48,7 +70,7 @@ namespace Models.Core
                 foreach (Model child in Model.Models)
                 {
                     models.Add(child);
-                    models.AddRange(child.Children.AllRecursively(typeFilter));
+                    models.AddRange(child.Children.AllRecursivelyMatching(typeFilter));
                 }
             }
             return models;
@@ -99,8 +121,7 @@ namespace Models.Core
             EnsureNameIsUnique(model);
             Model.Models.Add(model);
             model.Parent = Model;
-            Model.Scope.ClearCache();
-            Model.Variables.ClearCache();
+            ClearCache();
 
             if (model.Models == null)
                 model.Models = new List<Core.Model>();
@@ -141,11 +162,9 @@ namespace Models.Core
                 Model.Models.Insert(index, newModel);
 
                 // clear caches.
-                Model.Scope.ClearCache();
-                Model.Variables.ClearCache();
+                ClearCache();
 
                 oldModel.Parent = null;
-
 
                 // Connect our new child.
                 Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
@@ -176,8 +195,7 @@ namespace Models.Core
                 Model.Models.RemoveAt(index);
 
                 // clear caches.
-                Model.Scope.ClearCache();
-                Model.Variables.ClearCache();
+                ClearCache();
 
                 oldModel.Events.Disconnect();
                 oldModel.UnResolveLinks();
@@ -210,5 +228,18 @@ namespace Models.Core
             return NewName;
         }
 
+
+        /// <summary>
+        /// Clear the variable cache.
+        /// </summary>
+        private void ClearCache()
+        {
+            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null)
+            {
+                simulation.VariableCache.Clear();
+                simulation.ScopeCache.Clear();
+            }
+        }
     }
 }

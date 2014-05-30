@@ -144,7 +144,7 @@ namespace Models.Core
 
             Events.Connect();
             ResolveLinks();
-            foreach (Model child in Children.AllRecursively())
+            foreach (Model child in Children.AllRecursively)
             {
                 child.Events.Connect();
                 child.ResolveLinks();
@@ -155,7 +155,7 @@ namespace Models.Core
             VariableCache.Clear();
             ScopeCache.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
-            foreach (Model child in Children.AllRecursively())
+            foreach (Model child in Children.AllRecursively)
                 child.OnSimulationCommencing();
         }
 
@@ -178,7 +178,7 @@ namespace Models.Core
             _IsRunning = false;
 
             OnSimulationCompleted();
-            foreach (Model child in Children.AllRecursively())
+            foreach (Model child in Children.AllRecursively)
                 child.OnSimulationCompleted();
 
             if (OnCompleted != null)
@@ -186,7 +186,7 @@ namespace Models.Core
 
             Events.Disconnect();
             UnResolveLinks();
-            foreach (Model child in Children.AllRecursively())
+            foreach (Model child in Children.AllRecursively)
             {
                 child.Events.Disconnect();
                 child.UnResolveLinks();

@@ -305,8 +305,8 @@ namespace Models.PMF.OilPalm
 
 
         // The following event handler will be called each day at the beginning of the day
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             interception = MetData.Rain * InterceptionFraction;
         }

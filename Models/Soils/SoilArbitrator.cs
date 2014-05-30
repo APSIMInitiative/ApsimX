@@ -62,9 +62,9 @@ namespace Models.Soils
             //set up data table
             int NumLayers = 0;
             AllRootSystems.Rows.Clear();
-            List<Model> models = paddock.Children.AllRecursively();
+            List<Model> models = paddock.Children.AllRecursively;
 
-            foreach (Model m in paddock.Children.AllRecursively())
+            foreach (Model m in paddock.Children.AllRecursively)
             {
                 string PlantStatus = (string)m.Variables.Get("plant_status");
                 

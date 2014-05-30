@@ -289,7 +289,7 @@ namespace ModelTests
 
             Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
 
-            Assert.AreEqual(73, testrunSimulations.Children.AllRecursively().Count, "Wrong number of objects in the simulation");    
+            Assert.AreEqual(73, testrunSimulations.Children.AllRecursively.Count, "Wrong number of objects in the simulation");    
             Assert.IsNotNull(testrunSimulations.Scope.Find("wheat"));
             Assert.IsNotNull(testrunSimulations.Scope.Find("clock"));
             Assert.IsNotNull(testrunSimulations.Scope.Find("SoilNitrogen"));

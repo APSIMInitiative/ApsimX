@@ -262,8 +262,8 @@ namespace Models
         /// <summary>
         /// An event handler for the tick event.
         /// </summary>
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoWeather")]
+        private void OnDoWeather(object sender, EventArgs e)
         {
             if (DoSeek)
             {

@@ -21,7 +21,8 @@ namespace Models
         public DateTime EndDate { get; set; }
 
         // Public events that we're going to publish.
-        public event EventHandler Tick;
+        public event EventHandler DoWeather;
+        public event EventHandler DoDailyInitialisation;
         public event EventHandler StartOfDay;
         public event EventHandler MiddleOfDay;
         public event EventHandler EndOfDay;
@@ -54,9 +55,12 @@ namespace Models
                     Summary.WriteMessage(FullPath, "Simulation cancelled");
                     return;
                 }
+                if (DoWeather != null)
+                    DoWeather.Invoke(this, new EventArgs());
 
-                if (Tick != null)
-                    Tick.Invoke(this, new EventArgs());
+                if (DoDailyInitialisation != null)
+                    DoDailyInitialisation.Invoke(this, new EventArgs());
+
                 if (StartOfDay != null)
                     StartOfDay.Invoke(this, new EventArgs());
                 if (MiddleOfDay != null)

@@ -158,15 +158,21 @@
       <FileName>Core\Model.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Core.ModelCollection" Collapsed="true">
-    <Position X="53" Y="5" Width="1.75" />
+  <Class Name="Models.Core.ModelCollection">
+    <Position X="52.5" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAAAEBAABACAAAAAAAAAAIgAAAAAACg=</HashCode>
+      <HashCode>AAIAEAAAAAAAAAAAABAABACAAAAAAAAAAIgACAAAACg=</HashCode>
       <FileName>Core\ModelCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Core.Simulation" Collapsed="true">
-    <Position X="54.25" Y="8.25" Width="1.5" />
+  <Class Name="Models.Core.Simulation">
+    <Position X="56.25" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAQAgAAAAAAAAAIAIAAAQAAAAAAAAABABIEABABBAgM=</HashCode>
       <FileName>Core\Simulation.cs</FileName>
@@ -174,7 +180,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Models.Core.Simulations">
-    <Position X="53.25" Y="9.75" Width="1.5" />
+    <Position X="54" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAQAAAAAAAQAFAIBAAgAIJAAAQAAAAAAAFAAAI=</HashCode>
       <FileName>Core\Simulations.cs</FileName>
@@ -459,6 +465,60 @@
     <TypeIdentifier>
       <HashCode>CAABEQgQhCACAoACASEYQAAAACEIgQAAgQKgAAoAgDA=</HashCode>
       <FileName>C:\Users\hol353\ApsimX\Utility\Xml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Variables">
+    <Position X="55" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBABAEAAAAAAAAAAAABAAAAAABAAEAAA=</HashCode>
+      <FileName>Core\Variables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Scope">
+    <Position X="56.75" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Models.Core.Scope.Comparer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Scope.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAEAEQAAAAAAAIIAAAABAgBAAAAAA=</HashCode>
+      <FileName>Core\Scope.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Core.Events">
+    <Position X="54" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Models.Core.Events.EventSubscriber" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Events.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Models.Core.Events.EventPublisher" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Events.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Models.Core.Events.DynamicEventSubscriber" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Events.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIQCAEAAAAAgAAAAFAAAAIAAAAACAAAAQAAAAAABAgE=</HashCode>
+      <FileName>Core\Events.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Models.Core.ICrop" Collapsed="true">

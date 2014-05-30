@@ -521,8 +521,8 @@ namespace Models.Soils
         /// Performs every-day calculations - before begining of day tasks 
         /// </summary>
         /// <param name="time">Today's time</param>
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             // + Purpose: reset potential decomposition variables in each patch and get C and N status
 

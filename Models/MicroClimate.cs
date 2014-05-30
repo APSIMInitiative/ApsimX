@@ -330,8 +330,8 @@ namespace Models
         #region "Events to which we subscribe, and their handlers"
 
 
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;

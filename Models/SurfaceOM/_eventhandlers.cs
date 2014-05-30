@@ -11,8 +11,8 @@ namespace Models.SurfaceOM
     public partial class SurfaceOrganicMatter
     {
 
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (initialised)
                 surfaceOM_ONtick();
