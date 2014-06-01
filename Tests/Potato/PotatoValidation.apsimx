@@ -565,8 +565,8 @@
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -663,8 +663,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -4183,8 +4183,8 @@ namespace Models
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -4281,8 +4281,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -7832,8 +7832,8 @@ namespace Models
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -7930,8 +7930,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!

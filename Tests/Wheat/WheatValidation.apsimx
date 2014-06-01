@@ -231,8 +231,8 @@ namespace Models
 		[Description("Amount of fertiliser to be applied")]
 		public double Amount { get; set;}
 
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.DayOfYear == FertDayOfYear)
 			{
@@ -1364,8 +1364,8 @@ namespace Models
 		[Description("Amount of fertiliser to be applied")]
 		public double Amount { get; set;}
 
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.DayOfYear == FertDayOfYear)
 			{
@@ -2313,8 +2313,8 @@ AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
@@ -4577,8 +4577,8 @@ AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!

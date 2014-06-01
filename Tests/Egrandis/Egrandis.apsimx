@@ -987,8 +987,8 @@
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/(RowWidth*RowSpace);
 

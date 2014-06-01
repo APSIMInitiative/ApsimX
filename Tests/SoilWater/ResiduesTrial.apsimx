@@ -936,8 +936,8 @@ SWC60 = Soil.SoilWater.sw_dep[0] + Soil.SoilWater.sw_dep[1] + Soil.SoilWater.sw_
 Residue_water = Residue_water - Evaporated_interception;
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //Set interception variables
 Precip = Met.Rain + Irrig.IrrigationApplied; 
@@ -1042,8 +1042,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!

@@ -4195,8 +4195,8 @@ namespace Models.Soils
             flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoSoilWater")]
+        private void OnDoSoilWater(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_prepare

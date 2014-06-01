@@ -23,6 +23,8 @@ namespace Models
         // Public events that we're going to publish.
         public event EventHandler DoWeather;
         public event EventHandler DoDailyInitialisation;
+        public event EventHandler DoManagement;
+        public event EventHandler DoSoilWater;
         public event EventHandler StartOfDay;
         public event EventHandler MiddleOfDay;
         public event EventHandler EndOfDay;
@@ -60,6 +62,12 @@ namespace Models
 
                 if (DoDailyInitialisation != null)
                     DoDailyInitialisation.Invoke(this, new EventArgs());
+
+                if (DoManagement != null)
+                    DoManagement.Invoke(this, new EventArgs());
+
+                if (DoSoilWater != null)
+                    DoSoilWater.Invoke(this, new EventArgs());
 
                 if (StartOfDay != null)
                     StartOfDay.Invoke(this, new EventArgs());

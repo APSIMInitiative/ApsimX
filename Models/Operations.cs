@@ -44,8 +44,8 @@ namespace Models
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
         {
             foreach (Operation operation in Schedule)
             {
