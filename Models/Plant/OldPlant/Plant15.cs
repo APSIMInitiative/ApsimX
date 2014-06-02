@@ -205,10 +205,6 @@ namespace Models.PMF.OldPlant
 
         
         public event NewCropDelegate CropEnding;
-
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-
         
         public event EventHandler Harvesting;
 
@@ -336,6 +332,15 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        public double FRGR
+        {
+            get
+            {
+                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
+            }
+        }
+
         /// <summary>
         /// Old PLANT1 compat. eventhandler. Not used in Plant2
         /// </summary>
@@ -362,13 +367,7 @@ namespace Models.PMF.OldPlant
 
                 DoNDemandEstimate();
 
-                // PUBLISH NewPotentialGrowth event.
-                NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-                NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
-                                                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
-                NewPotentialGrowthData.sender = Name;
-                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
-                Util.Debug("NewPotentialGrowth.frgr=%f", NewPotentialGrowthData.frgr);
+                Util.Debug("NewPotentialGrowth.frgr=%f", FRGR);
                 //Prepare_p();   // FIXME
             }
         }

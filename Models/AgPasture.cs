@@ -442,9 +442,6 @@ namespace Models
         public delegate void NewCanopyDelegate(NewCanopyType Data);
         public event NewCanopyDelegate NewCanopy;
 
-        public delegate void NewPotentialGrowthDelegate(NewPotentialGrowthType Data);
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-
         public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
         public event FOMLayerDelegate IncorpFOM;
 
@@ -937,14 +934,11 @@ namespace Models
         /// <summary>
         /// Send out plant growth limiting factor for other module calculating potential transp.
         /// </summary>
-        private void DoNewPotentialGrowthEvent()
+        public double FRGR
         {
-            if (NewPotentialGrowth != null)
+            get
             {
-                NewPotentialGrowthType EventData = new NewPotentialGrowthType();
-                EventData.sender = Name;
                 p_gftemp = 0;     //weighted average   
-
 
                 double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT; //Tday
                 for (int s = 0; s < Nsp; s++)
@@ -969,11 +963,12 @@ namespace Models
 
                 //Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater), 
                 //coulnd't see any differnece for results
-                EventData.frgr = Math.Min(FVPD, gft);
+                return Math.Min(FVPD, gft);
                 // RCichota, Jan/2014: removed AgPasture's Frgr from here, it is considered at the same level as nitrogen etc...
-                NewPotentialGrowth.Invoke(EventData);
             }
         }
+
+        public string CropType { get { return "AgPasture"; } }
 
         #endregion //EventSender
         //======================================================================
@@ -992,7 +987,6 @@ namespace Models
 
             DoNewCropEvent();            // Tell other modules that I exist
             DoNewCanopyEvent();          // Tell other modules about my canopy
-            DoNewPotentialGrowthEvent(); // Tell other modules about my current growth status
 
             alt_N_uptake = alt_N_uptake.ToLower();
             if (alt_N_uptake == "yes")
@@ -1021,7 +1015,6 @@ namespace Models
             day_of_month = clock.Today.Day;
 
             DoNewCanopyEvent();
-            DoNewPotentialGrowthEvent();
         }
 
         /*        //---------------------------------------------------------------------

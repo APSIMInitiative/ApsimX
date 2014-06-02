@@ -30,8 +30,10 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-        
-        public string Crop_Type = "OilPalm";
+
+        public string CropType { get { return "OilPalm"; } }
+
+        public double FRGR { get { return 1; } }
 
         public double height = 0.0;
 
@@ -293,7 +295,7 @@ namespace Models.PMF.OilPalm
             if (NewCrop != null)
             {
                 NewCropType Crop = new NewCropType();
-                Crop.crop_type = Crop_Type;
+                Crop.crop_type = CropType;
                 Crop.sender = Name;
                 NewCrop.Invoke(Crop);
             }
@@ -448,7 +450,7 @@ namespace Models.PMF.OilPalm
                 FOMLayers[layer] = Layer;
             }
             FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = Crop_Type;
+            FomLayer.Type = CropType;
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
 
@@ -556,7 +558,7 @@ namespace Models.PMF.OilPalm
                 Bunches.RemoveAt(0);
 
                 BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-                BiomassRemovedData.crop_type = Crop_Type;
+                BiomassRemovedData.crop_type = CropType;
                 BiomassRemovedData.dm_type = new string[1] { "frond" };
                 BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(Fronds[0].Mass * Population * 10) };
                 BiomassRemovedData.dlt_dm_n = new float[1] { (float)(Fronds[0].N * Population * 10) };

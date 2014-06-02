@@ -22,7 +22,6 @@ namespace Models.PMF.Organs
         public double KDead = 0;                  // Extinction Coefficient (Dead)
         public double DeltaBiomass = 0;
 
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
         public event NewCanopyDelegate New_Canopy;
 
         [Link]
@@ -128,14 +127,12 @@ namespace Models.PMF.Organs
         }
         public override void OnSow(SowPlant2Type Data)
         {
-            PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }
         [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
             EP = 0;
-            PublishNewPotentialGrowth();
         }
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
@@ -154,17 +151,6 @@ namespace Models.PMF.Organs
                     else
                         i++;
                 }
-            }
-        }
-        private void PublishNewPotentialGrowth()
-        {
-            // Send out a NewPotentialGrowthEvent.
-            if (NewPotentialGrowth != null)
-            {
-                NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
-                GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(Frgr, Photosynthesis.FVPD.Value), Photosynthesis.FT.Value);
-                NewPotentialGrowth.Invoke(GrowthType);
             }
         }
 

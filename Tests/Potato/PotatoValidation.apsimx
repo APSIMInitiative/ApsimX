@@ -526,6 +526,7 @@
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>
@@ -4144,6 +4145,7 @@ namespace Models
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>
@@ -7793,6 +7795,7 @@ namespace Models
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>

@@ -33,7 +33,6 @@ namespace Models.PMF
     {
         public Double BudNumber;
     }
-    public delegate void NewPotentialGrowthDelegate(NewPotentialGrowthType Data);
     public class KillLeafType
     {
         public Single KillFraction;
@@ -79,6 +78,7 @@ namespace Models.PMF
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
+        [Link] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
@@ -108,6 +108,11 @@ namespace Models.PMF
 
         [Link(IsOptional=true)]
         Cultivars Cultivars = null;
+
+        /// <summary>
+        /// MicroClimate needs FRGR.
+        /// </summary>
+        public double FRGR { get { return RUEModel.FRGR; } }
 
         #region Links
         [Link]

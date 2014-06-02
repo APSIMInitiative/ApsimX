@@ -38,12 +38,11 @@ namespace Models.PMF.Slurp
         public double Height { get; set; }
         [Description("Depth")]
         public double Depth { get; set; }
-        
-        public string CropType = "Slurp";
+
+        public string CropType { get { return "Slurp"; } }
 
         public event EventHandler StartSlurp;
         public event NewCanopyDelegate NewCanopy;
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
 
         private double PEP;
         private double EP;
@@ -92,18 +91,16 @@ namespace Models.PMF.Slurp
                 NewCanopy.Invoke(LocalCanopyData);
         }
 
+        /// <summary>
+        /// MicroClimate needs FRGR
+        /// </summary>
+        public double FRGR { get { return 1; } }
+
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)
         {
             DoWaterBalance();
             DoNBalance();
-
-            //for MicroClimate
-            NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-            NewPotentialGrowthData.frgr = 1;
-            NewPotentialGrowthData.sender = Name;
-            if (NewPotentialGrowth != null)
-                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
         }
 
         private void DoWaterBalance()

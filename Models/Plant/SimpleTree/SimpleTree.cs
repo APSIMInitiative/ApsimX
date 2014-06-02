@@ -34,6 +34,9 @@ namespace Models.PMF
             fields = "Field, Field1, Field2";
         }
 
+        public string CropType { get { return "Wheat"; } }
+        public double FRGR { get { return 1; } }
+
         public override void OnSimulationCommencing()
         {
             fieldList = fields.Split(',');

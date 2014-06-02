@@ -25,8 +25,6 @@ namespace Models.PMF.Organs
         private double NShortage = 0;   //if an N Shoratge how Much;
 
         
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-        
         public event NewCanopyDelegate New_Canopy;
 
         //[Input]
@@ -216,7 +214,6 @@ namespace Models.PMF.Organs
         }
         public override void OnSow(SowPlant2Type Data)
         {
-            PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }
 
@@ -230,7 +227,6 @@ namespace Models.PMF.Organs
             }
 
             EP = 0;
-            PublishNewPotentialGrowth();
         }
         [EventSubscribe("Canopy_Water_Balance")]
         private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
@@ -251,17 +247,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        private void PublishNewPotentialGrowth()
-        {
-            // Send out a NewPotentialGrowthEvent.
-            if (NewPotentialGrowth != null)
-            {
-                NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
-                GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(Frgr, Fvpd), Ft);
-                NewPotentialGrowth.Invoke(GrowthType);
-            }
-        }
+
         private void PublishNewCanopyEvent()
         {
             if (New_Canopy != null)

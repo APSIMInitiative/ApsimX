@@ -29,11 +29,6 @@ namespace Models
         public CanopyEnergyBalanceInterceptionType[] Interception;
         public double transmission;
     }
-    public class NewPotentialGrowthType
-    {
-        public string sender = "";
-        public double frgr;
-    }
     public class CanopyWaterBalanceCanopyType
     {
         public string name = "";
@@ -378,12 +373,23 @@ namespace Models
             SendWaterBalanceEvent();
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoCanopyEnergyBalance")]
+        private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
         {
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
+
+            // Loop through all crops and get their potential growth for today.
+            foreach (ICrop crop in Scope.FindAll(typeof(ICrop)))
+            {
+                int senderIdx = FindComponentIndex(crop.CropType);
+                if (senderIdx < 0)
+                {
+                    throw new Exception("Unknown Canopy Component: " + crop.CropType);
+                }
+                ComponentData[senderIdx].Frgr = crop.FRGR;
+            }
         }
 
         /// <summary>
@@ -468,20 +474,6 @@ namespace Models
             // Round off a bit and convert mm to m
             ComponentData[senderIdx].Depth = Math.Round(newCanopy.depth, 5) / 1000.0;
             // Round off a bit and convert mm to m
-        }
-
-        /// <summary>
-        /// Obtain updated information about a plant's growth capacity
-        /// </summary>
-        [EventSubscribe("NewPotentialGrowth")]
-        private void OnNewPotentialGrowth(NewPotentialGrowthType newPotentialGrowth)
-        {
-            int senderIdx = FindComponentIndex(newPotentialGrowth.sender);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(newPotentialGrowth.sender));
-            }
-            ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
         }
 
         public override void OnLoaded()
