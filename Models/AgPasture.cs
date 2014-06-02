@@ -1003,8 +1003,8 @@ namespace Models
         /// <summary>
         /// EventHandeler - preparation befor the main process 
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             //  p_harvestDM = 0.0;      // impartant to have this reset because  
             //  p_harvestN = 0.0;       // they are used to DM & N returns

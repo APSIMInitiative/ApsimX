@@ -61,8 +61,8 @@ namespace Models.PMF
             LocalCanopyData.cover_tot = CoverLive;
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             RootSystem.Zones = new RootZone[NumPlots];
 

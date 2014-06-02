@@ -82,8 +82,8 @@ namespace Models.PMF.Phen
             Vrn1Target = 0.74;
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Plant.InGround)
             {

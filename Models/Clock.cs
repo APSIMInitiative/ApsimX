@@ -25,8 +25,9 @@ namespace Models
         public event EventHandler DoDailyInitialisation;
         public event EventHandler DoManagement;
         public event EventHandler DoCanopyEnergyBalance;
-        public event EventHandler DoSoilWater;
-        public event EventHandler StartOfDay;
+        public event EventHandler DoSoilWaterMovement;
+        public event EventHandler DoSoilArbitration;
+        public event EventHandler DoCanopy;
         public event EventHandler MiddleOfDay;
         public event EventHandler EndOfDay;
 
@@ -70,13 +71,18 @@ namespace Models
                 if (DoCanopyEnergyBalance != null)
                     DoCanopyEnergyBalance.Invoke(this, new EventArgs());
 
-                if (DoSoilWater != null)
-                    DoSoilWater.Invoke(this, new EventArgs());
+                if (DoSoilWaterMovement != null)
+                    DoSoilWaterMovement.Invoke(this, new EventArgs());
 
-                if (StartOfDay != null)
-                    StartOfDay.Invoke(this, new EventArgs());
+                if (DoSoilArbitration != null)
+                    DoSoilArbitration.Invoke(this, new EventArgs());
+
+                if (DoCanopy != null)
+                    DoCanopy.Invoke(this, new EventArgs());
+
                 if (MiddleOfDay != null)
                     MiddleOfDay.Invoke(this, new EventArgs());
+
                 if (EndOfDay != null)
                     EndOfDay.Invoke(this, new EventArgs());
 

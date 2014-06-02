@@ -56,8 +56,8 @@ namespace Models.Soils
             formatProvider.TextInfo.ListSeparator = " ";
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoSoilArbitration")]
+        private void OnDoSoilArbitration(object sender, EventArgs e)
         {
             //set up data table
             int NumLayers = 0;

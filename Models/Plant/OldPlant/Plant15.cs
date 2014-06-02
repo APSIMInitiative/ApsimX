@@ -344,7 +344,6 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Old PLANT1 compat. eventhandler. Not used in Plant2
         /// </summary>
-        [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
             if (SowingData != null)
@@ -378,6 +377,10 @@ namespace Models.PMF.OldPlant
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)
         {
+            // Dean: This call to OnPrepare used to be called at start of day. 
+            // No need to separate the call into separate event (I think)
+            OnPrepare(null, null);
+
             if (SowingData != null)
             {
 

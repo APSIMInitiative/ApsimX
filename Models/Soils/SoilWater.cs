@@ -4195,8 +4195,8 @@ namespace Models.Soils
             flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
-        [EventSubscribe("DoSoilWater")]
-        private void OnDoSoilWater(object sender, EventArgs e)
+        [EventSubscribe("DoSoilWaterMovement")]
+        private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_prepare
@@ -4220,14 +4220,6 @@ namespace Models.Soils
             //! potential: sevap + transpiration:
             soilwat2_pot_evapotranspiration();
             real_eo = eo;  //! store for reporting
-
-
-        }
-
-
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
-        {
 
             //Get variables from other modules
             //taken from Main() 

@@ -360,8 +360,8 @@ namespace Models
             wind = NewMet.wind;
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoCanopy")]
+        private void OnDoCanopy(object sender, EventArgs e)
         {
             CalculateGc();
             CalculateGa();

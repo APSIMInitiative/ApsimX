@@ -461,6 +461,7 @@ namespace Models
                 Filename = Path.ChangeExtension(originalFileName, ".db.baseline");
                 if (File.Exists(Filename))
                 {
+                    Disconnect();
                     Open(forWriting: false);
                     StreamWriter report = new StreamWriter(Filename + ".csv");
                     WriteAllTables(report);
@@ -472,6 +473,7 @@ namespace Models
                     Filename = originalFileName;
 
                     // Write normal .csv
+                    Disconnect();
                     Open(forWriting: false);
                     StreamWriter report = new StreamWriter(originalFileName + ".csv");
                     WriteAllTables(report);

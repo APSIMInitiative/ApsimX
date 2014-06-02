@@ -217,8 +217,8 @@ namespace Models.PMF.Organs
             PublishNewCanopyEvent();
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (PotentialBiomass != null)
             {
