@@ -40,7 +40,7 @@
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
@@ -778,7 +778,7 @@
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
@@ -1369,7 +1369,7 @@
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
@@ -1989,7 +1989,7 @@
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>

@@ -362,8 +362,8 @@ namespace Models.PMF
         }
 
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             if (InGround)
             {

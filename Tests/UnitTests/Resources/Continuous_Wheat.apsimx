@@ -1010,8 +1010,8 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock TimeClock;
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			/*
 				

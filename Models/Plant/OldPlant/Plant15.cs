@@ -385,8 +385,8 @@ namespace Models.PMF.OldPlant
         /// <summary>
         ///  Old PLANT1 compat. process eventhandler.
         /// </summary>
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             // Dean: This call to OnPrepare used to be called at start of day. 
             // No need to separate the call into separate event (I think)

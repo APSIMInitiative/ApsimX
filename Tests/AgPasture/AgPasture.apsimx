@@ -52,7 +52,7 @@
             <string />
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>

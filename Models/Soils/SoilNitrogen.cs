@@ -536,8 +536,8 @@ namespace Models.Soils
         /// <summary>
         /// Performs every-day calculations - end of day processes
         /// </summary>
-        [EventSubscribe("EndOfDay")]
-        private void OnPost(object sender, EventArgs e)
+        [EventSubscribe("DoUpdate")]
+        private void OnDoUpdate(object sender, EventArgs e)
         {
             // + Purpose: Check patch status and clean up, if possible
 

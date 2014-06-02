@@ -1073,8 +1073,8 @@ namespace Models
          */
 
         //---------------------------------------------------------------------
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             if (!p_Live)
                 return;

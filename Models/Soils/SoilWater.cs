@@ -4394,9 +4394,6 @@ namespace Models.Soils
             //Change the variables in other modules
             //taken from Main() 
             soilwat2_set_other_variables();
-
-            if (WaterMovementCompleted != null)
-                WaterMovementCompleted.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -4746,7 +4743,6 @@ namespace Models.Soils
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         public event RunoffEventDelegate Runoff;
         public event NitrogenChangedDelegate NitrogenChanged;
-        public event EventHandler WaterMovementCompleted;
         #endregion
 
 

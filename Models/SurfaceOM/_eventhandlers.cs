@@ -108,8 +108,8 @@ namespace Models.SurfaceOM
         [EventSubscribe("BiomassRemoved")]
         private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved) { SurfOMOnBiomassRemoved(BiomassRemoved); }
 
-        [EventSubscribe("WaterMovementCompleted")]
-        private void OnWaterMovementCompleted(object sender, EventArgs e)
+        [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
+        private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs e)
         {
             surfom_get_other_variables();
             surfom_Process();

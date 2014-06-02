@@ -58,7 +58,7 @@
             <string />
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
         </Report>
         <Soil>

@@ -327,8 +327,8 @@ namespace Models.PMF.OilPalm
             interception = MetData.Rain * InterceptionFraction;
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
 
             DoWaterBalance();

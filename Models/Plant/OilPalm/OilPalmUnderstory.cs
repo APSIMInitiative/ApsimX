@@ -83,8 +83,8 @@ namespace Models.PMF.OilPalm
 
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
 
             DoWaterBalance();

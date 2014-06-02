@@ -109,8 +109,8 @@ namespace Models.PMF.Slurp
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             DoWaterBalance();
             DoNBalance();

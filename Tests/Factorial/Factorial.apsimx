@@ -102,7 +102,7 @@
             <string>[SowingRule].Script.SowingDate.DayOfYear</string>
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
@@ -838,7 +838,7 @@
             <string>[FertiliserRule].Script.ApplicationAmount</string>
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
@@ -1535,7 +1535,7 @@
             <string>[Fertiliser].NitrogenApplied</string>
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
@@ -2245,7 +2245,7 @@
             <string>[Clock].Today.Year</string>
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
           </Events>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>

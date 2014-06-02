@@ -43,7 +43,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
@@ -2534,7 +2534,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
@@ -5114,7 +5114,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <string>[Soil].SoilWater.sw_dep</string>
         </Variables>
         <Events>
-          <string>[Clock].EndOfDay</string>
+          <string>[Clock].DoReport</string>
         </Events>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>

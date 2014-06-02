@@ -10,6 +10,8 @@ namespace Models
     [AllowDropOn("Simulation")]
     public class Clock : Model
     {
+        private EventArgs args = new EventArgs();
+
         // Links
         [Link]
         private ISummary Summary = null;
@@ -26,10 +28,13 @@ namespace Models
         public event EventHandler DoManagement;
         public event EventHandler DoCanopyEnergyBalance;
         public event EventHandler DoSoilWaterMovement;
+        public event EventHandler DoSurfaceOrganicMatterDecomposition;
         public event EventHandler DoSoilArbitration;
         public event EventHandler DoCanopy;
-        public event EventHandler MiddleOfDay;
-        public event EventHandler EndOfDay;
+        public event EventHandler DoPlantGrowth;
+        public event EventHandler DoUpdate;
+        public event EventHandler DoManagementCalculations;
+        public event EventHandler DoReport;
 
         // Public properties available to other models.
         [XmlIgnore]
@@ -59,32 +64,43 @@ namespace Models
                     Summary.WriteMessage(FullPath, "Simulation cancelled");
                     return;
                 }
+                
+
                 if (DoWeather != null)
-                    DoWeather.Invoke(this, new EventArgs());
+                    DoWeather.Invoke(this, args);
 
                 if (DoDailyInitialisation != null)
-                    DoDailyInitialisation.Invoke(this, new EventArgs());
+                    DoDailyInitialisation.Invoke(this, args);
 
                 if (DoManagement != null)
-                    DoManagement.Invoke(this, new EventArgs());
+                    DoManagement.Invoke(this, args);
 
                 if (DoCanopyEnergyBalance != null)
-                    DoCanopyEnergyBalance.Invoke(this, new EventArgs());
+                    DoCanopyEnergyBalance.Invoke(this, args);
 
                 if (DoSoilWaterMovement != null)
-                    DoSoilWaterMovement.Invoke(this, new EventArgs());
+                    DoSoilWaterMovement.Invoke(this, args);
+
+                if (DoSurfaceOrganicMatterDecomposition != null)
+                    DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
 
                 if (DoSoilArbitration != null)
-                    DoSoilArbitration.Invoke(this, new EventArgs());
+                    DoSoilArbitration.Invoke(this, args);
 
                 if (DoCanopy != null)
-                    DoCanopy.Invoke(this, new EventArgs());
+                    DoCanopy.Invoke(this, args);
 
-                if (MiddleOfDay != null)
-                    MiddleOfDay.Invoke(this, new EventArgs());
+                if (DoPlantGrowth != null)
+                    DoPlantGrowth.Invoke(this, args);
 
-                if (EndOfDay != null)
-                    EndOfDay.Invoke(this, new EventArgs());
+                if (DoUpdate != null)
+                    DoUpdate.Invoke(this, args);
+
+                if (DoManagementCalculations != null)
+                    DoManagementCalculations.Invoke(this, args);
+
+                if (DoReport != null)
+                    DoReport.Invoke(this, args);
 
                 Today = Today.AddDays(1);
             }

@@ -715,8 +715,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -2734,7 +2734,7 @@ namespace Models
             <string />
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
             <string />
           </Events>
           <AutoCreateCSV>true</AutoCreateCSV>
@@ -4334,8 +4334,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -6353,7 +6353,7 @@ namespace Models
             <string />
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
             <string />
           </Events>
           <AutoCreateCSV>true</AutoCreateCSV>
@@ -7984,8 +7984,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -10003,7 +10003,7 @@ namespace Models
             <string />
           </Variables>
           <Events>
-            <string>[Clock].EndOfDay</string>
+            <string>[Clock].DoReport</string>
             <string />
           </Events>
           <AutoCreateCSV>true</AutoCreateCSV>
