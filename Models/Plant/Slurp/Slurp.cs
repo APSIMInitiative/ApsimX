@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.Slurp
@@ -95,6 +96,18 @@ namespace Models.PMF.Slurp
         /// MicroClimate needs FRGR
         /// </summary>
         public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         [EventSubscribe("MiddleOfDay")]
         private void OnProcess(object sender, EventArgs e)

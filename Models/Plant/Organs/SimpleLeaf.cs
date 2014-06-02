@@ -21,7 +21,6 @@ namespace Models.PMF.Organs
 
         private double _WaterAllocation;
         private double EP = 0;
-        private double PEP = 0;
         private double NShortage = 0;   //if an N Shoratge how Much;
 
         
@@ -81,7 +80,7 @@ namespace Models.PMF.Organs
         }
         
         [Units("mm")]
-        public override double WaterDemand { get { return PEP; } }
+        public override double WaterDemand { get { return Plant.PotentialEP; } }
         
         [Units("mm")]
         public double Transpiration { get { return EP; } }
@@ -137,8 +136,8 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 0;
-                if (PEP > 0)
-                    F = EP / PEP;
+                if (WaterDemand > 0)
+                    F = EP / WaterDemand;
                 else
                     F = 1;
                 return F;
@@ -227,25 +226,6 @@ namespace Models.PMF.Organs
             }
 
             EP = 0;
-        }
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            if (Plant.InGround)
-            {
-                Boolean found = false;
-                int i = 0;
-                while (!found && (i != CWB.Canopy.Length))
-                {
-                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
-                    {
-                        PEP = CWB.Canopy[i].PotentialEp;
-                        found = true;
-                    }
-                    else
-                        i++;
-                }
-            }
         }
 
         private void PublishNewCanopyEvent()

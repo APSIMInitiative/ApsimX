@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.Soils;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -36,6 +37,18 @@ namespace Models.PMF
 
         public string CropType { get { return "Wheat"; } }
         public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         public override void OnSimulationCommencing()
         {

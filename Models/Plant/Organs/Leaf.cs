@@ -1007,7 +1007,17 @@ namespace Models.PMF.Organs
         }
         [XmlIgnore]
         [Units("mm")]
-        public override double WaterDemand { get; set; }
+        public override double WaterDemand
+        {
+            get
+            {
+                return Plant.PotentialEP;
+            }
+            set
+            {
+                Plant.PotentialEP = value;
+            }
+        }
         [XmlIgnore]
         public override double WaterAllocation { get; set;}
        
@@ -1250,26 +1260,6 @@ namespace Models.PMF.Organs
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             MaxCover = Sow.MaxCover;
-        }
-
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            if (Plant.InGround)
-            {
-                Boolean found = false;
-                int i = 0;
-                while (!found && (i != CWB.Canopy.Length))
-                {
-                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
-                    {
-                        WaterDemand = CWB.Canopy[i].PotentialEp;
-                        found = true;
-                    }
-                    else
-                        i++;
-                }
-            }
         }
 
         [EventSubscribe("KillLeaf")]

@@ -268,6 +268,17 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         
         [Units("kg/ha")]
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha

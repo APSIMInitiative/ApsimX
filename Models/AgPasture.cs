@@ -298,6 +298,7 @@ namespace Models
         private const double SVPfrac = 0.66;
         //private WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();  // Daily Met Data
         private double _IntRadn;    // Intercepted Radn   
+        private CanopyEnergyBalanceInterceptionlayerType[] _LightProfile;
 
         [Units("MJ")]
         public double IntRadn { get { return _IntRadn; }}
@@ -968,6 +969,48 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP
+        {
+            get
+            {
+                return p_waterDemand;
+            }
+            set
+            {
+                p_waterDemand = value;
+            }
+        }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
+        {
+            get
+            {
+                return _LightProfile;
+            }
+            set
+            {
+                _LightProfile = value;
+                canopiesNum = _LightProfile.Length;
+                canopiesRadn = new double[1];
+
+                _IntRadn = 0;
+                for (int j = 0; j < canopiesNum; j++)
+                {
+                    _IntRadn += _LightProfile[j].amount;
+                }
+                canopiesRadn[0] = _IntRadn;
+            }
+        }
+
+
         public string CropType { get { return "AgPasture"; } }
 
         #endregion //EventSender
@@ -1028,54 +1071,6 @@ namespace Models
                     MetData = NewMetData;
                 }
          */
-
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// Get plant potential transpiration
-        /// </summary>
-        /// <param name="CWB"></param>
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            for (int i = 0; i < CWB.Canopy.Length; i++)
-            {
-                if (CWB.Canopy[i].name.ToUpper() == thisCropName.ToUpper())
-                {
-                    p_waterDemand = (double)CWB.Canopy[i].PotentialEp;
-                }
-            }
-        }
-
-        //---------------------------------------------------------------------
-        [EventSubscribe("Canopy_Energy_Balance")]
-        private void OnCanopy_Energy_Balance(CanopyEnergyBalanceType LP)
-        {
-            canopiesNum = LP.Interception.Length;
-            canopiesRadn = new double[canopiesNum];
-
-            for (int i = 0; i < canopiesNum; i++)
-            {
-                if (LP.Interception[i].name.ToUpper() == thisCropName.ToUpper())  //TO: species by species, and get the total?
-                {
-                    _IntRadn = 0;
-                    for (int j = 0; j < LP.Interception[i].layer.Length; j++)
-                    {
-                        _IntRadn += LP.Interception[i].layer[j].amount;
-                    }
-                    canopiesRadn[i] = _IntRadn;
-                }
-                else //Radn intercepted possibly by other canopies used for a rough IL estimation,
-                {    //potenital use when species were specified separately in pasture. (not used of now.11Mar10 )                    
-                    double otherRadn = 0;
-                    for (int j = 0; j < LP.Interception[i].layer.Length; j++)
-                    {
-                        otherRadn += LP.Interception[i].layer[j].amount;
-                    }
-                    canopiesRadn[i] = otherRadn;
-                }
-            }
-        }
-
 
         //---------------------------------------------------------------------
         [EventSubscribe("MiddleOfDay")]

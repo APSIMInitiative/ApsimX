@@ -18,29 +18,6 @@ namespace Models
         public double thickness;
         public double amount;
     }
-    public class CanopyEnergyBalanceInterceptionType
-    {
-        public string name = "";
-        public string CropType = "";
-        public CanopyEnergyBalanceInterceptionlayerType[] layer;
-    }
-    public class CanopyEnergyBalanceType
-    {
-        public CanopyEnergyBalanceInterceptionType[] Interception;
-        public double transmission;
-    }
-    public class CanopyWaterBalanceCanopyType
-    {
-        public string name = "";
-        public string CropType = "";
-        public double PotentialEp;
-    }
-    public class CanopyWaterBalanceType
-    {
-        public CanopyWaterBalanceCanopyType[] Canopy;
-        public double eo;
-        public double interception;
-    }
     public class KeyValueArraypair_listType
     {
         public string key = "";
@@ -70,8 +47,6 @@ namespace Models
     }
 
     public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
-    public delegate void CanopyWaterBalanceDelegate(CanopyWaterBalanceType Data);
-    public delegate void CanopyEnergyBalanceDelegate(CanopyEnergyBalanceType Data);
 
 
     /// <remarks>
@@ -316,14 +291,7 @@ namespace Models
         }
         #endregion
 
-        #region "Events which we publish"
-        public event CanopyWaterBalanceDelegate Canopy_Water_Balance;
-
-        public event CanopyEnergyBalanceDelegate Canopy_Energy_Balance;
-        #endregion
-
         #region "Events to which we subscribe, and their handlers"
-
 
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
@@ -370,7 +338,6 @@ namespace Models
             CalculateOmega();
 
             SendEnergyBalanceEvent();
-            SendWaterBalanceEvent();
         }
 
         [EventSubscribe("DoCanopyEnergyBalance")]
@@ -388,6 +355,7 @@ namespace Models
                 {
                     throw new Exception("Unknown Canopy Component: " + crop.CropType);
                 }
+                ComponentData[senderIdx].Crop = crop;
                 ComponentData[senderIdx].Frgr = crop.FRGR;
             }
         }
@@ -545,6 +513,8 @@ namespace Models
         {
             public string Name;
             public string Type;
+            public ICrop Crop;
+
             [XmlIgnore]
             public double LAI;
             [XmlIgnore]
@@ -1132,59 +1102,26 @@ namespace Models
         /// </summary>
         private void SendEnergyBalanceEvent()
         {
-            CanopyEnergyBalanceType lightProfile = new CanopyEnergyBalanceType();
-            Array.Resize<CanopyEnergyBalanceInterceptionType>(ref lightProfile.Interception, ComponentData.Count);
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
                 ComponentDataStruct componentData = ComponentData[j];
-
-                lightProfile.Interception[j] = new CanopyEnergyBalanceInterceptionType();
-                lightProfile.Interception[j].name = componentData.Name;
-                lightProfile.Interception[j].CropType = componentData.Type;
-                Array.Resize<CanopyEnergyBalanceInterceptionlayerType>(ref lightProfile.Interception[j].layer, numLayers);
-                for (int i = 0; i <= numLayers - 1; i++)
+                if (componentData.Crop != null)
                 {
-                    lightProfile.Interception[j].layer[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                    lightProfile.Interception[j].layer[i].thickness = Convert.ToSingle(DeltaZ[i]);
-                    lightProfile.Interception[j].layer[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPotentialEp = 0;
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
+                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
+                        lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                        totalPotentialEp += componentData.PET[i];
+                        totalInterception += componentData.interception[i];
+                    }
+
+                    componentData.Crop.PotentialEP = totalPotentialEp;
+                    componentData.Crop.LightProfile = lightProfile;
                 }
-            }
-            lightProfile.transmission = 0;
-            if (Canopy_Energy_Balance != null)
-            {
-                Canopy_Energy_Balance(lightProfile);
-            }
-        }
-
-        /// <summary>
-        /// Send an water balance event
-        /// </summary>
-        private void SendWaterBalanceEvent()
-        {
-            CanopyWaterBalanceType waterBalance = new CanopyWaterBalanceType();
-            Array.Resize<CanopyWaterBalanceCanopyType>(ref waterBalance.Canopy, ComponentData.Count);
-            double totalInterception = 0.0;
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
-            {
-                ComponentDataStruct componentData = ComponentData[j];
-
-                waterBalance.Canopy[j] = new CanopyWaterBalanceCanopyType();
-                waterBalance.Canopy[j].name = componentData.Name;
-                waterBalance.Canopy[j].CropType = componentData.Type;
-                waterBalance.Canopy[j].PotentialEp = 0;
-                for (int i = 0; i <= numLayers - 1; i++)
-                {
-                    waterBalance.Canopy[j].PotentialEp += Convert.ToSingle(componentData.PET[i]);
-                    totalInterception += componentData.interception[i];
-                }
-            }
-
-            waterBalance.eo = 0f;
-            // need to implement this later
-            waterBalance.interception = Convert.ToSingle(totalInterception);
-            if (Canopy_Water_Balance != null)
-            {
-                Canopy_Water_Balance(waterBalance);
             }
         }
 

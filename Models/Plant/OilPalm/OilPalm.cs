@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.OilPalm
@@ -34,6 +35,19 @@ namespace Models.PMF.OilPalm
         public string CropType { get { return "OilPalm"; } }
 
         public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
 
         public double height = 0.0;
 

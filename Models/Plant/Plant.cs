@@ -114,6 +114,18 @@ namespace Models.PMF
         /// </summary>
         public double FRGR { get { return RUEModel.FRGR; } }
 
+        /// <summary>
+        /// MicroClimate supplies light profile.
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies Potential EP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
         #region Links
         [Link]
         ISummary Summary = null;
