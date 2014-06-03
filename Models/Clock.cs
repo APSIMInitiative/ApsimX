@@ -28,6 +28,7 @@ namespace Models
         public event EventHandler DoManagement;
         public event EventHandler DoCanopyEnergyBalance;
         public event EventHandler DoSoilWaterMovement;
+        public event EventHandler DoSoilOrganicMatter;
         public event EventHandler DoSurfaceOrganicMatterDecomposition;
         public event EventHandler DoSoilArbitration;
         public event EventHandler DoCanopy;
@@ -51,8 +52,8 @@ namespace Models
         /// <summary>
         /// An event handler to signal start of a simulation.
         /// </summary>
-        [EventSubscribe("Commenced")]
-        private void OnCommenced(object sender, EventArgs e)
+        [EventSubscribe("DoCommence")]
+        private void OnDoCommence(object sender, EventArgs e)
         {
             System.ComponentModel.BackgroundWorker bw = sender as System.ComponentModel.BackgroundWorker;
 
@@ -80,6 +81,9 @@ namespace Models
 
                 if (DoSoilWaterMovement != null)
                     DoSoilWaterMovement.Invoke(this, args);
+
+                if (DoSoilOrganicMatter != null)
+                    DoSoilOrganicMatter.Invoke(this, args);
 
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);

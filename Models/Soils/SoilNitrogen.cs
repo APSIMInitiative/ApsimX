@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Linq;
 using Models.Core;
+using Models.SurfaceOM;
 
 namespace Models.Soils
 {
@@ -125,8 +126,8 @@ namespace Models.Soils
     [Serializable]
     public partial class SoilNitrogen : Model
     {
-
-
+        [Link]
+        private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         public SoilNitrogen()
         {
@@ -481,9 +482,12 @@ namespace Models.Soils
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
-        [EventSubscribe("PotentialResidueDecompositionCalculated")]
-        private void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
+        [EventSubscribe("DoSoilOrganicMatter")]
+        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
+            // Get potential residue decomposition from surfaceom.
+            SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+
             foreach (soilCNPatch aPatch in Patch)
                 aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
@@ -569,39 +573,35 @@ namespace Models.Soils
             //		Now we explicitly tell the module the actual decomposition
             //      rate for each of its residues.  If there wasn't enough mineral N to decompose, the rate will be reduced from the potential value.
 
-            if (ActualResidueDecompositionCalculated != null)
+            // will have to pack the SOMdecomp data from each patch and then invoke the event
+            //int num_residues = Patch[0].SOMDecomp.Pool.Length;
+            int nLayers = dlayer.Length;
+
+            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
+
+            for (int residue = 0; residue < num_residues; residue++)
             {
-                // will have to pack the SOMdecomp data from each patch and then invoke the event
-                //int num_residues = Patch[0].SOMDecomp.Pool.Length;
-                int nLayers = dlayer.Length;
-
-                SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType();
-                Array.Resize(ref SOMDecomp.Pool, num_residues);
-
-                for (int residue = 0; residue < num_residues; residue++)
+                double c_summed = 0.0F;
+                double n_summed = 0.0F;
+                for (int k = 0; k < Patch.Count; k++)
                 {
-                    double c_summed = 0.0F;
-                    double n_summed = 0.0F;
-                    for (int k = 0; k < Patch.Count; k++)
-                    {
-                        c_summed += Patch[k].SOMDecomp.Pool[residue].FOM.C * Patch[k].RelativeArea;
-                        n_summed += Patch[k].SOMDecomp.Pool[residue].FOM.N * Patch[k].RelativeArea;
-                    }
-
-                    SOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
-                    SOMDecomp.Pool[residue].FOM = new FOMType();
-                    SOMDecomp.Pool[residue].Name = Patch[0].SOMDecomp.Pool[residue].Name;
-                    SOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SOMDecomp.Pool[residue].OrganicMatterType;
-                    SOMDecomp.Pool[residue].FOM.amount = 0.0F;
-                    SOMDecomp.Pool[residue].FOM.C = c_summed;
-                    SOMDecomp.Pool[residue].FOM.N = n_summed;
-                    SOMDecomp.Pool[residue].FOM.P = 0.0F;
-                    SOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
+                    c_summed += Patch[k].SOMDecomp.Pool[residue].FOM.C * Patch[k].RelativeArea;
+                    n_summed += Patch[k].SOMDecomp.Pool[residue].FOM.N * Patch[k].RelativeArea;
                 }
 
-                // send the decomposition information
-                ActualResidueDecompositionCalculated.Invoke(SOMDecomp);
+                ActualSOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
+                ActualSOMDecomp.Pool[residue].FOM = new FOMType();
+                ActualSOMDecomp.Pool[residue].Name = Patch[0].SOMDecomp.Pool[residue].Name;
+                ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SOMDecomp.Pool[residue].OrganicMatterType;
+                ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.C = c_summed;
+                ActualSOMDecomp.Pool[residue].FOM.N = n_summed;
+                ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
             }
+
+            SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
         }
 
         #endregion

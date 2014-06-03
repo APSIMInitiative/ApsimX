@@ -39,7 +39,7 @@ namespace Models.Core
         /// <summary>
         /// To commence the simulation, this event will be invoked.
         /// </summary>
-        public event EventHandler Commenced;
+        public event EventHandler DoCommence;
 
         /// <summary>
         /// Return the filename that this simulation sits in.
@@ -164,8 +164,8 @@ namespace Models.Core
         /// </summary>
         public void DoRun(object sender)
         {
-            if (Commenced != null)
-                Commenced.Invoke(sender, new EventArgs());
+            if (DoCommence != null)
+                DoCommence.Invoke(sender, new EventArgs());
             else
                 throw new ApsimXException(FullPath, "Cannot invoke Commenced");
         }

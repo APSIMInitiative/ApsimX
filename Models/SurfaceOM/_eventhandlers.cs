@@ -4,13 +4,13 @@ using System.Text;
 using Models.Core;
 using Models.Soils;
 using Models.PMF;
+using System.Xml.Serialization;
 
 namespace Models.SurfaceOM
 {
 
     public partial class SurfaceOrganicMatter
     {
-
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -108,19 +108,29 @@ namespace Models.SurfaceOM
         [EventSubscribe("BiomassRemoved")]
         private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved) { SurfOMOnBiomassRemoved(BiomassRemoved); }
 
-        [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
-        private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs e)
+        /// <summary>
+        /// Return the potential residue decomposition for today.
+        /// </summary>
+        public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
             surfom_get_other_variables();
-            surfom_Process();
-            //catch (Exception e) { }
-
-            if (Clock.Today.DayOfYear == 300)
-                return;
+            return surfom_Process();
         }
 
-        [EventSubscribe("ActualResidueDecompositionCalculated")]
-        private void OnActualResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SOMDecomp) { surfom_decompose_surfom(SOMDecomp); }
+        /// <summary>
+        /// Actual surface organic matter decomposition. Calculated by SoilNitrogen.
+        /// </summary>
+        [XmlIgnore]
+        public SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
+
+        /// <summary>
+        /// Do the daily residue decomposition for today.
+        /// </summary>
+        [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
+        private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args) 
+        {
+            surfom_decompose_surfom(ActualSOMDecomp); 
+        }
 
         public class Prop_upType
         {
