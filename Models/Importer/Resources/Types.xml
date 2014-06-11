@@ -1214,6 +1214,13 @@
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
+  <Type name="slurp">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Slurp</class>
+      <IsCrop>Yes</IsCrop>
+    </MetaData>
+  </Type>
   <Type name="wheat">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

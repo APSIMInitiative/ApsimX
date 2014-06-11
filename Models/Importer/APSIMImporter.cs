@@ -375,14 +375,18 @@ namespace Importer
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
                         string compClass = Types.Instance.MetaData(compNode.Name, "class");
-                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 0) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
+                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 4) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
                         if (Types.Instance.IsCrop(compNode.Name) &&  usePlantClass)
                         {
                             ImportPlant(compNode, destParent, newNode);
                         }
                         else
                         {
-                            newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                            // objects like root may have a name attribute
+                            string usename = Utility.Xml.NameAttr(compNode);
+                            if (usename.Length < 1)
+                                usename = compNode.Name;
+                            newNode = AddCompNode(destParent, classname, usename);    //found a model component that should be added to the simulation
                         }
                     }
                 }
