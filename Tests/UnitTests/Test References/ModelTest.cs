@@ -83,7 +83,7 @@ namespace ModelTests
         [TestMethod]
         public void FullPathTest()
         {
-            Zone sim = S.Models[0] as Zone;
+            Model sim = S.Models[0] as Model;
             Zone zone2 = sim.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;
@@ -121,7 +121,7 @@ namespace ModelTests
         [TestMethod]
         public void AddChildTest()
         {
-            Zone Sim = S.Models[0] as Zone;
+            Model Sim = S.Models[0] as Model;
             Zone zone2 = Sim.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;
@@ -138,7 +138,7 @@ namespace ModelTests
         [TestMethod]
         public void RemoveChildTest()
         {
-            Zone Sim = S.Models[0] as Zone;
+            Model Sim = S.Models[0] as Model;
             Zone zone2 = Sim.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;
@@ -155,7 +155,7 @@ namespace ModelTests
         [TestMethod]
         public void FindAllTest()
         {
-            Zone sim = S.Models[0] as Zone;
+            Model sim = S.Models[0] as Model;
             Zone zone2 = sim.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;
@@ -215,7 +215,7 @@ namespace ModelTests
         [TestMethod]
         public void GetTest()
         {
-            Zone sim = S.Models[0] as Zone;
+            Model sim = S.Models[0] as Model;
             Zone zone2 = sim.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Soil soil = zone2.Models[1] as Soil;

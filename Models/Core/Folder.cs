@@ -5,7 +5,7 @@ using System.Text;
 namespace Models.Core
 {
     [Serializable]
-    public class Folder : Zone
+    public class Folder : Model
     {
 
     }

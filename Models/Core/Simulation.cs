@@ -10,7 +10,7 @@ using System.IO;
 namespace Models.Core
 {
     [Serializable]
-    public class Simulation : Zone, Utility.JobManager.IRunnable
+    public class Simulation : Model, Utility.JobManager.IRunnable
     {
         private bool _IsRunning = false;
 

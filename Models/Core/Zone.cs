@@ -25,8 +25,8 @@ namespace Models.Core
         [Description("Area of zone (ha)")]
         public double Area { get; set; }
 
-
-
+        [Description("Slope (deg)")]
+        public double Slope { get; set; }
 
     }
 }

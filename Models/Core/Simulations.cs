@@ -15,7 +15,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Zone, Utility.JobManager.IRunnable
+    public class Simulations : Model, Utility.JobManager.IRunnable
     {
         private string _FileName;
         public Int32 ExplorerWidth { get; set; }
