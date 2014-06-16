@@ -1224,7 +1224,6 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-        int i = 0;
         Model[] models = paddock.Scope.FindAll(typeof(ICrop));
         
             foreach (Model m in models)
@@ -3111,11 +3110,11 @@ namespace Models.Soils
             //*+  Mission Statement
             //*     Calculate Drainage from each layer      
 
-            double add;           //! water to add to layer
-            double backup;        //! water to backup
+            // double add;           //! water to add to layer
+            // double backup;        //! water to backup
             double excess;        //! amount above saturation(overflow)(mm)
             double[] new_sw_dep;    //! record of results of sw calculations ensure mass balance. (mm)
-            int i;             //! counter //sv- this was "l" (as in the leter "L") but it looks too much like the number 1, so I changed it to "i". 
+            // int i;             //! counter //sv- this was "l" (as in the leter "L") but it looks too much like the number 1, so I changed it to "i". 
             int layer;         //! counter for layer no.
             int num_layers;    //! number of layers
             double w_drain;       //! water draining by gravity (mm)
