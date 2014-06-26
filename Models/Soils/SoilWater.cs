@@ -13,19 +13,6 @@ using Models.SurfaceOM;
 
 namespace Models.Soils
 {
-    [Serializable]
-    public class NewProfileType
-    {
-        public double[] dlayer;
-        public double[] air_dry_dep;
-        public double[] ll15_dep;
-        public double[] dul_dep;
-        public double[] sat_dep;
-        public double[] sw_dep;
-        public double[] bd;
-    }
-    public delegate void NewProfileDelegate(NewProfileType Data);
-      
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model
@@ -612,9 +599,6 @@ namespace Models.Soils
                     soilwat2_check_profile(layer);
                 }
 
-                if (initDone)
-                    soilwat2_New_Profile_Event();
-
                 Array.Copy(value, _dlayer, num_layers);
             }
         }
@@ -1122,8 +1106,6 @@ namespace Models.Soils
                         Array.Resize(ref solutes[solnum].delta, num_layers);
                     }
                 }
-
-                soilwat2_New_Profile_Event();
             }
         }
 
@@ -4082,10 +4064,6 @@ namespace Models.Soils
 
             for (int layer = 0; layer < _dlayer.Length; layer++)
                 soilwat2_check_profile(layer);
-
-            //publish event saying there is a new soil profile.
-            soilwat2_New_Profile_Event();
-
         }
 
 
@@ -4671,29 +4649,6 @@ namespace Models.Soils
 
         #region Functions used to Publish Events sent by this module
 
-
-        private void soilwat2_New_Profile_Event()
-        {
-            //*+  Mission Statement
-            //*     Advise other modules of new profile specification
-            if (NewProfile != null)
-            {
-                NewProfileType newProfile = new NewProfileType();
-                int nLayers = _dlayer.Length;
-                // Convert array values from doubles to floats
-                newProfile.air_dry_dep = _air_dry_dep;
-                newProfile.bd = bd;
-                newProfile.dlayer = _dlayer;
-                newProfile.dul_dep = _dul_dep;
-                newProfile.ll15_dep = _ll15_dep;
-                newProfile.sat_dep = _sat_dep;
-                newProfile.sw_dep = _sw_dep;
-                if (NewProfile != null)
-                    NewProfile.Invoke(newProfile);
-            }
-        }
-
-
         private void soilwat2_ExternalMassFlow(double sw_dep_delta_sum)
         {
 
@@ -4738,7 +4693,6 @@ namespace Models.Soils
         #region Events sent by this Module
 
         //Events
-        public event NewProfileDelegate NewProfile;
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         public event RunoffEventDelegate Runoff;
         public event NitrogenChangedDelegate NitrogenChanged;

@@ -634,54 +634,6 @@ namespace Models.Soils
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
         }
 
-
-
-        /// <summary>
-        /// Get information about changes in soil profile  (primarily due to erosion)
-        /// </summary>
-        [EventSubscribe("NewProfile")]
-        private void OnNew_profile(NewProfileType NewProfile)
-        {
-            // Note: are the changes maily (only) due to by erosion? what else??
-
-            // check whether the basic soil parameters are of the right size
-            int NewNumLayers = NewProfile.dlayer.Length;
-            if (dlayer == null || NewProfile.dlayer.Length != dlayer.Length)
-            {
-                Array.Resize(ref bd, NewNumLayers);
-                Array.Resize(ref sat_dep, NewNumLayers);
-                Array.Resize(ref dul_dep, NewNumLayers);
-                Array.Resize(ref ll15_dep, NewNumLayers);
-                Array.Resize(ref sw_dep, NewNumLayers);
-            }
-
-            // assign new values to soil parameters
-            double[] new_dlayer = new double[NewNumLayers];
-            for (int layer = 0; layer < NewNumLayers; layer++)
-            {
-                new_dlayer[layer] = (double)NewProfile.dlayer[layer];
-                bd[layer] = (double)NewProfile.bd[layer];
-                sat_dep[layer] = (double)NewProfile.dul_dep[layer];
-                dul_dep[layer] = (double)NewProfile.dul_dep[layer];
-                ll15_dep[layer] = (double)NewProfile.ll15_dep[layer];
-                sw_dep[layer] = (double)NewProfile.sw_dep[layer];
-            }
-
-            // check any variation in the soil C and N properties due to changes in soil profile
-            if (soil_loss > 0.0 && AllowProfileReduction)
-            {
-                foreach (soilCNPatch aPatch in Patch)
-                    aPatch.CheckProfile(new_dlayer);
-            }
-
-            // reset dlayer
-            if (dlayer == null || new_dlayer.Length != dlayer.Length)
-                ResizeLayerArrays(new_dlayer.Length);
-            Array.Resize(ref dlayer, NewNumLayers);
-            for (int layer = 0; layer < NewNumLayers; layer++)
-                dlayer[layer] = new_dlayer[layer];
-        }
-
         /// <summary>
         /// Gets the changes in mineral N made by other modules
         /// </summary>
