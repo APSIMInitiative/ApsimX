@@ -30,6 +30,7 @@ namespace Importer
         private bool SurfOMExists = false;
         private bool SoilWaterExists = false;
         private bool MicroClimateExists = false;
+        private DateTime StartDate;
 
         // fertiliser type conversion lookups
         Dictionary<string, string> Fertilisers;
@@ -722,7 +723,7 @@ namespace Importer
         private static XmlNode ImportObject(XmlNode destParent, XmlNode newNode, Model newObject, string objName)
         {
             newObject.Name = objName;
-            string newObjxml = Utility.Xml.Serialise(newObject, true);
+            string newObjxml = Utility.Xml.Serialise(newObject, false);
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(newObjxml);
             newNode = destParent.OwnerDocument.ImportNode(xdoc.DocumentElement, true);
@@ -1090,6 +1091,7 @@ namespace Importer
             string startDate = GetInnerText(compNode, "start_date");
             string endDate = GetInnerText(compNode, "end_date");
             myclock.StartDate = Utility.Date.DMYtoDate(startDate);
+            StartDate = myclock.StartDate;
             myclock.EndDate   = Utility.Date.DMYtoDate(endDate);
 
             // import this object into the new xml document
@@ -1113,8 +1115,17 @@ namespace Importer
 
                 string childText = "";
                 childNode = Utility.Xml.Find(oper, "date");
-                if (childNode != null)
+                if (childNode != null && childNode.InnerText != "")
+                {
                     childText = Utility.Date.DMYtoISO(childNode.InnerText);
+                    if (childText == "0001-01-01")
+                    {
+
+                        childText = Utility.Date.GetDate(childNode.InnerText, StartDate).ToString("yyyy-MM-dd");
+                    }
+                }
+                else
+                    childText = "0001-01-01";
                 dateNode.InnerText = childText;
                 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
