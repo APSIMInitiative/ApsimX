@@ -333,7 +333,7 @@ namespace UserInterface.Views
             StatusWindow.ScrollToCaret();
             //StatusWindow.Select(0, Message.Length);
 
-            Application.DoEvents();
+            //Application.DoEvents();
         }
 
         /// <summary>

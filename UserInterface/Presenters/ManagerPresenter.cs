@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
-            Manager.RebuildScriptModel();
+           // Manager.RebuildScriptModel();
         }
 
         /// <summary>
