@@ -125,8 +125,23 @@ namespace UserInterface.Presenters
             Model Model = ExplorerPresenter.ApsimXFile.Variables.Get(ExplorerView.CurrentNodePath) as Model;
             if (Model != null)
             {
+                // Get a list of all child models that we need to notify about the serialisation.
+                List<Model> modelsToNotify = Model.Children.AllRecursively;
+                modelsToNotify.Insert(0, Model);
+
+                // Let all models know that we're about to serialise.
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialising(xmlSerialisation: true);
+
+                // Do the serialisation
                 StringWriter writer = new StringWriter();
                 writer.Write(Utility.Xml.Serialise(Model, true));
+
+                // Let all models know that we have completed serialisation.
+                foreach (Model model in modelsToNotify)
+                    model.OnSerialised(xmlSerialisation: false);
+
+                // Set the clipboard text.
                 Clipboard.SetText(writer.ToString());
             }
         }

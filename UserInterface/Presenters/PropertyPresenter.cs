@@ -75,7 +75,8 @@ namespace UserInterface.Presenters
                     bool ignoreProperty = XmlIgnore != null;                                 // No [XmlIgnore]
                     //ignoreProperty |= parameter.PropertyType.GetInterface("IList") != null;   // No List<T>
                     ignoreProperty |= parameter.Name == "Name";   // No Name properties.
-                    ignoreProperty |= !parameter.CanWrite;         // Must be readwrite
+                    ignoreProperty |= !parameter.CanRead;         // Must be read
+                    ignoreProperty |= !parameter.CanWrite;         // Must be write
 
                     if (parameter.PropertyType.GetInterface("IList") != null &&
                         parameter.PropertyType != typeof(double[]) &&

@@ -519,8 +519,9 @@ namespace Models
         {
             lock (Locks)
             {
-                if (Connection == null || 
-                    (ForWriting == false && forWriting == true))
+                if (Filename != null && 
+                    (Connection == null || 
+                    (ForWriting == false && forWriting == true)))
                 {
                     if (Filename == null)
                         throw new ApsimXException(FullPath, "Cannot find name of .db file");

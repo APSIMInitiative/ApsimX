@@ -201,13 +201,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private void WriteLoadErrors()
         {
-            foreach (ApsimXException err in ApsimXFile.LoadErrors)
-            {
-                string message = String.Format("{0}:\n{1}", new object[] {
-                                               err.ModelFullPath,
-                                               err.Message});
-                View.ShowMessage(message, DataStore.ErrorLevel.Error);
-            }
+            if (ApsimXFile.LoadErrors != null)
+                foreach (ApsimXException err in ApsimXFile.LoadErrors)
+                {
+                    string message = String.Format("{0}:\n{1}", new object[] {
+                                                    err.ModelFullPath,
+                                                    err.Message});
+                    View.ShowMessage(message, DataStore.ErrorLevel.Error);
+                }
         }
 
         /// <summary>

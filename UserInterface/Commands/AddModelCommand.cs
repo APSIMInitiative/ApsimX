@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml;
 using System;
+using System.Collections.Generic;
 
 namespace UserInterface.Commands
 {
@@ -35,24 +36,19 @@ namespace UserInterface.Commands
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 FromModel.Parent = ToParent;
+
+
                 ToParent.Children.Add(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
 
-                // ensure the simulations have all the events connected and links resolved
-                Model sims = FromModel;
-                while ((sims != null) && !(sims is Simulations))
-                    sims = (Model)sims.Parent;
+                // Call OnLoaded in all models added.
+                // Get a list of all models that we need to call OnLoaded on.
+                List<Model> modelsToNotify = FromModel.Children.AllRecursively;
+                modelsToNotify.Insert(0, FromModel);
 
-                // initialise the simulation
-                Model sim = FromModel;
-                while ((sim != null) && !(sim is Simulation))
-                    sim = (Model)sim.Parent;
-
-                if (sim != null)
-                {
-                    sim.OnLoaded();
-                    sim.OnSimulationCommencing();
-                }
+                // Call OnLoaded
+                foreach (Model model in modelsToNotify)
+                    model.OnLoaded();
 
                 ModelAdded = true;
             }

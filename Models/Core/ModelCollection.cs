@@ -120,19 +120,24 @@ namespace Models.Core
         {
             EnsureNameIsUnique(model);
             Model.Models.Add(model);
-            model.Parent = Model;
             ClearCache();
 
             if (model.Models == null)
                 model.Models = new List<Core.Model>();
+
+            model.Parent = Model;
+            Model.OnLoaded();
+
+            // Call the model's (and all children recursively) OnLoaded method
+            model.OnLoaded();
+            ParentAllChildren(model);
+
             Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null && simulation.IsRunning)
             {
                 model.Events.Connect();
                 model.ResolveLinks();
             }
-            // Call the model's OnLoaded method.
-            Model.OnLoaded();
         }
 
         /// <summary>
@@ -228,7 +233,6 @@ namespace Models.Core
             return NewName;
         }
 
-
         /// <summary>
         /// Clear the variable cache.
         /// </summary>
@@ -239,6 +243,19 @@ namespace Models.Core
             {
                 simulation.VariableCache.Clear();
                 simulation.ScopeCache.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Parent all children of 'model' correctly and call their OnLoaded.
+        /// </summary>
+        private void ParentAllChildren(Model model)
+        {
+            foreach (Model child in model.Children.All)
+            {
+                child.Parent = model;
+                child.OnLoaded();
+                ParentAllChildren(child);
             }
         }
     }
