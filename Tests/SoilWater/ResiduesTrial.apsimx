@@ -737,7 +737,7 @@
         </MicroClimate>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[SurfaceOrganicMatter].surfaceom_cover</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
@@ -795,12 +795,12 @@
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <Graph>

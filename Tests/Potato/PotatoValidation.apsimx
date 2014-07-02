@@ -2606,7 +2606,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -2732,11 +2732,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>
@@ -6225,7 +6225,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -6351,11 +6351,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>
@@ -9875,7 +9875,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -10001,11 +10001,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>

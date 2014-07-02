@@ -29,17 +29,17 @@
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[WeatherFile].MaxT</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
           <string />
           <string />
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -662,16 +662,16 @@
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
           <string />
           <string />
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>

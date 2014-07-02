@@ -35,13 +35,13 @@
       </Fertiliser>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -773,13 +773,13 @@
       </Fertiliser>
       <Report>
         <Name>Report1</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -1364,13 +1364,13 @@
       </Fertiliser>
       <Report>
         <Name>Report2</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -1984,13 +1984,13 @@
       </Fertiliser>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>

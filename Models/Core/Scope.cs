@@ -168,7 +168,7 @@ namespace Models.Core
             public bool DoesMatch(Model model)
             {
                 if (NameToMatch != null)
-                    return model.Name == NameToMatch;
+                    return model.Name.Equals(NameToMatch, StringComparison.CurrentCultureIgnoreCase);
                 else if (TypeToMatch != null)
                     return TypeToMatch.IsAssignableFrom(model.GetType());
                 else

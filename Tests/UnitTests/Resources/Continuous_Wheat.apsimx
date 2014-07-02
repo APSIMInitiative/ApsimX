@@ -1032,17 +1032,17 @@ namespace Models
       </Folder>
       <Report>
         <Name>outputfile</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>biomass</string>
           <string>yield</string>
           <string>grain_protein</string>
           <string>grain_size</string>
           <string>esw</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string xsi:nil="true" />
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <MicroClimate>

@@ -850,38 +850,38 @@ namespace Importer
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursively(compNode, "variable", ref nodes);
-            myreport.Variables = new string[nodes.Count];
+            myreport.VariableNames = new string[nodes.Count];
             int i = 0;
             foreach (XmlNode var in nodes)
             {
                 if ( var.InnerText.Contains("yyyy") ) 
                 {
-                    myreport.Variables[i] = "[Clock].Today";
+                    myreport.VariableNames[i] = "[Clock].Today";
                 }
                 else
                 {
-                    myreport.Variables[i] = var.InnerText;
+                    myreport.VariableNames[i] = var.InnerText;
                 }
                 i++;
             }
             // now for the events
             nodes.Clear();
             Utility.Xml.FindAllRecursively(compNode, "event", ref nodes);
-            myreport.Events = new string[nodes.Count];
+            myreport.EventNames = new string[nodes.Count];
             i = 0;
             foreach (XmlNode _event in nodes)
             {
                 if (String.Compare(_event.InnerText, "end_day", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].EndOfDay";
+                    myreport.EventNames[i] = "[Clock].EndOfDay";
                 }
                 else if (String.Compare(_event.InnerText, "daily", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].StartOfDay";
+                    myreport.EventNames[i] = "[Clock].StartOfDay";
                 }
                 else
                 {
-                    myreport.Events[i] = "[Clock].EndOfDay";
+                    myreport.EventNames[i] = "[Clock].EndOfDay";
                 }
                 i++;
             }

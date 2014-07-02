@@ -233,8 +233,8 @@ namespace Models
         public Simulation Simulation = null;
 
         // Properties read in.
-        public new string[] Variables {get; set;}
-        public new string[] Events { get; set; }
+        public string[] VariableNames {get; set;}
+        public string[] EventNames { get; set; }
         public bool AutoCreateCSV { get; set; }
 
         public object Get(string name)
@@ -246,7 +246,7 @@ namespace Models
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            foreach (string Event in Events)
+            foreach (string Event in EventNames)
             {
                 if (Event != "")
                     base.Events.Subscribe(Event, OnReport);
@@ -273,7 +273,7 @@ namespace Models
 
             List<string> Names = new List<string>();
             List<Type> Types = new List<Type>();
-            foreach (string FullVariableName in Variables)
+            foreach (string FullVariableName in VariableNames)
             {
                 if (FullVariableName != "")
                     Members.Add(new VariableMember(FullVariableName, this));
@@ -346,7 +346,7 @@ namespace Models
         private void UnsubscribeAllEventHandlers()
         {
             // Unsubscribe to all events.
-            foreach (string Event in Events)
+            foreach (string Event in EventNames)
                 if ( (Event != null) && (Event != "") )
                     base.Events.Unsubscribe(Event);
         }

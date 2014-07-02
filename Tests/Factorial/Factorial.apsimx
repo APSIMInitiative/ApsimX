@@ -95,15 +95,15 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[FertiliserRule].Script.ApplicationAmount</string>
             <string>[SowingRule].Script.SowingDate.Year</string>
             <string>[SowingRule].Script.SowingDate.DayOfYear</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -833,13 +833,13 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[FertiliserRule].Script.ApplicationAmount</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -1530,13 +1530,13 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Fertiliser].NitrogenApplied</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -2241,12 +2241,12 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today.Year</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>

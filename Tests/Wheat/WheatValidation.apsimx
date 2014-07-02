@@ -167,7 +167,7 @@
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -193,11 +193,11 @@
             <string>[Wheat].NStress.Photo</string>
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Irrigation>
@@ -899,7 +899,7 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -925,11 +925,11 @@ namespace Models
             <string>[Wheat].NStress.Photo</string>
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Irrigation>
@@ -1592,7 +1592,7 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -1624,11 +1624,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <Irrigation>
@@ -2664,7 +2664,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -2691,10 +2691,10 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -3740,7 +3740,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -3767,10 +3767,10 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -6331,7 +6331,7 @@ public class Script : Model
         </Soil>
         <Report>
           <Name>Outputfile</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -6364,10 +6364,10 @@ public class Script : Model
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>

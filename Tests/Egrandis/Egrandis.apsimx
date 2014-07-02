@@ -2635,7 +2635,7 @@
       </Operations>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Eucalyptus].Phenology.CurrentPhaseName</string>
           <string>[Eucalyptus].Phenology.StageCode.Value</string>
@@ -2700,10 +2700,10 @@
           <string>[Eucalyptus].Age.Value</string>
           <string />
           <string />
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Graph>

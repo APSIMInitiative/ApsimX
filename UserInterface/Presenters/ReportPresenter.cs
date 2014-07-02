@@ -27,8 +27,8 @@ namespace UserInterface.Presenters
             this.ExplorerPresenter = explorerPresenter;
             this.View = View as IReportView;
 
-            this.View.VariableList.Lines = Report.Variables;
-            this.View.EventList.Lines = Report.Events;
+            this.View.VariableList.Lines = Report.VariableNames;
+            this.View.EventList.Lines = Report.EventNames;
             this.View.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
@@ -96,7 +96,7 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "VariableNames", View.VariableList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -106,7 +106,7 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "EventNames", View.EventList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -117,8 +117,8 @@ namespace UserInterface.Presenters
         {
             if (changedModel == Report)
             {
-                View.VariableList.Lines = Report.Variables;
-                View.EventList.Lines = Report.Events;
+                View.VariableList.Lines = Report.VariableNames;
+                View.EventList.Lines = Report.EventNames;
                 View.AutoCreate = Report.AutoCreateCSV;
             }
         }

@@ -38,13 +38,13 @@ The second example` shows a soil depth plot where all data is coming directly fr
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -2529,13 +2529,13 @@ The second example` shows a soil depth plot where all data is coming directly fr
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
@@ -5109,13 +5109,13 @@ The second example` shows a soil depth plot where all data is coming directly fr
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>

@@ -29,7 +29,7 @@
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[WeatherFile].MaxT</string>
           <string>[Soil].SoilWater.sw_dep</string>
@@ -37,10 +37,10 @@
           <string>[Soil].SoilNitrogen.no3</string>
           <string>[OilPalm].BunchMass</string>
           <string />
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].DoReport</string>
-        </Events>
+        </EventNames>
         <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>

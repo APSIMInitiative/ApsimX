@@ -37,7 +37,7 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[WeatherFile].DayLength</string>
             <string>[WeatherFile].MaxT</string>
@@ -50,10 +50,10 @@
             <string>[AgPasture].Biomass</string>
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>

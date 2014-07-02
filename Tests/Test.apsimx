@@ -44,7 +44,7 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[WeatherFile].DayLength</string>
             <string>[WeatherFile].MaxT</string>
@@ -56,10 +56,10 @@
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
             <string />
             <string />
-          </Variables>
-          <Events>
+          </VariableNames>
+          <EventNames>
             <string>[Clock].DoReport</string>
-          </Events>
+          </EventNames>
         </Report>
         <Soil>
           <Name>Soil</Name>
