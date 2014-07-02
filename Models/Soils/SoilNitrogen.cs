@@ -180,12 +180,12 @@ namespace Models.Soils
             initDone = false;
             dlayer = Soil.Thickness;
             bd = Soil.Water.BD;
-            sat_dep = Utility.Math.Multiply(Soil.Water.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Soil.Water.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Soil.Water.LL15, Soil.Thickness);
+            sat_dep = Utility.Math.Multiply(Soil.SAT, Soil.Thickness);
+            dul_dep = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
+            ll15_dep = Utility.Math.Multiply(Soil.LL15, Soil.Thickness);
             sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
             oc = Soil.OC;
-            ph = Soil.Analysis.PH;
+            ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
             no3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
@@ -193,8 +193,8 @@ namespace Models.Soils
             Tsoil = null;
             simpleST = null;
 
-            fbiom = SoilOrganicMatter.FBiom;
-            finert = SoilOrganicMatter.FInert;
+            fbiom = Soil.FBiom;
+            finert = Soil.FInert;
             soil_cn = SoilOrganicMatter.SoilCN;
             root_wt = SoilOrganicMatter.RootWt;
             root_cn = SoilOrganicMatter.RootCN;
