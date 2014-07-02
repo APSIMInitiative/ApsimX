@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         void Update(object sender, EventArgs e)
         {
-            MemoModel.MemoText = ((EditorArgs)e).TextString;
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(MemoModel, "MemoText", ((EditorArgs)e).TextString));
         }
 
         /// <summary>
