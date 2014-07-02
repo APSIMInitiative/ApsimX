@@ -2433,7 +2433,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Amount of N2O produced")]
-        double[] n2o_atm
+        public double[] n2o_atm
         {
             get
             {

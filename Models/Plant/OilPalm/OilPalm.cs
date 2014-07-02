@@ -85,24 +85,24 @@ namespace Models.PMF.OilPalm
         double FWexpan = 0.0;
         
         double Fn = 1.0;
-        
-        double CumulativeFrondNumber = 0.0;
-        
-        double CumulativeBunchNumber = 0.0;
-        
-        double CumulativeYield = 0.0;
+
+        public double CumulativeFrondNumber { get; set; }
+
+        public double CumulativeBunchNumber { get; set; }
+
+        public double CumulativeYield { get; set; }
         
         double ReproductiveGrowthFraction = 0.0;
 
         public double CarbonStress { get; set; }
-        
-        double HarvestBunches = 0.0;
-        
-        double HarvestYield = 0.0;
-        
-        double HarvestFFB = 0.0;
-        
-        double HarvestBunchSize = 0.0;
+
+        public double HarvestBunches { get; set; }
+
+        public double HarvestYield { get; set; }
+
+        public double HarvestFFB { get; set; }
+
+        public double HarvestBunchSize { get; set; }
 
         public double Age { get; set; }
 
@@ -174,8 +174,8 @@ namespace Models.PMF.OilPalm
         public double UnderstoryFW = 0;
         
         public double UnderstoryDltDM = 0;
-        
-        public double UnderstoryNFixation = 0;
+
+        public double UnderstoryNFixation { get; set; }
 
         public class RootType
         {
@@ -218,6 +218,19 @@ namespace Models.PMF.OilPalm
         // The following event handler will be called once at the beginning of the simulation
         public override void OnSimulationCommencing()
         {
+            //zero pulic properties
+            CumulativeFrondNumber = 0;
+            CumulativeBunchNumber = 0;
+            CumulativeYield = 0;
+            CarbonStress = 0;
+            HarvestBunches = 0;
+            HarvestYield = 0;
+            HarvestFFB = 0;
+            HarvestBunchSize = 0;
+            Age = 0;
+            Population = 0;
+            UnderstoryNFixation = 0;
+
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
             SWUptake = new double[Soil.SoilWater.ll15_dep.Length];
@@ -254,10 +267,7 @@ namespace Models.PMF.OilPalm
                 Bunches.Add(B);
             }
 
-
             RootDepth = InitialRootDepth;
-
-
         }
 
         public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
@@ -274,7 +284,7 @@ namespace Models.PMF.OilPalm
 
             // Invoke a sowing event.
             if (Sowing != null)
-                Sowing.Invoke();
+                Sowing.Invoke(this, new EventArgs());
 
             Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
@@ -286,14 +296,14 @@ namespace Models.PMF.OilPalm
         {
             // Invoke a harvesting event.
             if (Harvesting != null)
-                Harvesting.Invoke();
+                Harvesting.Invoke(this, new EventArgs());
         }
         
         public event NewCropDelegate NewCrop;
         
-        public event NullTypeDelegate Sowing;
+        public event EventHandler Sowing;
         
-        public event NullTypeDelegate Harvesting;
+        public event EventHandler Harvesting;
         
         public event FOMLayerDelegate IncorpFOM;
         
@@ -315,7 +325,7 @@ namespace Models.PMF.OilPalm
             }
 
             if (Sowing != null)
-                Sowing.Invoke();
+                Sowing.Invoke(this, new EventArgs());
 
         }
 
@@ -559,7 +569,7 @@ namespace Models.PMF.OilPalm
                 HarvestFFB = HarvestYield / 100;
                 HarvestBunchSize = Bunches[0].Mass / (1.0 - RipeBunchWaterContent.Value) / Bunches[0].FemaleFraction;
                 if (Harvesting != null)
-                    Harvesting.Invoke();
+                    Harvesting.Invoke(this, new EventArgs());
                 // Now rezero these outputs - they can only be output non-zero on harvesting event.
                 HarvestBunches = 0.0;
                 HarvestYield = 0.0;

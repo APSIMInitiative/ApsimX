@@ -46,8 +46,8 @@ namespace Models.PMF.OilPalm
         //double[] sw_dep;
         double[] PotNUptake;
         double[] NUptake;
-        
-        double NFixation = 0.0;
+
+        public double NFixation { get; set; }
 
         // The following event handler will be called once at the beginning of the simulation
         public override void OnSimulationCommencing()
