@@ -35,6 +35,7 @@ namespace Models
             private List<Type> _Types = new List<Type>();
             private List<object> _Values = new List<object>();
             private int MaxNumArrayElements;
+            private Type TypeOfThisMember;
 
             /// <summary>
             /// Constructor
@@ -51,9 +52,9 @@ namespace Models
             public void Analyse()
             {
                 // Work out the type of data we're dealing with.
-                Type T = DetermineType();
+                TypeOfThisMember = DetermineType();
 
-                if (T != null && _Values.Count > 0 && T.IsArray)
+                if (TypeOfThisMember != null && _Values.Count > 0 && TypeOfThisMember.IsArray)
                     {
                         // Array - calculate the maximum number of array elements and analyse each array element
                         // on row 0 for a name and type.
@@ -101,10 +102,7 @@ namespace Models
             {
                 List<object> AllValues = new List<object>();
 
-                // Work out the type of data we're dealing with.
-                Type T = DetermineType();
-
-                if (T != null && T.IsArray)
+                if (TypeOfThisMember != null && TypeOfThisMember.IsArray)
                     {
                         // Add required columns
                         Array Arr = _Values[Row] as Array;
@@ -235,19 +233,23 @@ namespace Models
         public Simulation Simulation = null;
 
         // Properties read in.
-        public string[] Variables {get; set;}
-        public string[] Events { get; set; }
+        public string[] VariableNames {get; set;}
+        public string[] EventNames { get; set; }
         public bool AutoCreateCSV { get; set; }
 
+        public object Get(string name)
+        {
+            return base.Variables.Get(name);
+        }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
-            foreach (string Event in Events)
+            foreach (string Event in EventNames)
             {
                 if (Event != "")
-                    Subscribe(Event, OnReport);
+                    base.Events.Subscribe(Event, OnReport);
             }
         }
 
@@ -271,7 +273,7 @@ namespace Models
 
             List<string> Names = new List<string>();
             List<Type> Types = new List<Type>();
-            foreach (string FullVariableName in Variables)
+            foreach (string FullVariableName in VariableNames)
             {
                 if (FullVariableName != "")
                     Members.Add(new VariableMember(FullVariableName, this));
@@ -281,11 +283,10 @@ namespace Models
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             // Get rid of old data in .db
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
+            DataStore DataStore = new DataStore(this);
             DataStore.DeleteOldContentInTable(Simulation.Name, Name);
 
             // Write and store a table in the DataStore
@@ -345,9 +346,9 @@ namespace Models
         private void UnsubscribeAllEventHandlers()
         {
             // Unsubscribe to all events.
-            foreach (string Event in Events)
-                if (Event != "")
-                    Unsubscribe(Event);
+            foreach (string Event in EventNames)
+                if ( (Event != null) && (Event != "") )
+                    base.Events.Unsubscribe(Event);
         }
 
     }

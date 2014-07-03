@@ -15,7 +15,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Zone, Utility.JobManager.IRunnable
+    public class Simulations : Model, Utility.JobManager.IRunnable
     {
         private string _FileName;
         public Int32 ExplorerWidth { get; set; }
@@ -59,19 +59,28 @@ namespace Models.Core
                 simulations.FileName = FileName;
                 simulations.SetFileNameInAllSimulations();
 
-                // Call the OnSerialised method in each model.
-                foreach (Model model in simulations.AllModels)
+                // Call the OnDeserialised method in each model.
+                foreach (Model model in simulations.Children.AllRecursively)
                     model.OnDeserialised(true);
 
                 // Parent all models.
-                ParentAllModels(simulations);
-
-                // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
+                simulations.Parent = null;
+                ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.AllModels.ForEach(CallOnLoaded);
+                simulations.LoadErrors = new List<ApsimXException>();
+                foreach (Model child in simulations.Children.AllRecursively)
+                {
+                    try
+                    {
+                        child.OnLoaded();
+                    }
+                    catch (ApsimXException err)
+                    {
+                        simulations.LoadErrors.Add(err);
+                    }
+
+                }
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -93,18 +102,16 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnSerialised method in each model.
-                foreach (Model model in simulations.AllModels)
+                foreach (Model model in simulations.Children.AllRecursively)
                     model.OnDeserialised(true);
 
                 // Parent all models.
-                ParentAllModels(simulations);
-
-                // Connect events and resolve links.
-                simulations.AllModels.ForEach(ConnectEventPublishers);
-                simulations.AllModels.ForEach(ResolveLinks);
+                simulations.Parent = null;
+                ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.AllModels.ForEach(CallOnLoaded);
+                foreach (Model child in simulations.Children.AllRecursively)
+                    child.OnLoaded();
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -133,6 +140,25 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Write the specified simulation set to the specified 'stream'
+        /// </summary>
+        public void Write(TextWriter stream)
+        {
+            foreach (Model model in Children.AllRecursively)
+                model.OnSerialising(xmlSerialisation: true);
+
+            try
+            {
+                stream.Write(Utility.Xml.Serialise(this, true));
+            }
+            finally
+            {
+                foreach (Model model in Children.AllRecursively)
+                    model.OnSerialised(xmlSerialisation: true);
+            }
+        }
+
+        /// <summary>
         /// Constructor, private to stop developers using it. Use Simulations.Read instead.
         /// </summary>
         private Simulations() { }
@@ -148,12 +174,10 @@ namespace Models.Core
                 simulations.AddRange((parent as Experiment).Create());
             else if (parent is Simulation)
                 simulations.Add(parent as Simulation);
-            else if (parent is ModelCollection)
+            else
             {
-                ModelCollection modelCollection = parent as ModelCollection;
-
                 // Look for simulations.
-                foreach (Model model in modelCollection.AllModels)
+                foreach (Model model in parent.Children.AllRecursively)
                 {
                     if (model is Experiment)
                         simulations.AddRange((model as Experiment).Create());
@@ -162,9 +186,11 @@ namespace Models.Core
                 }
             }
             // Make sure each simulation has it's filename set correctly.
-            string fileName = RootSimulations(parent).FileName;
             foreach (Simulation simulation in simulations)
-                simulation.FileName = fileName;
+            {
+                if (simulation.FileName == null)
+                    simulation.FileName = RootSimulations(parent).FileName;
+            }
             return simulations.ToArray();
         }
 
@@ -176,7 +202,7 @@ namespace Models.Core
         {
             List<string> simulations = new List<string>();
             // Look for simulations.
-            foreach (Model Model in AllModels)
+            foreach (Model Model in Children.AllRecursively)
             {
                 if (Model is Simulation)
                 {
@@ -187,7 +213,7 @@ namespace Models.Core
             }
 
             // Look for experiments and get them to create their simulations.
-            foreach (Model experiment in AllModels)
+            foreach (Model experiment in Children.AllRecursively)
             {
                 if (experiment is Experiment)
                     simulations.AddRange((experiment as Experiment).Names());
@@ -202,8 +228,9 @@ namespace Models.Core
         /// </summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Simulation simulation in AllModelsMatching(typeof(Simulation)))
-                simulation.FileName = FileName;
+            foreach (Model simulation in Children.AllRecursively)
+                if (simulation is Simulation)
+                    (simulation as Simulation).FileName = FileName;
         }
 
         private static Simulations RootSimulations(Model model)
@@ -222,6 +249,9 @@ namespace Models.Core
         [XmlIgnore]
         public Model SimulationToRun { get; set; }
 
+        private int NumToRun;
+        private int NumCompleted;
+
         /// <summary>
         /// Run all simulations.
         /// </summary>
@@ -230,16 +260,17 @@ namespace Models.Core
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
-            jobManager.OnComplete += OnAllSimulationsHaveCompleted;
+            // Get a reference to our child DataStore.
+            DataStore store = Children.Matching(typeof(DataStore)) as DataStore;
+
+            // Remove old simulation data.
+            store.RemoveUnwantedSimulations(this);
 
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
             {
-                // As we are goito run all simulations, we can delete all tables in the DataStore. This
+                // As we are going to run all simulations, we can delete all tables in the DataStore. This
                 // will clean up order of columns in the tables and removed unused ones.
-                DataStore store = new DataStore();
-                store.Connect(Path.ChangeExtension(FileName, ".db"), false);
-
                 foreach (string tableName in store.TableNames)
                     if (tableName != "Simulations" && tableName != "Messages")
                         store.DeleteTable(tableName);
@@ -251,27 +282,47 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
-            foreach (Model model in AllModels)
-                model.OnAllCommencing();
+            NumToRun = simulationsToRun.Length;
+            NumCompleted = 0;
 
-            foreach (Simulation simulation in simulationsToRun)
-                jobManager.AddJob(simulation);
+            if (NumToRun == 1)
+            {
+                // Skip running in another thread.
+                simulationsToRun[0].OnCompleted -= OnSimulationCompleted;
+                simulationsToRun[0].OnCompleted += OnSimulationCompleted;
+                simulationsToRun[0].Run(null, null);
+            }
+            else
+            {
+                foreach (Simulation simulation in simulationsToRun)
+                {
+                    simulation.OnCompleted -= OnSimulationCompleted;
+                    simulation.OnCompleted += OnSimulationCompleted;
+                    jobManager.AddJob(simulation);
+                }
+            }
         }
 
         /// <summary>
         /// This gets called everytime a simulation completes. When all are done then
         /// invoke each model's OnAllCompleted method.
         /// </summary>
-        private void OnAllSimulationsHaveCompleted(object sender, Utility.JobManager.JobCompleteArgs e)
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (e.PercentComplete == 100)
+            bool RunAllCompleted = false;
+            lock (this)
             {
-                Utility.JobManager jobManager = sender as Utility.JobManager;
-                jobManager.OnComplete -= OnAllSimulationsHaveCompleted;
-
-                foreach (Model model in AllModels)
-                    model.OnAllCompleted();
+                NumCompleted++;
+                RunAllCompleted = NumCompleted == NumToRun;
+            }
+            if (RunAllCompleted)
+            {
+                Console.WriteLine(FileName);
+                foreach (Model model in Children.AllRecursively)
+                    model.OnAllSimulationsCompleted();
             }
         }
+
+
     }
 }

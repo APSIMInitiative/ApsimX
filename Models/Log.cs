@@ -24,7 +24,7 @@ namespace Models
         /// <summary>
         /// Initialise the model.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             if (Simulation.FileName != null)
             {
@@ -36,16 +36,16 @@ namespace Models
         /// <summary>
         /// Simulation has completed.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             Writer.Close();
         }
 
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             Writer.WriteLine("Date: " + Clock.Today.ToString());
-            Model[] models = this.FindAll();
+            Model[] models = this.Scope.FindAll();
 
             foreach (Model model in models)
                 Summary.WriteModelProperties(Writer, model, false, true);

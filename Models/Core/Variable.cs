@@ -1,4 +1,4 @@
-﻿namespace Utility
+﻿namespace Models.Core
 {
     using System;
     using System.Reflection;
@@ -78,7 +78,7 @@
         {
             get
             {
-                return Reflection.GetValueOfFieldOrProperty("Name", Obj) as string;
+                return Utility.Reflection.GetValueOfFieldOrProperty("Name", Obj) as string;
             }
         }
 

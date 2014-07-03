@@ -120,6 +120,11 @@ namespace UserInterface.Views
         /// Returns true if the grid row is empty.
         /// </summary>
         bool RowIsEmpty(int rowIndex);
+
+        /// <summary>
+        /// The format to use for floating point columns (e.g. N3)
+        /// </summary>
+        string FloatingPointFormat { get; set; }
     }
 
     public partial class GridView : UserControl, IGridView
@@ -164,6 +169,11 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// The format to use for floating point columns (e.g. N3)
+        /// </summary>
+        public string FloatingPointFormat { get; set; }
+
+        /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
         private void PopulateGrid()
@@ -172,6 +182,8 @@ namespace UserInterface.Views
             Grid.DataSource = null;
             Grid.Columns.Clear();
             Grid.Rows.Clear();
+
+            Cursor.Current = Cursors.WaitCursor;
             
             if (DataSource != null)
             {
@@ -187,15 +199,28 @@ namespace UserInterface.Views
                 // If autofilter is on then use a data bound grid.
                 if (AutoFilterIsOn)
                 {
+                    Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     Grid.DataSource = new BindingSource(Data, null);
-
                     foreach (DataGridViewColumn column in Grid.Columns)
+                    {
                         column.HeaderCell = new DataGridViewAutoFilterColumnHeaderCell(column.HeaderCell);
+                        column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                        if (FloatingPointFormat != null &&
+                            Data.Columns[column.HeaderText].DataType == typeof(double) ||
+                            Data.Columns[column.HeaderText].DataType == typeof(float))
+                            column.DefaultCellStyle.Format = FloatingPointFormat;
+                    }
                 }
                 else
                 {
                     // Make sure we have the right number of columns.
                     Grid.ColumnCount = Math.Max(DataSource.Columns.Count, 1);
+
+                    // Turn off autosizing - too slow.
+                    foreach (DataGridViewColumn Col in Grid.Columns)
+                        Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 
                     // Populate the grid headers.
                     for (int Col = 0; Col < DataSource.Columns.Count; Col++)
@@ -204,22 +229,35 @@ namespace UserInterface.Views
                         Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         Grid.Columns[Col].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                        if (FloatingPointFormat != null && 
+                            DataSource.Columns[Col].DataType == typeof(double) ||
+                            DataSource.Columns[Col].DataType == typeof(float))
+                            Grid.Columns[Col].DefaultCellStyle.Format = FloatingPointFormat;
                     }
 
+                    
                     // Populate the grid cells with new rows.
-                    Grid.RowCount = DataSource.Rows.Count;
+                    Grid.RowCount = 1;
                     for (int Row = 0; Row < DataSource.Rows.Count; Row++)
                     {
                         for (int Col = 0; Col < DataSource.Columns.Count; Col++)
+                        {
                             Grid[Col, Row].Value = DataSource.Rows[Row][Col];
+
+                            if (Row == 0)
+                                Grid.Columns[Col].Width = Grid.Columns[Col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
+
+                        }
+
+                        Grid.RowCount = DataSource.Rows.Count;
                     }
                 }
 
-                foreach (DataGridViewColumn Col in Grid.Columns)
-                    Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                //foreach (DataGridViewColumn Col in Grid.Columns)
+                //    Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
 
-                foreach (DataGridViewColumn Col in Grid.Columns)
-                    Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
 
                 // Reinstate Grid.CellValueChanged event.
                 Grid.CellValueChanged += OnCellValueChanged;
@@ -229,6 +267,8 @@ namespace UserInterface.Views
             }
             else
                 Grid.Columns.Clear();
+
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>

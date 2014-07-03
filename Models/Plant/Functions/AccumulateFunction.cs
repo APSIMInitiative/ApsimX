@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     {
         //Class members
         private double AccumulatedValue = 0;
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private Model[] ChildFunctions;
 
         [Link]
         Phenology Phenology = null;
@@ -22,7 +22,7 @@ namespace Models.PMF.Functions
         public string EndStageName = "";
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             AccumulatedValue = 0;
         }
@@ -30,10 +30,13 @@ namespace Models.PMF.Functions
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
         {
+            if (ChildFunctions == null)
+                ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
             if (Phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
-                foreach (Function F in Children)
+                foreach (Function F in ChildFunctions)
                 {
                     DailyIncrement = DailyIncrement + F.Value;
                 }
@@ -47,6 +50,9 @@ namespace Models.PMF.Functions
         {
             get
             {
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
                 return AccumulatedValue;
             }
         }

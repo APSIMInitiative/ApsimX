@@ -42,7 +42,7 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true, MustBeChild = true)]
         Function InitialStructuralFraction = null;
         [Link(IsOptional = true, MustBeChild = true)]
-        Function WaterContent = null;
+        Function DryMatterContent = null;
         [Link(IsOptional = true)]
         Function MaximumNConc = null;
         [Link(IsOptional = true)]
@@ -171,8 +171,8 @@ namespace Models.PMF.Organs
                 //BiomassRemoved.Invoke(BiomassRemovedData);
 
             }            
-            if (WaterContent != null)
-                LiveFWt = Live.Wt / (1 - WaterContent.Value);
+            if ((DryMatterContent != null)&& (Live.Wt != 0))
+                LiveFWt = Live.Wt / DryMatterContent.Value;
 
 
         }

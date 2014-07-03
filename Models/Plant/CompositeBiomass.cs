@@ -51,7 +51,7 @@ namespace Models.PMF
         /// <summary>
         /// Clear ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
         }

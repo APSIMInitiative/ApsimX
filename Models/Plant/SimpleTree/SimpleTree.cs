@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.Soils;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -34,12 +35,27 @@ namespace Models.PMF
             fields = "Field, Field1, Field2";
         }
 
-        public override void OnCommencing()
+        public string CropType { get { return "Wheat"; } }
+        public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        public override void OnSimulationCommencing()
         {
             fieldList = fields.Split(',');
             //check field names are valid
             foreach (string s in fieldList)
-                if (this.Parent.Find(s.Trim()) == null)
+                if (this.Parent.Scope.Find(s.Trim()) == null)
                     throw new Exception("Error: Could not find field with name " + s);
 
             NumPlots = fieldList.Count();
@@ -58,22 +74,22 @@ namespace Models.PMF
             LocalCanopyData.cover_tot = CoverLive;
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             RootSystem.Zones = new RootZone[NumPlots];
 
             for (int i = 0; i < NumPlots; i++)
             {
-                Zone CurrentField = (Zone)this.Parent.Find(fieldList[i].Trim());
+                Zone CurrentField = (Zone)this.Parent.Scope.Find(fieldList[i].Trim());
                 // removing field properties for now
                 //   Component fieldProps = (Component)MyPaddock.Parent.ChildPaddocks[i].LinkByName("FieldProps");
                 RootSystem.Zones[i] = new RootZone();
-                RootSystem.Zones[i].ZoneArea = (double)this.Parent.Get("Area"); //get the zone area from parent (field)
+                RootSystem.Zones[i].ZoneArea = (double)this.Parent.Variables.Get("Area"); //get the zone area from parent (field)
                 //   if (!fieldProps.Get("fieldArea", out RootSystem.Zones[i].ZoneArea))
                 //       throw new Exception("Could not find FieldProps component in field " + MyPaddock.Parent.ChildPaddocks[i].Name);
-                Soil = (Soil)CurrentField.Find(typeof(Soil));
-                RootSystem.Zones[i].dlayer = (double[])Soil.SoilWater.Get("dlayer");
+                Soil = (Soil)CurrentField.Scope.Find(typeof(Soil));
+                RootSystem.Zones[i].dlayer = (double[])Soil.SoilWater.Variables.Get("dlayer");
                 RootSystem.Zones[i].ZoneName = CurrentField.Name;
                 RootSystem.Zones[i].RootDepth = 550;
                 RootSystem.Zones[i].kl = new double[RootSystem.Zones[i].dlayer.Length];
@@ -98,8 +114,8 @@ namespace Models.PMF
             for (int i = 0; i < RootSystem.Zones.Length; i++)
             {
                 PotSWUptake[i] = new double[RootSystem.Zones[i].dlayer.Length];
-                SWDep = (double[])Soil.SoilWater.Get("sw_dep");
-                LL15Dep = (double[])Soil.SoilWater.Get("ll15_dep");
+                SWDep = (double[])Soil.SoilWater.Variables.Get("sw_dep");
+                LL15Dep = (double[])Soil.SoilWater.Variables.Get("ll15_dep");
                 for (int j = 0; j < SWDep.Length; j++)
                 {
                     //only use 1 paddock to calculate sw_demand for testing

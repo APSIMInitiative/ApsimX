@@ -18,34 +18,6 @@ namespace Models
         public double thickness;
         public double amount;
     }
-    public class CanopyEnergyBalanceInterceptionType
-    {
-        public string name = "";
-        public string CropType = "";
-        public CanopyEnergyBalanceInterceptionlayerType[] layer;
-    }
-    public class CanopyEnergyBalanceType
-    {
-        public CanopyEnergyBalanceInterceptionType[] Interception;
-        public double transmission;
-    }
-    public class NewPotentialGrowthType
-    {
-        public string sender = "";
-        public double frgr;
-    }
-    public class CanopyWaterBalanceCanopyType
-    {
-        public string name = "";
-        public string CropType = "";
-        public double PotentialEp;
-    }
-    public class CanopyWaterBalanceType
-    {
-        public CanopyWaterBalanceCanopyType[] Canopy;
-        public double eo;
-        public double interception;
-    }
     public class KeyValueArraypair_listType
     {
         public string key = "";
@@ -75,8 +47,6 @@ namespace Models
     }
 
     public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
-    public delegate void CanopyWaterBalanceDelegate(CanopyWaterBalanceType Data);
-    public delegate void CanopyEnergyBalanceDelegate(CanopyEnergyBalanceType Data);
 
 
     /// <remarks>
@@ -321,17 +291,10 @@ namespace Models
         }
         #endregion
 
-        #region "Events which we publish"
-        public event CanopyWaterBalanceDelegate Canopy_Water_Balance;
-
-        public event CanopyEnergyBalanceDelegate Canopy_Energy_Balance;
-        #endregion
-
         #region "Events to which we subscribe, and their handlers"
 
-
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
@@ -365,8 +328,8 @@ namespace Models
             wind = NewMet.wind;
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoCanopy")]
+        private void OnDoCanopy(object sender, EventArgs e)
         {
             CalculateGc();
             CalculateGa();
@@ -375,15 +338,26 @@ namespace Models
             CalculateOmega();
 
             SendEnergyBalanceEvent();
-            SendWaterBalanceEvent();
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoCanopyEnergyBalance")]
+        private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
         {
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
+
+            // Loop through all crops and get their potential growth for today.
+            foreach (ICrop crop in Scope.FindAll(typeof(ICrop)))
+            {
+                int senderIdx = FindComponentIndex(crop.CropType);
+                if (senderIdx < 0)
+                {
+                    throw new Exception("Unknown Canopy Component: " + crop.CropType);
+                }
+                ComponentData[senderIdx].Crop = crop;
+                ComponentData[senderIdx].Frgr = crop.FRGR;
+            }
         }
 
         /// <summary>
@@ -470,20 +444,6 @@ namespace Models
             // Round off a bit and convert mm to m
         }
 
-        /// <summary>
-        /// Obtain updated information about a plant's growth capacity
-        /// </summary>
-        [EventSubscribe("NewPotentialGrowth")]
-        private void OnNewPotentialGrowth(NewPotentialGrowthType newPotentialGrowth)
-        {
-            int senderIdx = FindComponentIndex(newPotentialGrowth.sender);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(newPotentialGrowth.sender));
-            }
-            ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
-        }
-
         public override void OnLoaded()
         {
             ComponentData = new List<ComponentDataStruct>();
@@ -492,7 +452,7 @@ namespace Models
             AddCropTypes();
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             _albedo = albedo;
             windspeed_checked = false;
@@ -553,6 +513,8 @@ namespace Models
         {
             public string Name;
             public string Type;
+            public ICrop Crop;
+
             [XmlIgnore]
             public double LAI;
             [XmlIgnore]
@@ -888,9 +850,11 @@ namespace Models
             double[] Ld = new double[ComponentData.Count];
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
-                ComponentData[j].layerLAI = new double[numLayers];
-                ComponentData[j].layerLAItot = new double[numLayers];
-                Ld[j] = Utility.Math.Divide(ComponentData[j].LAItot, ComponentData[j].Depth, 0.0);
+                ComponentDataStruct componentData = ComponentData[j];
+
+                componentData.layerLAI = new double[numLayers];
+                componentData.layerLAItot = new double[numLayers];
+                Ld[j] = Utility.Math.Divide(componentData.LAItot, componentData.Depth, 0.0);
             }
             double top = 0.0;
             double bottom = 0.0;
@@ -905,11 +869,13 @@ namespace Models
                 // ===========================================
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    if ((ComponentData[j].Height > bottom) && (ComponentData[j].Height - ComponentData[j].Depth < top))
+                    ComponentDataStruct componentData = ComponentData[j];
+
+                    if ((componentData.Height > bottom) && (componentData.Height - componentData.Depth < top))
                     {
-                        ComponentData[j].layerLAItot[i] = Ld[j] * DeltaZ[i];
-                        ComponentData[j].layerLAI[i] = ComponentData[j].layerLAItot[i] * Utility.Math.Divide(ComponentData[j].LAI, ComponentData[j].LAItot, 0.0);
-                        layerLAIsum[i] += ComponentData[j].layerLAItot[i];
+                        componentData.layerLAItot[i] = Ld[j] * DeltaZ[i];
+                        componentData.layerLAI[i] = componentData.layerLAItot[i] * Utility.Math.Divide(componentData.LAI, componentData.LAItot, 0.0);
+                        layerLAIsum[i] += componentData.layerLAItot[i];
                     }
                 }
 
@@ -917,9 +883,11 @@ namespace Models
                 // ====================================================================
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Ftot[i] = Utility.Math.Divide(ComponentData[j].layerLAItot[i], layerLAIsum[i], 0.0);
+                    ComponentDataStruct componentData = ComponentData[j];
+
+                    componentData.Ftot[i] = Utility.Math.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
                     // Note: Sum of Fgreen will be < 1 as it is green over total
-                    ComponentData[j].Fgreen[i] = Utility.Math.Divide(ComponentData[j].layerLAI[i], layerLAIsum[i], 0.0);
+                    componentData.Fgreen[i] = Utility.Math.Divide(componentData.layerLAI[i], layerLAIsum[i], 0.0);
                 }
             }
         }
@@ -933,13 +901,15 @@ namespace Models
             // =========================================
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
+                ComponentDataStruct componentData = ComponentData[j];
+
                 if (Utility.Math.FloatsAreEqual(ComponentData[j].CoverGreen, 1.0, 1E-05))
                 {
                     throw new Exception("Unrealistically high cover value in MicroMet i.e. > -.9999");
                 }
 
-                ComponentData[j].K = Utility.Math.Divide(-Math.Log(1.0 - ComponentData[j].CoverGreen), ComponentData[j].LAI, 0.0);
-                ComponentData[j].Ktot = Utility.Math.Divide(-Math.Log(1.0 - ComponentData[j].CoverTot), ComponentData[j].LAItot, 0.0);
+                componentData.K = Utility.Math.Divide(-Math.Log(1.0 - componentData.CoverGreen), componentData.LAI, 0.0);
+                componentData.Ktot = Utility.Math.Divide(-Math.Log(1.0 - componentData.CoverTot), componentData.LAItot, 0.0);
             }
 
             // Calculate extinction for individual layers
@@ -949,7 +919,9 @@ namespace Models
                 layerKtot[i] = 0.0;
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    layerKtot[i] += ComponentData[j].Ftot[i] * ComponentData[j].Ktot;
+                    ComponentDataStruct componentData = ComponentData[j];
+
+                    layerKtot[i] += componentData.Ftot[i] * componentData.Ktot;
 
                 }
             }
@@ -980,9 +952,11 @@ namespace Models
 
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Gc[i] = CanopyConductance(ComponentData[j].Gsmax, ComponentData[j].R50, ComponentData[j].Frgr, ComponentData[j].Fgreen[i], layerKtot[i], layerLAIsum[i], Rflux);
+                    ComponentDataStruct componentData = ComponentData[j];
 
-                    Rint += ComponentData[j].Rs[i];
+                    componentData.Gc[i] = CanopyConductance(componentData.Gsmax, componentData.R50, componentData.Frgr, componentData.Fgreen[i], layerKtot[i], layerLAIsum[i], Rflux);
+
+                    Rint += componentData.Rs[i];
                 }
                 // Calculate Rin for the next layer down
                 Rin -= Rint;
@@ -996,7 +970,7 @@ namespace Models
             double windspeed = windspeed_default;
             if (!windspeed_checked)
             {
-                object val = this.Get("windspeed");
+                object val = this.Variables.Get("windspeed");
                 use_external_windspeed = val != null;
                 if (use_external_windspeed)
                     windspeed = (double)val;
@@ -1067,13 +1041,14 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].PET[i] = 0.0;
-                    ComponentData[j].PETr[i] = 0.0;
-                    ComponentData[j].PETa[i] = 0.0;
-                    sumRl += ComponentData[j].Rl[i];
-                    sumRsoil += ComponentData[j].Rsoil[i];
-                    sumInterception += ComponentData[j].interception[i];
-                    freeEvapGa += ComponentData[j].Ga[i];
+                    ComponentDataStruct componentData = ComponentData[j];
+                    componentData.PET[i] = 0.0;
+                    componentData.PETr[i] = 0.0;
+                    componentData.PETa[i] = 0.0;
+                    sumRl += componentData.Rl[i];
+                    sumRsoil += componentData.Rsoil[i];
+                    sumInterception += componentData.interception[i];
+                    freeEvapGa += componentData.Ga[i];
                 }
             }
 
@@ -1091,15 +1066,17 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    netRadiation = 1000000.0 * ((1.0 - _albedo) * ComponentData[j].Rs[i] + ComponentData[j].Rl[i] + ComponentData[j].Rsoil[i]);
+                    ComponentDataStruct componentData = ComponentData[j];
+
+                    netRadiation = 1000000.0 * ((1.0 - _albedo) * componentData.Rs[i] + componentData.Rl[i] + componentData.Rsoil[i]);
                     // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
-                    ComponentData[j].PETr[i] = CalcPETr(netRadiation * dryleaffraction, mint, maxt, air_pressure, ComponentData[j].Ga[i], ComponentData[j].Gc[i]);
+                    componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
 
-                    ComponentData[j].PETa[i] = CalcPETa(mint, maxt, vp, air_pressure, dayLength * dryleaffraction, ComponentData[j].Ga[i], ComponentData[j].Gc[i]);
+                    componentData.PETa[i] = CalcPETa(mint, maxt, vp, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
 
-                    ComponentData[j].PET[i] = ComponentData[j].PETr[i] + ComponentData[j].PETa[i];
+                    componentData.PET[i] = componentData.PETr[i] + componentData.PETa[i];
                 }
             }
         }
@@ -1113,7 +1090,9 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Omega[i] = CalcOmega(mint, maxt, air_pressure, ComponentData[j].Ga[i], ComponentData[j].Gc[i]);
+                    ComponentDataStruct componentData = ComponentData[j];
+
+                    componentData.Omega[i] = CalcOmega(mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
                 }
             }
         }
@@ -1123,55 +1102,26 @@ namespace Models
         /// </summary>
         private void SendEnergyBalanceEvent()
         {
-            CanopyEnergyBalanceType lightProfile = new CanopyEnergyBalanceType();
-            Array.Resize<CanopyEnergyBalanceInterceptionType>(ref lightProfile.Interception, ComponentData.Count);
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
-                lightProfile.Interception[j] = new CanopyEnergyBalanceInterceptionType();
-                lightProfile.Interception[j].name = ComponentData[j].Name;
-                lightProfile.Interception[j].CropType = ComponentData[j].Type;
-                Array.Resize<CanopyEnergyBalanceInterceptionlayerType>(ref lightProfile.Interception[j].layer, numLayers);
-                for (int i = 0; i <= numLayers - 1; i++)
+                ComponentDataStruct componentData = ComponentData[j];
+                if (componentData.Crop != null)
                 {
-                    lightProfile.Interception[j].layer[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                    lightProfile.Interception[j].layer[i].thickness = Convert.ToSingle(DeltaZ[i]);
-                    lightProfile.Interception[j].layer[i].amount = Convert.ToSingle(ComponentData[j].Rs[i] * RadnGreenFraction(j));
-                }
-            }
-            lightProfile.transmission = 0;
-            if (Canopy_Energy_Balance != null)
-            {
-                Canopy_Energy_Balance(lightProfile);
-            }
-        }
+                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPotentialEp = 0;
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
+                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
+                        lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                        totalPotentialEp += componentData.PET[i];
+                        totalInterception += componentData.interception[i];
+                    }
 
-        /// <summary>
-        /// Send an water balance event
-        /// </summary>
-        private void SendWaterBalanceEvent()
-        {
-            CanopyWaterBalanceType waterBalance = new CanopyWaterBalanceType();
-            Array.Resize<CanopyWaterBalanceCanopyType>(ref waterBalance.Canopy, ComponentData.Count);
-            double totalInterception = 0.0;
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
-            {
-                waterBalance.Canopy[j] = new CanopyWaterBalanceCanopyType();
-                waterBalance.Canopy[j].name = ComponentData[j].Name;
-                waterBalance.Canopy[j].CropType = ComponentData[j].Type;
-                waterBalance.Canopy[j].PotentialEp = 0;
-                for (int i = 0; i <= numLayers - 1; i++)
-                {
-                    waterBalance.Canopy[j].PotentialEp += Convert.ToSingle(ComponentData[j].PET[i]);
-                    totalInterception += ComponentData[j].interception[i];
+                    componentData.Crop.PotentialEP = totalPotentialEp;
+                    componentData.Crop.LightProfile = lightProfile;
                 }
-            }
-
-            waterBalance.eo = 0f;
-            // need to implement this later
-            waterBalance.interception = Convert.ToSingle(totalInterception);
-            if (Canopy_Water_Balance != null)
-            {
-                Canopy_Water_Balance(waterBalance);
             }
         }
 

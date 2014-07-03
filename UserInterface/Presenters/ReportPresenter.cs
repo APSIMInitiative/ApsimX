@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
         private Report Report;
         private IReportView View;
         private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = new DataStore();
+        private DataStore DataStore;
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -27,8 +27,8 @@ namespace UserInterface.Presenters
             this.ExplorerPresenter = explorerPresenter;
             this.View = View as IReportView;
 
-            this.View.VariableList.Lines = Report.Variables;
-            this.View.EventList.Lines = Report.Events;
+            this.View.VariableList.Lines = Report.VariableNames;
+            this.View.EventList.Lines = Report.EventNames;
             this.View.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
@@ -36,7 +36,8 @@ namespace UserInterface.Presenters
             this.View.OnAutoCreateClick += OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
-            DataStore.Connect(Path.ChangeExtension(Report.Simulation.FileName, ".db"), readOnly: true);
+            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            DataStore = new DataStore(Report);
 
             PopulateDataGrid();
             this.View.AutoCreate = Report.AutoCreateCSV;
@@ -67,7 +68,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (Utility.IVariable Property in Utility.ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                 {
                     e.Items.Add(Property.Name);
                 }
@@ -95,7 +96,7 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "VariableNames", View.VariableList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -105,7 +106,7 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "EventNames", View.EventList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -116,8 +117,8 @@ namespace UserInterface.Presenters
         {
             if (changedModel == Report)
             {
-                View.VariableList.Lines = Report.Variables;
-                View.EventList.Lines = Report.Events;
+                View.VariableList.Lines = Report.VariableNames;
+                View.EventList.Lines = Report.EventNames;
                 View.AutoCreate = Report.AutoCreateCSV;
             }
         }
@@ -127,7 +128,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateDataGrid()
         {
-            View.DataGrid.DataSource = DataStore.GetData(Report.Simulation.Name, Report.Name);
+            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            
+            View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
 
             if (View.DataGrid.DataSource != null)
             {

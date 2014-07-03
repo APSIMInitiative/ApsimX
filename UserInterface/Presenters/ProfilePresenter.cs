@@ -220,10 +220,10 @@ namespace UserInterface.Presenters
                 this.View.ShowGraph(false);
             else
             {
-                ParentZone = this.Model.Find(typeof(Zone)) as Zone;
+                ParentZone = this.Model.Scope.Find(typeof(Zone)) as Zone;
                 if (ParentZone != null)
                 {
-                    ParentZone.AddModel(g);
+                    ParentZone.Children.Add(g);
                     this.View.ShowGraph(true);
                     GraphPresenter = new GraphPresenter();
                     GraphPresenter.Attach(g, this.View.Graph, ExplorerPresenter);
@@ -237,7 +237,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             if (ParentZone != null && g != null)
-                ParentZone.RemoveModel(g);
+                ParentZone.Children.Remove(g);
         }
 
         /// <summary>

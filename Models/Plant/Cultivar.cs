@@ -42,7 +42,7 @@ namespace Models.PMF
 
         public void Apply(Model model)
         {
-            OldValue = model.Get(Name);
+            OldValue = model.Variables.Get(Name);
             if (OldValue == null)
                 throw new ApsimXException(model.FullPath, "In cultivar " + model.Name + ", cannot find variable " + Name);
             object objValue;
@@ -53,11 +53,11 @@ namespace Models.PMF
             }
             else
                 objValue = Convert.ChangeType(Value, OldValue.GetType());
-            model.Set(Name, objValue);
+            model.Variables.Set(Name, objValue);
         }
         public void Unapply(Model model)
         {
-            model.Set(Name, OldValue);
+            model.Variables.Set(Name, OldValue);
             if (OldValue == null)
                 throw new ApsimXException(model.FullPath, "In cultivar " + model.Name + ", cannot find variable " + Name);
         }

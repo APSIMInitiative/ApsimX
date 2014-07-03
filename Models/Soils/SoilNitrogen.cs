@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Linq;
 using Models.Core;
+using Models.SurfaceOM;
 
 namespace Models.Soils
 {
@@ -125,8 +126,8 @@ namespace Models.Soils
     [Serializable]
     public partial class SoilNitrogen : Model
     {
-
-
+        [Link]
+        private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         public SoilNitrogen()
         {
@@ -167,7 +168,7 @@ namespace Models.Soils
         /// <summary>
         /// Performs the initial checks and setup
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);
@@ -179,12 +180,12 @@ namespace Models.Soils
             initDone = false;
             dlayer = Soil.Thickness;
             bd = Soil.Water.BD;
-            sat_dep = Utility.Math.Multiply(Soil.Water.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Soil.Water.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Soil.Water.LL15, Soil.Thickness);
+            sat_dep = Utility.Math.Multiply(Soil.SAT, Soil.Thickness);
+            dul_dep = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
+            ll15_dep = Utility.Math.Multiply(Soil.LL15, Soil.Thickness);
             sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
             oc = Soil.OC;
-            ph = Soil.Analysis.PH;
+            ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
             no3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
@@ -192,8 +193,8 @@ namespace Models.Soils
             Tsoil = null;
             simpleST = null;
 
-            fbiom = SoilOrganicMatter.FBiom;
-            finert = SoilOrganicMatter.FInert;
+            fbiom = Soil.FBiom;
+            finert = Soil.FInert;
             soil_cn = SoilOrganicMatter.SoilCN;
             root_wt = SoilOrganicMatter.RootWt;
             root_cn = SoilOrganicMatter.RootCN;
@@ -481,9 +482,12 @@ namespace Models.Soils
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
-        [EventSubscribe("PotentialResidueDecompositionCalculated")]
-        private void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
+        [EventSubscribe("DoSoilOrganicMatter")]
+        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
+            // Get potential residue decomposition from surfaceom.
+            SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+
             foreach (soilCNPatch aPatch in Patch)
                 aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
@@ -521,8 +525,8 @@ namespace Models.Soils
         /// Performs every-day calculations - before begining of day tasks 
         /// </summary>
         /// <param name="time">Today's time</param>
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             // + Purpose: reset potential decomposition variables in each patch and get C and N status
 
@@ -536,8 +540,8 @@ namespace Models.Soils
         /// <summary>
         /// Performs every-day calculations - end of day processes
         /// </summary>
-        [EventSubscribe("EndOfDay")]
-        private void OnPost(object sender, EventArgs e)
+        [EventSubscribe("DoUpdate")]
+        private void OnDoUpdate(object sender, EventArgs e)
         {
             // + Purpose: Check patch status and clean up, if possible
 
@@ -569,39 +573,35 @@ namespace Models.Soils
             //		Now we explicitly tell the module the actual decomposition
             //      rate for each of its residues.  If there wasn't enough mineral N to decompose, the rate will be reduced from the potential value.
 
-            if (ActualResidueDecompositionCalculated != null)
+            // will have to pack the SOMdecomp data from each patch and then invoke the event
+            //int num_residues = Patch[0].SOMDecomp.Pool.Length;
+            int nLayers = dlayer.Length;
+
+            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
+
+            for (int residue = 0; residue < num_residues; residue++)
             {
-                // will have to pack the SOMdecomp data from each patch and then invoke the event
-                //int num_residues = Patch[0].SOMDecomp.Pool.Length;
-                int nLayers = dlayer.Length;
-
-                SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType();
-                Array.Resize(ref SOMDecomp.Pool, num_residues);
-
-                for (int residue = 0; residue < num_residues; residue++)
+                double c_summed = 0.0F;
+                double n_summed = 0.0F;
+                for (int k = 0; k < Patch.Count; k++)
                 {
-                    double c_summed = 0.0F;
-                    double n_summed = 0.0F;
-                    for (int k = 0; k < Patch.Count; k++)
-                    {
-                        c_summed += Patch[k].SOMDecomp.Pool[residue].FOM.C * Patch[k].RelativeArea;
-                        n_summed += Patch[k].SOMDecomp.Pool[residue].FOM.N * Patch[k].RelativeArea;
-                    }
-
-                    SOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
-                    SOMDecomp.Pool[residue].FOM = new FOMType();
-                    SOMDecomp.Pool[residue].Name = Patch[0].SOMDecomp.Pool[residue].Name;
-                    SOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SOMDecomp.Pool[residue].OrganicMatterType;
-                    SOMDecomp.Pool[residue].FOM.amount = 0.0F;
-                    SOMDecomp.Pool[residue].FOM.C = c_summed;
-                    SOMDecomp.Pool[residue].FOM.N = n_summed;
-                    SOMDecomp.Pool[residue].FOM.P = 0.0F;
-                    SOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
+                    c_summed += Patch[k].SOMDecomp.Pool[residue].FOM.C * Patch[k].RelativeArea;
+                    n_summed += Patch[k].SOMDecomp.Pool[residue].FOM.N * Patch[k].RelativeArea;
                 }
 
-                // send the decomposition information
-                ActualResidueDecompositionCalculated.Invoke(SOMDecomp);
+                ActualSOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
+                ActualSOMDecomp.Pool[residue].FOM = new FOMType();
+                ActualSOMDecomp.Pool[residue].Name = Patch[0].SOMDecomp.Pool[residue].Name;
+                ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SOMDecomp.Pool[residue].OrganicMatterType;
+                ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.C = c_summed;
+                ActualSOMDecomp.Pool[residue].FOM.N = n_summed;
+                ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
             }
+
+            SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
         }
 
         #endregion
@@ -632,54 +632,6 @@ namespace Models.Soils
 
             foreach (soilCNPatch aPatch in Patch)
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
-        }
-
-
-
-        /// <summary>
-        /// Get information about changes in soil profile  (primarily due to erosion)
-        /// </summary>
-        [EventSubscribe("NewProfile")]
-        private void OnNew_profile(NewProfileType NewProfile)
-        {
-            // Note: are the changes maily (only) due to by erosion? what else??
-
-            // check whether the basic soil parameters are of the right size
-            int NewNumLayers = NewProfile.dlayer.Length;
-            if (dlayer == null || NewProfile.dlayer.Length != dlayer.Length)
-            {
-                Array.Resize(ref bd, NewNumLayers);
-                Array.Resize(ref sat_dep, NewNumLayers);
-                Array.Resize(ref dul_dep, NewNumLayers);
-                Array.Resize(ref ll15_dep, NewNumLayers);
-                Array.Resize(ref sw_dep, NewNumLayers);
-            }
-
-            // assign new values to soil parameters
-            double[] new_dlayer = new double[NewNumLayers];
-            for (int layer = 0; layer < NewNumLayers; layer++)
-            {
-                new_dlayer[layer] = (double)NewProfile.dlayer[layer];
-                bd[layer] = (double)NewProfile.bd[layer];
-                sat_dep[layer] = (double)NewProfile.dul_dep[layer];
-                dul_dep[layer] = (double)NewProfile.dul_dep[layer];
-                ll15_dep[layer] = (double)NewProfile.ll15_dep[layer];
-                sw_dep[layer] = (double)NewProfile.sw_dep[layer];
-            }
-
-            // check any variation in the soil C and N properties due to changes in soil profile
-            if (soil_loss > 0.0 && AllowProfileReduction)
-            {
-                foreach (soilCNPatch aPatch in Patch)
-                    aPatch.CheckProfile(new_dlayer);
-            }
-
-            // reset dlayer
-            if (dlayer == null || new_dlayer.Length != dlayer.Length)
-                ResizeLayerArrays(new_dlayer.Length);
-            Array.Resize(ref dlayer, NewNumLayers);
-            for (int layer = 0; layer < NewNumLayers; layer++)
-                dlayer[layer] = new_dlayer[layer];
         }
 
         /// <summary>

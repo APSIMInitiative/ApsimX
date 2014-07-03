@@ -33,142 +33,99 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.OperationsView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
-    public class Operations : ModelCollection
+    public class Operations : Model
     {
-        [NonSerialized]
-        private List<Operation> PreviousSchedule = null;
+        [Link] Clock Clock = null;
 
-        [NonSerialized]
-        private Model _Model;
-
-        // Parameter
+        
         [XmlElement("Operation")]
         public List<Operation> Schedule { get; set; }
-
-        //[XmlIgnore]
-        //public Model Model { get; set;}
-
-        /// <summary>
-        /// We're about to be serialised. Remove our 'Script' model from the list
-        /// of all models so that is isn't serialised. Seems .NET has a problem
-        /// with serialising objects that have been compiled dynamically.
-        /// </summary>
-        public override void OnSerialising(bool xmlSerialisation)
-        {
-            if (_Model != null)
-                Models.Remove(_Model);
-        }
-
-        /// <summary>
-        /// Serialisation has completed. Readd our 'Script' model if necessary.
-        /// </summary>
-        public override void OnSerialised(bool xmlSerialisation)
-        {
-            if (_Model != null)
-                Models.Add(_Model);
-        }
 
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
-        public override void OnCommencing()
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
         {
-            if (ScheduleHasChanged())
+            foreach (Operation operation in Schedule)
             {
-
-                if (_Model != null)
-                    RemoveModel(_Model);
-
-                // Writes some c# code which then gets compiled to an assembly and added as a model.
-                string classHeader = "using System;\r\n" +
-                                     "using Models.Core;\r\n" +
-                                     "using Models.PMF;\r\n" +
-                                     "using Models.PMF.OldPlant;\r\n" +
-                                     "using Models.Soils;\r\n" +
-                                     "using Models.SurfaceOM;\r\n" +
-                                     "namespace Models\r\n" +
-                                     "{\r\n" +
-                                     "   [Serializable]\r\n" +
-                                     "   public class OperationsScript : Model\r\n" +
-                                     "   {\r\n";
-
-                string methodHeader = "      [EventSubscribe(\"StartOfDay\")]\r\n" +
-                                      "      private void OnStartOfDay(object sender, EventArgs e)\r\n" +
-                                      "      {\r\n";
-
-                string methodFooter = "      }\r\n";
-
-                string classFooter = "   }\r\n" +
-                                     "}\r\n";
-
-                StringWriter code = new StringWriter();
-                code.Write(classHeader);
-
-                // Loop though all operations and get a list of models the script will need to link to.
-                List<string> linkNames = new List<string>();
-                List<string> linkTypeNames = new List<string>();
-                foreach (Operation operation in Schedule)
+                if (operation.Date == Clock.Today)
                 {
-                    Model modelToLinkTo = this.Find(operation.GetActionModel().Trim());
-                    if (modelToLinkTo == null)
-                        throw new ApsimXException(FullPath, "Cannot find model '" + operation.GetActionModel() +
-                                                            "' as specified in operations schedule");
-                    if (!linkNames.Contains(modelToLinkTo.Name.Trim()))
+                    string st = operation.Action;
+                    string argumentsString = Utility.String.SplitOffBracketedValue(ref st, '(', ')');
+                    string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                    int posPeriod = st.IndexOf('.');
+                    if (posPeriod == -1)
+                        throw new ApsimXException(FullPath, "Bad operations action found: " + operation.Action);
+                    string modelName = st.Substring(0, posPeriod);
+                    string methodName = st.Substring(posPeriod+1).Replace(";", "").Trim();
+
+                    Model model = Scope.Find(modelName);
+                    if (model == null)
+                        throw new ApsimXException(FullPath, "Cannot find model: " + modelName);
+                    MethodInfo method = model.GetType().GetMethod(methodName);
+                    if (method == null)
+                        throw new ApsimXException(FullPath, "Cannot find method: " + methodName + " in model: " + modelName);
+
+                    // convert arguments to an object array.
+                    ParameterInfo[] parameters = method.GetParameters();
+                    object[] parameterValues = new object[parameters.Length];
+                    for (int i = 0; i < parameterValues.Length; i++)
                     {
-                        linkNames.Add(modelToLinkTo.Name.Trim());
-                        linkTypeNames.Add(modelToLinkTo.GetType().Name);
+                        if (i >= arguments.Length)
+                        {
+                            // no more arguments were specified - use default value.
+                            parameterValues[i] = parameters[i].DefaultValue;
+                        }
+                        else
+                        {
+                            string value = arguments[i];
+                            int argumentIndex;
+                            int posColon = arguments[i].IndexOf(':');
+                            if (posColon == -1)
+                                argumentIndex = i;
+                            else
+                            {
+                                string argumentName = arguments[i].Substring(0, posColon).Trim();
+                                // find parameter with this name.
+                                for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
+                                {
+                                    if (parameters[argumentIndex].Name == argumentName)
+                                        break;
+                                }
+                                if (argumentIndex == parameters.Length)
+                                    throw new ApsimXException(FullPath, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
+                                value = value.Substring(posColon + 1);
+                            }
+
+                            // convert value to correct type.
+                            if (parameters[argumentIndex].ParameterType == typeof(double))
+                                parameterValues[argumentIndex] = Convert.ToDouble(value);
+                            else if (parameters[argumentIndex].ParameterType == typeof(float))
+                                parameterValues[argumentIndex] = Convert.ToSingle(value);
+                            else if (parameters[argumentIndex].ParameterType == typeof(int))
+                                parameterValues[argumentIndex] = Convert.ToInt32(value);
+                            else if (parameters[argumentIndex].ParameterType == typeof(string))
+                                parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
+                            else if (parameters[argumentIndex].ParameterType.IsEnum)
+                            {
+                                value = value.Trim();
+                                int posLastPeriod = value.LastIndexOf('.');
+                                if (posLastPeriod != -1)
+                                    value = value.Substring(posLastPeriod+1);
+                                parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
+                            }
+                        }
                     }
+
+                    // invoke method.
+                    method.Invoke(model, parameterValues);
+
                 }
-
-                // write all links.
-                code.WriteLine("      [Link] Clock Clock = null;\r\n");
-                for (int i = 0; i < linkNames.Count; i++)
-                    code.WriteLine("      [Link] " + linkTypeNames[i] + " " + linkNames[i] + " = null;\r\n");
-
-                // write the start of day method.
-                code.Write(methodHeader);
-                foreach (Operation operation in Schedule)
-                {
-                    code.WriteLine("         if (Clock.Today == DateTime.Parse(\"" + operation.Date.ToString() + "\"))");
-                    code.WriteLine("            " + operation.Action);
-                }
-                code.Write(methodFooter);
-
-                // Write class footer 
-                code.Write(classFooter);
-
-                // Go look for our class name.
-                Assembly CompiledAssembly = Utility.Reflection.CompileTextToAssembly(code.ToString(), null);
-                Type ScriptType = CompiledAssembly.GetType("Models.OperationsScript");
-                if (ScriptType == null)
-                    throw new ApsimXException(FullPath, "Cannot find a public class called OperationsScript");
-
-                _Model = Activator.CreateInstance(ScriptType) as Model;
-                _Model.Name = "OperationsScript";
-                AddModel(_Model);
-                PreviousSchedule = Schedule;
             }
         }
 
-        /// <summary>
-        /// Return true if the schedule has been changed by the user.
-        /// </summary>
-        private bool ScheduleHasChanged()
-        {
-            if (PreviousSchedule == null)
-                return true;
-            if (PreviousSchedule.Count != Schedule.Count)
-                return true;
-
-            for (int i = 0; i < Schedule.Count; i++)
-            {
-                if (Schedule[i].Date != PreviousSchedule[i].Date ||
-                    Schedule[i].Action != PreviousSchedule[i].Action)
-                    return true;
-            }
-            return false;
-        }
-
-
+       
     }
 }

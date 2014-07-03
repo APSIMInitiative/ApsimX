@@ -15,7 +15,7 @@ namespace UserInterface.Presenters
         private IGraphView GraphView;
         private Graph Graph;
         private ExplorerPresenter ExplorerPresenter;
-        private Models.DataStore DataStore = new Models.DataStore();
+        private Models.DataStore DataStore;
         private static Color[] colours = {
                                         Color.FromArgb(228,26,28),
                                         Color.FromArgb(55,126,184),
@@ -53,9 +53,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
 
             // Connect to a datastore.
-            string dbName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".db");
-            if (dbName != null && File.Exists(dbName))
-                DataStore.Connect(dbName, true);
+            DataStore = new Models.DataStore(Graph);
 
             DrawGraph();
         }
@@ -234,7 +232,7 @@ namespace UserInterface.Presenters
             if (simulationName == null && tableName == null && fieldName != null)
             {
                 // Use reflection to access a property.
-                object Obj = Graph.Get(fieldName);
+                object Obj = Graph.Variables.Get(fieldName);
                 if (Obj != null && Obj.GetType().IsArray)
                     return Obj as Array;
             }

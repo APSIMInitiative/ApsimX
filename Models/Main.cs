@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 using Models.Core;
 
 namespace Models
@@ -29,17 +30,27 @@ namespace Models
 
                 // Create a instance of a job that will go find .apsimx files. Then
                 // pass the job to a job runner.
-                RunDirectoryOfApsimFiles runApsim = new RunDirectoryOfApsimFiles(fileName, commandLineSwitch == "/Recurse");
+                RunDirectoryOfApsimFiles runApsim = new RunDirectoryOfApsimFiles(fileName, commandLineSwitch);
 
-                Utility.JobManager jobManager = new Utility.JobManager();
-                jobManager.OnComplete += OnError;
-                jobManager.AddJob(runApsim);
-                jobManager.Start(waitUntilFinished:true);
-                if (jobManager.SomeHadErrors) return 1;
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
 
-                // Write out the number of simulations run to the console.
-                int numSimulations = jobManager.NumberOfJobs - 1;
-                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations");
+                int numSimulations = 0;
+                if (commandLineSwitch == "/SingleThreaded")
+                    numSimulations = RunSingleThreaded(fileName);
+                else
+                {
+                    Utility.JobManager jobManager = new Utility.JobManager();
+                    jobManager.OnComplete += OnError;
+                    jobManager.AddJob(runApsim);
+                    jobManager.Start(waitUntilFinished: true);
+                    if (jobManager.SomeHadErrors) return 1;
+
+                    // Write out the number of simulations run to the console.
+                    numSimulations = jobManager.NumberOfJobs - 1;
+                }
+                timer.Stop();
+                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
             }
             catch (Exception err)
             {
@@ -47,6 +58,20 @@ namespace Models
                 return 1;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Run all simulations in the specified 'fileName' single threaded i.e.
+        /// don't use the JobManager. Useful for profilling.
+        /// </summary>
+        private static int RunSingleThreaded(string fileName)
+        {
+            Simulations simulations = Simulations.Read(fileName);
+            // Don't use JobManager - just run the simulations.
+            Simulation[] simulationsToRun = Simulations.FindAllSimulationsToRun(simulations);
+            foreach (Simulation simulation in simulationsToRun)
+                simulation.Run(null, null);
+            return simulationsToRun.Length;
         }
 
         /// <summary>
@@ -76,10 +101,10 @@ namespace Models
             /// <summary>
             /// Constructor
             /// </summary>
-            public RunDirectoryOfApsimFiles(string fileSpec, bool recurse)
+            public RunDirectoryOfApsimFiles(string fileSpec, string commandLineSwitch)
             {
                 FileSpec = fileSpec;
-                Recurse = recurse;
+                Recurse = commandLineSwitch == "/Recurse";
             }
 
             /// <summary>
@@ -95,11 +120,13 @@ namespace Models
 
                 string fileSpecNoPath = Path.GetFileName(FileSpec);
 
-                string[] Files;
+                List<string> Files;
                 if (Recurse)
-                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.AllDirectories);
+                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.AllDirectories).ToList();
                 else
-                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.TopDirectoryOnly);
+                    Files = Directory.GetFiles(path, fileSpecNoPath, SearchOption.TopDirectoryOnly).ToList();
+
+                Files.RemoveAll(s => s.Contains("UnitTests"));
 
                 // Get a reference to the JobManager so that we can add jobs to it.
                 Utility.JobManager jobManager = e.Argument as Utility.JobManager;

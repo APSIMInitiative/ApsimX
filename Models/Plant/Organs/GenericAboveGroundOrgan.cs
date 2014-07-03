@@ -9,7 +9,7 @@ namespace Models.PMF.Organs
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         #region Event handlers
         [EventSubscribe("Prune")]

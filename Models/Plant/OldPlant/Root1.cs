@@ -17,7 +17,7 @@ namespace Models.PMF.OldPlant
     {
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         #region Parameters read from XML file and links to other functions.
         [Link]
@@ -199,7 +199,7 @@ namespace Models.PMF.OldPlant
 
             if (SwimIsPresent)
             {
-                dlt_sw_dep = (double[]) this.Get("uptake_water_" + Plant.CropType);
+                dlt_sw_dep = (double[])this.Variables.Get("uptake_water_" + Plant.CropType);
                 dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
             else
@@ -540,10 +540,20 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                if (Utility.Math.Sum(sw_avail_pot) == 0)
-                    return 1.0;
+                bool valuesFound = false;
+                double ratio = 0.0;
+                for (int i = 0; i < sw_avail_pot.Length; i++)
+                {
+                    if (sw_avail_pot[i] > 0)
+                    {
+                        ratio += sw_avail[i] / sw_avail_pot[i];
+                        valuesFound = true;
+                    }
+                }
+                if (valuesFound)
+                    return ratio;
                 else
-                    return Utility.Math.Sum(Utility.Math.Divide(sw_avail, sw_avail_pot));
+                    return 1.0;
             }
         }
         public double WetRootFraction
@@ -654,13 +664,15 @@ namespace Models.PMF.OldPlant
 
             double[] rlv_factor = new double[Soil.SoilWater.dlayer.Length];    // relative rooting factor for all layers
 
+            double[] relativeRootRate = RelativeRootRate.Values;
+            double[] sWFactorRootLength = SWFactorRootLength.Values;
 
             double rlv_factor_tot = 0.0;
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                double branching_factor = RelativeRootRate.Values[layer];
+                double branching_factor = relativeRootRate[layer];
 
-                rlv_factor[layer] = SWFactorRootLength.Values[layer] *
+                rlv_factor[layer] = sWFactorRootLength[layer] *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
                                     Utility.Math.Divide(Soil.SoilWater.dlayer[layer], RootDepth, 0.0);   // space weighting factor
@@ -747,7 +759,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             SwimIsPresent = swim3 > 0;
             if (SwimIsPresent)

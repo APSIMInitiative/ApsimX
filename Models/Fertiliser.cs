@@ -108,13 +108,13 @@ namespace Models
         /// <summary>
         /// prepare event handler from Clock.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             NitrogenApplied = 0;
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             NitrogenApplied = 0;
             AddDefinitions();

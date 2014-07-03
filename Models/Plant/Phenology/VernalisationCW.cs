@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     [Serializable]
-    public class VernalisationCW : ModelCollection
+    public class VernalisationCW : Model
     {
         [Link]
         Phenology Phenology = null;
@@ -47,7 +47,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialise everything
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             CumulativeVD = 0;
             VernEff = 1;

@@ -21,21 +21,24 @@
       <Name>Input</Name>
     </Input>
     <PredictedObserved/>
+    <TimeSeriesStats>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
       <Report>
         <Name>Report</Name>
-        <Variables>
+        <VariableNames>
           <string>[Clock].Today</string>
           <string>[WeatherFile].MaxT</string>
           <string>[WeatherFile].MinT</string>
           <string>[WeatherFile].Radn</string>
           <string>[WeatherFile].Rain</string>
-        </Variables>
-        <Events>
+        </VariableNames>
+        <EventNames>
           <string>[Clock].EndOfDay</string>
-        </Events>
+        </EventNames>
       </Report>
       <Fertiliser>
         <Name>Fertiliser</Name>

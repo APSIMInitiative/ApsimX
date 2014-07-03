@@ -254,59 +254,72 @@ namespace Utility
             return null;
         }
 
+
+        public static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
+
         /// <summary>
-        /// Complile the specified 'code' into an executable assembly. If 'assemblyFileName'
+        /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
         /// is null then compile to an in-memory assembly.
         /// </summary>
         public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
         {
-            bool VB = code.IndexOf("Imports System") != -1;
-            string Language;
-            if (VB)
-                Language = CodeDomProvider.GetLanguageFromExtension(".vb");
-            else
-                Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+            // See if we've already compiled this code. If so then return the assembly.
+            if (AssemblyCache.ContainsKey(code))
+                return AssemblyCache[code];
 
-            if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
+            lock (AssemblyCache)
             {
-                CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
-                if (Provider != null)
+                if (AssemblyCache.ContainsKey(code))
+                    return AssemblyCache[code];
+                bool VB = code.IndexOf("Imports System") != -1;
+                string Language;
+                if (VB)
+                    Language = CodeDomProvider.GetLanguageFromExtension(".vb");
+                else
+                    Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+
+                if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
                 {
-                    CompilerParameters Params = new CompilerParameters();
-                    
-                    if (assemblyFileName == null)
-                        Params.GenerateInMemory = true;
-                    else
+                    CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
+                    if (Provider != null)
                     {
-                        Params.GenerateInMemory = false;      
-                        Params.OutputAssembly = assemblyFileName;
-                    }
-                    Params.TreatWarningsAsErrors = false;
-                    Params.WarningLevel = 2;
-                    Params.ReferencedAssemblies.Add("System.dll");
-                    Params.ReferencedAssemblies.Add("System.Xml.dll");
-                    Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
+                        CompilerParameters Params = new CompilerParameters();
 
-                    Params.TempFiles = new TempFileCollection(".");
-                    Params.TempFiles.KeepFiles = false;
-                    string[] source = new string[1];
-                    source[0] = code;
-                    CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
-                    string Errors = "";
-                    foreach (CompilerError err in results.Errors)
-                    {
+                        if (assemblyFileName == null)
+                            Params.GenerateInMemory = true;
+                        else
+                        {
+                            Params.GenerateInMemory = false;
+                            Params.OutputAssembly = assemblyFileName;
+                        }
+                        Params.TreatWarningsAsErrors = false;
+                        Params.WarningLevel = 2;
+                        Params.ReferencedAssemblies.Add("System.dll");
+                        Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
+
+                        Params.TempFiles = new TempFileCollection(".");
+                        Params.TempFiles.KeepFiles = false;
+                        string[] source = new string[1];
+                        source[0] = code;
+                        CompilerResults results = Provider.CompileAssemblyFromSource(Params, source);
+                        string Errors = "";
+                        foreach (CompilerError err in results.Errors)
+                        {
+                            if (Errors != "")
+                                Errors += "\r\n";
+
+                            Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        }
                         if (Errors != "")
-                            Errors += "\r\n";
+                            throw new Exception(Errors);
 
-                        Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        AssemblyCache.Add(code, results.CompiledAssembly);
+                        return results.CompiledAssembly;
                     }
-                    if (Errors != "")
-                        throw new Exception(Errors);
-
-                    return results.CompiledAssembly;
                 }
+                throw new Exception("Cannot compile manager script to an assembly");
             }
-            throw new Exception("Cannot compile manager script to an assembly");
         }
 
 
@@ -338,6 +351,63 @@ namespace Utility
             IFormatter formatter = new BinaryFormatter();
             return formatter.Deserialize(stream);
         }
+
+
+        /// <summary>
+        /// Convert the specified 'stringValue' into an object of the specified 'type'.
+        /// Will throw if cannot convert type.
+        /// </summary>
+        public static object StringToObject(Type type, string stringValue)
+        {
+            if (type.IsArray)
+            {
+                string[] stringValues = stringValue.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (type == typeof(double[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(int[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(string[]))
+                    return stringValues;
+                else
+                    throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
+            }
+            else if (type == typeof(double))
+                return Convert.ToDouble(stringValue);
+            else if (type == typeof(float))
+                return Convert.ToSingle(stringValue);
+            else if (type == typeof(int))
+                return Convert.ToInt32(stringValue);
+            else if (type == typeof(DateTime))
+                return Convert.ToDateTime(stringValue);
+            else if (type == typeof(string))
+                return stringValue;
+            else if (type.IsEnum)
+                return Enum.Parse(type, stringValue, true);
+
+            throw new Exception("Cannot convert the string '" + stringValue + "' to a " + type.ToString());
+        }
+
+        /// <summary>
+        /// Convert the specified 'obj' into a string.
+        /// </summary>
+        public static string ObjectToString(object obj)
+        {
+            if (obj.GetType().IsArray)
+            {
+                string stringValue = "";
+                Array arr = obj as Array;
+                for (int j = 0; j < arr.Length; j++)
+                {
+                    if (j > 0)
+                        stringValue += ",";
+                    stringValue += arr.GetValue(j).ToString();
+                }
+                return stringValue;
+            }
+            else
+                return obj.ToString();
+        }
+
 
     }
 }

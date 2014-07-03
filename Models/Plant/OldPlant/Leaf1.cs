@@ -160,7 +160,7 @@ namespace Models.PMF.OldPlant
         private double[] LeafNoSen;
         private double dltNodeNo;
         private double[] LeafArea;
-        private const int max_node = 1000;
+        private const int max_node = 25;
         #endregion
 
         #region Public interface defined by Organ1
@@ -717,7 +717,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Senescing = new Biomass();
             Retranslocation = new Biomass();
@@ -735,7 +735,7 @@ namespace Models.PMF.OldPlant
         public override void OnPrepare(object sender, EventArgs e)
         {
             if (LeafNo == null)
-                OnCommencing();
+                OnSimulationCommencing();
 
             Growth.Clear();
             Senescing.Clear();

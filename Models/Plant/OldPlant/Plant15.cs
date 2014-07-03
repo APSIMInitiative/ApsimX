@@ -67,7 +67,7 @@ namespace Models.PMF.OldPlant
         Phenology Phenology = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         public bool AutoHarvest { get; set; }
 
@@ -82,6 +82,17 @@ namespace Models.PMF.OldPlant
         public event EventHandler Sowing;
         
         public event BiomassRemovedDelegate BiomassRemoved;
+
+        public override void OnLoaded()
+        {
+            // Find organs
+            Organ1s = new List<Organ1>();
+            foreach (Model model in this.Models)
+            {
+                if (model is Organ1)
+                    Organ1s.Add(model as Organ1);
+            }  
+        }
 
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
         {
@@ -112,6 +123,7 @@ namespace Models.PMF.OldPlant
                 Sowing.Invoke(this, new EventArgs());
 
             Population.OnSow(SowingData);
+            Phenology.OnSow();
             WriteSowReport(SowingData);
             OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.
         }
@@ -193,12 +205,8 @@ namespace Models.PMF.OldPlant
 
         
         public event NewCropDelegate CropEnding;
-
         
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-
-        
-        public event NullTypeDelegate Harvesting;
+        public event EventHandler Harvesting;
 
         public double cover_green 
         { 
@@ -260,24 +268,23 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         
         [Units("kg/ha")]
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
 
         [XmlIgnore]
-        public List<Organ1> Organ1s 
-        { 
-            get 
-            {
-                List<Organ1> organs = new List<Organ1>();
-                foreach (Model model in this.Models)
-                {
-                    if (model is Organ1)
-                        organs.Add(model as Organ1);
-                }
-                return organs;
-            }
-        }
+        public List<Organ1> Organ1s { get; set; }
         
         [XmlIgnore]
         public List<Organ1> Tops
@@ -336,10 +343,18 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        public double FRGR
+        {
+            get
+            {
+                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
+            }
+        }
+
         /// <summary>
         /// Old PLANT1 compat. eventhandler. Not used in Plant2
         /// </summary>
-        [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
             if (SowingData != null)
@@ -362,13 +377,7 @@ namespace Models.PMF.OldPlant
 
                 DoNDemandEstimate();
 
-                // PUBLISH NewPotentialGrowth event.
-                NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-                NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
-                                                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
-                NewPotentialGrowthData.sender = Name;
-                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
-                Util.Debug("NewPotentialGrowth.frgr=%f", NewPotentialGrowthData.frgr);
+                Util.Debug("NewPotentialGrowth.frgr=%f", FRGR);
                 //Prepare_p();   // FIXME
             }
         }
@@ -376,9 +385,13 @@ namespace Models.PMF.OldPlant
         /// <summary>
         ///  Old PLANT1 compat. process eventhandler.
         /// </summary>
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
+            // Dean: This call to OnPrepare used to be called at start of day. 
+            // No need to separate the call into separate event (I think)
+            OnPrepare(null, null);
+
             if (SowingData != null)
             {
 
@@ -653,7 +666,7 @@ namespace Models.PMF.OldPlant
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
-                Harvesting.Invoke();
+                Harvesting.Invoke(this, new EventArgs());
 
             // Check some bounds
             if (Harvest.Remove < 0 || Harvest.Remove > 1.0)

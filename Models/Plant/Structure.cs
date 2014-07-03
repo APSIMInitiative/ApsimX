@@ -11,7 +11,7 @@ namespace Models.PMF
 {
     [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
-    public class Structure : ModelCollection
+    public class Structure : Model
     {
         #region Links
         [Link]
@@ -202,12 +202,10 @@ namespace Models.PMF
 
         #region Event Handlers
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
-            string initial = "yes";
-            MainStemFinalNodeNumber.UpdateVariables(initial);
-            MaximumNodeNumber = (int) MainStemFinalNodeNumber.Value;
+
         }
         public void OnSow(SowPlant2Type Sow)
         {
@@ -216,6 +214,9 @@ namespace Models.PMF
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             PrimaryBudNo = Sow.BudNumber;
             TotalStemPopn = Sow.Population * PrimaryBudNo;
+            string initial = "yes";
+            MainStemFinalNodeNumber.UpdateVariables(initial);
+            MaximumNodeNumber = (int)MainStemFinalNodeNumber.Value;
         }
         #endregion
     }

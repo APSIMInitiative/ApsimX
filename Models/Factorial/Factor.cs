@@ -12,14 +12,18 @@ namespace Models.Factorial
     [ViewName("UserInterface.Views.FactorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
     [AllowDropOn("Factors")]
-    public class Factor : ModelCollection
+    public class Factor : Model
     {
         public List<string> Paths { get; set; }
 
         [XmlIgnore]
-        public List<FactorValue> FactorValues { get { return ModelsMatching<FactorValue>(); } }
+        public List<FactorValue> FactorValues { get; private set; }
 
-
-        //public Model Child { get; set; }
+        public override void OnLoaded()
+        {
+            FactorValues = new List<FactorValue>();
+            foreach (FactorValue factorValue in Children.MatchingMultiple(typeof(FactorValue)))
+                FactorValues.Add(factorValue);
+        }
     }
 }

@@ -15,17 +15,14 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         Structure structure = null;
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
 
 
         private double _WaterAllocation;
         private double EP = 0;
-        private double PEP = 0;
         private double NShortage = 0;   //if an N Shoratge how Much;
 
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
         
         public event NewCanopyDelegate New_Canopy;
 
@@ -83,7 +80,7 @@ namespace Models.PMF.Organs
         }
         
         [Units("mm")]
-        public override double WaterDemand { get { return PEP; } }
+        public override double WaterDemand { get { return Plant.PotentialEP; } }
         
         [Units("mm")]
         public double Transpiration { get { return EP; } }
@@ -139,8 +136,8 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 0;
-                if (PEP > 0)
-                    F = EP / PEP;
+                if (WaterDemand > 0)
+                    F = EP / WaterDemand;
                 else
                     F = 1;
                 return F;
@@ -216,12 +213,11 @@ namespace Models.PMF.Organs
         }
         public override void OnSow(SowPlant2Type Data)
         {
-            PublishNewPotentialGrowth();
             PublishNewCanopyEvent();
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (PotentialBiomass != null)
             {
@@ -230,38 +226,8 @@ namespace Models.PMF.Organs
             }
 
             EP = 0;
-            PublishNewPotentialGrowth();
         }
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            if (Plant.InGround)
-            {
-                Boolean found = false;
-                int i = 0;
-                while (!found && (i != CWB.Canopy.Length))
-                {
-                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
-                    {
-                        PEP = CWB.Canopy[i].PotentialEp;
-                        found = true;
-                    }
-                    else
-                        i++;
-                }
-            }
-        }
-        private void PublishNewPotentialGrowth()
-        {
-            // Send out a NewPotentialGrowthEvent.
-            if (NewPotentialGrowth != null)
-            {
-                NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
-                GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(Frgr, Fvpd), Ft);
-                NewPotentialGrowth.Invoke(GrowthType);
-            }
-        }
+
         private void PublishNewCanopyEvent()
         {
             if (New_Canopy != null)

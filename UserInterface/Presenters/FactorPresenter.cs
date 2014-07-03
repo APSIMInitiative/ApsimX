@@ -3,6 +3,7 @@ using Models.Factorial;
 using UserInterface.Views;
 using System.Reflection;
 using System.Collections.Generic;
+using Models.Core;
 namespace UserInterface.Presenters
 {
     /// <summary>
@@ -42,11 +43,11 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Factor.Get(e.ObjectName);
+            object o = Factor.Variables.Get(e.ObjectName);
 
             if (o != null)
             {
-                foreach (Utility.IVariable Property in Utility.ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                     e.Items.Add(Property.Name);
                 e.Items.Sort();
             }

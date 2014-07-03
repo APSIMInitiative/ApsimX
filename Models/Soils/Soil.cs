@@ -21,7 +21,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Soil : ModelCollection
+    public class Soil : Model
     {
         private static bool PathFixed = false;
 
@@ -58,29 +58,19 @@ namespace Models.Soils
         //[UILargeText]
         public string Comments { get; set; }
 
-        [Link] public Water Water = null;
-        [Link] public SoilWater SoilWater = null;
-        [Link] public SoilOrganicMatter SoilOrganicMatter = null;
-        [Link] public SoilNitrogen SoilNitrogen = null;
-        [Link] public Analysis Analysis = null;
-        [Link(IsOptional=true)] public InitialWater InitialWater = null;
-        [Link(IsOptional=true)] public Phosphorus Phosphorus = null;
-        [Link(IsOptional=true)] public Swim Swim = null;
-        [Link(IsOptional=true)] public LayerStructure LayerStructure = null;
-        [Link(IsOptional=true)] public SoilTemperature SoilTemperature = null;
-        [Link(IsOptional=true)] public SoilTemperature2 SoilTemperature2 = null;
+        [XmlIgnore] public Water Water { get; private set; }
+        [XmlIgnore] public SoilWater SoilWater { get; private set; }
+        [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
+        [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
+        [XmlIgnore] public Analysis Analysis { get; private set; }
+        [XmlIgnore] public InitialWater InitialWater { get; private set; }
+        [XmlIgnore] public Phosphorus Phosphorus { get; private set; }
+        [XmlIgnore] public Swim Swim { get; private set; }
+        [XmlIgnore] public LayerStructure LayerStructure { get; private set; }
+        [XmlIgnore] public SoilTemperature SoilTemperature { get; private set; }
+        [XmlIgnore] public SoilTemperature2 SoilTemperature2 { get; private set; }
 
-        [XmlIgnore]
-        public List<Sample> Samples 
-        { 
-            get 
-            {
-                List<Sample> samples = new List<Sample>();
-                foreach (Sample sample in AllModelsMatching(typeof(Sample)))
-                    samples.Add(sample);
-                return samples;
-            } 
-        }
+        [XmlIgnore] public List<Sample> Samples { get; private set; }
         
         /// <summary>
         /// Constructor
@@ -99,6 +89,40 @@ namespace Models.Soils
             XmlSerializer x = new XmlSerializer(typeof(Soil));
             StringReader F = new StringReader(Xml);
             return x.Deserialize(F) as Soil;
+        }
+
+        public override void OnLoaded()
+        {
+            FindChildren();
+        }
+
+        public override void OnSimulationCommencing()
+        {
+            FindChildren();
+        }
+
+        /// <summary>
+        /// Find our children.
+        /// </summary>
+        private void FindChildren()
+        {        
+            Water = Children.Matching(typeof(Water)) as Water;
+            SoilWater = Children.Matching(typeof(SoilWater)) as SoilWater;
+            SoilOrganicMatter = Children.Matching(typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoilNitrogen = Children.Matching(typeof(SoilNitrogen)) as SoilNitrogen;
+            Analysis = Children.Matching(typeof(Analysis)) as Analysis;
+            InitialWater = Children.Matching(typeof(InitialWater)) as InitialWater;
+            Phosphorus = Children.Matching(typeof(Phosphorus)) as Phosphorus;
+            Swim = Children.Matching(typeof(Swim)) as Swim;
+            LayerStructure = Children.Matching(typeof(LayerStructure)) as LayerStructure;
+            SoilTemperature = Children.Matching(typeof(SoilTemperature)) as SoilTemperature;
+            SoilTemperature2 = Children.Matching(typeof(SoilTemperature2)) as SoilTemperature2;
+
+            if (Samples == null)
+                Samples = new List<Sample>();
+            Samples.Clear();
+            foreach (Sample sample in Children.MatchingMultiple(typeof(Sample)))
+                Samples.Add(sample);
         }
 
         /// <summary>
@@ -1395,6 +1419,9 @@ namespace Models.Soils
         {
             if (FValues == null || FThickness == null || FValues.Length != FThickness.Length)
                 return null;
+
+            if (Utility.Math.AreEqual(FThickness, ToThickness))
+                return FValues;
 
             double[] FromThickness = (double[]) FThickness.Clone();
             double[] FromValues = (double[])FValues.Clone();

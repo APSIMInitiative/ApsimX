@@ -755,7 +755,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Perform actions for current day.
         /// </summary>
-        private void surfom_Process()
+        private SurfaceOrganicMatterDecompType surfom_Process()
         {
             double leach_rain = 0;	//"leaching" rainfall (if rain>10mm)
 
@@ -772,7 +772,7 @@ namespace Models.SurfaceOM
                 //no mineral N or P is leached today;
             }
 
-            surfom_Send_PotDecomp_Event();
+            return surfom_Send_PotDecomp_Event();
 
         }
 
@@ -873,11 +873,11 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Notify other modules of the potential to decompose.
         /// </summary>
-        private void surfom_Send_PotDecomp_Event()
+        private SurfaceOrganicMatterDecompType surfom_Send_PotDecomp_Event()
         {
 
             if (g.num_surfom <= 0)
-                return;
+                return null;
 
             SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType()
             {
@@ -907,10 +907,7 @@ namespace Models.SurfaceOM
                     }
                 };
 
-
-            //APSIM THING
-            publish_SurfaceOrganicMatterDecomp(SOMDecomp);
-
+            return SOMDecomp;
         }
 
         /// <summary>

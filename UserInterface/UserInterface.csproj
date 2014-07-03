@@ -67,6 +67,8 @@
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\MoveModelUpDownCommand.cs" />
+    <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
@@ -526,6 +528,7 @@
     <None Include="Resources\Apsim.ico" />
     <Content Include="apsim_logo32.ico" />
     <Content Include="Resources\apsim_logo32.ico" />
+    <None Include="Resources\calculator.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

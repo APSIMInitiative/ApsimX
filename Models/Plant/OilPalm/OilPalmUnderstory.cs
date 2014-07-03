@@ -50,7 +50,7 @@ namespace Models.PMF.OilPalm
         double NFixation = 0.0;
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[SoilWat.ll15_dep.Length];
@@ -83,8 +83,8 @@ namespace Models.PMF.OilPalm
 
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
 
             DoWaterBalance();
@@ -106,7 +106,7 @@ namespace Models.PMF.OilPalm
 
         private void DoGrowth()
         {
-            double OPCover = (double) this.Get("OilPalm.cover_green");
+            double OPCover = (double)this.Variables.Get("OilPalm.cover_green");
             double RUE = 1.3;
             DltDM = RUE * MetData.Radn * cover_green * (1 - OPCover) * FW;
 
@@ -114,7 +114,7 @@ namespace Models.PMF.OilPalm
 
         private void DoWaterBalance()
         {
-            double OPCover = (double)this.Get("OilPalm.cover_green");
+            double OPCover = (double)this.Variables.Get("OilPalm.cover_green");
             
             cover_green = 0.40 * (1 - OPCover);
             PEP = SoilWat.eo * cover_green * (1 - OPCover);

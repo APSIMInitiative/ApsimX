@@ -14,10 +14,7 @@ namespace Utility
         //------------------------------------------------
         // Returns true if specified value is 'missing'
         // -----------------------------------------------
-        public static double MissingValue
-        {
-            get { return 999999; }
-        }
+        public const double MissingValue = 999999;
 
         //-------------------------------------------------------------------------
         //
@@ -240,7 +237,9 @@ namespace Utility
             int iIndex = 0;
             foreach (double Value in Values)
             {
-                if (iIndex >= iStartIndex && iIndex < iEndIndex && Value != MissingValue)
+                if (iIndex >= iEndIndex)
+                    return result;
+                if (iIndex >= iStartIndex && Value != MissingValue)
                     result += Value;
                 iIndex++;
             }
@@ -409,6 +408,23 @@ namespace Utility
                     ReturnValues[Index] = Math.MissingValue;
                 else
                     ReturnValues[Index] = Convert.ToDouble(Values[Index]);
+            }
+            return ReturnValues;
+        }
+
+        // --------------------------------------------------
+        // Convert an array of strings to an array of integers
+        // --------------------------------------------------
+        static public int[] StringsToIntegers(IList Values)
+        {
+            int[] ReturnValues = new int[Values.Count];
+
+            for (int Index = 0; Index != Values.Count; Index++)
+            {
+                if (Values[Index].ToString() == "" || Values[Index].ToString() == "NaN")
+                    ReturnValues[Index] = int.MinValue;
+                else
+                    ReturnValues[Index] = Convert.ToInt32(Values[Index]);
             }
             return ReturnValues;
         }
@@ -847,6 +863,55 @@ namespace Utility
                 }
                 list[i + 1] = key;
             }
+        }
+
+        /// <summary>
+        /// A structure for holding time series stats.
+        /// </summary>
+        public class Stats
+        {
+            public double Residual { get { return PredictedMean - ObservedMean; } }
+            public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
+            public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
+            public double r { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            public double R2 { get { return System.Math.Pow(r, 2); } }
+            public double LCS { get { return 2.0 * SDs * SDm * (1.0 - r); } }
+            public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
+            public double SB { get { return System.Math.Pow(PredictedMean - ObservedMean, 2); } }
+            public double MSD { get { return SB + SDSD + LCS; } }
+            public double RMSD { get { return System.Math.Sqrt(MSD); } }
+            public double Percent { get { return (RMSD / ObservedMean)*100; } }
+
+            // Low level pre calculations.
+            public double ObservedMean;
+            public double PredictedMean;
+            public double X_XSquared; // sum of (observed - observedmean) ^ 2
+            public double Y_YSquared; // sum of (predicted - predictedmean) ^ 2
+            public double Y_YxX_X;    // sum of (predicted - predictedmean) * (observed - observedmean)
+            public int Count;
+        }
+
+        /// <summary>
+        /// Calculate stats on the specified column.
+        /// </summary>
+        public static Stats CalcTimeSeriesStats(double[] observed, double[] predicted)
+        {
+            if (observed.Length != predicted.Length)
+                throw new Exception("The number of observed points does not match the number of predicted points in CalcTimeSeriesStats");
+
+            Stats stats = new Stats();
+            stats.Count = observed.Length;
+            stats.ObservedMean = Average(observed);
+            stats.PredictedMean = Average(predicted);
+
+            for (int i = 0; i < stats.Count; i++)
+            {
+                stats.Y_YSquared += System.Math.Pow(observed[i] - stats.ObservedMean, 2);
+                stats.X_XSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
+                stats.Y_YxX_X += (predicted[i] - stats.PredictedMean) * (observed[i] - stats.ObservedMean);
+            }
+
+            return stats;
         }
 
     }

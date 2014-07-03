@@ -18,7 +18,7 @@ namespace Models.PMF.Organs
         [Link]
         public Plant Plant = null;
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
         [Link]
         public Arbitrator Arbitrator = null;
         [Link]
@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
 
         #region Structures
         [Serializable]
-        public class InitialLeafValues : ModelCollection
+        public class InitialLeafValues : Model
         {
             [Link(MustBeChild = true)] public Function MaxArea = null;
             [Link(MustBeChild = true)] public Function GrowthDuration = null;
@@ -64,8 +64,7 @@ namespace Models.PMF.Organs
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
-        [XmlIgnore]
-        public List<LeafCohort> InitialLeaves { get { return ModelsMatching<LeafCohort>(); } }
+        private LeafCohort[] InitialLeaves;
         [Link(MustBeChild = true)] InitialLeafValues LeafCohortParameters = null;
         [Link(MustBeChild = true)] RUEModel Photosynthesis = null;
         [Link(MustBeChild = true)] Function ThermalTime = null;
@@ -86,6 +85,15 @@ namespace Models.PMF.Organs
 
         #endregion
 
+        public override void OnLoaded()
+        {
+            base.OnLoaded();
+            List<LeafCohort> initialLeaves = new List<LeafCohort>();
+            foreach (LeafCohort initialLeaf in Children.MatchingMultiple(typeof(LeafCohort)))
+                initialLeaves.Add(initialLeaf);
+            InitialLeaves = initialLeaves.ToArray();
+        }
+
         #region States
         
         private List<LeafCohort> Leaves = new List<LeafCohort>();
@@ -97,6 +105,7 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         public double FractionNextleafExpanded = 0;
         public double _ExpandedNodeNo = 0;
+        public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
         #endregion
 
         #region Outputs
@@ -117,6 +126,8 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        public double FractionDied { get; set; }
         public bool CohortsInitialised
         {
             get
@@ -551,7 +562,8 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 1 based rank of the current leaf.
         /// </summary>
-        private int CurrentRank
+        private int CurrentRank { get; set; }
+        /*private int CurrentRank
         {
             get
             {
@@ -568,7 +580,7 @@ namespace Models.PMF.Organs
 
                 return Leaves[i - 1].Rank;
             }
-        }
+        }*/
         private int CohortCounter(string Condition)
         {
             int Count = 0;
@@ -633,10 +645,11 @@ namespace Models.PMF.Organs
                 if (NewLeaf != null)
                     NewLeaf.Invoke();
             }
-            
+       
             bool NextExpandingLeaf = false;
             foreach (LeafCohort L in Leaves)
             {
+                CurrentRank = L.Rank;
                 L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
                 if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                 {
@@ -660,7 +673,7 @@ namespace Models.PMF.Organs
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
             Leaves = new List<LeafCohort>();
-            CopyLeaves(InitialLeaves.ToArray(), Leaves);
+            CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
                 if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day
@@ -684,6 +697,14 @@ namespace Models.PMF.Organs
             Structure.UpdateHeight();
 
             PublishNewCanopyEvent();
+
+            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+            FractionDied = 0;
+            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            {
+                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+            }
         }
         public virtual void ZeroLeaves()
         {
@@ -986,7 +1007,17 @@ namespace Models.PMF.Organs
         }
         [XmlIgnore]
         [Units("mm")]
-        public override double WaterDemand { get; set; }
+        public override double WaterDemand
+        {
+            get
+            {
+                return Plant.PotentialEP;
+            }
+            set
+            {
+                Plant.PotentialEP = value;
+            }
+        }
         [XmlIgnore]
         public override double WaterAllocation { get; set;}
        
@@ -1229,26 +1260,6 @@ namespace Models.PMF.Organs
             if (Sow.MaxCover <= 0.0)
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             MaxCover = Sow.MaxCover;
-        }
-
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            if (Plant.InGround)
-            {
-                Boolean found = false;
-                int i = 0;
-                while (!found && (i != CWB.Canopy.Length))
-                {
-                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
-                    {
-                        WaterDemand = CWB.Canopy[i].PotentialEp;
-                        found = true;
-                    }
-                    else
-                        i++;
-                }
-            }
         }
 
         [EventSubscribe("KillLeaf")]

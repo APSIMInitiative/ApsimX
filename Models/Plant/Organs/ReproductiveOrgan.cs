@@ -11,7 +11,7 @@ namespace Models.PMF.Organs
     public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         #region Parameter Input Classes
         [Link]

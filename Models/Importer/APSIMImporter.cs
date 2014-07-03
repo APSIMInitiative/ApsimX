@@ -30,6 +30,10 @@ namespace Importer
         private bool SurfOMExists = false;
         private bool SoilWaterExists = false;
         private bool MicroClimateExists = false;
+        private DateTime StartDate;
+
+        // fertiliser type conversion lookups
+        Dictionary<string, string> Fertilisers;
 
         /// <summary>
         /// Original path that is substituted for %apsim%
@@ -38,6 +42,23 @@ namespace Importer
 
         public APSIMImporter()
         {
+            // fertiliser type strings that are mapped to Fertiliser.Types
+            Fertilisers = new Dictionary<string, string>();
+            Fertilisers.Add("calcite_ca", "CalciteCA");
+            Fertilisers.Add("calcite_fine", "CalciteFine");
+            Fertilisers.Add("dolomite", "Dolomite");
+            Fertilisers.Add("NO3_N", "NO3N");
+            Fertilisers.Add("NH4_N", "NH4N");
+            Fertilisers.Add("NH4NO3", "NH4NO3N");
+            Fertilisers.Add("DAP", "DAP");
+            Fertilisers.Add("MAP", "MAP");
+            Fertilisers.Add("urea_N", "UreaN");
+            Fertilisers.Add("urea_no3", "UreaNO3");
+            Fertilisers.Add("urea", "Urea");
+            Fertilisers.Add("nh4so4_n", "NH4SO4N");
+            Fertilisers.Add("rock_p", "RockP");
+            Fertilisers.Add("banded_p", "BandedP");
+            Fertilisers.Add("broadcast_p", "BroadcastP");
 
         }
 
@@ -355,14 +376,18 @@ namespace Importer
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
                         string compClass = Types.Instance.MetaData(compNode.Name, "class");
-                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 0) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
+                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 4) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
                         if (Types.Instance.IsCrop(compNode.Name) &&  usePlantClass)
                         {
                             ImportPlant(compNode, destParent, newNode);
                         }
                         else
                         {
-                            newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                            // objects like root may have a name attribute
+                            string usename = Utility.Xml.NameAttr(compNode);
+                            if (usename.Length < 1)
+                                usename = compNode.Name;
+                            newNode = AddCompNode(destParent, classname, usename);    //found a model component that should be added to the simulation
                         }
                     }
                 }
@@ -698,7 +723,7 @@ namespace Importer
         private static XmlNode ImportObject(XmlNode destParent, XmlNode newNode, Model newObject, string objName)
         {
             newObject.Name = objName;
-            string newObjxml = Utility.Xml.Serialise(newObject, true);
+            string newObjxml = Utility.Xml.Serialise(newObject, false);
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(newObjxml);
             newNode = destParent.OwnerDocument.ImportNode(xdoc.DocumentElement, true);
@@ -825,34 +850,38 @@ namespace Importer
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursively(compNode, "variable", ref nodes);
-            myreport.Variables = new string[nodes.Count];
+            myreport.VariableNames = new string[nodes.Count];
             int i = 0;
             foreach (XmlNode var in nodes)
             {
                 if ( var.InnerText.Contains("yyyy") ) 
                 {
-                    myreport.Variables[i] = "[Clock].Today";
+                    myreport.VariableNames[i] = "[Clock].Today";
                 }
                 else
                 {
-                    myreport.Variables[i] = var.InnerText;
+                    myreport.VariableNames[i] = var.InnerText;
                 }
                 i++;
             }
             // now for the events
             nodes.Clear();
             Utility.Xml.FindAllRecursively(compNode, "event", ref nodes);
-            myreport.Events = new string[nodes.Count];
+            myreport.EventNames = new string[nodes.Count];
             i = 0;
             foreach (XmlNode _event in nodes)
             {
-                if (_event.InnerText == "end_day")
+                if (String.Compare(_event.InnerText, "end_day", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].EndOfDay";
+                    myreport.EventNames[i] = "[Clock].EndOfDay";
                 }
-                else if (_event.InnerText == "daily")
+                else if (String.Compare(_event.InnerText, "daily", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].StartOfDay";
+                    myreport.EventNames[i] = "[Clock].StartOfDay";
+                }
+                else
+                {
+                    myreport.EventNames[i] = "[Clock].EndOfDay";
                 }
                 i++;
             }
@@ -885,6 +914,7 @@ namespace Importer
             List<string> startofdayScripts = new List<string>();
             List<string> endofdayScripts = new List<string>();
             List<string> initScripts = new List<string>();
+            List<string> unknownHandlerScripts = new List<string>();
 
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
@@ -912,14 +942,14 @@ namespace Importer
                     else
                     {
                         // use the StartOfDay as a default when the event name is unknown
-                        startofdayScripts.Add("// ----- " + eventNode.InnerText + " ----- \n" + textNode.InnerText);
+                        unknownHandlerScripts.Add("// ----- " + eventNode.InnerText + " ----- \n" + textNode.InnerText);
                     }
                 }
             }
             // append all the scripts for each type
             if (initScripts.Count > 0)
             {
-                code.Append("\t\tpublic override void OnCommencing()\n");
+                code.Append("\t\tpublic override void OnSimulationCommencing()\n");
                 code.Append("\t\t{\n");
                 foreach (string scripttext in initScripts)
                 {
@@ -955,6 +985,19 @@ namespace Importer
                 }
                 code.Append("\t\t}\n");
             }
+            if (unknownHandlerScripts.Count > 0)
+            {
+                code.Append("\t\t//[EventSubscribe(\"unknown\")]\n");
+                code.Append("\t\t//private void OnUnknown(object sender, EventArgs e)\n");
+                code.Append("\t\t//{\n");
+                foreach (string scripttext in unknownHandlerScripts)
+                {
+                    code.Append("\t\t\t/*\n");
+                    code.Append("\t\t\t\t" + scripttext + "\n");
+                    code.Append("\t\t\t*/\n");
+                }
+                code.Append("\t\t//}\n");
+            }
             code.Append("\t}\n}\n");
            
             mymanager.Code = code.ToString();   
@@ -969,21 +1012,6 @@ namespace Importer
             destParent = ImportManagerMemos(compNode, destParent);
             
             return newNode;
-        }
-
-        private string AddScriptToCode(string attr, string declar, string scriptText)
-        {
-            StringBuilder code = new StringBuilder();
-            if (attr.Length > 0)
-                code.Append("\t\t" + attr + "\n");
-            code.Append("\t\t" + declar + "\n");
-            code.Append("\t\t{\n");
-            code.Append("\t\t\t/*\n");
-            code.Append("\t\t\t\t" + scriptText + "\n");
-            code.Append("\t\t\t*/\n");
-            code.Append("\t\t}\n");
-
-            return code.ToString();
         }
 
         /// <summary>
@@ -1063,6 +1091,7 @@ namespace Importer
             string startDate = GetInnerText(compNode, "start_date");
             string endDate = GetInnerText(compNode, "end_date");
             myclock.StartDate = Utility.Date.DMYtoDate(startDate);
+            StartDate = myclock.StartDate;
             myclock.EndDate   = Utility.Date.DMYtoDate(endDate);
 
             // import this object into the new xml document
@@ -1086,20 +1115,104 @@ namespace Importer
 
                 string childText = "";
                 childNode = Utility.Xml.Find(oper, "date");
-                if (childNode != null)
+                if (childNode != null && childNode.InnerText != "")
+                {
                     childText = Utility.Date.DMYtoISO(childNode.InnerText);
+                    if (childText == "0001-01-01")
+                    {
+
+                        childText = Utility.Date.GetDate(childNode.InnerText, StartDate).ToString("yyyy-MM-dd");
+                    }
+                }
+                else
+                    childText = "0001-01-01";
                 dateNode.InnerText = childText;
                 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
-                childText = "";
+                childText = " ";
                 childNode = Utility.Xml.Find(oper, "action");
                 if (childNode != null)
-                    childText = "// " + childNode.InnerText;    //comment out the operations code for now
+                {
+                    childText = childNode.InnerText;    
+
+                    // parse the operation and determine if this can be converted to an apsimx function call
+                    // ** This code makes a BIG assumption that the fertiliser component has that name. Also the irrigation component!
+                    // if this name is not found then the conversion is not done as expected.
+                    childText = childText.Trim();
+                    int index = childText.IndexOf(" ");
+                    if (index > 0)
+                    {
+                        string operationOn = childText.Substring(0, index);
+                        if ((String.Compare(operationOn, "fertiliser", true) == 0) && ((childText.IndexOf(" apply") > 0) || (childText.IndexOf(" Apply") > 0)))
+                        {
+                            string amount = "0", type = "", depth = "0";
+
+                            FindTokenValue("amount", childText, ref amount);
+                            FindTokenValue("type", childText, ref type);
+
+                            string newtype;
+                            Fertilisers.TryGetValue(type, out newtype);
+                            type = "Fertiliser.Types." + newtype;
+                            FindTokenValue("depth", childText, ref depth);
+
+                            childText = String.Format("Fertiliser.Apply({0}, {1}, {2});", amount, type, depth);
+                        }
+                        else
+                        {
+                            if ((String.Compare(operationOn, "irrigation", true) == 0) && ((childText.IndexOf(" apply") > 0) || (childText.IndexOf(" Apply") > 0)))
+                            {
+                                string amount = "0";
+
+                                FindTokenValue("amount", childText, ref amount);
+
+                                childText = String.Format("Irrigation.Apply({0});", amount);
+                            }
+                            else
+                            {
+                                childText = " // " + childText; // for default comment out the operations code for now
+                            }
+                        }
+                    }
+                }
                 actionNode.InnerText = childText;
             } // next operation
 
             return newNode;
+        }
+
+        /// <summary>
+        /// Rough method for parsing an old manager script function call to obtain
+        /// the parameter values.
+        /// </summary>
+        /// <param name="name">Name of parameter</param>
+        /// <param name="line">Input function call line text</param>
+        /// <param name="value">The value found for the parameter. Contains the original value if not found.</param>
+        /// <returns>Index of the parameter name found or -1 if not found</returns>
+        private int FindTokenValue(string name, string line, ref string value)
+        {
+            int index = -1; // not found
+            index = line.IndexOf(name);
+            if (index > 0)
+            {
+                value = "";
+                int i = index + name.Length;
+                while ((i < line.Length) && (line[i] == ' '))
+                    i++;
+                // find =
+                while ((i < line.Length) && (line[i] != '='))   
+                    i++;
+                i++;
+                while ((i < line.Length) && (line[i] == ' '))
+                    i++;
+                // now build the value parameter
+                while ((i < line.Length) && (line[i] != ' ') && (line[i] != '(') && (line[i] != ','))
+                {
+                    value = value + line[i];
+                    i++;
+                }
+            }
+            return index;
         }
 
         /// <summary>

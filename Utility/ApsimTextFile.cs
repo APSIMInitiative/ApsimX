@@ -185,7 +185,8 @@ namespace Utility
                 for (int w = 0; w != Words.Count; w++)
                 {
                     int TableColumnNumber = NewMetRow.Table.Columns.IndexOf(Headings[w]);
-                    NewMetRow[TableColumnNumber] = Values[TableColumnNumber];
+                    if (!Convert.IsDBNull(Values[TableColumnNumber]))
+                        NewMetRow[TableColumnNumber] = Values[TableColumnNumber];
                 }
                 Data.Rows.Add(NewMetRow);
                 CheckHeadingsExist = false;

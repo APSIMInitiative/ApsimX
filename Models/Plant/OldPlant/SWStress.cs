@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    public class SWStress : ModelCollection
+    public class SWStress : Model
     {
         private double _Photo = 1;
         private double _Pheno = 1;

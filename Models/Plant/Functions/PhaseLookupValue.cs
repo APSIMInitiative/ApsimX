@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
         [Link]
         Phenology Phenology = null;
 
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private Model[] ChildFunctions;
 
         public string Start = "";
 
@@ -23,14 +23,17 @@ namespace Models.PMF.Functions
         {
             get
             {
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
                 if (Start == "")
                     throw new Exception("Phase start name not set:" + Name);
                 if (End == "")
                     throw new Exception("Phase end name not set:" + Name);
 
-                if (Phenology.Between(Start, End) && Children.Count > 0)
+                if (Phenology.Between(Start, End) && ChildFunctions.Length > 0)
                 {
-                    Function Lookup = Children[0] as Function;
+                    Function Lookup = ChildFunctions[0] as Function;
                     return Lookup.Value;
                 }
                 else

@@ -8,7 +8,7 @@ namespace Models.PMF.Functions
 {
     [Serializable]
     [Description("Base class from which other functions inherit")]
-    abstract public class Function: ModelCollection
+    abstract public class Function: Model
     {
         abstract public double Value { get; }
         virtual public double[] Values { get { return new double[1] { Value }; } }

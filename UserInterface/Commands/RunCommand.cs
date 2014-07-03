@@ -2,6 +2,10 @@
 using Models.Core;
 using System.Media;
 using System;
+using UserInterface.Presenters;
+using System.Diagnostics;
+using System.Threading;
+using Models.Factorial;
 
 namespace UserInterface.Commands
 {
@@ -10,17 +14,18 @@ namespace UserInterface.Commands
         private Model ModelClicked;
         private Simulations Simulations;
         private Utility.JobManager JobManager;
-        private IExplorerView View;
+        private ExplorerPresenter ExplorerPresenter;
+        private Stopwatch Timer = new Stopwatch(); 
         public bool ok { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RunCommand(Simulations Simulations, Model Simulation, IExplorerView view)
+        public RunCommand(Simulations Simulations, Model Simulation, ExplorerPresenter presenter)
         {
             this.Simulations = Simulations;
             this.ModelClicked = Simulation;
-            this.View = view;
+            this.ExplorerPresenter = presenter;
 
             JobManager = new Utility.JobManager();
             JobManager.OnComplete += OnComplete;
@@ -32,18 +37,34 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            if (View != null)
-                View.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
+            if (ExplorerPresenter != null)
+                ExplorerPresenter.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
+
+            Timer.Start();
 
             if (ModelClicked is Simulations)
             {
                 Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
             }
-            else
+            else if (ModelClicked is Simulation)
             {
-                Simulations.SimulationToRun = ModelClicked;
+                Simulation simulation = ModelClicked as Simulation;
+                try
+                {
+                    simulation.Run(null, null);
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
+                    foreach (Model model in Simulations.Children.AllRecursively)
+                        model.OnAllSimulationsCompleted();
+                }
+                catch (Exception err)
+                {
+                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
+                }
+                return;
             }
-
+            else
+                Simulations.SimulationToRun = ModelClicked;
+           
             JobManager.AddJob(Simulations);
             JobManager.Start(waitUntilFinished: false);
         }
@@ -60,14 +81,17 @@ namespace UserInterface.Commands
         /// </summary>
         private void OnComplete(object sender, Utility.JobManager.JobCompleteArgs e)
         {
-            if (View != null && e.ErrorMessage != null)
-                View.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
-            if (JobManager.AllJobsFinished)
+            if (ExplorerPresenter != null && e.ErrorMessage != null)
+                ExplorerPresenter.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
+            if (e.PercentComplete == 100)
             {
+                Timer.Stop();
+
                 if (JobManager.SomeHadErrors)
-                    View.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
+                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
                 else
-                    View.ShowMessage(ModelClicked.Name + " complete", Models.DataStore.ErrorLevel.Information);
+                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete " 
+                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12)

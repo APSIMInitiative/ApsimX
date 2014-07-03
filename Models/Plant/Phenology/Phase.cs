@@ -9,7 +9,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     [Serializable]
-    abstract public class Phase : ModelCollection
+    abstract public class Phase : Model
     {
         public string Start;
 
@@ -19,7 +19,7 @@ namespace Models.PMF.Phen
         protected Phenology Phenology = null;
 
         [Link]
-        private Summary Summary = null;
+        private ISummary Summary = null;
 
         // ThermalTime is optional because GerminatingPhase doesn't require it.
         [Link(IsOptional=true)] public Function ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
@@ -70,7 +70,7 @@ namespace Models.PMF.Phen
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }
         abstract public double FractionComplete { get; }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         { ResetPhase(); }
         public virtual void ResetPhase()
         {

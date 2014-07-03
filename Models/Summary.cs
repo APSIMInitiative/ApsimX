@@ -30,7 +30,7 @@ namespace Models
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Messages = new DataTable("Messages");
             Messages.Columns.Add("ComponentName", typeof(string));
@@ -42,18 +42,15 @@ namespace Models
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
-            DataStore DataStore = new DataStore();
-            DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: false);
+            DataStore DataStore = new DataStore(this);
             DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
             DataStore.WriteTable(Simulation.Name, "Messages", Messages);
             DataStore.Disconnect();
-            DataStore = null;
 
             if (AutoCreate)
                 CreateReportFile(false);
-
         }
 
         /// <summary>
@@ -91,6 +88,7 @@ namespace Models
         public string GetSummary(string apsimSummaryImageFileName)
         {
             StringWriter st = new StringWriter();
+            Simulation = ParentOfType(typeof(Simulation)) as Simulation;
             WriteSummary(st, Simulation.Name, apsimSummaryImageFileName);
             return st.ToString();
         }
@@ -121,8 +119,7 @@ namespace Models
         {
             if (Simulation.FileName != null)
             {
-                DataStore DataStore = new DataStore();
-                DataStore.Connect(Path.ChangeExtension(Simulation.FileName, ".db"), readOnly: true);
+                DataStore DataStore = new DataStore(this);
 
                 if (html)
                 {
@@ -189,9 +186,9 @@ namespace Models
                     string message = (string)row[3];
                     Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
 
-                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                    if (errorLevel == DataStore.ErrorLevel.Error)
                         message = "FATAL ERROR: " + message;
-                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == DataStore.ErrorLevel.Warning)
                         message = "WARNING: " + message;
 
                     messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
@@ -209,7 +206,7 @@ namespace Models
 
             if (Simulation != null)
             {
-                Model[] models = Simulation.FindAll();
+                Model[] models = Simulation.Scope.FindAll();
                 foreach (Model model in models)
                     WriteModelProperties(report, model, html, StateVariables);
             }

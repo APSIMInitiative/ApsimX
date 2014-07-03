@@ -13,19 +13,6 @@ using Models.SurfaceOM;
 
 namespace Models.Soils
 {
-    [Serializable]
-    public class NewProfileType
-    {
-        public double[] dlayer;
-        public double[] air_dry_dep;
-        public double[] ll15_dep;
-        public double[] dul_dep;
-        public double[] sat_dep;
-        public double[] sw_dep;
-        public double[] bd;
-    }
-    public delegate void NewProfileDelegate(NewProfileType Data);
-      
 
     ///<summary>
     /// .NET port of the Fortran SoilWat model
@@ -612,9 +599,6 @@ namespace Models.Soils
                     soilwat2_check_profile(layer);
                 }
 
-                if (initDone)
-                    soilwat2_New_Profile_Event();
-
                 Array.Copy(value, _dlayer, num_layers);
             }
         }
@@ -1122,8 +1106,6 @@ namespace Models.Soils
                         Array.Resize(ref solutes[solnum].delta, num_layers);
                     }
                 }
-
-                soilwat2_New_Profile_Event();
             }
         }
 
@@ -1224,8 +1206,7 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-        int i = 0;
-        Model[] models = paddock.FindAll(typeof(ICrop));
+        Model[] models = paddock.Scope.FindAll(typeof(ICrop));
         
             foreach (Model m in models)
             {
@@ -1264,7 +1245,7 @@ namespace Models.Soils
                     propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
                 else
                     propName = solutes[solnum].name;
-                object objValue = this.Get(propName);
+                object objValue = this.Variables.Get(propName);
                 if (objValue != null)
                 {
                     Value = objValue as double[];
@@ -3111,11 +3092,11 @@ namespace Models.Soils
             //*+  Mission Statement
             //*     Calculate Drainage from each layer      
 
-            double add;           //! water to add to layer
-            double backup;        //! water to backup
+            // double add;           //! water to add to layer
+            // double backup;        //! water to backup
             double excess;        //! amount above saturation(overflow)(mm)
             double[] new_sw_dep;    //! record of results of sw calculations ensure mass balance. (mm)
-            int i;             //! counter //sv- this was "l" (as in the leter "L") but it looks too much like the number 1, so I changed it to "i". 
+            // int i;             //! counter //sv- this was "l" (as in the leter "L") but it looks too much like the number 1, so I changed it to "i". 
             int layer;         //! counter for layer no.
             int num_layers;    //! number of layers
             double w_drain;       //! water draining by gravity (mm)
@@ -4083,10 +4064,6 @@ namespace Models.Soils
 
             for (int layer = 0; layer < _dlayer.Length; layer++)
                 soilwat2_check_profile(layer);
-
-            //publish event saying there is a new soil profile.
-            soilwat2_New_Profile_Event();
-
         }
 
 
@@ -4122,10 +4099,10 @@ namespace Models.Soils
 
         public override void OnLoaded()
         {
-            Initialise();
+            //Initialise();
         }
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Initialise();
         }
@@ -4195,8 +4172,8 @@ namespace Models.Soils
             flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoSoilWaterMovement")]
+        private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_prepare
@@ -4220,14 +4197,6 @@ namespace Models.Soils
             //! potential: sevap + transpiration:
             soilwat2_pot_evapotranspiration();
             real_eo = eo;  //! store for reporting
-
-
-        }
-
-
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
-        {
 
             //Get variables from other modules
             //taken from Main() 
@@ -4402,9 +4371,6 @@ namespace Models.Soils
             //Change the variables in other modules
             //taken from Main() 
             soilwat2_set_other_variables();
-
-            if (WaterMovementCompleted != null)
-                WaterMovementCompleted.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -4683,29 +4649,6 @@ namespace Models.Soils
 
         #region Functions used to Publish Events sent by this module
 
-
-        private void soilwat2_New_Profile_Event()
-        {
-            //*+  Mission Statement
-            //*     Advise other modules of new profile specification
-            if (NewProfile != null)
-            {
-                NewProfileType newProfile = new NewProfileType();
-                int nLayers = _dlayer.Length;
-                // Convert array values from doubles to floats
-                newProfile.air_dry_dep = _air_dry_dep;
-                newProfile.bd = bd;
-                newProfile.dlayer = _dlayer;
-                newProfile.dul_dep = _dul_dep;
-                newProfile.ll15_dep = _ll15_dep;
-                newProfile.sat_dep = _sat_dep;
-                newProfile.sw_dep = _sw_dep;
-                if (NewProfile != null)
-                    NewProfile.Invoke(newProfile);
-            }
-        }
-
-
         private void soilwat2_ExternalMassFlow(double sw_dep_delta_sum)
         {
 
@@ -4750,11 +4693,9 @@ namespace Models.Soils
         #region Events sent by this Module
 
         //Events
-        public event NewProfileDelegate NewProfile;
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         public event RunoffEventDelegate Runoff;
         public event NitrogenChangedDelegate NitrogenChanged;
-        public event EventHandler WaterMovementCompleted;
         #endregion
 
 

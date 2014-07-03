@@ -7,279 +7,156 @@ using System.IO;
 
 namespace Models.Core
 {
+    /// <summary>
+    /// Encapsulates a collection of models.
+    /// </summary>
     [Serializable]
-    public abstract class ModelCollection : Model
+    public class ModelCollection
     {
         /// <summary>
-        /// A list of child models.   
+        /// The model that contains the list of child models that
+        /// we are to work with.
         /// </summary>
-        [XmlElement(typeof(Simulation))]
-        [XmlElement(typeof(Simulations))]
-        [XmlElement(typeof(Zone))]
-        [XmlElement(typeof(Model))]
-        [XmlElement(typeof(ModelCollectionFromResource))]
-        [XmlElement(typeof(Models.Graph.Graph))]
-        [XmlElement(typeof(Models.PMF.Plant))]
-        [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
-        [XmlElement(typeof(Models.PMF.OilPalm.OilPalm))]
-        [XmlElement(typeof(Models.Soils.Soil))]
-        [XmlElement(typeof(Models.SurfaceOM.SurfaceOrganicMatter))]
-        [XmlElement(typeof(AgPasture))]
-        [XmlElement(typeof(Clock))]
-        [XmlElement(typeof(DataStore))]
-        [XmlElement(typeof(Fertiliser))]
-        [XmlElement(typeof(Input))]
-        [XmlElement(typeof(PredictedObserved))]
-        [XmlElement(typeof(Irrigation))]
-        [XmlElement(typeof(Manager))]
-        [XmlElement(typeof(MicroClimate))]
-        [XmlElement(typeof(Operations))]
-        [XmlElement(typeof(Report))]
-        [XmlElement(typeof(Summary))]
-        [XmlElement(typeof(NullSummary))]
-        [XmlElement(typeof(Tests))]
-        [XmlElement(typeof(WeatherFile))]
-        [XmlElement(typeof(Log))]
-        [XmlElement(typeof(Models.Factorial.Experiment))]
-        [XmlElement(typeof(Models.Factorial.Factors))]
-        [XmlElement(typeof(Models.Factorial.Factor))]
-        [XmlElement(typeof(Models.Factorial.FactorValue))]
+        private Model Model;
 
-        [XmlElement(typeof(Memo))]
-        [XmlElement(typeof(Folder))]
-
-        [XmlElement(typeof(Soils.Water))]
-        [XmlElement(typeof(Soils.SoilWater))]
-        [XmlElement(typeof(Soils.SoilNitrogen))]
-        [XmlElement(typeof(Soils.SoilOrganicMatter))]
-        [XmlElement(typeof(Soils.Analysis))]
-        [XmlElement(typeof(Soils.InitialWater))]
-        [XmlElement(typeof(Soils.Phosphorus))]
-        [XmlElement(typeof(Soils.Swim))]
-        [XmlElement(typeof(Soils.LayerStructure))]
-        [XmlElement(typeof(Soils.SoilTemperature))]
-        [XmlElement(typeof(Soils.SoilTemperature2))]
-        [XmlElement(typeof(Soils.SoilArbitrator))]
-        [XmlElement(typeof(Soils.Sample))]
-        [XmlElement(typeof(Models.PMF.Arbitrator))]
-        [XmlElement(typeof(Models.PMF.Structure))]
-        [XmlElement(typeof(Models.PMF.Summariser))]
-        [XmlElement(typeof(Models.PMF.Biomass))]
-        [XmlElement(typeof(Models.PMF.CompositeBiomass))]
-        [XmlElement(typeof(Models.PMF.ArrayBiomass))]
-        [XmlElement(typeof(Models.PMF.Organs.BelowGroundOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.GenericAboveGroundOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.GenericBelowGroundOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.GenericOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.HIReproductiveOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.Leaf))]
-        [XmlElement(typeof(Models.PMF.Organs.LeafCohort))]
-        [XmlElement(typeof(Models.PMF.Organs.Leaf.InitialLeafValues))]
-        [XmlElement(typeof(Models.PMF.Organs.Nodule))]
-        [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.ReserveOrgan))]
-        [XmlElement(typeof(Models.PMF.Organs.Root))]
-        [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
-        [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
-        [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
-        [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
-        [XmlElement(typeof(Models.PMF.Phen.Phenology))]
-        [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
-        [XmlElement(typeof(Models.PMF.Phen.EndPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.GenericPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.GerminatingPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.GotoPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.LeafAppearancePhase))]
-        [XmlElement(typeof(Models.PMF.Phen.LeafDeathPhase))]
-        [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
-        [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
-        [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.AddFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.AgeCalculatorFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.AirTemperatureFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.BellCurveFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.Constant))]
-        [XmlElement(typeof(Models.PMF.Functions.DivideFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.ExponentialFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.ExpressionFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.ExternalVariable))]
-        [XmlElement(typeof(Models.PMF.Functions.InPhaseTtFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.LessThanFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.LinearInterpolationFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.MaximumFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.MinimumFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.MultiplyFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.OnEventFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.PhaseBasedSwitch))]
-        [XmlElement(typeof(Models.PMF.Functions.PhaseLookup))]
-        [XmlElement(typeof(Models.PMF.Functions.PhaseLookupValue))]
-        [XmlElement(typeof(Models.PMF.Functions.PhotoperiodDeltaFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.PhotoperiodFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.PowerFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction2))]
-        [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureDepthFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureWeightedFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SplineInterpolationFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StageBasedInterpolation))]
-        [XmlElement(typeof(Models.PMF.Functions.SubtractFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.VariableReference))]
-        [XmlElement(typeof(Models.PMF.Functions.WeightedTemperatureFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.Zadok))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PartitionFractionDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PotentialSizeDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
-        [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Environment))]
-        [XmlElement(typeof(Models.PMF.OldPlant.GenericArbitratorXY))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Grain))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Leaf1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.LeafNumberPotential3))]
-        [XmlElement(typeof(Models.PMF.OldPlant.NStress))]
-        [XmlElement(typeof(Models.PMF.OldPlant.NUptake3))]
-        [XmlElement(typeof(Models.PMF.OldPlant.PlantSpatial1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Pod))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Population1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.PStress))]
-        [XmlElement(typeof(Models.PMF.OldPlant.RadiationPartitioning))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Root1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.RUEModel1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
-        [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
-        [XmlElement(typeof(Models.PMF.SimpleTree))]
-        [XmlElement(typeof(Models.PMF.Cultivars))]
-        public List<Model> Models { get; set; }
+        ////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// Return a list containing 'this' model and all child models recursively. 
-        /// Never returns null. Can return empty list.
+        /// Constructor
         /// </summary>
-        [XmlIgnore]
-        public List<Model> AllModels 
-        { 
-            get 
-            {
-                List<Model> allModels = new List<Model>();
-                allModels.Add(this);
-                allModels.AddRange(AllModelsMatching(null));
-                return allModels;
-            } 
-        }
-
-        /// <summary>
-        /// Return a list containing all child models recursively. 
-        /// Never returns null. Can return empty list.
-        /// If 'modelType' is specified, only models of that type will be returned.
-        /// </summary>
-        public List<Model> AllModelsMatching(Type modelType)
+        public ModelCollection(Model model)
         {
-            List<Model> allModels = new List<Model>();
+            Model = model;
+        } 
 
-            // Get a list of children (recursively) of this zone.
-            foreach (Model child in Models)
+        /// <summary>
+        /// Return a list of child models.
+        /// </summary>
+        public List<Model> All { get { return Model.Models; } }
+
+        /// <summary>
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        public List<Model> AllRecursively
+        {
+            get
             {
-                if (modelType == null || modelType.IsAssignableFrom(child.GetType()))
-                    allModels.Add(child);
-                if (child is ModelCollection)
-                    allModels.AddRange((child as ModelCollection).AllModelsMatching(modelType));
+                List<Model> models = new List<Model>();
+
+                if (Model.Models != null)
+                {
+                    foreach (Model child in Model.Models)
+                    {
+                        models.Add(child);
+                        models.AddRange(child.Children.AllRecursively);
+                    }
+                }
+                return models;
             }
-            return allModels;
         }
 
         /// <summary>
-        /// Return a child model that matches the specified 'modelType'. Returns null if not found.
+        /// Return a list of all child models recursively. Only models of 
+        /// the specified 'typeFilter' will be returned. Never returns
+        /// null. Can return an empty list.
         /// </summary>
-        public Model ModelMatching(Type modelType)
+        public List<Model> AllRecursivelyMatching(Type typeFilter)
         {
-            foreach (Model child in Models)
+            List<Model> models = new List<Model>();
+
+            if (Model.Models != null)
+            {
+                foreach (Model child in Model.Models)
+                {
+                    models.Add(child);
+                    models.AddRange(child.Children.AllRecursivelyMatching(typeFilter));
+                }
+            }
+            return models;
+        }
+
+        /// <summary>
+        /// Return a child model that matches the specified 'modelType'. Returns 
+        /// null if not found.
+        /// </summary>
+        public Model Matching(Type modelType)
+        {
+            foreach (Model child in Model.Models)
                 if (modelType.IsAssignableFrom(child.GetType()))
                     return child;
             return null;
         }
 
         /// <summary>
-        /// Return a child model that matches the specified 'name'. Returns null if not found.
+        /// Return a child model that matches the specified 'name'. Returns 
+        /// null if not found.
         /// </summary>
-        public Model ModelMatching(string name)
+        public Model Matching(string name)
         {
-            foreach (Model child in Models)
+            foreach (Model child in Model.Models)
                 if (child.Name == name)
                     return child;
             return null;
         }
 
         /// <summary>
-        /// Return child models that match the specified 'modelType'. Returns empty list if none found.
+        /// Return children that match the specified 'modelType'. Never returns 
+        /// null. Can return emply Array.
         /// </summary>
-        public List<T> ModelsMatching<T>() where T : Model
+        public Model[] MatchingMultiple(Type modelType)
         {
-            List<T> modelsMatching = new List<T>();
-            foreach (Model child in Models)
-                if (typeof(T).IsAssignableFrom(child.GetType()))
-                    modelsMatching.Add((T) child);
-            return modelsMatching;
+            List<Model> matches = new List<Model>();
+            foreach (Model child in Model.Models)
+                if (modelType.IsAssignableFrom(child.GetType()))
+                    matches.Add(child);
+            return matches.ToArray();
         }
 
         /// <summary>
-        /// Add a model to the Models collection. Will throw if model cannot be added.
+        /// Add a model to the collection. Will throw if model cannot be added.
         /// </summary>
-        public void AddModel(Model model)
+        public void Add(Model model)
         {
             EnsureNameIsUnique(model);
-            Models.Add(model);
-            model.Parent = this;
-            ParentAllModels(this);
-            Scope.ClearCache(this);
-            Variables.ClearCache(this);
+            Model.Models.Add(model);
+            ClearCache();
 
-            // Call the model's OnLoaded method.
-            CallOnLoaded(model);
+            if (model.Models == null)
+                model.Models = new List<Core.Model>();
 
-            // We need to resolve all links in all models as 
-            // the new model may be a better fit for an existing link.
-            Simulation simulationToReLink = null;
-            if (model is Simulation)
-                simulationToReLink = model as Simulation;
-            else
-                simulationToReLink = Simulation;
+            model.Parent = Model;
+            Model.OnLoaded();
 
-            if (simulationToReLink != null)
+            // Call the model's (and all children recursively) OnLoaded method
+            model.OnLoaded();
+            ParentAllChildren(model);
+
+            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null && simulation.IsRunning)
             {
-                simulationToReLink.AllModels.ForEach(DisconnectEvents);
-                simulationToReLink.AllModels.ForEach(UnresolveLinks);
-                simulationToReLink.AllModels.ForEach(ResolveLinks);
-                simulationToReLink.AllModels.ForEach(ConnectEventPublishers);
+                model.Events.Connect();
+                model.ResolveLinks();
             }
         }
 
         /// <summary>
-        /// Replace the specified child model with the specified 'newModel'. Return
+        /// Replace the specified 'modelToReplace' with the specified 'newModel'. Return
         /// true if successful.
         /// </summary>
-        public bool ReplaceModel(Model modelToReplace, Model newModel)
+        public bool Replace(Model modelToReplace, Model newModel)
         {
             // Find the model.
-            int index = Models.IndexOf(modelToReplace);
+            int index = Model.Models.IndexOf(modelToReplace);
             if (index != -1)
             {
-                Model oldModel = Models[index];
-                // unresolve the links in the old model and then tell the Simulation to
-                // resolve all links in all models.
-                UnresolveLinks(oldModel);
-                DisconnectEvents(oldModel);
+                Model oldModel = Model.Models[index];
+
+                oldModel.Events.Disconnect();
+                oldModel.UnResolveLinks();
 
                 // remove the existing model.
-                Models.RemoveAt(index);
+                Model.Models.RemoveAt(index);
 
                 // Name and parent the model we're adding.
                 newModel.Name = modelToReplace.Name;
@@ -287,23 +164,21 @@ namespace Models.Core
                 EnsureNameIsUnique(newModel);
 
                 // insert the new model.
-                Models.Insert(index, newModel);
+                Model.Models.Insert(index, newModel);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                ClearCache();
 
                 oldModel.Parent = null;
 
-                // Completely wipe out all link and event connections as the new model may
-                // offer different links and events.
-                Simulation.AllModels.ForEach(DisconnectEvents);
-                Simulation.AllModels.ForEach(ConnectEventPublishers);
-                Simulation.AllModels.ForEach(UnresolveLinks);
-                Simulation.AllModels.ForEach(ResolveLinks);
-
-                // Call the model's OnLoaded method.
-                CallOnLoaded(newModel);
+                // Connect our new child.
+                Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+                if (simulation != null && simulation.IsRunning)
+                {
+                    newModel.Events.Connect();
+                    newModel.ResolveLinks();
+                }
+                newModel.OnLoaded();
 
                 return true;
             }
@@ -313,106 +188,75 @@ namespace Models.Core
         /// <summary>
         /// Remove a model from the Models collection. Returns true if model was removed.
         /// </summary>
-        public bool RemoveModel(Model modelToRemove)
+        public bool Remove(Model modelToRemove)
         {
             // Find the model.
-            int index = Models.IndexOf(modelToRemove);
+            int index = Model.Models.IndexOf(modelToRemove);
             if (index != -1)
             {
-                Model oldModel = Models[index];
+                Model oldModel = Model.Models[index];
 
                 // remove the existing model.
-                Models.RemoveAt(index);
+                Model.Models.RemoveAt(index);
 
                 // clear caches.
-                Scope.ClearCache(this);
-                Variables.ClearCache(this);
+                ClearCache();
 
-                // unresolve the links in the old model
-                UnresolveLinks(oldModel);
-                // Completely wipe out all link and event connections as the deleted model may
-                // affect other model's links and events.
-                if (Simulation != null)
-                {
-                    Simulation.AllModels.ForEach(DisconnectEvents);
-                    Simulation.AllModels.ForEach(ConnectEventPublishers);
-                    Simulation.AllModels.ForEach(UnresolveLinks);
-                    Simulation.AllModels.ForEach(ResolveLinks);
-                }
+                oldModel.Events.Disconnect();
+                oldModel.UnResolveLinks();
+
                 return true;
             }
             return false;
         }
 
         /// <summary>
-        /// Write the specified simulation set to the specified 'stream'
-        /// </summary>
-        public override void Write(TextWriter stream)
-        {
-            foreach (Model model in AllModels)
-                model.OnSerialising(xmlSerialisation: true);
-
-            try
-            {
-                stream.Write(Utility.Xml.Serialise(this, true));
-            }
-            finally
-            {
-                foreach (Model model in AllModels)
-                    model.OnSerialised(xmlSerialisation: true);
-            }
-        }
-
-        /// <summary>
         /// Give the specified model a unique name
         /// </summary>
-        private string EnsureNameIsUnique(Model Model)
+        private string EnsureNameIsUnique(Model modelToCheck)
         {
-            string originalName = Model.Name;
+            if (modelToCheck.Models == null)
+                return modelToCheck.Name;
+            string originalName = modelToCheck.Name;
             string NewName = originalName;
             int Counter = 0;
-            Model child = Models.FirstOrDefault(m => m.Name == NewName);
-            while (child != null && child != Model && Counter < 10000)
+            Model child = Model.Models.FirstOrDefault(m => m.Name == NewName);
+            while (child != null && child != modelToCheck && Counter < 10000)
             {
                 Counter++;
                 NewName = originalName + Counter.ToString();
-                child = Models.FirstOrDefault(m => m.Name == NewName);
+                child = Model.Models.FirstOrDefault(m => m.Name == NewName);
             }
             if (Counter == 1000)
                 throw new Exception("Cannot create a unique name for model: " + originalName);
-            Utility.Reflection.SetName(Model, NewName);
+            Utility.Reflection.SetName(modelToCheck, NewName);
             return NewName;
         }
 
-
         /// <summary>
-        /// Locate the parent with the specified type. Returns null if not found.
+        /// Clear the variable cache.
         /// </summary>
-        private Simulation Simulation
+        private void ClearCache()
         {
-            get
+            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            if (simulation != null)
             {
-                Model m = this;
-                while (m != null && m.Parent != null && !(m is Simulation))
-                    m = m.Parent;
-
-                return m as Simulation;
+                simulation.VariableCache.Clear();
+                simulation.ScopeCache.Clear();
             }
         }
 
-
         /// <summary>
-        /// Recursively go through all child models and correctly set their parent field.
+        /// Parent all children of 'model' correctly and call their OnLoaded.
         /// </summary>
-        protected static void ParentAllModels(ModelCollection parent)
+        private void ParentAllChildren(Model model)
         {
-            foreach (Model child in parent.Models)
+            foreach (Model child in model.Children.All)
             {
-                child.Parent = parent;
-                if (child is ModelCollection)
-                    ParentAllModels(child as ModelCollection);
+                child.Parent = model;
+                child.OnLoaded();
+                ParentAllChildren(child);
             }
         }
-
     }
 }

@@ -33,7 +33,6 @@ namespace Models.PMF
     {
         public Double BudNumber;
     }
-    public delegate void NewPotentialGrowthDelegate(NewPotentialGrowthType Data);
     public class KillLeafType
     {
         public Single KillFraction;
@@ -75,23 +74,57 @@ namespace Models.PMF
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
+        private Organ[] _Organs = null;
         public string CropType { get; set; }
         [Link] public Phenology Phenology = null;
         [Link] public Arbitrator Arbitrator = null;
+        [Link] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
         public SowPlant2Type SowingData;
 
         [XmlIgnore]
-        public List<Organ> Organs { get { return ModelsMatching<Organ>(); } }
+        public Organ[] Organs 
+        { 
+            get 
+
+            {
+                if (_Organs == null)
+                {
+                    List<Organ> organs = new List<Organ>();
+                    foreach (Organ organ in Children.MatchingMultiple(typeof(Organ)))
+                        organs.Add(organ);
+                    _Organs = organs.ToArray();
+                }
+                return _Organs;
+            } 
+        }
 
         [XmlIgnore]
         public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        [XmlIgnore]
         public NewCanopyType LocalCanopyData;
 
         [Link(IsOptional=true)]
         Cultivars Cultivars = null;
+
+        /// <summary>
+        /// MicroClimate needs FRGR.
+        /// </summary>
+        public double FRGR { get { return RUEModel.FRGR; } }
+
+        /// <summary>
+        /// MicroClimate supplies light profile.
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies Potential EP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
 
         #region Links
         [Link]
@@ -195,11 +228,11 @@ namespace Models.PMF
 
             BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
             BiomassRemovedData.crop_type = CropType;
-            BiomassRemovedData.dm_type = new string[Organs.Count];
-            BiomassRemovedData.dlt_crop_dm = new float[Organs.Count];
-            BiomassRemovedData.dlt_dm_n = new float[Organs.Count];
-            BiomassRemovedData.dlt_dm_p = new float[Organs.Count];
-            BiomassRemovedData.fraction_to_residue = new float[Organs.Count];
+            BiomassRemovedData.dm_type = new string[Organs.Length];
+            BiomassRemovedData.dlt_crop_dm = new float[Organs.Length];
+            BiomassRemovedData.dlt_dm_n = new float[Organs.Length];
+            BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
+            BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
             int i = 0;
             foreach (Organ O in Organs)
             {
@@ -319,7 +352,7 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Clear();
             foreach (Organ o in Organs)
@@ -329,8 +362,8 @@ namespace Models.PMF
         }
 
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             if (InGround)
             {

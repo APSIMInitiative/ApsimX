@@ -8,7 +8,7 @@ using Models.PMF.Phen;
 namespace Models.PMF
 {
     [Serializable]
-    public class Summariser : ModelCollection
+    public class Summariser : Model
     {
         [Link] Biomass AboveGround = null;
         [Link] Biomass BelowGround = null;
@@ -17,7 +17,7 @@ namespace Models.PMF
         [Link] Biomass TotalDead   = null;
 
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
         [Link]
         Phenology Phenology = null;
 

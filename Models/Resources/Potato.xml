@@ -1,5 +1,6 @@
  <Plant>
     <Name>Potato</Name>
+   <CropType>Potato</CropType>
    <Cultivars>
      <Cultivar>
        <Name>RussetBurbank</Name>
@@ -8,7 +9,7 @@
        <Name>JerseyBenny</Name>
        <Override>
          <Name>[Structure].MainStemFinalNodeNumber.value</Name>
-         <Value>34</Value>
+         <Value>19</Value>
        </Override>
        <Override>
          <Name>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X</Name>
@@ -20,11 +21,23 @@
        </Override>
        <Override>
          <Name>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value</Name>
-         <Value>5</Value>
+         <Value>3</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.2</Value>
        </Override>
      </Cultivar>
      <Cultivar>
        <Name>IlamHardy</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>26</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.18</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>MarisPiper</Name>
@@ -59,18 +72,54 @@
      </Cultivar>
      <Cultivar>
        <Name>Horizon</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>28</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.12 0.16</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Karaka</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>29</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.2</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Nooksac</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>36</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.21</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>RedRascal</Name>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.2</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Rua</Name>
+       <Override>
+         <Name>[Structure].MainStemFinalNodeNumber.value</Name>
+         <Value>29</Value>
+       </Override>
+       <Override>
+         <Name>[Tuber].DryMatterContent.XYPairs.Y</Name>
+         <Value>0.13 0.21</Value>
+       </Override>
      </Cultivar>
      <Cultivar>
        <Name>Fianna</Name>
@@ -592,24 +641,16 @@
               <EndStageName>Maturity</EndStageName>
             </PotentialSizeDemandFunction>
             <LinearInterpolationFunction>
-              <Name>WaterContent</Name>
+              <Name>DryMatterContent</Name>
               <XProperty>[Phenology].StageCode.Value</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>3</double>
                   <double>4</double>
-                  <double>4.1</double>
-                  <double>4.7</double>
-                  <double>5.4</double>
-                  <double>6</double>
+                  <double>4.5</double>
                 </X>
                 <Y>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0.1</double>
-                  <double>0.16</double>
-                  <double>0.2</double>
+                  <double>0.13</double>
                   <double>0.22</double>
                 </Y>
               </XYPairs>
@@ -772,6 +813,21 @@
                 </Y>
               </XYPairs>
             </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>SenescenceRate</Name>
+              <XProperty>[Leaf].FractionDied</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0.1</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
             <InitialDM>5</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3>0.02</KNO3>
@@ -869,7 +925,7 @@
                     <double>0.3</double>
                     <double>0.4</double>
                     <double>0.73</double>
-                    <double>2</double>
+                    <double>1</double>
                   </X>
                   <Y>
                     <double>350</double>
@@ -934,7 +990,7 @@
               </Constant>
               <LinearInterpolationFunction>
                 <Name>ExpansionStress</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
@@ -1084,7 +1140,7 @@
               </Constant>
               <LinearInterpolationFunction>
                 <Name>LinearInterpolationFunction</Name>
-                <XProperty>[Plant].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>

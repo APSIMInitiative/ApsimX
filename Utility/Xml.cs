@@ -796,15 +796,15 @@ namespace Utility
         public static string Serialise(object Component, bool WithNamespace)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            if (WithNamespace)
+                ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            else
+                ns.Add("", "");
 
             MemoryStream M = new MemoryStream();
             StreamWriter Writer = new StreamWriter(M);
             XmlSerializer x = new XmlSerializer(Component.GetType());
-            if (WithNamespace)
-                 x.Serialize(Writer, Component, ns);
-            else
-                x.Serialize(Writer, Component);
+            x.Serialize(Writer, Component, ns);
                
             M.Seek(0, SeekOrigin.Begin);
             StreamReader R = new StreamReader(M);

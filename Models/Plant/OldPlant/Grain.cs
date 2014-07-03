@@ -15,7 +15,7 @@ namespace Models.PMF.OldPlant
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         #region Parameters read from XML file and links to other functions.
 
@@ -460,7 +460,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             Senescing = new Biomass();
             Retranslocation = new Biomass();

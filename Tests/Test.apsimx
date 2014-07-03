@@ -44,7 +44,7 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[WeatherFile].DayLength</string>
             <string>[WeatherFile].MaxT</string>
@@ -56,10 +56,10 @@
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -778,8 +778,8 @@
                [Description("Date irrigation is applied")]
                public DateTime ApplicationDate {get; set;}
 			   
-			   [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+			   [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				if (Clock.Today.Date.Equals(ApplicationDate))
                     Irrigation.Apply(amount:ApplicationAmount);
@@ -823,8 +823,8 @@
                [Description("Date of fertiliser application")]
                public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);

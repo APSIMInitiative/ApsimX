@@ -70,7 +70,7 @@
       <Name>GerminationToEmergence</Name>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -98,7 +98,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -119,11 +119,11 @@
           <Name>MinimumFunction</Name>
           <VariableReference>
             <Name>VariableReference</Name>
-            <VariableName>[VernalisationCW].VernEff</VariableName>
+            <VariableName>[Vernalisation].VernEff</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Variable1</Name>
-            <VariableName>[VernalisationCW].PhotopEff</VariableName>
+            <VariableName>[Vernalisation].PhotopEff</VariableName>
           </VariableReference>
         </MinimumFunction>
         <MinimumFunction>
@@ -153,7 +153,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -174,11 +174,11 @@
           <Name>MinimumFunction</Name>
           <VariableReference>
             <Name>VariableReference</Name>
-            <VariableName>[VernalisationCW].VernEff</VariableName>
+            <VariableName>[Vernalisation].VernEff</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Variable1</Name>
-            <VariableName>[VernalisationCW].PhotopEff</VariableName>
+            <VariableName>[Vernalisation].PhotopEff</VariableName>
           </VariableReference>
         </MinimumFunction>
         <MinimumFunction>
@@ -208,7 +208,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -229,11 +229,11 @@
           <Name>MinimumFunction</Name>
           <VariableReference>
             <Name>VariableReference</Name>
-            <VariableName>[VernalisationCW].VernEff</VariableName>
+            <VariableName>[Vernalisation].VernEff</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Variable1</Name>
-            <VariableName>[VernalisationCW].PhotopEff</VariableName>
+            <VariableName>[Vernalisation].PhotopEff</VariableName>
           </VariableReference>
         </MinimumFunction>
         <MinimumFunction>
@@ -263,7 +263,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -289,7 +289,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -315,7 +315,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -341,7 +341,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -367,7 +367,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -393,7 +393,7 @@
       </Constant>
       <LinearInterpolationFunction>
         <Name>ThermalTime</Name>
-        <XProperty>[VernalisationCW].CrownTemperature</XProperty>
+        <XProperty>[Vernalisation].CrownTemperature</XProperty>
         <XYPairs>
           <Name>XYPairs</Name>
           <X>
@@ -511,7 +511,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>SWFactorRootDepth</Name>
-      <XProperty>[Root1].FASW</XProperty>
+      <XProperty>[Root].FASW</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -526,7 +526,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>SWFactorRootLength</Name>
-      <XProperty>[Root1].FASWLayered</XProperty>
+      <XProperty>[Root].FASWLayered</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -571,7 +571,7 @@
     </StageBasedInterpolation>
     <LinearInterpolationFunction>
       <Name>RelativeRootRate</Name>
-      <XProperty>[Root1].RootLengthDensity</XProperty>
+      <XProperty>[Root].RootLengthDensity</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -605,7 +605,7 @@
     </Constant>
     <LinearInterpolationFunction>
       <Name>DMSenescenceFraction</Name>
-      <XProperty>[Leaf1].FractionCanopySenescing</XProperty>
+      <XProperty>[Leaf].FractionCanopySenescing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -887,7 +887,7 @@
     </PhaseBasedSwitch>
     <LinearInterpolationFunction>
       <Name>NodeAppearanceRate</Name>
-      <XProperty>[Leaf1].NodeNo</XProperty>
+      <XProperty>[Leaf].NodeNo</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -902,7 +902,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>LeavesPerNode</Name>
-      <XProperty>[Leaf1].NodeNo</XProperty>
+      <XProperty>[Leaf].NodeNo</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -919,7 +919,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>LeafSize</Name>
-      <XProperty>[Leaf1].NodeNumberNow</XProperty>
+      <XProperty>[Leaf].NodeNumberNow</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -942,7 +942,7 @@
     </Constant>
     <LinearInterpolationFunction>
       <Name>SLAMax</Name>
-      <XProperty>[Leaf1].LAI</XProperty>
+      <XProperty>[Leaf].LAI</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -957,7 +957,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>LeafNumberFraction</Name>
-      <XProperty>[Leaf1].LAIRatio</XProperty>
+      <XProperty>[Leaf].LAIRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -996,7 +996,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>DMSenescenceFraction</Name>
-      <XProperty>[Leaf1].FractionCanopySenescing</XProperty>
+      <XProperty>[Leaf].FractionCanopySenescing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1011,7 +1011,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>ExtinctionCoefficient</Name>
-      <XProperty>[PlantSpatial1].RowSpacing</XProperty>
+      <XProperty>[PlantSpatial].RowSpacing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1028,7 +1028,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>ExtinctionCoefficientDead</Name>
-      <XProperty>[PlantSpatial1].RowSpacing</XProperty>
+      <XProperty>[PlantSpatial].RowSpacing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1142,7 +1142,7 @@
     </Biomass>
     <LinearInterpolationFunction>
       <Name>RetainFraction</Name>
-      <XProperty>[Stem1].FractionHeightRemoved</XProperty>
+      <XProperty>[Stem].FractionHeightRemoved</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1159,7 +1159,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>HeightFunction</Name>
-      <XProperty>[Stem1].GreenWtPerPlant</XProperty>
+      <XProperty>[Stem].GreenWtPerPlant</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1189,7 +1189,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>DMSenescenceFraction</Name>
-      <XProperty>[Leaf1].FractionCanopySenescing</XProperty>
+      <XProperty>[Leaf].FractionCanopySenescing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1365,7 +1365,7 @@
     </Constant>
     <LinearInterpolationFunction>
       <Name>DMSenescenceFraction</Name>
-      <XProperty>[Leaf1].FractionCanopySenescing</XProperty>
+      <XProperty>[Leaf].FractionCanopySenescing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1506,7 +1506,7 @@
     </Constant>
     <LinearInterpolationFunction>
       <Name>DMSenescenceFraction</Name>
-      <XProperty>[Leaf1].FractionCanopySenescing</XProperty>
+      <XProperty>[Leaf].FractionCanopySenescing</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1615,7 +1615,7 @@
     <Name>SWStress</Name>
     <LinearInterpolationFunction>
       <Name>ExpansionFactor</Name>
-      <XProperty>[Plant15].SWSupplyDemandRatio</XProperty>
+      <XProperty>[Wheat].SWSupplyDemandRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1630,7 +1630,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>PhenoFactor</Name>
-      <XProperty>[Root1].SWAvailRatio</XProperty>
+      <XProperty>[Root].SWAvailRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1645,7 +1645,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>FixationFactor</Name>
-      <XProperty>[Root1].SWAvailRatio</XProperty>
+      <XProperty>[Root].SWAvailRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1664,7 +1664,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>OxygenDeficitPhotoFactor</Name>
-      <XProperty>[Root1].WetRootFraction</XProperty>
+      <XProperty>[Root].WetRootFraction</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1681,7 +1681,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>PhenoFlowerFactor</Name>
-      <XProperty>[Root1].SWAvailRatio</XProperty>
+      <XProperty>[Root].SWAvailRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1698,7 +1698,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>PhenoGrainFillingFactor</Name>
-      <XProperty>[Root1].SWAvailRatio</XProperty>
+      <XProperty>[Root].SWAvailRatio</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1775,8 +1775,8 @@
   <CompositeBiomass>
     <Name>AboveGroundLive</Name>
     <Propertys>
-      <string>[Leaf1].Live</string>
-      <string>[Stem1].Live</string>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
       <string>[Pod].Live</string>
       <string>[Grain].Live</string>
     </Propertys>
@@ -1784,8 +1784,8 @@
   <CompositeBiomass>
     <Name>AboveGroundDead</Name>
     <Propertys>
-      <string>[Leaf1].Dead</string>
-      <string>[Stem1].Dead</string>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
       <string>[Pod].Dead</string>
       <string>[Grain].Dead</string>
     </Propertys>
@@ -1793,33 +1793,33 @@
   <CompositeBiomass>
     <Name>BelowGroundLive</Name>
     <Propertys>
-      <string>[Root1].Live</string>
+      <string>[Root].Live</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>
     <Name>BelowGroundDead</Name>
     <Propertys>
-      <string>[Root1].Dead</string>
+      <string>[Root].Dead</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>
     <Name>TotalLive</Name>
     <Propertys>
-      <string>[Leaf1].Live</string>
-      <string>[Stem1].Live</string>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
       <string>[Pod].Live</string>
       <string>[Grain].Live</string>
-      <string>[Root1].Live</string>
+      <string>[Root].Live</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>
     <Name>TotalDead</Name>
     <Propertys>
-      <string>[Leaf1].Dead</string>
-      <string>[Stem1].Dead</string>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
       <string>[Pod].Dead</string>
       <string>[Grain].Dead</string>
-      <string>[Root1].Dead</string>
+      <string>[Root].Dead</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>
@@ -1832,8 +1832,8 @@
   <CompositeBiomass>
     <Name>BelowGround</Name>
     <Propertys>
-      <string>[Root1].Live</string>
-      <string>[Root1].Dead</string>
+      <string>[Root].Live</string>
+      <string>[Root].Dead</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>
@@ -1885,7 +1885,7 @@
     <Proportional>false</Proportional>
   </StageBasedInterpolation>
   <PlantSpatial1>
-    <Name>PlantSpatial1</Name>
+    <Name>PlantSpatial</Name>
   </PlantSpatial1>
   <Environment>
     <Name>Environment</Name>

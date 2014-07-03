@@ -16,11 +16,11 @@ namespace Models.PMF.Phen
         public String NewPhaseName = "";
     }
     [Serializable]
-    public class Phenology : ModelCollection
+    public class Phenology : Model
     {
         #region Links
         [Link]
-        private Summary Summary = null;
+        private ISummary Summary = null;
         [Link]
         private Clock Clock = null;
         [Link(IsOptional = true)]
@@ -40,8 +40,7 @@ namespace Models.PMF.Phen
         [Link] public Function StageCode = null;
         [Link] public Function ThermalTime = null;
 
-        [XmlIgnore]
-        public List<Phase> Phases { get { return ModelsMatching<Phase>(); } }
+        private List<Phase> Phases;
 
         #endregion
 
@@ -63,21 +62,13 @@ namespace Models.PMF.Phen
         {
             Stage = 1;
             _AccumulatedTT = 0;
-            Phases.Clear();
             JustInitialised = true;
             SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = "";
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
-            foreach (object ChildObject in this.Models)
-            {
-                Phase Child = ChildObject as Phase;
-                if (Child != null)
-                {
-                    Phases.Add(Child);
-                    Child.ResetPhase();
-                }
-            }
+            foreach (Phase phase in Phases)
+                phase.ResetPhase();
         }
 
         #endregion
@@ -148,7 +139,14 @@ namespace Models.PMF.Phen
         /// </summary>
         public Phenology() { }
 
-        public override void OnCommencing()
+        public override void OnLoaded()
+        {
+            Phases = new List<Phase>();
+            foreach (Phase phase in Children.MatchingMultiple(typeof(Phase)))
+                Phases.Add(phase);
+        }
+
+        public override void OnSimulationCommencing()
         {
             Clear();
         }
@@ -178,7 +176,7 @@ namespace Models.PMF.Phen
         {
             // If this is the first time through here then setup some variables.
             if (Phases == null || Phases.Count == 0)
-                OnCommencing();
+                OnSimulationCommencing();
 
             CurrentlyOnFirstDayOfPhase = "";
             if (JustInitialised)

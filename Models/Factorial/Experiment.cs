@@ -13,34 +13,27 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
-    public class Experiment : ModelCollection
+    public class Experiment : Model
     {
-        [Link] Factors Factors = null;
-        [Link] Simulation Base = null;
-
         /// <summary>
         /// Create all simulations.
         /// </summary>
         public Simulation[] Create()
         {
-            // remove event connections and links from the base simulation before we clone.
-            Base.AllModels.ForEach(DisconnectEvents);
-            Base.AllModels.ForEach(UnresolveLinks);
-
             List<List<FactorValue>> allCombinations = AllCombinations();
+            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Model.Clone(Base) as Simulation;
+                Simulation newSimulation = baseSimulation.Clone() as Simulation;
                 newSimulation.Name = Name;
+                newSimulation.Parent = null;
+                ModelFunctions.ParentAllChildren(newSimulation);
 
-                // Connect events and links in our new  simulation.
-                newSimulation.AllModels.ForEach(DisconnectEvents);
-                newSimulation.AllModels.ForEach(UnresolveLinks);
-                newSimulation.AllModels.ForEach(ConnectEventPublishers);
-                newSimulation.AllModels.ForEach(ResolveLinks);
-                newSimulation.AllModels.ForEach(CallOnLoaded);
+                // Call OnLoaded in all models.
+                foreach (Model child in newSimulation.Children.AllRecursively)
+                    child.OnLoaded();
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
@@ -48,14 +41,43 @@ namespace Models.Factorial
                 simulations.Add(newSimulation);
             }
 
-            // reconnect events and links in the base simulation.
-            Base.AllModels.ForEach(ConnectEventPublishers);
-            Base.AllModels.ForEach(ResolveLinks);
-
             return simulations.ToArray();
         }
 
+        /// <summary>
+        /// Create a specific simulation.
+        /// </summary>
+        public Simulation CreateSpecificSimulation(string name)
+        {
+            List<List<FactorValue>> allCombinations = AllCombinations();
+            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
 
+            foreach (List<FactorValue> combination in allCombinations)
+            {
+                string newSimulationName = Name;
+                foreach (FactorValue value in combination)
+                    value.AddToName(ref newSimulationName);
+
+                if (newSimulationName == name)
+                {
+                    Simulation newSimulation = baseSimulation.Clone() as Simulation;
+                    newSimulation.Name = Name;
+                    newSimulation.Parent = null;
+                    ModelFunctions.ParentAllChildren(newSimulation);
+
+                    // Connect events and links in our new  simulation.
+                    foreach (Model child in newSimulation.Children.AllRecursively)
+                        child.OnLoaded();
+
+                    foreach (FactorValue value in combination)
+                        value.ApplyToSimulation(newSimulation);
+
+                    return newSimulation;
+                }
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Return a list of simulation names.
@@ -85,6 +107,8 @@ namespace Models.Factorial
         /// </summary>
         private List<List<FactorValue>> AllCombinations()
         {
+            Factors Factors = Children.Matching(typeof(Factors)) as Factors;
+
             // Create a list of list of factorValuse so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)

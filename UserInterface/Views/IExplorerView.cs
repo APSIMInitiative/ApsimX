@@ -149,6 +149,17 @@ namespace UserInterface.Views
         event EventHandler<NodeRenameArgs> Rename;
 
         /// <summary>
+        /// Invoked then a node is moved down
+        /// </summary>
+        event EventHandler<EventArgs> OnMoveDown;
+
+        /// <summary>
+        /// Invoked then a node is moved up
+        /// </summary>
+        event EventHandler<EventArgs> OnMoveUp;
+
+
+        /// <summary>
         /// Return the current node path.
         /// </summary>
         string CurrentNodePath { get; set; }

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.OilPalm
@@ -14,7 +15,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm: ModelCollection, ICrop
+    public class OilPalm: Model, ICrop
     {
 
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
@@ -30,8 +31,23 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-        
-        public string Crop_Type = "OilPalm";
+
+        public string CropType { get { return "OilPalm"; } }
+
+        public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
 
         public double height = 0.0;
 
@@ -200,7 +216,7 @@ namespace Models.PMF.OilPalm
         }
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
@@ -293,7 +309,7 @@ namespace Models.PMF.OilPalm
             if (NewCrop != null)
             {
                 NewCropType Crop = new NewCropType();
-                Crop.crop_type = Crop_Type;
+                Crop.crop_type = CropType;
                 Crop.sender = Name;
                 NewCrop.Invoke(Crop);
             }
@@ -305,14 +321,14 @@ namespace Models.PMF.OilPalm
 
 
         // The following event handler will be called each day at the beginning of the day
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             interception = MetData.Rain * InterceptionFraction;
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
 
             DoWaterBalance();
@@ -448,7 +464,7 @@ namespace Models.PMF.OilPalm
                 FOMLayers[layer] = Layer;
             }
             FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = Crop_Type;
+            FomLayer.Type = CropType;
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
 
@@ -556,7 +572,7 @@ namespace Models.PMF.OilPalm
                 Bunches.RemoveAt(0);
 
                 BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-                BiomassRemovedData.crop_type = Crop_Type;
+                BiomassRemovedData.crop_type = CropType;
                 BiomassRemovedData.dm_type = new string[1] { "frond" };
                 BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(Fronds[0].Mass * Population * 10) };
                 BiomassRemovedData.dlt_dm_n = new float[1] { (float)(Fronds[0].N * Population * 10) };

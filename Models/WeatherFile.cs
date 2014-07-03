@@ -16,7 +16,6 @@ namespace Models
     {
         // Links
         [Link] private Clock Clock = null;
-        [Link] private Simulation Simulation = null;
 
         // Privates
         private Utility.ApsimTextFile WtrFile = null;
@@ -46,18 +45,28 @@ namespace Models
         {
             get
             {
+                Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                    
                 string FullFileName = FileName;
-                if (FileName != null && Simulation != null && Simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
-                    FullFileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName), FileName);
+                if (FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(FileName) != FileName)
+                {
+                    FullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);
+                    if (!File.Exists(FullFileName))
+                        FullFileName = Path.Combine(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), FileName);
+                }
                 return FullFileName;
             }
             set
             {
                 FileName = Utility.PathUtils.OSFilePath(value);
                 WtrFile = null; // ensure it is reopened
-                // try and convert to path relative to the Simulations.FileName.
+                // try and convert to path relative to the Simulations.FileName or ApsimX install directory.
                 if (FileName != null)
-                    FileName = FileName.Replace(Path.GetDirectoryName(Simulation.FileName) + Path.DirectorySeparatorChar, "");
+                {
+                    Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                    FileName = FileName.Replace( Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
+                    FileName = FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, "");
+                }
             }
         }
 
@@ -223,7 +232,7 @@ namespace Models
         /// <summary>
         /// An event handler to allow use to initialise ourselves.
         /// </summary>
-        public override void OnCommencing()
+        public override void OnSimulationCommencing()
         {
             DoSeek = true; 
         }
@@ -253,8 +262,8 @@ namespace Models
         /// <summary>
         /// An event handler for the tick event.
         /// </summary>
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoWeather")]
+        private void OnDoWeather(object sender, EventArgs e)
         {
             if (DoSeek)
             {
@@ -294,7 +303,7 @@ namespace Models
         /// <summary>
         /// Simulation has terminated. Perform cleanup.
         /// </summary>
-        public override void OnCompleted()
+        public override void OnSimulationCompleted()
         {
             if (WtrFile != null)
             {

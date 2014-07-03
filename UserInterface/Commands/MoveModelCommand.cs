@@ -11,14 +11,14 @@ namespace UserInterface.Commands
     class MoveModelCommand : ICommand
     {
         Model FromModel;
-        ModelCollection ToParent;
+        Model ToParent;
         private bool ModelMoved;
         private string OriginalName;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MoveModelCommand(Model FromModel, ModelCollection ToParent)
+        public MoveModelCommand(Model FromModel, Model ToParent)
         {
             this.FromModel = FromModel;
             this.ToParent = ToParent;
@@ -29,10 +29,10 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            ModelCollection FromParent = FromModel.Parent as ModelCollection;
+            Model FromParent = FromModel.Parent;
             
             // Remove old model.
-            ModelMoved = FromParent.RemoveModel(FromModel);
+            ModelMoved = FromParent.Children.Remove(FromModel);
 
             // Add model to new parent.
             if (ModelMoved)
@@ -41,7 +41,7 @@ namespace UserInterface.Commands
                 // Undo later.
                 OriginalName = FromModel.Name;
 
-                ToParent.AddModel(FromModel);
+                ToParent.Children.Add(FromModel);
                 CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
@@ -54,11 +54,11 @@ namespace UserInterface.Commands
         {
             if (ModelMoved)
             {
-                ModelCollection FromParent = FromModel.Parent as ModelCollection;
-            
-                ToParent.RemoveModel(FromModel);
+                Model FromParent = FromModel.Parent;
+
+                ToParent.Children.Remove(FromModel);
                 FromModel.Name = OriginalName;
-                FromParent.AddModel(FromModel);
+                FromParent.Children.Add(FromModel);
 
                 CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);

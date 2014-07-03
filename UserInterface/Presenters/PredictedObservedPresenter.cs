@@ -14,22 +14,22 @@ namespace UserInterface.Presenters
     /// </summary>
     public class PredictedObservedPresenter : IPresenter
     {
-        private PredictedObserved PredictedObserved;
+        private Models.PostSimulationTools.PredictedObserved PredictedObserved;
         private IPredictedObservedView View;
         private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = new DataStore();
+        private DataStore DataStore;
 
         /// <summary>
         /// Attaches an Input model to an Input View.
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            PredictedObserved = model as PredictedObserved;
+            PredictedObserved = model as Models.PostSimulationTools.PredictedObserved;
             View = view as IPredictedObservedView;
             ExplorerPresenter = explorerPresenter;
 
             // Need a datastore.
-            DataStore.Connect(Path.ChangeExtension(PredictedObserved.Simulations.FileName, ".db"), readOnly: true);
+            DataStore = new DataStore(PredictedObserved);
 
             PopulateView();
 
