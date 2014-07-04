@@ -177,6 +177,7 @@ namespace Models.PMF.OilPalm
 
         public double UnderstoryNFixation { get; set; }
 
+        [Serializable]
         public class RootType
         {
             public double Mass = 0;
@@ -184,6 +185,7 @@ namespace Models.PMF.OilPalm
             public double Length = 0;
         }
 
+        [Serializable]
         public class FrondType
         {
             public double Mass; // g/frond
@@ -191,6 +193,7 @@ namespace Models.PMF.OilPalm
             public double Area; // m2/frond
             public double Age;  //days
         }
+        [Serializable]
         public class BunchType
         {
             public double Mass = 0;
@@ -199,10 +202,10 @@ namespace Models.PMF.OilPalm
             public double FemaleFraction = 1;
         }
 
-        
-        double StemMass = 0.0;
-        
-        double StemN = 0.0;
+
+        public double StemMass { get; set; }
+
+        public double StemN { get; set; }
         
         double StemNConc
         {
@@ -230,6 +233,8 @@ namespace Models.PMF.OilPalm
             Age = 0;
             Population = 0;
             UnderstoryNFixation = 0;
+            StemMass = 0;
+            StemN = 0;
 
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];

@@ -42,7 +42,7 @@ namespace Models.SurfaceOM
         //             type definition from datatypes.interface for a structures within a;
         //             structure.
         [Serializable]
-        class OMFractionType
+        public class OMFractionType
         {
             public double amount;
             public double C;

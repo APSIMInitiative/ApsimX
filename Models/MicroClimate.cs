@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+        [Serializable]
     public class CanopyEnergyBalanceInterceptionlayerType
     {
         public double thickness;
