@@ -213,15 +213,15 @@ namespace Models.Core
         /// <summary>
         /// Give the specified model a unique name
         /// </summary>
-        private string EnsureNameIsUnique(Model Model)
+        private string EnsureNameIsUnique(Model modelToCheck)
         {
-            if (Model.Models == null)
-                return Model.Name;
-            string originalName = Model.Name;
+            if (modelToCheck.Models == null)
+                return modelToCheck.Name;
+            string originalName = modelToCheck.Name;
             string NewName = originalName;
             int Counter = 0;
             Model child = Model.Models.FirstOrDefault(m => m.Name == NewName);
-            while (child != null && child != Model && Counter < 10000)
+            while (child != null && child != modelToCheck && Counter < 10000)
             {
                 Counter++;
                 NewName = originalName + Counter.ToString();
@@ -229,7 +229,7 @@ namespace Models.Core
             }
             if (Counter == 1000)
                 throw new Exception("Cannot create a unique name for model: " + originalName);
-            Utility.Reflection.SetName(Model, NewName);
+            Utility.Reflection.SetName(modelToCheck, NewName);
             return NewName;
         }
 

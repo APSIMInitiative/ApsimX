@@ -334,14 +334,13 @@ namespace UserInterface.Presenters
             Model Obj = ApsimXFile.Variables.Get(e.NodePath) as Model;
             if (Obj != null)
             {
-                StringWriter writer = new StringWriter();
-                writer.Write(Utility.Xml.Serialise(Obj, true));
-                Clipboard.SetText(writer.ToString());
+                string xml = Obj.Serialise();
+                Clipboard.SetText(xml);
 
                 DragObject DragObject = new DragObject();
                 DragObject.NodePath = e.NodePath;
                 DragObject.ModelType = Obj.GetType();
-                DragObject.Xml = writer.ToString();
+                DragObject.Xml = xml;
                 e.DragObject = DragObject;
             }
         }

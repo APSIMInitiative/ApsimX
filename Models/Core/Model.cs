@@ -377,6 +377,30 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Serialise the model to a string and return the string.
+        /// </summary>
+        public string Serialise()
+        {
+            // Get a list of all child models that we need to notify about the serialisation.
+            List<Model> modelsToNotify = Children.AllRecursively;
+            modelsToNotify.Insert(0, this);
+
+            // Let all models know that we're about to serialise.
+            foreach (Model model in modelsToNotify)
+                model.OnSerialising(xmlSerialisation: true);
+
+            // Do the serialisation
+            StringWriter writer = new StringWriter();
+            writer.Write(Utility.Xml.Serialise(this, true));
+
+            // Let all models know that we have completed serialisation.
+            foreach (Model model in modelsToNotify)
+                model.OnSerialised(xmlSerialisation: false);
+
+            // Set the clipboard text.
+            return writer.ToString();
+        }
         #region Internals
 
         /// <summary>

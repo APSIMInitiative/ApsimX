@@ -37,18 +37,8 @@ namespace UserInterface.Commands
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 FromModel.Parent = ToParent;
 
-
                 ToParent.Children.Add(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
-
-                // Call OnLoaded in all models added.
-                // Get a list of all models that we need to call OnLoaded on.
-                List<Model> modelsToNotify = FromModel.Children.AllRecursively;
-                modelsToNotify.Insert(0, FromModel);
-
-                // Call OnLoaded
-                foreach (Model model in modelsToNotify)
-                    model.OnLoaded();
 
                 ModelAdded = true;
             }
