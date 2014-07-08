@@ -2022,8 +2022,7 @@ namespace Models.Soils
             if (Double.IsNaN(catchment_area))
                 catchment_area = 0.0;
 
-            if (KLAT == null)
-                KLAT = new double[_dlayer.Length];
+            KLAT = new double[_dlayer.Length];
 
             //taken from Lateral_zero_variables()
             ZeroArray(ref outflow_lat);
