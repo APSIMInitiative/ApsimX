@@ -265,6 +265,17 @@ namespace Models
         }
 
         /// <summary>
+        /// Public method to allow reporting from scripts.
+        /// </summary>
+        public void DoReport()
+        {
+            if (Members == null)
+                FindVariableMembers();
+            foreach (VariableMember Variable in Members)
+                Variable.StoreValue();
+        }
+
+        /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
         private void FindVariableMembers()
