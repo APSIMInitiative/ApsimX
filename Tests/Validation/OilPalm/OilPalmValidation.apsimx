@@ -944,9 +944,7 @@
               <string>AnnualDnit</string>
               <string>AnnualFertiliser</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
@@ -975,9 +973,7 @@
               <string>[Calculations].Script.MonthlyN2</string>
               <string>[Calculations].Script.SoilCtpha</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
@@ -2261,9 +2257,7 @@ namespace Models
               <string>AnnualDnit</string>
               <string>AnnualFertiliser</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
@@ -2292,9 +2286,7 @@ namespace Models
               <string>[Calculations].Script.MonthlyN2</string>
               <string>[Calculations].Script.SoilCtpha</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
@@ -2973,11 +2965,95 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <Manager>
+            <Name>ReportMonthly</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Report MonthlyOutput;
+			
+		[EventSubscribe("DoReport")]
+		private void OnDoReport(object sender, EventArgs e)
+		{
+			// Add Trunk from previous plantation
+			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+			
+			if (Clock.Today.Day == 1)
+			{
+				MonthlyOutput.DoReport();
+			}
+		}
+	}
+}
+]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
       </Simulation>
     </Experiment>
+    <Graph>
+      <Name>Yield</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>Expt504OperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>Expt504OperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>*</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Folder>
   <Folder>
     <Name>Expt212</Name>
@@ -3749,9 +3825,7 @@ namespace Models
               <string>AnnualDnit</string>
               <string>AnnualFertiliser</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
@@ -3780,9 +3854,7 @@ namespace Models
               <string>[Calculations].Script.MonthlyN2</string>
               <string>[Calculations].Script.SoilCtpha</string>
             </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
+            <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
@@ -4493,6 +4565,12 @@ namespace Models
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
+    <Input>
+      <Name>Input</Name>
+      <FileNames>
+        <string>C:\ApsimX\Tests\Validation\OilPalm\observed.prn</string>
+      </FileNames>
+    </Input>
   </DataStore>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

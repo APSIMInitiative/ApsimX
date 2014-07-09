@@ -31,7 +31,6 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-
         public string CropType { get { return "OilPalm"; } }
 
         public double FRGR { get { return 1; } }
@@ -47,7 +46,6 @@ namespace Models.PMF.OilPalm
         /// </summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-
 
         public double height = 0.0;
 
@@ -125,17 +123,12 @@ namespace Models.PMF.OilPalm
         double FrondGrowth = 0.0;
         double RootGrowth = 0.0;
 
-        //FrondType[] Frond;
         [XmlIgnore]
         public List<FrondType> Fronds = new List<FrondType>();
         [XmlIgnore]
         public List<BunchType> Bunches = new List<BunchType>();
         [XmlIgnore]
         public List<RootType> Roots = new List<RootType>();
-
-        //Component MySoilWat;
-        //Component MySoilN;
-
 
         [Link]
         Function FrondAppRate = null;
@@ -265,6 +258,8 @@ namespace Models.PMF.OilPalm
             }
         }
 
+        private bool CropInGround = false;
+
         // The following event handler will be called once at the beginning of the simulation
         public override void OnSimulationCommencing()
         {
@@ -282,6 +277,11 @@ namespace Models.PMF.OilPalm
             UnderstoryNFixation = 0;
             StemMass = 0;
             StemN = 0;
+            CropInGround = false;
+
+            Fronds = new List<FrondType>();
+            Bunches = new List<BunchType>();
+            Roots = new List<RootType>();
 
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
@@ -318,7 +318,6 @@ namespace Models.PMF.OilPalm
                 B.FemaleFraction = FemaleFlowerFraction.Value;
                 Bunches.Add(B);
             }
-
             RootDepth = InitialRootDepth;
         }
 
@@ -333,6 +332,7 @@ namespace Models.PMF.OilPalm
             SowingData.BudNumber = BudNumber;
             SowingData.RowSpacing = RowSpacing;
             SowingData.CropClass = CropClass;
+            CropInGround = true;
 
             // Invoke a sowing event.
             if (Sowing != null)
@@ -381,7 +381,6 @@ namespace Models.PMF.OilPalm
 
         }
 
-
         // The following event handler will be called each day at the beginning of the day
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
@@ -392,6 +391,8 @@ namespace Models.PMF.OilPalm
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
+            if (!CropInGround)
+                return;
 
             DoWaterBalance();
             DoGrowth();
@@ -400,7 +401,6 @@ namespace Models.PMF.OilPalm
             DoFlowerAbortion();
             DoGenderDetermination();
             DoUnderstory();
-
         }
 
         private void DoFlowerAbortion()
