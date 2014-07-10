@@ -2,9 +2,9 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Folder>
-    <Name>Expt324</Name>
+    <Name>Sangara</Name>
     <Experiment>
-      <Name>Expt324</Name>
+      <Name>Sangara</Name>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -409,7 +409,9 @@
               </Operation>
             </Operations>
           </FactorValue>
-          <Paths />
+          <Paths>
+            <string>[operations]</string>
+          </Paths>
         </Factor>
       </Factors>
       <Simulation>
@@ -751,18 +753,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>0.89213224639523414</double>
-                <double>0.0083267294267871748</double>
-                <double>0.0067220423055810979</double>
-                <double>0.0063505757482090917</double>
-                <double>0.006327042779120196</double>
-                <double>0.005821797645539098</double>
-                <double>0.0037332919060220184</double>
-                <double>0.003561288142347724</double>
-                <double>0.0035171653939180549</double>
-                <double>2.9269166119325375E-05</double>
-                <double>2.1971903809622694E-05</double>
-                <double>6.1693196441367866E-06</double>
+                <double>0.3842688997281905</double>
+                <double>0.0015423382461348834</double>
+                <double>0.0010573909403857665</double>
+                <double>0.0010703905218764432</double>
+                <double>0.0010244244337454624</double>
+                <double>0.00097916891942461141</double>
+                <double>0.00053628398688466516</double>
+                <double>0.00051530059200774719</double>
+                <double>0.00050452696958718359</double>
+                <double>2.9569794169482849E-05</double>
+                <double>2.2183189547818804E-05</double>
+                <double>6.1999591917707922E-06</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -934,15 +936,8 @@
             <VariableNames>
               <string>year</string>
               <string>[Clock].Today</string>
-              <string>OilPalm.Age</string>
-              <string>AnnualYield</string>
+              <string>[OilPalm].Age</string>
               <string>CumulativeFrondNumber</string>
-              <string>AnnualBunches</string>
-              <string>AnnualRain</string>
-              <string>AnnualEo</string>
-              <string>AnnualNPP</string>
-              <string>AnnualDnit</string>
-              <string>AnnualFertiliser</string>
             </VariableNames>
             <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
@@ -954,18 +949,16 @@
               <string>[Clock].Today</string>
               <string>[Clock].Today.Month</string>
               <string>[OilPalm].Age</string>
+              <string>[OilPalm].CumulativeFrondNumber</string>
+              <string>[Calculations].Script.CumFronds</string>
               <string>[Calculations].Script.MonthlyPalmBunches</string>
               <string>[Calculations].Script.MonthlyPalmYield</string>
               <string>[Calculations].Script.MonthlyPalmBunchSize</string>
               <string>[OilPalm].LAI</string>
               <string>[OilPalm].StemMass</string>
-              <string>[Soil].SoilNitrogen.oc</string>
-              <string>[Soil].SoilNitrogen.carbon_tot</string>
-              <string>[Soil].SoilNitrogen.nit_tot</string>
               <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
               <string>[Calculations].Script.MonthlyDenit</string>
               <string>[Calculations].Script.MonthlyN2O</string>
-              <string>[Soil].NO3</string>
               <string>[Calculations].Script.MonthlyLeach</string>
               <string>[Calculations].Script.MonthlyFixation</string>
               <string>[Calculations].Script.SurfaceNO3</string>
@@ -1665,7 +1658,7 @@ namespace Models
       </Simulation>
     </Experiment>
     <Graph>
-      <Name>Yield</Name>
+      <Name>LAI</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1681,28 +1674,256 @@ namespace Models
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Expt324OperationsN0</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Expt324OperationsN0</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>StemMass</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>StemMass</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
   </Folder>
   <Folder>
-    <Name>Expt504</Name>
+    <Name>Sagarai</Name>
     <Experiment>
-      <Name>Expt504</Name>
+      <Name>Sagarai</Name>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -2900,6 +3121,7 @@ namespace Models
               <string>[Calculations].Script.RootZoneNO3</string>
               <string>[Calculations].Script.MonthlyN2</string>
               <string>[Calculations].Script.SoilCtpha</string>
+              <string />
             </VariableNames>
             <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
@@ -3617,7 +3839,7 @@ namespace Models
       </Simulation>
     </Experiment>
     <Graph>
-      <Name>Yield</Name>
+      <Name>LAI</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -3633,35 +3855,113 @@ namespace Models
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Expt504OperationsN0</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Expt504OperationsN0</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
       <Series>
-        <Type>Scatter</Type>
+        <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
+        <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
@@ -3669,11 +3969,142 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
+    <Graph>
+      <Name>StemMass</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>StemMass</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Folder>
   <Folder>
-    <Name>Expt212</Name>
+    <Name>Hargy</Name>
     <Experiment>
-      <Name>Expt212</Name>
+      <Name>Hargy</Name>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -4000,7 +4431,9 @@ namespace Models
               </Operation>
             </Operations>
           </FactorValue>
-          <Paths />
+          <Paths>
+            <string>[operations]</string>
+          </Paths>
         </Factor>
       </Factors>
       <Simulation>
@@ -4468,6 +4901,7 @@ namespace Models
               <string>[Calculations].Script.RootZoneNO3</string>
               <string>[Calculations].Script.MonthlyN2</string>
               <string>[Calculations].Script.SoilCtpha</string>
+              <string />
             </VariableNames>
             <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
@@ -5208,68 +5642,277 @@ namespace Models
         </Zone>
       </Simulation>
     </Experiment>
+    <Graph>
+      <Name>LAI</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>StemMass</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>StemMass</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.StemMass</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\Validation\OilPalm\observed.prn</string>
+        <string>C:\ApsimX\Tests\OilPalm\observed.prn</string>
       </FileNames>
     </Input>
   </DataStore>
-  <Graph>
-    <Name>Yield</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>LAI</Title>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Series>
-      <Title />
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <SimulationName>*</SimulationName>
-        <TableName>MonthlyOutput</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <SimulationName>*</SimulationName>
-        <TableName>MonthlyOutput</TableName>
-        <FieldName>OilPalm.LAI</FieldName>
-      </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-    </Series>
-    <Series>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16711681</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <SimulationName>*</SimulationName>
-        <TableName>Input</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <SimulationName>*</SimulationName>
-        <TableName>Input</TableName>
-        <FieldName>OilPalm.LAI</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-    </Series>
-    <LegendPosition>TopLeft</LegendPosition>
-  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
