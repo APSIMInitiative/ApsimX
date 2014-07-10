@@ -413,7 +413,7 @@
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Base</Name>
+        <Name>Base324</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>Tests\WeatherFiles\Popondetta.met</FileName>
@@ -1420,70 +1420,6 @@
           </OilPalm>
           <Operations>
             <Name>operations</Name>
-            <Operation>
-              <Date>1996-04-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-06-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-09-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-12-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-07-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-11-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-07-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-11-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-07-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-11-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-07-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-11-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
           </Operations>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -1539,7 +1475,7 @@ namespace Models
 			
 			if (Clock.Today.Date == sowing_date)
 			{
-				Summary.WriteMessage(this.FullPath, "Sowing!!");
+
 			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
 			}
 		}
@@ -1692,11 +1628,76 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <Manager>
+            <Name>ReportMonthly</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Report MonthlyOutput;
+			
+		[EventSubscribe("DoReport")]
+		private void OnDoReport(object sender, EventArgs e)
+		{
+			// Add Trunk from previous plantation
+			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+			
+			if (Clock.Today.Day == 1)
+			{
+				MonthlyOutput.DoReport();
+			}
+		}
+	}
+}
+]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
       </Simulation>
     </Experiment>
+    <Graph>
+      <Name>Yield</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>Expt324OperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>Expt324OperationsN0</SimulationName>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.LAI</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Folder>
   <Folder>
     <Name>Expt504</Name>
@@ -1741,15 +1742,219 @@ namespace Models
             <Operations>
               <Name>operations</Name>
               <Operation>
-                <Date>2014-01-02T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-06T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-10T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
             </Operations>
@@ -1759,15 +1964,219 @@ namespace Models
             <Operations>
               <Name>operations</Name>
               <Operation>
-                <Date>2014-01-02T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-06T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-10T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
             </Operations>
@@ -1777,24 +2186,230 @@ namespace Models
             <Operations>
               <Name>operations</Name>
               <Operation>
-                <Date>2014-01-02T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-06T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2014-01-10T00:00:00</Date>
+                <Date>1991-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
+                <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-01-02T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
             </Operations>
           </FactorValue>
-          <Paths />
+          <Paths>
+            <string>[operations]</string>
+          </Paths>
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Base</Name>
+        <Name>Base504</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>Tests\WeatherFiles\Sagarai.met</FileName>
@@ -2308,6 +2923,33 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>operations</Name>
+            <Operation>
+              <Date>1991-03-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1991-09-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1992-03-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1992-09-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-03-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-09-01T00:00:00</Date>
+              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+          </Operations>
           <OilPalm>
             <Name>OilPalm</Name>
             <Constant>
@@ -2731,33 +3373,6 @@ namespace Models
             <UnderstoryDltDM>0</UnderstoryDltDM>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>1991-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-09-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1993-03-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1993-09-01T00:00:00</Date>
-              <Action>Fertiliser.Apply(42, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
           <Irrigation>
             <Name>Irrigation</Name>
           </Irrigation>
@@ -2812,7 +3427,7 @@ namespace Models
 			
 			if (Clock.Today.Date == sowing_date)
 			{
-				Summary.WriteMessage(this.FullPath, "Sowing!!");
+
 			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
 			}
 		}
@@ -3389,7 +4004,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Base</Name>
+        <Name>Base212</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>Tests\WeatherFiles\Hargy.met</FileName>
@@ -3930,7 +4545,7 @@ namespace Models
 			
 			if (Clock.Today.Date == sowing_date)
 			{
-				Summary.WriteMessage(this.FullPath, "Sowing!!");
+
 			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
 			}
 		}
@@ -4557,6 +5172,37 @@ namespace Models
             <UnderstoryDltDM>0</UnderstoryDltDM>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
+          <Manager>
+            <Name>ReportMonthly</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Report MonthlyOutput;
+			
+		[EventSubscribe("DoReport")]
+		private void OnDoReport(object sender, EventArgs e)
+		{
+			// Add Trunk from previous plantation
+			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+			
+			if (Clock.Today.Day == 1)
+			{
+				MonthlyOutput.DoReport();
+			}
+		}
+	}
+}
+]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -4572,5 +5218,58 @@ namespace Models
       </FileNames>
     </Input>
   </DataStore>
+  <Graph>
+    <Name>Yield</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>LAI</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title />
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>MonthlyOutput</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>MonthlyOutput</TableName>
+        <FieldName>OilPalm.LAI</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <Series>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711681</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>OilPalm.LAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
