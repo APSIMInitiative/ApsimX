@@ -284,17 +284,17 @@ namespace Models.PMF.OilPalm
             Roots = new List<RootType>();
 
             //MyPaddock.Parent.ChildPaddocks
-            PotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            SWUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            PotNUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            NUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            PotSWUptake = new double[Soil.Thickness.Length];
+            SWUptake = new double[Soil.Thickness.Length];
+            PotNUptake = new double[Soil.Thickness.Length];
+            NUptake = new double[Soil.Thickness.Length];
 
-            UnderstoryPotSWUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            UnderstorySWUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            UnderstoryPotNUptake = new double[Soil.SoilWater.ll15_dep.Length];
-            UnderstoryNUptake = new double[Soil.SoilWater.ll15_dep.Length];
+            UnderstoryPotSWUptake = new double[Soil.Thickness.Length];
+            UnderstorySWUptake = new double[Soil.Thickness.Length];
+            UnderstoryPotNUptake = new double[Soil.Thickness.Length];
+            UnderstoryNUptake = new double[Soil.Thickness.Length];
 
-            for (int i = 0; i < Soil.SoilWater.ll15_dep.Length; i++)
+            for (int i = 0; i < Soil.Thickness.Length; i++)
             {
                 RootType R = new RootType();
                 Roots.Add(R);
