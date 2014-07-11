@@ -181,6 +181,12 @@ namespace UserInterface.Views
         Int32 AskToSave();
 
         /// <summary>
+        /// A helper function that asks user for a folder.
+        /// </summary>
+        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
+        string AskUserForFolder(string prompt);
+
+        /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>

@@ -10,7 +10,7 @@ using Models.Factorial;
 
 namespace UserInterface.Presenters
 {
-    class GraphPresenter : IPresenter
+    class GraphPresenter : IPresenter, IExportable
     {
         private IGraphView GraphView;
         private Graph Graph;
@@ -252,7 +252,21 @@ namespace UserInterface.Presenters
             return null;
         }
 
+        /// <summary>
+        /// Export the contents of this graph to the specified file.
+        /// </summary>
+        public string ConvertToHtml(string folder)
+        {
+            Rectangle r = new Rectangle(0, 0, 600, 600);
+            Bitmap img = new Bitmap(r.Width, r.Height);
 
+            GraphView.Export(600, 600, img);
+
+            string fileName = Path.Combine(folder, Graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return "<img src=\"" + Graph.Name + ".png" + "\"/>";
+        }
 
 
 

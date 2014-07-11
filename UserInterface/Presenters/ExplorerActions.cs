@@ -311,6 +311,24 @@ namespace UserInterface.Presenters
                 ExplorerPresenter.CommandHistory.Add(Cmd, true);
             }
         }
+
+        /// <summary>
+        /// Event handler for a User interface "Export" action
+        /// </summary>
+        [ContextMenuName("Export to HTML")]
+        [ContextModelType(typeof(Simulation))]
+        [ContextModelType(typeof(Folder))]
+        [ContextModelType(typeof(Experiment))]
+        [ContextModelType(typeof(Simulations))]
+        public void ExportToHTML(object Sender, EventArgs e)
+        {
+            string destinationFolder = ExplorerView.AskUserForFolder("Select folder to export to");
+            if (destinationFolder != null)
+            {
+                ExportNodeCommand cmd = new ExportNodeCommand(ExplorerPresenter, ExplorerView.CurrentNodePath, destinationFolder);
+                ExplorerPresenter.CommandHistory.Add(cmd, true);
+            }
+        }
         
         #endregion
     }

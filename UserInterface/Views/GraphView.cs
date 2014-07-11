@@ -70,6 +70,12 @@ namespace UserInterface.Views
         /// Format the title.
         /// </summary>
         void FormatTitle(string text);
+
+        /// <summary>
+        /// Export the graph to the specified 'bitmap'
+        /// </summary>
+        void Export(int width, int height, Bitmap bitmap);
+
     }
 
     public partial class GraphView : UserControl, IGraphView
@@ -327,6 +333,18 @@ namespace UserInterface.Views
         {
             BottomPanel.Visible = false;
             Splitter.Visible = false;
+        }
+
+        /// <summary>
+        /// Export the graph to the specified 'bitmap'
+        /// </summary>
+        public void Export(int width, int height, Bitmap bitmap)
+        {
+            plot1.Dock = DockStyle.None;
+            plot1.Width = width;
+            plot1.Height = height;
+            plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, width, height));
+            plot1.Dock = DockStyle.Fill;
         }
 
         /// <summary>

@@ -142,7 +142,12 @@ namespace Models.Soils
                     double[] BiomC = new double[Thickness.Length];
                     for (int i = 0; i < Thickness.Length; i++)
                     {
-                        if (OC[i] == double.NaN ||
+                        if (i >= OC.Length ||
+                            i >= FBiom.Length ||
+                            i >= BD.Length ||
+                            i >= InertC.Length ||
+                            i >- BiomC.Length ||
+                            OC[i] == double.NaN ||
                             FBiom[i] == double.NaN ||
                             BD[i] == double.NaN ||
                             InertC[i] == double.NaN)

@@ -86,7 +86,6 @@ namespace UserInterface.Presenters
             WriteLoadErrors();
         }
 
-
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
@@ -168,35 +167,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Write all error messages from the datastore to the window.
-        /// </summary>
-        //void WriteMessagesFromDataStore()
-        //{
-        //    DataTable messageTable = store.GetData("*", "Messages");
-        //    if (messageTable != null)
-        //    {
-        //        foreach (DataRow messageRow in messageTable.Rows)
-        //        {
-        //            if (Convert.ToInt32(messageRow["MessageType"]) == 2)
-        //            {
-        //                DateTime date = (DateTime)messageRow["Date"];
-        //                string message;
-        //                if (date.Ticks == 0)
-        //                    message = String.Format("{0}:\n{1}", new object[] {
-        //                        messageRow["ComponentName"].ToString(),
-        //                        messageRow["Message"].ToString()});
-        //                else
-        //                    message = String.Format("{0} - {1}:\n{2}", new object[] {
-        //                                           date.ToShortDateString(),
-        //                                           messageRow["ComponentName"].ToString(),
-        //                                           messageRow["Message"].ToString()});
-        //                View.ShowMessage(message, DataStore.ErrorLevel.Error);
-        //            }
-        //        }
-        //    }
-        //}
-
-        /// <summary>
         /// Write all errors thrown during the loading of the .apsimx file.
         /// </summary>
         private void WriteLoadErrors()
@@ -219,6 +189,18 @@ namespace UserInterface.Presenters
             View.ShowMessage(Message, errorLevel);
         }
 
+        /// <summary>
+        /// Return the current right hand presenter.
+        /// </summary>
+        public IPresenter CurrentPresenter { get { return CurrentRightHandPresenter; } }
+
+        /// <summary>
+        /// Select a node in the view.
+        /// </summary>
+        public void SelectNode(string nodePath)
+        {
+            View.CurrentNodePath = nodePath;
+        }
 
         #region Events from view
 

@@ -67,6 +67,7 @@
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
@@ -529,6 +531,9 @@
     <Content Include="apsim_logo32.ico" />
     <Content Include="Resources\apsim_logo32.ico" />
     <None Include="Resources\calculator.png" />
+    <None Include="Resources\export2.png" />
+    <None Include="Resources\ExportToHTML.gif" />
+    <None Include="Resources\ExportToHTML.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
