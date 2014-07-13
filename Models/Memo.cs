@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace Models
 {
@@ -8,7 +10,7 @@ namespace Models
     /// This is a memo/text component that stores user entered text information.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.MemoView")]
+    [ViewName("UserInterface.Views.HTMLView")]
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
     public class Memo : Model
     {
@@ -17,7 +19,23 @@ namespace Models
 
         }
 
+        [XmlIgnore]
         [Description("Text of the memo")]
         public string MemoText { get; set; }
+
+        [XmlElement("MemoText")]
+        public XmlNode CodeCData
+        {
+            get
+            {
+                XmlDocument dummy = new XmlDocument();
+                return dummy.CreateCDataSection(MemoText);
+            }
+            set
+            {
+                if (value != null && value.InnerText.StartsWith("<"))
+                    MemoText = value.InnerText;
+            }
+        }
     }
 }

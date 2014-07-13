@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     public class MemoPresenter : IPresenter, IExportable
     {
         private Memo MemoModel;
-        private MemoView MemoViewer;
+        private HTMLView MemoViewer;
 
         private ExplorerPresenter ExplorerPresenter;
 
@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
             MemoModel = Model as Memo;
-            MemoViewer = View as MemoView;
+            MemoViewer = View as HTMLView;
             ExplorerPresenter = explorerPresenter;
 
             MemoViewer.MemoText = MemoModel.MemoText;
@@ -62,23 +62,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public string ConvertToHtml(string folder)
         {
-            string html = "";
-            foreach (string line in MemoViewer.MemoLines)
-            {
-                html += line + "<br/>\r\n";
-            }
-            return html;
-
-            //Rectangle r = new Rectangle(0, 0, 400, 400);
-            //Bitmap img = new Bitmap(r.Width, r.Height);
-
-            //Graphics g = Graphics.FromImage(img);
-            //MemoViewer.Export(400, 400, g);
-
-            //string fileName = Path.Combine(folder, MemoModel.Name + ".png"); 
-            //img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            //return "<img src=\"" + MemoModel.Name + ".png" + "\"/>";
+            return MemoViewer.MemoText;
         }
     }
 }
