@@ -123,7 +123,7 @@ namespace UserInterface.Presenters
             bool result = true;
             try
             {
-                if (ApsimXFile != null)
+                if (ApsimXFile != null && ApsimXFile.FileName != null)
                 {
                     // need to test is ApsimXFile has changed and only prompt when changes have occured.
                     // serialise ApsimXFile to buffer
@@ -200,6 +200,47 @@ namespace UserInterface.Presenters
         public void SelectNode(string nodePath)
         {
             View.CurrentNodePath = nodePath;
+        }
+
+        /// <summary>
+        /// Select the next node in the view. The next node is defined as the next one
+        /// down in the tree view. It will go through child nodes if they exist.
+        /// Will return true if next node was successfully selected. Will return
+        /// false if no more nodes to select.
+        /// </summary>
+        public bool SelectNextNode()
+        {
+            // Get a complete list of all models in this file.
+            List<Model> allModels = ApsimXFile.Children.AllRecursively;
+
+            // If the current node path is '.Simulations' (the root node) then
+            // select the first item in the 'allModels' list.
+            if (View.CurrentNodePath == ".Simulations")
+            {
+                View.CurrentNodePath = allModels[0].FullPath;
+                return true;
+            }
+
+            // Find the current node in this list.
+            int index = -1;
+            for (int i = 0; i < allModels.Count; i++)
+            {
+                if (allModels[i].FullPath == View.CurrentNodePath)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == -1)
+                throw new Exception("Cannot find the current selected model in the .apsimx file");
+
+            // If the current model is the last one in the list then return false.
+            if (index == allModels.Count - 1)
+                return false;
+
+            // Select the next node.
+            View.CurrentNodePath = allModels[index + 1].FullPath;
+            return true;
         }
 
         #region Events from view

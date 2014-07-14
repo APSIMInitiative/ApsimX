@@ -400,9 +400,12 @@ namespace UserInterface.Views
                     for (int i = 0; i < Math.Min(20, Grid.Rows.Count - 1); i++)
                     {
                         // Add 40 pixels to cover the dropdown target.
-                        NewWidth = (int)g.MeasureString(Grid.Rows[i].Cells[j].Value.ToString(), font).Width + 40;
-                        if (Grid.Columns[j].Width < NewWidth)
-                            Grid.Columns[j].Width = NewWidth;
+                        if (Grid.Rows[i].Cells[j].Value != null)
+                        {
+                            NewWidth = (int)g.MeasureString(Grid.Rows[i].Cells[j].Value.ToString(), font).Width + 40;
+                            if (Grid.Columns[j].Width < NewWidth)
+                                Grid.Columns[j].Width = NewWidth;
+                        }
                     }
             }
             else

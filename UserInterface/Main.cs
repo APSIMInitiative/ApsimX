@@ -11,13 +11,21 @@ namespace UserInterface
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static int Main(string[] args)
         {
             try
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainForm());
+                MainForm f = new MainForm(args);
+                Application.Run(f);
+
+                // ErrorMessage can be set when a startup script fails.
+                if (f.ErrorMessage != null)
+                {
+                    Console.WriteLine(f.ErrorMessage); // this doesn't work because no console.
+                    return 1;
+                }
             }
             catch (Exception err)
             {
@@ -27,6 +35,8 @@ namespace UserInterface
                 Msg += "\r\n" + err.StackTrace;
                 MessageBox.Show(Msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            return 0;
         }
     }
 }
