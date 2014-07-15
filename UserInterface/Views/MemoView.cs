@@ -34,7 +34,6 @@ namespace UserInterface.Views
     public partial class MemoView : UserControl, IMemoView
     {
         public event EventHandler<EditorArgs> MemoUpdate;
-        public event EventHandler OnPopup;
 
         public MemoView()
         {

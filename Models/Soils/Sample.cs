@@ -14,9 +14,9 @@ namespace Models.Soils
     {
         public string Date { get; set; }
 
-        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
 
+        [Description("Depth")]
         [XmlIgnore]
         [Units("cm")]
         public string[] Depth
@@ -29,18 +29,26 @@ namespace Models.Soils
             {
                 Thickness = Soil.ToThickness(value);
             }
-        }  
-        
+        }
+
+        [Description("NO3")]
         public double[] NO3 { get; set; }
+        [Description("NH4")]
         public double[] NH4 { get; set; }
+        [Description("SW")]
         public double[] SW { get; set; }
+        [Description("OC")]
         public double[] OC { get; set; }
+        [Description("EC")]
         [Units("1:5 dS/m")]
         public double[] EC { get; set; }
+        [Description("CL")]
         [Units("mg/kg")]
         public double[] CL { get; set; }
+        [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
+        [Description("PH")]
         public double[] PH { get; set; }
 
         public Sample() {Name = "Sample"; }
@@ -277,7 +285,6 @@ namespace Models.Soils
         /// <summary>
         /// Organic carbon. Units: Total %
         /// </summary>
-        [UserInterfaceIgnore]
         public double[] OCTotal
         {
             get
@@ -292,7 +299,6 @@ namespace Models.Soils
         /// <summary>
         /// PH. Units: (1:5 water)
         /// </summary>
-        [UserInterfaceIgnore]
         public double[] PHWater
         {
             get

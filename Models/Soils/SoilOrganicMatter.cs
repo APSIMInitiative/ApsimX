@@ -23,11 +23,10 @@ namespace Models.Soils
         [Description("Erosion enrichment coefficient B")]
         public double EnrBCoeff { get; set; }
 
-        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
 
-        [XmlIgnore]
         [Units("cm")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -40,10 +39,14 @@ namespace Models.Soils
             }
         }
 
+        [Description("OC")]
         public double[] OC { get; set; }
         public string[] OCMetadata { get; set; }
+        [Description("FBiom")]
         [Units("0-1")]
         public double[] FBiom { get; set; }
+
+        [Description("FInert")]
         [Units("0-1")]
         public double[] FInert { get; set; }
 
@@ -75,7 +78,6 @@ namespace Models.Soils
         /// <summary>
         /// Organic carbon. Units: Total %
         /// </summary>
-        [UserInterfaceIgnore]
         public double[] OCTotal
         {
             get

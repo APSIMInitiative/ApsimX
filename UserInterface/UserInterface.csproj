@@ -95,7 +95,9 @@
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
-    <Compile Include="Presenters\ProfilePresenter.cs" />
+    <Compile Include="Presenters\ProfilePresenter.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\ExplorerActions.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
@@ -344,6 +346,7 @@
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

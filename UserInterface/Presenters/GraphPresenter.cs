@@ -75,7 +75,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Draw the graph on the screen.
         /// </summary>
-        private void DrawGraph()
+        public void DrawGraph()
         {
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)

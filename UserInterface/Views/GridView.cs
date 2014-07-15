@@ -72,6 +72,13 @@ namespace UserInterface.Views
         void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null);
 
         /// <summary>
+        /// Set the column header text
+        /// </summary>
+        /// <param name="col">The index of the column</param>
+        /// <param name="col">The text to set the header to</param>
+        void SetColumnHeader(int col, string text);
+
+        /// <summary>
         /// Set the numeric grid format e.g. N3
         /// </summary>
         void SetNumericFormat(string Format);
@@ -238,7 +245,8 @@ namespace UserInterface.Views
 
                     
                     // Populate the grid cells with new rows.
-                    Grid.RowCount = 1;
+                    if (DataSource.Rows.Count > 0)
+                        Grid.RowCount = 1;
                     for (int Row = 0; Row < DataSource.Rows.Count; Row++)
                     {
                         for (int Col = 0; Col < DataSource.Columns.Count; Col++)
@@ -470,6 +478,16 @@ namespace UserInterface.Views
                 Grid.Columns[Col].HeaderCell.Style.BackColor = BackgroundColour.Value;
             if (ForegroundColour.HasValue)
                 Grid.Columns[Col].HeaderCell.Style.ForeColor = ForegroundColour.Value;
+        }
+
+        /// <summary>
+        /// Set the column header text
+        /// </summary>
+        /// <param name="col">The index of the column</param>
+        /// <param name="col">The text to set the header to</param>
+        public void SetColumnHeader(int col, string text)
+        {
+            Grid.Columns[col].HeaderText = text;
         }
 
         /// <summary>

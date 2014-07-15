@@ -33,7 +33,6 @@ namespace UserInterface.Views
     public partial class HTMLView : UserControl, IHTMLView
     {
         public event EventHandler<EditorArgs> MemoUpdate;
-        public event EventHandler OnPopup;
 
         public HTMLView()
         {
