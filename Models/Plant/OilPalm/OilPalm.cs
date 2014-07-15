@@ -210,6 +210,9 @@ namespace Models.PMF.OilPalm
 
         public double UnderstoryDltDM = 0;
 
+        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        public event NitrogenChangedDelegate NitrogenChanged;
+
         [XmlIgnore]
         public double UnderstoryNFixation { get; set; }
 
@@ -259,6 +262,12 @@ namespace Models.PMF.OilPalm
         }
 
         private bool CropInGround = false;
+        [XmlIgnore]
+        public bool IsCropInGround
+        {
+            get { return CropInGround; }
+            set { CropInGround = value; }
+        }
 
         // The following event handler will be called once at the beginning of the simulation
         public override void OnSimulationCommencing()
@@ -680,6 +689,12 @@ namespace Models.PMF.OilPalm
 
         private void DoNBalance()
         {
+            NitrogenChangedType NUptakeType = new NitrogenChangedType();
+            NUptakeType.Sender = Name;
+            NUptakeType.SenderType = "Plant";
+            NUptakeType.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
+            NUptakeType.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+
             double StartN = PlantN;
 
             double StemNDemand = StemGrowth * StemNConcentration.Value / 100.0 * 10.0;  // factor of 10 to convert g/m2 to kg/ha
@@ -705,8 +720,12 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
-                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
+               // Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
+                NUptakeType.DeltaNO3[j] = -NUptake[j];
             }
+
+            if (NitrogenChanged != null)
+                NitrogenChanged.Invoke(NUptakeType);
 
             Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
