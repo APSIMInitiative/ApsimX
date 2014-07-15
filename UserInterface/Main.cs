@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.IO;
 
 namespace UserInterface
 {
@@ -23,7 +24,7 @@ namespace UserInterface
                 // ErrorMessage can be set when a startup script fails.
                 if (f.ErrorMessage != null)
                 {
-                    Console.WriteLine(f.ErrorMessage); // this doesn't work because no console.
+                    File.WriteAllText("errors.txt", f.ErrorMessage);
                     return 1;
                 }
             }
