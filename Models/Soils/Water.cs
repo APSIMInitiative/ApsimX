@@ -15,7 +15,6 @@ namespace Models.Soils
     {
         private double[] _Thickness;
 
-        [UserInterfaceIgnore]
         public double[] Thickness
         {
             get
@@ -30,6 +29,7 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("cm")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -42,16 +42,22 @@ namespace Models.Soils
             }
         }
 
+        [Description("BD")]
         [Units("g/cc")]
         public double[] BD { get; set; }
+        [Description("Air dry")]
         [Units("mm/mm")]
         public double[] AirDry { get; set; }
+        [Description("LL15")]
         [Units("mm/mm")]
         public double[] LL15 { get; set; }
+        [Description("DUL")]
         [Units("mm/mm")]
         public double[] DUL { get; set; }
+        [Description("SAT")]
         [Units("mm/mm")]
         public double[] SAT { get; set; }
+        [Description("KS")]
         [Units("mm/day")]
         public double[] KS { get; set; }
 
@@ -62,6 +68,7 @@ namespace Models.Soils
         public string[] SATMetadata { get; set; }
         public string[] KSMetadata { get; set; }
 
+        [Description("Soil crop parameterisations")]
         [XmlElement("SoilCrop")]
         public List<SoilCrop> Crops { get; set; }
 
@@ -96,7 +103,6 @@ namespace Models.Soils
         /// the setting list of names. Also new crops will be added / deleted as required.
         /// </summary>
         [XmlIgnore]
-        [UserInterfaceIgnore]
         public string[] CropNames
         {
             get

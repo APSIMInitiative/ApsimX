@@ -13,9 +13,11 @@ namespace Models.Soils
         [XmlIgnore]
         public Soil Soil { get; set; }
 
+        [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
 
+        [Description("PAWC")]
         [DisplayTotal]
         [DisplayFormat("N1")]
         [Units("mm")]
@@ -27,10 +29,12 @@ namespace Models.Soils
             }
         }
 
+        [Description("KL")]
         [DisplayFormat("N2")]
         [Units("mm/mm")]
         public double[] KL { get; set; }
-        
+
+        [Description("XF")]
         [DisplayFormat("N1")]
         [Units("mm/mm")]
         public double[] XF { get; set; }

@@ -117,6 +117,7 @@
     <Compile Include="Core\IPostSimulationTool.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Core\ModelFunctions.cs" />
+    <Compile Include="Core\VariableProperty.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
     <Compile Include="PostSimulationTools\TimeSeriesStats.cs" />

@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 
 namespace Utility
 {
@@ -111,22 +112,48 @@ namespace Utility
             }
         }
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
-        static public void AddColumnOfObjects(System.Data.DataTable Table, string ColumnName, object[] Values)
+        /// <summary>
+        /// Add a column of values to the specified data table
+        /// </summary>
+        /// <param name="table">The table to add values to</param>
+        /// <param name="columnName">The name of the column</param>
+        /// <param name="values">The values to add to the table.</param>
+        static public void AddColumnOfObjects(System.Data.DataTable table, string columnName, IEnumerable values)
         {
-            if (Table.Columns.IndexOf(ColumnName) == -1)
-                Table.Columns.Add(ColumnName, Values.GetType().GetElementType());
-
-            if (Values != null && Values.Length > 0)
+            // Make sure the table has the specified column
+            if (!table.Columns.Contains(columnName))
             {
-                // Make sure there are enough values in the table.
-                while (Table.Rows.Count < Values.Length)
-                    Table.Rows.Add(Table.NewRow());
+                table.Columns.Add(columnName, values.GetType().GetElementType());
+            }
 
-                for (int Row = 0; Row != Values.Length; Row++)
-                    Table.Rows[Row][ColumnName] = Values[Row];
+            if (values != null)
+            {
+                int row = 0;
+                foreach (object value in values)
+                {
+                    // Make sure we have enough rows.
+                    if (table.Rows.Count <= row)
+                    {
+                        table.Rows.Add(table.NewRow());
+                    }
+
+                    // Determine if this value should be put into the table.
+                    // If the value is a double.NaN then don't put into table.
+                    // All other values do get inserted.
+                    bool insertValue = true;
+                    if (value is double && double.IsNaN((double) value))
+                    {
+                        insertValue = false;
+                    }
+
+                    // Set the cell value in table.
+                    if (insertValue)
+                    {
+                        table.Rows[row][columnName] = value;
+                    }
+
+                    row++;
+                }
             }
         }
 

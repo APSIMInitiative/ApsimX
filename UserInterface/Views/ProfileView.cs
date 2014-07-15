@@ -29,12 +29,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Show the property grid if Show = true;
         /// </summary>
-        void ShowPropertyGrid(bool Show);
+        void ShowPropertyGrid(bool show);
 
         /// <summary>
         /// Show the graph if Show = true;
         /// </summary>
-        void ShowGraph(bool Show);
+        void ShowGraph(bool show);
     }
 
     public partial class ProfileView : UserControl, IProfileView
