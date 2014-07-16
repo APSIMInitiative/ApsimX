@@ -2674,7 +2674,7 @@ namespace Models
         <Y>
           <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2713,7 +2713,7 @@ namespace Models
         <Y>
           <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2752,7 +2752,41 @@ namespace Models
         <Y>
           <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>PvOLAI</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>graph</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>PredictedObserved</TableName>
+          <FieldName>Observed.OilPalm.LAI</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>PredictedObserved</TableName>
+          <FieldName>Predicted.OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -5464,7 +5498,7 @@ namespace Models
         <Y>
           <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -5503,7 +5537,7 @@ namespace Models
         <Y>
           <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -5542,7 +5576,7 @@ namespace Models
         <Y>
           <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -7870,7 +7904,7 @@ namespace Models
         <Y>
           <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -7909,7 +7943,7 @@ namespace Models
         <Y>
           <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -7948,7 +7982,7 @@ namespace Models
         <Y>
           <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>BunchSize</FieldName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -7974,5 +8008,39 @@ namespace Models
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
   </DataStore>
+  <Graph>
+    <Name>PvOLAI</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>LAI</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>graph</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.OilPalm.StemMass</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.OilPalm.StemMass</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
