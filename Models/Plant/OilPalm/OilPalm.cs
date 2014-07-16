@@ -637,7 +637,6 @@ namespace Models.PMF.OilPalm
                 HarvestFFB = 0.0;
                 HarvestBunchSize = 0.0;
 
-
                 CumulativeBunchNumber += Bunches[0].FemaleFraction;
                 CumulativeYield += Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
                 Bunches.RemoveAt(0);
@@ -684,7 +683,6 @@ namespace Models.PMF.OilPalm
                 FW = 1.0;
                 FWexpan = 1.0;
             }
-
         }
 
         private void DoNBalance()
@@ -720,7 +718,6 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
-               // Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
                 NUptakeType.DeltaNO3[j] = -NUptake[j];
             }
 

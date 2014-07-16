@@ -753,18 +753,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>0.44479978443667151</double>
-                <double>0.003388473888079909</double>
-                <double>0.0025975423383709437</double>
-                <double>0.0025239917555765897</double>
-                <double>0.0024939417453375108</double>
-                <double>0.0023764414538595302</double>
-                <double>0.0013624789428564208</double>
-                <double>0.0011835006715667938</double>
-                <double>0.0011208821662297835</double>
-                <double>2.9381381957737857E-05</double>
-                <double>2.2039839153258362E-05</double>
-                <double>6.1795356633866216E-06</double>
+                <double>0.44479573613233886</double>
+                <double>0.0033883584506775575</double>
+                <double>0.0025974493453459896</double>
+                <double>0.0025239029352137473</double>
+                <double>0.0024938520824913544</double>
+                <double>0.0023763536567628124</double>
+                <double>0.0013624647438683867</double>
+                <double>0.0011834783858272434</double>
+                <double>0.0011208803393474407</double>
+                <double>2.9381380355205026E-05</double>
+                <double>2.203983985392592E-05</double>
+                <double>6.1795349078353113E-06</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -788,6 +788,20 @@
                 <double>500</double>
                 <double>1000</double>
               </Thickness>
+              <Depth>
+                <string>0-10</string>
+                <string>10-30</string>
+                <string>30-60</string>
+                <string>60-90</string>
+                <string>90-120</string>
+                <string>120-150</string>
+                <string>150-200</string>
+                <string>200-250</string>
+                <string>250-300</string>
+                <string>300-350</string>
+                <string>350-400</string>
+                <string>400-500</string>
+              </Depth>
               <OC>
                 <double>2.1</double>
                 <double>1.06</double>
@@ -939,6 +953,7 @@
               <string>[Calculations].Script.AnnualFronds</string>
               <string>[Calculations].Script.AnnualBunches</string>
               <string>[Calculations].Script.AnnualYield</string>
+              <string>[Calculations].Script.AnnualBunchSize</string>
             </VariableNames>
             <EventNames />
             <AutoCreateCSV>false</AutoCreateCSV>
@@ -1533,6 +1548,8 @@ namespace Models
 		public double sowing_depth {get; set;}
 		
 		public double Plant_population {get;set;}
+		
+		private byte HarvestCounter = 1;
 
 		public override void OnSimulationCommencing()
 		{
@@ -1541,15 +1558,19 @@ namespace Models
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Add Trunk from previous plantation
-			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-			
+		{	
 			if (Clock.Today.Date == sowing_date)
 			{
-
 			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
 			}
+			
+			if (HarvestCounter == 14)
+			{
+				oilPalm.Harvest();
+				HarvestCounter = 1;
+			}
+			
+			HarvestCounter++;
 		}
 	}
 }
@@ -1558,27 +1579,195 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
-              <MonthlyPalmYield>4.70321281348923</MonthlyPalmYield>
-              <MonthlyPalmBunchSize>5.87901601686154</MonthlyPalmBunchSize>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-              <MonthlyDenit>0.0373002330305299</MonthlyDenit>
-              <MonthlyN2O>0.0068170905060165</MonthlyN2O>
-              <MonthlyLeach>0.00267246506393858</MonthlyLeach>
-              <MonthlyFixation>0</MonthlyFixation>
-              <SurfaceNO3>3.94200116253156</SurfaceNO3>
-              <RootZoneNO3>5.39243200293918</RootZoneNO3>
-              <MonthlyN2>0.0304831425245134</MonthlyN2>
-              <SoilCtpha>6.59462574311495</SoilCtpha>
-              <AnnualFronds>9</AnnualFronds>
-              <AnnualBunches>2.57428283276997</AnnualBunches>
-              <AnnualYield>0</AnnualYield>
               <Offset>317</Offset>
-              <BunchOffset>137.720848697411</BunchOffset>
-              <YieldOffset>6551.07871084665</YieldOffset>
+              <AnnualFronds>9</AnnualFronds>
+              <AnnualBunches>2.57515090354195</AnnualBunches>
+              <BunchOffset>137.704103916953</BunchOffset>
+              <AnnualYield>3.11362841309565</AnnualYield>
+              <AnnualBunchSize>32496.319245489</AnnualBunchSize>
+              <YieldOffset>6551.11544239668</YieldOffset>
+              <MonthlyPalmYield>4.70341946051109</MonthlyPalmYield>
+              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
+              <MonthlyPalmBunchSize>5.87927432563886</MonthlyPalmBunchSize>
+              <MonthlyDenit>0.0373018205202907</MonthlyDenit>
+              <MonthlyN2O>0.00681741849940021</MonthlyN2O>
+              <MonthlyN2>0.0304844020208905</MonthlyN2>
+              <MonthlyFixation>0</MonthlyFixation>
+              <SurfaceNO3>3.94205321978469</SurfaceNO3>
+              <RootZoneNO3>5.39251570361473</RootZoneNO3>
+              <MonthlyLeach>0.00267348465781614</MonthlyLeach>
+              <SoilCtpha>6.59449389162885</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>4.28234064110367E-10</surfaceom_wt_oilpalmstem>
               <OilPalmYield>0</OilPalmYield>
+              <TotalNO3>5.42843013656791</TotalNO3>
             </Script>
             <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] OilPalm oilPalm;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+		public double Offset {get; set;}
+		public double AnnualFronds {get; set;}
+		public double AnnualBunches {get; set;}
+		public double BunchOffset {get; set;}
+		public double AnnualYield {get; set;}
+		public double AnnualBunchSize {get; set;}
+		public double YieldOffset {get; set;}
+		public double MonthlyPalmYield {get; set;}
+		public double MonthlyPalmBunches {get; set;}
+		public double MonthlyPalmBunchSize {get; set;}
+		public double MonthlyDenit {get; set;}
+		public double MonthlyN2O {get; set;}
+		public double MonthlyN2 {get; set;}
+		public double MonthlyFixation {get; set;}
+		public double SurfaceNO3 {get; set;}
+		public double RootZoneNO3 {get; set;}
+		public double MonthlyLeach {get; set;}
+		public double SoilCtpha {get; set;}
+		public double surfaceom_wt_oilpalmstem {get; set;}
+	    public double OilPalmYield {get; set;}
+	    public double TotalNO3 {get; set;}
+		
+		public override void OnSimulationCommencing()
+		{	
+			Offset = 0;
+			OilPalmYield = 0;
+			AnnualFronds = 0;
+			AnnualBunches = 0;
+			AnnualBunchSize = 0;
+			BunchOffset = 0;
+			AnnualYield = 0;
+			YieldOffset = 0;
+			MonthlyPalmYield = 0;
+			MonthlyPalmBunches = 0;
+			MonthlyPalmBunchSize = 0;
+			MonthlyDenit = 0;
+			MonthlyN2O = 0;
+			MonthlyN2 = 0;
+			MonthlyFixation = 0;
+			SurfaceNO3 = 0;
+			RootZoneNO3 = 0;
+			MonthlyLeach = 0;
+			SoilCtpha = 0;
+			surfaceom_wt_oilpalmstem = 0;
+		}
+		
+		[EventSubscribe("DoDailyInitialisation")]
+		private void OnDoDailyInitialisation(object sender, EventArgs e)
+		{			
+			if (Clock.Today.Day == 1)
+			{
+			   MonthlyPalmYield = 0;
+			   MonthlyPalmBunches = 0;
+			   MonthlyPalmBunchSize = 0;
+			   MonthlyDenit = 0;
+			   MonthlyN2O = 0;
+			   MonthlyN2 = 0;
+			   MonthlyFixation = 0;
+			   MonthlyLeach = 0;
+			}
+		}
+		
+	   [EventSubscribe("DoHarvest")]
+	   private void OnDoHarvest(object sender, EventArgs e)
+	   {
+	   	   AnnualYield += oilPalm.HarvestFFB;
+	   }
+		
+       [EventSubscribe("DoManagement")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+
+			if (oilPalm.IsCropInGround)
+			{
+				if (Clock.Today.DayOfYear == 1)
+				{
+				   Offset = oilPalm.CumulativeFrondNumber;
+				   BunchOffset = oilPalm.CumulativeBunchNumber;
+				   YieldOffset = oilPalm.CumulativeYield;
+				   AnnualYield = 0;
+				   AnnualBunchSize = 0;
+				}
+				
+				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
+				{
+					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
+					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+				}
+			}
+
+			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+			MonthlyN2 = MonthlyDenit - MonthlyN2O;
+			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
+			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
+			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
+			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
+			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
+			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+
+		}
+		
+		[EventSubscribe("Harvesting")]
+		private void OnHarvesting(object sender, EventArgs e)
+		{
+			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
+			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
+			if (MonthlyPalmBunches > 0)
+			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
+			else
+			   MonthlyPalmBunchSize = 0;
+			   
+			AnnualYield += oilPalm.HarvestFFB;
+			AnnualBunchSize += oilPalm.HarvestBunchSize;
+		}
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>ReportMonthly</Name>
+            <Manager>
+              <Name>Calculations</Name>
+              <Script>
+                <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
+                <MonthlyPalmYield>4.70321281348923</MonthlyPalmYield>
+                <MonthlyPalmBunchSize>5.87901601686154</MonthlyPalmBunchSize>
+                <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+                <MonthlyDenit>0.0373002330305299</MonthlyDenit>
+                <MonthlyN2O>0.0068170905060165</MonthlyN2O>
+                <MonthlyLeach>0.00267246506393858</MonthlyLeach>
+                <MonthlyFixation>0</MonthlyFixation>
+                <SurfaceNO3>3.94200116253156</SurfaceNO3>
+                <RootZoneNO3>5.39243200293918</RootZoneNO3>
+                <MonthlyN2>0.0304831425245134</MonthlyN2>
+                <SoilCtpha>6.59462574311495</SoilCtpha>
+                <AnnualFronds>9</AnnualFronds>
+                <AnnualBunches>2.57428283276997</AnnualBunches>
+                <AnnualYield>0</AnnualYield>
+                <Offset>317</Offset>
+                <BunchOffset>137.720848697411</BunchOffset>
+                <YieldOffset>6551.07871084665</YieldOffset>
+                <OilPalmYield>0</OilPalmYield>
+              </Script>
+              <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
@@ -1715,9 +1904,7 @@ namespace Models
 	}
 }
 ]]></Code>
-          </Manager>
-          <Manager>
-            <Name>ReportMonthly</Name>
+            </Manager>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1780,284 +1967,10 @@ namespace Models
 }
 ]]></Code>
           </Manager>
-          <Report>
-            <Name>Report</Name>
-            <VariableNames>
-              <string>[Clock].Today</string>
-              <string>[Calculations].Script.TotalNO3</string>
-              <string />
-            </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
-            <AutoCreateCSV>false</AutoCreateCSV>
-          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Graph>
-          <Name>NO3</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Year</Title>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>AnnualYield</Title>
-            <Inverted>false</Inverted>
-          </Axis>
-          <Series>
-            <Title />
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN0</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN0</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN0</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN0</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <Series>
-            <Title />
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8323328</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN1</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN1</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8323328</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN1</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN1</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <Series>
-            <Title />
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN2</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN2</SimulationName>
-              <TableName>AnnualOutput</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <SimulationName>SagaraiOperationsN2</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <SimulationName>SagaraiOperationsN2</SimulationName>
-              <TableName>Input</TableName>
-              <FieldName>Calculations.Script.AnnualYield</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-        </Graph>
       </Simulation>
-      <Graph>
-        <Name>AnnualYield1</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Year</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>AnnualYield</Title>
-          <Inverted>false</Inverted>
-        </Axis>
-        <Series>
-          <Title />
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN0</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN0</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN0</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN0</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <Series>
-          <Title />
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8323328</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN1</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN1</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8323328</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN1</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN1</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <Series>
-          <Title />
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN2</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN2</SimulationName>
-            <TableName>AnnualOutput</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <Series>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <SimulationName>SagaraiOperationsN2</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <SimulationName>SagaraiOperationsN2</SimulationName>
-            <TableName>Input</TableName>
-            <FieldName>Calculations.Script.AnnualYield</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-      </Graph>
     </Experiment>
     <Graph>
       <Name>LAI</Name>
@@ -2322,7 +2235,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
     <Graph>
-      <Name>AnnualFronds</Name>
+      <Name>FrondProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2330,7 +2243,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>AnnualYield</Title>
+        <Title>Frond Production</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -2368,7 +2281,7 @@ namespace Models
         <Y>
           <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -2387,6 +2300,268 @@ namespace Models
         </X>
         <Y>
           <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Frond Production</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>AnnualYield</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualYield</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualYield</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
@@ -2420,12 +2595,12 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
@@ -2447,6 +2622,137 @@ namespace Models
           <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -3490,6 +3796,19 @@ namespace Models
                 <double>200</double>
                 <double>1000</double>
               </Thickness>
+              <Depth>
+                <string>0-20</string>
+                <string>20-40</string>
+                <string>40-60</string>
+                <string>60-80</string>
+                <string>80-100</string>
+                <string>100-120</string>
+                <string>120-140</string>
+                <string>140-160</string>
+                <string>160-180</string>
+                <string>180-200</string>
+                <string>200-300</string>
+              </Depth>
               <OC>
                 <double>4.125010432</double>
                 <double>2.948649312</double>
@@ -3619,6 +3938,7 @@ namespace Models
               <string>[Calculations].Script.AnnualFronds</string>
               <string>[Calculations].Script.AnnualBunches</string>
               <string>[Calculations].Script.AnnualYield</string>
+              <string>[Calculations].Script.AnnualBunchSize</string>
               <string />
             </VariableNames>
             <EventNames />
@@ -4142,213 +4462,6 @@ namespace Models
             <Name>Irrigation</Name>
           </Irrigation>
           <Manager>
-            <Name>Palm Management</Name>
-            <Script>
-              <sowing_date>1/03/1991 12:00:00 AM</sowing_date>
-              <population>127</population>
-              <cultivar>Dami</cultivar>
-              <sowing_depth>200</sowing_depth>
-              <Plant_population>0</Plant_population>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date")]
-		public DateTime sowing_date {get; set;}
-		
-		[Description("Plant population /ha")]
-		public double population {get; set;}
-
-
-		[Description("Cultivar")]
-		public string cultivar {get; set;}
-
-		[Description("Sowing depth (mm)")]
-		public double sowing_depth {get; set;}
-		
-		public double Plant_population {get;set;}
-
-		public override void OnSimulationCommencing()
-		{
-		    Plant_population = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Add Trunk from previous plantation
-			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-			
-			if (Clock.Today.Date == sowing_date)
-			{
-
-			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
-			}
-		}
-	}
-}
-]]></Code>
-          </Manager>
-          <Manager>
-            <Name>Calculations</Name>
-            <Script>
-              <Offset>0</Offset>
-              <CumFronds>0</CumFronds>
-              <CumBunches>0</CumBunches>
-              <BunchOffset>0</BunchOffset>
-              <CumYield>0</CumYield>
-              <YieldOffset>0</YieldOffset>
-              <MonthlyPalmYield>0</MonthlyPalmYield>
-              <MonthlyPalmBunches>0</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>0</MonthlyPalmBunchSize>
-              <MonthlyDenit>NaN</MonthlyDenit>
-              <MonthlyN2O>NaN</MonthlyN2O>
-              <MonthlyN2>NaN</MonthlyN2>
-              <MonthlyFixation>NaN</MonthlyFixation>
-              <SurfaceNO3>NaN</SurfaceNO3>
-              <RootZoneNO3>NaN</RootZoneNO3>
-              <MonthlyLeach>NaN</MonthlyLeach>
-              <SoilCtpha>NaN</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-using Models.Soils;
-using Models.SurfaceOM;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
-		public double AnnualYield {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-		
-		public override void OnSimulationCommencing()
-		{	
-			Offset = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			BunchOffset = 0;
-			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-		}
-		
-		[EventSubscribe("DoDailyInitialisation")]
-		private void OnDoDailyInitialisation(object sender, EventArgs e)
-		{			
-			if (Clock.Today.Day == 1)
-			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
-			}
-		}
-		
-       [EventSubscribe("DoManagement")]
-       private void OnDoManagement(object sender, EventArgs e)
-		{
-
-			if (oilPalm.IsCropInGround)
-			{
-			    // Note that using Convert.ToDateTime(string) will use current regional settings
-			    // which may be different to the script authors. This is why we specify DMY as
-			    // seperate integers.
-				if (Clock.Today.DayOfYear == 1)
-				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;				   
-				}
-				
-				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
-				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
-					AnnualYield = oilPalm.CumulativeYield - YieldOffset;
-				}
-			}
-
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-
-		}
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-		}
-	}
-}
-]]></Code>
-          </Manager>
-          <Manager>
             <Name>ReportMonthly</Name>
             <Script />
             <Code><![CDATA[using System;
@@ -4405,6 +4518,240 @@ namespace Models
 			{
 				AnnualOutput.DoReport();
 			}
+		}
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Palm Management</Name>
+            <Script>
+              <sowing_date>1/03/1996 12:00:00 AM</sowing_date>
+              <population>135</population>
+              <cultivar>Dami</cultivar>
+              <sowing_depth>200</sowing_depth>
+              <Plant_population>0</Plant_population>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] OilPalm oilPalm;
+		[Link] Summary Summary;
+		
+		[Description("Sowing date")]
+		public DateTime sowing_date {get; set;}
+		
+		[Description("Plant population /ha")]
+		public double population {get; set;}
+
+
+		[Description("Cultivar")]
+		public string cultivar {get; set;}
+
+		[Description("Sowing depth (mm)")]
+		public double sowing_depth {get; set;}
+		
+		public double Plant_population {get;set;}
+		
+		private byte HarvestCounter = 1;
+
+		public override void OnSimulationCommencing()
+		{
+		    Plant_population = 0;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			// Add Trunk from previous plantation
+			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+			
+			if (Clock.Today.Date == sowing_date)
+			{
+			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
+			}
+			
+			if (HarvestCounter == 14)
+			{
+				oilPalm.Harvest();
+				HarvestCounter = 1;
+			}
+			
+			HarvestCounter++;
+		}
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Calculations</Name>
+            <Script>
+              <Offset>317</Offset>
+              <AnnualFronds>9</AnnualFronds>
+              <AnnualBunches>2.57515090354195</AnnualBunches>
+              <BunchOffset>137.704103916953</BunchOffset>
+              <AnnualYield>3.11362841309565</AnnualYield>
+              <AnnualBunchSize>32496.319245489</AnnualBunchSize>
+              <YieldOffset>6551.11544239668</YieldOffset>
+              <MonthlyPalmYield>4.70341946051109</MonthlyPalmYield>
+              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
+              <MonthlyPalmBunchSize>5.87927432563886</MonthlyPalmBunchSize>
+              <MonthlyDenit>0.0373018205202907</MonthlyDenit>
+              <MonthlyN2O>0.00681741849940021</MonthlyN2O>
+              <MonthlyN2>0.0304844020208905</MonthlyN2>
+              <MonthlyFixation>0</MonthlyFixation>
+              <SurfaceNO3>3.94205321978469</SurfaceNO3>
+              <RootZoneNO3>5.39251570361473</RootZoneNO3>
+              <MonthlyLeach>0.00267348465781614</MonthlyLeach>
+              <SoilCtpha>6.59449389162885</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>4.28234064110367E-10</surfaceom_wt_oilpalmstem>
+              <OilPalmYield>0</OilPalmYield>
+              <TotalNO3>5.42843013656791</TotalNO3>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] OilPalm oilPalm;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+		public double Offset {get; set;}
+		public double AnnualFronds {get; set;}
+		public double AnnualBunches {get; set;}
+		public double BunchOffset {get; set;}
+		public double AnnualYield {get; set;}
+		public double AnnualBunchSize {get; set;}
+		public double YieldOffset {get; set;}
+		public double MonthlyPalmYield {get; set;}
+		public double MonthlyPalmBunches {get; set;}
+		public double MonthlyPalmBunchSize {get; set;}
+		public double MonthlyDenit {get; set;}
+		public double MonthlyN2O {get; set;}
+		public double MonthlyN2 {get; set;}
+		public double MonthlyFixation {get; set;}
+		public double SurfaceNO3 {get; set;}
+		public double RootZoneNO3 {get; set;}
+		public double MonthlyLeach {get; set;}
+		public double SoilCtpha {get; set;}
+		public double surfaceom_wt_oilpalmstem {get; set;}
+	    public double OilPalmYield {get; set;}
+	    public double TotalNO3 {get; set;}
+		
+		public override void OnSimulationCommencing()
+		{	
+			Offset = 0;
+			OilPalmYield = 0;
+			AnnualFronds = 0;
+			AnnualBunches = 0;
+			AnnualBunchSize = 0;
+			BunchOffset = 0;
+			AnnualYield = 0;
+			YieldOffset = 0;
+			MonthlyPalmYield = 0;
+			MonthlyPalmBunches = 0;
+			MonthlyPalmBunchSize = 0;
+			MonthlyDenit = 0;
+			MonthlyN2O = 0;
+			MonthlyN2 = 0;
+			MonthlyFixation = 0;
+			SurfaceNO3 = 0;
+			RootZoneNO3 = 0;
+			MonthlyLeach = 0;
+			SoilCtpha = 0;
+			surfaceom_wt_oilpalmstem = 0;
+		}
+		
+		[EventSubscribe("DoDailyInitialisation")]
+		private void OnDoDailyInitialisation(object sender, EventArgs e)
+		{			
+			if (Clock.Today.Day == 1)
+			{
+			   MonthlyPalmYield = 0;
+			   MonthlyPalmBunches = 0;
+			   MonthlyPalmBunchSize = 0;
+			   MonthlyDenit = 0;
+			   MonthlyN2O = 0;
+			   MonthlyN2 = 0;
+			   MonthlyFixation = 0;
+			   MonthlyLeach = 0;
+			}
+		}
+		
+	   [EventSubscribe("DoHarvest")]
+	   private void OnDoHarvest(object sender, EventArgs e)
+	   {
+	   	   AnnualYield += oilPalm.HarvestFFB;
+	   }
+		
+       [EventSubscribe("DoManagement")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+
+			if (oilPalm.IsCropInGround)
+			{
+				if (Clock.Today.DayOfYear == 1)
+				{
+				   Offset = oilPalm.CumulativeFrondNumber;
+				   BunchOffset = oilPalm.CumulativeBunchNumber;
+				   YieldOffset = oilPalm.CumulativeYield;
+				   AnnualYield = 0;
+				   AnnualBunchSize = 0;
+				}
+				
+				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
+				{
+					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
+					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+				}
+			}
+
+			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+			MonthlyN2 = MonthlyDenit - MonthlyN2O;
+			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
+			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
+			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
+			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
+			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
+			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+
+		}
+		
+		[EventSubscribe("Harvesting")]
+		private void OnHarvesting(object sender, EventArgs e)
+		{
+			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
+			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
+			if (MonthlyPalmBunches > 0)
+			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
+			else
+			   MonthlyPalmBunchSize = 0;
+			   
+			AnnualYield += oilPalm.HarvestFFB;
+			AnnualBunchSize += oilPalm.HarvestBunchSize;
 		}
 	}
 }
@@ -4678,6 +5025,268 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
     <Graph>
+      <Name>FrondProduction</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Frond Production</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Frond Production</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
       <Name>AnnualYield</Name>
       <Axis>
         <Type>Bottom</Type>
@@ -4686,7 +5295,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>AnnualYield</Title>
+        <Title>LAI</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -4803,6 +5412,137 @@ namespace Models
           <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SagaraiOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>SangaraOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -5476,6 +6216,12 @@ namespace Models
                 <double>400</double>
                 <double>3200</double>
               </Thickness>
+              <Depth>
+                <string>0-20</string>
+                <string>20-40</string>
+                <string>40-80</string>
+                <string>80-400</string>
+              </Depth>
               <OC>
                 <double>5.3</double>
                 <double>3</double>
@@ -5574,6 +6320,7 @@ namespace Models
               <string>[Calculations].Script.AnnualFronds</string>
               <string>[Calculations].Script.AnnualBunches</string>
               <string>[Calculations].Script.AnnualYield</string>
+              <string>[Calculations].Script.AnnualBunchSize</string>
               <string />
             </VariableNames>
             <EventNames />
@@ -5631,213 +6378,6 @@ namespace Models
           <Irrigation>
             <Name>Irrigation</Name>
           </Irrigation>
-          <Manager>
-            <Name>Palm Management</Name>
-            <Script>
-              <sowing_date>1/02/1996 12:00:00 AM</sowing_date>
-              <population>140</population>
-              <cultivar>Dami</cultivar>
-              <sowing_depth>200</sowing_depth>
-              <Plant_population>0</Plant_population>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date")]
-		public DateTime sowing_date {get; set;}
-		
-		[Description("Plant population /ha")]
-		public double population {get; set;}
-
-
-		[Description("Cultivar")]
-		public string cultivar {get; set;}
-
-		[Description("Sowing depth (mm)")]
-		public double sowing_depth {get; set;}
-		
-		public double Plant_population {get;set;}
-
-		public override void OnSimulationCommencing()
-		{
-		    Plant_population = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Add Trunk from previous plantation
-			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-			
-			if (Clock.Today.Date == sowing_date)
-			{
-
-			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
-			}
-		}
-	}
-}
-]]></Code>
-          </Manager>
-          <Manager>
-            <Name>Calculations</Name>
-            <Script>
-              <Offset>0</Offset>
-              <CumFronds>0</CumFronds>
-              <CumBunches>0</CumBunches>
-              <BunchOffset>0</BunchOffset>
-              <CumYield>0</CumYield>
-              <YieldOffset>0</YieldOffset>
-              <MonthlyPalmYield>0</MonthlyPalmYield>
-              <MonthlyPalmBunches>0</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>0</MonthlyPalmBunchSize>
-              <MonthlyDenit>NaN</MonthlyDenit>
-              <MonthlyN2O>NaN</MonthlyN2O>
-              <MonthlyN2>NaN</MonthlyN2>
-              <MonthlyFixation>NaN</MonthlyFixation>
-              <SurfaceNO3>NaN</SurfaceNO3>
-              <RootZoneNO3>NaN</RootZoneNO3>
-              <MonthlyLeach>NaN</MonthlyLeach>
-              <SoilCtpha>NaN</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-using Models.Soils;
-using Models.SurfaceOM;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
-		public double AnnualYield {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-		
-		public override void OnSimulationCommencing()
-		{	
-			Offset = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			BunchOffset = 0;
-			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-		}
-		
-		[EventSubscribe("DoDailyInitialisation")]
-		private void OnDoDailyInitialisation(object sender, EventArgs e)
-		{			
-			if (Clock.Today.Day == 1)
-			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
-			}
-		}
-		
-       [EventSubscribe("DoManagement")]
-       private void OnDoManagement(object sender, EventArgs e)
-		{
-
-			if (oilPalm.IsCropInGround)
-			{
-			    // Note that using Convert.ToDateTime(string) will use current regional settings
-			    // which may be different to the script authors. This is why we specify DMY as
-			    // seperate integers.
-				if (Clock.Today.DayOfYear == 1)
-				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;				   
-				}
-				
-				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
-				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
-					AnnualYield = oilPalm.CumulativeYield - YieldOffset;
-				}
-			}
-
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-
-		}
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-		}
-	}
-}
-]]></Code>
-          </Manager>
           <Operations>
             <Name>operations</Name>
             <Operation>
@@ -6389,6 +6929,240 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <Manager>
+            <Name>Palm Management</Name>
+            <Script>
+              <sowing_date>1/03/1996 12:00:00 AM</sowing_date>
+              <population>135</population>
+              <cultivar>Dami</cultivar>
+              <sowing_depth>200</sowing_depth>
+              <Plant_population>0</Plant_population>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] OilPalm oilPalm;
+		[Link] Summary Summary;
+		
+		[Description("Sowing date")]
+		public DateTime sowing_date {get; set;}
+		
+		[Description("Plant population /ha")]
+		public double population {get; set;}
+
+
+		[Description("Cultivar")]
+		public string cultivar {get; set;}
+
+		[Description("Sowing depth (mm)")]
+		public double sowing_depth {get; set;}
+		
+		public double Plant_population {get;set;}
+		
+		private byte HarvestCounter = 1;
+
+		public override void OnSimulationCommencing()
+		{
+		    Plant_population = 0;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			// Add Trunk from previous plantation
+			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+			
+			if (Clock.Today.Date == sowing_date)
+			{
+			    oilPalm.Sow(Population: population / 10000, Cultivar:cultivar, Depth:sowing_depth);
+			}
+			
+			if (HarvestCounter == 14)
+			{
+				oilPalm.Harvest();
+				HarvestCounter = 1;
+			}
+			
+			HarvestCounter++;
+		}
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Calculations</Name>
+            <Script>
+              <Offset>317</Offset>
+              <AnnualFronds>9</AnnualFronds>
+              <AnnualBunches>2.57515090354195</AnnualBunches>
+              <BunchOffset>137.704103916953</BunchOffset>
+              <AnnualYield>3.11362841309565</AnnualYield>
+              <AnnualBunchSize>32496.319245489</AnnualBunchSize>
+              <YieldOffset>6551.11544239668</YieldOffset>
+              <MonthlyPalmYield>4.70341946051109</MonthlyPalmYield>
+              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
+              <MonthlyPalmBunchSize>5.87927432563886</MonthlyPalmBunchSize>
+              <MonthlyDenit>0.0373018205202907</MonthlyDenit>
+              <MonthlyN2O>0.00681741849940021</MonthlyN2O>
+              <MonthlyN2>0.0304844020208905</MonthlyN2>
+              <MonthlyFixation>0</MonthlyFixation>
+              <SurfaceNO3>3.94205321978469</SurfaceNO3>
+              <RootZoneNO3>5.39251570361473</RootZoneNO3>
+              <MonthlyLeach>0.00267348465781614</MonthlyLeach>
+              <SoilCtpha>6.59449389162885</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>4.28234064110367E-10</surfaceom_wt_oilpalmstem>
+              <OilPalmYield>0</OilPalmYield>
+              <TotalNO3>5.42843013656791</TotalNO3>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] OilPalm oilPalm;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+		public double Offset {get; set;}
+		public double AnnualFronds {get; set;}
+		public double AnnualBunches {get; set;}
+		public double BunchOffset {get; set;}
+		public double AnnualYield {get; set;}
+		public double AnnualBunchSize {get; set;}
+		public double YieldOffset {get; set;}
+		public double MonthlyPalmYield {get; set;}
+		public double MonthlyPalmBunches {get; set;}
+		public double MonthlyPalmBunchSize {get; set;}
+		public double MonthlyDenit {get; set;}
+		public double MonthlyN2O {get; set;}
+		public double MonthlyN2 {get; set;}
+		public double MonthlyFixation {get; set;}
+		public double SurfaceNO3 {get; set;}
+		public double RootZoneNO3 {get; set;}
+		public double MonthlyLeach {get; set;}
+		public double SoilCtpha {get; set;}
+		public double surfaceom_wt_oilpalmstem {get; set;}
+	    public double OilPalmYield {get; set;}
+	    public double TotalNO3 {get; set;}
+		
+		public override void OnSimulationCommencing()
+		{	
+			Offset = 0;
+			OilPalmYield = 0;
+			AnnualFronds = 0;
+			AnnualBunches = 0;
+			AnnualBunchSize = 0;
+			BunchOffset = 0;
+			AnnualYield = 0;
+			YieldOffset = 0;
+			MonthlyPalmYield = 0;
+			MonthlyPalmBunches = 0;
+			MonthlyPalmBunchSize = 0;
+			MonthlyDenit = 0;
+			MonthlyN2O = 0;
+			MonthlyN2 = 0;
+			MonthlyFixation = 0;
+			SurfaceNO3 = 0;
+			RootZoneNO3 = 0;
+			MonthlyLeach = 0;
+			SoilCtpha = 0;
+			surfaceom_wt_oilpalmstem = 0;
+		}
+		
+		[EventSubscribe("DoDailyInitialisation")]
+		private void OnDoDailyInitialisation(object sender, EventArgs e)
+		{			
+			if (Clock.Today.Day == 1)
+			{
+			   MonthlyPalmYield = 0;
+			   MonthlyPalmBunches = 0;
+			   MonthlyPalmBunchSize = 0;
+			   MonthlyDenit = 0;
+			   MonthlyN2O = 0;
+			   MonthlyN2 = 0;
+			   MonthlyFixation = 0;
+			   MonthlyLeach = 0;
+			}
+		}
+		
+	   [EventSubscribe("DoHarvest")]
+	   private void OnDoHarvest(object sender, EventArgs e)
+	   {
+	   	   AnnualYield += oilPalm.HarvestFFB;
+	   }
+		
+       [EventSubscribe("DoManagement")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+
+			if (oilPalm.IsCropInGround)
+			{
+				if (Clock.Today.DayOfYear == 1)
+				{
+				   Offset = oilPalm.CumulativeFrondNumber;
+				   BunchOffset = oilPalm.CumulativeBunchNumber;
+				   YieldOffset = oilPalm.CumulativeYield;
+				   AnnualYield = 0;
+				   AnnualBunchSize = 0;
+				}
+				
+				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
+				{
+					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
+					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+				}
+			}
+
+			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+			MonthlyN2 = MonthlyDenit - MonthlyN2O;
+			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
+			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
+			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
+			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
+			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
+			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+
+		}
+		
+		[EventSubscribe("Harvesting")]
+		private void OnHarvesting(object sender, EventArgs e)
+		{
+			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
+			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
+			if (MonthlyPalmBunches > 0)
+			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
+			else
+			   MonthlyPalmBunchSize = 0;
+			   
+			AnnualYield += oilPalm.HarvestFFB;
+			AnnualBunchSize += oilPalm.HarvestBunchSize;
+		}
+	}
+}
+]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -6657,6 +7431,268 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
     <Graph>
+      <Name>FrondProduction</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Frond Production</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>OilPalm.AnnualFronds</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Frond Production</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Calculations.Script.AnnualBunches</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
       <Name>AnnualYield</Name>
       <Axis>
         <Type>Bottom</Type>
@@ -6665,7 +7701,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>AnnualYield</Title>
+        <Title>LAI</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -6782,6 +7818,137 @@ namespace Models
           <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>LAI</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN0</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN1</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Title />
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+      </Series>
+      <Series>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <SimulationName>HargyOperationsN2</SimulationName>
+          <TableName>Input</TableName>
+          <FieldName>BunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>

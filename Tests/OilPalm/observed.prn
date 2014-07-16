@@ -1,4 +1,4 @@
-    SimulationName   Clock.Today   OilPalm.BunchMass   OilPalm.LAI  OilPalm.StemMass  Calculations.Script.AnnualBunches        BunchSize    Calculations.Script.AnnualYield
+    SimulationName   Clock.Today OilPalm.AnnualFronds  OilPalm.LAI  OilPalm.StemMass  Calculations.Script.AnnualBunches        BunchSize    Calculations.Script.AnnualYield
                 ()            ()                  ()            ()                ()                                 ()               ()                                 ()
 SagaraiOperationsN0    31/12/2001             22.1875            *                 *                                  *                *                                  *
 SagaraiOperationsN0    31/12/2002             21.5625            *                 *                                  *                *                                  *
@@ -209,93 +209,93 @@ SagaraiOperationsN2     9/11/2006                  *             *            42
 SagaraiOperationsN2    11/10/2007                  *             *            4238.56                                 *                *                                  *
 SagaraiOperationsN2    13/01/2009                  *             *            4787.05                                 *                *                                  *
 SagaraiOperationsN2     6/10/2009                  *             *            5081.69                                 *                *                                  *
-SagaraiOperationsN0    31/12/1996                  *             *                 *                             18.7448          12.0016                            2740.52
-SagaraiOperationsN0    31/12/1997                  *             *                 *                             20.2656          12.8414                               3139
-SagaraiOperationsN0    31/12/1998                  *             *                 *                             11.7813          13.7909                            1904.21
-SagaraiOperationsN0    31/12/1999                  *             *                 *                              8.7031          18.9953                            2110.84
-SagaraiOperationsN0    31/12/2000                  *             *                 *                             14.3177          22.5354                            3950.79
-SagaraiOperationsN0    31/12/2001                  *             *                 *                              9.4688          19.4974                            2278.06
-SagaraiOperationsN0    31/12/2002                  *             *                 *                              9.7604          22.2936                            2733.42
-SagaraiOperationsN0    31/12/2003                  *             *                 *                              9.8125          21.3316                            2560.34
-SagaraiOperationsN0    31/12/2004                  *             *                 *                              8.0208          21.8877                            2217.62
-SagaraiOperationsN0    31/12/2005                  *             *                 *                              6.8646          23.8929                            2260.44
-SagaraiOperationsN0    31/12/2006                  *             *                 *                              7.5573          23.3681                            2157.43
-SagaraiOperationsN0    31/12/2007                  *             *                 *                              9.2969          22.4842                            2814.62
-SagaraiOperationsN0    31/12/2008                  *             *                 *                              5.9688          22.7135                            1690.87
-SagaraiOperationsN1    31/12/1996                  *             *                 *                             18.9688          12.3527                            2804.42
-SagaraiOperationsN1    31/12/1997                  *             *                 *                             19.8438          13.3489                            3312.87
-SagaraiOperationsN1    31/12/1998                  *             *                 *                             11.3594          14.0684                            2035.99
-SagaraiOperationsN1    31/12/1999                  *             *                 *                             10.2344          19.1443                            2409.09
-SagaraiOperationsN1    31/12/2000                  *             *                 *                             15.2135          22.7317                            4442.84
-SagaraiOperationsN1    31/12/2001                  *             *                 *                             10.1042          20.0516                            2539.21
-SagaraiOperationsN1    31/12/2002                  *             *                 *                             10.1563          23.2002                            3025.28
-SagaraiOperationsN1    31/12/2003                  *             *                 *                              10.474          22.4212                            2968.96
-SagaraiOperationsN1    31/12/2004                  *             *                 *                              8.4844          23.5226                            2358.55
-SagaraiOperationsN1    31/12/2005                  *             *                 *                              8.0521          25.5369                            2538.37
-SagaraiOperationsN1    31/12/2006                  *             *                 *                              9.1302          25.4033                            2972.22
-SagaraiOperationsN1    31/12/2007                  *             *                 *                              9.8281          23.8516                            3084.61
-SagaraiOperationsN1    31/12/2008                  *             *                 *                              6.4219          24.5485                            1891.29
-SagaraiOperationsN2    31/12/1996                  *             *                 *                             17.9375          12.3412                             2563.5
-SagaraiOperationsN2    31/12/1997                  *             *                 *                             19.9427          13.1338                            3184.37
-SagaraiOperationsN2    31/12/1998                  *             *                 *                             10.6927          13.8394                             1790.1
-SagaraiOperationsN2    31/12/1999                  *             *                 *                              8.9531          19.3059                             2065.3
-SagaraiOperationsN2    31/12/2000                  *             *                 *                             14.9948          22.8154                            4225.01
-SagaraiOperationsN2    31/12/2001                  *             *                 *                              9.8854          19.4558                             2456.2
-SagaraiOperationsN2    31/12/2002                  *             *                 *                             10.4219          23.1056                            2907.09
-SagaraiOperationsN2    31/12/2003                  *             *                 *                              11.375          22.2469                             3089.2
-SagaraiOperationsN2    31/12/2004                  *             *                 *                              9.2344          23.2245                            2616.54
-SagaraiOperationsN2    31/12/2005                  *             *                 *                              8.9896          26.6108                            2990.75
-SagaraiOperationsN2    31/12/2006                  *             *                 *                             10.2083          26.3315                            3402.35
-SagaraiOperationsN2    31/12/2007                  *             *                 *                             10.2552          25.0202                            3337.02
-SagaraiOperationsN2    31/12/2008                  *             *                 *                               6.875          26.1166                            2321.94
-SangaraOperationsN0    31/12/2001                  *             *                 *                             21.8281          10.9581                            3229.12
-SangaraOperationsN0    31/12/2002                  *             *                 *                             19.3438          11.4936                            3001.45
-SangaraOperationsN0    31/12/2003                  *             *                 *                             18.8594          13.0736                            3328.55
-SangaraOperationsN0    31/12/2004                  *             *                 *                             13.6719           12.912                            2383.17
-SangaraOperationsN0    31/12/2005                  *             *                 *                             11.8438          13.2943                            2125.64
-SangaraOperationsN0    31/12/2006                  *             *                 *                              8.8594          13.4397                            1607.41
-SangaraOperationsN0    31/12/2007                  *             *                 *                              9.5938          14.8914                            1928.66
-SangaraOperationsN0    31/12/2008                  *             *                 *                              7.7656          14.6598                            1536.87
-SangaraOperationsN0    31/12/2009                  *             *                 *                              8.2656          13.7355                            1532.69
-SangaraOperationsN1    31/12/2001                  *             *                 *                             23.2625          11.4416                            3593.18
-SangaraOperationsN1    31/12/2002                  *             *                 *                             21.0281          11.9176                            3383.18
-SangaraOperationsN1    31/12/2003                  *             *                 *                             20.8094          14.2163                            3993.73
-SangaraOperationsN1    31/12/2004                  *             *                 *                             15.5125          15.4349                            3232.35
-SangaraOperationsN1    31/12/2005                  *             *                 *                             15.6594          17.4388                             3686.6
-SangaraOperationsN1    31/12/2006                  *             *                 *                             11.6188          17.5889                            2758.88
-SangaraOperationsN1    31/12/2007                  *             *                 *                             12.2656          19.5437                            3236.16
-SangaraOperationsN1    31/12/2008                  *             *                 *                             11.3969          20.0484                            3084.61
-SangaraOperationsN1    31/12/2009                  *             *                 *                             11.1438          20.7633                            3123.64
-SangaraOperationsN2    31/12/2001                  *             *                 *                             22.5031          11.6575                            3541.45
-SangaraOperationsN2    31/12/2002                  *             *                 *                             20.4469            12.37                            3414.51
-SangaraOperationsN2    31/12/2003                  *             *                 *                             21.1719          14.7304                            4210.25
-SangaraOperationsN2    31/12/2004                  *             *                 *                             15.8531          15.9431                             3412.1
-SangaraOperationsN2    31/12/2005                  *             *                 *                               16.05          18.3671                             3979.7
-SangaraOperationsN2    31/12/2006                  *             *                 *                             12.3875          19.1895                            3209.09
-SangaraOperationsN2    31/12/2007                  *             *                 *                               13.25          20.9137                            3740.94
-SangaraOperationsN2    31/12/2008                  *             *                 *                             13.0719          21.5529                            3803.45
-SangaraOperationsN2    31/12/2009                  *             *                 *                             12.8969          20.9429                            3646.33
- HargyOperationsN0     31/12/2002                  *             *                 *                             11.0375           13.433                            2075.74
- HargyOperationsN0     31/12/2003                  *             *                 *                             12.1583          15.4068                             2622.5
- HargyOperationsN0     31/12/2004                  *             *                 *                             11.9083          15.9395                            2657.37
- HargyOperationsN0     31/12/2005                  *             *                 *                              9.3375          17.3329                            2265.84
- HargyOperationsN0     31/12/2006                  *             *                 *                              9.3458          17.5103                            2291.08
- HargyOperationsN0     31/12/2007                  *             *                 *                                 9.1           18.999                            2420.47
- HargyOperationsN0     31/12/2008                  *             *                 *                              7.8833          18.5249                            2044.54
- HargyOperationsN0     31/12/2009                  *             *                 *                              7.8667          20.6197                            2270.92
- HargyOperationsN1     31/12/2002                  *             *                 *                             10.5167          14.0361                            2066.58
- HargyOperationsN1     31/12/2003                  *             *                 *                             11.0667          16.6107                            2573.56
- HargyOperationsN1     31/12/2004                  *             *                 *                             12.3917          18.1774                            3153.48
- HargyOperationsN1     31/12/2005                  *             *                 *                             10.0417          19.6023                            2755.75
- HargyOperationsN1     31/12/2006                  *             *                 *                              9.0833          20.6337                            2623.91
- HargyOperationsN1     31/12/2007                  *             *                 *                              9.7917          21.3369                            2924.93
- HargyOperationsN1     31/12/2008                  *             *                 *                              7.9833          21.6616                            2421.04
- HargyOperationsN1     31/12/2009                  *             *                 *                              8.8792          24.1828                            3006.12
- HargyOperationsN2     31/12/2002                  *             *                 *                             10.7708          13.6571                            2059.38
- HargyOperationsN2     31/12/2003                  *             *                 *                              11.325          16.1535                            2561.13
- HargyOperationsN2     31/12/2004                  *             *                 *                             13.7375          17.5372                            3372.85
- HargyOperationsN2     31/12/2005                  *             *                 *                             10.4958          19.1445                            2813.13
- HargyOperationsN2     31/12/2006                  *             *                 *                              9.9375          20.0529                            2789.85
- HargyOperationsN2     31/12/2007                  *             *                 *                             10.7208           20.671                            3102.55
- HargyOperationsN2     31/12/2008                  *             *                 *                              8.6125           20.694                            2495.19
- HargyOperationsN2     31/12/2009                  *             *                 *                             10.6833          23.1982                            3469.68
+SagaraiOperationsN0    31/12/1996                  *             *                 *                             18.7448          12.0016                            27.4052
+SagaraiOperationsN0    31/12/1997                  *             *                 *                             20.2656          12.8414                              31.39
+SagaraiOperationsN0    31/12/1998                  *             *                 *                             11.7813          13.7909                            19.0421
+SagaraiOperationsN0    31/12/1999                  *             *                 *                              8.7031          18.9953                            21.1084
+SagaraiOperationsN0    31/12/2000                  *             *                 *                             14.3177          22.5354                            39.5079
+SagaraiOperationsN0    31/12/2001                  *             *                 *                              9.4688          19.4974                            22.7806
+SagaraiOperationsN0    31/12/2002                  *             *                 *                              9.7604          22.2936                            27.3342
+SagaraiOperationsN0    31/12/2003                  *             *                 *                              9.8125          21.3316                            25.6034
+SagaraiOperationsN0    31/12/2004                  *             *                 *                              8.0208          21.8877                            22.1762
+SagaraiOperationsN0    31/12/2005                  *             *                 *                              6.8646          23.8929                            22.6044
+SagaraiOperationsN0    31/12/2006                  *             *                 *                              7.5573          23.3681                            21.5743
+SagaraiOperationsN0    31/12/2007                  *             *                 *                              9.2969          22.4842                            28.1462
+SagaraiOperationsN0    31/12/2008                  *             *                 *                              5.9688          22.7135                            16.9087
+SagaraiOperationsN1    31/12/1996                  *             *                 *                             18.9688          12.3527                            28.0442
+SagaraiOperationsN1    31/12/1997                  *             *                 *                             19.8438          13.3489                            33.1287
+SagaraiOperationsN1    31/12/1998                  *             *                 *                             11.3594          14.0684                            20.3599
+SagaraiOperationsN1    31/12/1999                  *             *                 *                             10.2344          19.1443                            24.0909
+SagaraiOperationsN1    31/12/2000                  *             *                 *                             15.2135          22.7317                            44.4284
+SagaraiOperationsN1    31/12/2001                  *             *                 *                             10.1042          20.0516                            25.3921
+SagaraiOperationsN1    31/12/2002                  *             *                 *                             10.1563          23.2002                            30.2528
+SagaraiOperationsN1    31/12/2003                  *             *                 *                              10.474          22.4212                            29.6896
+SagaraiOperationsN1    31/12/2004                  *             *                 *                              8.4844          23.5226                            23.5855
+SagaraiOperationsN1    31/12/2005                  *             *                 *                              8.0521          25.5369                            25.3837
+SagaraiOperationsN1    31/12/2006                  *             *                 *                              9.1302          25.4033                            29.7222
+SagaraiOperationsN1    31/12/2007                  *             *                 *                              9.8281          23.8516                            30.8461
+SagaraiOperationsN1    31/12/2008                  *             *                 *                              6.4219          24.5485                            18.9129
+SagaraiOperationsN2    31/12/1996                  *             *                 *                             17.9375          12.3412                             25.635
+SagaraiOperationsN2    31/12/1997                  *             *                 *                             19.9427          13.1338                            31.8437
+SagaraiOperationsN2    31/12/1998                  *             *                 *                             10.6927          13.8394                             17.901
+SagaraiOperationsN2    31/12/1999                  *             *                 *                              8.9531          19.3059                             20.653
+SagaraiOperationsN2    31/12/2000                  *             *                 *                             14.9948          22.8154                            42.2501
+SagaraiOperationsN2    31/12/2001                  *             *                 *                              9.8854          19.4558                             24.562
+SagaraiOperationsN2    31/12/2002                  *             *                 *                             10.4219          23.1056                            29.0709
+SagaraiOperationsN2    31/12/2003                  *             *                 *                              11.375          22.2469                             30.892
+SagaraiOperationsN2    31/12/2004                  *             *                 *                              9.2344          23.2245                            26.1654
+SagaraiOperationsN2    31/12/2005                  *             *                 *                              8.9896          26.6108                            29.9075
+SagaraiOperationsN2    31/12/2006                  *             *                 *                             10.2083          26.3315                            34.0235
+SagaraiOperationsN2    31/12/2007                  *             *                 *                             10.2552          25.0202                            33.3702
+SagaraiOperationsN2    31/12/2008                  *             *                 *                               6.875          26.1166                            23.2194
+SangaraOperationsN0    31/12/2001                  *             *                 *                             21.8281          10.9581                            32.2912
+SangaraOperationsN0    31/12/2002                  *             *                 *                             19.3438          11.4936                            30.0145
+SangaraOperationsN0    31/12/2003                  *             *                 *                             18.8594          13.0736                            33.2855
+SangaraOperationsN0    31/12/2004                  *             *                 *                             13.6719           12.912                            23.8317
+SangaraOperationsN0    31/12/2005                  *             *                 *                             11.8438          13.2943                            21.2564
+SangaraOperationsN0    31/12/2006                  *             *                 *                              8.8594          13.4397                            16.0741
+SangaraOperationsN0    31/12/2007                  *             *                 *                              9.5938          14.8914                            19.2866
+SangaraOperationsN0    31/12/2008                  *             *                 *                              7.7656          14.6598                            15.3687
+SangaraOperationsN0    31/12/2009                  *             *                 *                              8.2656          13.7355                            15.3269
+SangaraOperationsN1    31/12/2001                  *             *                 *                             23.2625          11.4416                            35.9318
+SangaraOperationsN1    31/12/2002                  *             *                 *                             21.0281          11.9176                            33.8318
+SangaraOperationsN1    31/12/2003                  *             *                 *                             20.8094          14.2163                            39.9373
+SangaraOperationsN1    31/12/2004                  *             *                 *                             15.5125          15.4349                            32.3235
+SangaraOperationsN1    31/12/2005                  *             *                 *                             15.6594          17.4388                             36.866
+SangaraOperationsN1    31/12/2006                  *             *                 *                             11.6188          17.5889                            27.5888
+SangaraOperationsN1    31/12/2007                  *             *                 *                             12.2656          19.5437                            32.3616
+SangaraOperationsN1    31/12/2008                  *             *                 *                             11.3969          20.0484                            30.8461
+SangaraOperationsN1    31/12/2009                  *             *                 *                             11.1438          20.7633                            31.2364
+SangaraOperationsN2    31/12/2001                  *             *                 *                             22.5031          11.6575                            35.4145
+SangaraOperationsN2    31/12/2002                  *             *                 *                             20.4469            12.37                            34.1451
+SangaraOperationsN2    31/12/2003                  *             *                 *                             21.1719          14.7304                            42.1025
+SangaraOperationsN2    31/12/2004                  *             *                 *                             15.8531          15.9431                             34.121
+SangaraOperationsN2    31/12/2005                  *             *                 *                               16.05          18.3671                             39.797
+SangaraOperationsN2    31/12/2006                  *             *                 *                             12.3875          19.1895                            32.0909
+SangaraOperationsN2    31/12/2007                  *             *                 *                               13.25          20.9137                            37.4094
+SangaraOperationsN2    31/12/2008                  *             *                 *                             13.0719          21.5529                            38.0345
+SangaraOperationsN2    31/12/2009                  *             *                 *                             12.8969          20.9429                            36.4633
+ HargyOperationsN0     31/12/2002                  *             *                 *                             11.0375           13.433                            20.7574
+ HargyOperationsN0     31/12/2003                  *             *                 *                             12.1583          15.4068                             26.225
+ HargyOperationsN0     31/12/2004                  *             *                 *                             11.9083          15.9395                            26.5737
+ HargyOperationsN0     31/12/2005                  *             *                 *                              9.3375          17.3329                            22.6584
+ HargyOperationsN0     31/12/2006                  *             *                 *                              9.3458          17.5103                            22.9108
+ HargyOperationsN0     31/12/2007                  *             *                 *                                 9.1           18.999                            24.2047
+ HargyOperationsN0     31/12/2008                  *             *                 *                              7.8833          18.5249                            20.4454
+ HargyOperationsN0     31/12/2009                  *             *                 *                              7.8667          20.6197                            22.7092
+ HargyOperationsN1     31/12/2002                  *             *                 *                             10.5167          14.0361                            20.6658
+ HargyOperationsN1     31/12/2003                  *             *                 *                             11.0667          16.6107                            25.7356
+ HargyOperationsN1     31/12/2004                  *             *                 *                             12.3917          18.1774                            31.5348
+ HargyOperationsN1     31/12/2005                  *             *                 *                             10.0417          19.6023                            27.5575
+ HargyOperationsN1     31/12/2006                  *             *                 *                              9.0833          20.6337                            26.2391
+ HargyOperationsN1     31/12/2007                  *             *                 *                              9.7917          21.3369                            29.2493
+ HargyOperationsN1     31/12/2008                  *             *                 *                              7.9833          21.6616                            24.2104
+ HargyOperationsN1     31/12/2009                  *             *                 *                              8.8792          24.1828                            30.0612
+ HargyOperationsN2     31/12/2002                  *             *                 *                             10.7708          13.6571                            20.5938
+ HargyOperationsN2     31/12/2003                  *             *                 *                              11.325          16.1535                            25.6113
+ HargyOperationsN2     31/12/2004                  *             *                 *                             13.7375          17.5372                            33.7285
+ HargyOperationsN2     31/12/2005                  *             *                 *                             10.4958          19.1445                            28.1313
+ HargyOperationsN2     31/12/2006                  *             *                 *                              9.9375          20.0529                            27.8985
+ HargyOperationsN2     31/12/2007                  *             *                 *                             10.7208           20.671                            31.0255
+ HargyOperationsN2     31/12/2008                  *             *                 *                              8.6125           20.694                            24.9519
+ HargyOperationsN2     31/12/2009                  *             *                 *                             10.6833          23.1982                            34.6968

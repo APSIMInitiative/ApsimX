@@ -47,6 +47,9 @@ namespace Models.PMF.OilPalm
         double[] PotNUptake;
         double[] NUptake;
 
+        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        public event NitrogenChangedDelegate NitrogenChanged;
+
         public double NFixation { get; set; }
 
         // The following event handler will be called once at the beginning of the simulation
@@ -120,13 +123,13 @@ namespace Models.PMF.OilPalm
             PEP = SoilWat.eo * cover_green * (1 - OPCover);
 
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < SoilWat.Thickness.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
             EP = 0.0;
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < SoilWat.Thickness.Length; j++)
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
@@ -146,10 +149,16 @@ namespace Models.PMF.OilPalm
 
         private void DoNBalance()
         {
+            Soils.NitrogenChangedType NUptakeType = new Soils.NitrogenChangedType();
+            NUptakeType.Sender = Name;
+            NUptakeType.SenderType = "Plant";
+            NUptakeType.DeltaNO3 = new double[SoilWat.Thickness.Length];
+            NUptakeType.DeltaNH4 = new double[SoilWat.Thickness.Length];
+
             double Ndemand = DltDM * 10 * 0.021;
             NFixation = Math.Max(0.0, Ndemand * .44);
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < SoilWat.Thickness.Length; j++)
             {
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * SoilN.no3[j]);
             }
@@ -157,16 +166,14 @@ namespace Models.PMF.OilPalm
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
             double Fr = Math.Min(1.0, (Ndemand - NFixation) / TotPotNUptake);
 
-            for (int j = 0; j < SoilWat.ll15_dep.Length; j++)
+            for (int j = 0; j < SoilWat.Thickness.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
-                SoilN.no3[j] = SoilN.no3[j] - NUptake[j];
-
+                NUptakeType.DeltaNO3[j] = -NUptake[j];
             }
-          
 
-            //NFixation = Math.Max(0.0, Ndemand - Utility.Math.Sum(NUptake));
-
+            if (NitrogenChanged != null)
+                NitrogenChanged.Invoke(NUptakeType);
         }
 
 
