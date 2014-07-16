@@ -7963,6 +7963,16 @@ namespace Models
         <string>C:\ApsimX\Tests\OilPalm\observed.prn</string>
       </FileNames>
     </Input>
+    <TimeSeriesStats>
+      <Name>TimeSeriesStats</Name>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>MonthlyOutput</PredictedTableName>
+      <ObservedTableName>Input</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
   </DataStore>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

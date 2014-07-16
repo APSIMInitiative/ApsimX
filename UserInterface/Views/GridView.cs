@@ -405,7 +405,7 @@ namespace UserInterface.Views
             {
                 for (int j = 0; j < Grid.Columns.Count; j++)
                     // Limit number of rows to check to no more than 20
-                    for (int i = 0; i < Math.Min(20, Grid.Rows.Count - 1); i++)
+                    for (int i = 0; i <= Math.Min(20, Grid.Rows.Count - 1); i++)
                     {
                         // Add 40 pixels to cover the dropdown target.
                         if (Grid.Rows[i].Cells[j].Value != null)
