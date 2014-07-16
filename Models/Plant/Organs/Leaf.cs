@@ -31,29 +31,29 @@ namespace Models.PMF.Organs
         [Serializable]
         public class InitialLeafValues : Model
         {
-            [Link(MustBeChild = true)] public Function MaxArea = null;
-            [Link(MustBeChild = true)] public Function GrowthDuration = null;
-            [Link(MustBeChild = true)] public Function LagDuration = null;
-            [Link(MustBeChild = true)] public Function SenescenceDuration = null;
-            [Link(MustBeChild = true)] public Function DetachmentLagDuration = null;
-            [Link(MustBeChild = true)] public Function DetachmentDuration = null;
-            [Link(MustBeChild = true)] public Function SpecificLeafAreaMax = null;
-            [Link(MustBeChild = true)] public Function SpecificLeafAreaMin = null;
-            [Link(MustBeChild = true)] public Function StructuralFraction = null;
-            [Link(MustBeChild = true)] public Function MaximumNConc = null;
-            [Link(MustBeChild = true)] public Function MinimumNConc = null;
-            [Link(IsOptional=true, MustBeChild = true)] public Function StructuralNConc = null;
-            [Link(MustBeChild = true)] public Function InitialNConc = null;
-            [Link(MustBeChild = true)] public Function NReallocationFactor = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function DMReallocationFactor = null;
-            [Link(MustBeChild = true)] public Function NRetranslocationFactor = null;
-            [Link(MustBeChild = true)] public Function ExpansionStress = null;
-            [Link(MustBeChild = true)] public Function CriticalNConc = null;
-            [Link(MustBeChild = true)] public Function DMRetranslocationFactor = null;
-            [Link(MustBeChild = true)] public Function ShadeInducedSenescenceRate = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
-            [Link(MustBeChild = true)] public Function NonStructuralFraction = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function CellDivisionStress = null;
+            [Link] public Function MaxArea = null;
+            [Link] public Function GrowthDuration = null;
+            [Link] public Function LagDuration = null;
+            [Link] public Function SenescenceDuration = null;
+            [Link] public Function DetachmentLagDuration = null;
+            [Link] public Function DetachmentDuration = null;
+            [Link] public Function SpecificLeafAreaMax = null;
+            [Link] public Function SpecificLeafAreaMin = null;
+            [Link] public Function StructuralFraction = null;
+            [Link] public Function MaximumNConc = null;
+            [Link] public Function MinimumNConc = null;
+            [Link(IsOptional=true)] public Function StructuralNConc = null;
+            [Link] public Function InitialNConc = null;
+            [Link] public Function NReallocationFactor = null;
+            [Link(IsOptional=true)] public Function DMReallocationFactor = null;
+            [Link] public Function NRetranslocationFactor = null;
+            [Link] public Function ExpansionStress = null;
+            [Link] public Function CriticalNConc = null;
+            [Link] public Function DMRetranslocationFactor = null;
+            [Link] public Function ShadeInducedSenescenceRate = null;
+            [Link(IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
+            [Link] public Function NonStructuralFraction = null;
+            [Link(IsOptional=true)] public Function CellDivisionStress = null;
         }
         #endregion
 
@@ -65,17 +65,17 @@ namespace Models.PMF.Organs
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
         private LeafCohort[] InitialLeaves;
-        [Link(MustBeChild = true)] InitialLeafValues LeafCohortParameters = null;
-        [Link(MustBeChild = true)] RUEModel Photosynthesis = null;
-        [Link(MustBeChild = true)] Function ThermalTime = null;
-        [Link(MustBeChild = true)] Function ExtinctionCoeff = null;
-        [Link(MustBeChild = true)] Function FrostFraction = null;
+        [Link] InitialLeafValues LeafCohortParameters = null;
+        [Link] RUEModel Photosynthesis = null;
+        [Link] Function ThermalTime = null;
+        [Link] Function ExtinctionCoeff = null;
+        [Link] Function FrostFraction = null;
         //[Link] Function ExpansionStress = null;
         //[Link] Function CriticalNConc = null;
         //[Link] Function MaximumNConc = null;
         //[Link] Function MinimumNConc = null;
-        [Link(MustBeChild = true)] Function StructuralFraction = null;
-        [Link(MustBeChild = true, IsOptional=true)] Function DMDemandFunction = null;
+        [Link] Function StructuralFraction = null;
+        [Link(IsOptional=true)] Function DMDemandFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;

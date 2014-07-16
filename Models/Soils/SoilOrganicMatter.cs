@@ -93,7 +93,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return amount of inert carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] InertC
         {
@@ -129,7 +129,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return the amount of biom carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] BiomC
         {
@@ -171,7 +171,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return the amount of humic carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] HumC
         {

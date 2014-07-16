@@ -182,7 +182,7 @@
         {
             get
             {
-                Description descriptionAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(Description), false) as Description;
+                DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descriptionAttribute != null && descriptionAttribute.ToString() != "")
                     return descriptionAttribute.ToString();
                 return null;
@@ -196,9 +196,9 @@
         {
             get
             {
-                Units unitsAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(Units), false) as Units;
+                UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
-                    return "(" + unitsAttribute.UnitsString + ")";
+                    return "(" + unitsAttribute.ToString() + ")";
                 return null;
             }
         }
@@ -210,7 +210,7 @@
                 bool ignoreProperty = FieldInfo.DeclaringType == typeof(Model);
                 ignoreProperty |= FieldInfo.FieldType == typeof(Model);
                 ignoreProperty |= FieldInfo.FieldType.IsSubclassOf(typeof(Model));
-                ignoreProperty |= Utility.Reflection.GetAttribute(FieldInfo, typeof(Link), false) != null;
+                ignoreProperty |= Utility.Reflection.GetAttribute(FieldInfo, typeof(LinkAttribute), false) != null;
                 ignoreProperty |= FieldInfo.Name.Contains("BackingField");
                 return !ignoreProperty;
             }

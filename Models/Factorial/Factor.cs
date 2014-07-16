@@ -11,7 +11,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.FactorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
-    [AllowDropOn("Factors")]
+    [ValidParent(ParentModels = new Type[] { typeof(Factorial.Factors) })]
     public class Factor : Model
     {
         public List<string> Paths { get; set; }

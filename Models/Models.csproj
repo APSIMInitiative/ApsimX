@@ -113,6 +113,15 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Core\Attributes\BoundsAttribute.cs" />
+    <Compile Include="Core\Attributes\DisplayAttribute.cs" />
+    <Compile Include="Core\Attributes\ValidParentAttribute.cs" />
+    <Compile Include="Core\Attributes\DescriptionAttribute.cs" />
+    <Compile Include="Core\Attributes\ViewNameAttribute.cs" />
+    <Compile Include="Core\Attributes\PresenterNameAttribute.cs" />
+    <Compile Include="Core\Attributes\EventSubscribeAttribute.cs" />
+    <Compile Include="Core\Attributes\UnitsAttribute.cs" />
+    <Compile Include="Core\Attributes\LinkAttribute.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\IPostSimulationTool.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
@@ -297,7 +306,6 @@
     <Compile Include="Core\Zone.cs" />
     <Compile Include="DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />
-    <Compile Include="Core\Attributes.cs" />
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />
     <Compile Include="Clock.cs" />

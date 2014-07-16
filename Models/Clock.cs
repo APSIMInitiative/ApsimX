@@ -7,7 +7,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [AllowDropOn("Simulation")]
+    [ValidParent(typeof(Simulation))]
     public class Clock : Model
     {
         private EventArgs args = new EventArgs();

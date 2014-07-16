@@ -6,7 +6,7 @@ using Models.Core;
 using System.Xml.Serialization;
 namespace Models.Factorial
 {
-    [AllowDropOn("Factor")]
+    [ValidParent(typeof(Factor))]
     public class FactorValue : Model
     {
         private List<string> FactorPaths;

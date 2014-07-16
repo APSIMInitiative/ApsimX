@@ -15,21 +15,27 @@ namespace Models.SurfaceOM
         public ResidueTypes ResidueTypes { get; set;}
         public TillageTypes TillageTypes { get; set; }
 
+        [Description("Pool name")]
         [Units("")]
         public string PoolName { get; set; }
 
+        [Description("Pool type")]
         [Units("")]
         public string type { get; set; }
 
+        [Description("Mass")]
         [Units("")]
         public string mass { get; set; }
 
+        [Description("Standing fraction")]
         [Units("")]
         public string standing_fraction { get; set; }
 
+        [Description("CPR")]
         [Units("")]
         public string cpr { get; set; }
 
+        [Description("CNR")]
         [Units("")]
         public string cnr { get; set; }
 

@@ -68,6 +68,10 @@
       <Link>Utility\DateTimeCellType.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Attributes\ContextMenuAttribute.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
@@ -99,7 +104,7 @@
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Presenters\SeriesPresenter.cs" />
-    <Compile Include="Presenters\ExplorerActions.cs" />
+    <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />

@@ -39,10 +39,10 @@ namespace UserInterface.Presenters
     public class ExplorerPresenter : IPresenter
     {
         private IExplorerView View;
-        private ExplorerActions ExplorerActions;
+        private MainMenu MainMenu;
+        private ContextMenu ContextMenu;
         private IPresenter CurrentRightHandPresenter;
         private bool AdvancedMode = false;
-        //private DataStore store = null;
 
         public CommandHistory CommandHistory { get; set; }
         public Simulations ApsimXFile { get; set; }
@@ -66,7 +66,8 @@ namespace UserInterface.Presenters
             this.CommandHistory = new CommandHistory();
             this.ApsimXFile = Model as Simulations;
             this.View = View as IExplorerView;
-            this.ExplorerActions = new ExplorerActions(this, this.View);
+            this.MainMenu = new MainMenu(this);
+            this.ContextMenu = new ContextMenu(this);
 
             this.View.PopulateChildNodes += OnPopulateNodes;
             this.View.PopulateContextMenu += OnPopulateContextMenu;
@@ -158,6 +159,34 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Save the current file under a differnet name.
+        /// </summary>
+        public void SaveAs()
+        {
+            string newFileName = View.SaveAs(this.ApsimXFile.FileName);
+            if (newFileName != null)
+            {
+                try
+                {
+                    this.ApsimXFile.Write(newFileName);
+                    this.View.ChangeTabText(Path.GetFileNameWithoutExtension(newFileName));
+                }
+                catch (Exception err)
+                {
+                    this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toggle the 2nd right hand side explorer view on/off
+        /// </summary>
+        public void ToggleSecondExplorerViewVisible()
+        {
+            View.ToggleSecondExplorerViewVisible();
+        }
+
+        /// <summary>
         /// Do the actual write to the file
         /// </summary>
         public void WriteSimulation()
@@ -190,9 +219,29 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Return the current right hand presenter.
+        /// Gets the current right hand presenter.
         /// </summary>
         public IPresenter CurrentPresenter { get { return CurrentRightHandPresenter; } }
+
+        /// <summary>
+        /// Gets the path of the current selected node in the tree.
+        /// </summary>
+        public string CurrentNodePath
+        {
+            get
+            {
+                return View.CurrentNodePath;
+            }
+        }
+
+        /// <summary>
+        /// A helper function that asks user for a folder.
+        /// </summary>
+        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
+        public string AskUserForFolder(string prompt)
+        {
+            return View.AskUserForFolder(prompt);
+        }
 
         /// <summary>
         /// Select a node in the view.
@@ -252,16 +301,16 @@ namespace UserInterface.Presenters
         private void OnPopulateMainMenu(object sender, MenuDescriptionArgs e)
         {
             // Go look for all [UserInterfaceAction]
-            foreach (MethodInfo Method in typeof(ExplorerActions).GetMethods())
+            foreach (MethodInfo Method in typeof(MainMenu).GetMethods())
             {
-                MainMenuName MainMenuName = Utility.Reflection.GetAttribute(Method, typeof(MainMenuName), false) as MainMenuName;
+                MainMenuAttribute MainMenuName = Utility.Reflection.GetAttribute(Method, typeof(MainMenuAttribute), false) as MainMenuAttribute;
                 if (MainMenuName != null)
                 {
                     MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
                     Desc.Name = MainMenuName.MenuName;
                     Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
 
-                    EventHandler Handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), ExplorerActions, Method);
+                    EventHandler Handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), MainMenu, Method);
                     Desc.OnClick = Handler;
 
                     e.Descriptions.Add(Desc);
@@ -279,24 +328,18 @@ namespace UserInterface.Presenters
             object SelectedModel = ApsimXFile.Variables.Get(View.CurrentNodePath);
 
             // Go look for all [UserInterfaceAction]
-            foreach (MethodInfo Method in typeof(ExplorerActions).GetMethods())
+            foreach (MethodInfo Method in typeof(ContextMenu).GetMethods())
             {
-                ContextMenuName ContextMenuName = Utility.Reflection.GetAttribute(Method, typeof(ContextMenuName), false) as ContextMenuName;
-                if (ContextMenuName != null)
+                ContextMenuAttribute contextMenu = Utility.Reflection.GetAttribute(Method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
+                if (contextMenu != null)
                 {
-                    // Get a list of allowed types.
-                    List<Type> allowedMenuTypes = new List<Type>();
-                    foreach (ContextModelType contextModelType in Utility.Reflection.GetAttributes(Method, typeof(ContextModelType), false))
-                        allowedMenuTypes.Add(contextModelType.ModelType);
-
-
-                    if (allowedMenuTypes.Count == 0 || allowedMenuTypes.Contains(SelectedModel.GetType()))
+                    if (contextMenu.AppliesTo == null || Array.IndexOf(contextMenu.AppliesTo, SelectedModel.GetType()) != -1)
                     {
                         MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
-                        Desc.Name = ContextMenuName.MenuName;
+                        Desc.Name = contextMenu.MenuName;
                         Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
 
-                        EventHandler Handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), ExplorerActions, Method);
+                        EventHandler Handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), ContextMenu, Method);
                         Desc.OnClick = Handler;
 
                         if (Desc.Name == "Advanced mode")
@@ -379,14 +422,14 @@ namespace UserInterface.Presenters
             if (DestinationModel != null)
             {
                 DragObject DragObject = e.DragObject as DragObject;
-                Attribute[] DropAttributes = Utility.Reflection.GetAttributes(DragObject.ModelType, typeof(AllowDropOn), false);
-                if (DropAttributes.Length == 0)
+                ValidParentAttribute validParent = Utility.Reflection.GetAttribute(DragObject.ModelType, typeof(ValidParentAttribute), false) as ValidParentAttribute;
+                if (validParent == null || validParent.ParentModels.Length == 0)
                     e.Allow = true;
                 else
                 {
-                    foreach (AllowDropOn AllowDropOn in DropAttributes)
+                    foreach (Type allowedParentType in validParent.ParentModels)
                     {
-                        if (AllowDropOn.ModelTypeName == DestinationModel.GetType().Name)
+                        if (allowedParentType == DestinationModel.GetType())
                             e.Allow = true;
                     }
                 }
@@ -515,13 +558,13 @@ namespace UserInterface.Presenters
 
                 if (Model != null)
                 {
-                    ViewName ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewName), false) as ViewName;
-                    PresenterName PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterName), false) as PresenterName;
+                    ViewNameAttribute ViewName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    PresenterNameAttribute PresenterName = Utility.Reflection.GetAttribute(Model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
                     if (AdvancedMode)
                     {
-                        ViewName = new ViewName("UserInterface.Views.GridView");
-                        PresenterName = new PresenterName("UserInterface.Presenters.PropertyPresenter");
+                        ViewName = new ViewNameAttribute("UserInterface.Views.GridView");
+                        PresenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
                     }
 
                     if (ViewName != null && PresenterName != null)

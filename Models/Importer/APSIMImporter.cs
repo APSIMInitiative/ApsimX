@@ -497,7 +497,7 @@ namespace Importer
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
                                                                         BindingFlags.NonPublic | BindingFlags.Public))
             {
-                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                 {
                     if (!field.FieldType.IsAbstract && !link.IsOptional)

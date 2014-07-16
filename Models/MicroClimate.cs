@@ -109,21 +109,26 @@ namespace Models
 
         #region "Parameters used to initialise the model"
         #region "Parameters set in the GUI by the user"
+        [Description("a_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm/mm")]
         public double a_interception { get; set; }
 
+        [Description("b_interception")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
         public double b_interception {get; set;}
 
+        [Description("c_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         public double c_interception { get; set; }
 
+        [Description("d_interception")]
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
 
+        [Description("soil albedo")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double soil_albedo { get; set; }
 

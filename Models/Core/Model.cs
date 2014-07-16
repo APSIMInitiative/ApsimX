@@ -429,42 +429,24 @@ namespace Models.Core
         private static void ResolveLinksInternal(Model model, Type linkTypeToMatch = null)
         {
             string errorMsg = "";
-            //Console.WriteLine(model.FullPath + ":");
 
             // Go looking for [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
                                                                         BindingFlags.NonPublic | BindingFlags.Public))
             {
-                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null && 
                     (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
                 {
                     object linkedObject = null;
                     
-                    // NEW SECTION
                     Model[] allMatches;
-                    if (link.MustBeChild)
-                        allMatches = model.Children.AllRecursivelyMatching(field.FieldType).ToArray();
-                    else
-                        allMatches = model.Scope.FindAll(field.FieldType);
-                    if (!link.MustBeChild && allMatches.Length == 1)
+                    allMatches = model.Scope.FindAll(field.FieldType);
+                    if (allMatches.Length == 1)
                         linkedObject = allMatches[0];
-                    else if (allMatches.Length > 1 && model.Parent is Factorial.FactorValue)
-                    {
-                        // Doesn't matter what the link is being connected to if the the model passed
-                        // into ResolveLinks is sitting under a FactorValue. It won't be run from
-                        // under FactorValue anyway.
-                        linkedObject = allMatches[0];
-                    }
                     else
                     {
-                        // This is primarily for PLANT where matches for things link Functions should
-                        // only come from children and not somewhere else in Plant.
-                        // e.g. EmergingPhase in potato has an optional link for 'Target'
-                        // Potato doesn't have a target child so we don't want to use scoping 
-                        // rules to find the target for some other phase.
-
                         // more that one match so use name to match.
                         foreach (Model matchingModel in allMatches)
                             if (matchingModel.Name == field.Name)
@@ -480,9 +462,6 @@ namespace Models.Core
 
                     if (linkedObject != null)
                     {
-                        //if (linkedObject is Model)
-                        //    Console.WriteLine("    " + field.Name + " linked to " + (linkedObject as Model).FullPath);
-
                         field.SetValue(model, linkedObject);
                     }
                     else if (!link.IsOptional)
@@ -502,7 +481,7 @@ namespace Models.Core
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
                                                                         BindingFlags.NonPublic | BindingFlags.Public))
             {
-                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                     field.SetValue(model, null);
             }

@@ -21,27 +21,27 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Parameter Function Links
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function SenescenceRateFunction = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function DetachmentRateFunction = null;
 
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function NReallocationFactor = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function NRetranslocationFactor = null;
-        [Link(MustBeChild = true)] Function NitrogenDemandSwitch = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link] Function NitrogenDemandSwitch = null;
+        [Link(IsOptional = true)]
         Function DMRetranslocationFactor = null;
         [Link(IsOptional = true)] 
         Function StructuralFraction = null;
         [Link(IsOptional = true)]
         Function DMDemandFunction = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function InitialWtFunction = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function InitialStructuralFraction = null;
-        [Link(IsOptional = true, MustBeChild = true)]
+        [Link(IsOptional = true)]
         Function DryMatterContent = null;
         [Link(IsOptional = true)]
         Function MaximumNConc = null;

@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
                 foreach (PropertyInfo property in this.model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                 {
                     // Properties must have a [Description], not be called Name, and be read/write.
-                    bool hasDescription = property.IsDefined(typeof(Description), false);
+                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
                     bool includeProperty = hasDescription &&
                                            property.Name != "Name" &&
                                            property.CanRead &&
@@ -150,7 +150,7 @@ namespace UserInterface.Presenters
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(Description), true);
+                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
                 }

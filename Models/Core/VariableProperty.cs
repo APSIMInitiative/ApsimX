@@ -62,7 +62,7 @@ namespace Models.Core
         {
             get
             {
-                Description descriptionAttribute = Utility.Reflection.GetAttribute(this.property, typeof(Description), false) as Description;
+                DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descriptionAttribute == null)
                 {
                     return null;
@@ -86,12 +86,12 @@ namespace Models.Core
             {
                 // Get units from property
                 string unitString = null;
-                Units unitsAttribute = Utility.Reflection.GetAttribute(this.property, typeof(Units), false) as Units;
+                UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 PropertyInfo unitsInfo = this.model.GetType().GetProperty(this.property.Name + "Units");
                 MethodInfo unitsToStringInfo = this.model.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
                 {
-                    unitString = unitsAttribute.UnitsString;
+                    unitString = unitsAttribute.ToString();
                 }
                 else if (unitsToStringInfo != null)
                 {
@@ -178,8 +178,8 @@ namespace Models.Core
         {
             get
             {
-                DisplayFormat displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayFormat), false) as DisplayFormat;
-                if (displayFormatAttribute != null)
+                DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                if (displayFormatAttribute != null && displayFormatAttribute.Format != null)
                 {
                     return displayFormatAttribute.Format;
                 }
@@ -212,7 +212,8 @@ namespace Models.Core
         {
             get
             {
-                bool hasDisplayTotal = this.property.IsDefined(typeof(DisplayTotal), false);
+                DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
                 if (hasDisplayTotal)
                 {
                     double sum = 0.0;

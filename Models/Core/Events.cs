@@ -348,11 +348,11 @@ namespace Models.Core
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
             foreach (MethodInfo method in model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                EventSubscribe subscriberAttribute = (EventSubscribe)Utility.Reflection.GetAttribute(method, typeof(EventSubscribe), false);
-                if (subscriberAttribute != null && (eventName == null || subscriberAttribute.Name == eventName))
+                EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)Utility.Reflection.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))
                     subscribers.Add(new EventSubscriber()
                     {
-                        Name = subscriberAttribute.Name,
+                        Name = subscriberAttribute.ToString(),
                         MethodInfo = method,
                         Model = model
                     });

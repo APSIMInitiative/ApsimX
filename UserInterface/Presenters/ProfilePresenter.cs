@@ -230,7 +230,7 @@ namespace UserInterface.Presenters
             // be either double[] or string[] type.
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
-                bool hasDescription = property.IsDefined(typeof(Description), false);
+                bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
                 if (hasDescription && property.CanRead)
                 {
                     if (property.PropertyType == typeof(double[]) || 
