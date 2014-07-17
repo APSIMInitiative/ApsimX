@@ -17,13 +17,6 @@ namespace Models.Factorial
         public List<string> Paths { get; set; }
 
         [XmlIgnore]
-        public List<FactorValue> FactorValues { get; private set; }
-
-        public override void OnLoaded()
-        {
-            FactorValues = new List<FactorValue>();
-            foreach (FactorValue factorValue in Children.MatchingMultiple(typeof(FactorValue)))
-                FactorValues.Add(factorValue);
-        }
+        public Model[] FactorValues { get { return Children.MatchingMultiple(typeof(FactorValue)); } }
     }
 }
