@@ -351,7 +351,6 @@
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -566,6 +565,9 @@
     <None Include="Resources\ExportToHTML.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

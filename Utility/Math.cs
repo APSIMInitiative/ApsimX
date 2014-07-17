@@ -664,7 +664,10 @@ namespace Utility
         {
             double Minimum = 9999999;
             foreach (double Value in Values)
-                Minimum = System.Math.Min(Value, Minimum);
+            {
+                if (!double.IsNaN(Value))
+                    Minimum = System.Math.Min(Value, Minimum);
+            }
             return Minimum;
         }
 
@@ -672,7 +675,10 @@ namespace Utility
         {
             double Maximum = -9999999;
             foreach (double Value in Values)
-                Maximum = System.Math.Max(Value, Maximum);
+            {
+                if (!double.IsNaN(Value))
+                    Maximum = System.Math.Max(Value, Maximum);
+            }
             return Maximum;
         }
 

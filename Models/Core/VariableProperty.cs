@@ -228,5 +228,22 @@ namespace Models.Core
                 return double.NaN;
             }
         }
+
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public DisplayAttribute.DisplayTypeEnum DisplayType
+        {
+            get
+            {
+                DisplayAttribute displayAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                if (displayAttribute != null)
+                {
+                    return displayAttribute.DisplayType;
+                }
+                else
+                    return DisplayAttribute.DisplayTypeEnum.None;
+            }
+        }
     }
 }

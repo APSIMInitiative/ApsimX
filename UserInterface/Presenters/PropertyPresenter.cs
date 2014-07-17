@@ -11,6 +11,7 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using Models.Core;
     using Views;
+    using Models;
 
     /// <summary>
     /// <para>
@@ -176,7 +177,16 @@ namespace UserInterface.Presenters
         {
             for (int i = 0; i < this.properties.Count; i++)
             {
-                this.grid.SetCellEditor(1, i, this.GetPropertyValue(this.properties[i]));
+                if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
+                {
+                    DataStore dataStore = this.model.Scope.Find(typeof(DataStore)) as DataStore;
+                    if (dataStore != null)
+                        this.grid.SetCellEditor(1, i, dataStore.TableNames);
+                }
+                else
+                {
+                    this.grid.SetCellEditor(1, i, this.GetPropertyValue(this.properties[i]));
+                }
             }
 
             this.grid.SetColumnSize(0);
