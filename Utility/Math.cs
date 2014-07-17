@@ -454,6 +454,10 @@ namespace Utility
             public double R2YX;
             public double VarRatio;
             public double RMSD;
+            public double NSE;        // Nash-Sutcliff efficiency
+            public double ME;         // Mean error
+            public double MAE;        // Mean Absolute Error
+            public double RSR;        // Root mean square error to Standard deviation Ratio
         };
 
         static public RegrStats CalcRegressionStats(IEnumerable X, IEnumerable Y)
@@ -474,6 +478,10 @@ namespace Utility
             double REGSS, REGSSM;
             double RESIDSS, RESIDSSM;
             double S2;
+            double SumOfSquaredResiduals = 0;   //SUM i=1->n  ((P(i) - O(i)) ^ 2)
+            double SumOfResiduals = 0;          //SUM i=1->n   (P(i) - O(i))
+            double SumOfAbsResiduals = 0;       //SUM i=1->n  |(P(i) - O(i))|
+            double SumOfSquaredOPResiduals = 0; //SUM i=1->n  ((O(i) - P(i)) ^ 2)
 
             stats.n = 0;
             stats.m = 0.0;
@@ -503,6 +511,12 @@ namespace Utility
                     SumY = SumY + yValue;
                     SumY2 = SumY2 + yValue * yValue;       // SS for y
                     SumXY = SumXY + xValue * yValue;       // SS for products
+
+                    SumOfSquaredResiduals += System.Math.Pow(xValue - yValue, 2);
+                    SumOfResiduals += xValue - yValue;
+                    SumOfAbsResiduals += System.Math.Abs(xValue - yValue);
+                    SumOfSquaredOPResiduals += System.Math.Pow(yValue - xValue, 2);
+
                     Num_points++;
                 }
             }
@@ -548,6 +562,11 @@ namespace Utility
             //      MeanAbsError = SumXYdiff / Num_points;
             //      MeanAbsPerError = SumXYDiffPer / Num_points;  // very dangerous when y is low
             // could use MeanAbsError over mean
+
+            stats.NSE = 1 - SumOfSquaredResiduals / Ybar;                    // Nash-Sutcliff efficiency
+            stats.ME = 1 / stats.n * SumOfResiduals;                         // Mean error
+            stats.MAE = 1 / stats.n * SumOfAbsResiduals;                     // Mean Absolute Error
+            stats.RSR = Math.Sqr(SumOfSquaredOPResiduals) / Math.Sqr(Ybar);  // Root mean square error to Standard deviation Ratio
             
             return stats;
         }
@@ -816,8 +835,8 @@ namespace Utility
         public static double Gamma(double x)
         {
             double[] p = {0.99999999999980993, 676.5203681218851, -1259.1392167224028,
-			     	  771.32342877765313, -176.61502916214059, 12.507343278686905,
-			     	  -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7};
+                      771.32342877765313, -176.61502916214059, 12.507343278686905,
+                      -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7};
             int g = 7;
             if (x < 0.5) return System.Math.PI / (System.Math.Sin(System.Math.PI * x) * Gamma(1 - x));
 
@@ -886,6 +905,7 @@ namespace Utility
             public double RMSD { get { return System.Math.Sqrt(MSD); } }
             public double Percent { get { return (RMSD / ObservedMean)*100; } }
 
+
             // Low level pre calculations.
             public double ObservedMean;
             public double PredictedMean;
@@ -914,7 +934,7 @@ namespace Utility
                 stats.X_XSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
                 stats.Y_YxX_X += (predicted[i] - stats.PredictedMean) * (observed[i] - stats.ObservedMean);
             }
-
+           
             return stats;
         }
 
