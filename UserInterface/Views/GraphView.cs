@@ -259,6 +259,9 @@ namespace UserInterface.Views
                 IEnumerator yEnum = y.GetEnumerator();
                 while (xEnum.MoveNext() && yEnum.MoveNext())
                 {
+                    bool xIsMissing = false;
+                    bool yIsMissing = false;
+
                     DataPoint P = new DataPoint();
                     if (xEnum.Current.GetType() == typeof(DateTime))
                     {
@@ -269,6 +272,7 @@ namespace UserInterface.Views
                     {
                         P.X = Convert.ToDouble(xEnum.Current);
                         xDataType = typeof(double);
+                        xIsMissing = double.IsNaN(P.X);
                     }
                     else
                     {
@@ -285,14 +289,16 @@ namespace UserInterface.Views
                     {
                         P.Y = Convert.ToDouble(yEnum.Current);
                         yDataType = typeof(double);
+                        yIsMissing = double.IsNaN(P.Y);
                     }
                     else
                     {
                         yLabels.Add(yEnum.Current.ToString());
                         yDataType = typeof(string);
 
-                    } 
-                    Points.Add(P);
+                    }
+                    if (!xIsMissing && !yIsMissing)
+                        Points.Add(P);
                 }
 
                 // Get the axes right for this data.

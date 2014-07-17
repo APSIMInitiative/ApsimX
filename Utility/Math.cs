@@ -496,14 +496,18 @@ namespace Utility
                     return null;
                 double xValue = Convert.ToDouble(xEnum.Current);
                 double yValue = Convert.ToDouble(yEnum.Current);
-
-                SumX = SumX + xValue;
-                SumX2 = SumX2 + xValue * xValue;       // SS for X
-                SumY = SumY + yValue;
-                SumY2 = SumY2 + yValue * yValue;       // SS for y
-                SumXY = SumXY + xValue * yValue;       // SS for products
-                Num_points++;
+                if (!double.IsNaN(xValue) && !double.IsNaN(yValue))
+                {
+                    SumX = SumX + xValue;
+                    SumX2 = SumX2 + xValue * xValue;       // SS for X
+                    SumY = SumY + yValue;
+                    SumY2 = SumY2 + yValue * yValue;       // SS for y
+                    SumXY = SumXY + xValue * yValue;       // SS for products
+                    Num_points++;
+                }
             }
+            if (Num_points == 0)
+                return null;
             Xbar = SumX / Num_points;
             Ybar = SumY / Num_points;
 
