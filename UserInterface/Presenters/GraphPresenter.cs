@@ -216,6 +216,10 @@ namespace UserInterface.Presenters
                     string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
                                      + "r2 = " + stats.R2.ToString("f2") + "\r\n"
                                      + "n = " + stats.n.ToString() + "\r\n"
+                                     + "NSE = " + stats.NSE.ToString("f2") + "\r\n"
+                                     + "ME = " + stats.ME.ToString("f2") + "\r\n"
+                                     + "MAE = " + stats.MAE.ToString("f2") + "\r\n"
+                                     + "RSR = " + stats.RSR.ToString("f2") + "\r\n"
                                      + "RMSD = " + stats.RMSD.ToString("f2");
                     GraphView.DrawText(equation, minimumX, yPosition, xAxisType, yAxisType, colour);
                 }

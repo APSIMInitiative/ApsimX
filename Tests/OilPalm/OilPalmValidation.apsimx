@@ -2788,7 +2788,7 @@ namespace Models
           <TableName>PredictedObserved</TableName>
           <FieldName>Predicted.OilPalm.LAI</FieldName>
         </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowRegressionLine>true</ShowRegressionLine>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7994,7 +7994,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\OilPalm\observed.prn</string>
+        <string>C:\ApsimX\Tests\OilPalm\observed.prn</string>
       </FileNames>
     </Input>
     <TimeSeriesStats>
@@ -8002,14 +8002,20 @@ namespace Models
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <PredictedObserved>
-      <Name>PredictedObserved</Name>
+      <Name>POMonthly</Name>
       <PredictedTableName>MonthlyOutput</PredictedTableName>
+      <ObservedTableName>Input</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>POAnnual</Name>
+      <PredictedTableName>AnnualOutput</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
   </DataStore>
   <Graph>
-    <Name>PvOLAI</Name>
+    <Name>LAI</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Year</Title>
@@ -8025,20 +8031,114 @@ namespace Models
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
+      <ColourArgb>-16777056</ColourArgb>
       <Marker>FilledCircle</Marker>
-      <Line>Solid</Line>
+      <Line>None</Line>
       <X>
-        <SimulationName>*</SimulationName>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.OilPalm.StemMass</FieldName>
+        <TableName>POMonthly</TableName>
+        <FieldName>Predicted.OilPalm.LAI</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.OilPalm.StemMass</FieldName>
+        <TableName>POMonthly</TableName>
+        <FieldName>Observed.OilPalm.LAI</FieldName>
       </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>Yield</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>LAI</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>graph</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777056</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualYield</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>BunchSize</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>LAI</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>graph</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777056</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualBunchSize</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>BunchProduction</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>LAI</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>graph</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777056</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualBunches</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>

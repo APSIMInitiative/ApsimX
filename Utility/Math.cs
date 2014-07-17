@@ -564,8 +564,8 @@ namespace Utility
             // could use MeanAbsError over mean
 
             stats.NSE = 1 - SumOfSquaredResiduals / Ybar;                    // Nash-Sutcliff efficiency
-            stats.ME = 1 / stats.n * SumOfResiduals;                         // Mean error
-            stats.MAE = 1 / stats.n * SumOfAbsResiduals;                     // Mean Absolute Error
+            stats.ME = 1 / (double)stats.n * SumOfResiduals;                         // Mean error
+            stats.MAE = 1 / (double)stats.n * SumOfAbsResiduals;                     // Mean Absolute Error
             stats.RSR = Math.Sqr(SumOfSquaredOPResiduals) / Math.Sqr(Ybar);  // Root mean square error to Standard deviation Ratio
             
             return stats;
