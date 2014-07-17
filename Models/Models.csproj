@@ -148,7 +148,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PostSimulationTools\Regression.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
