@@ -24,5 +24,12 @@ namespace Models.Core
         /// a total at the top of the column in a ProfileGrid.
         /// </summary>
         public bool ShowTotal { get; set; }
+
+        public enum DisplayTypeEnum { None, TableName };
+
+        /// <summary>
+        /// Gets or sets the display type. 
+        /// </summary>
+        public DisplayTypeEnum DisplayType { get; set; }
     }
 }
