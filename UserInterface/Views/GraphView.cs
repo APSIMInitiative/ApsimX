@@ -105,6 +105,7 @@ namespace UserInterface.Views
         {
             plot1.Model.Series.Clear();
             plot1.Model.Axes.Clear();
+            plot1.Model.Annotations.Clear();
         }
 
         /// <summary>
