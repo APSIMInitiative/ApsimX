@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Collections;
+using System.Linq;
 using Models.Factorial;
 
 namespace UserInterface.Presenters
@@ -142,7 +143,7 @@ namespace UserInterface.Presenters
 
                 // Format the axes.
                 foreach (Models.Graph.Axis A in Graph.Axes)
-                    GraphView.FormatAxis(A.Type, A.Title, A.Inverted);
+                    FormatAxis(A);
 
                 // Format the legend.
                 GraphView.FormatLegend(Graph.LegendPosition);
@@ -153,6 +154,37 @@ namespace UserInterface.Presenters
                 GraphView.Refresh();
             }
 
+        }
+
+        /// <summary>
+        /// Format the specified axis.
+        /// </summary>
+        /// <param name="axis">The axis to format</param>
+        private void FormatAxis(Models.Graph.Axis axis)
+        {
+            string title = axis.Title;
+            if (axis.Title == null || axis.Title == string.Empty)
+            {
+                // Work out a default title by going through all series and getting the
+                // X or Y field name depending on whether 'axis' is an x axis or a y axis.
+                HashSet<string> names = new HashSet<string>();
+
+                foreach (Series series in Graph.Series)
+                {
+                    if (series.XAxis == axis.Type)
+                    {
+                        names.Add(series.X.FieldName);
+                    }
+                    if (series.YAxis == axis.Type)
+                    {
+                        names.Add(series.Y.FieldName);
+                    }
+                }
+
+                // Create a default title by appending all 'names' together.
+                title = Utility.String.BuildString(names.ToArray(), ", ");
+            }
+            GraphView.FormatAxis(axis.Type, title, axis.Inverted);
         }
 
         /// <summary>
@@ -217,7 +249,7 @@ namespace UserInterface.Presenters
                                      + "r2 = " + stats.R2.ToString("f2") + "\r\n"
                                      + "n = " + stats.n.ToString() + "\r\n"
                                      + "RMSD = " + stats.RMSD.ToString("f2");
-                    GraphView.DrawText(equation, minimumX, yPosition, xAxisType, yAxisType, colour);
+                    GraphView.DrawText(equation, lowestAxisScale, yPosition, xAxisType, yAxisType, colour);
                 }
             }
         }

@@ -549,7 +549,8 @@ namespace UserInterface.Views
         /// </summary>
         public void SetCellValue(int Col, int Row, object Value)
         {
-            Grid[Col, Row].Value = Value;
+            if (Col != -1 && Row != -1)
+                Grid[Col, Row].Value = Value;
         }
 
         /// <summary>

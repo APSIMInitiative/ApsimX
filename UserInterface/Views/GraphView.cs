@@ -80,6 +80,8 @@ namespace UserInterface.Views
 
     public partial class GraphView : UserControl, IGraphView
     {
+        private const int FontSize = 16;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -95,7 +97,6 @@ namespace UserInterface.Views
         public event ClickAxisDelegate OnAxisClick;
         public event ClickDelegate OnLegendClick;
         public event ClickDelegate OnTitleClick;
-
 
         /// <summary>
         /// Clear the graph of everything.
@@ -115,6 +116,32 @@ namespace UserInterface.Views
             plot1.Model.LegendBorder = OxyColors.Black;
             plot1.Model.LegendBackground = OxyColors.White;
             plot1.Model.RefreshPlot(true);
+
+            foreach (OxyPlot.Axes.Axis axis in plot1.Model.Axes)
+            {
+                FormatAxisTickLabels(axis);
+            }
+            plot1.Model.RefreshPlot(true);
+        }
+
+        private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
+        {
+            if (axis is LinearAxis)
+            {
+                // We want the axis labels to always have a leading 0 when displaying decimal places.
+                // e.g. we want 0.5 rather than .5
+
+                // Use the current culture to format the string.
+                string st = axis.ActualMajorStep.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                // count the number of decimal places in the above string.
+                int pos = st.IndexOfAny(".,".ToCharArray());
+                if (pos != -1)
+                {
+                    int numDecimalPlaces = st.Length - pos - 1;
+                    axis.StringFormat = "F" + numDecimalPlaces.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -205,9 +232,11 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = GetAxis(axisType);
             if (oxyAxis != null)
             {
+                oxyAxis.FontSize = FontSize;
                 oxyAxis.Title = title;
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
+                oxyAxis.AxisTitleDistance = 10;
                 if (inverted)
                 {
                     oxyAxis.StartPosition = 1;
@@ -220,7 +249,6 @@ namespace UserInterface.Views
                 }
             }
         }
-
 
         /// <summary>
         /// Format the legend.

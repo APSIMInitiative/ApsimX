@@ -167,7 +167,11 @@ namespace UserInterface.Presenters
                 // Get the simulation and table names.
                 string SimulationName = null;
                 string TableName = null;
-                if (!SeriesView.DataSource.StartsWith("."))
+                if (!SeriesView.DataSource.Contains("."))
+                {
+                    TableName = SeriesView.DataSource;
+                }
+                else if (!SeriesView.DataSource.StartsWith("."))
                 {
                     SimulationName = SeriesView.DataSource;
                     TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
@@ -181,62 +185,65 @@ namespace UserInterface.Presenters
                 NewSeries.YAxis = Axis.AxisType.Left;
                 AllSeries.Add(NewSeries);
             }
-            Series S = AllSeries[SeriesIndex];
-
-            if (Col == 0) // Data source
+            if (SeriesIndex != -1)
             {
-                string SimulationName = NewContents.ToString();
-                string TableName;
-                if (SimulationName.Contains("."))
-                    TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
-                else
+                Series S = AllSeries[SeriesIndex];
+
+                if (Col == 0) // Data source
                 {
-                    TableName = SimulationName;
-                    SimulationName = null;
+                    string SimulationName = NewContents.ToString();
+                    string TableName;
+                    if (SimulationName.Contains("."))
+                        TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
+                    else
+                    {
+                        TableName = SimulationName;
+                        SimulationName = null;
+                    }
+                    S.X.SimulationName = SimulationName;
+                    S.X.TableName = TableName;
+                    S.Y.SimulationName = SimulationName;
+                    S.Y.TableName = TableName;
                 }
-                S.X.SimulationName = SimulationName;
-                S.X.TableName = TableName;
-                S.Y.SimulationName = SimulationName;
-                S.Y.TableName = TableName;
-            }
-            else if (Col == 1) // X
-                S.X.FieldName = NewContents.ToString();
-            else if (Col == 2)  // Y
-                S.Y.FieldName = NewContents.ToString();
-            else if (Col == 3) // Title
-                S.Title = NewContents.ToString();
-            else if (Col == 4) // Colour
-                S.Colour = Color.FromArgb((int)NewContents);
-            else if (Col == 5) // Type
-                S.Type = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), NewContents.ToString());
-            else if (Col == 6) // Top?
-            {
-                if ((bool)NewContents)
-                    S.XAxis = Axis.AxisType.Top;
-                else
-                    S.XAxis = Axis.AxisType.Bottom;
-            }
-            else if (Col == 7) // Right?
-            {
-                if ((bool)NewContents)
-                    S.YAxis = Axis.AxisType.Right;
-                else
-                    S.YAxis = Axis.AxisType.Left;
-            }
-            else if (Col == 8) // Line
-                S.Line = (Series.LineType)Enum.Parse(typeof(Series.LineType), NewContents.ToString());
+                else if (Col == 1) // X
+                    S.X.FieldName = NewContents.ToString();
+                else if (Col == 2)  // Y
+                    S.Y.FieldName = NewContents.ToString();
+                else if (Col == 3) // Title
+                    S.Title = NewContents.ToString();
+                else if (Col == 4) // Colour
+                    S.Colour = Color.FromArgb((int)NewContents);
+                else if (Col == 5) // Type
+                    S.Type = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), NewContents.ToString());
+                else if (Col == 6) // Top?
+                {
+                    if ((bool)NewContents)
+                        S.XAxis = Axis.AxisType.Top;
+                    else
+                        S.XAxis = Axis.AxisType.Bottom;
+                }
+                else if (Col == 7) // Right?
+                {
+                    if ((bool)NewContents)
+                        S.YAxis = Axis.AxisType.Right;
+                    else
+                        S.YAxis = Axis.AxisType.Left;
+                }
+                else if (Col == 8) // Line
+                    S.Line = (Series.LineType)Enum.Parse(typeof(Series.LineType), NewContents.ToString());
 
-            else if (Col == 9) // Marker
-                S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
+                else if (Col == 9) // Marker
+                    S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
 
-            else if (Col == 10) // Regression line?
-                S.ShowRegressionLine = (bool)NewContents;
+                else if (Col == 10) // Regression line?
+                    S.ShowRegressionLine = (bool)NewContents;
 
-            List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
-            string[] PropertyNamesChanged = new string[] { "Series", "Axes" };
-            object[] PropertyValues = new object[] { AllSeries, AllAxes };
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, PropertyNamesChanged, PropertyValues);
-            ExplorerPresenter.CommandHistory.Add(Cmd);
+                List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
+                string[] PropertyNamesChanged = new string[] { "Series", "Axes" };
+                object[] PropertyValues = new object[] { AllSeries, AllAxes };
+                Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, PropertyNamesChanged, PropertyValues);
+                ExplorerPresenter.CommandHistory.Add(Cmd);
+            }
         }
 
         /// <summary>
@@ -357,7 +364,7 @@ namespace UserInterface.Presenters
                 SeriesView.SeriesGrid.RowCount = SeriesView.SeriesGrid.RowCount + 1;
 
                 int Row = SeriesView.SeriesGrid.RowCount-1;
-                SeriesView.SeriesGrid.SetCellValue(0, Row, ColumnName);
+                SeriesView.SeriesGrid.SetCellValue(0, Row, SeriesView.DataSource);
                 OnCellChanged(1, Row, null, ColumnName);
                 SeriesView.XFocused = false;
                 SeriesView.YFocused = true;
