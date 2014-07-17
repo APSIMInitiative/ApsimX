@@ -258,6 +258,7 @@ namespace UserInterface.Views
             LegendPosition oxyLegendPosition;
             if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
                 plot1.Model.LegendPosition = oxyLegendPosition;
+            plot1.Model.LegendSymbolLength = 30;
         }
 
         /// <summary>
