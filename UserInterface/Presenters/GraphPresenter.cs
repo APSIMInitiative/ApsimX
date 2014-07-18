@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections;
 using System.Linq;
 using Models.Factorial;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -243,7 +244,7 @@ namespace UserInterface.Presenters
 
                     // Draw the equation.
                     double interval = (largestAxisScale - lowestAxisScale) / 20;
-                    double yPosition = largestAxisScale - seriesNumber * interval;
+                    double yPosition = largestAxisScale - (seriesNumber+1) * interval;
 
                     string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
                                      + "r2 = " + stats.R2.ToString("f2") + "\r\n"
@@ -296,7 +297,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 600, 600);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            GraphView.Export(600, 600, img);
+            GraphView.Export(img);
 
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
@@ -320,18 +321,18 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked an axis.
         /// </summary>
-        private void OnAxisClick(OxyPlot.Axes.AxisPosition AxisPosition)
+        private void OnAxisClick(Axis.AxisType axisType)
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
             AxisView A = new AxisView();
             GraphView.ShowEditorPanel(A);
-            AxisPresenter.Attach(GetAxis(AxisPosition), A, ExplorerPresenter);
+            AxisPresenter.Attach(GetAxis(axisType), A, ExplorerPresenter);
         }
 
         /// <summary>
         /// User has clicked the plot area.
         /// </summary>
-        private void OnPlotClick()
+        private void OnPlotClick(object sender, EventArgs e)
         {
             SeriesPresenter SeriesPresenter = new SeriesPresenter();
             SeriesView SeriesView = new SeriesView();
@@ -342,7 +343,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked a title.
         /// </summary>
-        private void OnTitleClick()
+        private void OnTitleClick(object sender, EventArgs e)
         {
             TitlePresenter titlePresenter = new TitlePresenter();
             TitleView t = new TitleView();
@@ -353,12 +354,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Get an axis 
         /// </summary>
-        private object GetAxis(OxyPlot.Axes.AxisPosition AxisType)
+        private object GetAxis(Axis.AxisType axisType)
         {
             foreach (Axis A in Graph.Axes)
-                if (A.Type.ToString() == AxisType.ToString())
+                if (A.Type.ToString() == axisType.ToString())
                     return A;
-            throw new Exception("Cannot find axis with type: " + AxisType.ToString());
+            throw new Exception("Cannot find axis with type: " + axisType.ToString());
         }
 
         /// <summary>
@@ -372,7 +373,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked the legend.
         /// </summary>
-        void OnLegendClick()
+        void OnLegendClick(object sender, EventArgs e)
         {
             LegendPresenter presenter = new LegendPresenter();
             LegendView view = new LegendView();

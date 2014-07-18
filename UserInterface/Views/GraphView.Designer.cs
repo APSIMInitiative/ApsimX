@@ -1,11 +1,40 @@
-﻿namespace UserInterface.Views
+﻿// -----------------------------------------------------------------------
+// <copyright file="GraphView.Designer.cs" company="CSIRO">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Views
 {
-    partial class GraphView
+    /// <summary>
+    /// A view that contains a graph and click zones for the user to allow
+    /// editing various parts of the graph.
+    /// </summary>
+    public partial class GraphView
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// The graph's plot
+        /// </summary>
+        private OxyPlot.WindowsForms.Plot plot1;
+
+        /// <summary>
+        /// The splitter between the graph plot and the editors.
+        /// </summary>
+        private System.Windows.Forms.Splitter splitter;
+
+        /// <summary>
+        /// The bottom panel that holds the editors.
+        /// </summary>
+        private System.Windows.Forms.Panel bottomPanel;
+
+        /// <summary>
+        /// The close button to hide the bottom panel.
+        /// </summary>
+        private System.Windows.Forms.Button closeButton;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -13,10 +42,11 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -29,10 +59,10 @@
         private void InitializeComponent()
         {
             this.plot1 = new OxyPlot.WindowsForms.Plot();
-            this.Splitter = new System.Windows.Forms.Splitter();
-            this.BottomPanel = new System.Windows.Forms.Panel();
-            this.CloseButton = new System.Windows.Forms.Button();
-            this.BottomPanel.SuspendLayout();
+            this.splitter = new System.Windows.Forms.Splitter();
+            this.bottomPanel = new System.Windows.Forms.Panel();
+            this.closeButton = new System.Windows.Forms.Button();
+            this.bottomPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // plot1
@@ -53,56 +83,48 @@
             // 
             // Splitter
             // 
-            this.Splitter.BackColor = System.Drawing.SystemColors.Control;
-            this.Splitter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.Splitter.Location = new System.Drawing.Point(0, 302);
-            this.Splitter.Name = "Splitter";
-            this.Splitter.Size = new System.Drawing.Size(568, 5);
-            this.Splitter.TabIndex = 2;
-            this.Splitter.TabStop = false;
+            this.splitter.BackColor = System.Drawing.SystemColors.Control;
+            this.splitter.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter.Location = new System.Drawing.Point(0, 302);
+            this.splitter.Name = "Splitter";
+            this.splitter.Size = new System.Drawing.Size(568, 5);
+            this.splitter.TabIndex = 2;
+            this.splitter.TabStop = false;
             // 
             // BottomPanel
             // 
-            this.BottomPanel.Controls.Add(this.CloseButton);
-            this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.BottomPanel.Location = new System.Drawing.Point(0, 307);
-            this.BottomPanel.Name = "BottomPanel";
-            this.BottomPanel.Size = new System.Drawing.Size(568, 194);
-            this.BottomPanel.TabIndex = 3;
+            this.bottomPanel.Controls.Add(this.closeButton);
+            this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bottomPanel.Location = new System.Drawing.Point(0, 307);
+            this.bottomPanel.Name = "BottomPanel";
+            this.bottomPanel.Size = new System.Drawing.Size(568, 194);
+            this.bottomPanel.TabIndex = 3;
             // 
             // CloseButton
             // 
-            this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseButton.Image = global::UserInterface.Properties.Resources.Close;
-            this.CloseButton.Location = new System.Drawing.Point(546, 1);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(22, 23);
-            this.CloseButton.TabIndex = 0;
-            this.CloseButton.UseVisualStyleBackColor = true;
-            this.CloseButton.Click += new System.EventHandler(this.CloseEditorPanel);
+            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeButton.Image = global::UserInterface.Properties.Resources.Close;
+            this.closeButton.Location = new System.Drawing.Point(546, 1);
+            this.closeButton.Name = "CloseButton";
+            this.closeButton.Size = new System.Drawing.Size(22, 23);
+            this.closeButton.TabIndex = 0;
+            this.closeButton.UseVisualStyleBackColor = true;
+            this.closeButton.Click += new System.EventHandler(this.OnCloseEditorPanel);
             // 
             // GraphView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.plot1);
-            this.Controls.Add(this.Splitter);
-            this.Controls.Add(this.BottomPanel);
+            this.Controls.Add(this.splitter);
+            this.Controls.Add(this.bottomPanel);
             this.Name = "GraphView";
             this.Size = new System.Drawing.Size(568, 501);
-            this.BottomPanel.ResumeLayout(false);
+            this.bottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private OxyPlot.WindowsForms.Plot plot1;
-        private System.Windows.Forms.Splitter Splitter;
-        private System.Windows.Forms.Panel BottomPanel;
-        private System.Windows.Forms.Button CloseButton;
-
-
-
     }
 }

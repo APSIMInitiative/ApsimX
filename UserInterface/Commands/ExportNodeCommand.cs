@@ -18,7 +18,6 @@ namespace UserInterface.Commands
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
-                                                                    typeof(Experiment),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation)};
 
@@ -70,9 +69,7 @@ namespace UserInterface.Commands
                 StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
                 index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head/>");
                 index.WriteLine("<body>");
-
-                // Write out any models that are under this model.
-                DoExportZone(modelToExport, folderPath, index);
+                index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
 
                 // Look for child models that are a folder or simulation etc
                 // that we need to recurse down through.
@@ -90,6 +87,9 @@ namespace UserInterface.Commands
                         DoExport(child, childFolderPath);
                     }
                 }
+
+                // Write out any models that are under this model.
+                DoExportZone(modelToExport, folderPath, index);
 
                 index.WriteLine("</body>");
                 index.WriteLine("</html>");
