@@ -1,0 +1,148 @@
+﻿// -----------------------------------------------------------------------
+// <copyright file="IGraphView.cs" company="CSIRO">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Interfaces
+{
+    using System;
+    using System.Collections;
+    using System.Drawing;
+    using System.Windows.Forms;
+    using Models.Graph;
+
+    /// <summary>
+    /// Event arguments for a Axis click
+    /// </summary>
+    /// <param name="axisType">The type of axis clicked</param>
+    public delegate void ClickAxisDelegate(Axis.AxisType axisType);
+
+    /// <summary>
+    /// This interface defines the API for talking to a GraphView.
+    /// </summary>
+    public interface IGraphView
+    {
+        /// <summary>
+        /// Invoked when the user clicks on the plot area (the area inside the axes)
+        /// </summary>
+        event EventHandler OnPlotClick;
+
+        /// <summary>
+        /// Invoked when the user clicks on an axis.
+        /// </summary>
+        event ClickAxisDelegate OnAxisClick;
+
+        /// <summary>
+        /// Invoked when the user clicks on a legend.
+        /// </summary>
+        event EventHandler OnLegendClick;
+
+        /// <summary>
+        /// Invoked when the user clicks on the graph title.
+        /// </summary>
+        event EventHandler OnTitleClick;
+
+        /// <summary>
+        /// Show the specified editor.
+        /// </summary>
+        /// <param name="editor">Show the specified series editor</param>
+        void ShowEditorPanel(UserControl editor);
+
+        /// <summary>
+        /// Clear the graph of everything.
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Refresh the graph.
+        /// </summary>
+        void Refresh();
+
+        /// <summary>
+        ///  Draw a line and markers series with the specified arguments.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        /// <param name="lineType">The type of series line</param>
+        /// <param name="markerType">The type of series markers</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawLineAndMarkers(
+             string title, 
+             IEnumerable x, 
+             IEnumerable y,
+             Models.Graph.Axis.AxisType xAxisType, 
+             Models.Graph.Axis.AxisType yAxisType,
+             Color colour,
+             Models.Graph.Series.LineType lineType, 
+             Models.Graph.Series.MarkerType markerType);
+
+        /// <summary>
+        /// Draw a bar series with the specified arguments.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawBar(
+            string title, 
+            IEnumerable x, 
+            IEnumerable y, 
+            Models.Graph.Axis.AxisType xAxisType, 
+            Models.Graph.Axis.AxisType yAxisType, 
+            Color colour);
+
+        /// <summary>
+        /// Draw text on the graph at the specified coordinates.
+        /// </summary>
+        /// <param name="text">The text to put on the graph</param>
+        /// <param name="x">The x position in graph coordinates</param>
+        /// <param name="y">The y position in graph coordinates</param>
+        /// <param name="xAxisType">The axis type the x value relates to</param>
+        /// <param name="yAxisType">The axis type the y value are relates to</param>
+        /// <param name="colour">The color of the text</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawText(
+            string text, 
+            double x, 
+            double y,
+            Models.Graph.Axis.AxisType xAxisType, 
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour);
+
+        /// <summary>
+        /// Format the specified axis.
+        /// </summary>
+        /// <param name="axisType">The axis type to format</param>
+        /// <param name="title">The axis title. If null then a default axis title will be shown</param>
+        /// <param name="inverted">Invert the axis?</param>
+        void FormatAxis(
+            Models.Graph.Axis.AxisType axisType, 
+            string title, 
+            bool inverted);
+
+        /// <summary>
+        /// Format the legend.
+        /// </summary>
+        /// <param name="legendPositionType">Position of the legend</param>
+        void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType);
+
+        /// <summary>
+        /// Format the title.
+        /// </summary>
+        /// <param name="text">Text of the title</param>
+        void FormatTitle(string text);
+
+        /// <summary>
+        /// Export the graph to the specified 'bitmap'
+        /// </summary>
+        /// <param name="bitmap">Bitmap to write to</param>
+        void Export(Bitmap bitmap);
+    }
+}
