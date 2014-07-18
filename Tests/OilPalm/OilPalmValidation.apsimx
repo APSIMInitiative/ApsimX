@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>Memo</Name>
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+ <head>
+  <title></title>
+ </head>
+ <body>
+  <p>Add information about the trial.</p>
+ </body>
+</html>]]></MemoText>
+  </Memo>
   <Folder>
     <Name>Sangara</Name>
     <Experiment>
@@ -2374,7 +2387,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Frond Production</Title>
+        <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -2505,7 +2518,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Yield</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -2636,7 +2649,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -2755,40 +2768,6 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>PvOLAI</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>LAI</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title>graph</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>Solid</Line>
-        <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>Observed.OilPalm.LAI</FieldName>
-        </X>
-        <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
-          <TableName>PredictedObserved</TableName>
-          <FieldName>Predicted.OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5198,7 +5177,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Frond Production</Title>
+        <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -5329,7 +5308,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Yield</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -5460,7 +5439,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -7604,7 +7583,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Frond Production</Title>
+        <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -7735,7 +7714,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Yield</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -7866,7 +7845,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>LAI</Title>
+        <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -8018,12 +7997,12 @@ namespace Models
     <Name>LAI</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Year</Title>
+      <Title />
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>LAI</Title>
+      <Title />
       <Inverted>false</Inverted>
     </Axis>
     <Series>
@@ -8050,12 +8029,12 @@ namespace Models
     <Name>Yield</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Year</Title>
+      <Title>Predicted Bunch Production</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>LAI</Title>
+      <Title>Observed Bunch Production</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
@@ -8082,12 +8061,12 @@ namespace Models
     <Name>BunchSize</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Year</Title>
+      <Title>Predicted Bunch Size</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>LAI</Title>
+      <Title>Observed Bunch Size</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
@@ -8114,12 +8093,12 @@ namespace Models
     <Name>BunchProduction</Name>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Year</Title>
+      <Title>Predicted Bunch Production</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>LAI</Title>
+      <Title>Observed Bunch Production</Title>
       <Inverted>false</Inverted>
     </Axis>
     <Series>
