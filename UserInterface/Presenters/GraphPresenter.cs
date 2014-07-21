@@ -128,7 +128,7 @@ namespace UserInterface.Presenters
                             if (S.Type == Models.Graph.Series.SeriesType.Bar)
                                 GraphView.DrawBar(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour);
 
-                            else if (S.Type == Series.SeriesType.Line)
+                            else if (S.Type == Series.SeriesType.Line || S.Type == Series.SeriesType.Scatter)
                             {
                                 GraphView.DrawLineAndMarkers(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour,
                                                              S.Line, S.Marker);

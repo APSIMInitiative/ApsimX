@@ -282,6 +282,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool SelectNextNode()
         {
+            HideRightHandPanel();
             // Get a complete list of all models in this file.
             List<Model> allModels = ApsimXFile.Children.AllRecursively;
 
