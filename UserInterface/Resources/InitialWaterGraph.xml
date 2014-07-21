@@ -12,6 +12,25 @@
     <Inverted>false</Inverted>
   </Axis>
   <Series>
+    <Type>Area</Type>
+    <XAxis>Top</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-3479297</ColourArgb>
+    <Marker>None</Marker>
+    <X>
+      <FieldName>[Soil].LL15</FieldName>
+    </X>
+    <Y>
+      <FieldName>[Soil].DepthMidPoints</FieldName>
+    </Y>
+    <X2>
+      <FieldName>[Soil].SW</FieldName>
+    </X2>
+    <Y2>
+      <FieldName>[Soil].DepthMidPoints</FieldName>
+    </Y2>
+  </Series>  
+  <Series>
     <Type>Line</Type>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
@@ -58,32 +77,6 @@
     <Marker>None</Marker>
     <X>
       <FieldName>[Soil].SAT</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Type>Line</Type>
-    <XAxis>Top</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-32768</ColourArgb>
-    <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].LL15</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil]l.DepthMidPoints</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Type>Line</Type>
-    <XAxis>Top</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-32768</ColourArgb>
-    <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].SW</FieldName>
     </X>
     <Y>
       <FieldName>[Soil].DepthMidPoints</FieldName>

@@ -119,7 +119,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Called by TabbedExplorerPresenter to do a save. Return true if all ok.
         /// </summary>
-        public bool Save()
+        public bool SaveIfChanged()
         {
             bool result = true;
             try
@@ -145,6 +145,10 @@ namespace UserInterface.Presenters
                         result = false;
                     else if (choice == 0)                       // save
                     {
+                        // Need to hide the right hand panel because some views may not have saved
+                        // their contents until they get a 'Detach' call.
+                        HideRightHandPanel();
+
                         WriteSimulation();
                         result = true;
                     }
@@ -156,6 +160,25 @@ namespace UserInterface.Presenters
                 result = false;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Save all changes.
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                // Need to hide the right hand panel because some views may not have saved
+                // their contents until they get a 'Detach' call.
+                HideRightHandPanel();
+                this.ApsimXFile.Write(this.ApsimXFile.FileName);
+            }
+            catch (Exception err)
+            {
+                this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+            }
+
         }
 
         /// <summary>

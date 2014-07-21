@@ -60,7 +60,7 @@ namespace UserInterface.Presenters
 
             foreach (ExplorerPresenter presenter in Presenters)
             {
-                ok = presenter.Save() && ok;
+                ok = presenter.SaveIfChanged() && ok;
             }
 
             return ok;

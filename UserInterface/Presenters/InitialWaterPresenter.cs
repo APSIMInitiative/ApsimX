@@ -42,11 +42,6 @@ namespace UserInterface.Presenters
         private Graph graph;
 
         /// <summary>
-        /// The parent zone of our model.
-        /// </summary>
-        private Zone parentZone;
-
-        /// <summary>
         /// Attach the view to the model.
         /// </summary>
         /// <param name="model">The initial water model</param>
@@ -66,13 +61,9 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
-            this.parentZone = this.initialWater.Scope.Find(typeof(Zone)) as Zone;
-            if (this.parentZone != null)
-            {
-                this.parentZone.Children.Add(this.graph);
-                this.graphPresenter = new GraphPresenter();
-                this.graphPresenter.Attach(this.graph, this.initialWaterView.Graph, this.explorerPresenter);
-            }
+            this.initialWater.Children.Add(this.graph);
+            this.graphPresenter = new GraphPresenter();
+            this.graphPresenter.Attach(this.graph, this.initialWaterView.Graph, this.explorerPresenter);
         }
 
         /// <summary>
@@ -82,10 +73,7 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
-            if (this.parentZone != null && this.graph != null)
-            {
-                this.parentZone.Children.Remove(this.graph);
-            }
+            this.initialWater.Children.Remove(this.graph);
         }
 
         /// <summary>

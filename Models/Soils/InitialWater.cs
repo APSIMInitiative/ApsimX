@@ -173,7 +173,7 @@ namespace Models.Soils
             {
                 // Get the plant available water (mm/mm)
                 double[] pawc;
-                if (this.RelativeTo == "LL15")
+                if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                 {
                     pawc = this.Soil.PAWC;
                 }

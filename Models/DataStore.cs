@@ -116,7 +116,8 @@ namespace Models
             if (simulation == null)
             {
                 Simulations simulations = ownerModel.ParentOfType(typeof(Simulations)) as Simulations;
-                Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                if (simulations != null)
+                    Filename = Path.ChangeExtension(simulations.FileName, ".db");
             }
             else
                 Filename = Path.ChangeExtension(simulation.FileName, ".db");

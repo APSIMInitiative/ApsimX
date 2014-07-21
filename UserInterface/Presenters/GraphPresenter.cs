@@ -53,6 +53,7 @@ namespace UserInterface.Presenters
             GraphView.OnLegendClick += OnLegendClick;
             GraphView.OnTitleClick += OnTitleClick;
             ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
+            this.GraphView.AddContextAction("Copy graph XML to clipboard", CopyGraphXML);
 
             // Connect to a datastore.
             DataStore = new Models.DataStore(Graph);
@@ -127,10 +128,19 @@ namespace UserInterface.Presenters
                             if (S.Type == Models.Graph.Series.SeriesType.Bar)
                                 GraphView.DrawBar(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour);
 
-                            else
+                            else if (S.Type == Series.SeriesType.Line)
+                            {
                                 GraphView.DrawLineAndMarkers(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour,
                                                              S.Line, S.Marker);
+                            }
+                            else
+                            {
+                                // Get extra data for area series.
+                                IEnumerable x2 = GetData(simulationName, S.X2.TableName, S.X2.FieldName);
+                                IEnumerable y2 = GetData(simulationName, S.Y2.TableName, S.Y2.FieldName);
 
+                                GraphView.DrawArea(seriesTitle, x, y, x2, y2, S.XAxis, S.YAxis, seriesColour);
+                            }
                             if (S.ShowRegressionLine)
                                 AddRegressionLine(seriesNumber, seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour);
                             
@@ -332,6 +342,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked the plot area.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
         private void OnPlotClick(object sender, EventArgs e)
         {
             SeriesPresenter SeriesPresenter = new SeriesPresenter();
@@ -343,6 +355,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked a title.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
         private void OnTitleClick(object sender, EventArgs e)
         {
             TitlePresenter titlePresenter = new TitlePresenter();
@@ -373,7 +387,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked the legend.
         /// </summary>
-        void OnLegendClick(object sender, EventArgs e)
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLegendClick(object sender, EventArgs e)
         {
             LegendPresenter presenter = new LegendPresenter();
             LegendView view = new LegendView();
@@ -381,7 +397,16 @@ namespace UserInterface.Presenters
             presenter.Attach(Graph, view, ExplorerPresenter);
         }
 
-
+        /// <summary>
+        /// User has clicked "copy graph xml" menu item.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphXML(object sender, EventArgs e)
+        {
+            // Set the clipboard text.
+            System.Windows.Forms.Clipboard.SetText(this.Graph.Serialise());
+        }
 
         /// <summary>
         /// Creates color with corrected brightness.

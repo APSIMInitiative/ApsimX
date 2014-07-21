@@ -99,6 +99,29 @@ namespace UserInterface.Interfaces
             Color colour);
 
         /// <summary>
+        /// Draw an  area series with the specified arguments. A filled polygon is
+        /// drawn with the x1, y1, x2, y2 coordinates.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x1">The x1 values for the series</param>
+        /// <param name="y1">The y1 values for the series</param>
+        /// <param name="x2">The x2 values for the series</param>
+        /// <param name="y2">The y2 values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawArea(
+            string title,
+            IEnumerable x1,
+            IEnumerable y1,
+            IEnumerable x2,
+            IEnumerable y2,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour);
+
+        /// <summary>
         /// Draw text on the graph at the specified coordinates.
         /// </summary>
         /// <param name="text">The text to put on the graph</param>
@@ -144,5 +167,11 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         void Export(Bitmap bitmap);
+
+        /// <summary>
+        /// Add an action (on context menu) on the memo.
+        /// </summary>
+        void AddContextAction(string ButtonText, System.EventHandler OnClick);
+
     }
 }

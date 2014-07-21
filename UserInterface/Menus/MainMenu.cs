@@ -37,14 +37,7 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Save")]
         public void OnSaveClick(object sender, EventArgs e)
         {
-            try
-            {
-                this.explorerPresenter.ApsimXFile.Write(this.explorerPresenter.ApsimXFile.FileName);
-            }
-            catch (Exception err)
-            {
-                this.explorerPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
-            }
+            this.explorerPresenter.Save();
         }
 
         /// <summary>

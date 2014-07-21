@@ -58,7 +58,9 @@ namespace UserInterface.Views
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.plot1 = new OxyPlot.WindowsForms.Plot();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.splitter = new System.Windows.Forms.Splitter();
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.closeButton = new System.Windows.Forms.Button();
@@ -67,6 +69,7 @@ namespace UserInterface.Views
             // 
             // plot1
             // 
+            this.plot1.ContextMenuStrip = this.contextMenuStrip1;
             this.plot1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plot1.KeyboardPanHorizontalStep = 0.1D;
             this.plot1.KeyboardPanVerticalStep = 0.1D;
@@ -81,31 +84,36 @@ namespace UserInterface.Views
             this.plot1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             this.plot1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnMouseDoubleClick);
             // 
-            // Splitter
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 26);
+            // 
+            // splitter
             // 
             this.splitter.BackColor = System.Drawing.SystemColors.Control;
             this.splitter.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.splitter.Location = new System.Drawing.Point(0, 302);
-            this.splitter.Name = "Splitter";
+            this.splitter.Name = "splitter";
             this.splitter.Size = new System.Drawing.Size(568, 5);
             this.splitter.TabIndex = 2;
             this.splitter.TabStop = false;
             // 
-            // BottomPanel
+            // bottomPanel
             // 
             this.bottomPanel.Controls.Add(this.closeButton);
             this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bottomPanel.Location = new System.Drawing.Point(0, 307);
-            this.bottomPanel.Name = "BottomPanel";
+            this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(568, 194);
             this.bottomPanel.TabIndex = 3;
             // 
-            // CloseButton
+            // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.Image = global::UserInterface.Properties.Resources.Close;
             this.closeButton.Location = new System.Drawing.Point(546, 1);
-            this.closeButton.Name = "CloseButton";
+            this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(22, 23);
             this.closeButton.TabIndex = 0;
             this.closeButton.UseVisualStyleBackColor = true;
@@ -126,5 +134,7 @@ namespace UserInterface.Views
         }
 
         #endregion
+
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

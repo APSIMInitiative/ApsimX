@@ -156,9 +156,6 @@ namespace UserInterface.Views
         /// <summary>
         /// Draw a bar series with the specified arguments.
         /// </summary>
-        /// <summary>
-        /// Draw a bar series with the specified arguments.
-        /// </summary>
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
@@ -178,6 +175,47 @@ namespace UserInterface.Views
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+            this.plot1.Model.Series.Add(series);
+        }
+
+        /// <summary>
+        /// Draw an  area series with the specified arguments. A filled polygon is
+        /// drawn with the x1, y1, x2, y2 coordinates.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x1">The x1 values for the series</param>
+        /// <param name="y1">The y1 values for the series</param>
+        /// <param name="x2">The x2 values for the series</param>
+        /// <param name="y2">The y2 values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawArea(
+            string title,
+            IEnumerable x1,
+            IEnumerable y1,
+            IEnumerable x2,
+            IEnumerable y2,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour)
+        {
+            AreaSeries series = new AreaSeries();
+            series.Color = ConverterExtensions.ToOxyColor(colour);
+            series.Fill = ConverterExtensions.ToOxyColor(colour);
+            List<IDataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
+            List<IDataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
+
+            foreach (IDataPoint point in points)
+            {
+                series.Points.Add(point);
+            }
+
+            foreach (IDataPoint point in points2)
+            {
+                series.Points2.Add(point);
+            }
             this.plot1.Model.Series.Add(series);
         }
 
@@ -344,7 +382,7 @@ namespace UserInterface.Views
         /// <param name="yAxisType">The y axis the data is associated with</param>
         /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        private List<DataPoint> PopulateDataPointSeries(
+        private List<IDataPoint> PopulateDataPointSeries(
             IEnumerable x, 
             IEnumerable y,                                
             Models.Graph.Axis.AxisType xAxisType,
@@ -354,7 +392,7 @@ namespace UserInterface.Views
             List<string> yLabels = new List<string>();
             Type xDataType = null;
             Type yDataType = null;
-            List<DataPoint> points = new List<DataPoint>();
+            List<IDataPoint> points = new List<IDataPoint>();
             if (x != null && y != null && x != null && y != null)
             {
                 IEnumerator xEnum = x.GetEnumerator();
@@ -574,6 +612,17 @@ namespace UserInterface.Views
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the memo.
+        /// </summary>
+        /// <param name="buttonText">Text for button</param>
+        /// <param name="onClick">Event handler for button click</param>
+        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        {
+            contextMenuStrip1.Items.Add(buttonText);
+            contextMenuStrip1.Items[0].Click += onClick;
         }
     }
 }
