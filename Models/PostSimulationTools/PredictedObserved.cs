@@ -54,8 +54,8 @@ namespace Models.PostSimulationTools
                     query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
                     query.Replace("@field", s);
                 }
-                
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
+
+                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match' = R.'@match'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
                 query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 

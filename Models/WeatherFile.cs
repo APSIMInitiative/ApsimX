@@ -64,8 +64,12 @@ namespace Models
                 if (FileName != null)
                 {
                     Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
-                    FileName = FileName.Replace( Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
-                    FileName = FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, "");
+                    if (simulation != null && simulation.FileName != null)
+                    {
+                        FileName = FileName.Replace(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
+                        if (FileName.Contains(Path.GetDirectoryName(simulation.FileName)))
+                            FileName = FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, "");
+                    }
                 }
             }
         }

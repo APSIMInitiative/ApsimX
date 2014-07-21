@@ -24,6 +24,8 @@ namespace UserInterface.Views
         string[] MemoLines { get; set; }
         bool ReadOnly { get; set; }
         string LabelText { get; set; }
+
+        void Export(int width, int height, Graphics graphics);
     }
 
     /// <summary>
@@ -32,7 +34,6 @@ namespace UserInterface.Views
     public partial class MemoView : UserControl, IMemoView
     {
         public event EventHandler<EditorArgs> MemoUpdate;
-        public event EventHandler OnPopup;
 
         public MemoView()
         {
@@ -115,6 +116,34 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Export the memo to the specified 'graphics'
+        /// </summary>
+        public void Export(int width, int height, Graphics graphics)
+        {
+            float x = 10;
+            float y = 0;
+            int charpos = 0;
+            while (charpos < richTextBox1.Text.Length)
+            {
+                if (richTextBox1.Text[charpos] == '\n')
+                {
+                    charpos++;
+                    y += 20;
+                    x = 10;
+                }
+                else if (richTextBox1.Text[charpos] == '\r')
+                    charpos++;
+                else
+                {
+                    richTextBox1.Select(charpos, 1);
+                    graphics.DrawString(richTextBox1.SelectedText, richTextBox1.SelectionFont,
+                                        new SolidBrush(richTextBox1.SelectionColor), x, y);
+                    x += graphics.MeasureString(richTextBox1.SelectedText, richTextBox1.SelectionFont).Width;
+                    charpos++;
+                }
+            }
+        }
 
     }
 

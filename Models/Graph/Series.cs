@@ -13,7 +13,7 @@ namespace Models.Graph
 
         public string Title { get; set; }
 
-        public enum SeriesType { Line, Bar, Scatter };
+        public enum SeriesType { Line, Bar, Scatter, Area };
         public SeriesType Type { get; set; }
         
         public Axis.AxisType XAxis { get; set; }

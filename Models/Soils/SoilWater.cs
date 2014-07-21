@@ -539,11 +539,9 @@ namespace Models.Soils
 
 
         private double[] _dlayer = null;
-        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
-        [Description("Thickness of soil layer")]
         public double[] dlayer    //! thickness of soil layer (mm)
         {
             get { return _dlayer; }
@@ -604,10 +602,8 @@ namespace Models.Soils
         }
 
 
-        [UserInterfaceIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Saturated water content for layer")]
         private double[] sat       //! saturated water content for layer  
         {
             get
@@ -637,11 +633,9 @@ namespace Models.Soils
             }
         }
 
-        [UserInterfaceIgnore]
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Drained upper limit soil water content for each soil layer")]
         public double[] dul       //! drained upper limit soil water content for each soil layer 
         {
             get
@@ -681,8 +675,6 @@ namespace Models.Soils
 #endif
 
         [XmlIgnore]
-        [UserInterfaceIgnore]
-        [Description("Soil water content of layer")]
         public double[] sw        //! soil water content of layer
         {
             get
@@ -734,8 +726,6 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [XmlIgnore]
-        [UserInterfaceIgnore]
-        [Description("15 bar lower limit of extractable soil water for each soil layer")]
         public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
             get
@@ -771,8 +761,6 @@ namespace Models.Soils
 #else
         [Units("0-1")]
 #endif
-        [Description("Air dry soil water content")]
-        [UserInterfaceIgnore]
         private double[] air_dry   //! air dry soil water content
         {
             get
@@ -809,11 +797,11 @@ namespace Models.Soils
         // be mapped into a standardised layer structure. The 4 variables below (Thickness, SWCON, MWCON and KLAT) 
         // may be in a different layer structure.
 
-        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
         [XmlIgnore]
         [Units("cm")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -828,11 +816,12 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
-        [Description("Soil water conductivity constant")]
+        [Description("SWCON")]
         public double[] SWCON { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
+        [Description("KLAT")]
         public double[] KLAT { get; set; }
 
         #endregion
@@ -842,13 +831,11 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm/d")]
-        [Description("Saturated conductivity")]
         private double[] ks = null;        //! saturated conductivity (mm/d)
 
         [XmlIgnore]
         [Bounds(Lower = 0.01, Upper = 3.0)]
         [Units("g/cm^3")]
-        [Description("Bulk density of soil")]
         public double[] bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
 
 
@@ -856,8 +843,6 @@ namespace Models.Soils
 
         private double[] _sat_dep;
         [Units("mm")]
-        [Description("Sat * dlayer")]
-        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
         {
@@ -877,8 +862,6 @@ namespace Models.Soils
 
         private double[] _dul_dep;
         [Units("mm")]
-        [Description("dul * dlayer")]
-        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
         {
@@ -899,9 +882,7 @@ namespace Models.Soils
         private double[] _sw_dep;
 
         [XmlIgnore]
-        [UserInterfaceIgnore]
         [Units("mm")]
-        [Description("sw * dlayer")]
         public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sw_dep; }
@@ -925,8 +906,6 @@ namespace Models.Soils
 
         private double[] _ll15_dep;
         [Units("mm")]
-        [Description("ll15 * dlayer")]
-        [UserInterfaceIgnore]
         [XmlIgnore]
         public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
@@ -947,8 +926,6 @@ namespace Models.Soils
 
         private double[] _air_dry_dep;
         [Units("mm")]
-        [UserInterfaceIgnore]
-        [Description("air_dry * dlayer")]
         private double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
         {
             get { return _air_dry_dep; }
@@ -967,7 +944,6 @@ namespace Models.Soils
 
 
         [Units("mm/mm")]
-        [Description("Soil water content of layer")]
         private double[] sws       //TODO: this appears to just be an output variable and is identical to sw. I think it should be removed.   //! temporary soil water array used in water_table calculation
         {
             get
@@ -982,18 +958,14 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("mm")]
-        [Description("Depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)")]
         public double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
         [XmlIgnore]
         [Units("mm")]
-        [Description("Initially, water moving downward into layer i (mm), then water moving downward out of layer i (saturated flow)")]
         public double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
         [XmlIgnore]
         [Units("mm")]
-        [Description("flow_water[layer] = flux[layer] - flow[layer]")]
-        [UserInterfaceIgnore]
         public double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
         {
             get
@@ -1009,7 +981,6 @@ namespace Models.Soils
         //private double[] _flow2;
         [XmlIgnore]
         [Units("mm")]
-        [Description("Nasty cludge to get flow reporting without a massive refactor")]
         public double[] flow2
         {
             get;
@@ -1025,7 +996,6 @@ namespace Models.Soils
        // private double[] _flux2;
         [XmlIgnore]
         [Units("mm")]
-        [Description("Nasty cludge to get fluw reporting without a massive refactor")]
         public double[] flux2
         {
             get;
@@ -1046,7 +1016,6 @@ namespace Models.Soils
 
 
         [Units("mm")]
-        [Description("Lateral outflow")]
         [XmlIgnore]
         public double[] outflow_lat;   //! outflowing lateral water   //lateral outflow
         //end
@@ -2022,8 +1991,7 @@ namespace Models.Soils
             if (Double.IsNaN(catchment_area))
                 catchment_area = 0.0;
 
-            if (KLAT == null)
-                KLAT = new double[_dlayer.Length];
+            KLAT = new double[_dlayer.Length];
 
             //taken from Lateral_zero_variables()
             ZeroArray(ref outflow_lat);

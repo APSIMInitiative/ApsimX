@@ -1297,7 +1297,7 @@ namespace Models.Soils
 
         [Units("%")]
         [Description("Soil organic carbon (exclude FOM)")]
-        private double[] oc
+        public double[] oc
         {
             get
             {
@@ -2433,7 +2433,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Amount of N2O produced")]
-        double[] n2o_atm
+        public double[] n2o_atm
         {
             get
             {
@@ -2653,7 +2653,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Total N in soil")]
-        double[] nit_tot
+        public double[] nit_tot
         {
             get
             {
@@ -3174,7 +3174,7 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Total soil carbon")]
-        double[] carbon_tot
+        public double[] carbon_tot
         {
             get
             {

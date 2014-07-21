@@ -213,7 +213,11 @@ namespace UserInterface.Views
                 if (Node == null)
                     Node = FindNode(TreeView.Nodes, PathBit);
                 else
+                {
+                    if (!Node.IsExpanded)
+                        Node.Expand();
                     Node = FindNode(Node.Nodes, PathBit);
+                }
 
                 if (Node == null)
                     return null;
@@ -346,6 +350,19 @@ namespace UserInterface.Views
             SaveFileDialog.FileName = OldFilename;
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
                 return SaveFileDialog.FileName;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// A helper function that asks user for a folder.
+        /// </summary>
+        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
+        public string AskUserForFolder(string prompt)
+        {
+            folderBrowserDialog1.Description = prompt;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                return folderBrowserDialog1.SelectedPath;
             else
                 return null;
         }

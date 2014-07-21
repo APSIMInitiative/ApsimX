@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using UserInterface.Commands;
 using UserInterface.Presenters;
+using System.Reflection;
 
 namespace UserInterface
 {
@@ -13,11 +14,17 @@ namespace UserInterface
         private Utility.Configuration Configuration;
         private TabbedExplorerPresenter Presenter1;
         private TabbedExplorerPresenter Presenter2;
+        private string[] commandLineArguments;
+
+        /// <summary>
+        /// The error message will be set if an error results from a startup script.
+        /// </summary>
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
             Application.EnableVisualStyles();
@@ -31,6 +38,7 @@ namespace UserInterface
             Presenter2.Attach(tabbedExplorerView2);
 
             SplitContainer.Panel2Collapsed = true;
+            commandLineArguments = args;
         }
 
         public void ToggleSecondExplorerViewVisible()
@@ -43,7 +51,7 @@ namespace UserInterface
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            Configuration.Settings.MainFormLocation = Location;
+            Configuration.Settings.MainFormLocation = Location; 
             Configuration.Settings.MainFormSize = Size;
             Configuration.Settings.MainFormWindowState = WindowState;
             //store settings on closure
@@ -75,6 +83,25 @@ namespace UserInterface
             }
 
             ResumeLayout();
+
+            // Look for a script specified on the command line.
+            if (commandLineArguments != null && commandLineArguments.Length > 0 &&
+                commandLineArguments[0].EndsWith(".cs"))
+            {
+                try
+                {
+
+                    ProcessStartupScript(commandLineArguments[0]);
+                }
+                catch (Exception err)
+                {
+                    ErrorMessage = err.Message;
+                    if (err.InnerException != null)
+                        ErrorMessage += "\r\n" + err.InnerException.Message;
+                    ErrorMessage += "\r\n" + err.StackTrace;
+                    Close();
+                }
+            }
         }
 
         /// <summary>
@@ -83,6 +110,34 @@ namespace UserInterface
         private void OnClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !Presenter1.AllowClose() || !Presenter2.AllowClose();
+        }
+
+        /// <summary>
+        /// User has specified a startup script - execute it.
+        /// </summary>
+        private void ProcessStartupScript(string fileName)
+        {
+            StreamReader reader = new StreamReader(fileName);
+            string code = reader.ReadToEnd();
+            reader.Close();
+            Assembly compiledAssembly = Utility.Reflection.CompileTextToAssembly(code, null);
+
+            // Get the script 'Type' from the compiled assembly.
+            Type scriptType = compiledAssembly.GetType("Script");
+            if (scriptType == null)
+                throw new Exception("Cannot find a public class called 'Script'");
+
+            // Look for a method called Execute
+            MethodInfo executeMethod = scriptType.GetMethod("Execute");
+            if (executeMethod == null)
+                throw new Exception("Cannot find a method Script.Execute");
+
+            // Create a new script model.
+            object script = compiledAssembly.CreateInstance("Script");
+            
+            // Call Execute on our newly created script instance.
+            object[] arguments = new object[] { Presenter1 };
+            executeMethod.Invoke(script, arguments);
         }
 
     }

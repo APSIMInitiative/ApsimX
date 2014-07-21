@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Reflection;
 using Models.Core;
 
 namespace Models.SurfaceOM
@@ -14,21 +15,27 @@ namespace Models.SurfaceOM
         public ResidueTypes ResidueTypes { get; set;}
         public TillageTypes TillageTypes { get; set; }
 
+        [Description("Pool name")]
         [Units("")]
         public string PoolName { get; set; }
 
+        [Description("Pool type")]
         [Units("")]
         public string type { get; set; }
 
+        [Description("Mass")]
         [Units("")]
         public string mass { get; set; }
 
+        [Description("Standing fraction")]
         [Units("")]
         public string standing_fraction { get; set; }
 
+        [Description("CPR")]
         [Units("")]
         public string cpr { get; set; }
 
+        [Description("CNR")]
         [Units("")]
         public string cnr { get; set; }
 
@@ -278,11 +285,22 @@ namespace Models.SurfaceOM
 
         [Units("")]
         public double surfaceom_wt_algae { get { return surfaceom_wt_("algae", x => x.amount); } }
+       
+        /// <summary>
+        /// Get the weight of the given SOM pool
+        /// </summary>
+        /// <param name="pool">Name of the pool to get the weight from.</param>
+        /// <returns>The weight of the given pool</returns>
+        public double GetWeightFromPool(string pool)
+        {
+             var SomType = g.SurfOM.Find(x => x.name.Equals(pool, StringComparison.CurrentCultureIgnoreCase));
+             return SumOMFractionType(SomType.Standing, y => y.amount) +
+                 SumOMFractionType(SomType.Lying, y => y.amount);
+        }
 
         ///<summary>
         ///Mass of organic matter in all pools
         ///</summary>
-
         [Units("kg/ha")]
         public double[] surfaceom_wt_all
         {

@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
         [Link]
         ISummary Summary = null;
 
-        [Link(IsOptional=true, MustBeChild = true)]
+        [Link(IsOptional=true)]
         private Function Target = null;
 
         /// <summary>

@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Models.Factorial
 {
     [Serializable]
-    [AllowDropOn("Experiment")]
+    [ValidParent(typeof(Experiment))]
     public class Factors : Model
     {
         [XmlIgnore]

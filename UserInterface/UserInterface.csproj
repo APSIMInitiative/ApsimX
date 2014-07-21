@@ -39,6 +39,10 @@
     <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ModelEditControl, Version=1.2.4049.42096, Culture=neutral, PublicKeyToken=445e193243cd750d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\ModelEditControl.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -64,9 +68,14 @@
       <Link>Utility\DateTimeCellType.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Attributes\ContextMenuAttribute.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
@@ -74,6 +83,19 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Forms\FormInsertHyperlink.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormInsertHyperlink.designer.cs">
+      <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IInitialWaterView.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Interfaces\IGraphView.cs" />
+    <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Presenters\IExportable.cs" />
+    <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
@@ -83,9 +105,11 @@
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
-    <Compile Include="Presenters\ProfilePresenter.cs" />
+    <Compile Include="Presenters\ProfilePresenter.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Presenters\SeriesPresenter.cs" />
-    <Compile Include="Presenters\ExplorerActions.cs" />
+    <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TestPresenter.cs" />
@@ -105,6 +129,18 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\InitialWaterView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\InitialWaterView.Designer.cs">
+      <DependentUpon>InitialWaterView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HTMLView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\HTMLView.Designer.cs">
+      <DependentUpon>HTMLView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PredictedObservedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -244,8 +280,17 @@
     <Compile Include="Views\TabbedMetDataView.Designer.cs">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
+      <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\InitialWaterView.resx">
+      <DependentUpon>InitialWaterView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HTMLView.resx">
+      <DependentUpon>HTMLView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PredictedObservedView.resx">
       <DependentUpon>PredictedObservedView.cs</DependentUpon>
@@ -529,9 +574,14 @@
     <Content Include="apsim_logo32.ico" />
     <Content Include="Resources\apsim_logo32.ico" />
     <None Include="Resources\calculator.png" />
+    <None Include="Resources\export2.png" />
+    <None Include="Resources\ExportToHTML.gif" />
+    <None Include="Resources\ExportToHTML.png" />
+    <None Include="Resources\InitialWaterGraph.xml" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

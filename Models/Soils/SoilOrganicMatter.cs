@@ -23,11 +23,10 @@ namespace Models.Soils
         [Description("Erosion enrichment coefficient B")]
         public double EnrBCoeff { get; set; }
 
-        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
 
-        [XmlIgnore]
         [Units("cm")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -40,10 +39,14 @@ namespace Models.Soils
             }
         }
 
+        [Description("OC")]
         public double[] OC { get; set; }
         public string[] OCMetadata { get; set; }
+        [Description("FBiom")]
         [Units("0-1")]
         public double[] FBiom { get; set; }
+
+        [Description("FInert")]
         [Units("0-1")]
         public double[] FInert { get; set; }
 
@@ -75,7 +78,6 @@ namespace Models.Soils
         /// <summary>
         /// Organic carbon. Units: Total %
         /// </summary>
-        [UserInterfaceIgnore]
         public double[] OCTotal
         {
             get
@@ -91,7 +93,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return amount of inert carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] InertC
         {
@@ -127,7 +129,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return the amount of biom carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] BiomC
         {
@@ -142,7 +144,12 @@ namespace Models.Soils
                     double[] BiomC = new double[Thickness.Length];
                     for (int i = 0; i < Thickness.Length; i++)
                     {
-                        if (OC[i] == double.NaN ||
+                        if (i >= OC.Length ||
+                            i >= FBiom.Length ||
+                            i >= BD.Length ||
+                            i >= InertC.Length ||
+                            i >- BiomC.Length ||
+                            OC[i] == double.NaN ||
                             FBiom[i] == double.NaN ||
                             BD[i] == double.NaN ||
                             InertC[i] == double.NaN)
@@ -164,7 +171,7 @@ namespace Models.Soils
         /// <summary>
         /// Calculate and return the amount of humic carbon on the same layer structure as OC. Units: kg/ha
         /// </summary>
-        [DisplayFormat("N0")]
+        [Display(Format = "N0")]
         [Units("kg/ha")]
         public double[] HumC
         {

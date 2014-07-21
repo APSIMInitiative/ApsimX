@@ -72,6 +72,13 @@ namespace UserInterface.Views
         void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null);
 
         /// <summary>
+        /// Set the column header text
+        /// </summary>
+        /// <param name="col">The index of the column</param>
+        /// <param name="col">The text to set the header to</param>
+        void SetColumnHeader(int col, string text);
+
+        /// <summary>
         /// Set the numeric grid format e.g. N3
         /// </summary>
         void SetNumericFormat(string Format);
@@ -238,7 +245,8 @@ namespace UserInterface.Views
 
                     
                     // Populate the grid cells with new rows.
-                    Grid.RowCount = 1;
+                    if (DataSource.Rows.Count > 0)
+                        Grid.RowCount = 1;
                     for (int Row = 0; Row < DataSource.Rows.Count; Row++)
                     {
                         for (int Col = 0; Col < DataSource.Columns.Count; Col++)
@@ -254,10 +262,8 @@ namespace UserInterface.Views
                     }
                 }
 
-                //foreach (DataGridViewColumn Col in Grid.Columns)
-                //    Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-
-
+                // ColIndex doesn't matter since we're resizing all of them.
+                SetColumnSize(0, -1);
 
                 // Reinstate Grid.CellValueChanged event.
                 Grid.CellValueChanged += OnCellValueChanged;
@@ -391,14 +397,31 @@ namespace UserInterface.Views
         /// </summary>
         public void SetColumnSize(int Col, int size = -1)
         {
+            Graphics g = Grid.CreateGraphics();
+            Font font = Grid.Font;
+            int NewWidth;
+
             if (size == -1)
             {
-                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                size = Grid.Columns[Col].Width + 20;
+                for (int j = 0; j < Grid.Columns.Count; j++)
+                    // Limit number of rows to check to no more than 20
+                    for (int i = 0; i <= Math.Min(20, Grid.Rows.Count - 1); i++)
+                    {
+                        // Add 40 pixels to cover the dropdown target.
+                        if (Grid.Rows[i].Cells[j].Value != null)
+                        {
+                            NewWidth = (int)g.MeasureString(Grid.Rows[i].Cells[j].Value.ToString(), font).Width + 40;
+                            if (Grid.Columns[j].Width < NewWidth)
+                                Grid.Columns[j].Width = NewWidth;
+                        }
+                    }
             }
-            //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
-            Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            Grid.Columns[Col].Width = size;
+            else
+            {
+                //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
+                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                Grid.Columns[Col].Width = size;
+            }
         }
 
         /// <summary>
@@ -455,6 +478,16 @@ namespace UserInterface.Views
                 Grid.Columns[Col].HeaderCell.Style.BackColor = BackgroundColour.Value;
             if (ForegroundColour.HasValue)
                 Grid.Columns[Col].HeaderCell.Style.ForeColor = ForegroundColour.Value;
+        }
+
+        /// <summary>
+        /// Set the column header text
+        /// </summary>
+        /// <param name="col">The index of the column</param>
+        /// <param name="col">The text to set the header to</param>
+        public void SetColumnHeader(int col, string text)
+        {
+            Grid.Columns[col].HeaderText = text;
         }
 
         /// <summary>
@@ -516,7 +549,8 @@ namespace UserInterface.Views
         /// </summary>
         public void SetCellValue(int Col, int Row, object Value)
         {
-            Grid[Col, Row].Value = Value;
+            if (Col != -1 && Row != -1)
+                Grid[Col, Row].Value = Value;
         }
 
         /// <summary>
@@ -572,6 +606,7 @@ namespace UserInterface.Views
 
                 if (CellValueChanged != null && ValueBeforeEdit != NewValue)
                     CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);
+                SetColumnSize(e.ColumnIndex, -1);
             }
         }
 
@@ -617,6 +652,8 @@ namespace UserInterface.Views
                     Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
                 }
             }
+
+            SetColumnSize(e.ColumnIndex, -1);
         }
 
         /// <summary>

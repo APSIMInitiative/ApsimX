@@ -49,7 +49,7 @@ namespace UserInterface.Commands
                 P.OldValue = Utility.Reflection.GetValueOfFieldOrProperty(P.Name, Obj);
 
                 // Set the new property value.
-                P.WasModified = Utility.Reflection.SetValueOfFieldOrProperty(P.Name, Obj, P.Value);
+                P.WasModified = Utility.Reflection.SetValueOfProperty(P.Name, Obj, P.Value);
             }
             CommandHistory.InvokeModelChanged(Obj);
         }
@@ -59,7 +59,7 @@ namespace UserInterface.Commands
             foreach (Property P in Properties)
             {
                 if (P.WasModified)
-                    Utility.Reflection.SetValueOfFieldOrProperty(P.Name, Obj, P.OldValue);
+                    Utility.Reflection.SetValueOfProperty(P.Name, Obj, P.OldValue);
             }
             CommandHistory.InvokeModelChanged(Obj);
         }

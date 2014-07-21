@@ -12,6 +12,25 @@
           <Inverted>false</Inverted>
         </Axis>
         <Series>
+          <Type>Area</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3479297</ColourArgb>
+          <Marker>None</Marker>
+          <X>
+            <FieldName>[Soil].LL15</FieldName>
+          </X>
+          <Y>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y>
+          <X2>
+            <FieldName>[Soil].DUL</FieldName>
+          </X2>
+          <Y2>
+            <FieldName>[Soil].DepthMidPoints</FieldName>
+          </Y2>
+        </Series>
+        <Series>
           <Type>Line</Type>
           <XAxis>Top</XAxis>
           <YAxis>Left</YAxis>

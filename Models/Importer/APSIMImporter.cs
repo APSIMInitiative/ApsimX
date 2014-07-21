@@ -497,7 +497,7 @@ namespace Importer
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
                                                                         BindingFlags.NonPublic | BindingFlags.Public))
             {
-                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                 {
                     if (!field.FieldType.IsAbstract && !link.IsOptional)
@@ -1115,12 +1115,14 @@ namespace Importer
 
                 string childText = "";
                 childNode = Utility.Xml.Find(oper, "date");
-                if (childNode != null && childNode.InnerText != "")
+                DateTime when;
+                if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
+                    childText = when.ToString("yyyy-MM-dd");
+                else if (childNode != null && childNode.InnerText != "")
                 {
                     childText = Utility.Date.DMYtoISO(childNode.InnerText);
                     if (childText == "0001-01-01")
                     {
-
                         childText = Utility.Date.GetDate(childNode.InnerText, StartDate).ToString("yyyy-MM-dd");
                     }
                 }

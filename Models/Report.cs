@@ -246,17 +246,42 @@ namespace Models
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            foreach (string Event in EventNames)
+            List<string> eventNames = new List<string>();
+            for (int i = 0; i < EventNames.Length; i++ )
             {
-                if (Event != "")
-                    base.Events.Subscribe(Event, OnReport);
+                if (EventNames[i] != "")
+                {
+                    eventNames.Add(EventNames[i].Trim());
+                    base.Events.Subscribe(EventNames[i].Trim(), OnReport);
+                }
             }
+            EventNames = eventNames.ToArray();
+
+            // sanitise the variable names.
+            List<string> variableNames = new List<string>();
+            for (int i = 0; i < VariableNames.Length; i++)
+            {
+                if (VariableNames[i] != "")
+                    variableNames.Add(VariableNames[i].Trim());
+            }
+            VariableNames = variableNames.ToArray();
         }
 
         /// <summary>
         /// Event handler for the report event.
         /// </summary>
         public void OnReport(object sender, EventArgs e)
+        {
+            if (Members == null)
+                FindVariableMembers();
+            foreach (VariableMember Variable in Members)
+                Variable.StoreValue();
+        }
+
+        /// <summary>
+        /// Public method to allow reporting from scripts.
+        /// </summary>
+        public void DoReport()
         {
             if (Members == null)
                 FindVariableMembers();
