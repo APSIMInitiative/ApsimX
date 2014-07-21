@@ -89,9 +89,13 @@
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IInitialWaterView.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Interfaces\IGraphView.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\IExportable.cs" />
+    <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
@@ -125,6 +129,12 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\InitialWaterView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\InitialWaterView.Designer.cs">
+      <DependentUpon>InitialWaterView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\HTMLView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -275,6 +285,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\InitialWaterView.resx">
+      <DependentUpon>InitialWaterView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HTMLView.resx">
       <DependentUpon>HTMLView.cs</DependentUpon>
@@ -564,6 +577,7 @@
     <None Include="Resources\export2.png" />
     <None Include="Resources\ExportToHTML.gif" />
     <None Include="Resources\ExportToHTML.png" />
+    <None Include="Resources\InitialWaterGraph.xml" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

@@ -105,22 +105,35 @@ namespace Utility
                     return true;
                 }
 
-                PropertyInfo P = Obj.GetType().GetProperty(Name, Flags);
-                if (P != null)
-                {
-                    if (P.PropertyType == typeof(string))
-                        P.SetValue(Obj, Value.ToString(), null);
-                    else if (P.PropertyType == typeof(double))
-                        P.SetValue(Obj, Convert.ToDouble(Value), null);
-                    else if (P.PropertyType == typeof(int))
-                        P.SetValue(Obj, Convert.ToInt32(Value), null);
-                    else
-                        P.SetValue(Obj, Value, null);
-                    return true;
-                }
-
-                return false;
+                return SetValueOfProperty(Name, Obj, Value);
             }
+        }
+
+        /// <summary>
+        /// Set the value of a object property using reflection. Property must be public.
+        /// </summary>
+        /// <param name="name">Name of the property</param>
+        /// <param name="obj">Object to probe</param>
+        /// <param name="value">The value to set the property to</param>
+        /// <returns>True if value set successfully</returns>
+        public static bool SetValueOfProperty(string name, object obj, object value)
+        {
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+            PropertyInfo P = obj.GetType().GetProperty(name, flags);
+            if (P != null)
+            {
+                if (P.PropertyType == typeof(string))
+                    P.SetValue(obj, value.ToString(), null);
+                else if (P.PropertyType == typeof(double))
+                    P.SetValue(obj, Convert.ToDouble(value), null);
+                else if (P.PropertyType == typeof(int))
+                    P.SetValue(obj, Convert.ToInt32(value), null);
+                else
+                    P.SetValue(obj, value, null);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

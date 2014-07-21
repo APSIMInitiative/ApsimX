@@ -1,114 +1,335 @@
-﻿using System;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="InitialWater.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Soils
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using System.Xml.Serialization;
+
+    /// <summary>
+    /// Represents the simulation initial water status. There are multiple ways
+    /// of specifying the starting water; 1) by a fraction of a full profile, 2) by depth of
+    /// wet soil or 3) a single value of plant available water.
+    /// </summary>
+    [ViewName("UserInterface.Views.InitialWaterView")]
+    [PresenterName("UserInterface.Presenters.InitialWaterPresenter")]
+    [ValidParent(typeof(Soil))]
     [Serializable]
     public class InitialWater : Model
     {
-        public enum PercentMethodEnum { FilledFromTop, EvenlyDistributed };
-        public PercentMethodEnum PercentMethod { get; set; }
-        public double FractionFull = double.NaN;
-        public double DepthWetSoil = double.NaN;
-        public string RelativeTo { get; set; }
-
         /// <summary>
-        /// Method to set SW to a percent full.
+        /// Gets the parent soil model.
         /// </summary>
-        public void SetSW(double FractionFull, PercentMethodEnum PercentMethod)
+        private Soil Soil
         {
-            this.FractionFull = FractionFull;
-            this.PercentMethod = PercentMethod;
-            this.DepthWetSoil = double.NaN;
+            get
+            {
+                return this.ParentOfType(typeof(Soil)) as Soil;
+            }
         }
 
         /// <summary>
-        /// Method to set SW to a depth of wet soil.
+        /// The fraction of a full profile.
         /// </summary>
-        public void SetSW(double DepthWetSoil)
+        private double fractionFull = double.NaN;
+
+        /// <summary>
+        /// The depth of wet soil.
+        /// </summary>
+        private double depthOfWetSoil = double.NaN;
+
+        /// <summary>
+        /// An enumeration for soil water distribution used by the percent full
+        /// method.
+        /// </summary>
+        public enum PercentMethodEnum 
+        { 
+            /// <summary>
+            /// Represents filled from the top of the profile
+            /// </summary>
+            FilledFromTop, 
+
+            /// <summary>
+            /// Represents evenly distribution down the profile.
+            /// </summary>
+            EvenlyDistributed 
+        }
+
+        /// <summary>
+        /// Gets or sets the distribution method for the percent full method.
+        /// </summary>
+        public PercentMethodEnum PercentMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fraction of a full profile. If NaN is returned then
+        /// the depth of wet soil is the specified method.
+        /// </summary>
+        public double FractionFull
         {
-            this.DepthWetSoil = DepthWetSoil;
-            this.FractionFull = double.NaN;
+            get
+            {
+                if (double.IsNaN(this.fractionFull))
+                {
+                    // Get the plant available water (mm/mm)
+                    double[] pawc;
+                    if (this.RelativeTo == "LL15" || this.RelativeTo == null)
+                    {
+                        pawc = this.Soil.PAWC;
+                    }
+                    else
+                    {
+                        pawc = this.Soil.PAWCCrop(this.RelativeTo);
+                    }
+
+                    // Convert from mm/mm to mm and sum over the profile.
+                    pawc = Utility.Math.Multiply(pawc, this.Soil.Thickness);
+                    double totalPAWC = Utility.Math.Sum(pawc);
+
+                    // Convert from total to a fraction.
+                    if (totalPAWC > 0)
+                    {
+                        return Utility.Math.Bound(PAW / totalPAWC, 0, 100);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return this.fractionFull;
+                }
+            }
+
+            set
+            {
+                if (!double.IsNaN(value))
+                {
+                    this.fractionFull = value;
+                    this.depthOfWetSoil = double.NaN;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the depth of wet soil (mm). If NaN is returned then
+        /// fraction full is the specified method.
+        /// </summary>
+        public double DepthWetSoil
+        {
+            get
+            {
+                return this.depthOfWetSoil;
+            }
+
+            set
+            {
+                if (!double.IsNaN(value))
+                {
+                    this.depthOfWetSoil = value;
+                    this.fractionFull = double.NaN;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the plant available water content
+        /// </summary>
+        [XmlIgnore]
+        public double PAW
+        {
+            get
+            {
+                // Get the correct lower limits and xf values to use in the calculation of PAW
+                double[] ll;
+                double[] xf;
+                if (this.RelativeTo == "LL15" || this.RelativeTo == null)
+                {
+                    ll = this.Soil.LL15;
+                    xf = null;
+                }
+                else
+                {
+                    ll = this.Soil.LL(this.RelativeTo);
+                    xf = this.Soil.XF(this.RelativeTo);
+                }
+
+                // Get the soil water values for each layer.
+                double[] sw = this.SW(this.Soil.Thickness, ll, this.Soil.DUL, xf);
+
+                // Calculate the plant available water (mm/mm)
+                double[] pawVolumetric = Utility.Math.Subtract(sw, ll);
+
+                // Convert from mm/mm to mm and return
+                double[] paw = Utility.Math.Multiply(pawVolumetric, this.Soil.Thickness);
+                return Utility.Math.Sum(paw);
+            }
+
+            set
+            {
+                // Get the plant available water (mm/mm)
+                double[] pawc;
+                if (this.RelativeTo == "LL15")
+                {
+                    pawc = this.Soil.PAWC;
+                }
+                else
+                {
+                    pawc = this.Soil.PAWCCrop(this.RelativeTo);
+                }
+
+                // Convert from mm/mm to mm and sum over the profile.
+                pawc = Utility.Math.Multiply(pawc, this.Soil.Thickness);
+                double totalPAWC = Utility.Math.Sum(pawc);
+
+                // Convert from total to a fraction.
+                if (totalPAWC > 0)
+                {
+                    this.fractionFull = Utility.Math.Bound(value / totalPAWC, 0, 100);
+                }
+                else
+                {
+                    this.fractionFull = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the crop that starting plant available water is relative to.
+        /// </summary>
+        public string RelativeTo { get; set; }
+
+        /// <summary>
+        /// Gets the crop names that are permissible in the 'RelativeTo' property.
+        /// </summary>
+        public string[] RelativeToCrops
+        {
+            get
+            {
+                List<string> crops = new List<string>();
+                crops.Add("LL15");
+                crops.AddRange(this.Soil.CropNames);
+                return crops.ToArray();
+            }
         }
 
         /// <summary>
         /// Calculate a layered soil water. Units: mm/mm
         /// </summary>
-        internal double[] SW(double[] Thickness, double[] LL, double[] DUL, double[] XF)
+        /// <param name="thickness">Thickness of each layer</param>
+        /// <param name="ll">Lower limit</param>
+        /// <param name="dul">Drained upper limit</param>
+        /// <param name="xf">Exploratory factor</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        internal double[] SW(double[] thickness, double[] ll, double[] dul, double[] xf)
         {
-            if (double.IsNaN(DepthWetSoil))
+            if (double.IsNaN(this.DepthWetSoil))
             {
-                if (PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop)
-                    return SWFilledFromTop(Thickness, LL, DUL, XF);
+                if (this.PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop)
+                {
+                    return this.SWFilledFromTop(thickness, ll, dul, xf);
+                }
                 else
-                    return SWEvenlyDistributed(LL, DUL);
+                {
+                    return this.SWEvenlyDistributed(ll, dul);
+                }
             }
             else
-                return SWDepthWetSoil(Thickness, LL, DUL);
+            {
+                return this.SWDepthWetSoil(thickness, ll, dul);
+            }
         }
 
         /// <summary>
-        /// Calculate a layered soil water using a FractionFull and filled from the top. Units: mm/mm
+        /// Calculate a layered soil water using a FractionFull and filled from the top
         /// </summary>
-        private double[] SWFilledFromTop(double[] Thickness, double[] LL, double[] DUL, double[] XF)
+        /// <param name="thickness">Thickness of each layer</param>
+        /// <param name="ll">Lower limit</param>
+        /// <param name="dul">Drained upper limit</param>
+        /// <param name="xf">Exploratory factor</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        private double[] SWFilledFromTop(double[] thickness, double[] ll, double[] dul, double[] xf)
         {
-            double[] SW = new double[Thickness.Length];
-            if (Thickness.Length != LL.Length ||
-                Thickness.Length != DUL.Length)
-                return SW;
-            double[] PAWCmm = Utility.Math.Multiply(Utility.Math.Subtract(DUL, LL), Thickness);
-
-            double AmountWater = Utility.Math.Sum(PAWCmm) * FractionFull;
-            for (int Layer = 0; Layer < LL.Length; Layer++)
+            double[] sw = new double[thickness.Length];
+            if (thickness.Length != ll.Length ||
+                thickness.Length != dul.Length)
             {
-                if (AmountWater >= 0 && XF != null && XF[Layer] == 0)
-                    SW[Layer] = LL[Layer];
-                else if (AmountWater >= PAWCmm[Layer])
+                return sw;
+            }
+
+            double[] pawcmm = Utility.Math.Multiply(Utility.Math.Subtract(dul, ll), thickness);
+
+            double amountWater = Utility.Math.Sum(pawcmm) * this.FractionFull;
+            for (int layer = 0; layer < ll.Length; layer++)
+            {
+                if (amountWater >= 0 && xf != null && xf[layer] == 0)
                 {
-                    SW[Layer] = DUL[Layer];
-                    AmountWater = AmountWater - PAWCmm[Layer];
+                    sw[layer] = ll[layer];
+                }
+                else if (amountWater >= pawcmm[layer])
+                {
+                    sw[layer] = dul[layer];
+                    amountWater = amountWater - pawcmm[layer];
                 }
                 else
                 {
-                    double Prop = AmountWater / PAWCmm[Layer];
-                    SW[Layer] = Prop * (DUL[Layer] - LL[Layer]) + LL[Layer];
-                    AmountWater = 0;
+                    double prop = amountWater / pawcmm[layer];
+                    sw[layer] = (prop * (dul[layer] - ll[layer])) + ll[layer];
+                    amountWater = 0;
                 }
             }
-            return SW;
+
+            return sw;
         }
 
         /// <summary>
         /// Calculate a layered soil water using a FractionFull and evenly distributed. Units: mm/mm
         /// </summary>
-        private double[] SWEvenlyDistributed(double[] LL, double[] DUL)
+        /// <param name="ll">Lower limit</param>
+        /// <param name="dul">Drained upper limit</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        private double[] SWEvenlyDistributed(double[] ll, double[] dul)
         {
-            double[] SW = new double[LL.Length];
-            for (int Layer = 0; Layer < LL.Length; Layer++)
-                SW[Layer] = FractionFull * (DUL[Layer] - LL[Layer]) + LL[Layer];
-            return SW;
+            double[] sw = new double[ll.Length];
+            for (int layer = 0; layer < ll.Length; layer++)
+            {
+                sw[layer] = (this.FractionFull * (dul[layer] - ll[layer])) + ll[layer];
+            }
+
+            return sw;
         }
 
         /// <summary>
         /// Calculate a layered soil water using a depth of wet soil. Units: mm/mm
         /// </summary>
-        private double[] SWDepthWetSoil(double[] Thickness, double[] LL, double[] DUL)
+        /// <param name="thickness">Thickness of each layer</param>
+        /// <param name="ll">Lower limit</param>
+        /// <param name="dul">Drained upper limit</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        private double[] SWDepthWetSoil(double[] thickness, double[] ll, double[] dul)
         {
-            double[] SW = new double[LL.Length];
-            double DepthSoFar = 0;
-            for (int Layer = 0; Layer < Thickness.Length; Layer++)
+            double[] sw = new double[ll.Length];
+            double depthSoFar = 0;
+            for (int layer = 0; layer < thickness.Length; layer++)
             {
-                if (DepthWetSoil > DepthSoFar + Thickness[Layer])
-                    SW[Layer] = DUL[Layer];
+                if (this.DepthWetSoil > depthSoFar + thickness[layer])
+                {
+                    sw[layer] = dul[layer];
+                }
                 else
                 {
-                    double Prop = Math.Max(DepthWetSoil - DepthSoFar, 0) / Thickness[Layer];
-                    SW[Layer] = Prop * (DUL[Layer] - LL[Layer]) + LL[Layer];
+                    double prop = Math.Max(this.DepthWetSoil - depthSoFar, 0) / thickness[layer];
+                    sw[layer] = (prop * (dul[layer] - ll[layer])) + ll[layer];
                 }
-                DepthSoFar += Thickness[Layer];
+
+                depthSoFar += thickness[layer];
             }
-            return SW;
+
+            return sw;
         }
     }
-
 }
