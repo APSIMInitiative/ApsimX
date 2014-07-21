@@ -8098,7 +8098,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\OilPalm\observed.prn</string>
+        <string>Tests\OilPalm\observed.prn</string>
       </FileNames>
     </Input>
     <TimeSeriesStats>
