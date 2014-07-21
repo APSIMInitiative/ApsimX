@@ -293,7 +293,7 @@ namespace Models.SurfaceOM
         /// <returns>The weight of the given pool</returns>
         public double GetWeightFromPool(string pool)
         {
-             var SomType = g.SurfOM.Find(x => x.name.Equals(pool));
+             var SomType = g.SurfOM.Find(x => x.name.Equals(pool, StringComparison.CurrentCultureIgnoreCase));
              return SumOMFractionType(SomType.Standing, y => y.amount) +
                  SumOMFractionType(SomType.Lying, y => y.amount);
         }

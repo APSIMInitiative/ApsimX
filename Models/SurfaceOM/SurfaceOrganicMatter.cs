@@ -536,7 +536,7 @@ namespace Models.SurfaceOM
                 return -1;
 
             for (int i = 0; i < g.SurfOM.Count; i++)
-                if (g.SurfOM[i].name == surfomname)
+                if (g.SurfOM[i].name.Equals(surfomname, StringComparison.CurrentCultureIgnoreCase))
                     return i;
 
             return -1;

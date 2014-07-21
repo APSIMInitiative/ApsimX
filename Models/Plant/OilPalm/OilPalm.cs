@@ -108,6 +108,9 @@ namespace Models.PMF.OilPalm
         public double HarvestFFB { get; set; }
 
         [XmlIgnore]
+        public double HarvestNRemoved { get; set; }
+
+        [XmlIgnore]
         public double HarvestBunchSize { get; set; }
 
         [XmlIgnore]
@@ -118,10 +121,16 @@ namespace Models.PMF.OilPalm
         public SowPlant2Type SowingData = new SowPlant2Type();
 
         double[] PotNUptake;
-        double[] NUptake;
-        double StemGrowth = 0.0;
-        double FrondGrowth = 0.0;
-        double RootGrowth = 0.0;
+        [XmlIgnore]
+        public double[] NUptake { get; set; }
+                [XmlIgnore]
+        public double StemGrowth { get; set; }
+        [XmlIgnore]
+        public double FrondGrowth { get; set; }
+        [XmlIgnore]
+        public double RootGrowth { get; set; }
+        [XmlIgnore]
+        public double BunchGrowth { get; set; }
 
         [XmlIgnore]
         public List<FrondType> Fronds = new List<FrondType>();
@@ -190,7 +199,7 @@ namespace Models.PMF.OilPalm
         Function FrondMinimumNConcentration = null;
 
         public double UnderstoryCoverGreen = 0;
-        private double UnderstoryKL = 0.04;
+        private double UnderstoryKLmax = 0.12;
 
         double[] UnderstoryPotSWUptake;
 
@@ -198,7 +207,8 @@ namespace Models.PMF.OilPalm
 
         double[] UnderstoryPotNUptake;
 
-        double[] UnderstoryNUptake;
+        [XmlIgnore]
+        public double[] UnderstoryNUptake { get; set; }
 
         public double UnderstoryRootDepth = 0;
 
@@ -280,6 +290,7 @@ namespace Models.PMF.OilPalm
             HarvestBunches = 0;
             HarvestYield = 0;
             HarvestFFB = 0;
+            HarvestNRemoved = 0;
             HarvestBunchSize = 0;
             Age = 0;
             Population = 0;
@@ -287,6 +298,12 @@ namespace Models.PMF.OilPalm
             StemMass = 0;
             StemN = 0;
             CropInGround = false;
+            NUptake = new double[] { 0 };
+            UnderstoryNUptake = new double[] { 0 };
+            StemGrowth = 0;
+            RootGrowth = 0;
+            FrondGrowth = 0;
+            BunchGrowth = 0;
 
             Fronds = new List<FrondType>();
             Bunches = new List<BunchType>();
@@ -577,21 +594,30 @@ namespace Models.PMF.OilPalm
             if (Age > 10 && Fr < 1)
             { }
 
+            BunchGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual bunches
+
             for (int i = 0; i < 6; i++)
-                Bunches[i].Mass += BunchDMD[i] * Fr / Population / BunchOilConversionFactor.Value;
+            {
+                double IndividualBunchGrowth = BunchDMD[i] * Fr / Population / BunchOilConversionFactor.Value;
+                Bunches[i].Mass += IndividualBunchGrowth;
+                BunchGrowth += IndividualBunchGrowth * Population;
+            }
             if (DltDM > 0)
                 ReproductiveGrowthFraction = TotBunchDMD * Fr / DltDM;
             else
                 ReproductiveGrowthFraction = 0;
 
+            FrondGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual fronds
+
             for (int i = 0; i < Fronds.Count; i++)
             {
-                FrondGrowth = FrondDMD[i] * Fr / Population;
-                Fronds[i].Mass += FrondGrowth;
+                double IndividualFrondGrowth = FrondDMD[i] * Fr / Population;
+                Fronds[i].Mass += IndividualFrondGrowth;
+                FrondGrowth += IndividualFrondGrowth * Population;
                 if (Fr >= SpecificLeafArea.Value / SpecificLeafAreaMax.Value)
                     Fronds[i].Area += (SizeFunction(Fronds[i].Age + DeltaT) - SizeFunction(Fronds[i].Age)) * Fn;
                 else
-                    Fronds[i].Area += FrondGrowth * SpecificLeafAreaMax.Value;
+                    Fronds[i].Area += IndividualFrondGrowth * SpecificLeafAreaMax.Value;
 
             }
 
@@ -628,6 +654,7 @@ namespace Models.PMF.OilPalm
                 HarvestBunches = Bunches[0].FemaleFraction;
                 HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
                 HarvestFFB = HarvestYield / 100;
+                HarvestNRemoved = Bunches[0].N * Population * 10;
                 HarvestBunchSize = Bunches[0].Mass / (1.0 - RipeBunchWaterContent.Value) / Bunches[0].FemaleFraction;
                 if (Harvesting != null)
                     Harvesting.Invoke(this, new EventArgs());
@@ -636,6 +663,7 @@ namespace Models.PMF.OilPalm
                 HarvestYield = 0.0;
                 HarvestFFB = 0.0;
                 HarvestBunchSize = 0.0;
+                HarvestNRemoved = 0.0;
 
                 CumulativeBunchNumber += Bunches[0].FemaleFraction;
                 CumulativeYield += Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
@@ -1038,7 +1066,7 @@ namespace Models.PMF.OilPalm
         private void DoUnderstoryGrowth()
         {
             double RUE = 1.3;
-            UnderstoryDltDM = RUE * MetData.Radn * UnderstoryCoverGreen * (1 - cover_green) * FW;
+            UnderstoryDltDM = RUE * MetData.Radn * UnderstoryCoverGreen * (1 - cover_green) * UnderstoryFW;
         }
 
         private void DoUnderstoryWaterBalance()
@@ -1047,15 +1075,15 @@ namespace Models.PMF.OilPalm
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
             UnderstoryPEP = Soil.SoilWater.eo * UnderstoryCoverGreen * (1 - cover_green);
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKL * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
+            for (int j = 0; j < Soil.Thickness.Length; j++)
+                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
 
             double TotUnderstoryPotSWUptake = Utility.Math.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
-                UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, PEP / TotUnderstoryPotSWUptake);
+                UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
                 Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - UnderstorySWUptake[j];
 
@@ -1073,7 +1101,7 @@ namespace Models.PMF.OilPalm
             double UnderstoryNdemand = LegumeNdemand + NonLegumeNdemand;
             UnderstoryNFixation = Math.Max(0.0, LegumeNdemand * .44);
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.SoilNitrogen.no3[j]);
             }
@@ -1081,7 +1109,7 @@ namespace Models.PMF.OilPalm
             double TotUnderstoryPotNUptake = Utility.Math.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
                 Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - UnderstoryNUptake[j];

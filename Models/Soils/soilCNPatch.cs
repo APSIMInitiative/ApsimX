@@ -2489,7 +2489,7 @@ namespace Models.Soils
                     fom_type = 0; // use as default if fom type not found
                     for (int i = 0; i < g.fom_types.Length; i++)
                     {
-                        if (g.fom_types[i] == FOMdata.Type)
+                        if (g.fom_types[i].Equals(FOMdata.Type, StringComparison.CurrentCultureIgnoreCase))
                         {
                             fom_type = i;
                             break;
