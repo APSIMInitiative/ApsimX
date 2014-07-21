@@ -17,6 +17,7 @@ namespace Models.PMF.Functions
 
         public string XProperty = "";
 
+        [NonSerialized]
         private CubicSpline spline = null;
         private string PropertyName;
         private string ArraySpec;
@@ -44,7 +45,7 @@ namespace Models.PMF.Functions
                 }
 
                 if (spline == null)
-                    spline = MathNet.Numerics.Interpolation.CubicSpline.InterpolateAkima(XYPairs.X, XYPairs.Y);
+                    spline = CubicSpline.InterpolateAkima(XYPairs.X, XYPairs.Y);
 
                 return Interpolate(XValue);
             }
