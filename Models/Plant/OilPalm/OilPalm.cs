@@ -309,6 +309,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
+            
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];
             SWUptake = new double[Soil.Thickness.Length];
