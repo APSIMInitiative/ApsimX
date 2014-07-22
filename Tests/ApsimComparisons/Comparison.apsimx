@@ -16,7 +16,7 @@
 </html>]]></MemoText>
   </Memo>
   <Simulation>
-    <Name>Comparisons</Name>
+    <Name>comparisons</Name>
     <WeatherFile>
       <Name>met</Name>
       <FileName>Tests\WeatherFiles\WeeWaa1889_2012.met</FileName>
@@ -574,17 +574,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0.43022395462337309</double>
+            <double>0.54341972468691113</double>
+            <double>0.7176241057111119</double>
+            <double>0.80447134983492663</double>
+            <double>0.73325413427810182</double>
+            <double>0.42868100513750679</double>
+            <double>0.257296466262741</double>
+            <double>0.20971490342908214</double>
+            <double>0.15256374848054266</double>
+            <double>0.12399021231413862</double>
+            <double>0.11447917543968829</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -782,6 +782,8 @@
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalNO3</string>
           <string>[Calculations].Script.SW</string>
+          <string>[Calculations].Script.TotalN</string>
+          <string>[Calculations].Script.TotalC</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -812,6 +814,7 @@
         <Script>
           <Offset>460</Offset>
           <TotalNO3>47.3638110918014</TotalNO3>
+          <SW>0</SW>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -834,16 +837,20 @@ namespace Models
 		public double Offset {get; set;}
 	    public double TotalNO3 {get; set;}
 	    public double SW {get;set;}
+	    public double TotalN {get;set;}
+	    public double TotalC {get;set;}
 		
 		public override void OnSimulationCommencing()
 		{	
 			TotalNO3 = 0;
-			SW=0;
+			SW = 0;
+			TotalN = 0;
+			TotalC = 0;
 		}
 		
 		[EventSubscribe("DoDailyInitialisation")]
 		private void OnDoDailyInitialisation(object sender, EventArgs e)
-		{			
+		{
 		}
 		
        [EventSubscribe("DoManagement")]
@@ -851,6 +858,8 @@ namespace Models
 		{
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
 			SW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
 		}
 	}
 }
@@ -865,7 +874,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\ApsimComparisons\Apsim.out</string>
+        <string>C:\ApsimX\Tests\ApsimComparisons\Apsim.out</string>
       </FileNames>
     </Input>
   </DataStore>
@@ -916,7 +925,7 @@ namespace Models
       <Y>
         <SimulationName>*</SimulationName>
         <TableName>Input</TableName>
-        <FieldName>no3()</FieldName>
+        <FieldName>Calculations.Script.TotalNO3</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
     </Series>
@@ -969,7 +978,113 @@ namespace Models
       <Y>
         <SimulationName>*</SimulationName>
         <TableName>Input</TableName>
-        <FieldName>sw_dep()</FieldName>
+        <FieldName>Calculations.Script.SW</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>TotalN</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title />
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>Comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>Comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Calculations.Script.TotalN</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <Series>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>Date</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>Calculations.Scipt.TotalN</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>TotalC</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title />
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>Comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>Comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Calculations.Script.TotalC</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <Series>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>Date</FieldName>
+      </X>
+      <Y>
+        <SimulationName>*</SimulationName>
+        <TableName>Input</TableName>
+        <FieldName>Calculations.Script.TotalC</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
     </Series>
@@ -978,10 +1093,31 @@ namespace Models
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>Comparisons</SimulationName>
+      <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalNO3</ColumnNames>
+      <Parameters>1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>comparisons</SimulationName>
+      <TableName>Report</TableName>
+      <Type>CompareToInput</Type>
+      <ColumnNames>Calculations.Script.SW</ColumnNames>
+      <Parameters>1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>comparisons</SimulationName>
+      <TableName>Report</TableName>
+      <Type>CompareToInput</Type>
+      <ColumnNames>Calculations.Script.TotalN</ColumnNames>
+      <Parameters>1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>comparisons</SimulationName>
+      <TableName>Report</TableName>
+      <Type>CompareToInput</Type>
+      <ColumnNames>Calculations.Script.TotalC</ColumnNames>
       <Parameters>1</Parameters>
     </Test>
   </Tests>

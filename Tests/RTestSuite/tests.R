@@ -146,7 +146,7 @@ CompareToInput <- function (x, func, params, input, ...) {
     } else {
         output <- x <= compare + params[2] &
             x >= compare - params[2]
-    }  
+    }
     
     ifelse(all(output), Output(x, TRUE, output, func, params, compare), Output(x, FALSE, output, func, params, compare))
 }

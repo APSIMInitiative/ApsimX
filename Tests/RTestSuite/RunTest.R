@@ -4,7 +4,7 @@
 # Will find all .apsimx files under the working directory.
 # Ignores any .apsimx files in UnitTest directory.
 
-#rm(list=ls()) # for testing only 
+rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
 #setwd("c:\\ApsimX") # for testing only
@@ -31,7 +31,7 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
-for (fileNumber in 1:length(files)){
+for (fileNumber in 3:3) {#length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
@@ -90,6 +90,7 @@ for (fileNumber in 1:length(files)){
           readSimOutput <- dbReadTable(db, "Report")
           readSimOutput <- readSimOutput[readSimOutput$SimulationID == as.numeric(simID),]
           
+          #try to read an Input table
           tables <- dbGetQuery(db, "SELECT name FROM sqlite_master WHERE type='table'")
           if(length(grep("Input", tables$name)) > 0){
               inputTable <- dbReadTable(db, "Input")
