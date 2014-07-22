@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using System.ComponentModel;
 using Models.PMF.Functions;
+using System.IO;
 
 
 namespace Models.PMF.Phen
@@ -80,9 +81,9 @@ namespace Models.PMF.Phen
         }
 
 
-        internal virtual void WriteSummary()
+        internal virtual void WriteSummary(TextWriter writer)
         {
-            Summary.WriteMessage(FullPath, "      " + Name);
+            writer.WriteLine("      " + Name);
         }
     }
 }

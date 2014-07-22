@@ -46,9 +46,6 @@ namespace Models
         {
             Writer.WriteLine("Date: " + Clock.Today.ToString());
             Model[] models = this.Scope.FindAll();
-
-            foreach (Model model in models)
-                Summary.WriteModelProperties(Writer, model, false, true);
         }
 
     }

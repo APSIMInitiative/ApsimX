@@ -1,29 +1,44 @@
-﻿namespace Models.Core
+﻿// -----------------------------------------------------------------------
+// <copyright file="ISummary.cs" company="CSIRO">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.Core
 {
+    /// <summary>
+    /// A summary model interface for writing to the summary file.
+    /// </summary>
     public interface ISummary
     {
         /// <summary>
-        /// Write a message to the summary
+        /// Gets or sets a value indicating whether the report should be in HTML format
         /// </summary>
-        void WriteMessage(string FullPath, string Message);
+        bool Html { get; set; }
 
         /// <summary>
-        /// Write a message to the summary
+        /// Gets or sets a value indicating whether the summary file should be
+        /// created every time the simulation is run.
         /// </summary>
-        void WriteWarning(string FullPath, string Message);
-
-        /// <summary>
-        /// Return the html for the summary file.
-        /// </summary>
-        string GetSummary(string apsimSummaryImageFileName);
-
-        /// <summary>
-        /// Create a report file in text format.
-        /// </summary>
-        void CreateReportFile(bool baseline);
-
-        bool html { get; set; }
         bool AutoCreate { get; set; }
-        bool StateVariables { get; set; }
+        
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        void WriteMessage(string fullPath, string message);
+
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        void WriteWarning(string fullPath, string message);
+
+        /// <summary>
+        /// Write the summary report to a file
+        /// </summary>
+        /// <param name="baseline">Indicates whether the baseline data store should be used.</param>
+        void WriteReportToFile(bool baseline);
     }
 }

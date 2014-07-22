@@ -1,42 +1,181 @@
-﻿using Models.Core;
-using System.IO;
-using System.Diagnostics;
-using System.Reflection;
-using System.Data;
-using System;
-using System.Collections.Generic;
-using System.Collections;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Summary.cs" company="CSIRO">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Reflection;
+    using Models.Core;
+
+    /// <summary>
+    /// This model collects the simulation initial conditions and stores into the DataStore.
+    /// It also provides an API for writing messages to the DataStore.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
-    {
+    {      
+        /// <summary>
+        /// The messages data table.
+        /// </summary>
+        private DataTable messagesTable;
 
-        // Privates
-        private const string divider = "------------------------------------------------------------------------------";
-        private DataTable Messages;
+        /// <summary>
+        /// A link to the clock in the simulation.
+        /// </summary>
+        [Link] 
+        private Clock clock = null;
 
-        [Link] private Clock Clock = null;
-        [Link] Simulation Simulation = null;
+        /// <summary>
+        /// Gets a link to the simulation.
+        /// </summary>
+        public Simulation Simulation
+        {
+            get
+            {
+                return this.ParentOfType(typeof(Simulation)) as Simulation;
+            }
+        }
 
-        // Parameters
-        public bool html { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether HTML report is required.
+        /// </summary>
+        public bool Html { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the summary file should be
+        /// created every time the simulation is run.
+        /// </summary>
         public bool AutoCreate { get; set; }
-        public bool StateVariables { get; set; }
+
+        /// <summary>
+        /// Write the summary report to the specified writer.
+        /// </summary>
+        /// <param name="simulation">The simulation to produce a summary report for</param>
+        /// <param name="writer">Text writer to write to</param>
+        /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
+        /// <param name="baseline">Read from the baseline data store?</param>
+        /// <param name="html">Indicates whether to produce html format</param>
+        public static void WriteReport(
+            Simulation simulation,
+            TextWriter writer,
+            string apsimSummaryImageFileName,
+            bool baseline,
+            bool html)
+        {
+            if (html)
+            {
+                writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                writer.WriteLine("<!DOCTYPE html PUBLIC \" -//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
+                writer.WriteLine("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">");
+                writer.WriteLine("<head><title>Summary file</title>");
+
+                writer.WriteLine("<style type=\"text/css\">");
+                writer.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
+                writer.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
+                writer.WriteLine("table.ApsimTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;background-color:#d4e3e5;}");
+                writer.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
+
+                writer.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.PropertyTable tr {\r\n" +
+                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
+                                 "   vertical-align:middle;\r\n" +
+                                 "   padding: 0px 0px 0px 0px;\r\n" +
+                                 "}");
+                writer.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+
+                writer.WriteLine("table.MessageTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.MessageTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.MessageTable tr {\r\n" +
+                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
+                                 "   vertical-align:middle;\r\n" +
+                                 "   padding: 0px 0px 0px 0px;\r\n" +
+                                 "}");
+                writer.WriteLine("table.MessageTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+
+                writer.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
+                writer.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
+
+                writer.WriteLine("</style>");
+                writer.WriteLine("</head>");
+                writer.WriteLine("<body>");
+
+                if (apsimSummaryImageFileName != null)
+                {
+                    writer.WriteLine("<p><img src=\"" + apsimSummaryImageFileName + "\" alt=\"logo\"></img></p>");
+                }
+            }
+
+            // Get the initial conditions table.            
+            DataStore dataStore = new DataStore(simulation, baseline);
+            DataTable initialConditionsTable = dataStore.GetData(simulation.Name, "InitialConditions");
+            if (initialConditionsTable != null)
+            {
+                // Convert the 'InitialConditions' table in the DataStore to a series of
+                // DataTables for each model.
+                List<DataTable> tables = new List<DataTable>();
+                ConvertInitialConditionsToTables(initialConditionsTable, tables);
+
+                // Now write all tables to our report.
+                for (int i = 0; i < tables.Count; i += 2)
+                {
+                    // Only write something to the summary file if we have something to write.
+                    if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
+                    {
+                        string heading = tables[i].TableName;
+                        WriteHeading(writer, heading, html);
+
+                        // Write the properties table if we have any properties.
+                        if (tables[i].Rows.Count > 0)
+                        {
+                            WriteTable(writer, tables[i], html, includeHeadings: false, className: "PropertyTable");
+                        }
+
+                        // Write the general data table if we have any data.
+                        if (tables[i + 1].Rows.Count > 0)
+                        {
+                            WriteTable(writer, tables[i + 1], html, includeHeadings: true, className: "ApsimTable");
+                        }
+                    }
+                }
+            }
+
+            // Write out all messages.
+            WriteHeading(writer, "Simulation log:", html);
+            DataTable messageTable = GetMessageTable(dataStore, simulation.Name);
+            WriteTable(writer, messageTable, html, false, "MessageTable");
+
+            if (html)
+            {
+                writer.WriteLine("</body>");
+                writer.WriteLine("</html>");
+            }
+
+            dataStore.Disconnect();
+            writer.Close();
+        }
 
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            Messages = new DataTable("Messages");
-            Messages.Columns.Add("ComponentName", typeof(string));
-            Messages.Columns.Add("Date", typeof(DateTime));
-            Messages.Columns.Add("Message", typeof(string));
-            Messages.Columns.Add("MessageType", typeof(int));
+            // Create our Messages table.
+            this.messagesTable = new DataTable("Messages");
+            this.messagesTable.Columns.Add("ComponentName", typeof(string));
+            this.messagesTable.Columns.Add("Date", typeof(DateTime));
+            this.messagesTable.Columns.Add("Message", typeof(string));
+            this.messagesTable.Columns.Add("MessageType", typeof(int));
+
+            // Create an initial conditions table in the DataStore.
+            CreateInitialConditionsTable(Simulation);
         }
 
         /// <summary>
@@ -44,275 +183,454 @@ namespace Models
         /// </summary>
         public override void OnSimulationCompleted()
         {
-            DataStore DataStore = new DataStore(this);
-            DataStore.DeleteOldContentInTable(Simulation.Name, "Messages");
-            DataStore.WriteTable(Simulation.Name, "Messages", Messages);
-            DataStore.Disconnect();
+            DataStore dataStore = new DataStore(this);
+            dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
+            dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
+            dataStore.Disconnect();
 
-            if (AutoCreate)
-                CreateReportFile(false);
+            if (this.AutoCreate)
+            {
+                this.WriteReportToFile(baseline: false);
+            }
         }
 
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        public void WriteMessage(string FullPath, string Message)
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteMessage(string fullPath, string message)
         {
-            DataRow newRow = Messages.NewRow();
-            newRow["ComponentName"] = FullPath;
-            newRow["Date"] = Clock.Today;
-            newRow["Message"] = Message;
+            string relativeModelPath = fullPath.Replace(Simulation.FullPath + ".", string.Empty);
+                
+            DataRow newRow = this.messagesTable.NewRow();
+            newRow["ComponentName"] = relativeModelPath;
+            newRow["Date"] = this.clock.Today;
+            newRow["Message"] = message;
             newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Information);
-            Messages.Rows.Add(newRow);
+            this.messagesTable.Rows.Add(newRow);
         }
 
         /// <summary>
         /// Write a warning message to the summary
         /// </summary>
-        public void WriteWarning(string FullPath, string Message)
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The warning message to write</param>
+        public void WriteWarning(string fullPath, string message)
         {
-            if (Messages != null)
+            if (this.messagesTable != null)
             {
-                DataRow newRow = Messages.NewRow();
-                newRow["ComponentName"] = FullPath;
-                newRow["Date"] = Clock.Today;
-                newRow["Message"] = Message;
+                DataRow newRow = this.messagesTable.NewRow();
+                newRow["ComponentName"] = fullPath;
+                newRow["Date"] = this.clock.Today;
+                newRow["Message"] = message;
                 newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
-                Messages.Rows.Add(newRow);
+                this.messagesTable.Rows.Add(newRow);
             }
         }
 
         /// <summary>
-        /// A property that the presenter will use to get the summary.
+        /// Write the summary report to a file
         /// </summary>
-        public string GetSummary(string apsimSummaryImageFileName)
+        /// <param name="baseline">Indicates whether the baseline data store should be used.</param>
+        public void WriteReportToFile(bool baseline)
         {
-            StringWriter st = new StringWriter();
-            Simulation = ParentOfType(typeof(Simulation)) as Simulation;
-            WriteSummary(st, Simulation.Name, apsimSummaryImageFileName);
-            return st.ToString();
-        }
-
-        /// <summary>
-        /// Create a report file in text format.
-        /// </summary>
-        public void CreateReportFile(bool baseline)
-        {
-            string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
-                                           Simulation.Name + this.Name + ".csv.");
-
-            StreamWriter report;
+            string fileName = Path.Combine(
+                                    Path.GetDirectoryName(Simulation.FileName),
+                                    Simulation.Name + this.Name);
             if (baseline)
-                fileName = fileName.Replace(".csv", ".baseline.csv");
-            
-            report = new StreamWriter(fileName);
-            WriteSummary(report, Simulation.Name, null);
+            {
+                fileName += ".baseline";
+            }
+
+            if (this.Html)
+            {
+                fileName += ".html";
+            }
+            else
+            {
+                fileName += ".csv";
+            }
+
+            StreamWriter report = report = new StreamWriter(fileName);
+            WriteReport(this.Simulation, report, null, baseline, this.Html);
             report.Close();
         }
 
-        #region Summary report generation
-
-        /// <summary>
-        /// Write out summary information
-        /// </summary>
-        public void WriteSummary(TextWriter report, string simulationName, string apsimSummaryImageFileName)
-        {
-            if (Simulation.FileName != null)
-            {
-                DataStore DataStore = new DataStore(this);
-
-                if (html)
-                {
-                    report.WriteLine("<!DOCTYPE html>");
-                    report.WriteLine("<html>");
-                    report.WriteLine("<body>");
-
-                    report.WriteLine("<style type=\"text/css\">");
-                    report.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
-                    report.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
-                    report.WriteLine("table.ApsimTable tr font-family:Arial,Helvetica,sans-serif;vertical-align:top;{background-color:#d4e3e5;}");
-                    report.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
-
-                    report.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                    report.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                    report.WriteLine("table.PropertyTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;}");
-                    report.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-
-                    report.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
-                    report.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-
-                    report.WriteLine("</style>");
-
-                    report.WriteLine("<img src=\"" + apsimSummaryImageFileName + "\">");
-                }
-
-                // Write out all properties.
-                WriteProperties(report, simulationName);
-
-                // Write out all messages.
-                if (html)
-                    report.WriteLine("<hr>");
-                WriteHeading(report, "Simulation log:", html);
-                DataTable messageTable = GetMessageTable(DataStore, simulationName);
-                WriteTable(report, messageTable, html, false, "PropertyTable");
-
-                if (html)
-                {
-                    report.WriteLine("</body>");
-                    report.WriteLine("</html>");
-                }
-                DataStore.Disconnect();
-                DataStore = null;
-            }
-        }
-
+        #region Private static summary report generation
+                
         /// <summary>
         /// Create a message table ready for writing.
         /// </summary>
-        private DataTable GetMessageTable(DataStore DataStore, string simulationName)
+        /// <param name="dataStore">The data store to read the message table from</param>
+        /// <param name="simulationName">The simulation name to get messages for</param>
+        /// <returns>The filled message table</returns>
+        private static DataTable GetMessageTable(DataStore dataStore, string simulationName)
         {
-
             DataTable messageTable = new DataTable();
-            DataTable messages = DataStore.GetData(simulationName, "Messages");
+            DataTable messages = dataStore.GetData(simulationName, "Messages");
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
-                messageTable.Columns.Add("Model", typeof(string));
                 messageTable.Columns.Add("Message", typeof(string));
+                string previousCol1Text = null;
+                string previousMessage = null;
                 foreach (DataRow row in messages.Rows)
                 {
+                    // Work out the column 1 text.
                     string modelName = (string)row[1];
                     DateTime date = (DateTime)row[2];
+                    string col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
+
+                    // If the date and model name have changed then write a row.
+                    if (col1Text != previousCol1Text)
+                    {
+                        if (previousCol1Text != null)
+                        {
+                            messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage });
+                        }
+
+                        previousMessage = string.Empty;
+                        previousCol1Text = col1Text;
+                    }
+                    else
+                    {
+                        col1Text = null;
+                    }
+
                     string message = (string)row[3];
                     Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
 
                     if (errorLevel == DataStore.ErrorLevel.Error)
-                        message = "FATAL ERROR: " + message;
+                    {
+                        message += "FATAL ERROR: " + message;
+                    }
                     else if (errorLevel == DataStore.ErrorLevel.Warning)
-                        message = "WARNING: " + message;
+                    {
+                        message += "WARNING: " + message;
+                    }
+                    else
+                    {
+                        previousMessage += message;
+                    }
 
-                    messageTable.Rows.Add(new object[] { date.ToString("yyyy-MM-dd"), modelName, message });
+                    previousMessage += "<br/>";
                 }
             }
+
             return messageTable;
-        }
-
-        /// <summary>
-        /// Get a table of all properties for all models in the specified simulation.
-        /// </summary>
-        private void WriteProperties(TextWriter report, string simulationName)
-        {
-            DataTable propertyTable = new DataTable();
-
-            if (Simulation != null)
-            {
-                Model[] models = Simulation.Scope.FindAll();
-                foreach (Model model in models)
-                    WriteModelProperties(report, model, html, StateVariables);
-            }
-        }
-
-        /// <summary>
-        /// Write all properties of the specified model to the specified TextWriter. Retruns true if something
-        /// was written.
-        /// </summary>
-        public static bool WriteModelProperties(TextWriter report, Model model, bool html, bool stateVariables)
-        {
-            string modelName = model.FullPath;
-
-            DataTable[] tables = Utility.DataTableSerialiser.Serialise(model, stateVariables);
-
-            if (tables != null && tables.Length > 0)
-            {
-                WriteHeading(report, modelName, html);
-                foreach (DataTable table in tables)
-                    WriteTable(report, table, html, true, modelName);
-                if (!html)
-                    report.WriteLine(divider);
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Format the specified value into a string and return the string.
-        /// </summary>
-        private static string FormatValue(object value)
-        {
-            if (value == null)
-                return "null";
-            if (value is double || value is float)
-                return String.Format("{0:F3}", value);
-            else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-MM-dd");
-            else
-                return value.ToString();
         }
 
         /// <summary>
         /// Write the specified heading to the TextWriter.
         /// </summary>
+        /// <param name="writer">Text writer to write to</param>
+        /// <param name="heading">The heading to write</param>
+        /// <param name="html">Indicates whether to produce html format</param>
         private static void WriteHeading(TextWriter writer, string heading, bool html)
         {
             if (html)
+            {
                 writer.WriteLine("<h2>" + heading + "</h2>");
+            }
             else
+            {
                 writer.WriteLine(heading.ToUpper());
+            }
         }
 
         /// <summary>
-        /// Write the specfieid table to the TextWriter.
+        /// Write the specified table to the TextWriter.
         /// </summary>
-        private static void WriteTable(TextWriter report, DataTable table, bool html, bool includeHeadings, string className)
+        /// <param name="writer">The writer to write to</param>
+        /// <param name="table">The table to write</param>
+        /// <param name="html">Indicates whether html format should be produced</param>
+        /// <param name="includeHeadings">Include headings in the html table produced?</param>
+        /// <param name="className">The class name of the generated html table</param>
+        private static void WriteTable(TextWriter writer, DataTable table, bool html, bool includeHeadings, string className)
         {
             if (html)
             {
-                report.WriteLine("<p><table class=\"" + className + "\">");
+                writer.WriteLine("<table class=\"" + className + "\">");
                 if (includeHeadings)
                 {
-                    report.WriteLine("<tr>");
+                    writer.Write("<tr>");
                     foreach (DataColumn col in table.Columns)
                     {
-                        report.Write("<th>");
-                        report.Write(col.ColumnName);
-                        report.WriteLine("</th>");
+                        writer.Write("<th>");
+                        writer.Write(col.ColumnName);
+                        writer.Write("</th>");
                     }
-                    report.WriteLine("</tr>");
+
+                    writer.WriteLine("</tr>");
                 }
 
                 foreach (DataRow row in table.Rows)
                 {
-                    report.WriteLine("<tr>");
+                    writer.Write("<tr>");
                     foreach (DataColumn col in table.Columns)
                     {
-                        report.WriteLine("<td>");
-                        string st = FormatValue(row[col]);
+                        writer.Write("<td>");
+
+                        string st = row[col].ToString();
                         if (st.Contains("\n"))
+                        {
                             st = st.Replace("\n", "<br/>");
+                        }
+
                         if (col.Ordinal == 1 && table.Rows.Count == 1 && table.Rows[0][0].ToString() == "Code:")
+                        {
                             st = "<code><pre>" + st + "</pre></code>";  // manager code
+                        }
+
                         if (st.Contains("WARNING:"))
-                            report.WriteLine("<p class=\"Warning\">");
+                        {
+                            st = "<p class=\"Warning\">" + st + "</p>";
+                        }
                         else if (st.Contains("ERROR:"))
-                            report.WriteLine("<p class=\"Error\">");
+                        {
+                            st = "<p class=\"Error\">" + st + "</p>";
+                        }
+
+                        // For property table, bold the value field.
+                        if (className == "PropertyTable" && col.Ordinal == 1)
+                        {
+                            writer.Write("<b>" + st + "</b>");
+                        }
                         else
-                            report.WriteLine("<p>");
-                        report.Write(st);
-                        
-                        report.WriteLine("</td>");
+                        {
+                            writer.Write(st);
+                        }
+
+                        writer.Write("</td>");
                     }
-                    report.WriteLine("</tr>");
+
+                    writer.WriteLine("</tr>");
                 }
-                report.WriteLine("</table></p>");
+
+                writer.WriteLine("</table>");
             }
             else
             {
-                report.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
+                writer.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
+            }
+        }
+
+        /// <summary>
+        /// Create an initial conditions table in the DataStore.
+        /// </summary>
+        /// <param name="simulation">The simulation to create an table for</param>
+        private static void CreateInitialConditionsTable(Simulation simulation)
+        {
+            // Create our initial conditions table.
+            DataTable initialConditionsTable = new DataTable("InitialConditions");
+            initialConditionsTable.Columns.Add("ModelPath", typeof(string));
+            initialConditionsTable.Columns.Add("Name", typeof(string));
+            initialConditionsTable.Columns.Add("Description", typeof(string));
+            initialConditionsTable.Columns.Add("DataType", typeof(string));
+            initialConditionsTable.Columns.Add("Units", typeof(string));
+            initialConditionsTable.Columns.Add("DisplayFormat", typeof(string));
+            initialConditionsTable.Columns.Add("Value", typeof(string));
+
+            initialConditionsTable.Rows.Add(
+                new object[] { simulation.FullPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, simulation.Name });
+
+            // Get all model properties and store in 'initialConditionsTable'
+            foreach (Model model in simulation.Scope.FindAll())
+            {
+                string relativeModelPath = model.FullPath.Replace(simulation.FullPath + ".", string.Empty);
+                List<VariableProperty> properties = new List<VariableProperty>();
+
+                FindAllProperties(model, properties);
+
+                foreach (VariableProperty property in properties)
+                {
+                    string value = property.ValueWithArrayHandling.ToString();
+                    if (value != null && property.DataType == typeof(DateTime))
+                    {
+                        value = ((DateTime)property.Value).ToString("yyyy-MM-dd hh:mm:ss");
+                    }
+
+                    initialConditionsTable.Rows.Add(new object[]
+                          { 
+                              relativeModelPath, 
+                              property.Name,
+                              property.Description,
+                              property.DataType.Name,
+                              property.Units,
+                              property.Format,
+                              value
+                          });
+                }
             }
 
+            // Write to data store.
+            DataStore dataStore = new DataStore(simulation);
+            dataStore.DeleteOldContentInTable(simulation.Name, "InitialConditions");
+            dataStore.WriteTable(simulation.Name, "InitialConditions", initialConditionsTable);
+            dataStore.Disconnect();
+        }
+
+        /// <summary>
+        /// Find all properties from the model and fill this.properties.
+        /// </summary>
+        /// <param name="model">The model to search for properties</param>
+        /// <param name="properties">The list of properties to fill</param>
+        private static void FindAllProperties(Model model, List<VariableProperty> properties)
+        {
+            if (model != null)
+            {
+                foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                {
+                    // Properties must have a [Description], not be called Name, and be read/write.
+                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
+                    bool includeProperty = hasDescription &&
+                                           property.Name != "Name" &&
+                                           property.CanRead &&
+                                           property.CanWrite;
+
+                    // Only allow lists that are double[], int[] or string[]
+                    if (includeProperty && property.PropertyType.GetInterface("IList") != null)
+                    {
+                        includeProperty = property.PropertyType == typeof(double[]) ||
+                                          property.PropertyType == typeof(int[]) ||
+                                          property.PropertyType == typeof(string[]);
+                    }
+
+                    if (includeProperty)
+                    {
+                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), true);
+                        properties.Add(new VariableProperty(model, property));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts a flat 'InitialConditions' table (from the data store) to a series of data tables.
+        /// </summary>
+        /// <param name="initialConditionsTable">The table to read the rows from</param>
+        /// <param name="tables">The list of tables to create</param>
+        private static void ConvertInitialConditionsToTables(DataTable initialConditionsTable, List<DataTable> tables)
+        {
+            DataTable propertyDataTable = null;
+            DataTable generalDataTable = null;
+            string previousModel = null;
+            foreach (DataRow row in initialConditionsTable.Rows)
+            {
+                string modelPath = row["ModelPath"].ToString();
+
+                // If this is a new model then write a new section for it.
+                if (modelPath != previousModel)
+                {
+                    // Add a new properties table for this model.
+                    propertyDataTable = new DataTable(modelPath);
+                    propertyDataTable.Columns.Add("Name", typeof(string));
+                    propertyDataTable.Columns.Add("Value", typeof(string));
+                    tables.Add(propertyDataTable);
+
+                    // Add a new data table for this model.
+                    generalDataTable = new DataTable("General " + modelPath);
+                    tables.Add(generalDataTable);
+
+                    previousModel = modelPath;
+                }
+
+                // Work out the property name.
+                string propertyName = row["Description"].ToString();
+                string units = row["Units"].ToString();
+                string displayFormat = row["DisplayFormat"].ToString();
+
+                // If the data type is an array then write the general datatable.
+                if (row["DataType"].ToString().Contains("[]"))
+                {
+                    if (units != null && units != string.Empty)
+                    {
+                        propertyName += " (" + units + ")";
+                    }
+
+                    AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, row["Value"], generalDataTable);
+                }
+                else
+                {
+                    string value = FormatPropertyValue(row["DataType"].ToString(), row["Value"]);
+                    if (units != null && units != string.Empty)
+                    {
+                        value += " (" + units + ")";
+                    }
+
+                    propertyDataTable.Rows.Add(new object[] 
+                    {
+                        propertyName + ": ",
+                        value
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add a column to the specified table based on values in the 'value'
+        /// </summary>
+        /// <param name="heading">The new column heading</param>
+        /// <param name="dataTypeName">The data type of the value</param>
+        /// <param name="displayFormat">The display format to use when writing the column</param>
+        /// <param name="value">The values containing the array</param>
+        /// <param name="table">The table where a column should be added to</param>
+        private static void AddArrayToTable(string heading, string dataTypeName, string displayFormat, object value, DataTable table)
+        {
+            if (displayFormat == null)
+            {
+                displayFormat = "N3";
+            }
+
+            string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (dataTypeName == "Double[]")
+            {
+                double[] values = Utility.Math.StringsToDoubles(stringValues);
+                stringValues = Utility.Math.DoublesToStrings(values, displayFormat);
+            }
+            else if (dataTypeName == "Int32[]")
+            {
+                double[] values = Utility.Math.StringsToDoubles(stringValues);
+                stringValues = Utility.Math.DoublesToStrings(values, "N0");
+            }
+            else if (dataTypeName != "String[]")
+            {
+                throw new ApsimXException(string.Empty, "Invalid property type: " + dataTypeName);
+            }
+
+            Utility.DataTable.AddColumn(table, heading, stringValues);
+        }
+
+        /// <summary>
+        /// Format the specified value into a string and return the string.
+        /// </summary>
+        /// <param name="dataTypeName">The name of the data type</param>
+        /// <param name="value">The value to format</param>
+        /// <returns>The formatted value as a string</returns>
+        private static string FormatPropertyValue(string dataTypeName, object value)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+
+            if (dataTypeName == "Double" || dataTypeName == "Single")
+            {
+                double doubleValue = Convert.ToDouble(value);
+                return string.Format("{0:F3}", doubleValue);
+            }
+            else if (dataTypeName == "DateTime")
+            {
+                DateTime date = DateTime.ParseExact(value.ToString(), "yyyy-MM-dd hh:mm:ss", null);
+                return date.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                return value.ToString();
+            }
         }
 
         #endregion
-
     }
 }

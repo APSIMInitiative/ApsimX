@@ -80,7 +80,11 @@ namespace UserInterface.Views
         public bool ReadOnly 
         {
             get { return !tooledControl1.editControl.Enabled; }
-            set { tooledControl1.editControl.Enabled = !value; }
+            set 
+            { 
+                tooledControl1.editControl.Enabled = !value;
+                tooledControl1.modelEdit.toolContainer.visible = tooledControl1.editControl.Enabled;
+            }
         }
 
         /// <summary>

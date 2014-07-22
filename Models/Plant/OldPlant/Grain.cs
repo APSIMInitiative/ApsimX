@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace Models.PMF.OldPlant
 {
@@ -450,12 +451,15 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Grain.N_grain_demand=%f", N_grain_demand);
         }
-        internal void WriteCultivarInfo()
+        internal void WriteCultivarInfo(TextWriter writer)
         {
-            Summary.WriteMessage(FullPath, string.Format("   grains_per_gram_stem           = {0,10:F1} (/g)", GrainsPerGramStem));
-            Summary.WriteMessage(FullPath, string.Format("   potential_grain_filling_rate   = {0,10:F4} (g/grain/day)", PotentialGrainFillingRate));
-            Summary.WriteMessage(FullPath, string.Format("   potential_grain_growth_rate    = {0,10:F4} (g/grain/day)", PotentialGrainGrowthRate));
-            Summary.WriteMessage(FullPath, string.Format("   max_grain_size                 = {0,10:F4} (g)", MaxGrainSize));
+            string message = string.Format("grains_per_gram_stem           = {0,10:F1} (/g)\r\n" +
+                                           "potential_grain_filling_rate   = {1,10:F4} (g/grain/day)\r\n" +
+                                           "potential_grain_growth_rate    = {2,10:F4} (g/grain/day)\r\n" +
+                                           "max_grain_size                 = {3,10:F4} (g)", 
+                    GrainsPerGramStem, PotentialGrainFillingRate, PotentialGrainGrowthRate,  MaxGrainSize);
+
+            writer.WriteLine(message);
         }
         #endregion
 

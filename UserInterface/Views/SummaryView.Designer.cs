@@ -28,24 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.HtmlControl = new System.Windows.Forms.WebBrowser();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SummaryView));
             this.TextBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.StateVariablesCheckBox = new System.Windows.Forms.CheckBox();
             this.HTMLCheckBox = new System.Windows.Forms.CheckBox();
             this.CreateButton = new System.Windows.Forms.Button();
             this.AutoCreateCheckBox = new System.Windows.Forms.CheckBox();
-            this.StateVariablesCheckBox = new System.Windows.Forms.CheckBox();
+            this.HtmlControl = new HTMLView();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // HtmlControl
-            // 
-            this.HtmlControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.HtmlControl.Location = new System.Drawing.Point(0, 39);
-            this.HtmlControl.MinimumSize = new System.Drawing.Size(20, 20);
-            this.HtmlControl.Name = "HtmlControl";
-            this.HtmlControl.Size = new System.Drawing.Size(754, 734);
-            this.HtmlControl.TabIndex = 0;
             // 
             // TextBox
             // 
@@ -70,6 +62,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(754, 39);
             this.panel1.TabIndex = 4;
+            // 
+            // StateVariablesCheckBox
+            // 
+            this.StateVariablesCheckBox.AutoSize = true;
+            this.StateVariablesCheckBox.Location = new System.Drawing.Point(349, 3);
+            this.StateVariablesCheckBox.Name = "StateVariablesCheckBox";
+            this.StateVariablesCheckBox.Size = new System.Drawing.Size(130, 17);
+            this.StateVariablesCheckBox.TabIndex = 7;
+            this.StateVariablesCheckBox.Text = "Show state variables?";
+            this.StateVariablesCheckBox.UseVisualStyleBackColor = true;
+            this.StateVariablesCheckBox.CheckedChanged += new System.EventHandler(this.OnStateVariablesCheckBoxChanged);
             // 
             // HTMLCheckBox
             // 
@@ -105,16 +108,16 @@
             this.AutoCreateCheckBox.UseVisualStyleBackColor = true;
             this.AutoCreateCheckBox.CheckedChanged += new System.EventHandler(this.OnAutoCreateCheckBoxChanged);
             // 
-            // StateVariablesCheckBox
+            // HtmlControl
             // 
-            this.StateVariablesCheckBox.AutoSize = true;
-            this.StateVariablesCheckBox.Location = new System.Drawing.Point(349, 3);
-            this.StateVariablesCheckBox.Name = "StateVariablesCheckBox";
-            this.StateVariablesCheckBox.Size = new System.Drawing.Size(130, 17);
-            this.StateVariablesCheckBox.TabIndex = 7;
-            this.StateVariablesCheckBox.Text = "Show state variables?";
-            this.StateVariablesCheckBox.UseVisualStyleBackColor = true;
-            this.StateVariablesCheckBox.CheckedChanged += new System.EventHandler(this.OnStateVariablesCheckBoxChanged);
+            this.HtmlControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.HtmlControl.LabelText = "Add text to the simulation notes";
+            this.HtmlControl.Location = new System.Drawing.Point(0, 39);
+            this.HtmlControl.MemoText = resources.GetString("HtmlControl.MemoText");
+            this.HtmlControl.Name = "HtmlControl";
+            this.HtmlControl.ReadOnly = false;
+            this.HtmlControl.Size = new System.Drawing.Size(754, 734);
+            this.HtmlControl.TabIndex = 5;
             // 
             // SummaryView
             // 
@@ -134,12 +137,12 @@
 
         #endregion
 
-        private System.Windows.Forms.WebBrowser HtmlControl;
         private System.Windows.Forms.TextBox TextBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox HTMLCheckBox;
         private System.Windows.Forms.Button CreateButton;
         private System.Windows.Forms.CheckBox AutoCreateCheckBox;
         private System.Windows.Forms.CheckBox StateVariablesCheckBox;
+        private HTMLView HtmlControl;
     }
 }

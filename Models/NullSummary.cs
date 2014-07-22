@@ -26,18 +26,18 @@ namespace Models
 
         public void WriteWarning(string FullPath, string Message)
         {
+
         }
 
-        public string GetSummary(string apsimSummaryImageFileName)
+        /// <summary>
+        /// Write the summary report to a file
+        /// </summary>
+        /// <param name="baseline">Indicates whether the baseline datastore should be used.</param>
+        public void WriteReportToFile(bool baseline)
         {
-            return null;
         }
 
-        public void CreateReportFile(bool baseline)
-        {
-        }
-
-        public bool html
+        public bool Html
         {
             get
             {
@@ -72,5 +72,18 @@ namespace Models
                 
             }
         }
+
+        /// <summary>
+        /// Write the summary report to the specified writer.
+        /// </summary>
+        /// <param name="writer">Text writer to write to</param>
+        /// <param name="apsimSummaryImageFileName">The png file name for the apsim logo</param>
+        /// <param name="baseline">Read from the baseline datastore?</param>
+        public void WriteReport(System.IO.TextWriter writer, string apsimSummaryImageFileName, bool baseline)
+        {
+
+        }
+        
+        
     }
 }
