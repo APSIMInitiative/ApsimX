@@ -45,9 +45,9 @@
         <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Water>
           <Name>Water</Name>
@@ -865,7 +865,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\ApsimComparisons\Apsim.out</string>
+        <string>Tests\ApsimComparisons\Apsim.out</string>
       </FileNames>
     </Input>
   </DataStore>
