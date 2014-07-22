@@ -874,7 +874,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>C:\ApsimX\Tests\ApsimComparisons\Apsim.out</string>
+        <string>Tests\ApsimComparisons\Apsim.out</string>
       </FileNames>
     </Input>
   </DataStore>

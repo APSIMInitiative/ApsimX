@@ -4,7 +4,7 @@
 # Will find all .apsimx files under the working directory.
 # Ignores any .apsimx files in UnitTest directory.
 
-rm(list=ls()) # for testing only 
+#rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
 #setwd("c:\\ApsimX") # for testing only
@@ -25,13 +25,13 @@ source("Tests/RTestSuite/tests.R")
 # if 1 argument, assume it is a single test to run
 ifelse(length(args) == 1, files <- args[1], files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
 
-# create a blank data frame to hold all test output
+# create an empty data frame to hold all test output
 buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 
                           BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
 
 results <- -1
 
-for (fileNumber in 3:3) {#length(files)){
+for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
