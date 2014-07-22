@@ -1,4 +1,4 @@
-# syntax: Tests\RTestSuite\RunTest.R %OS% %BUILD_NUMBER% -l
+# syntax: Tests\RTestSuite\RunTest.R %OS% %BUILD_NUMBER% [-l]
 # -l: run local; do not try to connect to results storage database
 #
 # Will find all .apsimx files under the working directory.
@@ -14,6 +14,7 @@ library("RSQLite")
 library("RODBC")
 
 args <- commandArgs(TRUE)
+tmp <- 0
 #args <- c("Windows_NT", -1, "-l") # for testing only 
 
 if(length(args) == 0)
@@ -72,16 +73,31 @@ for (fileNumber in 1:length(files)){
     
     for (sim in c(1:length(simsToTest)))
     {
-      #connect to simulator output and baseline data if available
+      #connect to simulator output, input and baseline data if available
       db <- dbConnect(SQLite(), dbname = dbName)
       if(file.exists(paste(dbName, ".baseline", sep="")))
           dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
       
       #get report ID and extract relevant info from table
-      simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+      possibleError <- tryCatch({
+        simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+      }, error = function(err) {
+          print(noquote("Could not find 'Simulations' column. Did the test run?"))
+          haveTestsPassed <<- FALSE
+      })
+      
       possibleError <- tryCatch({
           readSimOutput <- dbReadTable(db, "Report")
           readSimOutput <- readSimOutput[readSimOutput$SimulationID == as.numeric(simID),]
+          
+          tables <- dbGetQuery(db, "SELECT name FROM sqlite_master WHERE type='table'")
+          if(length(grep("Input", tables$name)) > 0){
+              inputTable <- dbReadTable(db, "Input")
+              inputTable <- inputTable[inputTable$SimulationID == as.numeric(simID),]
+          }
+          else {
+              inputTable <- NA
+          }
           
           if(nrow(readSimOutput) == 0)
             stop(paste("Error: No data returned for simulation: ", simsToTest[sim]))
@@ -141,8 +157,8 @@ for (fileNumber in 1:length(files)){
 
             #run each test
             ifelse(results == -1,      
-              results <- func(simOutput, tests, params, simOutputBase),
-              results <- c(results, func(simOutput, tests, params, simOutputBase)))
+              results <- func(simOutput, tests, params, simOutputBase, input = inputTable),
+              results <- c(results, func(simOutput, tests, params, simOutputBase, input = inputTable)))
             print(noquote(paste(tests, tail(results,1), cols, sep=" ")))
            }
       }, error = function(err) {

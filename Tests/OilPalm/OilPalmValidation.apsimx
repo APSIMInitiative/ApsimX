@@ -1616,29 +1616,29 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <MonthlyPalmBunches>1.41014686370248</MonthlyPalmBunches>
+              <Offset>460</Offset>
+              <AnnualFronds>24</AnnualFronds>
+              <AnnualBunches>12.2079804062386</AnnualBunches>
+              <BunchOffset>220.202585650071</BunchOffset>
+              <AnnualYield>11.2354924272104</AnnualYield>
+              <AnnualBunchSize>6.8173331756543</AnnualBunchSize>
+              <YieldOffset>27160.2351168953</YieldOffset>
               <MonthlyPalmYield>25.7855928553127</MonthlyPalmYield>
+              <MonthlyPalmBunches>1.41014686370248</MonthlyPalmBunches>
               <MonthlyPalmBunchSize>18.2857498882138</MonthlyPalmBunchSize>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <MonthlyDenit>0.414461618647461</MonthlyDenit>
               <MonthlyN2O>0.0786112498666511</MonthlyN2O>
-              <MonthlyLeach>0</MonthlyLeach>
+              <MonthlyN2>0.33585036878081</MonthlyN2>
               <MonthlyFixation>1.05527435407466</MonthlyFixation>
               <SurfaceNO3>26.2137804267181</SurfaceNO3>
               <RootZoneNO3>37.9859183255494</RootZoneNO3>
-              <MonthlyN2>0.33585036878081</MonthlyN2>
+              <MonthlyLeach>0</MonthlyLeach>
               <SoilCtpha>323.202986459283</SoilCtpha>
-              <NitTot>27077.3722617306</NitTot>
-              <AnnualFronds>24</AnnualFronds>
-              <AnnualBunches>12.2079804062386</AnnualBunches>
-              <AnnualYield>11.2354924272104</AnnualYield>
-              <AnnualBunchSize>6.8173331756543</AnnualBunchSize>
-              <Offset>460</Offset>
-              <BunchOffset>220.202585650071</BunchOffset>
-              <YieldOffset>27160.2351168953</YieldOffset>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
               <TotalNO3>47.3638110918014</TotalNO3>
+              <NitTot>27077.3722617306</NitTot>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

@@ -110,7 +110,6 @@ Mean <- function (x, func, params, ...) {
 # @baseData: vector - reference data
 ##################################
 Tolerance <- function (x, func, params, baseData, ...) {
-  #print (baseData)
   if (is.na(baseData))
     stop("Tolerance test requires a baseline and one was not found.")
   if (params[1]) {
@@ -123,6 +122,35 @@ Tolerance <- function (x, func, params, baseData, ...) {
    ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
   }
   
+############# CompareToInput ############
+# Return true if each value in x is within +-[2](%) of [3]
+# Similar to Tolerance but uses an Input table instead of a seperate .db
+# @Param x: multi  - list
+# @Param func:string - name of the calling test
+# @Param 1: bool   - 1; use percentage, 0; use absolute
+# @Param 2: double - tolerance value (inclusive)
+# @baseData: vector - reference data
+##################################
+CompareToInput <- function (x, func, params, input, ...) {
+
+    index <- grep(names(x), names(inputTable))
+    
+    if (length(index) == 0) 
+        stop(paste("Could not find column", names(x), "in Input table.", sep=" "))
+             
+    compare <- input[, index]
+
+    if (params[1]) {
+        output <- abs(x) <= abs(compare) + abs(compare) * params[2] / 100 &
+            abs(x) >= abs(compare) - abs(compare) * params[2] / 100
+    } else {
+        output <- x <= compare + params[2] &
+            x >= compare - params[2]
+    }  
+    
+    ifelse(all(output), Output(x, TRUE, output, func, params, compare), Output(x, FALSE, output, func, params, compare))
+}
+
 ############# EqualTo ############
 # Return true if each value in x is equal to
 # corresponding value in baseData
