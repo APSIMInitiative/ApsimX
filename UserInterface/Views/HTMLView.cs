@@ -33,6 +33,14 @@ namespace UserInterface.Views
     public partial class HTMLView : UserControl, IHTMLView
     {
         public event EventHandler<EditorArgs> MemoUpdate;
+        private string defaultHtml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                     "<!DOCTYPE html PUBLIC \" -//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
+                                     "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" +
+                                     "<head>" +
+                                     "<title />" +
+                                     "</head>" +
+                                     "<body />" +
+                                     "</html>";
 
         public HTMLView()
         {
@@ -59,18 +67,17 @@ namespace UserInterface.Views
             {
                 if (value == null)
                 {
-                    value = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                            "<!DOCTYPE html PUBLIC \" -//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
-                            "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" +
-                            "<head>" +
-                            "<title />" +
-                            "</head>" +
-                            "<body />" +
-                            "</html>";
+                    value = defaultHtml;
                 }
 
                 StringReader reader = new StringReader(value);
-                tooledControl1.modelEdit.openDocument(reader);
+                try
+                {
+                    tooledControl1.modelEdit.openDocument(reader);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -82,7 +89,7 @@ namespace UserInterface.Views
             get { return !tooledControl1.editControl.Enabled; }
             set 
             { 
-                tooledControl1.editControl.Enabled = !value;
+                //tooledControl1.editControl.Enabled = !value;
                 tooledControl1.modelEdit.toolContainer.visible = tooledControl1.editControl.Enabled;
             }
         }

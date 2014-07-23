@@ -75,8 +75,10 @@ namespace UserInterface.Presenters
             // Get a simulation object.
             Simulation simulation = this.summary.ParentOfType(typeof(Simulation)) as Simulation;
 
+            DataStore dataStore = new DataStore(simulation, false);
+
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(simulation, writer, configuration.SummaryPngFileName, false, this.summary.Html);
+            Summary.WriteReport(dataStore, simulation.Name, writer, configuration.SummaryPngFileName, this.summary.Html);
             this.view.SetSummary(writer.ToString(), this.summary.Html);
         }
 

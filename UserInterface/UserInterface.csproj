@@ -89,6 +89,7 @@
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>

@@ -60,13 +60,12 @@ namespace Models
         /// <param name="simulation">The simulation to produce a summary report for</param>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
-        /// <param name="baseline">Read from the baseline data store?</param>
         /// <param name="html">Indicates whether to produce html format</param>
         public static void WriteReport(
-            Simulation simulation,
+            DataStore dataStore,
+            string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
-            bool baseline,
             bool html)
         {
             if (html)
@@ -91,15 +90,29 @@ namespace Models
                                  "}");
                 writer.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
 
-                writer.WriteLine("table.MessageTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                writer.WriteLine("table.MessageTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.MessageTable {\r\n" +
+                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
+                                 "   font-size:14px;\r\n" +
+                                 "   width: 100%;\r\n" +
+                                 "   table-layout: fixed;\r\n" +
+                                 "   border-width: 1px;}");
+                writer.WriteLine("table.MessageTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;}");
                 writer.WriteLine("table.MessageTable tr {\r\n" +
                                  "   font-family:Arial,Helvetica,sans-serif;\r\n" +
                                  "   vertical-align:middle;\r\n" +
                                  "   padding: 0px 0px 0px 0px;\r\n" +
                                  "}");
-                writer.WriteLine("table.MessageTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.MessageTable td {\r\n" +
+                                 "   font-family:Arial,Helvetica,sans-serif;font-size:14px;\r\n" +
+                                 "   border-width: 1px;\r\n" +
+                                 "}");
 
+                writer.WriteLine("td.col1 {\r\n" +
+                                 "   width: 30%;\r\n" +
+                                 "}");
+                writer.WriteLine("td.col2 {\r\n" +
+                                 "   width: 70%;\r\n" +
+                                 "}");
                 writer.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
                 writer.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
 
@@ -114,8 +127,7 @@ namespace Models
             }
 
             // Get the initial conditions table.            
-            DataStore dataStore = new DataStore(simulation, baseline);
-            DataTable initialConditionsTable = dataStore.GetData(simulation.Name, "InitialConditions");
+            DataTable initialConditionsTable = dataStore.GetData(simulationName, "InitialConditions");
             if (initialConditionsTable != null)
             {
                 // Convert the 'InitialConditions' table in the DataStore to a series of
@@ -149,8 +161,8 @@ namespace Models
 
             // Write out all messages.
             WriteHeading(writer, "Simulation log:", html);
-            DataTable messageTable = GetMessageTable(dataStore, simulation.Name);
-            WriteTable(writer, messageTable, html, false, "MessageTable");
+            DataTable messageTable = GetMessageTable(dataStore, simulationName);
+            WriteMessageTable(writer, messageTable, html, false, "MessageTable");
 
             if (html)
             {
@@ -252,8 +264,10 @@ namespace Models
                 fileName += ".csv";
             }
 
+            DataStore dataStore = new DataStore(Simulation, baseline);
+            
             StreamWriter report = report = new StreamWriter(fileName);
-            WriteReport(this.Simulation, report, null, baseline, this.Html);
+            WriteReport(dataStore, this.Simulation.Name, report, null, this.Html);
             report.Close();
         }
 
@@ -352,6 +366,7 @@ namespace Models
             if (html)
             {
                 writer.WriteLine("<table class=\"" + className + "\">");
+
                 if (includeHeadings)
                 {
                     writer.Write("<tr>");
@@ -370,7 +385,22 @@ namespace Models
                     writer.Write("<tr>");
                     foreach (DataColumn col in table.Columns)
                     {
-                        writer.Write("<td>");
+                        if (className == "MessageTable")
+                        {
+                            if (col.Ordinal == 0)
+                            {
+                                writer.WriteLine("<td class=\"col1\">");
+                            }
+                            else
+                            {
+                                writer.WriteLine("<td class=\"col2\">");
+                            }
+                            
+                        }
+                        else
+                        {
+                            writer.Write("<td>");
+                        }
 
                         string st = row[col].ToString();
                         if (st.Contains("\n"))
@@ -413,6 +443,23 @@ namespace Models
             else
             {
                 writer.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
+            }
+        }
+
+        /// <summary>
+        /// Write the specified table to the TextWriter.
+        /// </summary>
+        /// <param name="writer">The writer to write to</param>
+        /// <param name="table">The table to write</param>
+        /// <param name="html">Indicates whether html format should be produced</param>
+        /// <param name="includeHeadings">Include headings in the html table produced?</param>
+        /// <param name="className">The class name of the generated html table</param>
+        private static void WriteMessageTable(TextWriter writer, DataTable table, bool html, bool includeHeadings, string className)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                writer.WriteLine("<b>" + row[0] + "</b>");
+                writer.WriteLine("<p>" + row[1] + "</p>");
             }
         }
 
