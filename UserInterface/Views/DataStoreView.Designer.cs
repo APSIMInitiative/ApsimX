@@ -1,11 +1,79 @@
-﻿namespace UserInterface.Views
+﻿// -----------------------------------------------------------------------
+// <copyright file="DataStoreView.Designer.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Views
 {
-    partial class DataStoreView
+    /// <summary>
+    /// A data store view
+    /// </summary>
+    public partial class DataStoreView
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// List of table names.
+        /// </summary>
+        private System.Windows.Forms.ListView listBox1;
+
+        /// <summary>
+        /// Top panel
+        /// </summary>
+        private System.Windows.Forms.Panel panel1;
+
+        /// <summary>
+        /// A create button
+        /// </summary>
+        private System.Windows.Forms.Button createButton;
+
+        /// <summary>
+        /// A splitter
+        /// </summary>
+        private System.Windows.Forms.Splitter splitter1;
+
+        /// <summary>
+        /// An output grid view.
+        /// </summary>
+        private GridView gridView;
+
+        /// <summary>
+        /// Run child models button.
+        /// </summary>
+        private System.Windows.Forms.Button button1;
+
+        /// <summary>
+        /// The main tab control.
+        /// </summary>
+        private System.Windows.Forms.TabControl tabControl1;
+
+        /// <summary>
+        /// First tab page
+        /// </summary>
+        private System.Windows.Forms.TabPage tabPage1;
+
+        /// <summary>
+        /// Second tab page.
+        /// </summary>
+        private System.Windows.Forms.TabPage tabPage2;
+
+        /// <summary>
+        /// Summary html viewer
+        /// </summary>
+        private HTMLView htmlView1;
+
+        /// <summary>
+        /// Second splitter
+        /// </summary>
+        private System.Windows.Forms.Splitter splitter2;
+
+        /// <summary>
+        /// Simulation list view.
+        /// </summary>
+        private System.Windows.Forms.ListView listView2;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -13,10 +81,11 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -28,71 +97,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.TableList = new System.Windows.Forms.ListView();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataStoreView));
+            this.listBox1 = new System.Windows.Forms.ListView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.CreateButton = new System.Windows.Forms.Button();
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.GridView = new GridView();
             this.button1 = new System.Windows.Forms.Button();
+            this.createButton = new System.Windows.Forms.Button();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.gridView = new GridView();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.htmlView1 = new HTMLView();
+            this.splitter2 = new System.Windows.Forms.Splitter();
+            this.listView2 = new System.Windows.Forms.ListView();
             this.panel1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // TableList
+            // listBox1
             // 
-            this.TableList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.TableList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.TableList.HideSelection = false;
-            this.TableList.Location = new System.Drawing.Point(0, 39);
-            this.TableList.MultiSelect = false;
-            this.TableList.Name = "TableList";
-            this.TableList.ShowGroups = false;
-            this.TableList.Size = new System.Drawing.Size(465, 97);
-            this.TableList.TabIndex = 1;
-            this.TableList.UseCompatibleStateImageBehavior = false;
-            this.TableList.View = System.Windows.Forms.View.List;
-            this.TableList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.OnTableSelectedInGrid);
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listBox1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listBox1.HideSelection = false;
+            this.listBox1.Location = new System.Drawing.Point(3, 42);
+            this.listBox1.MultiSelect = false;
+            this.listBox1.Name = "listBox1";
+            this.listBox1.ShowGroups = false;
+            this.listBox1.Size = new System.Drawing.Size(451, 97);
+            this.listBox1.TabIndex = 1;
+            this.listBox1.UseCompatibleStateImageBehavior = false;
+            this.listBox1.View = System.Windows.Forms.View.List;
+            this.listBox1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.OnTableSelectedInGrid);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.CreateButton);
+            this.panel1.Controls.Add(this.createButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(465, 39);
+            this.panel1.Size = new System.Drawing.Size(451, 39);
             this.panel1.TabIndex = 3;
-            // 
-            // CreateButton
-            // 
-            this.CreateButton.AutoSize = true;
-            this.CreateButton.Location = new System.Drawing.Point(3, 3);
-            this.CreateButton.Name = "CreateButton";
-            this.CreateButton.Size = new System.Drawing.Size(125, 23);
-            this.CreateButton.TabIndex = 4;
-            this.CreateButton.Text = "Write output file now";
-            this.CreateButton.UseVisualStyleBackColor = true;
-            this.CreateButton.Click += new System.EventHandler(this.OnCreateButtonClick);
-            // 
-            // splitter1
-            // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(0, 136);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(465, 3);
-            this.splitter1.TabIndex = 4;
-            this.splitter1.TabStop = false;
-            // 
-            // GridView
-            // 
-            this.GridView.AutoFilterOn = false;
-            this.GridView.DataSource = null;
-            this.GridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GridView.Location = new System.Drawing.Point(0, 139);
-            this.GridView.Name = "GridView";
-            this.GridView.ReadOnly = false;
-            this.GridView.RowCount = 0;
-            this.GridView.Size = new System.Drawing.Size(465, 349);
-            this.GridView.TabIndex = 5;
             // 
             // button1
             // 
@@ -104,29 +151,126 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnRunChildModelsClick);
             // 
+            // createButton
+            // 
+            this.createButton.AutoSize = true;
+            this.createButton.Location = new System.Drawing.Point(3, 3);
+            this.createButton.Name = "createButton";
+            this.createButton.Size = new System.Drawing.Size(125, 23);
+            this.createButton.TabIndex = 4;
+            this.createButton.Text = "Write output file now";
+            this.createButton.UseVisualStyleBackColor = true;
+            this.createButton.Click += new System.EventHandler(this.OnCreateButtonClick);
+            // 
+            // splitter1
+            // 
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(3, 139);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(451, 3);
+            this.splitter1.TabIndex = 4;
+            this.splitter1.TabStop = false;
+            // 
+            // gridView
+            // 
+            this.gridView.AutoFilterOn = false;
+            this.gridView.DataSource = null;
+            this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridView.FloatingPointFormat = null;
+            this.gridView.Location = new System.Drawing.Point(3, 142);
+            this.gridView.Name = "gridView";
+            this.gridView.ReadOnly = false;
+            this.gridView.RowCount = 0;
+            this.gridView.Size = new System.Drawing.Size(451, 317);
+            this.gridView.TabIndex = 5;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(465, 488);
+            this.tabControl1.TabIndex = 6;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.gridView);
+            this.tabPage1.Controls.Add(this.splitter1);
+            this.tabPage1.Controls.Add(this.listBox1);
+            this.tabPage1.Controls.Add(this.panel1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(457, 462);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Output";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.htmlView1);
+            this.tabPage2.Controls.Add(this.splitter2);
+            this.tabPage2.Controls.Add(this.listView2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(457, 462);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Summary";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // htmlView1
+            // 
+            this.htmlView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.htmlView1.LabelText = "";
+            this.htmlView1.Location = new System.Drawing.Point(3, 103);
+            this.htmlView1.MemoText = resources.GetString("htmlView1.MemoText");
+            this.htmlView1.Name = "htmlView1";
+            this.htmlView1.ReadOnly = true;
+            this.htmlView1.Size = new System.Drawing.Size(451, 356);
+            this.htmlView1.TabIndex = 2;
+            // 
+            // splitter2
+            // 
+            this.splitter2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter2.Location = new System.Drawing.Point(3, 100);
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(451, 3);
+            this.splitter2.TabIndex = 1;
+            this.splitter2.TabStop = false;
+            // 
+            // listView2
+            // 
+            this.listView2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listView2.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listView2.HideSelection = false;
+            this.listView2.Location = new System.Drawing.Point(3, 3);
+            this.listView2.Name = "listView2";
+            this.listView2.ShowGroups = false;
+            this.listView2.Size = new System.Drawing.Size(451, 97);
+            this.listView2.TabIndex = 3;
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.View = System.Windows.Forms.View.List;
+            this.listView2.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.OnSimulationSelectedInView);
+            // 
             // DataStoreView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.GridView);
-            this.Controls.Add(this.splitter1);
-            this.Controls.Add(this.TableList);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.tabControl1);
             this.Name = "DataStoreView";
             this.Size = new System.Drawing.Size(465, 488);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
-
         #endregion
-
-        private System.Windows.Forms.ListView TableList;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button CreateButton;
-        private System.Windows.Forms.Splitter splitter1;
-        private GridView GridView;
-        private System.Windows.Forms.Button button1;
     }
 }

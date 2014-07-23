@@ -31,8 +31,10 @@ namespace Models.Soils
             }
         }
 
+        [Display(Format="N1")]
         [Description("NO3")]
         public double[] NO3 { get; set; }
+        [Display(Format = "N1")]
         [Description("NH4")]
         public double[] NH4 { get; set; }
         [Description("SW")]

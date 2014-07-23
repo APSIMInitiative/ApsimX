@@ -810,11 +810,20 @@ namespace Utility
             return NewValues.ToArray();
         }
 
-        public static string[] DoublesToStrings(IList DoubleValues)
+        public static string[] DoublesToStrings(IList DoubleValues, string format = null)
         {
             string[] Values = new string[DoubleValues.Count];
             for (int i = 0; i < DoubleValues.Count; i++)
-                Values[i] = DoubleValues[i].ToString();
+            {
+                if (format != null)
+                {
+                    Values[i] = ((double)DoubleValues[i]).ToString(format);
+                }
+                else
+                {
+                    Values[i] = ((double)DoubleValues[i]).ToString();
+                }
+            }
             return Values;
         }
 

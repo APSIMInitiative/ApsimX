@@ -50,7 +50,8 @@ namespace UserInterface.Views
             {
                 TextBox.Visible = false;
                 HtmlControl.Visible = true;
-                HtmlControl.DocumentText = contents;
+                HtmlControl.MemoText = contents;
+                HtmlControl.ReadOnly = true;
             }
             else
             {

@@ -253,11 +253,7 @@ namespace Models.PMF.Organs
         }
         public override void OnCut()
         {
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
 
             Live.Clear();
             Dead.Clear();

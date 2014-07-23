@@ -711,7 +711,7 @@ namespace Models.PMF.Organs
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
             Leaves.Clear();
-            Summary.WriteMessage(FullPath, "Removing Leaves from plant");
+            Summary.WriteMessage(FullPath, "Removing leaves from plant");
         }
         /// <summary>
         /// Fractional interception "above" a given node position 
@@ -1250,7 +1250,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
-            Summary.WriteMessage(FullPath, "Removing Lowest Leaf");
+            Summary.WriteMessage(FullPath, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
         }
 
@@ -1265,11 +1265,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
-            //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Killing " + KillLeaf.KillFraction + " of leaves on " + Plant.Name;
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
 
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
@@ -1278,12 +1274,8 @@ namespace Models.PMF.Organs
 
         public override void OnCut()
         {
-            //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+
+            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();

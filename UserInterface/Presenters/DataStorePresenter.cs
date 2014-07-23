@@ -1,99 +1,123 @@
-﻿using System;
-using UserInterface.Views;
-using Models;
-using System.Data;
-using Models.Core;
-using System.Collections.Generic;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="DataStorePresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
-    class DataStorePresenter : IPresenter
+    using System;
+    using Interfaces;
+    using Models;
+    using Models.Core;
+    using System.IO;
+
+    /// <summary>
+    /// A data store presenter connecting a data store model with a data store view
+    /// </summary>
+    public class DataStorePresenter : IPresenter
     {
-        private DataStore DataStore;
-        private IDataStoreView DataStoreView;
-        ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The data store model to work with.
+        /// </summary>
+        private DataStore dataStore;
+
+        /// <summary>
+        /// The data store view to work with.
+        /// </summary>
+        private IDataStoreView dataStoreView;
+
+        /// <summary>
+        /// Parent explorer presenter.
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Attach the model and view to this presenter and populate the view.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The data store model to work with.</param>
+        /// <param name="view">Data store view to work with.</param>
+        /// <param name="explorerPresenter">Parent explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            DataStore = Model as DataStore;
-            DataStoreView = View as IDataStoreView;
-            ExplorerPresenter = explorerPresenter;
+            this.dataStore = model as DataStore;
+            this.dataStoreView = view as IDataStoreView;
+            this.explorerPresenter = explorerPresenter;
 
-            DataStoreView.OnTableSelected += OnTableSelected;
-            DataStoreView.CreateNowClicked += OnCreateNowClicked;
-            DataStoreView.RunChildModelsClicked += OnRunChildModelsClicked;
+            this.dataStoreView.OnTableSelected += this.OnTableSelected;
+            this.dataStoreView.CreateNowClicked += this.OnCreateNowClicked;
+            this.dataStoreView.RunChildModelsClicked += this.OnRunChildModelsClicked;
+            this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
 
-            DataStoreView.Grid.ReadOnly = true;
-            DataStoreView.Grid.AutoFilterOn = true;
-            DataStoreView.Grid.FloatingPointFormat = "N3";
-            DataStoreView.PopulateTables(DataStore.TableNames);
+            this.dataStoreView.Grid.ReadOnly = true;
+            this.dataStoreView.Grid.AutoFilterOn = true;
+            this.dataStoreView.Grid.FloatingPointFormat = "N3";
+            this.dataStoreView.TableNames = this.dataStore.TableNames;
+            this.dataStoreView.SimulationNames = this.dataStore.SimulationNames;
         }
-
 
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public void Detach()
         {
-            DataStoreView.OnTableSelected -= OnTableSelected;
-            DataStoreView.CreateNowClicked -= OnCreateNowClicked;
-            DataStoreView.RunChildModelsClicked -= OnRunChildModelsClicked;
+            this.dataStoreView.OnTableSelected -= this.OnTableSelected;
+            this.dataStoreView.CreateNowClicked -= this.OnCreateNowClicked;
+            this.dataStoreView.RunChildModelsClicked -= this.OnRunChildModelsClicked;
+            this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
         }
 
         /// <summary>
         /// The selected table has changed.
         /// </summary>
-        private void OnTableSelected(string TableName)
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTableSelected(object sender, EventArgs e)
         {
-            DataStoreView.Grid.DataSource = DataStore.GetData("*", TableName);
+            this.dataStoreView.Grid.DataSource = this.dataStore.GetData("*", this.dataStoreView.SelectedTableName);
+        }
 
-            if (DataStoreView.Grid.DataSource != null)
-            {
+        /// <summary>
+        /// The selected simulation has changed.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSimulationSelected(object sender, EventArgs e)
+        {
+            StringWriter writer = new StringWriter();
 
-                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                //    DataStoreView.Grid.SetColumnSize(col.Ordinal, 50);
-
-                // Make all numeric columns have a format of N3
-                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                //{
-                //    //DataStoreView.Grid.SetColumnAlignment(col.Ordinal, false);
-                //    if (col.DataType == typeof(double))
-                //        DataStoreView.Grid.SetColumnFormat(col.Ordinal, "N3");
-                //}
-
-                //foreach (DataColumn col in DataStoreView.Grid.DataSource.Columns)
-                //    DataStoreView.Grid.SetColumnSize(col.Ordinal, -1);
-            }
+            Summary.WriteReport(dataStore, this.dataStoreView.SelectedSimulationName, writer, null, true);
+            this.dataStoreView.ShowSummaryContent(writer.ToString());
         }
 
         /// <summary>
         /// Create now has been clicked.
         /// </summary>
-        void OnCreateNowClicked(object sender, EventArgs e)
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCreateNowClicked(object sender, EventArgs e)
         {
-            DataStore.WriteOutputFile();
+            this.dataStore.WriteOutputFile();
         }
 
         /// <summary>
         /// User has clicked the run child models button.
         /// </summary>
-        void OnRunChildModelsClicked(object sender, EventArgs e)
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnRunChildModelsClicked(object sender, EventArgs e)
         {
             try
             {
                 // Run all child model post processors.
-                DataStore.RunPostProcessingTools();
+                this.dataStore.RunPostProcessingTools();
             }
             catch (Exception err)
             {
-                ExplorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
+                this.explorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
             }
-            DataStoreView.PopulateTables(DataStore.TableNames);
-            ExplorerPresenter.ShowMessage("DataStore post processing models have completed", Models.DataStore.ErrorLevel.Information);
-        }
 
+            this.dataStoreView.TableNames = this.dataStore.TableNames;
+            this.explorerPresenter.ShowMessage("DataStore post processing models have completed", Models.DataStore.ErrorLevel.Information);
+        }
     }
 }

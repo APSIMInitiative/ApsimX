@@ -172,7 +172,41 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the display format for this property e.g. 'N3'
+        /// Get the value of the specified property with arrays converted to csv strings.
+        /// </summary>
+        public object ValueWithArrayHandling
+        {
+            get
+            {
+                object value = this.Value;
+                if (value == null)
+                {
+                    return string.Empty;
+                }
+
+                if (this.DataType.IsArray)
+                {
+                    string stringValue = string.Empty;
+                    Array arr = value as Array;
+                    for (int j = 0; j < arr.Length; j++)
+                    {
+                        if (j > 0)
+                        {
+                            stringValue += ",";
+                        }
+
+                        stringValue += arr.GetValue(j).ToString();
+                    }
+
+                    value = stringValue;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
         public string Format
         {
@@ -184,7 +218,7 @@ namespace Models.Core
                     return displayFormatAttribute.Format;
                 }
 
-                return "N3";
+                return null;
             }
         }
 

@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
+using System.IO;
 
 namespace Models.PMF.Phen
 {
@@ -361,11 +362,11 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Write phenology info to summary file.
         /// </summary>
-        internal void WriteSummary()
+        internal void WriteSummary(TextWriter writer)
         {
-            Summary.WriteMessage(FullPath, "   Phases:");
+            writer.WriteLine("   Phases:");
             foreach (Phase P in Phases)
-                P.WriteSummary();
+                P.WriteSummary(writer);
         }
 
         /// <summary>

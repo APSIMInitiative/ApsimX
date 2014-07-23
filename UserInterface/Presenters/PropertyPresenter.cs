@@ -166,7 +166,7 @@ namespace UserInterface.Presenters
         {
             foreach (VariableProperty property in this.properties)
             {
-                table.Rows.Add(new object[] { property.Description, this.GetPropertyValue(property) });
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
         }
 
@@ -185,7 +185,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    this.grid.SetCellEditor(1, i, this.GetPropertyValue(this.properties[i]));
+                    this.grid.SetCellEditor(1, i, this.properties[i].ValueWithArrayHandling);
                 }
             }
 
@@ -208,38 +208,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
-        /// <summary>
-        /// Get the value of the specified property
-        /// </summary>
-        /// <param name="property">The property to get the value of</param>
-        /// <returns>Returns the value of the specified property or null</returns>
-        private object GetPropertyValue(VariableProperty property)
-        {
-            object value = property.Value;
-            if (value == null)
-            {
-                return null;
-            }
 
-            if (property.DataType.IsArray)
-            {
-                string stringValue = string.Empty;
-                Array arr = value as Array;
-                for (int j = 0; j < arr.Length; j++)
-                {
-                    if (j > 0)
-                    {
-                        stringValue += ",";
-                    }
-
-                    stringValue += arr.GetValue(j).ToString();
-                }
-
-                value = stringValue;
-            }
-
-            return value;
-        }
 
         /// <summary>
         /// Set the value of the specified property

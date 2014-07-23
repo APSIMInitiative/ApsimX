@@ -8,6 +8,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -25,8 +26,8 @@ namespace Models
         /// <summary>
         /// The filename of the SQLite .db
         /// </summary>
-        [NonSerialized]
-        private string Filename;
+        [XmlIgnore]
+        public string Filename { get; set; }
 
         /// <summary>
         /// A flag that when true indicates that the DataStore is in post processing model.
@@ -110,7 +111,7 @@ namespace Models
         /// <summary>
         /// A constructor that needs to know the calling model.
         /// </summary>
-        public DataStore(Model ownerModel)
+        public DataStore(Model ownerModel, bool baseline = false)
         {
             Simulation simulation = ownerModel.ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation == null)
@@ -121,6 +122,9 @@ namespace Models
             }
             else
                 Filename = Path.ChangeExtension(simulation.FileName, ".db");
+
+            if (Filename != null && baseline)
+                Filename += ".baseline";
         }
 
         /// <summary>

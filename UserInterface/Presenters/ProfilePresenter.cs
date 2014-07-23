@@ -208,7 +208,13 @@ namespace UserInterface.Presenters
                     toolTips = property.Metadata;
                 }
 
-                this.view.ProfileGrid.SetColumnFormat(col, property.Format, backgroundColour, foregroundColour, property.IsReadOnly, toolTips);
+                string format = property.Format;
+                if (format == null)
+                {
+                    format = "N3";
+                }
+
+                this.view.ProfileGrid.SetColumnFormat(col, format, backgroundColour, foregroundColour, property.IsReadOnly, toolTips);
 
                 // colour the column headers of total columns.
                 if (!double.IsNaN(property.Total))

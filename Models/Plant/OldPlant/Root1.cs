@@ -9,6 +9,7 @@ using Models.PMF.Organs;
 using Models.Soils;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace Models.PMF.OldPlant
 {
@@ -703,21 +704,21 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Write a summary to the summary file.
         /// </summary>
-        internal void WriteSummary()
+        internal void WriteSummary(TextWriter writer)
         {
-            Summary.WriteMessage(FullPath, "                        Root Profile");
-            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
-            Summary.WriteMessage(FullPath, "          Layer       Kl           Lower    Exploration");
-            Summary.WriteMessage(FullPath, "          Depth     Factor         Limit      Factor");
-            Summary.WriteMessage(FullPath, "          (mm)         ()        (mm/mm)       (0-1)");
-            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
+            writer.WriteLine("               Root Profile");
+            writer.WriteLine("-----------------------------------------------");
+            writer.WriteLine(" Layer       Kl           Lower    Exploration");
+            writer.WriteLine(" Depth     Factor         Limit      Factor");
+            writer.WriteLine(" (mm)         ()        (mm/mm)       (0-1)");
+            writer.WriteLine("-----------------------------------------------");
 
             double dep_tot, esw_tot;                      // total depth of soil & ll
 
             dep_tot = esw_tot = 0.0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                Summary.WriteMessage(FullPath, string.Format("     {0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
+                writer.WriteLine(FullPath, string.Format("{0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
                                   Soil.SoilWater.dlayer[layer],
                                   getModifiedKL(layer),
                                   Utility.Math.Divide(ll_dep[layer], Soil.SoilWater.dlayer[layer], 0.0),
@@ -725,14 +726,14 @@ namespace Models.PMF.OldPlant
                 dep_tot += Soil.SoilWater.dlayer[layer];
                 esw_tot += Soil.SoilWater.dul_dep[layer] - ll_dep[layer];
             }
-            Summary.WriteMessage(FullPath, "         -----------------------------------------------");
+             writer.WriteLine("         -----------------------------------------------");
             if (HaveModifiedKLValues)
-                Summary.WriteMessage(FullPath, "         **** KL's have been modified using either CL, EC or ESP values.");
+                writer.WriteLine("**** KL's have been modified using either CL, EC or ESP values.");
 
-            Summary.WriteMessage(FullPath, string.Format("         Extractable SW: {0,5:F0}mm in {1,5:F0}mm total depth ({2,3:F0}%).",
+            writer.WriteLine("Extractable SW: {0,5:F0}mm in {1,5:F0}mm total depth ({2,3:F0}%).",
                                             esw_tot,
                                             dep_tot,
-                                            Conversions.fract2pcnt * Utility.Math.Divide(esw_tot, dep_tot, 0.0)));
+                                            Conversions.fract2pcnt * Utility.Math.Divide(esw_tot, dep_tot, 0.0));
         }
 
         /// <summary>
