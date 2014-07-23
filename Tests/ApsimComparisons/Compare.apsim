@@ -5,7 +5,7 @@
     </metfile>
     <clock>
       <start_date type="date" description="Enter the start date of the simulation">01/01/1889</start_date>
-      <end_date type="date" description="Enter the end date of the simulation">31/12/1889</end_date>
+      <end_date type="date" description="Enter the end date of the simulation">31/12/2012</end_date>
     </clock>
     <summaryfile />
     <area name="paddock">
