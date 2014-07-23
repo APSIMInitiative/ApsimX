@@ -447,9 +447,8 @@
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <html>false</html>
+          <Html>false</Html>
           <AutoCreate>false</AutoCreate>
-          <StateVariables>false</StateVariables>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -894,9 +893,9 @@
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
-              <PercentMethod>EvenlyDistributed</PercentMethod>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
@@ -3624,9 +3623,8 @@ namespace Models
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <html>true</html>
+          <Html>false</Html>
           <AutoCreate>false</AutoCreate>
-          <StateVariables>false</StateVariables>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -4019,9 +4017,9 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
-              <PercentMethod>EvenlyDistributed</PercentMethod>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
@@ -4839,8 +4837,8 @@ namespace Models
 	   	   AnnualYield += oilPalm.HarvestFFB;
 	   }
 		
-       [EventSubscribe("DoManagement")]
-       private void OnDoManagement(object sender, EventArgs e)
+       [EventSubscribe("DoManagementCalculations")]
+       private void DoManagementCalculations(object sender, EventArgs e)
 		{
 
 			if (oilPalm.IsCropInGround)
@@ -6041,9 +6039,8 @@ namespace Models
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <html>true</html>
+          <Html>false</Html>
           <AutoCreate>false</AutoCreate>
-          <StateVariables>false</StateVariables>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -6402,9 +6399,9 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
-              <PercentMethod>EvenlyDistributed</PercentMethod>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
