@@ -7,7 +7,7 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
-setwd("c:\\ApsimX") # for testing only
+#setwd("c:\\ApsimX") # for testing only
 haveTestsPassed <- TRUE;
 library("XML")
 library("RSQLite")
