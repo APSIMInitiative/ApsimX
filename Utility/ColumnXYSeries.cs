@@ -55,6 +55,7 @@ namespace Utility
         {
             double HalfBarWidth = XDataRange() * ColumnWidth / 2.0;
 
+            HalfBarWidth = 0.40; // slightly less that half of 1.0 cartesian coordinate
             Items.Clear();
             foreach (DataPoint P in ItemsSource)
             {
