@@ -7,7 +7,7 @@
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
-#setwd("c:\\ApsimX") # for testing only
+setwd("c:\\ApsimX") # for testing only
 haveTestsPassed <- TRUE;
 library("XML")
 library("RSQLite")
@@ -31,6 +31,7 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
+# for (fileNumber in 3:3){
 for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
@@ -120,9 +121,11 @@ for (fileNumber in 1:length(files)){
           rm(junk)
           
           # drop Date column if it exists
-          readSimOutput     <- readSimOutput[,     -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
+          readSimOutput     <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
           if (!is.na(readSimOutputBase))
               readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
+          if (!is.na(inputTable))
+              inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
                               
           #get tests to run
           tests <- unlist(strsplit(currentSimGroup[3, 1], ","))

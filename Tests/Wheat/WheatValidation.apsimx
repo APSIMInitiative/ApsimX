@@ -6,7 +6,7 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Wheat\WheatObservedData.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\WheatObservedData.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -18,7 +18,7 @@
     <Input>
       <Name>NZObservations</Name>
       <FileNames>
-        <string>Tests\Wheat\RainShelterBiomass.txt</string>
+        <string>C:\ApsimX\Tests\Wheat\RainShelterBiomass.txt</string>
       </FileNames>
     </Input>
   </DataStore>
@@ -501,6 +501,16 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-45</string>
+              <string>45-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -767,9 +777,74 @@ namespace Models
           <Name>PredictedObserved</Name>
           <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
         </PredictedObserved>
+        <Manager>
+          <Name>Calculations</Name>
+          <Script>
+            <Offset>460</Offset>
+            <AnnualFronds>24</AnnualFronds>
+            <AnnualBunches>12.2079804062386</AnnualBunches>
+            <BunchOffset>220.202585650071</BunchOffset>
+            <AnnualYield>11.2354924272104</AnnualYield>
+            <AnnualBunchSize>6.8173331756543</AnnualBunchSize>
+            <YieldOffset>27160.2351168953</YieldOffset>
+            <MonthlyPalmYield>25.7855928553127</MonthlyPalmYield>
+            <MonthlyPalmBunches>1.41014686370248</MonthlyPalmBunches>
+            <MonthlyPalmBunchSize>18.2857498882138</MonthlyPalmBunchSize>
+            <MonthlyDenit>0.414461618647461</MonthlyDenit>
+            <MonthlyN2O>0.0786112498666511</MonthlyN2O>
+            <MonthlyN2>0.33585036878081</MonthlyN2>
+            <MonthlyFixation>1.05527435407466</MonthlyFixation>
+            <SurfaceNO3>26.2137804267181</SurfaceNO3>
+            <RootZoneNO3>37.9859183255494</RootZoneNO3>
+            <MonthlyLeach>0</MonthlyLeach>
+            <SoilCtpha>323.202986459283</SoilCtpha>
+            <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>47.3638110918014</TotalNO3>
+            <NitTot>27077.3722617306</NitTot>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+	    public double NitTot {get;set;}
+	    public double CarbonTot {get;set;}
+		
+		public override void OnSimulationCommencing()
+		{	
+			NitTot=0;
+			CarbonTot = 0;
+		}
+		
+		
+       [EventSubscribe("DoManagement")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+		}
+	}
+}
+]]></Code>
+        </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Grain yield</Name>
@@ -1181,6 +1256,15 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -1461,8 +1545,8 @@ namespace Models
           <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
         </PredictedObserved>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1893,6 +1977,16 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-45</string>
+              <string>45-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -2325,8 +2419,8 @@ private void OnDoManagement(object sender, EventArgs e)
 	   ]]></Code>
         </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>NH4</Name>
@@ -2979,6 +3073,18 @@ private void OnDoManagement(object sender, EventArgs e)
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-20</string>
+              <string>20-30</string>
+              <string>30-40</string>
+              <string>40-50</string>
+              <string>50-60</string>
+              <string>60-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+            </Depth>
             <OC>
               <double>0.5</double>
               <double>0.1</double>
@@ -3341,8 +3447,8 @@ private void OnDoManagement(object sender, EventArgs e)
           <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -4055,6 +4161,18 @@ private void OnDoManagement(object sender, EventArgs e)
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-20</string>
+              <string>20-30</string>
+              <string>30-40</string>
+              <string>40-50</string>
+              <string>50-60</string>
+              <string>60-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+            </Depth>
             <OC>
               <double>0.5</double>
               <double>0.1</double>
@@ -4589,8 +4707,8 @@ private void OnDoManagement(object sender, EventArgs e)
 	   ]]></Code>
         </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -5933,7 +6051,6 @@ public class Script : Model
 }
 				]]></Code>
           </Manager>
-          <Area>0</Area>
         </Folder>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6194,6 +6311,16 @@ public class Script : Model
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-30</string>
+              <string>30-50</string>
+              <string>50-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+              <string>130-150</string>
+            </Depth>
             <OC>
               <double>0.35</double>
               <double>0.27</double>
@@ -6426,8 +6553,8 @@ public class Script : Model
           <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>LAI</Name>
@@ -6652,6 +6779,5 @@ public class Script : Model
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
-  <Area>0</Area>
   <ExplorerWidth>328</ExplorerWidth>
 </Simulations>

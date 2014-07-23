@@ -133,7 +133,7 @@ Tolerance <- function (x, func, params, baseData, ...) {
 ##################################
 CompareToInput <- function (x, func, params, input, ...) {
 
-    index <- grep(names(x), names(inputTable))
+    index <- grep(paste(names(x),"$", sep=""), names(input))
     
     if (length(index) == 0) 
         stop(paste("Could not find column", names(x), "in Input table.", sep=" "))
@@ -147,7 +147,6 @@ CompareToInput <- function (x, func, params, input, ...) {
         output <- x <= compare + params[2] &
             x >= compare - params[2]
     }
-    
     ifelse(all(output), Output(x, TRUE, output, func, params, compare), Output(x, FALSE, output, func, params, compare))
 }
 

@@ -5,7 +5,7 @@
     </metfile>
     <clock>
       <start_date type="date" description="Enter the start date of the simulation">01/01/1889</start_date>
-      <end_date type="date" description="Enter the end date of the simulation">31/12/2012</end_date>
+      <end_date type="date" description="Enter the end date of the simulation">31/12/1889</end_date>
     </clock>
     <summaryfile />
     <area name="paddock">
@@ -22,9 +22,88 @@
         <YearOfSampling>0</YearOfSampling>
         <InitialWater name="Initial water">
           <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
           <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Water>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.02</double>
+            <double>1.03</double>
+            <double>1.02</double>
+            <double>1.02</double>
+            <double>1.06</double>
+            <double>1.11</double>
+            <double>1.12</double>
+            <double>1.15</double>
+            <double>1.18</double>
+            <double>1.2</double>
+            <double>1.25</double>
+          </BD>
+          <AirDry>
+            <double>0.15</double>
+            <double>0.26</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </AirDry>
+          <LL15>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </LL15>
+          <DUL>
+            <double>0.54</double>
+            <double>0.53</double>
+            <double>0.54</double>
+            <double>0.54</double>
+            <double>0.52</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.48</double>
+            <double>0.47</double>
+            <double>0.46</double>
+            <double>0.44</double>
+          </DUL>
+          <SAT>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.57</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.53</double>
+            <double>0.52</double>
+            <double>0.51</double>
+            <double>0.49</double>
+          </SAT>
           <SoilCrop name="Barley">
             <Thickness>
               <double>150</double>
@@ -403,84 +482,6 @@
               <double>0</double>
             </XF>
           </SoilCrop>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.02</double>
-            <double>1.03</double>
-            <double>1.02</double>
-            <double>1.02</double>
-            <double>1.06</double>
-            <double>1.11</double>
-            <double>1.12</double>
-            <double>1.15</double>
-            <double>1.18</double>
-            <double>1.2</double>
-            <double>1.25</double>
-          </BD>
-          <AirDry>
-            <double>0.15</double>
-            <double>0.26</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </AirDry>
-          <LL15>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </LL15>
-          <DUL>
-            <double>0.54</double>
-            <double>0.53</double>
-            <double>0.54</double>
-            <double>0.54</double>
-            <double>0.52</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.44</double>
-          </DUL>
-          <SAT>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.53</double>
-            <double>0.52</double>
-            <double>0.51</double>
-            <double>0.49</double>
-          </SAT>
         </Water>
         <SoilWater>
           <SummerCona>3.5</SummerCona>
@@ -495,6 +496,10 @@
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -580,6 +585,7 @@
             <double>0.95</double>
             <double>0.95</double>
           </FInert>
+          <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
         <Analysis>
           <Thickness>
@@ -595,6 +601,32 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Texture>
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+          </Texture>
+          <MunsellColour>
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+            <string />
+          </MunsellColour>
           <EC>
             <double>0.2</double>
             <double>0.25</double>
@@ -621,6 +653,8 @@
             <double>8.9</double>
             <double>8.9</double>
           </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
         </Analysis>
         <Sample name="Initial nitrogen">
           <Thickness>
@@ -686,7 +720,8 @@
           <variable>sw_dep() as Calculations.Script.SW</variable>
           <variable>SimulationName</variable>
           <variable>carbon_tot() as Calculations.Script.TotalC</variable>
-          <variable>nit_tot() as Calculations.Scipt.TotalN</variable>
+          <variable>nit_tot() as Calculations.Script.TotalN</variable>
+          <variable>rain</variable>
         </variables>
         <events name="Reporting Frequency">
           <event>end_day</event>
@@ -711,7 +746,6 @@
     </area>
     <Graph name="XY">
       <Legend>
-        <CheckedTitles> Continuous Wheat</CheckedTitles>
       </Legend>
       <Plot>
         <SeriesType>Solid line</SeriesType>
@@ -726,7 +760,7 @@
   </simulation>
   <Graph name="NO3">
     <Legend>
-      <CheckedTitles> Continuous Wheat</CheckedTitles>
+      <CheckedTitles> Apsim</CheckedTitles>
     </Legend>
     <Plot>
       <SeriesType>Solid line</SeriesType>
@@ -735,12 +769,12 @@
       </colour>
       <X>Date</X>
       <Y>no3()</Y>
+      <Y>Calculations.Script.TotalNO3</Y>
       <GDApsimFileReader name="ApsimFileReader" />
     </Plot>
   </Graph>
   <Graph name="SW">
     <Legend>
-      <CheckedTitles> Continuous Wheat</CheckedTitles>
     </Legend>
     <Plot>
       <SeriesType>Solid line</SeriesType>
@@ -749,6 +783,22 @@
       </colour>
       <X>Date</X>
       <Y>sw_dep()</Y>
+      <GDApsimFileReader name="ApsimFileReader" />
+    </Plot>
+  </Graph>
+  <Graph name="SW1">
+    <Legend>
+      <CheckedTitles> Calculations.Script.SW</CheckedTitles>
+      <CheckedTitles> rain</CheckedTitles>
+    </Legend>
+    <Plot>
+      <SeriesType>No line</SeriesType>
+      <PointType>Circle</PointType>
+      <colour>
+      </colour>
+      <X>Date</X>
+      <YRight>rain</YRight>
+      <Y>Calculations.Script.SW</Y>
       <GDApsimFileReader name="ApsimFileReader" />
     </Plot>
   </Graph>

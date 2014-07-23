@@ -20,18 +20,18 @@
     <WeatherFile>
       <Name>met</Name>
       <FileName>Tests\WeatherFiles\WeeWaa1889_2012.met</FileName>
-      <MaxT>35.5</MaxT>
-      <MinT>19.5</MinT>
+      <MaxT>34</MaxT>
+      <MinT>19</MinT>
       <Rain>0</Rain>
-      <Radn>30</Radn>
-      <vp>15</vp>
+      <Radn>24</Radn>
+      <vp>19</vp>
       <wind>3</wind>
       <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>clock</Name>
       <StartDate>1889-01-01T00:00:00</StartDate>
-      <EndDate>2012-12-31T00:00:00</EndDate>
+      <EndDate>1889-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -574,17 +574,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.43022395462337309</double>
-            <double>0.54341972468691113</double>
-            <double>0.7176241057111119</double>
-            <double>0.80447134983492663</double>
-            <double>0.73325413427810182</double>
-            <double>0.42868100513750679</double>
-            <double>0.257296466262741</double>
-            <double>0.20971490342908214</double>
-            <double>0.15256374848054266</double>
-            <double>0.12399021231413862</double>
-            <double>0.11447917543968829</double>
+            <double>1.021781036335915</double>
+            <double>0.87783862152963887</double>
+            <double>0.88464391627383976</double>
+            <double>0.8877390426374514</double>
+            <double>0.7690911584247595</double>
+            <double>0.44950302024819655</double>
+            <double>0.26972009472504327</double>
+            <double>0.21977886010125672</double>
+            <double>0.15984470588925157</double>
+            <double>0.12987652177039102</double>
+            <double>0.1198868752479923</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -784,6 +784,7 @@
           <string>[Calculations].Script.SW</string>
           <string>[Calculations].Script.TotalN</string>
           <string>[Calculations].Script.TotalC</string>
+          <string>[met].Rain</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -899,12 +900,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalNO3</FieldName>
       </Y>
@@ -918,12 +919,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.TotalNO3</FieldName>
       </Y>
@@ -952,12 +953,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.SW</FieldName>
       </Y>
@@ -971,12 +972,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.SW</FieldName>
       </Y>
@@ -1005,12 +1006,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalN</FieldName>
       </Y>
@@ -1022,16 +1023,16 @@ namespace Models
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
-      <Line>Solid</Line>
+      <Line>Dash</Line>
       <X>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
-        <FieldName>Calculations.Scipt.TotalN</FieldName>
+        <FieldName>Calculations.Script.TotalN</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
     </Series>
@@ -1058,12 +1059,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>Comparisons</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalC</FieldName>
       </Y>
@@ -1077,12 +1078,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
+        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.TotalC</FieldName>
       </Y>
@@ -1097,29 +1098,86 @@ namespace Models
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalNO3</ColumnNames>
-      <Parameters>1</Parameters>
+      <Parameters>1,5</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.SW</ColumnNames>
-      <Parameters>1</Parameters>
+      <Parameters>1,5</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalN</ColumnNames>
-      <Parameters>1</Parameters>
+      <Parameters>1,5</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalC</ColumnNames>
-      <Parameters>1</Parameters>
+      <Parameters>1,5</Parameters>
     </Test>
   </Tests>
+  <Graph>
+    <Name>SW and rain</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Right</Type>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title />
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <SimulationName>comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Calculations.Script.SW</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <Series>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Right</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <SimulationName>comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <SimulationName>comparisons</SimulationName>
+        <TableName>Report</TableName>
+        <FieldName>met.Rain</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
