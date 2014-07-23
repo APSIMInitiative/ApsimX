@@ -458,8 +458,11 @@ namespace Models
         {
             foreach (DataRow row in table.Rows)
             {
-                writer.WriteLine("<b>" + row[0] + "</b>");
-                writer.WriteLine("<p>" + row[1] + "</p>");
+                writer.WriteLine("<h3>" + row[0] + "</h3>");
+
+                string content = row[1].ToString();
+                content = content.Replace("\r\n", "<br/>");
+                writer.WriteLine("<p>" + content + "</p>");
             }
         }
 
