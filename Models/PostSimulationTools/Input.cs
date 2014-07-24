@@ -36,7 +36,8 @@ namespace Models.PostSimulationTools
                 //attempt to use relative path for files in ApsimX install directory
                 fileNames = new string[value.Length];
                 for (int i = 0; i < fileNames.Length; i++)
-                    fileNames[i] = value[i].Replace(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
+                    fileNames[i] = value[i].Replace(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), "");
             }
         }
 
@@ -56,10 +57,12 @@ namespace Models.PostSimulationTools
                     if (FileNames[i] == null)
                         continue;
 
+                    string temp = string.Empty;
                     if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        FileNames[i] = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                        temp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
 
-                    if (File.Exists(FileNames[i]))
+                    if (File.Exists(temp))
                         dataStore.WriteTable(null, this.Name, data);
                 }
             }
@@ -81,7 +84,8 @@ namespace Models.PostSimulationTools
 
                     string file;
                     if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        file = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3) + FileNames[i]; //remove bin
+                        file = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
                     else file = FileNames[i];
 
                     if ( File.Exists(file))
