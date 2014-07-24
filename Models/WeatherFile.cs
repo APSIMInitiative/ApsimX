@@ -52,7 +52,8 @@ namespace Models
                 {
                     FullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);
                     if (!File.Exists(FullFileName))
-                        FullFileName = Path.Combine(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), FileName);
+                        FullFileName = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), FileName);
                 }
                 return FullFileName;
             }
@@ -66,7 +67,8 @@ namespace Models
                     Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
                     if (simulation != null && simulation.FileName != null)
                     {
-                        FileName = FileName.Replace(Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3), "");
+                        FileName = FileName.Replace(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), "");
                         if (FileName.Contains(Path.GetDirectoryName(simulation.FileName)))
                             FileName = FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, "");
                     }

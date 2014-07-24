@@ -41,6 +41,9 @@ namespace Models.PostSimulationTools
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
+                if (predictedDataNames == null)
+                    throw new ApsimXException(FullPath, "Could not find model data table: " + ObservedTableName);
+                
                 if (observedDataNames == null)
                     throw new ApsimXException(FullPath, "Could not find observed data table: " + ObservedTableName);
 
