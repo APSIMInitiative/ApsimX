@@ -10,6 +10,12 @@ namespace Models.Graph
     [Serializable]
     public class Series
     {
+        public Series()
+        {
+            XAxis = Axis.AxisType.Bottom;
+            Colour = Color.Blue;
+            SeparateSeriesForAllSimulationsInScope = true;
+        }
 
         public string Title { get; set; }
 
@@ -45,7 +51,8 @@ namespace Models.Graph
         public GraphValues Y2 { get; set; }
 
         public bool ShowRegressionLine { get; set; }
-
+        public bool ShowInLegend { get; set; }
+        public bool SeparateSeriesForAllSimulationsInScope { get; set; }
 
     }
 }

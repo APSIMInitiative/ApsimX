@@ -356,7 +356,7 @@ namespace UserInterface.Views
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
             if (axis is LinearAxis && 
-                (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy-")))
+                (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
                 // We want the axis labels to always have a leading 0 when displaying decimal places.
                 // e.g. we want 0.5 rather than .5

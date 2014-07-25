@@ -43,15 +43,28 @@ namespace UserInterface.Commands
 
         public void Do(CommandHistory CommandHistory)
         {
+            bool wasChanged = false;
             foreach (Property P in Properties)
             {
                 // Get original value of property so that we can restore it in Undo if needed.
                 P.OldValue = Utility.Reflection.GetValueOfFieldOrProperty(P.Name, Obj);
 
-                // Set the new property value.
-                P.WasModified = Utility.Reflection.SetValueOfProperty(P.Name, Obj, P.Value);
+                if (P.OldValue != null && P.OldValue.Equals(P.Value))
+                {
+                    P.WasModified = false;
+                }
+                else
+                {
+                    // Set the new property value.
+                    P.WasModified = Utility.Reflection.SetValueOfProperty(P.Name, Obj, P.Value);
+                    if (P.WasModified)
+                        wasChanged = true;
+                }
             }
-            CommandHistory.InvokeModelChanged(Obj);
+            if (wasChanged)
+            {
+                CommandHistory.InvokeModelChanged(Obj);
+            }
         }
 
         public void Undo(CommandHistory CommandHistory)

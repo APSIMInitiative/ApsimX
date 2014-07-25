@@ -89,11 +89,13 @@
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ISeriesEditorView.cs" />
     <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Interfaces\IGraphView.cs" />
+    <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
@@ -147,6 +149,12 @@
     </Compile>
     <Compile Include="Views\PredictedObservedView.Designer.cs">
       <DependentUpon>PredictedObservedView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SeriesEditorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SeriesEditorView.Designer.cs">
+      <DependentUpon>SeriesEditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TitleView.cs">
       <SubType>UserControl</SubType>
@@ -295,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PredictedObservedView.resx">
       <DependentUpon>PredictedObservedView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SeriesEditorView.resx">
+      <DependentUpon>SeriesEditorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TitleView.resx">
       <DependentUpon>TitleView.cs</DependentUpon>
