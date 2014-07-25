@@ -186,6 +186,7 @@ namespace UserInterface.Views
         {
             if (this.SeriesRenamed != null)
             {
+                listView1.Items[e.Item].Text = e.Label;
                 this.SeriesRenamed.Invoke(sender, null);
             }
         }
