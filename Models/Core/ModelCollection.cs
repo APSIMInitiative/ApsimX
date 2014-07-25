@@ -69,7 +69,11 @@ namespace Models.Core
             {
                 foreach (Model child in Model.Models)
                 {
-                    models.Add(child);
+                    if (child.GetType() == typeFilter)
+                    {
+                        models.Add(child);
+                    }
+
                     models.AddRange(child.Children.AllRecursivelyMatching(typeFilter));
                 }
             }

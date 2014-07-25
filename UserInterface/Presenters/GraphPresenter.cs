@@ -224,7 +224,14 @@ namespace UserInterface.Presenters
                 List<string> names = new List<string>();
                 foreach (Model model in parent.Children.AllRecursively)
                 {
-                    names.Add(model.Name);
+                    if (model is Simulation)
+                    {
+                        names.Add(model.Name);
+                    }
+                    else if (model is Experiment)
+                    {
+                        names.AddRange((model as Experiment).Names());
+                    }
                 }
                 return names.ToArray();
             }
