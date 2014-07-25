@@ -1,180 +1,194 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="SeriesView.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
-    public delegate void DataSourceChangedDelegate(string NewDataSource);
-    public interface ISeriesView
-    {
-        /// <summary>
-        /// Invokedn when the data source has changed by user.
-        /// </summary>
-        event DataSourceChangedDelegate DataSourceChanged;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using System.Text;
+    using System.Windows.Forms;
+    using Interfaces;
 
-        /// <summary>
-        /// Get the Series grid.
-        /// </summary>
-        IGridView SeriesGrid { get; }
-
-        /// <summary>
-        /// Get the data grid.
-        /// </summary>
-        IGridView DataGrid { get; }
-
-        /// <summary>
-        /// Get or set the data source items.
-        /// </summary>
-        string[] DataSourceItems { get; set; }
-
-        /// <summary>
-        /// Get or set the focus on X variable list.
-        /// </summary>
-        bool XFocused { get; set; }
-
-        /// <summary>
-        /// Get or set the focus on Y variable list.
-        /// </summary>
-        bool YFocused { get; set; }
-
-        /// <summary>
-        /// Get or set the data source.
-        /// </summary>
-        string DataSource { get; set; }
-    }
-
-
+    /// <summary>
+    /// A view for adding, removing and editing graph series.
+    /// </summary>
     public partial class SeriesView : UserControl, ISeriesView
     {
         /// <summary>
-        /// Invokedn when the data source has changed by user.
-        /// </summary>
-        public event DataSourceChangedDelegate DataSourceChanged;
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="SeriesView" /> class.
         /// </summary>
         public SeriesView()
         {
             InitializeComponent();
+           
         }
 
         /// <summary>
-        /// Get the Series grid
+        /// Invoked when a series has been selected by user.
         /// </summary>
-        public IGridView SeriesGrid { get { return SeriesGridView; } }
+        public event EventHandler SeriesSelected;
 
         /// <summary>
-        /// Get the data grid
+        /// Invoked when a new empty series is added.
         /// </summary>
-        public IGridView DataGrid { get { return DataGridView; } }
+        public event EventHandler SeriesAdded;
 
         /// <summary>
-        /// Get or set the data source items.
+        /// Invoked when a series is deleted.
         /// </summary>
-        public string[] DataSourceItems
+        public event EventHandler SeriesDeleted;
+
+        /// <summary>
+        /// Invoked when a series is deleted.
+        /// </summary>
+        public event EventHandler AllSeriesCleared;
+
+        /// <summary>
+        /// Invoked when a series is renamed
+        /// </summary>
+        public event EventHandler SeriesRenamed;
+
+        /// <summary>
+        /// Gets the series editor.
+        /// </summary>
+        public ISeriesEditorView SeriesEditor
         {
             get
             {
-                List<string> Items = new List<string>();
-                foreach (string Item in DataSourceCombo.Items)
-                    Items.Add(Item);
-                return Items.ToArray();
+                return seriesEditorView1;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series editor is visible.
+        /// </summary>
+        public bool EditorVisible
+        {
+            get
+            {
+                return seriesEditorView1.Visible;
+            }
+
             set
             {
-                DataSourceCombo.Items.Clear();
-                if (value != null && value.Length > 0)
+                seriesEditorView1.Visible = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the series names.
+        /// </summary>
+        public string[] SeriesNames
+        {
+            get
+            {
+                List<string> names = new List<string>();
+                foreach (ListViewItem item in listView1.Items)
                 {
-                    DataSourceCombo.Items.AddRange(value);
-                    DataSourceCombo.Text = value[0];
+                    names.Add(item.Text);
+                }
+                return names.ToArray();
+            }
+
+            set
+            {
+                listView1.Items.Clear();
+                foreach (string st in value)
+                {
+                    listView1.Items.Add(st);
                 }
             }
         }
 
         /// <summary>
-        /// Get or set the data source.
+        /// Gets or sets the selected series name.
         /// </summary>
-        public string DataSource
+        public string SelectedSeriesName
         {
             get
             {
-                return DataSourceCombo.Text;
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    return listView1.SelectedItems[0].Text;
+                }
+                return null;
             }
+
             set
             {
-                DataSourceCombo.Text = value;
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    item.Selected = item.Text == value;
+                }
             }
         }
 
         /// <summary>
-        /// Get or set the focus on X variable list.
+        /// User has changed the series.
         /// </summary>
-        public bool XFocused
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            get
+            if (SeriesSelected != null)
+                SeriesSelected.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Add a new series
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.SeriesAdded != null)
             {
-                return XRadio.Checked;
-            }
-            set
-            {
-                XRadio.Checked = value;
-                if (value)
-                    XRadio.Font = new Font(XRadio.Font, FontStyle.Bold);
-                else
-                    XRadio.Font = new Font(XRadio.Font, FontStyle.Regular);
+                this.SeriesAdded.Invoke(sender, e);
             }
         }
 
         /// <summary>
-        /// Get or set the focus on Y variable list.
+        /// Delete the selected series.
         /// </summary>
-        public bool YFocused
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            get
+            if (this.SeriesDeleted != null)
             {
-                return YRadio.Checked;
-            }
-            set
-            {
-                YRadio.Checked = value;
-                if (value)
-                    YRadio.Font = new Font(XRadio.Font, FontStyle.Bold);
-                else
-                    YRadio.Font = new Font(XRadio.Font, FontStyle.Regular);
+                this.SeriesDeleted.Invoke(sender, e);
             }
         }
 
         /// <summary>
-        /// User has changed the data source combo.
+        /// Clear all series
         /// </summary>
-        private void OnDataSourceComboChanged(object sender, EventArgs e)
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void clearAllSeriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DataSourceChanged != null)
-                DataSourceChanged(DataSourceCombo.Text);
+            if (this.AllSeriesCleared != null)
+            {
+                this.AllSeriesCleared.Invoke(sender, e);
+            }
         }
 
-        private void OnXListBoxClick(object sender, EventArgs e)
+        /// <summary>
+        /// User has finished renaming a series name.
+        /// </summary>
+        private void OnlistView1_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            XFocused = true;
-            YFocused = false;
+            if (this.SeriesRenamed != null)
+            {
+                this.SeriesRenamed.Invoke(sender, null);
+            }
         }
-
-        private void OnYListBoxClick(object sender, EventArgs e)
-        {
-            XFocused = false;
-            YFocused = true;
-
-        }
-
-
-
-
 
     }
 }

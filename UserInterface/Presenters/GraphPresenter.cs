@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ExplorerPresenter ExplorerPresenter;
         private Models.DataStore DataStore;
+        private IPresenter CurrentPresenter = null;
         private static Color[] colours = {
                                         Color.FromArgb(228,26,28),
                                         Color.FromArgb(55,126,184),
@@ -67,6 +68,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            if (CurrentPresenter != null)
+            {
+                CurrentPresenter.Detach();
+            }
             GraphView.OnAxisClick -= OnAxisClick;
             GraphView.OnPlotClick -= OnPlotClick;
             GraphView.OnLegendClick -= OnLegendClick;
@@ -89,12 +94,11 @@ namespace UserInterface.Presenters
                 
                     if (S.X != null && S.Y != null)
                     {
-                        // We need to handle the case where series X and Y SimulationName member
-                        // may be a wildcard '*'. If found then it duplicates the creating of
-                        // graph series for each simulation found in the datastore.
-                        bool simulationWildCard = S.X.SimulationName == "*";
+                        // We need to handle the case where the series needs to be duplicated
+                        // for each simulation in scope.
+                        bool duplicateForEachSimulation = S.SeparateSeriesForAllSimulationsInScope;
                         List<string> simulationNames = new List<string>();
-                        if (simulationWildCard)
+                        if (duplicateForEachSimulation)
                         {
                             // get all simulation names in scope.
                             string[] simulationNamesInScope = FindSimulationNamesInScope();
@@ -103,7 +107,7 @@ namespace UserInterface.Presenters
                                 simulationNames.Add(simulationName);
                         }
                         else
-                            simulationNames.Add(S.X.SimulationName);
+                            simulationNames.Add("*");
 
                         string seriesTitle = S.Title;
                         Color seriesColour = S.Colour;
@@ -117,8 +121,14 @@ namespace UserInterface.Presenters
 
                             // If this is a wildcard series then add the simulation name to the
                             // title of the series.
-                            if (simulationWildCard)
+                            if (duplicateForEachSimulation && simulationNames.Count > 1)
                                 seriesTitle = S.Title + " [" + simulationNames[i] + "]";
+
+                            // If ShowInLegend is false then blank the series title.
+                            if (!S.ShowInLegend)
+                            {
+                                seriesTitle = string.Empty;
+                            }
 
                             // Get data.
                             IEnumerable x = GetData(simulationName, S.X.TableName, S.X.FieldName);
@@ -133,7 +143,7 @@ namespace UserInterface.Presenters
                                 GraphView.DrawLineAndMarkers(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour,
                                                              S.Line, S.Marker);
                             }
-                            else
+                            else if (S.X2 != null && S.Y2 != null)
                             {
                                 // Get extra data for area series.
                                 IEnumerable x2 = GetData(simulationName, S.X2.TableName, S.X2.FieldName);
@@ -182,11 +192,11 @@ namespace UserInterface.Presenters
 
                 foreach (Series series in Graph.Series)
                 {
-                    if (series.XAxis == axis.Type)
+                    if (series.X != null && series.XAxis == axis.Type)
                     {
                         names.Add(series.X.FieldName);
                     }
-                    if (series.YAxis == axis.Type)
+                    if (series.Y != null && series.YAxis == axis.Type)
                     {
                         names.Add(series.Y.FieldName);
                     }
@@ -324,7 +334,7 @@ namespace UserInterface.Presenters
         private void OnGraphModelChanged(object Model)
         {
             if (Graph.Axes.Count >= 2 &&
-                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1]))
+                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1] || Model is Series))
                 DrawGraph();
         }
 
@@ -334,6 +344,7 @@ namespace UserInterface.Presenters
         private void OnAxisClick(Axis.AxisType axisType)
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
+            CurrentPresenter = AxisPresenter;
             AxisView A = new AxisView();
             GraphView.ShowEditorPanel(A);
             AxisPresenter.Attach(GetAxis(axisType), A, ExplorerPresenter);
@@ -347,6 +358,7 @@ namespace UserInterface.Presenters
         private void OnPlotClick(object sender, EventArgs e)
         {
             SeriesPresenter SeriesPresenter = new SeriesPresenter();
+            CurrentPresenter = SeriesPresenter; 
             SeriesView SeriesView = new SeriesView();
             GraphView.ShowEditorPanel(SeriesView);
             SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
@@ -360,6 +372,8 @@ namespace UserInterface.Presenters
         private void OnTitleClick(object sender, EventArgs e)
         {
             TitlePresenter titlePresenter = new TitlePresenter();
+            CurrentPresenter = titlePresenter; 
+            
             TitleView t = new TitleView();
             GraphView.ShowEditorPanel(t);
             titlePresenter.Attach(Graph, t, ExplorerPresenter);
@@ -392,6 +406,8 @@ namespace UserInterface.Presenters
         private void OnLegendClick(object sender, EventArgs e)
         {
             LegendPresenter presenter = new LegendPresenter();
+            CurrentPresenter = presenter; 
+            
             LegendView view = new LegendView();
             GraphView.ShowEditorPanel(view);
             presenter.Attach(Graph, view, ExplorerPresenter);

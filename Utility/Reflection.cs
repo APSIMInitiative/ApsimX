@@ -422,6 +422,14 @@ namespace Utility
                 return obj.ToString();
         }
 
-
+        /// <summary>
+        /// Perform a deep Copy of the specified object
+        /// </summary>
+        public static object Clone(object sourceObj)
+        {
+            Stream stream = BinarySerialise(sourceObj);
+            stream.Seek(0, SeekOrigin.Begin);
+            return BinaryDeserialise(stream);
+        }
     }
 }
