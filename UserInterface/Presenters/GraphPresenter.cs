@@ -219,6 +219,15 @@ namespace UserInterface.Presenters
                 return (parent as Experiment).Names();
             else if (parent is Simulation)
                 return new string[1] { parent.Name };
+            else if (parent is Folder)
+            {
+                List<string> names = new List<string>();
+                foreach (Model model in parent.Children.AllRecursively)
+                {
+                    names.Add(model.Name);
+                }
+                return names.ToArray();
+            }
             else
                 return Graph.DataStore.SimulationNames;
         }
@@ -228,6 +237,7 @@ namespace UserInterface.Presenters
             Model parent = Graph;
             while (parent != null && parent.GetType() != typeof(Simulation) &&
                                      parent.GetType() != typeof(Experiment) &&
+                                     parent.GetType() != typeof(Folder) &&
                                      parent.GetType() != typeof(Simulations))
                 parent = parent.Parent;
             return parent;
