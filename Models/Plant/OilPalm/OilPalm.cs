@@ -8,6 +8,8 @@ using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace Models.PMF.OilPalm
@@ -579,8 +581,9 @@ namespace Models.PMF.OilPalm
             double TotBunchDMD = Utility.Math.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
-            for (int i = 0; i < Fronds.Count; i++)
-                FrondDMD[i] = (SizeFunction(Fronds[i].Age + DeltaT) - SizeFunction(Fronds[i].Age)) / SpecificLeafArea.Value * Population * Fn;
+            //for (int i = 0; i < Fronds.Count; i++)
+            Parallel.For(0, Fronds.Count, i =>
+                FrondDMD[i] = (SizeFunction(Fronds[i].Age + DeltaT) - SizeFunction(Fronds[i].Age)) / SpecificLeafArea.Value * Population * Fn);
             double TotFrondDMD = Utility.Math.Sum(FrondDMD);
 
             //double StemDMD = DMAvailable * StemToFrondFraction.Value;
@@ -610,7 +613,7 @@ namespace Models.PMF.OilPalm
 
             FrondGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual fronds
 
-            for (int i = 0; i < Fronds.Count; i++)
+            Parallel.For(0, Fronds.Count, i =>
             {
                 double IndividualFrondGrowth = FrondDMD[i] * Fr / Population;
                 Fronds[i].Mass += IndividualFrondGrowth;
@@ -620,7 +623,7 @@ namespace Models.PMF.OilPalm
                 else
                     Fronds[i].Area += IndividualFrondGrowth * SpecificLeafAreaMax.Value;
 
-            }
+            });
 
             StemGrowth = StemDMD * Fr;// +Excess; 
             StemMass += StemGrowth;
@@ -1004,9 +1007,10 @@ namespace Models.PMF.OilPalm
 
         protected double SizeFunction(double Age)
         {
+            double FMA = FrondMaxArea.Value;
             double GrowthDuration = ExpandingFronds.Value * FrondAppRate.Value;
-            double alpha = -Math.Log((1 / 0.99 - 1) / (FrondMaxArea.Value / (FrondMaxArea.Value * 0.01) - 1)) / GrowthDuration;
-            double leafsize = FrondMaxArea.Value / (1 + (FrondMaxArea.Value / (FrondMaxArea.Value * 0.01) - 1) * Math.Exp(-alpha * Age));
+            double alpha = -Math.Log((1 / 0.99 - 1) / (FMA / (FMA * 0.01) - 1)) / GrowthDuration;
+            double leafsize = FMA / (1 + (FMA / (FMA * 0.01) - 1) * Math.Exp(-alpha * Age));
             return leafsize;
 
         }
