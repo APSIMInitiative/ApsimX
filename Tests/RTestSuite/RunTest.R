@@ -15,7 +15,7 @@ library("RODBC")
 
 args <- commandArgs(TRUE)
 tmp <- 0
-#args <- c("Windows_NT", -1, "-l") # for testing only 
+#args <- c("Windows_NT", -1) # for testing only 
 
 if(length(args) == 0)
   stop("Usage: rscript RunTest.R <path to .apsimx>")
@@ -41,12 +41,6 @@ for (fileNumber in 1:length(files)){
   
   print(noquote(files[fileNumber]))
   
-  # get connection string used to store test output, not used if -l (local) argument given
-  if(length(args) > 1 & ! "-l" %in% args){
-    dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE)) # only needed for machines submitting results to main database
-    connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
-  } 
-
   time <- proc.time()
   # read tests from .apsimx
   doc <- xmlTreeParse(files[fileNumber], useInternalNodes=TRUE)
@@ -177,13 +171,6 @@ for (fileNumber in 1:length(files)){
     print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
 
   odbcCloseAll()
-}
-
-if (length(args) > 1 & length(args) > 1 & !"-l" %in% args){
-    # this line does the save to the external database. Ignore if -l specified
-    print(noquote("Uploading test results."))
-    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-    print(noquote("Uploading complete."))
 }
 
 write.csv(buildRecord,"Tests/Test Output.csv")
