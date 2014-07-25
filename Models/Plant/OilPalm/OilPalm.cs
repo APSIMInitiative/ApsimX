@@ -570,6 +570,15 @@ namespace Models.PMF.OilPalm
             DltDM = RUEadj * Fn * MetData.Radn * cover_green * FW;
 
             double DMAvailable = DltDM;
+            double[] FrondsAge = new double[Fronds.Count];
+            double[] FrondsAgeDelta = new double[Fronds.Count];
+
+            //precalculate  above two arrays
+            Parallel.For(0, Fronds.Count, i =>
+                {
+                    FrondsAge[i] = SizeFunction(Fronds[i].Age);
+                    FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT);
+                });
 
             RootGrowth = (DltDM * RootFraction.Value);
             DMAvailable -= RootGrowth;
@@ -581,12 +590,10 @@ namespace Models.PMF.OilPalm
             double TotBunchDMD = Utility.Math.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
-            //for (int i = 0; i < Fronds.Count; i++)
             Parallel.For(0, Fronds.Count, i =>
-                FrondDMD[i] = (SizeFunction(Fronds[i].Age + DeltaT) - SizeFunction(Fronds[i].Age)) / SpecificLeafArea.Value * Population * Fn);
+                FrondDMD[i] = (FrondsAgeDelta[i] - FrondsAge[i]) / SpecificLeafArea.Value * Population * Fn);
             double TotFrondDMD = Utility.Math.Sum(FrondDMD);
 
-            //double StemDMD = DMAvailable * StemToFrondFraction.Value;
             double StemDMD = TotFrondDMD * StemToFrondFraction.Value;
 
             double Fr = Math.Min(DMAvailable / (TotBunchDMD + TotFrondDMD + StemDMD), 1.0);
@@ -619,7 +626,7 @@ namespace Models.PMF.OilPalm
                 Fronds[i].Mass += IndividualFrondGrowth;
                 FrondGrowth += IndividualFrondGrowth * Population;
                 if (Fr >= SpecificLeafArea.Value / SpecificLeafAreaMax.Value)
-                    Fronds[i].Area += (SizeFunction(Fronds[i].Age + DeltaT) - SizeFunction(Fronds[i].Age)) * Fn;
+                    Fronds[i].Area += (FrondsAgeDelta[i] - FrondsAge[i]) * Fn;
                 else
                     Fronds[i].Area += IndividualFrondGrowth * SpecificLeafAreaMax.Value;
 
