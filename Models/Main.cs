@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Net;
+using System.Net.Sockets;
 using Models.Core;
 
 namespace Models
@@ -25,8 +29,8 @@ namespace Models
                     fileName = args[0];
                 if (args.Length == 2)
                     commandLineSwitch = args[1];
-                if (args.Length < 1 || args.Length > 2)
-                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse]");
+                if (args.Length < 1 || args.Length > 3)
+                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse] [/Network]");
 
                 // Create a instance of a job that will go find .apsimx files. Then
                 // pass the job to a job runner.
@@ -38,6 +42,24 @@ namespace Models
                 int numSimulations = 0;
                 if (commandLineSwitch == "/SingleThreaded")
                     numSimulations = RunSingleThreaded(fileName);
+                else if (args.Contains("/Network"))
+                {
+                    Utility.JobManager jobManager = new Utility.JobManager();
+                    jobManager.OnComplete += OnError;
+                    jobManager.AddJob(runApsim);
+                    using (TcpClient client = new TcpClient("localhost", 50000))
+                    using (NetworkStream ns = client.GetStream())
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(ns, jobManager);
+                    }
+                }
+                else if (args[0] == "/Master")
+                {
+                    Console.WriteLine("Master server started.");
+                    ApServer.Master.StartMaster();
+                    return 0;
+                }
                 else
                 {
                     Utility.JobManager jobManager = new Utility.JobManager();
@@ -93,6 +115,7 @@ namespace Models
         /// the constructor. If 'recurse' is true then it will also recursively
         /// look for files in sub directories.
         /// </summary>
+        [Serializable]
         class RunDirectoryOfApsimFiles : Utility.JobManager.IRunnable
         {
             private string FileSpec;
