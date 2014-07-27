@@ -257,11 +257,12 @@ namespace Models
             }
             EventNames = eventNames.ToArray();
 
-            // sanitise the variable names.
+            // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
             for (int i = 0; i < VariableNames.Length; i++)
             {
-                if (VariableNames[i] != "")
+                bool isDuplicate = Utility.String.IndexOfCaseInsensitive(variableNames, VariableNames[i].Trim()) != -1;
+                if (!isDuplicate && VariableNames[i] != "")
                     variableNames.Add(VariableNames[i].Trim());
             }
             VariableNames = variableNames.ToArray();
