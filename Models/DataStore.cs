@@ -545,7 +545,7 @@ namespace Models
                         {
                             Connection = new Utility.SQLite();
                             Connection.OpenDatabase(Filename, readOnly: false);
-                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
                             Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
 
                             if (!forWriting)
@@ -807,7 +807,7 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = simulationNames.IndexOf(simulationName);
+                    int index = Utility.String.IndexOfCaseInsensitive(simulationNames, simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
                     else
