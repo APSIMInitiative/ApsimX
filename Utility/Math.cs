@@ -163,6 +163,23 @@ namespace Utility
             return results;
         }
 
+        public static double[] Add(double[] value1, double[] value2)
+        {
+            double[] results = null;
+            if (value1.Length == value2.Length)
+            {
+                results = new double[value1.Length];
+                for (int iIndex = 0; iIndex < value1.Length; iIndex++)
+                {
+                    if (value1[iIndex] == MissingValue || value2[iIndex] == MissingValue)
+                        results[iIndex] = MissingValue;
+                    else
+                        results[iIndex] = (value1[iIndex] + value2[iIndex]);
+                }
+            }
+            return results;
+        }
+
         public static double[] Subtract(double[] value1, double[] value2)
         {
             double[] results = null;

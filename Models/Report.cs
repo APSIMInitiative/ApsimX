@@ -36,6 +36,7 @@ namespace Models
             private List<object> _Values = new List<object>();
             private int MaxNumArrayElements;
             private Type TypeOfThisMember;
+            private string Alias;
 
             /// <summary>
             /// Constructor
@@ -43,6 +44,12 @@ namespace Models
             public VariableMember(string FullName, Report report)
             {
                 this.FullName = FullName;
+                int posAlias = this.FullName.IndexOf(" as ");
+                if (posAlias != -1)
+                {
+                    Alias = this.FullName.Substring(posAlias + 4);
+                    this.FullName = this.FullName.Substring(0, posAlias);
+                }
                 this.Report = report;
             }
 
@@ -63,13 +70,21 @@ namespace Models
                         Array Arr = _Values[0] as Array;
                         for (int Col = 0; Col < MaxNumArrayElements; Col++)
                         {
-                            string Heading = FullName + "(" + (Col + 1).ToString() + ")";
+                            string Heading = FullName;
+                            if (Alias != null)
+                                Heading = Alias;
+                            Heading += "(" + (Col + 1).ToString() + ")";
                             if (Col < Arr.Length)
                                 AnalyseValue(Heading, Arr.GetValue(Col));
                         }
                     }
                 else if (_Values.Count > 0)
-                    AnalyseValue(FullName, _Values[0]);
+                {
+                    if (Alias != null)
+                        AnalyseValue(Alias, _Values[0]);
+                    else                        
+                        AnalyseValue(FullName, _Values[0]);
+                }
             }
 
             /// <summary>

@@ -151,7 +151,7 @@ namespace Utility
                 return "";
             else
             {
-                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n".ToCharArray(), Pos - 1);
+                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n(".ToCharArray(), Pos - 1);
                 return TextBox.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
             }
         }

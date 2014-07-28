@@ -29,11 +29,22 @@ namespace Models.Core
         private PropertyInfo property;
 
         /// <summary>
+        /// An optional lower bound array specifier.
+        /// </summary>
+        private int lowerArraySpecifier;
+
+        /// <summary>
+        /// An optional upper bound array specifier.
+        /// </summary>
+        private int upperArraySpecifier;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VariableProperty" /> class.
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
         /// <param name="property">The PropertyInfo for this property</param>
-        public VariableProperty(object model, PropertyInfo property)
+        /// <param name="arraySpecifier">An optional array specifier e.g. 1:3</param>
+        public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
             if (model == null || property == null)
             {
@@ -42,6 +53,21 @@ namespace Models.Core
             
             this.model = model;
             this.property = property;
+            if (arraySpecifier != null)
+            {
+                // Can be either a number or a range e.g. 1:3
+                int posColon = arraySpecifier.IndexOf(':');
+                if (posColon == -1)
+                {
+                    lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
+                    upperArraySpecifier = lowerArraySpecifier;
+                }
+                else
+                {
+                    lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
+                    upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
+                }
+            }
         }
         
         /// <summary>
@@ -162,7 +188,22 @@ namespace Models.Core
         {
             get
             {
-                return this.property.GetValue(this.model, null);
+                object obj = this.property.GetValue(this.model, null);
+
+                if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
+                {
+                    Array array = obj as Array;
+                    int numElements = upperArraySpecifier - lowerArraySpecifier + 1;
+                    Array values = Array.CreateInstance(this.property.PropertyType.GetElementType(), numElements);
+                    for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
+                    {
+                        int index = i - lowerArraySpecifier;
+                        values.SetValue(array.GetValue(i), index);
+                    }
+                    return values;
+                }
+
+                return obj;
             }
 
             set
@@ -172,7 +213,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get the value of the specified property with arrays converted to csv strings.
+        /// Gets the value of the specified property with arrays converted to comma separated strings.
         /// </summary>
         public object ValueWithArrayHandling
         {
@@ -276,7 +317,9 @@ namespace Models.Core
                     return displayAttribute.DisplayType;
                 }
                 else
+                {
                     return DisplayAttribute.DisplayTypeEnum.None;
+                }
             }
         }
     }

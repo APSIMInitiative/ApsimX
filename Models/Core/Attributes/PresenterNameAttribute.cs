@@ -32,7 +32,7 @@ namespace Models.Core
         /// Gets the name of the presenter.
         /// </summary>
         /// <returns>The name of the presenter class</returns>
-        public string ToString()
+        public override string ToString()
         {
             return this.name;
         }

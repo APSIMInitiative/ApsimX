@@ -123,8 +123,10 @@
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\IPostSimulationTool.cs" />
+    <Compile Include="Core\IVariable.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Core\ModelFunctions.cs" />
+    <Compile Include="Core\VariableExpression.cs" />
     <Compile Include="Core\VariableProperty.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
@@ -309,7 +311,6 @@
     <Compile Include="Clock.cs" />
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Utility\DataTableSerialiser.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
     <Compile Include="WeatherFile.cs" />

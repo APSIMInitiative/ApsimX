@@ -32,7 +32,7 @@ namespace Models.Core
         /// Gets the name of the view.
         /// </summary>
         /// <returns>The name of the view class</returns>
-        public string ToString()
+        public override string ToString()
         {
             return this.name;
         }

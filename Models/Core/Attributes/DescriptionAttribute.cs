@@ -32,7 +32,7 @@ namespace Models.Core
         /// Gets the description
         /// </summary>
         /// <returns>The description</returns>
-        public string ToString()
+        public override string ToString()
         {
             return this.description;
         }

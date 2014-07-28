@@ -35,7 +35,7 @@ namespace Models.Core
         /// Returns the units.
         /// </summary>
         /// <returns>The units string</returns>
-        public string ToString()
+        public override string ToString()
         {
             return this.unitsString;
         }

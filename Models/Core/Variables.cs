@@ -75,52 +75,69 @@ namespace Models.Core
                 if (Simulation.VariableCache.TryGetValue(cacheKey, out returnVariable))
                     return returnVariable;
             }
-            // Not found in cache so go find variable.
-            Model rootModel = GetRootModelOf(RelativeTo);
+            IVariable variable;
 
-            // Make the absolute path relative to the simulation.
-            if (!absolutePath.StartsWith(rootModel.FullPath))
-                throw new ApsimXException(RelativeTo.FullPath, "Invalid path found while trying to do a get. Path is '" + absolutePath + "'");
-            string pathRelativeToSimulations = absolutePath.Remove(0, rootModel.FullPath.Length);
-
-            object obj = rootModel;
-            PropertyInfo propertyInfo = null;
-
-            // Now look through all paths which are separated by a '.'
-            string[] namePathBits = pathRelativeToSimulations.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string pathBit in namePathBits)
+            // Look for an expression.
+            if (namePath.IndexOfAny("(+-*/".ToCharArray()) != -1)
             {
-                if (propertyInfo != null)
-                {
-                    obj = propertyInfo.GetValue(obj, null);
-                    propertyInfo = null;
-                }
+                variable = new VariableExpression(namePath, this);
+            }
+            else
+            {
+                // Not found in cache so go find variable.
+                Model rootModel = GetRootModelOf(RelativeTo);
 
-                object localObj = null;
-                Model model = obj as Model;
-                if (model != null)
-                    localObj = model.Children.All.FirstOrDefault(m => m.Name == pathBit);
+                // Make the absolute path relative to the simulation.
+                if (!absolutePath.StartsWith(rootModel.FullPath))
+                    throw new ApsimXException(RelativeTo.FullPath, "Invalid path found while trying to do a get. Path is '" + absolutePath + "'");
+                string pathRelativeToSimulations = absolutePath.Remove(0, rootModel.FullPath.Length);
 
-                if (localObj != null)
-                    obj = localObj;
-                else
+                object obj = rootModel;
+                PropertyInfo propertyInfo = null;
+                string arraySpecifier = null;
+                    
+                // Now look through all paths which are separated by a '.'
+                string[] namePathBits = pathRelativeToSimulations.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string st in namePathBits)
                 {
-                    propertyInfo = obj.GetType().GetProperty(pathBit);
-                    if (propertyInfo == null)
+                    string pathBit = st;
+                    if (propertyInfo != null)
                     {
-                        if (Simulation != null)
-                            Simulation.VariableCache[cacheKey] = new VariableObject(null);
-                        return null;
+                        obj = propertyInfo.GetValue(obj, null);
+                        propertyInfo = null;
+                    }
+
+                    // look for an array specifier e.g. sw[2]
+                    if (pathBit.Contains("["))
+                    {
+                        arraySpecifier = Utility.String.SplitOffBracketedValue(ref pathBit, '[', ']');
+                    }
+
+                    object localObj = null;
+                    Model model = obj as Model;
+                    if (model != null)
+                        localObj = model.Children.All.FirstOrDefault(m => m.Name == pathBit);
+
+                    if (localObj != null)
+                        obj = localObj;
+                    else
+                    {
+                        propertyInfo = obj.GetType().GetProperty(pathBit);
+                        if (propertyInfo == null)
+                        {
+                            if (Simulation != null)
+                                Simulation.VariableCache[cacheKey] = new VariableObject(null);
+                            return null;
+                        }
                     }
                 }
-            }
 
-            // Now we can create our return variable.
-            IVariable variable;
-            if (propertyInfo == null)
-                variable = new VariableObject(obj);
-            else
-                variable = new VariableProperty(obj, propertyInfo);
+                // Now we can create our return variable.
+                if (propertyInfo == null)
+                    variable = new VariableObject(obj);
+                else
+                    variable = new VariableProperty(obj, propertyInfo, arraySpecifier);
+            }
 
             // Add to our cache.
             if (Simulation != null)

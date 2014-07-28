@@ -32,7 +32,7 @@ namespace Models.Core
         /// Gets the name of the event.
         /// </summary>
         /// <returns>The name of the event being subscribed to</returns>
-        public string ToString()
+        public override string ToString()
         {
             return this.name;
         }

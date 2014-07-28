@@ -50,7 +50,7 @@ namespace Models.PMF.Functions
             {
                 symFilled.m_name = sym.m_name;
                 symFilled.m_type = Utility.ExpressionType.Variable;
-                symFilled.m_valueString = "";
+                symFilled.m_values = null;
                 symFilled.m_value = 0;
                 object sometypeofobject = RelativeTo.Variables.Get(sym.m_name.Trim());
                 if (sometypeofobject == null)
