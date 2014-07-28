@@ -47,10 +47,10 @@
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
             <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
-            <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
-            <string>[WeatherFile].Rain / 25.4 as RainInches</string>
-            <string>[Soil].SoilWater.sw - [Soil].SoilWater.ll15 as ESW</string>
-            <string>sum([Soil].SoilWater.sw - [Soil].SoilWater.ll15) as TotalESW</string>
+            <string>(sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
+            <string>([WeatherFile].Rain / 25.4) as RainInches</string>
+            <string>([Soil].SoilWater.sw - [Soil].SoilWater.ll15) as ESW</string>
+            <string>(sum([Soil].SoilWater.sw - [Soil].SoilWater.ll15)) as TotalESW</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>

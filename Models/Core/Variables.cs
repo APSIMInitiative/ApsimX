@@ -78,7 +78,7 @@ namespace Models.Core
             IVariable variable;
 
             // Look for an expression.
-            if (namePath.IndexOfAny("(+-*/".ToCharArray()) != -1)
+            if (namePath.StartsWith("("))
             {
                 variable = new VariableExpression(namePath, this);
             }
