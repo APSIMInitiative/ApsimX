@@ -4,7 +4,7 @@
       <filename name="filename" input="yes">%apsim%\Examples\MetFiles\WeeWaa1889_2012.met</filename>
     </metfile>
     <clock>
-      <start_date type="date" description="Enter the start date of the simulation">01/01/1889</start_date>
+      <start_date type="date" description="Enter the start date of the simulation">01/01/2007</start_date>
       <end_date type="date" description="Enter the end date of the simulation">31/12/2012</end_date>
     </clock>
     <summaryfile />
