@@ -10,7 +10,7 @@
   <title></title>
  </head>
  <body>
-  <p>The purpose of this test is to compare soil and nitrogen values against APSIM across a long time period (1889 - 2012) to ensure the models are the same.</p>
+  <p>The purpose of this test is to compare soil and nitrogen values against APSIM to ensure the models are the same.</p>
   <p>The results should be accurate to within 1% or less.</p>
  </body>
 </html>]]></MemoText>
@@ -30,7 +30,7 @@
     </WeatherFile>
     <Clock>
       <Name>clock</Name>
-      <StartDate>1889-01-01T00:00:00</StartDate>
+      <StartDate>2007-01-01T00:00:00</StartDate>
       <EndDate>2012-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
@@ -899,16 +899,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalNO3</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -918,16 +918,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.TotalNO3</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -952,16 +952,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.SW</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -971,16 +971,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.SW</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1005,16 +1005,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalN</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1024,16 +1024,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Dash</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.TotalN</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1058,16 +1058,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.TotalC</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1077,16 +1077,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Input</TableName>
         <FieldName>Calculations.Script.TotalC</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1115,16 +1115,16 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Calculations.Script.SW</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1134,16 +1134,16 @@ namespace Models
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>comparisons</SimulationName>
         <TableName>Report</TableName>
         <FieldName>met.Rain</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>

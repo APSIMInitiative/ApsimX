@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net;
 using System.Net.Sockets;
+using System.Xml;
 using Models.Core;
 
 namespace Models
@@ -44,21 +45,7 @@ namespace Models
                     numSimulations = RunSingleThreaded(fileName);
                 else if (args.Contains("/Network"))
                 {
-                    Utility.JobManager jobManager = new Utility.JobManager();
-                    jobManager.OnComplete += OnError;
-                    jobManager.AddJob(runApsim);
-                    using (TcpClient client = new TcpClient("localhost", 50000))
-                    using (NetworkStream ns = client.GetStream())
-                    {
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(ns, jobManager);
-                    }
-                }
-                else if (args[0] == "/Master")
-                {
-                    Console.WriteLine("Master server started.");
-                    ApServer.Master.StartMaster();
-                    return 0;
+                    DoNetworkRun(fileName);// send files over network
                 }
                 else
                 {
@@ -97,6 +84,112 @@ namespace Models
         }
 
         /// <summary>
+        /// Get a list of files (weather, input) to send to remote computer.
+        /// </summary>
+        /// <param name="fileName">The .apsimx file to parse.</param>
+        /// <returns>A list of weather file names.</returns>
+        private static List<string> GetFileList(string fileName)
+        {
+            List<string> FileList = new List<string>();
+            XmlNodeList nodes;
+            XmlDocument doc = new XmlDocument();
+
+            doc.Load(fileName);
+            XmlNode root = doc.DocumentElement;
+
+            nodes = root.SelectNodes("//WeatherFile/FileName");
+            foreach (XmlNode node in nodes)
+                FileList.Add(node.InnerText);
+
+            nodes = root.SelectNodes("//Input/FileNames/string");
+            foreach (XmlNode node in nodes)
+                FileList.Add(node.InnerText);
+
+            // resolve relative file name
+            for (int i = 0; i < FileList.Count; i++)
+            {
+                if (!File.Exists(FileList[i]))
+                {
+                    string TryFileName = Utility.PathUtils.GetAbsolutePath(FileList[i]);
+                    if (File.Exists(TryFileName))
+                        FileList[i] = TryFileName;
+                }
+            }
+                return FileList;
+        }
+
+        /// <summary>
+        /// Send our .apsimx and associated weather files over the network
+        /// </summary>
+        /// <param name="FileName">The .apsimx file to send.</param>
+        private static void DoNetworkRun(string FileName)
+        {
+            //hold server acknowledge
+            byte[] ack = new byte[1];
+
+            // get a list of files to send
+            List<string> FileList = GetFileList(FileName);
+            FileList.Add(FileName);
+
+            using (TcpClient client = new TcpClient("localhost", 50000))
+            using (NetworkStream ns = client.GetStream())
+            {
+                // send the number of files to be sent
+                byte[] dataLength = BitConverter.GetBytes(FileList.Count);
+                ns.Write(dataLength, 0, 4);
+                ns.Flush();
+
+                foreach (string fileName in FileList)
+                {
+                    // send the length of the file name
+                    dataLength = BitConverter.GetBytes(Path.GetFileName(fileName).Length);
+                    ns.Write(dataLength, 0, 4);
+                    ns.Flush();
+
+                    // read the file and send the length;
+                    byte[] FileStream = File.ReadAllBytes(fileName);
+                    dataLength = BitConverter.GetBytes(FileStream.Length);
+                    ns.Write(dataLength, 0, 4);
+                    ns.Flush();
+
+                    // then send the file name
+                    Console.WriteLine("Sending file name: " + fileName);
+                    StreamWriter writer = new StreamWriter(ns, Encoding.ASCII);
+                    writer.Write(Path.GetFileName(fileName));
+                    writer.Flush();
+
+                    //wait for acknowledgement from server
+                    ns.Read(ack, 0, 1);
+
+                    // next, send the file data
+                    Console.WriteLine("sending file data");
+                    ns.Write(FileStream, 0, FileStream.Length);
+                    ns.Flush();
+
+                    //wait for acknowledgement from server
+                    ns.Read(ack, 0, 1);
+                }
+
+                //get run updates from server
+                byte[] MsgLength = new byte[4];
+                byte[] Msg;
+                while(true)
+                {
+                    ns.Read(MsgLength, 0, 4);
+                    if (BitConverter.ToInt32(MsgLength, 0) == Int32.MaxValue)
+                        break;
+
+                    Msg = new byte[BitConverter.ToInt32(MsgLength, 0)];
+                    ns.Read(Msg, 0, Msg.Length);
+
+                    Console.WriteLine(Encoding.ASCII.GetString(Msg));
+                }
+
+                GetNetworkRun(ns);
+            }
+        }
+
+        /// <summary>
         /// When an error is encountered, this handler will be called.
         /// </summary>
         static void OnError(object sender, Utility.JobManager.JobCompleteArgs e)
@@ -105,10 +198,63 @@ namespace Models
                 Console.WriteLine(e.ErrorMessage);
         }
 
+        static void GetNetworkRun(NetworkStream stream)
+        {
+            // the acknowledge byte
+            byte[] ack = { 1 };
 
+            byte[] data = new byte[4096];
+            byte[] nameLength = new byte[4]; //hold the length of the next incoming file name
+            byte[] dataLength = new byte[4];
+            byte[] fileListLength = new byte[4];
+            int bytesRead;
+            string fileName;
+            MemoryStream ms;
 
+            //TODO TOMORROW -  finish up getting .db files, don't forget to find the number of files then put the stuff below in a loop.
+/*
 
+            bytesRead = 0;
+            //get the length of the file name
+            bytesRead = stream.Read(nameLength, 0, 4);
+            if (bytesRead == 0)
+                break;
 
+            //get the length of the file
+            bytesRead = stream.Read(dataLength, 0, 4);
+            if (bytesRead == 0)
+                break;
+
+            // next item to arrive is the .apsimx file name
+            byte[] nameData = new byte[BitConverter.ToInt32(nameLength, 0)];
+            bytesRead = stream.Read(nameData, 0, nameData.Length);
+            if (bytesRead == 0)
+            {
+                Console.WriteLine("Could not read file name.");
+                break;
+            }
+            fileName = Encoding.ASCII.GetString(nameData);
+
+            // send an acknowledgement
+            stream.Write(ack, 0, 1);
+
+            // then the .apsimx file itself.
+            int totalBytes = 0;
+            while (totalBytes < BitConverter.ToInt32(dataLength, 0))
+            {
+                bytesRead = stream.Read(data, 0, 4096);
+                ms.Write(data, 0, bytesRead);
+                totalBytes += bytesRead;
+            }
+
+            File.WriteAllBytes(Path.Combine(dataDir, fileName), Convert2.ToByteArray(ms));
+
+            Console.WriteLine(Path.Combine(dataDir, fileName) + " successfully written.");
+
+            // send an acknowledgement
+            stream.Write(ack, 0, 1);
+            WriteComplete = true;*/
+        }
 
         /// <summary>
         /// This runnable class finds .apsimx files on the 'fileSpec' passed into

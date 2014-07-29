@@ -55,18 +55,17 @@ namespace UserInterface.Views
         {
             get
             {
+            //TODO: This won't work on Linux or Mac
                 if (!FileNameLabel.Text.Contains(':')) // no drive designator, so it's a relative path
-                    FileNameLabel.Text = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNameLabel.Text; //remove bin
+                    FileNameLabel.Text = Utility.PathUtils.GetAbsolutePath(FileNameLabel.Text); //remove bin
 
                 return FileNameLabel.Text;
             }
             set
             {
-                string curdir =Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3);
+                string curdir = Utility.PathUtils.GetAbsolutePath(String.Empty);
                 FileNameLabel.Text = value;
-                FileNameLabel.Text = FileNameLabel.Text.Replace(curdir, "");
+                FileNameLabel.Text = FileNameLabel.Text.Replace(curdir, String.Empty);
             }
         }
 

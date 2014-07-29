@@ -47,5 +47,16 @@ namespace Utility
 
         }
 
+        /// <summary>
+        /// Try to find an absolute path from a relative one
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetAbsolutePath(string path)
+        {
+            return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), path);
+        }
+
     }
 }

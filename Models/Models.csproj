@@ -111,7 +111,6 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
-    <Compile Include="ApServer\Master.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\DisplayAttribute.cs" />
     <Compile Include="Core\Attributes\ValidParentAttribute.cs" />
