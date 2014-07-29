@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
         }
 
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
                 ChildFunctions = Children.MatchingMultiple(typeof(Function));

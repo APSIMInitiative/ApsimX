@@ -38,6 +38,9 @@ namespace Models.Soils
         Simulation paddock;
 
         [Link]
+        WeatherFile Weather;
+
+        [Link]
         private Soil Soil = null;
 
         [Link]
@@ -4347,7 +4350,7 @@ namespace Models.Soils
         #region Met, Irrig, Solute, Plants Event Handlers
 
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
             //*     ===========================================================
             //      subroutine soilwat2_ONnewmet (variant)
@@ -4361,10 +4364,10 @@ namespace Models.Soils
 
             //*- Implementation Section ----------------------------------
 
-            radn = NewMet.radn;
-            maxt = NewMet.maxt;
-            mint = NewMet.mint;
-            rain = NewMet.rain;
+            radn = Weather.MetData.Radn;
+            maxt = Weather.MetData.Maxt;
+            mint = Weather.MetData.Mint;
+            rain = Weather.MetData.Rain;
 
             bound_check_real_var(radn, 0.0, 60.0, "radn");
             bound_check_real_var(maxt, -50.0, 60.0, "maxt");

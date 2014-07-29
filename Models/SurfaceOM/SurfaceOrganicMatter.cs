@@ -23,6 +23,9 @@ namespace Models.SurfaceOM
         [Link]
         ISummary Summary = null;
 
+        [Link]
+        WeatherFile Weather = null;
+
         //====================================================================
         //    SurfaceOM constants;
         //====================================================================
@@ -611,7 +614,7 @@ namespace Models.SurfaceOM
         private double surfom_tf()
         {
             double
-                ave_temp = divide((g.MetData.maxt + g.MetData.mint), 2.0f, 0.0f);	//today"s average air temp (oC)
+                ave_temp = divide((g.MetData.Maxt + g.MetData.Mint), 2.0f, 0.0f);	//today"s average air temp (oC)
                 //tf;	//temperature factor;
 
             if (ave_temp > 0.0)
@@ -785,7 +788,7 @@ namespace Models.SurfaceOM
         /// <param name="leach_rain"></param>
         private void surfom_set_vars(out double cumeos, out double leach_rain)
         {
-            double precip = g.MetData.rain + g.irrig;	//daily precipitation (g.rain + irrigation) (mm H2O)
+            double precip = g.MetData.Rain + g.irrig;	//daily precipitation (g.rain + irrigation) (mm H2O)
 
             if (precip > 4.0)
             {

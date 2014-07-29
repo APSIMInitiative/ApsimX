@@ -76,7 +76,10 @@ namespace Models.SurfaceOM
         private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM) { surfom_remove_surfom(SOM); }
 
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType newmetdata) { g.MetData = newmetdata; }
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e) 
+        { 
+            g.MetData = Weather.MetData; 
+        }
 
         public class IrrigationApplicationType : EventArgs
         {

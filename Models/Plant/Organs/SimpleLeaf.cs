@@ -119,10 +119,10 @@ namespace Models.PMF.Organs
             {
                 const double SVPfrac = 0.66;
 
-                double VPDmint = Utility.Met.svp(MetData.MinT) - MetData.vp;
+                double VPDmint = Utility.Met.svp(MetData.MinT) - MetData.VP;
                 VPDmint = Math.Max(VPDmint, 0.0);
 
-                double VPDmaxt = Utility.Met.svp(MetData.MaxT) - MetData.vp;
+                double VPDmaxt = Utility.Met.svp(MetData.MaxT) - MetData.VP;
                 VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
                 double VPD = SVPfrac * VPDmaxt + (1.0 - SVPfrac) * VPDmint;

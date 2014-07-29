@@ -14,6 +14,9 @@ namespace Models.PMF.Phen
         [Link]
         AirTemperatureFunction VDModel = null;
 
+        [Link]
+        WeatherFile Weather = null;
+
         public string StartStage = "";
         public string EndStage = "";
         
@@ -23,10 +26,10 @@ namespace Models.PMF.Phen
         /// Trap the NewMet event.
         /// </summary>
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable()
         {
             if (Phenology.Between(StartStage, EndStage))
-                DoVernalisation(NewMet.maxt, NewMet.mint);
+                DoVernalisation(Weather.MetData.Maxt, Weather.MetData.Mint);
         }
 
         /// <summary>

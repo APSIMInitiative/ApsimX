@@ -385,6 +385,7 @@ namespace Models
         private int year;
 
         public int UseRootProportion = 0;
+        public bool HaveInitialised = false;
 
         //** Aggregated pasture parameters of all species (wiht a prefix 'p_')    
         //p_d... variables are daily changes (delta) 
@@ -1025,7 +1026,7 @@ namespace Models
         {
             InitParameters();            // Init parameters after reading the data           
 
-            if (MetData.StartDate != new DateTime(0) || MetData.ReadFirstDay())
+            if (MetData.StartDate != new DateTime(0))
               SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
 
             DoNewCropEvent();            // Tell other modules that I exist
@@ -1039,7 +1040,7 @@ namespace Models
 
         public override void OnSimulationCommencing()
         {
-            Initialise();
+            HaveInitialised = false;
         }
 
         //---------------------------------------------------------------------
@@ -1049,6 +1050,12 @@ namespace Models
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
+            if (!HaveInitialised)
+            {
+                Initialise();
+                HaveInitialised = true;
+            }
+
             //  p_harvestDM = 0.0;      // impartant to have this reset because  
             //  p_harvestN = 0.0;       // they are used to DM & N returns
             //  p_harvestDigest = 0.0;
@@ -2937,10 +2944,10 @@ namespace Models
         /// <returns></returns>
         private double VPD()
         {
-            double VPDmint = svp(MetData.MinT) - MetData.vp;
+            double VPDmint = svp(MetData.MinT) - MetData.VP;
             VPDmint = Math.Max(VPDmint, 0.0);
 
-            double VPDmaxt = svp(MetData.MaxT) - MetData.vp;
+            double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
             VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
             double vdp = SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
@@ -3716,7 +3723,7 @@ namespace Models
         public int Phenology()
         {
             const double DDSEmergence = 150;   // to be an input parameter
-            double meanT = 0.5 * (MetData.maxt + MetData.mint);
+            double meanT = 0.5 * (MetData.Maxt + MetData.Mint);
 
             if (bSown && phenoStage == 0)            //  before emergence
             {
@@ -3875,7 +3882,7 @@ namespace Models
             }
 
             //To consider: should use MetData.radn or SP.intRadn - depending on the methods in seting up simulation
-            double RI = ((refRI + riEffect) / ((MetData.radn / dayLength) + riEffect));
+            double RI = ((refRI + riEffect) / ((MetData.Radn / dayLength) + riEffect));
             rue = refRUE * RI; // ((refRI + riEffect) / ((MetData.radn / dayLength) + riEffect));  
 
             //consider a growth efficiency coefficient (as grgeff or sgseff in GRAZPLAN)
@@ -3968,8 +3975,8 @@ namespace Models
             //Pm is an input
 
             //Add temp effects to Pm
-            double Tmean = (MetData.maxt + MetData.mint) / 2;
-            double Tday = Tmean + 0.5 * (MetData.maxt - Tmean);
+            double Tmean = (MetData.Maxt + MetData.Mint) / 2;
+            double Tday = Tmean + 0.5 * (MetData.Maxt - Tmean);
 
             double Pm_mean = Pm * GFTemperature(Tmean) * PCO2Effects() * PmxNeffect();  //Dec10: added CO2 & [N]effects
             double Pm_day = Pm * GFTemperature(Tday) * PCO2Effects() * PmxNeffect();    //Dec10: added CO2 & [N]effects
@@ -4655,7 +4662,7 @@ namespace Models
         public double GFTempC3()
         {
             double gft3 = 0.0;
-            double T = (MetData.maxt + MetData.mint) / 2;
+            double T = (MetData.Maxt + MetData.Mint) / 2;
             if (T > growthTmin && T < growthTmax)
             {
                 double Tmax = growthTopt + (growthTopt - growthTmin) / growthTq;
@@ -4691,7 +4698,7 @@ namespace Models
         public double GFTempC4()
         {
             double gft4 = 0.0;          // Assign value 0 for the case of T < Tmin
-            double T = (MetData.maxt + MetData.mint) / 2;
+            double T = (MetData.Maxt + MetData.Mint) / 2;
 
             if (T > growthTmin)         // same as GFTempC3 for [Tmin,Topt], but T as Topt if T > Topt
             {
@@ -4741,7 +4748,7 @@ namespace Models
 
             if (highTempEffect < 1.0)
             {
-                double meanT = 0.5 * (MetData.maxt + MetData.mint);
+                double meanT = 0.5 * (MetData.Maxt + MetData.Mint);
                 if (25 - meanT > 0)
                 {
                     accumT += (25 - meanT);
@@ -4755,13 +4762,13 @@ namespace Models
 
             //possible new high temp. effect
             double newHeatF = 1.0;
-            if (MetData.maxt > heatFullT)
+            if (MetData.Maxt > heatFullT)
             {
                 newHeatF = 0;
             }
-            else if (MetData.maxt > heatOnsetT)
+            else if (MetData.Maxt > heatOnsetT)
             {
-                newHeatF = (MetData.maxt - heatOnsetT) / (heatFullT - heatOnsetT);
+                newHeatF = (MetData.Maxt - heatOnsetT) / (heatFullT - heatOnsetT);
             }
 
             // If this new high temp. effect is compounded with the old one & 
@@ -4784,7 +4791,7 @@ namespace Models
             double recoverF = 1.0;
             if (lowTempEffect < 1.0)
             {
-                double meanT = 0.5 * (MetData.maxt + MetData.mint);
+                double meanT = 0.5 * (MetData.Maxt + MetData.Mint);
                 if (meanT > 0)
                 {
                     accumTLow += meanT;
@@ -4798,13 +4805,13 @@ namespace Models
 
             //possible new low temp. effect
             double newColdF = 1.0;
-            if (MetData.mint < coldFullT)
+            if (MetData.Mint < coldFullT)
             {
                 newColdF = 0;
             }
-            else if (MetData.mint < coldOnsetT)
+            else if (MetData.Mint < coldOnsetT)
             {
-                newColdF = (MetData.mint - coldFullT) / (coldOnsetT - coldFullT);
+                newColdF = (MetData.Mint - coldFullT) / (coldOnsetT - coldFullT);
             }
 
             // If this new cold temp. effect happens when serious cold effect is still on, 
@@ -4838,7 +4845,7 @@ namespace Models
         // Tissue turnover: Tmin=5, Topt=20 - same for C3 & C4 plants ?
         public double GFTempTissue()
         {
-            double T = (MetData.maxt + MetData.mint) / 2;
+            double T = (MetData.Maxt + MetData.Mint) / 2;
 
             double gftt = 0.0;        //default as T < massFluxTmin     
             if (T > massFluxTmin && T <= massFluxTopt)

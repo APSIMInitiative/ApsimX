@@ -16,6 +16,8 @@ namespace Models.PMF.Phen
         [Link]
         Function Photoperiod = null;
 
+        [Link]
+        WeatherFile Weather = null;
 
         [XmlIgnore]
         public double PhotopEff { get; set; }
@@ -37,11 +39,11 @@ namespace Models.PMF.Phen
         /// Trap the NewWeatherDataAvailable event.
         /// </summary>
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            Maxt = NewMet.maxt;
-            Mint = NewMet.mint;
-            Vernalisation(NewMet.maxt, NewMet.mint);
+            Maxt = Weather.MetData.Maxt;
+            Mint = Weather.MetData.Mint;
+            Vernalisation(Weather.MetData.Maxt, Weather.MetData.Mint);
         }
 
         /// <summary>

@@ -324,14 +324,14 @@ namespace Models
         /// Obtain all relevant met data
         /// </summary>
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            radn = NewMet.radn;
-            maxt = NewMet.maxt;
-            mint = NewMet.mint;
-            rain = NewMet.rain;
-            vp = NewMet.vp;
-            wind = NewMet.wind;
+            radn = Weather.MetData.Radn;
+            maxt = Weather.MetData.Maxt;
+            mint = Weather.MetData.Mint;
+            rain = Weather.MetData.Rain;
+            vp = Weather.MetData.VP;
+            wind = Weather.MetData.Wind;
         }
 
         [EventSubscribe("DoCanopy")]
