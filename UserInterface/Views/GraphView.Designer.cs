@@ -36,6 +36,11 @@ namespace UserInterface.Views
         /// </summary>
         private System.Windows.Forms.Button closeButton;
 
+        /// <summary>
+        /// The context menu
+        /// </summary>
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
@@ -134,7 +139,5 @@ namespace UserInterface.Views
         }
 
         #endregion
-
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

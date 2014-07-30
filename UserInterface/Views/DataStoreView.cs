@@ -103,7 +103,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets the main data grid.
         /// </summary>
-        public Views.IGridView Grid 
+        public Interfaces.IGridView Grid 
         { 
             get
             {

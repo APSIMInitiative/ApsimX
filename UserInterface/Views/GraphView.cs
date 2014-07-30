@@ -207,15 +207,19 @@ namespace UserInterface.Views
             List<IDataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<IDataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
-            foreach (IDataPoint point in points)
+            if (points != null && points2 != null)
             {
-                series.Points.Add(point);
+                foreach (IDataPoint point in points)
+                {
+                    series.Points.Add(point);
+                }
+
+                foreach (IDataPoint point in points2)
+                {
+                    series.Points2.Add(point);
+                }
             }
 
-            foreach (IDataPoint point in points2)
-            {
-                series.Points2.Add(point);
-            }
             this.plot1.Model.Series.Add(series);
         }
 
@@ -335,6 +339,17 @@ namespace UserInterface.Views
             this.plot1.Height = bitmap.Height;
             this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
             this.plot1.Dock = DockStyle.Fill;
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the memo.
+        /// </summary>
+        /// <param name="buttonText">Text for button</param>
+        /// <param name="onClick">Event handler for button click</param>
+        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        {
+            this.contextMenuStrip1.Items.Add(buttonText);
+            this.contextMenuStrip1.Items[0].Click += onClick;
         }
 
         /// <summary>
@@ -613,17 +628,6 @@ namespace UserInterface.Views
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Add an action (on context menu) on the memo.
-        /// </summary>
-        /// <param name="buttonText">Text for button</param>
-        /// <param name="onClick">Event handler for button click</param>
-        public void AddContextAction(string buttonText, System.EventHandler onClick)
-        {
-            contextMenuStrip1.Items.Add(buttonText);
-            contextMenuStrip1.Items[0].Click += onClick;
         }
     }
 }

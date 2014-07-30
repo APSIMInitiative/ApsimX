@@ -1,11 +1,32 @@
-﻿namespace UserInterface.Views
+﻿// -----------------------------------------------------------------------
+// <copyright file="GridView.Designer.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Views
 {
-    partial class GridView
+    using System.Diagnostics.CodeAnalysis;
+
+    /// <summary>
+    /// A grid control that implements the grid view interface.
+    /// </summary>
+    public partial class GridView
     {
+        /// <summary>
+        /// A grid
+        /// </summary>
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
+        public System.Windows.Forms.DataGridView Grid;
+        
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// A popup menu
+        /// </summary>
+        private System.Windows.Forms.ContextMenuStrip popupMenu;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -13,10 +34,11 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -29,15 +51,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.popupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Grid = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
             // 
             // PopupMenu
             // 
-            this.PopupMenu.Name = "contextMenuStrip1";
-            this.PopupMenu.Size = new System.Drawing.Size(61, 4);
+            this.popupMenu.Name = "contextMenuStrip1";
+            this.popupMenu.Size = new System.Drawing.Size(61, 4);
             // 
             // Grid
             // 
@@ -46,7 +68,7 @@
             this.Grid.BackgroundColor = System.Drawing.SystemColors.Window;
             this.Grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.ContextMenuStrip = this.PopupMenu;
+            this.Grid.ContextMenuStrip = this.popupMenu;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(0, 0);
             this.Grid.Name = "Grid";
@@ -70,13 +92,8 @@
             this.Size = new System.Drawing.Size(354, 345);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
-
-        private System.Windows.Forms.ContextMenuStrip PopupMenu;
-        private System.Windows.Forms.DataGridView Grid;
-
     }
 }

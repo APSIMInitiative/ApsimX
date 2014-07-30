@@ -515,25 +515,26 @@ namespace UserInterface.Views
         /// <summary>
         /// The data grid has had one of its column headers clicked.
         /// </summary>
-        /// <param name="headerText">The name of the column that was clicked.</param>
-        private void OnDataGridColumnHeaderClicked(string headerText)
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnDataGridColumnHeaderClicked(object sender, EventArguments.GridHeaderClickedArgs e)
         {
             if (textBox1.BackColor == selectedColour)
             {
-                textBox1.Text = headerText;
+                textBox1.Text = e.Column.HeaderText;
                 OnTextBox2Click(null, null);
             }
             else if (textBox2.BackColor == selectedColour)
             {
-                textBox2.Text = headerText;
+                textBox2.Text = e.Column.HeaderText;
             }
             else if (textBox3.BackColor == selectedColour)
             {
-                textBox3.Text = headerText;
+                textBox3.Text = e.Column.HeaderText;
             }
             else if (textBox4.BackColor == selectedColour)
             {
-                textBox4.Text = headerText;
+                textBox4.Text = e.Column.HeaderText;
             }
 
         }

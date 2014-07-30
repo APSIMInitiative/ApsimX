@@ -8,6 +8,7 @@ using System.Reflection;
 using Models.Core;
 using System.Data;
 using System.IO;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -137,9 +138,10 @@ namespace UserInterface.Presenters
                 // Make all numeric columns have a format of N3
                 foreach (DataColumn col in View.DataGrid.DataSource.Columns)
                 {
-                    View.DataGrid.SetColumnAlignment(col.Ordinal, false);
+                    IGridColumn gridColumn = this.View.DataGrid.GetColumn(col.Ordinal);
+                    gridColumn.LeftAlignment = false;
                     if (col.DataType == typeof(double))
-                        View.DataGrid.SetColumnFormat(col.Ordinal, "N3");
+                        gridColumn.Format = "N3";
                 }
             }
         }

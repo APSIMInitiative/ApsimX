@@ -303,7 +303,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public IEnumerable GetData(string simulationName, string tableName, string fieldName)
         {
-            if (simulationName == null && tableName == null && fieldName != null)
+            if (tableName == null && fieldName != null)
             {
                 // Use reflection to access a property.
                 object Obj = Graph.Variables.Get(fieldName);

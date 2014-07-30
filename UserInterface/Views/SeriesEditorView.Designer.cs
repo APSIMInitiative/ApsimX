@@ -61,14 +61,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGrid.AutoFilterOn = false;
             this.dataGrid.DataSource = null;
-            this.dataGrid.FloatingPointFormat = null;
             this.dataGrid.Location = new System.Drawing.Point(15, 165);
             this.dataGrid.Name = "dataGrid";
+            this.dataGrid.NumericFormat = null;
             this.dataGrid.ReadOnly = false;
             this.dataGrid.RowCount = 0;
             this.dataGrid.Size = new System.Drawing.Size(599, 119);
             this.dataGrid.TabIndex = 0;
-            this.dataGrid.ColumnHeaderClicked += new GridCellHeaderClickedDelegate(this.OnDataGridColumnHeaderClicked);
+            this.dataGrid.ColumnHeaderClicked += new System.EventHandler<EventArguments.GridHeaderClickedArgs>(this.OnDataGridColumnHeaderClicked);
             // 
             // label1
             // 

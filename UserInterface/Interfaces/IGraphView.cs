@@ -171,7 +171,8 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
-        void AddContextAction(string ButtonText, System.EventHandler OnClick);
-
+        /// <param name="menuText">Menu item text</param>
+        /// <param name="onClick">Event handler for menu item click</param>
+        void AddContextAction(string menuText, System.EventHandler onClick);
     }
 }

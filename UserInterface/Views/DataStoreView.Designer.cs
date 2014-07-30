@@ -176,7 +176,6 @@ namespace UserInterface.Views
             this.gridView.AutoFilterOn = false;
             this.gridView.DataSource = null;
             this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridView.FloatingPointFormat = null;
             this.gridView.Location = new System.Drawing.Point(3, 142);
             this.gridView.Name = "gridView";
             this.gridView.ReadOnly = false;

@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
 
             this.dataStoreView.Grid.ReadOnly = true;
             this.dataStoreView.Grid.AutoFilterOn = true;
-            this.dataStoreView.Grid.FloatingPointFormat = "N3";
+            this.dataStoreView.Grid.NumericFormat = "N3";
             this.dataStoreView.TableNames = this.dataStore.TableNames;
             this.dataStoreView.SimulationNames = this.dataStore.SimulationNames;
         }

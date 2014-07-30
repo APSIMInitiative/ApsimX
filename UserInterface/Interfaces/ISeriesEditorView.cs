@@ -140,25 +140,25 @@ namespace UserInterface.Interfaces
         string Y2 { get; set; }
 
         /// <summary>
-        /// Gets or set the show in legend checkbox
+        /// Gets or sets a value indicating whether the series should be shown in the legend
         /// </summary>
         bool ShowInLegend { get; set; }
 
         /// <summary>
-        /// Gets or set the separate series checkbox
+        /// Gets or sets a value indicating whether a separate series should be created for each simulation
         /// </summary>
         bool SeparateSeries { get; set; }
-
-        /// <summary>
-        /// Sets the list of available data sources.
-        /// </summary>
-        /// <param name="data">The available data sources</param>
-        void SetDataSources(string[] dataSources);
 
         /// <summary>
         /// Gets or sets the selected data source name.
         /// </summary>
         string DataSource { get; set; }
+
+        /// <summary>
+        /// Sets the list of available data sources.
+        /// </summary>
+        /// <param name="dataSources">The available data sources</param>
+        void SetDataSources(string[] dataSources);
 
         /// <summary>
         /// Provides data for the currently selected data source.
@@ -171,6 +171,5 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="show">Indicates whether the fields should be shown</param>
         void ShowX2Y2(bool show);
-
     }
 }

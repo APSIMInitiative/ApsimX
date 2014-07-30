@@ -15,6 +15,8 @@ namespace UserInterface.Presenters
     using Models.Graph;
     using Models.Soils;
     using Views;
+    using EventArguments;
+    using Interfaces;
 
     /// <summary>
     /// <para>
@@ -126,7 +128,7 @@ namespace UserInterface.Presenters
 
             // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
             // we can save the contents.
-            this.view.ProfileGrid.CellValueChanged += this.OnProfileGridCellValueChanged;
+            this.view.ProfileGrid.CellsChanged += this.OnProfileGridCellValueChanged;
         }
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.view.ProfileGrid.CellValueChanged -= this.OnProfileGridCellValueChanged;
+            this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
 
             if (this.parentZone != null && this.graph != null)
             {
@@ -214,12 +216,21 @@ namespace UserInterface.Presenters
                     format = "N3";
                 }
 
-                this.view.ProfileGrid.SetColumnFormat(col, format, backgroundColour, foregroundColour, property.IsReadOnly, toolTips);
+                IGridColumn gridColumn = this.view.ProfileGrid.GetColumn(col);
+                gridColumn.Format = format;
+                gridColumn.BackgroundColour = backgroundColour;
+                gridColumn.ForegroundColour = foregroundColour;
+                gridColumn.ReadOnly = property.IsReadOnly;
+                for (int rowIndex = 0; rowIndex < toolTips.Length; rowIndex++)
+                {
+                    IGridCell cell = this.view.ProfileGrid.GetCell(col, rowIndex);
+                    cell.ToolTip = toolTips[rowIndex];
+                }
 
                 // colour the column headers of total columns.
                 if (!double.IsNaN(property.Total))
                 {
-                    this.view.ProfileGrid.SetColumnHeaderColours(col, null, Color.Red);
+                    gridColumn.HeaderForegroundColour = Color.Red;
                 }
             }
 
@@ -303,7 +314,7 @@ namespace UserInterface.Presenters
         /// <param name="row">The row index of the cell that has changed</param>
         /// <param name="oldValue">The old value of the cell</param>
         /// <param name="newValue">The new value of the cell</param>
-        private void OnProfileGridCellValueChanged(int col, int row, object oldValue, object newValue)
+        private void OnProfileGridCellValueChanged(object sender, GridCellsChangedArgs e)
         {
             this.SaveGrid();
 
@@ -363,7 +374,8 @@ namespace UserInterface.Presenters
                     int row = 0;
                     foreach (object value in property.Value as IEnumerable<double>)
                     {
-                        this.view.ProfileGrid.SetCellValue(col, row, value);
+                        IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
+                        cell.Value = value;
                         row++;
                     }
 
@@ -378,7 +390,9 @@ namespace UserInterface.Presenters
                         }
 
                         columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
-                        this.view.ProfileGrid.SetColumnHeader(col, columnName);
+
+                        IGridColumn column = this.view.ProfileGrid.GetColumn(col);
+                        column.HeaderText = columnName;
                     }
                 }
             }

@@ -72,6 +72,8 @@
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\GridCell.cs" />
+    <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangePropertyCommand.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
@@ -83,12 +85,17 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
+    <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Forms\FormInsertHyperlink.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IGridCell.cs" />
+    <Compile Include="Interfaces\IGridColumn.cs" />
+    <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\ISeriesEditorView.cs" />
     <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">

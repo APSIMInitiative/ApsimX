@@ -12,6 +12,9 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
     using Models;
+    using Interfaces;
+    using EventArguments;
+    using Classes;
 
     /// <summary>
     /// <para>
@@ -74,7 +77,7 @@ namespace UserInterface.Presenters
 
             this.FindAllProperties();
             this.PopulateGrid(this.model);
-            this.grid.CellValueChanged += this.OnCellValueChanged;
+            this.grid.CellsChanged += this.OnCellValueChanged;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
@@ -83,7 +86,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.grid.CellValueChanged -= this.OnCellValueChanged;
+            this.grid.CellsChanged -= this.OnCellValueChanged;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -177,21 +180,46 @@ namespace UserInterface.Presenters
         {
             for (int i = 0; i < this.properties.Count; i++)
             {
+                IGridCell cell = this.grid.GetCell(1, i);
+                        
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
                     DataStore dataStore = this.model.Scope.Find(typeof(DataStore)) as DataStore;
                     if (dataStore != null)
-                        this.grid.SetCellEditor(1, i, dataStore.TableNames);
+                    {
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = dataStore.TableNames;
+                    }
                 }
                 else
                 {
-                    this.grid.SetCellEditor(1, i, this.properties[i].ValueWithArrayHandling);
+                    object cellValue = this.properties[i].ValueWithArrayHandling;
+                    if (cellValue is DateTime)
+                    {
+                        cell.EditorType = EditorTypeEnum.DateTime;
+                    }
+                    else if (cellValue is bool)
+                    {
+                        cell.EditorType = EditorTypeEnum.Boolean;
+                    }
+                    else if (cellValue.GetType().IsEnum)
+                    {
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = Utility.String.EnumToStrings(cellValue);
+                    }
+                    else
+                    {
+                        cell.EditorType = EditorTypeEnum.TextBox;
+                    }
                 }
             }
 
-            this.grid.SetColumnSize(0);
-            this.grid.SetColumnSize(1);
-            this.grid.SetColumnReadOnly(0, true);
+            IGridColumn descriptionColumn = this.grid.GetColumn(0);
+            descriptionColumn.Width = -1;
+            descriptionColumn.ReadOnly = true;
+
+            IGridColumn valueColumn = this.grid.GetColumn(1);
+            valueColumn.Width = -1;
         }
 
         /// <summary>
@@ -201,10 +229,15 @@ namespace UserInterface.Presenters
         /// <param name="row">The row index of the cell that has changed</param>
         /// <param name="oldValue">The cell value before the user changed it</param>
         /// <param name="newValue">The cell value the user has entered</param>
-        private void OnCellValueChanged(int col, int row, object oldValue, object newValue)
+        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            this.SetPropertyValue(this.properties[row], newValue);
+
+            foreach (IGridCell cell in e.ChangedCells)
+            {
+                this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+            }
+            
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 

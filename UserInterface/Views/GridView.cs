@@ -1,184 +1,231 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Diagnostics;
-using DataGridViewAutoFilter;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="GridView.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Windows.Forms;
+    using Classes;
+    using DataGridViewAutoFilter;
+    using EventArguments;
+    using Interfaces;
 
-    public delegate void GridCellValueChanged(int Col, int Row, object OldValue, object NewValue);
-    public delegate void GridCellHeaderClickedDelegate(string HeaderText);
-    
-    public interface IGridView
+    /// <summary>
+    /// A grid control that implements the grid view interface.
+    /// </summary>
+    public partial class GridView : UserControl, IGridView
     {
         /// <summary>
-        /// This event is invoked when the value of a cell is changed.
+        /// Is the user currently editing a cell?
         /// </summary>
-        event GridCellValueChanged CellValueChanged;
+        private bool userEditingCell = false;
+
+        /// <summary>
+        /// The value before the user starts editing a cell.
+        /// </summary>
+        private object valueBeforeEdit;
+
+        /// <summary>
+        /// The data table that is being shown on the grid.
+        /// </summary>
+        private DataTable table;
+
+        /// <summary>
+        /// A value indicating whether auto filter is turned on.
+        /// </summary>
+        private bool isAutoFilterOn = false;
+
+        /// <summary>
+        /// The default numeric format
+        /// </summary>
+        private string defaultNumericFormat = null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GridView" /> class.
+        /// </summary>
+        public GridView()
+        {
+            this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// This event is invoked when the values of 1 or more cells have changed.
+        /// </summary>
+        public event EventHandler<GridCellsChangedArgs> CellsChanged;
 
         /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
-        event GridCellHeaderClickedDelegate ColumnHeaderClicked;
+        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
         /// <summary>
-        /// Specified the data to use to populate the grid.
+        /// Gets or sets the data to use to populate the grid.
         /// </summary>
-        DataTable DataSource { get; set; }
+        public System.Data.DataTable DataSource
+        {
+            get
+            {
+                return this.table;
+            }
+            
+            set
+            {
+                this.table = value;
+                this.PopulateGrid();
+            }
+        }
 
         /// <summary>
-        /// Set the editor for the specified cell using the specified Obj to determine type
+        /// Gets or sets the number of rows in grid.
         /// </summary>
-        void SetCellEditor(int Col, int Row, object Obj);
+        public int RowCount
+        {
+            get
+            {
+                return this.Grid.RowCount;
+            }
+            
+            set
+            {
+                this.Grid.RowCount = value;
+            }
+        }
 
         /// <summary>
-        /// Set the specified column size. A value of -1 indicates auto sizing.
+        /// Gets or sets the numeric grid format e.g. N3
         /// </summary>
-        void SetColumnSize(int Col, int size=-1);
+        public string NumericFormat
+        {
+            get
+            {
+                return this.defaultNumericFormat;
+            }
+
+            set
+            {
+                this.defaultNumericFormat = value;
+
+                if (this.DataSource != null)
+                {
+                    for (int col = 0; col < this.DataSource.Columns.Count; col++)
+                    {
+                        if (this.DataSource.Columns[col].DataType == typeof(float) ||
+                            this.DataSource.Columns[col].DataType == typeof(double))
+                        {
+                            this.Grid.Columns[col].DefaultCellStyle.Format = this.defaultNumericFormat;
+                        }
+                    }
+                }
+            }
+        }
 
         /// <summary>
-        /// Set the specified column's alignment (left/right)
+        /// Gets or sets a value indicating whether the grid is read only
         /// </summary>
-        void SetColumnAlignment(int Col, bool LeftAlign);
+        public bool ReadOnly 
+        { 
+            get 
+            {
+                return this.Grid.ReadOnly; 
+            } 
+            
+            set 
+            {
+                this.Grid.ReadOnly = value; 
+            } 
+        }
 
         /// <summary>
-        /// Get or set the number of rows in grid.
+        /// Gets or sets a value indicating whether the grid has an auto filter
         /// </summary>
-        int RowCount { get; set; }
+        public bool AutoFilterOn
+        {
+            get
+            {
+                return this.isAutoFilterOn;
+            }
+            
+            set 
+            {
+                this.isAutoFilterOn = value;
+                this.PopulateGrid();
+            }
+        }
 
         /// <summary>
-        /// Set the column to readonly.
+        /// Gets or sets the currently selected cell. Null if none selected.
         /// </summary>
-        void SetColumnReadOnly(int Col, bool IsReadOnly);
+        public IGridCell GetCurrentCell
+        {
+            get
+            {
+                if (this.Grid.CurrentCell == null)
+                {
+                    return null;
+                }
+
+                return this.GetCell(this.Grid.CurrentCell.ColumnIndex, this.Grid.CurrentCell.RowIndex);
+            }
+
+            set
+            {
+                this.Grid.CurrentCell = this.Grid[value.ColumnIndex, value.RowIndex];
+            }
+        }
 
         /// <summary>
-        /// Set the column format.
+        /// Return a particular cell of the grid.
         /// </summary>
-        void SetColumnFormat(int Col, string Format, 
-                             Color? BackgroundColour = null,
-                             Color? ForegroundColour = null,
-                             bool ReadOnly = false,
-                             string[] ToolTips = null);
+        /// <param name="columnIndex">The column index</param>
+        /// <param name="rowIndex">The row index</param>
+        /// <returns>The cell</returns>
+        public IGridCell GetCell(int columnIndex, int rowIndex)
+        {
+            return new GridCell(this, columnIndex, rowIndex);
+        }
 
         /// <summary>
-        /// Set the column header colours.
+        /// Return a particular column of the grid.
         /// </summary>
-        void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null);
-
-        /// <summary>
-        /// Set the column header text
-        /// </summary>
-        /// <param name="col">The index of the column</param>
-        /// <param name="col">The text to set the header to</param>
-        void SetColumnHeader(int col, string text);
-
-        /// <summary>
-        /// Set the numeric grid format e.g. N3
-        /// </summary>
-        void SetNumericFormat(string Format);
-
-        /// <summary>
-        /// Get or set the readonly status of the grid.
-        /// </summary>
-        bool ReadOnly { get; set; }
-
-        /// <summary>
-        /// Return the address of the current cell in the grid.
-        /// </summary>
-        Point CurrentCell { get; }
-
-        /// <summary>
-        /// set the autofilter capability on
-        /// </summary>
-        bool AutoFilterOn { get; set; }
+        /// <param name="columnIndex">The column index</param>
+        /// <returns>The column</returns>
+        public IGridColumn GetColumn(int columnIndex)
+        {
+            return new GridColumn(this, columnIndex);
+        }
 
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
-        void AddContextAction(string ButtonText, System.EventHandler OnClick);
-
-        /// <summary>
-        /// Return a cell's tooltip.
-        /// </summary>
-        string GetToolTipForCell(int Col, int Row);
-
-        /// <summary>
-        /// Set a cell's tooltip.
-        /// </summary>
-        void SetToolTipForCell(int Col, int Row, string TipText);
-
-        /// <summary>
-        /// Set the value of the specified cell.
-        /// </summary>
-        void SetCellValue(int Col, int Row, object Value);
-
-        /// <summary>
-        /// Set the value of the specified cell.
-        /// </summary>
-        object GetCellValue(int Col, int Row);
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextAction(string menuItemText, System.EventHandler onClick)
+        {
+            ToolStripItem item = this.popupMenu.Items.Add(menuItemText);
+            item.Click += onClick;
+        }
 
         /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
-        bool RowIsEmpty(int rowIndex);
-
-        /// <summary>
-        /// The format to use for floating point columns (e.g. N3)
-        /// </summary>
-        string FloatingPointFormat { get; set; }
-    }
-
-    public partial class GridView : UserControl, IGridView
-    {
-        private bool UserEditingCell = false;
-        private object ValueBeforeEdit;
-        private DataTable Data;
-        private bool AutoFilterIsOn = false;
-
-        /// <summary>
-        /// This event is invoked when the value of a cell is changed.
-        /// </summary>
-        public event GridCellValueChanged CellValueChanged;
-
-        /// <summary>
-        /// Invoked when a grid cell header is clicked.
-        /// </summary>
-        public event GridCellHeaderClickedDelegate ColumnHeaderClicked;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GridView()
+        /// <param name="rowIndex">The row index</param>
+        /// <returns>True if the row is empty</returns>
+        public bool RowIsEmpty(int rowIndex)
         {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// DataSource property.
-        /// </summary>
-        public DataTable DataSource
-        {
-            get
+            foreach (DataGridViewColumn column in this.Grid.Columns)
             {
-                return Data;
+                if (this.Grid[column.Index, rowIndex].Value != null)
+                {
+                    return false;
+                }
             }
-            set
-            {
-                Data = value;
-                PopulateGrid();
-            }
-        }
 
-        /// <summary>
-        /// The format to use for floating point columns (e.g. N3)
-        /// </summary>
-        public string FloatingPointFormat { get; set; }
+            return true;
+        }
 
         /// <summary>
         /// Populate the grid from the DataSource.
@@ -186,427 +233,147 @@ namespace UserInterface.Views
         private void PopulateGrid()
         {
             // The DataGridViewAutoFilterColumnHeaderCell class needs DataSource to be set.
-            Grid.DataSource = null;
-            Grid.Columns.Clear();
-            Grid.Rows.Clear();
+            this.Grid.DataSource = null;
+            this.Grid.Columns.Clear();
+            this.Grid.Rows.Clear();
 
             Cursor.Current = Cursors.WaitCursor;
-            
-            if (DataSource != null)
+
+            if (this.DataSource != null)
             {
                 // Under MONO for LINUX, when Grid.EditMode = DataGridViewEditMode.EditOnEnter
                 // then the populating code below will cause the grid to go into edit mode.
                 // For now turn off edit mode temporarily.
-                Grid.EditMode = DataGridViewEditMode.EditProgrammatically;
+                this.Grid.EditMode = DataGridViewEditMode.EditProgrammatically;
 
                 // The populating code below will cause Grid.CellValueChanged to be invoked
                 // Turn this event off temporarily.
-                Grid.CellValueChanged -= OnCellValueChanged;
+                this.Grid.CellValueChanged -= this.OnCellValueChanged;
 
                 // If autofilter is on then use a data bound grid.
-                if (AutoFilterIsOn)
+                if (this.isAutoFilterOn)
                 {
-                    Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                    Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    Grid.DataSource = new BindingSource(Data, null);
-                    foreach (DataGridViewColumn column in Grid.Columns)
+                    this.Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    this.Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    this.Grid.DataSource = new BindingSource(this.table, null);
+                    foreach (DataGridViewColumn column in this.Grid.Columns)
                     {
                         column.HeaderCell = new DataGridViewAutoFilterColumnHeaderCell(column.HeaderCell);
                         column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-                        if (FloatingPointFormat != null &&
-                            Data.Columns[column.HeaderText].DataType == typeof(double) ||
-                            Data.Columns[column.HeaderText].DataType == typeof(float))
-                            column.DefaultCellStyle.Format = FloatingPointFormat;
+                        this.NumericFormat = this.defaultNumericFormat;
                     }
                 }
                 else
                 {
                     // Make sure we have the right number of columns.
-                    Grid.ColumnCount = Math.Max(DataSource.Columns.Count, 1);
+                    this.Grid.ColumnCount = Math.Max(this.DataSource.Columns.Count, 1);
 
                     // Turn off autosizing - too slow.
-                    foreach (DataGridViewColumn Col in Grid.Columns)
-                        Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-
-                    // Populate the grid headers.
-                    for (int Col = 0; Col < DataSource.Columns.Count; Col++)
+                    foreach (DataGridViewColumn col in this.Grid.Columns)
                     {
-                        Grid.Columns[Col].HeaderText = DataSource.Columns[Col].ColumnName;
-                        Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                        Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                        Grid.Columns[Col].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                        if (FloatingPointFormat != null && 
-                            DataSource.Columns[Col].DataType == typeof(double) ||
-                            DataSource.Columns[Col].DataType == typeof(float))
-                            Grid.Columns[Col].DefaultCellStyle.Format = FloatingPointFormat;
+                        col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     }
 
-                    
-                    // Populate the grid cells with new rows.
-                    if (DataSource.Rows.Count > 0)
-                        Grid.RowCount = 1;
-                    for (int Row = 0; Row < DataSource.Rows.Count; Row++)
+                    // Populate the grid headers.
+                    for (int col = 0; col < this.DataSource.Columns.Count; col++)
                     {
-                        for (int Col = 0; Col < DataSource.Columns.Count; Col++)
+                        this.Grid.Columns[col].HeaderText = this.DataSource.Columns[col].ColumnName;
+                        this.Grid.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        this.Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        this.Grid.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                        this.NumericFormat = this.defaultNumericFormat;
+                    }
+
+                    // Populate the grid cells with new rows.
+                    if (this.DataSource.Rows.Count > 0)
+                    {
+                        this.Grid.RowCount = 1;
+                    }
+
+                    for (int row = 0; row < this.DataSource.Rows.Count; row++)
+                    {
+                        for (int col = 0; col < this.DataSource.Columns.Count; col++)
                         {
-                            Grid[Col, Row].Value = DataSource.Rows[Row][Col];
+                            this.Grid[col, row].Value = this.DataSource.Rows[row][col];
 
-                            if (Row == 0)
-                                Grid.Columns[Col].Width = Grid.Columns[Col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
-
+                            if (row == 0)
+                            {
+                                this.Grid.Columns[col].Width = this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
+                            }
                         }
 
-                        Grid.RowCount = DataSource.Rows.Count;
+                        this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
                 }
 
                 // ColIndex doesn't matter since we're resizing all of them.
-                SetColumnSize(0, -1);
+                this.GetColumn(0).Width = -1;
 
                 // Reinstate Grid.CellValueChanged event.
-                Grid.CellValueChanged += OnCellValueChanged;
+                this.Grid.CellValueChanged += this.OnCellValueChanged;
 
                 // Reinstate our desired edit mode.
-                Grid.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+                this.Grid.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             }
             else
-                Grid.Columns.Clear();
+            {
+                this.Grid.Columns.Clear();
+            }
 
             Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
-        /// Set the editor for the specified cell using the specified Obj to determine type
-        /// </summary>
-        public void SetCellEditor(int Col, int Row, object Obj)
-        {
-            if (Obj != null)
-            {
-                object Value = Grid[Col, Row].Value;
-
-                if (Obj is DateTime)
-                    Grid[Col, Row] = new Utility.DataGridViewCalendarCell.CalendarCell();
-                else if (Obj is bool)
-                    Grid[Col, Row] = new DataGridViewCheckBoxCell();
-                else if (Obj is Color)
-                {
-                    Utility.ColorPickerCell Button = new Utility.ColorPickerCell();
-                    Grid[Col, Row] = Button;
-                    Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    Grid.Columns[Col].Width = Grid.Rows[Row].Height;  // Make the cell square
-                }
-                else if (Obj.GetType().IsEnum)
-                {
-                    List<string> Items = new List<string>();
-                    foreach (object e in Obj.GetType().GetEnumValues())
-                        Items.Add(e.ToString());
-
-                    SetCellEditor(Col, Row, Items.ToArray());
-                }
-                else if (Obj is string[])
-                {
-                    DataGridViewComboBoxCell Combo;
-                    if (Grid[Col, Row] is DataGridViewComboBoxCell)
-                        Combo = Grid[Col, Row] as DataGridViewComboBoxCell;
-                    else
-                        Combo = new DataGridViewComboBoxCell();
-                    
-                    Combo.Items.Clear();
-                    foreach (string St in Obj as string[])
-                        if (St != null)
-                            Combo.Items.Add(St);
-                    Combo.Value = Grid[Col, Row].Value;
-
-                    Combo.FlatStyle = FlatStyle.Flat;
-                    Combo.ToolTipText = Grid[Col, Row].ToolTipText;
-                    if (!(Grid[Col, Row] is DataGridViewComboBoxCell))
-                    {
-                        // Normally you set a cell editor like this:
-                        //    Grid[Col, Row] = Combo;
-                        // But this doesn't work on MONO OSX. The two lines
-                        // below seem to work ok though.
-                        if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                            Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                            Grid[Col, Row] = Combo;
-                        else
-                        {
-                            Grid.Rows[Row].Cells.RemoveAt(Col);
-                            Grid.Rows[Row].Cells.Insert(Col, Combo);
-                        }
-                    }
-                }
-
-                Grid[Col, Row].Value = Value;
-            }
-        }
-
-        /// <summary>
-        /// Set the specified column's alignment (left/right)
-        /// </summary>
-        public void SetColumnAlignment(int Col, bool LeftAlign)
-        {
-            if (LeftAlign)
-            {
-                Grid.Columns[Col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-                Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            }
-            else
-            {
-                Grid.Columns[Col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-                Grid.Columns[Col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            }
-        }
-
-        /// <summary>
-        /// Set the numeric grid format e.g. N3
-        /// </summary>
-        public void SetNumericFormat(string Format)
-        {
-            for (int Col = 0; Col < DataSource.Columns.Count; Col++)
-            {
-                if (DataSource.Columns[Col].DataType == typeof(float) ||
-                    DataSource.Columns[Col].DataType == typeof(double))
-                    Grid.Columns[Col].DefaultCellStyle.Format = Format;
-            }
-        }
-
-        /// <summary>
-        /// Get or set the number of rows in grid.
-        /// </summary>
-        public int  RowCount
-        {
-            get
-            {
-                return Grid.RowCount;
-            }
-            set
-            {
-                Grid.RowCount = value;
-            }
-        }
-
-        /// <summary>
-        /// Get or set the readonly status of the grid.
-        /// </summary>
-        public bool ReadOnly { get { return Grid.ReadOnly; } set { Grid.ReadOnly = value; } }
-
-        /// <summary>
-        /// Set the specified column size. A value of -1 indicates auto sizing.
-        /// </summary>
-        public void SetColumnSize(int Col, int size = -1)
-        {
-            Graphics g = Grid.CreateGraphics();
-            Font font = Grid.Font;
-            int NewWidth;
-
-            if (size == -1)
-            {
-                for (int j = 0; j < Grid.Columns.Count; j++)
-                    // Limit number of rows to check to no more than 20
-                    for (int i = 0; i <= Math.Min(20, Grid.Rows.Count - 1); i++)
-                    {
-                        // Add 40 pixels to cover the dropdown target.
-                        if (Grid.Rows[i].Cells[j].Value != null)
-                        {
-                            NewWidth = (int)g.MeasureString(Grid.Rows[i].Cells[j].Value.ToString(), font).Width + 40;
-                            if (Grid.Columns[j].Width < NewWidth)
-                                Grid.Columns[j].Width = NewWidth;
-                        }
-                    }
-            }
-            else
-            {
-                //avoid auto so the columns can be resized. 20 pixels also allows for datepickers
-                Grid.Columns[Col].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                Grid.Columns[Col].Width = size;
-            }
-        }
-
-        /// <summary>
-        /// Set the column to readonly.
-        /// </summary>
-        public void SetColumnReadOnly(int Col, bool IsReadOnly)
-        {
-            Grid.Columns[Col].ReadOnly = IsReadOnly;
-            Grid.Columns[Col].DefaultCellStyle.BackColor = Color.LightGray;
-            if (Grid.CurrentCell != null && Grid.CurrentCell.ColumnIndex == Col)
-            {
-                // Move the current cell out of the readonly column.
-                Grid.CurrentCell = Grid.Rows[Grid.CurrentCell.RowIndex].Cells[Grid.CurrentCell.ColumnIndex + 1];
-            }
-        }
-
-        /// <summary>
-        /// Set the column format.
-        /// </summary>
-        public void SetColumnFormat(int Col, string Format,
-                                    Color? BackgroundColour = null,
-                                    Color? ForegroundColour = null,
-                                    bool ReadOnly = false,
-                                    string[] ToolTips = null)
-        {
-            if (Col < Grid.Columns.Count)
-            {
-                if (Format != null)
-                    Grid.Columns[Col].DefaultCellStyle.Format = Format;
-                if (ForegroundColour.HasValue)
-                    Grid.Columns[Col].DefaultCellStyle.ForeColor = ForegroundColour.Value;
-                if (BackgroundColour.HasValue)
-                    Grid.Columns[Col].DefaultCellStyle.BackColor = BackgroundColour.Value;
-                Grid.Columns[Col].ReadOnly = ReadOnly;
-                if (ToolTips != null)
-                {
-                    for (int Row = 0; Row < Grid.RowCount; Row++)
-                    {
-                        if (Row < ToolTips.Length)
-                            Grid.Rows[Row].Cells[Col].ToolTipText = ToolTips[Row];
-                    }
-                }
-                //Grid.Refresh();
-            }
-        }
-
-        /// <summary>
-        /// Set the column header colours.
-        /// </summary>
-        public void SetColumnHeaderColours(int Col, Color? BackgroundColour = null, Color? ForegroundColour = null)
-        {
-            Grid.EnableHeadersVisualStyles = false;
-            if (BackgroundColour.HasValue)
-                Grid.Columns[Col].HeaderCell.Style.BackColor = BackgroundColour.Value;
-            if (ForegroundColour.HasValue)
-                Grid.Columns[Col].HeaderCell.Style.ForeColor = ForegroundColour.Value;
-        }
-
-        /// <summary>
-        /// Set the column header text
-        /// </summary>
-        /// <param name="col">The index of the column</param>
-        /// <param name="col">The text to set the header to</param>
-        public void SetColumnHeader(int col, string text)
-        {
-            Grid.Columns[col].HeaderText = text;
-        }
-
-        /// <summary>
-        /// Return the address of the current cell in the grid.
-        /// </summary>
-        public Point CurrentCell
-        {
-            get
-            {
-                return new Point(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex);
-            }
-        }
-
-        /// <summary>
-        /// set the autofilter capability on
-        /// </summary>
-        public bool AutoFilterOn
-        {
-            get
-            {
-                return AutoFilterIsOn;
-            }
-            set 
-            {
-                AutoFilterIsOn = value;
-                PopulateGrid();
-            }
-        }
-
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        public void AddContextAction(string ButtonText, System.EventHandler OnClick)
-        {
-            ToolStripItem Item = PopupMenu.Items.Add(ButtonText);
-            Item.Click += OnClick;
-        }
-
-        /// <summary>
-        /// Return a cell's tooltip.
-        /// </summary>
-        public string GetToolTipForCell(int Col, int Row)
-        {
-            return Grid[Col, Row].ToolTipText;
-        }
-
-        /// <summary>
-        /// Set a cell's tooltip.
-        /// </summary>
-        public void SetToolTipForCell(int Col, int Row, string TipText)
-        {
-            Grid[Col, Row].ToolTipText = TipText;
-            Grid.ShowCellToolTips = true;
-        }
-
-        /// <summary>
-        /// Set the value of the specified cell.
-        /// </summary>
-        public void SetCellValue(int Col, int Row, object Value)
-        {
-            if (Col != -1 && Row != -1)
-                Grid[Col, Row].Value = Value;
-        }
-
-        /// <summary>
-        /// Set the value of the specified cell.
-        /// </summary>
-        public object GetCellValue(int Col, int Row)
-        {
-            return Grid[Col, Row].Value;
-        }
-
-        /// <summary>
         /// User is about to edit a cell.
         /// </summary>
-        public void OnCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
+        private void OnCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            UserEditingCell = true;
-            ValueBeforeEdit = Grid[e.ColumnIndex, e.RowIndex].Value;
-        }
-
-        /// <summary>
-        /// Returns true if the grid row is empty.
-        /// </summary>
-        public bool RowIsEmpty(int rowIndex)
-        {
-            foreach (DataGridViewColumn column in Grid.Columns)
-                if (Grid[column.Index, rowIndex].Value != null)
-                    return false;
-            return true;
+            this.userEditingCell = true;
+            this.valueBeforeEdit = this.Grid[e.ColumnIndex, e.RowIndex].Value;
         }
 
         /// <summary>
         /// User has finished editing a cell.
         /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void OnCellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (UserEditingCell)
+            if (this.userEditingCell)
             {
-                object OldValue = ValueBeforeEdit;
-                //ValueBeforeEdit = null;
-                UserEditingCell = false;
+                object oldValue = this.valueBeforeEdit;
+                
+                this.userEditingCell = false;
 
                 // Make sure our table has enough rows.
-                object NewValue = Grid[e.ColumnIndex, e.RowIndex].Value;
-                while (DataSource != null && e.RowIndex >= DataSource.Rows.Count)
-                    DataSource.Rows.Add(DataSource.NewRow());
+                object newValue = this.Grid[e.ColumnIndex, e.RowIndex].Value;
+                while (this.DataSource != null && e.RowIndex >= this.DataSource.Rows.Count)
+                {
+                    this.DataSource.Rows.Add(this.DataSource.NewRow());
+                }
 
                 // Put the new value into the table on the correct row.
-                if (DataSource != null)
-                    DataSource.Rows[e.RowIndex][e.ColumnIndex] = NewValue;
+                if (this.DataSource != null)
+                {
+                    this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                }
 
-                if (ValueBeforeEdit != null && ValueBeforeEdit.GetType() == typeof(string) && NewValue == null)
-                    NewValue = "";
+                if (this.valueBeforeEdit != null && this.valueBeforeEdit.GetType() == typeof(string) && newValue == null)
+                {
+                    newValue = string.Empty;
+                }
 
-                if (CellValueChanged != null && ValueBeforeEdit != NewValue)
-                    CellValueChanged(e.ColumnIndex, e.RowIndex, OldValue, NewValue);
-                SetColumnSize(e.ColumnIndex, -1);
+                if (this.CellsChanged != null && this.valueBeforeEdit != newValue)
+                {
+                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                    args.ChangedCells = new List<IGridCell>();
+                    args.ChangedCells.Add(this.GetCell(e.ColumnIndex, e.RowIndex));
+                    this.CellsChanged(this, args);
+                }
             }
         }
 
@@ -614,78 +381,73 @@ namespace UserInterface.Views
         /// Trap any grid data errors, usually as a result of cell values not being
         /// in combo boxes. We'll handle these elsewhere.
         /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
         }
 
         /// <summary>
-        /// User has clicked a cell. Check for a click on the header of a column and
-        /// the click on a colour cell.
+        /// User has clicked a cell. 
         /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void OnCellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
             {
-                //// Check to see if autofilter is on. If so then show drop down menu.
-                //if (Grid.Columns[e.ColumnIndex].HeaderCell.GetType() == typeof(DataGridViewAutoFilterColumnHeaderCell))
-                //{
-                //    DataGridViewAutoFilterColumnHeaderCell filterCell =  Grid.CurrentCell.OwningColumn.HeaderCell as
-                //                                                         DataGridViewAutoFilterColumnHeaderCell;
-                //    if (filterCell != null)
-                //    {
-                //        Grid.DataSource = Data;
-                //        filterCell.ShowDropDownList();
-                //    }
-                //}
-                if (ColumnHeaderClicked != null)
-                    ColumnHeaderClicked.Invoke(Grid.Columns[e.ColumnIndex].HeaderText);
+                if (this.ColumnHeaderClicked != null)
+                {
+                    GridHeaderClickedArgs args = new GridHeaderClickedArgs();
+                    args.Column = this.GetColumn(e.ColumnIndex);
+                    this.ColumnHeaderClicked.Invoke(this, args);
+                }
             }
-            else if (Grid[e.ColumnIndex, e.RowIndex] is Utility.ColorPickerCell)
+            else if (this.Grid[e.ColumnIndex, e.RowIndex] is Utility.ColorPickerCell)
             {
                 ColorDialog dlg = new ColorDialog();
 
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    UserEditingCell = true;
-                    ValueBeforeEdit = Grid[e.ColumnIndex, e.RowIndex].Value;
-                    Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
+                    this.userEditingCell = true;
+                    this.valueBeforeEdit = this.Grid[e.ColumnIndex, e.RowIndex].Value;
+                    this.Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
                 }
             }
-
-            SetColumnSize(e.ColumnIndex, -1);
         }
 
         /// <summary>
         /// We need to trap the EditingControlShowing event so that we can tweak all combo box
         /// cells to allow the user to edit the contents.
         /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void OnEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (Grid.CurrentCell is DataGridViewComboBoxCell)
+            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
-                DataGridViewComboBoxEditingControl Combo = (DataGridViewComboBoxEditingControl) Grid.EditingControl;
-                Combo.DropDownStyle = ComboBoxStyle.DropDown;
+                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
+                combo.DropDownStyle = ComboBoxStyle.DropDown;
             }
         }
 
+        /// <summary>
+        /// If the cell being validated is a combo cell then always make sure the cell value 
+        /// is in the list of combo items.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void Grid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (Grid.CurrentCell is DataGridViewComboBoxCell)
+            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
-                DataGridViewComboBoxEditingControl Combo = (DataGridViewComboBoxEditingControl) Grid.EditingControl;
-                if (Combo != null && !Combo.Items.Contains(e.FormattedValue))
-                    Combo.Items.Add(e.FormattedValue);
+                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
+                if (combo != null && !combo.Items.Contains(e.FormattedValue))
+                {
+                    combo.Items.Add(e.FormattedValue);
+                }
             }
         }
-
     }
-
-    public class GetComboItemsForCellArgs : EventArgs
-    {
-        public int Col;
-        public int Row;
-        public List<string> Items = new List<string>();
-    }
-
 }

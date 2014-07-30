@@ -3,6 +3,9 @@ using System.Data;
 using UserInterface.Views;
 using Models;
 using System.IO;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+using System.Collections.Generic;
 
 namespace UserInterface.Presenters
 {
@@ -33,7 +36,7 @@ namespace UserInterface.Presenters
             }
 
             PopulateGrid();
-            Grid.CellValueChanged += OnCellValueChanged;
+            Grid.CellsChanged += OnCellValueChanged;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -42,7 +45,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            Grid.CellValueChanged -= OnCellValueChanged;
+            Grid.CellsChanged -= OnCellValueChanged;
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             DataStore.Disconnect();
             DataStore = null;
@@ -57,25 +60,31 @@ namespace UserInterface.Presenters
             Grid.DataSource = Table;
 
             // Set up cell editors for all cells.
-            Test.TestType Dummy = new Test.TestType();
-            Grid.RowCount = 100;
+            Test.TestType dummy = new Test.TestType();
+            this.Grid.RowCount = 100;
             for (int Row = 0; Row < Grid.RowCount; Row++)
             {
                 PopulateComboItemsInRow(Row);
-                Grid.SetCellEditor(3, Row, Dummy);
+                IGridCell testTypeCell = this.Grid.GetCell(3, Row);
+
+                testTypeCell.EditorType = EditorTypeEnum.DropDown;
+                testTypeCell.DropDownStrings = Utility.String.EnumToStrings(dummy);
             }
 
-            Grid.SetColumnSize(2);
+            this.Grid.GetColumn(2).Width = -1;
         }
 
         /// <summary>
         /// Populate the specified row with the correct combo boxes.
         /// </summary>
-        /// <param name="Row"></param>
+        /// <param name="Row">Row index</param>
         private void PopulateComboItemsInRow(int Row)
         {
             DataTable Table = Grid.DataSource;
-            Grid.SetCellEditor(0, Row, DataStore.SimulationNames);
+            
+            IGridCell simulationCell = this.Grid.GetCell(0, Row);
+            simulationCell.EditorType = EditorTypeEnum.DropDown;
+            simulationCell.DropDownStrings = DataStore.SimulationNames;
 
             string[] TableNames = new string[0];
             string[] ColumnNames = new string[0];
@@ -92,8 +101,13 @@ namespace UserInterface.Presenters
                 }
             }
 
-            Grid.SetCellEditor(1, Row, TableNames);
-            Grid.SetCellEditor(2, Row, ColumnNames);
+            IGridCell tableNameCell = this.Grid.GetCell(1, Row);
+            tableNameCell.EditorType = EditorTypeEnum.DropDown;
+            tableNameCell.DropDownStrings = TableNames;
+
+            IGridCell columnNameCell = this.Grid.GetCell(2, Row);
+            columnNameCell.EditorType = EditorTypeEnum.DropDown;
+            columnNameCell.DropDownStrings = ColumnNames;
         }
 
         /// <summary>
@@ -143,13 +157,24 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has changed the value of a cell.
         /// </summary>
-        private void OnCellValueChanged(int Col, int Row, object OldValue, object NewValue)
+        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
             // The ChangePropertyCommand below will trigger a call to OnModelChanged. We don't need to 
             // repopulate the grid so stop the event temporarily until end of this method.
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
-            PopulateComboItemsInRow(Row);
+            // Get a list of rows that have changed.
+            SortedSet<int> changedRows = new SortedSet<int>();
+            foreach (IGridCell cell in e.ChangedCells)
+            {
+                changedRows.Add(cell.RowIndex);
+            }
+
+            // Repopulate each changed row.
+            foreach (int rowIndex in changedRows)
+            {
+                this.PopulateComboItemsInRow(rowIndex);
+            }
 
             // Convert grid datatable back to an array of test objects and store in Tests model
             // via a command.
@@ -158,7 +183,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.Add(Cmd, true);
 
             // Reinstate the model changed event.
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

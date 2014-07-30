@@ -45,7 +45,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets the main data grid.
         /// </summary>
-        Views.IGridView Grid { get; }
+        Interfaces.IGridView Grid { get; }
 
         /// <summary>
         /// Gets or sets the list of simulation names.
