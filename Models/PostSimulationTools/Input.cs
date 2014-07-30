@@ -58,9 +58,11 @@ namespace Models.PostSimulationTools
                         continue;
 
                     string temp = string.Empty;
+                    //make it work in linux
                     if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
                         temp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                         .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
+                    else temp = FileNames[i];
 
                     if (File.Exists(temp))
                         dataStore.WriteTable(null, this.Name, data);
