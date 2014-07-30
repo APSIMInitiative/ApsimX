@@ -436,8 +436,8 @@
           <MinT>22.100000381469727</MinT>
           <Rain>0</Rain>
           <Radn>16.299999237060547</Radn>
-          <vp>26.597756815642228</vp>
-          <wind>3</wind>
+          <VP>0</VP>
+          <Wind>0</Wind>
           <CO2>350</CO2>
         </WeatherFile>
         <Clock>
@@ -2036,16 +2036,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2055,16 +2055,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2075,16 +2075,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2094,16 +2094,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2114,16 +2114,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2133,16 +2133,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2167,16 +2167,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2186,16 +2186,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2206,16 +2206,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2225,16 +2225,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2245,16 +2245,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2264,16 +2264,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2298,16 +2298,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2317,16 +2317,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2337,16 +2337,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2356,16 +2356,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2376,16 +2376,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2395,16 +2395,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2429,16 +2429,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2448,16 +2448,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2468,16 +2468,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2487,16 +2487,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2507,16 +2507,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2526,16 +2526,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2560,16 +2560,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2579,16 +2579,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2599,16 +2599,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2618,16 +2618,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2638,16 +2638,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2657,16 +2657,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2691,16 +2691,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2710,16 +2710,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2730,16 +2730,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2749,16 +2749,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -2769,16 +2769,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2788,16 +2788,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2826,16 +2826,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>SurfaceOM.surfaceom_wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title>N</Title>
@@ -2846,16 +2846,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>SurfaceOM.surfaceom_n</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -2872,7 +2872,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2880,16 +2880,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Calculations.Script.NitTot</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -3612,8 +3612,8 @@ namespace Models
           <MinT>27</MinT>
           <Rain>0.60000002384185791</Rain>
           <Radn>23.600000381469727</Radn>
-          <vp>35.648592398728994</vp>
-          <wind>3</wind>
+          <VP>0</VP>
+          <Wind>0</Wind>
           <CO2>350</CO2>
         </WeatherFile>
         <Clock>
@@ -4918,16 +4918,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4937,16 +4937,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -4957,16 +4957,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4976,16 +4976,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -4996,16 +4996,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5015,16 +5015,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5049,16 +5049,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5068,16 +5068,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5088,16 +5088,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5107,16 +5107,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5127,16 +5127,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5146,16 +5146,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5180,16 +5180,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5199,16 +5199,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5219,16 +5219,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5238,16 +5238,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5258,16 +5258,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5277,16 +5277,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5311,16 +5311,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5330,16 +5330,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5350,16 +5350,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5369,16 +5369,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5389,16 +5389,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5408,16 +5408,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5442,16 +5442,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5461,16 +5461,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5481,16 +5481,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5500,16 +5500,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5520,16 +5520,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5539,16 +5539,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5573,16 +5573,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5592,16 +5592,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5612,16 +5612,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5631,16 +5631,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -5651,16 +5651,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SagaraiOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5670,16 +5670,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>SangaraOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6028,8 +6028,8 @@ namespace Models
           <MinT>25.200000762939453</MinT>
           <Rain>0</Rain>
           <Radn>14</Radn>
-          <vp>32.052996971649776</vp>
-          <wind>3</wind>
+          <VP>0</VP>
+          <Wind>0</Wind>
           <CO2>350</CO2>
         </WeatherFile>
         <Clock>
@@ -7324,16 +7324,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7343,16 +7343,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7363,16 +7363,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7382,16 +7382,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7402,16 +7402,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7421,16 +7421,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7455,16 +7455,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7474,16 +7474,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7494,16 +7494,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7513,16 +7513,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7533,16 +7533,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>MonthlyOutput</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7552,16 +7552,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7586,16 +7586,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7605,16 +7605,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7625,16 +7625,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7644,16 +7644,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7664,16 +7664,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7683,16 +7683,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7717,16 +7717,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7736,16 +7736,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7756,16 +7756,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7775,16 +7775,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7795,16 +7795,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7814,16 +7814,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7848,16 +7848,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7867,16 +7867,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7887,16 +7887,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7906,16 +7906,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -7926,16 +7926,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7945,16 +7945,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7979,16 +7979,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7998,16 +7998,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN0</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -8018,16 +8018,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -8037,16 +8037,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN1</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title />
@@ -8057,16 +8057,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>AnnualOutput</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -8076,16 +8076,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>HargyOperationsN2</SimulationName>
           <TableName>Input</TableName>
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -8144,6 +8144,8 @@ namespace Models
         <FieldName>Observed.OilPalm.LAI</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8176,6 +8178,8 @@ namespace Models
         <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8208,6 +8212,8 @@ namespace Models
         <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8240,6 +8246,8 @@ namespace Models
         <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>

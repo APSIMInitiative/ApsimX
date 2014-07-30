@@ -65,6 +65,8 @@ namespace ApServer
         {
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
+            string userDir = Path.Combine(dataDir, tcpClient.Client.RemoteEndPoint.ToString().Replace(':', '-'));
+            userDir = userDir.Replace(".", "");
 
             // the acknowledge byte
             byte[] ack = { 1 };
@@ -78,6 +80,13 @@ namespace ApServer
             MemoryStream ms;
 
             bytesRead = 0;
+
+            // old userDir can stick around if client connection was terminated during a run
+            // if so, delete it
+            if (Directory.Exists(userDir))
+                Directory.Delete(userDir, true);
+
+            Directory.CreateDirectory(userDir);
 
             try
             {
@@ -119,48 +128,46 @@ namespace ApServer
                         totalBytes += bytesRead;
                     }
 
-                    File.WriteAllBytes(Path.Combine(dataDir, fileName), Convert2.ToByteArray(ms));
+                    File.WriteAllBytes(Path.Combine(userDir, fileName), Convert2.ToByteArray(ms));
 
-                    Console.WriteLine(Path.Combine(dataDir, fileName) + " successfully written.");
+                    Console.WriteLine(Path.Combine(userDir, fileName) + " successfully written.");
 
                     // send an acknowledgement
                     clientStream.Write(ack, 0, 1);
                 }
+                RunSimulations(userDir, clientStream);
             }
             catch
             {
                 //a socket error has occured
-                //   break;
+                Console.WriteLine("Connection to " + tcpClient.Client.RemoteEndPoint + " terminated");
             }
-
-            //Do apsim run
-
-
-            //run the simulations
-            RunSimulations("", clientStream);
-
-            tcpClient.Close();
+            finally
+            {
+                tcpClient.Close();
+                Directory.Delete(userDir, true);
+            }
         }
 
         private void RunSimulations(string dir, NetworkStream stream)
         {
             // First, remove all paths from file names
-            foreach (string s in Directory.GetFiles(Path.Combine(dataDir, dir), "*.apsimx"))
+            foreach (string s in Directory.GetFiles(dir, "*.apsimx"))
             {
                 XmlDocument doc = new XmlDocument();
                 XmlNode root;
                 XmlNodeList nodes;
-                char SplitChar = '\\';
 
                 doc.Load(s);
                 root = doc.DocumentElement;
 
                 nodes = root.SelectNodes("//WeatherFile/FileName");
-
                 foreach (XmlNode node in nodes)
-                {
-                    node.InnerText = Path.GetFileName(node.InnerText);
-                }
+                    node.InnerText = Path.Combine(dir,Path.GetFileName(node.InnerText));
+
+                nodes = root.SelectNodes("//Input/FileNames/string");
+                foreach (XmlNode node in nodes)
+                    node.InnerText = Path.Combine(dir, Path.GetFileName(node.InnerText));
                 doc.Save(s);
             }
 
@@ -173,9 +180,10 @@ namespace ApServer
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-            stream.Write(BitConverter.GetBytes(Int32.MaxValue), 0, 4);
+            stream.Write(BitConverter.GetBytes(Int32.MaxValue), 0, 4); //using Int32.MaxValue as an EOS designator.
 
             // Send completed runs back to user.
+            SendCompletedData(dir, stream);
             
             Console.WriteLine("Run complete.");
         }
@@ -209,7 +217,7 @@ namespace ApServer
                 stream.Flush();
 
                 // then send the file name
-                Console.WriteLine("Sending file name: " + s);
+                Console.WriteLine("Sending file: " + s);
                 StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
                 writer.Write(Path.GetFileName(s));
                 writer.Flush();
@@ -218,7 +226,6 @@ namespace ApServer
                 stream.Read(ack, 0, 1);
 
                 // next, send the file data
-                Console.WriteLine("sending file data");
                 stream.Write(FileStream, 0, FileStream.Length);
                 stream.Flush();
 
@@ -232,23 +239,23 @@ namespace ApServer
             if (DataArgs.Data == null)
                 return;
 
-            NetworkStream stream = (NetworkStream)SendingProcess;
-            StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
-            stream.Write(BitConverter.GetBytes(DataArgs.Data.Length), 0, 4);
-            writer.Write(DataArgs.Data);
-            writer.Flush();
-        }
-    }
-
-    public static class Convert2
-    {
-        public static byte[] ToByteArray(Stream stream)
-        {
-            stream.Position = 0;
-            byte[] buffer = new byte[stream.Length];
-            for (int totalBytesCopied = 0; totalBytesCopied < stream.Length; )
-                totalBytesCopied += stream.Read(buffer, totalBytesCopied, Convert.ToInt32(stream.Length) - totalBytesCopied);
-            return buffer;
+            try
+            {
+                NetworkStream stream = (NetworkStream)SendingProcess;
+                StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
+                stream.Write(BitConverter.GetBytes(DataArgs.Data.Length), 0, 4);
+                writer.Write(DataArgs.Data);
+                writer.Flush();
+            }
+            catch (Exception e)
+            {
+                if (e is SocketException || e is IOException)
+                {
+                    Console.WriteLine("connection to client lost");
+                    return;
+                }
+                throw;
+            }
         }
     }
 }

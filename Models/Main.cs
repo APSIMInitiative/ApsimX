@@ -45,7 +45,14 @@ namespace Models
                     numSimulations = RunSingleThreaded(fileName);
                 else if (args.Contains("/Network"))
                 {
-                    DoNetworkRun(fileName);// send files over network
+                    try
+                    {
+                        DoNetworkRun(fileName);// send files over network
+                    }
+                    catch (SocketException)
+                    {
+                        Console.WriteLine("Connection to server terminated.");
+                    }
                 }
                 else
                 {
@@ -124,6 +131,8 @@ namespace Models
         /// <param name="FileName">The .apsimx file to send.</param>
         private static void DoNetworkRun(string FileName)
         {
+            string ServerIP = "150.229.142.16";
+            //ServerIP = "127.0.0.1";
             //hold server acknowledge
             byte[] ack = new byte[1];
 
@@ -131,9 +140,11 @@ namespace Models
             List<string> FileList = GetFileList(FileName);
             FileList.Add(FileName);
 
-            using (TcpClient client = new TcpClient("localhost", 50000))
+            Console.WriteLine("Attempting connection to " + ServerIP);
+            using (TcpClient client = new TcpClient(ServerIP, 50000))
             using (NetworkStream ns = client.GetStream())
             {
+                Console.WriteLine("Connected to " + client.Client.RemoteEndPoint);
                 // send the number of files to be sent
                 byte[] dataLength = BitConverter.GetBytes(FileList.Count);
                 ns.Write(dataLength, 0, 4);
@@ -153,7 +164,7 @@ namespace Models
                     ns.Flush();
 
                     // then send the file name
-                    Console.WriteLine("Sending file name: " + fileName);
+                    Console.WriteLine("Sending file: " + fileName);
                     StreamWriter writer = new StreamWriter(ns, Encoding.ASCII);
                     writer.Write(Path.GetFileName(fileName));
                     writer.Flush();
@@ -162,7 +173,6 @@ namespace Models
                     ns.Read(ack, 0, 1);
 
                     // next, send the file data
-                    Console.WriteLine("sending file data");
                     ns.Write(FileStream, 0, FileStream.Length);
                     ns.Flush();
 
@@ -185,7 +195,7 @@ namespace Models
                     Console.WriteLine(Encoding.ASCII.GetString(Msg));
                 }
 
-                GetNetworkRun(ns);
+                GetNetworkRun(ns, FileName);
             }
         }
 
@@ -198,7 +208,7 @@ namespace Models
                 Console.WriteLine(e.ErrorMessage);
         }
 
-        static void GetNetworkRun(NetworkStream stream)
+        static void GetNetworkRun(NetworkStream stream, string FileName)
         {
             // the acknowledge byte
             byte[] ack = { 1 };
@@ -211,49 +221,55 @@ namespace Models
             string fileName;
             MemoryStream ms;
 
-            //TODO TOMORROW -  finish up getting .db files, don't forget to find the number of files then put the stuff below in a loop.
-/*
-
-            bytesRead = 0;
             //get the length of the file name
-            bytesRead = stream.Read(nameLength, 0, 4);
+            bytesRead = stream.Read(fileListLength, 0, 4);
             if (bytesRead == 0)
-                break;
+                return;
 
-            //get the length of the file
-            bytesRead = stream.Read(dataLength, 0, 4);
-            if (bytesRead == 0)
-                break;
-
-            // next item to arrive is the .apsimx file name
-            byte[] nameData = new byte[BitConverter.ToInt32(nameLength, 0)];
-            bytesRead = stream.Read(nameData, 0, nameData.Length);
-            if (bytesRead == 0)
+            for (int i = 0; i < BitConverter.ToInt32(fileListLength, 0);i++ )
             {
-                Console.WriteLine("Could not read file name.");
-                break;
+                ms = new MemoryStream();
+                bytesRead = 0;
+                //get the length of the file name
+                bytesRead = stream.Read(nameLength, 0, 4);
+                if (bytesRead == 0)
+                    break;
+
+                //get the length of the file
+                bytesRead = stream.Read(dataLength, 0, 4);
+                if (bytesRead == 0)
+                    break;
+
+                // receive the file name
+                byte[] nameData = new byte[BitConverter.ToInt32(nameLength, 0)];
+                bytesRead = stream.Read(nameData, 0, nameData.Length);
+                if (bytesRead == 0)
+                {
+                    Console.WriteLine("Could not read file name.");
+                    break;
+                }
+                fileName = Encoding.ASCII.GetString(nameData);
+                Console.WriteLine("Receiving " + fileName);
+
+                // send an acknowledgement
+                stream.Write(ack, 0, 1);
+
+                // then the file itself.
+                int totalBytes = 0;
+                while (totalBytes < BitConverter.ToInt32(dataLength, 0))
+                {
+                    bytesRead = stream.Read(data, 0, 4096);
+                    ms.Write(data, 0, bytesRead);
+                    totalBytes += bytesRead;
+                }
+
+                File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(FileName), fileName), ApServer.Convert2.ToByteArray(ms));
+
+                Console.WriteLine(Path.Combine(Path.GetDirectoryName(FileName), fileName) + " successfully written.");
+
+                // send an acknowledgement
+                stream.Write(ack, 0, 1);
             }
-            fileName = Encoding.ASCII.GetString(nameData);
-
-            // send an acknowledgement
-            stream.Write(ack, 0, 1);
-
-            // then the .apsimx file itself.
-            int totalBytes = 0;
-            while (totalBytes < BitConverter.ToInt32(dataLength, 0))
-            {
-                bytesRead = stream.Read(data, 0, 4096);
-                ms.Write(data, 0, bytesRead);
-                totalBytes += bytesRead;
-            }
-
-            File.WriteAllBytes(Path.Combine(dataDir, fileName), Convert2.ToByteArray(ms));
-
-            Console.WriteLine(Path.Combine(dataDir, fileName) + " successfully written.");
-
-            // send an acknowledgement
-            stream.Write(ack, 0, 1);
-            WriteComplete = true;*/
         }
 
         /// <summary>
