@@ -326,62 +326,65 @@ namespace Models
         /// </summary>
         public override void OnSimulationCompleted()
         {
-            // Get rid of old data in .db
-            DataStore DataStore = new DataStore(this);
-            DataStore.DeleteOldContentInTable(Simulation.Name, Name);
-
-            // Write and store a table in the DataStore
-            if (Members != null && Members.Count > 0)
+            if (Simulation != null)
             {
-                DataTable table = new DataTable();
+                // Get rid of old data in .db
+                DataStore DataStore = new DataStore(this);
+                DataStore.DeleteOldContentInTable(Simulation.Name, Name);
 
-                foreach (VariableMember Variable in Members)
+                // Write and store a table in the DataStore
+                if (Members != null && Members.Count > 0)
                 {
-                    Variable.Analyse();
-                    for (int i = 0; i < Variable.Names.Length; i++)
-                    {
-                        if (Variable.Types[i] == null)
-                            table.Columns.Add(Variable.Names[i], typeof(int));
-                        else
-                            table.Columns.Add(Variable.Names[i], Variable.Types[i]);
-                    }
-                }
+                    DataTable table = new DataTable();
 
-                for (int Row = 0; Row < Members[0].NumValues; Row++)
-                {
-                    DataRow newRow = table.NewRow();
-                    int colIndex = 0;
                     foreach (VariableMember Variable in Members)
                     {
-                        foreach (object value in Variable.Values(Row))
+                        Variable.Analyse();
+                        for (int i = 0; i < Variable.Names.Length; i++)
                         {
-                            if (value != null)
-                                newRow[colIndex] = value;
-                            colIndex++;
+                            if (Variable.Types[i] == null)
+                                table.Columns.Add(Variable.Names[i], typeof(int));
+                            else
+                                table.Columns.Add(Variable.Names[i], Variable.Types[i]);
                         }
                     }
-                    table.Rows.Add(newRow);
+
+                    for (int Row = 0; Row < Members[0].NumValues; Row++)
+                    {
+                        DataRow newRow = table.NewRow();
+                        int colIndex = 0;
+                        foreach (VariableMember Variable in Members)
+                        {
+                            foreach (object value in Variable.Values(Row))
+                            {
+                                if (value != null)
+                                    newRow[colIndex] = value;
+                                colIndex++;
+                            }
+                        }
+                        table.Rows.Add(newRow);
+                    }
+
+                    DataStore.WriteTable(Simulation.Name, Name, table);
+
+                    Members.Clear();
+                    Members = null;
+
+                    // If user wants a csv file written, then write it.
+                    if (AutoCreateCSV)
+                    {
+                        string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
+                                                       Simulation.Name + this.Name + ".csv.");
+                        StreamWriter writer = new StreamWriter(fileName);
+                        writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
+                        writer.Close();
+                    }
                 }
 
-                DataStore.WriteTable(Simulation.Name, Name, table);
-
-                Members.Clear();
-                Members = null;
-
-                // If user wants a csv file written, then write it.
-                if (AutoCreateCSV)
-                {
-                    string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
-                                                   Simulation.Name + this.Name + ".csv.");
-                    StreamWriter writer = new StreamWriter(fileName);
-                    writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
-                    writer.Close();
-                }
+                UnsubscribeAllEventHandlers();
+                DataStore.Disconnect();
+                DataStore = null;
             }
-
-            UnsubscribeAllEventHandlers();
-            DataStore.Disconnect();
-            DataStore = null;
         }
 
         private void UnsubscribeAllEventHandlers()

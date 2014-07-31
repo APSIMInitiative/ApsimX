@@ -92,7 +92,12 @@ namespace Models.PMF.OldPlant
             {
                 if (model is Organ1)
                     Organ1s.Add(model as Organ1);
-            }  
+            }
+
+            EOCropFactor = 1.5;  // wheat
+            NSupplyPreference = "active";
+            DoRetranslocationBeforeNDemand = false;
+
         }
 
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
@@ -186,10 +191,13 @@ namespace Models.PMF.OldPlant
         [Link]
         GenericArbitratorXY Arbitrator1 = null;
 
+        [XmlIgnore]
         public double EOCropFactor { get; set; }
 
+        [XmlIgnore]
         public string NSupplyPreference { get; set; }
 
+        [XmlIgnore]
         public bool DoRetranslocationBeforeNDemand { get; set; }
 
         //[Input]
@@ -866,7 +874,7 @@ namespace Models.PMF.OldPlant
         }
 
 
-        
+        [XmlIgnore]
         public RemovedByAnimalType RemovedByAnimal
         {
             get

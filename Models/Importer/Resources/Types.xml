@@ -1221,10 +1221,10 @@
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="wheat">
+  <Type name="oilpalm">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
-      <class>Plant.Wheat</class>
+      <class>Plant.OilPalm</class>
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>

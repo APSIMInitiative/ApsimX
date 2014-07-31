@@ -50,11 +50,12 @@ namespace UserInterface.Presenters
             object o = null;
             if (Manager.Script != null)
             {
+                e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
 
                 // If no dot was specified then the object name may be refering to a [Link] in the script.
                 if (!e.ObjectName.Contains("."))
                 {
-                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Script);
+                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName, Manager.Script);
                     if (o == null)
                     {
                         // Not a [Link] so look for the object within scope
@@ -85,6 +86,11 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             try
             {
+                // set the code property manually first so that compile error can be trapped via
+                // an exception.
+                Manager.Code = ManagerView.Editor.Text;
+
+                // If it gets this far then compiles ok.
                 ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
             }
             catch (Exception err)
