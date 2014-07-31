@@ -62,7 +62,7 @@ namespace UserInterface.Presenters
 
             List<string> newPaths = new List<string>();
             newPaths.AddRange(FactorView.Editor.Lines);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Factor, "Paths", newPaths));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Paths", newPaths));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }

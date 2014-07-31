@@ -129,11 +129,11 @@ namespace UserInterface.Classes
                 this.gridView.Grid.Columns[this.ColumnIndex].ReadOnly = value;
                 if (value)
                 {
-                    this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.BackColor = Color.LightGray;
+                    this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.ForeColor = Color.DarkMagenta;
                 }
                 else
                 {
-                    this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.BackColor = SystemColors.Window;
+                    this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.ForeColor = SystemColors.WindowText;
                 }
             }
         }

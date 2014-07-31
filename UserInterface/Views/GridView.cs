@@ -351,6 +351,11 @@ namespace UserInterface.Views
 
                 // Make sure our table has enough rows.
                 object newValue = this.Grid[e.ColumnIndex, e.RowIndex].Value;
+                if (newValue == null)
+                {
+                    newValue = DBNull.Value;
+                }
+
                 while (this.DataSource != null && e.RowIndex >= this.DataSource.Rows.Count)
                 {
                     this.DataSource.Rows.Add(this.DataSource.NewRow());
@@ -438,7 +443,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The event arguments</param>
-        private void Grid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void OnGridCellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
@@ -447,6 +452,129 @@ namespace UserInterface.Views
                 {
                     combo.Items.Add(e.FormattedValue);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Paste from clipboard into grid.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
+        private void OnPasteFromClipboard(object sender, EventArgs e)
+        {
+            try
+            {
+                string text = Clipboard.GetText();
+                string[] lines = text.Split('\n');
+                int rowIndex = this.Grid.CurrentCell.RowIndex;
+                int columnIndex = this.Grid.CurrentCell.ColumnIndex;
+                List<IGridCell> cellsChanged = new List<IGridCell>();
+                foreach (string line in lines)
+                {
+                    if (rowIndex < this.Grid.RowCount && line.Length > 0)
+                    {
+                        string[] words = line.Split('\t');
+                        for (int i = 0; i < words.GetLength(0); ++i)
+                        {
+                            if (columnIndex + i < this.Grid.ColumnCount)
+                            {
+                                DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
+                                if (!cell.ReadOnly)
+                                {
+                                    if (cell.Value == null || cell.Value.ToString() != words[i])
+                                    {
+                                        // We are pasting a new value for this cell. Put the new
+                                        // value into the cell.
+                                        if (words[i] == string.Empty)
+                                        {
+                                            cell.Value = null;
+                                        }
+                                        else
+                                        {
+                                            cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
+                                        }
+
+                                        // Make sure there are enough rows in the data source.
+                                        while (this.DataSource.Rows.Count <= rowIndex)
+                                        {
+                                            this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                        }
+
+                                        // Put the new value into the data source.
+                                        if (cell.Value == null)
+                                        {
+                                            this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
+                                        }
+                                        else
+                                        {
+                                            this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
+                                        }
+
+                                        // Put a cell into the cells changed member.
+                                        cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                    }
+                                }
+                            }
+                            else
+                            { 
+                                break; 
+                            }
+                        }
+
+                        rowIndex++;
+                    }
+                    else
+                    { 
+                        break; 
+                    }
+                }
+
+                // If some cells were changed then send out an event.
+                if (cellsChanged.Count > 0 && this.CellsChanged != null)
+                {
+                    this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                }
+            }
+            catch (FormatException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Copy to clipboard
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
+        private void OnCopyToClipboard(object sender, EventArgs e)
+        {
+            DataObject content = this.Grid.GetClipboardContent();
+            Clipboard.SetDataObject(content);
+        }
+
+        /// <summary>
+        /// Delete was clicked by the user.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
+        private void OnDeleteClick(object sender, EventArgs e)
+        {
+            List<IGridCell> cellsChanged = new List<IGridCell>();
+            foreach (DataGridViewCell cell in this.Grid.SelectedCells)
+            {
+                // Save change in data source
+                this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
+
+                // Delete cell in grid.
+                this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
+
+                // Put a cell into the cells changed member.
+                cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+            }
+
+            // If some cells were changed then send out an event.
+            if (cellsChanged.Count > 0 && this.CellsChanged != null)
+            {
+                this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
         }
     }

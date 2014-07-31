@@ -11,12 +11,12 @@ namespace UserInterface.Presenters
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
+    using EventArguments;
+    using Interfaces;
     using Models.Core;
     using Models.Graph;
     using Models.Soils;
     using Views;
-    using EventArguments;
-    using Interfaces;
 
     /// <summary>
     /// <para>
@@ -98,15 +98,9 @@ namespace UserInterface.Presenters
             // Create a list of profile (array) properties. Create a table from them and 
             // hand the table to the profile grid.
             this.FindAllProperties(this.model);
-            DataTable table = this.CreateTable();
-            this.view.ProfileGrid.DataSource = table;
 
-            // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
-            this.propertyPresenter.RemoveProperties(this.propertiesInGrid);
-            this.view.ShowPropertyGrid(!this.propertyPresenter.IsEmpty);
-
-            // Format the profile grid.
-            this.FormatGrid(table);
+            // Populate the grid
+            this.PopulateGrid();
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
@@ -129,6 +123,9 @@ namespace UserInterface.Presenters
             // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
             // we can save the contents.
             this.view.ProfileGrid.CellsChanged += this.OnProfileGridCellValueChanged;
+
+            // Trap the model changed event so that we can handle undo.
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -137,11 +134,28 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
-
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+       
             if (this.parentZone != null && this.graph != null)
             {
                 this.parentZone.Children.Remove(this.graph);
             }
+        }
+
+        /// <summary>
+        /// Populate the grid with data and formatting.
+        /// </summary>
+        private void PopulateGrid()
+        {
+            DataTable table = this.CreateTable();
+            this.view.ProfileGrid.DataSource = table;
+
+            // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
+            this.propertyPresenter.RemoveProperties(this.propertiesInGrid);
+            this.view.ShowPropertyGrid(!this.propertyPresenter.IsEmpty);
+
+            // Format the profile grid.
+            this.FormatGrid(table);
         }
 
         /// <summary>
@@ -308,12 +322,10 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// User has changed the value of a cell in the profile grid.
+        /// User has changed the value of one or more cells in the profile grid.
         /// </summary>
-        /// <param name="col">The column index of the cell that has changed</param>
-        /// <param name="row">The row index of the cell that has changed</param>
-        /// <param name="oldValue">The old value of the cell</param>
-        /// <param name="newValue">The new value of the cell</param>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
         private void OnProfileGridCellValueChanged(object sender, GridCellsChangedArgs e)
         {
             this.SaveGrid();
@@ -323,7 +335,9 @@ namespace UserInterface.Presenters
 
             // Refresh the graph.
             if (this.graph != null)
+            {
                 this.graphPresenter.DrawGraph();
+            }
         }
 
         /// <summary>
@@ -331,8 +345,13 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SaveGrid()
         {
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+       
             // Get the data source of the profile grid.
             DataTable data = this.view.ProfileGrid.DataSource;
+
+            // Maintain a list of all property changes that we need to make.
+            List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
 
             // Loop through all non-readonly properties, get an array of values from the data table
             // for the property and then set the property value.
@@ -352,10 +371,37 @@ namespace UserInterface.Presenters
                         values = Utility.DataTable.GetColumnAsStrings(data, data.Columns[i].ColumnName);
                     }
 
-                    // Set the property value.
-                    this.propertiesInGrid[i].Value = values;
+                    // Is the value any different to the former property value?
+                    bool changedValues;
+                    if (this.propertiesInGrid[i].DataType == typeof(double[]))
+                    {
+                        changedValues = !Utility.Math.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
+                    }
+                    else
+                    {
+                        changedValues = !Utility.Math.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
+                    }
+
+                    if (changedValues)
+                    {
+                        // Store the property change.
+                        Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
+                        property.Name = this.propertiesInGrid[i].Name;
+                        property.Obj = this.propertiesInGrid[i].Model;
+                        property.NewValue = values;
+                        properties.Add(property);
+                    }
                 }
             }
+
+            // If there are property changes pending, then commit the changes in a block.
+            if (properties.Count > 0)
+            {
+                Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
+                this.explorerPresenter.CommandHistory.Add(command);
+            }
+
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -374,8 +420,17 @@ namespace UserInterface.Presenters
                     int row = 0;
                     foreach (object value in property.Value as IEnumerable<double>)
                     {
+                        object valueForCell = value;
+                        bool missingValue = (double)value == Utility.Math.MissingValue || double.IsNaN((double)value);
+
+                        if (missingValue)
+                        {
+                            valueForCell = null;
+                        }
+
                         IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
-                        cell.Value = value;
+                        cell.Value = valueForCell;
+
                         row++;
                     }
 
@@ -396,6 +451,17 @@ namespace UserInterface.Presenters
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// The model has changed probably because of an undo.
+        /// </summary>
+        /// <param name="changedModel">The model that has changed.</param>
+        private void OnModelChanged(object changedModel)
+        {
+            this.PopulateGrid();
+            this.RefreshCalculatedColumns();
+            this.graphPresenter.DrawGraph();
         }
     }
 }

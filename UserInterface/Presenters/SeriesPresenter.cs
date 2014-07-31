@@ -153,7 +153,7 @@ namespace UserInterface.Presenters
             allSeries.AddRange(graph.Series);
             allSeries.Add(seriesToAdd);
             seriesToAdd.Title = "Series" + allSeries.Count.ToString();
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(this.graph, "Series", allSeries);
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", allSeries);
             this.explorerPresenter.CommandHistory.Add(command);
             this.PopulateSeriesNames();
             this.seriesView.SelectedSeriesName = seriesToAdd.Title;
@@ -172,7 +172,7 @@ namespace UserInterface.Presenters
                 List<Series> allSeries = new List<Series>();
                 allSeries.AddRange(graph.Series);
                 allSeries.RemoveAt(seriesIndex);
-                Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(this.graph, "Series", allSeries);
+                Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", allSeries);
                 explorerPresenter.CommandHistory.Add(command);
                 PopulateSeriesNames();
             }
@@ -185,7 +185,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnSeriesCleared(object sender, EventArgs e)
         {
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(this.graph, "Series", new List<Series>());
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", new List<Series>());
             explorerPresenter.CommandHistory.Add(command);
             PopulateSeriesNames();
         }
@@ -202,7 +202,7 @@ namespace UserInterface.Presenters
             {
                 if (this.graph.Series[i].Title != seriesNames[i])
                 {
-                    Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(this.graph.Series[i], "Title", seriesNames[i]);
+                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph.Series[i], "Title", seriesNames[i]);
                     explorerPresenter.CommandHistory.Add(command);
                 }
             }
@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
         private void SetModelProperty(string name, object value)
         {
             Series series = GetCurrentSeries();
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(series, name, value);
+            Commands.ChangeProperty command = new Commands.ChangeProperty(series, name, value);
             this.explorerPresenter.CommandHistory.Add(command);
         }
 
@@ -607,7 +607,7 @@ namespace UserInterface.Presenters
 
             if (unNeededAxisFound || axisWasAdded)
             {
-                Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(graph, "Axes", allAxes);
+                Commands.ChangeProperty command = new Commands.ChangeProperty(graph, "Axes", allAxes);
                 this.explorerPresenter.CommandHistory.Add(command);
             }
         }

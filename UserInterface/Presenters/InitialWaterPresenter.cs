@@ -130,7 +130,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnRelativeToChanged(object sender, System.EventArgs e)
         {
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "RelativeTo", this.initialWaterView.RelativeTo);
 
             this.explorerPresenter.CommandHistory.Add(command);
@@ -144,7 +144,7 @@ namespace UserInterface.Presenters
         private void OnPercentFullChanged(object sender, System.EventArgs e)
         {
             double fractionFull = (this.initialWaterView.PercentFull * 1.0) / 100;
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "FractionFull", fractionFull);
 
             this.explorerPresenter.CommandHistory.Add(command);
@@ -157,7 +157,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnPAWChanged(object sender, System.EventArgs e)
         {
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW));
 
             this.explorerPresenter.CommandHistory.Add(command);
@@ -180,7 +180,7 @@ namespace UserInterface.Presenters
                 percentMethod = InitialWater.PercentMethodEnum.EvenlyDistributed;
             }
 
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "PercentMethod", percentMethod);
 
             this.explorerPresenter.CommandHistory.Add(command);
@@ -194,7 +194,7 @@ namespace UserInterface.Presenters
         private void OnDepthWetSoilChanged(object sender, System.EventArgs e)
         {
             double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil) * 10; // cm to mm
-            Commands.ChangePropertyCommand command = new Commands.ChangePropertyCommand(
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "DepthWetSoil", depthOfWetSoil);
 
             this.explorerPresenter.CommandHistory.Add(command);

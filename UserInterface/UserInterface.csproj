@@ -75,7 +75,7 @@
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="CommandHistory.cs" />
-    <Compile Include="Commands\ChangePropertyCommand.cs" />
+    <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
@@ -261,7 +261,7 @@
     <Compile Include="Views\ExplorerView.Designer.cs">
       <DependentUpon>ExplorerView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

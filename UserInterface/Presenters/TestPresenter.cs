@@ -179,7 +179,7 @@ namespace UserInterface.Presenters
             // Convert grid datatable back to an array of test objects and store in Tests model
             // via a command.
             Test[] AllTests = DataTableToTests(Grid.DataSource);
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Tests, "AllTests", AllTests);
+            Commands.ChangeProperty Cmd = new Commands.ChangeProperty(Tests, "AllTests", AllTests);
             ExplorerPresenter.CommandHistory.Add(Cmd, true);
 
             // Reinstate the model changed event.

@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Input, "FileNames", e.FileNames));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FileNames", e.FileNames));
             }
             catch (Exception err)
             {

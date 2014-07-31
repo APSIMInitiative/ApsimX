@@ -356,21 +356,7 @@ namespace Utility
             return Values;
         }
 
-        static public bool AreEqual(double[] Values1, double[] Values2)
-        {
-            // Return true if the 2 arrays of numbers are equal.
-            if (Values1.Length == Values2.Length)
-            {
-                for (int i = 0; i < Values1.Length; i++)
-                {
-                    if (!Math.FloatsAreEqual(Values1[i], Values2[i]))
-                        return false;
-                }
-            }
-            else
-                return false;
-            return true;
-        }
+
 
         // ---------------------------------------------
         // Reverse the contents of the specified array.
@@ -884,17 +870,50 @@ namespace Utility
         }
 
 
-        static public bool AreEqual(IList L1, IList L2)
+        static public bool AreEqual(IList<double> L1, IList<double> L2)
         {
-            if (L1.Count != L2.Count)
+            if (L1 == null && L2 == null)
+            {
+                return true;
+            }
+            else if ((L1 == null && L2 != null || (L1 != null && L2 == null)))
+            {
                 return false;
+            }
+
+            if (L1.Count != L2.Count)
+            {
+                return false;
+            }
+
             for (int i = 0; i < L1.Count; i++)
-                if (L1[i] != L2[i])
+            {
+                if (!Math.FloatsAreEqual(L1[i], L2[i]))
+                {
                     return false;
+                }
+            }
 
             return true;
         }
 
+        static public bool AreEqual(IList<string> L1, IList<string> L2)
+        {
+            if (L1.Count != L2.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < L1.Count; i++)
+            {
+                if (!L1[i].Equals(L2[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Perform an insertion sort (stable sort) on the specified list.

@@ -19,11 +19,6 @@ namespace Models.Core
     public class VariableProperty : IVariable
     {
         /// <summary>
-        /// Gets or sets the underlying model that this property belongs to.
-        /// </summary>
-        private object model;
-
-        /// <summary>
         /// Gets or sets the PropertyInfo for this property.
         /// </summary>
         private PropertyInfo property;
@@ -51,7 +46,7 @@ namespace Models.Core
                 throw new ApsimXException(string.Empty, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
             
-            this.model = model;
+            this.Model = model;
             this.property = property;
             if (arraySpecifier != null)
             {
@@ -69,7 +64,12 @@ namespace Models.Core
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the underlying model that this property belongs to.
+        /// </summary>
+        public object Model { get; set; }
+
         /// <summary>
         /// Return the name of the property.
         /// </summary>
@@ -94,9 +94,9 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.model is SoilCrop)
+                if (this.Model is SoilCrop)
                 {
-                    return (this.model as SoilCrop).Name + " " + descriptionAttribute.ToString();
+                    return (this.Model as SoilCrop).Name + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
@@ -113,15 +113,15 @@ namespace Models.Core
                 // Get units from property
                 string unitString = null;
                 UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.model.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsToStringInfo = this.model.GetType().GetMethod(this.property.Name + "UnitsToString");
+                PropertyInfo unitsInfo = this.Model.GetType().GetProperty(this.property.Name + "Units");
+                MethodInfo unitsToStringInfo = this.Model.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
                 }
                 else if (unitsToStringInfo != null)
                 {
-                    unitString = (string)unitsToStringInfo.Invoke(this.model, new object[] { null });
+                    unitString = (string)unitsToStringInfo.Invoke(this.Model, new object[] { null });
                 }
 
                 return unitString;
@@ -156,10 +156,10 @@ namespace Models.Core
         {
             get
             {
-                PropertyInfo metadataInfo = this.model.GetType().GetProperty(this.property.Name + "Metadata");
+                PropertyInfo metadataInfo = this.Model.GetType().GetProperty(this.property.Name + "Metadata");
                 if (metadataInfo != null)
                 {
-                    string[] metadata = metadataInfo.GetValue(this.model, null) as string[];
+                    string[] metadata = metadataInfo.GetValue(this.Model, null) as string[];
                     if (metadata != null)
                     {
                         return metadata;
@@ -188,7 +188,7 @@ namespace Models.Core
         {
             get
             {
-                object obj = this.property.GetValue(this.model, null);
+                object obj = this.property.GetValue(this.Model, null);
 
                 if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
                 {
@@ -208,7 +208,7 @@ namespace Models.Core
 
             set
             {
-                this.property.SetValue(this.model, value, null);
+                this.property.SetValue(this.Model, value, null);
             }
         }
 
@@ -270,9 +270,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.model is SoilCrop)
+                if (this.Model is SoilCrop)
                 {
-                    return (this.model as SoilCrop).Name;
+                    return (this.Model as SoilCrop).Name;
                 }
 
                 return null;
@@ -294,7 +294,10 @@ namespace Models.Core
                     double sum = 0.0;
                     foreach (double doubleValue in this.Value as IEnumerable<double>)
                     {
-                        sum += doubleValue;
+                        if (doubleValue != Utility.Math.MissingValue)
+                        {
+                            sum += doubleValue;
+                        }
                     }
 
                     return sum;

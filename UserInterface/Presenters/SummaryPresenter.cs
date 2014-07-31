@@ -89,7 +89,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnHTMLChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(this.summary, "html", this.view.html));
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.summary, "html", this.view.html));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnAutoCreateChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(this.summary, "AutoCreate", this.view.AutoCreate));
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.summary, "AutoCreate", this.view.AutoCreate));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnStateVariablesChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(this.summary, "StateVariables", this.view.StateVariables));
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.summary, "StateVariables", this.view.StateVariables));
         }
 
         /// <summary>

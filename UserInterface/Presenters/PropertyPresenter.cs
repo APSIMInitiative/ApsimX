@@ -271,7 +271,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            Commands.ChangePropertyCommand cmd = new Commands.ChangePropertyCommand(this.model, property.Name, value);
+            Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
             this.explorerPresenter.CommandHistory.Add(cmd, true);
         }
 

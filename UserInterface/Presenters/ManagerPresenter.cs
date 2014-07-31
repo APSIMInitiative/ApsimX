@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
             }
             catch (Exception err)
             {

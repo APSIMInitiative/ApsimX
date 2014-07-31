@@ -97,7 +97,7 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "VariableNames", View.VariableList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "VariableNames", View.VariableList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -107,7 +107,7 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "EventNames", View.EventList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "EventNames", View.EventList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -152,7 +152,7 @@ namespace UserInterface.Presenters
         void OnAutoCreateClick(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "AutoCreateCSV", View.AutoCreate));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "AutoCreateCSV", View.AutoCreate));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 

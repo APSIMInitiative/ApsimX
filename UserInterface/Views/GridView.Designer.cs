@@ -28,6 +28,21 @@ namespace UserInterface.Views
         /// </summary>
         private System.Windows.Forms.ContextMenuStrip popupMenu;
 
+        /// <summary>
+        /// A copy menu item.
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+
+        /// <summary>
+        /// A paste menu item
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+
+        /// <summary>
+        /// A delete menu item
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
@@ -52,14 +67,46 @@ namespace UserInterface.Views
         {
             this.components = new System.ComponentModel.Container();
             this.popupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Grid = new System.Windows.Forms.DataGridView();
+            this.popupMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // PopupMenu
+            // popupMenu
             // 
+            this.popupMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.deleteToolStripMenuItem});
             this.popupMenu.Name = "contextMenuStrip1";
-            this.popupMenu.Size = new System.Drawing.Size(61, 4);
+            this.popupMenu.Size = new System.Drawing.Size(145, 70);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.OnCopyToClipboard);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.OnPasteFromClipboard);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.OnDeleteClick);
             // 
             // Grid
             // 
@@ -79,7 +126,7 @@ namespace UserInterface.Views
             this.Grid.TabIndex = 1;
             this.Grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.OnCellBeginEdit);
             this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellClick);
-            this.Grid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.Grid_CellValidating);
+            this.Grid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.OnGridCellValidating);
             this.Grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.OnEditingControlShowing);
             // 
@@ -90,10 +137,10 @@ namespace UserInterface.Views
             this.Controls.Add(this.Grid);
             this.Name = "GridView";
             this.Size = new System.Drawing.Size(354, 345);
+            this.popupMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
         }
-
         #endregion
     }
 }

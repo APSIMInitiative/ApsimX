@@ -76,7 +76,7 @@ namespace UserInterface.Presenters
                     operations.Add(operation);
                 }
             }
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Operations, "Schedule", operations));
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 

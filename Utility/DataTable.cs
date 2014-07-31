@@ -141,7 +141,7 @@ namespace Utility
                     // If the value is a double.NaN then don't put into table.
                     // All other values do get inserted.
                     bool insertValue = true;
-                    if (value is double && double.IsNaN((double) value))
+                    if (value is double && (double.IsNaN((double) value) || (double) value == Math.MissingValue))
                     {
                         insertValue = false;
                     }
