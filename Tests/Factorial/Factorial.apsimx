@@ -95,15 +95,15 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[FertiliserRule].Script.ApplicationAmount</string>
             <string>[SowingRule].Script.SowingDate.Year</string>
             <string>[SowingRule].Script.SowingDate.DayOfYear</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -743,8 +743,8 @@
                [Description("Date of fertiliser application")]
                public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
@@ -833,13 +833,13 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[FertiliserRule].Script.ApplicationAmount</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -1423,8 +1423,8 @@
                [Description("Date of fertiliser application")]
                public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
@@ -1530,13 +1530,13 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Fertiliser].NitrogenApplied</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
@@ -2241,12 +2241,12 @@
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today.Year</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
           <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>

@@ -33,7 +33,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.OperationsView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
-    public class Operations : ModelCollection
+    public class Operations : Model
     {
         [Link] Clock Clock = null;
 
@@ -44,8 +44,8 @@ namespace Models
         /// <summary>
         /// Simulation is commencing.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
         {
             foreach (Operation operation in Schedule)
             {
@@ -61,7 +61,7 @@ namespace Models
                     string modelName = st.Substring(0, posPeriod);
                     string methodName = st.Substring(posPeriod+1).Replace(";", "").Trim();
 
-                    Model model = Find(modelName);
+                    Model model = Scope.Find(modelName);
                     if (model == null)
                         throw new ApsimXException(FullPath, "Cannot find model: " + modelName);
                     MethodInfo method = model.GetType().GetMethod(methodName);

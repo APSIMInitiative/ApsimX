@@ -26,7 +26,7 @@ namespace Utility
     {
         public string m_name;
         public double m_value;
-        public string m_valueString;
+        public double[] m_values;
         public ExpressionType m_type;
         public override string ToString()
         {
@@ -113,7 +113,7 @@ namespace Utility
                         {
                             Symbol sym1 = (Symbol)m_postfix[i];
                             sym1.m_value = sym.m_value;
-                            sym1.m_valueString = sym.m_valueString;
+                            sym1.m_values = sym.m_values;
                             m_postfix[i] = sym1;
                         }
                     }
@@ -129,7 +129,7 @@ namespace Utility
             int state = 1;
             string temp = "";
             Symbol ctSymbol;
-            ctSymbol.m_valueString = "";
+            ctSymbol.m_values = null;
 
             m_bError = false;
             m_sErrorDescription = "None";
@@ -212,7 +212,8 @@ namespace Utility
                         }
                         break;
                     case 3:
-                        if (Char.IsLetterOrDigit(equation[i]) || (equation[i] == '.') || (equation[i] == '[') || (equation[i] == ']'))
+                        if (Char.IsLetterOrDigit(equation[i]) || (equation[i] == '.') ||
+                            (equation[i] == '[') || (equation[i] == ']') || (equation[i] == ':'))
                             temp += equation[i];
                         else
                         {
@@ -396,12 +397,9 @@ namespace Utility
             {
                 tpResult = (Symbol)tpStack.Pop();
                 m_result = tpResult.m_value;
-                if (tpResult.m_valueString != "")
+                if (tpResult.m_values != null)
                 {
-                    List<double> Values = new List<double>();
-                    foreach (string Value in tpResult.m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                        Values.Add(Convert.ToDouble(Value));
-                    m_results = Values.ToArray();
+                    m_results = tpResult.m_values;
                 }
             }
         }
@@ -438,7 +436,7 @@ namespace Utility
             result.m_name = sym1.m_name + opr.m_name + sym2.m_name;
             result.m_type = ExpressionType.Result;
             result.m_value = 0;
-            result.m_valueString = "";
+            result.m_values = null;
             switch (opr.m_name)
             {
                 case "^":
@@ -446,26 +444,40 @@ namespace Utility
                     break;
                 case "/":
                     {
-                        if (sym2.m_value > 0)
-                            result.m_value = sym1.m_value / sym2.m_value;
+                        if (sym1.m_values != null && sym2.m_values != null)
+                            result.m_values = Utility.Math.Divide(sym1.m_values, sym2.m_values);
                         else
                         {
-                            result.m_name = "Divide by Zero.";
-                            result.m_type = ExpressionType.Error;
+                            if (sym2.m_value > 0)
+                                result.m_value = sym1.m_value / sym2.m_value;
+                            else
+                            {
+                                result.m_name = "Divide by Zero.";
+                                result.m_type = ExpressionType.Error;
+                            }
                         }
                         break;
                     }
                 case "*":
-                    result.m_value = sym1.m_value * sym2.m_value;
+                    if (sym1.m_values != null && sym2.m_values != null)
+                        result.m_values = Utility.Math.Multiply(sym1.m_values, sym2.m_values);
+                    else
+                        result.m_value = sym1.m_value * sym2.m_value;
                     break;
                 case "%":
                     result.m_value = sym1.m_value % sym2.m_value;
                     break;
                 case "+":
-                    result.m_value = sym1.m_value + sym2.m_value;
+                    if (sym1.m_values != null && sym2.m_values != null)
+                        result.m_values = Utility.Math.Add(sym1.m_values, sym2.m_values);
+                    else
+                        result.m_value = sym1.m_value + sym2.m_value;
                     break;
                 case "-":
-                    result.m_value = sym1.m_value - sym2.m_value;
+                    if (sym1.m_values != null && sym2.m_values != null)
+                        result.m_values = Utility.Math.Subtract(sym1.m_values, sym2.m_values);
+                    else
+                        result.m_value = sym1.m_value - sym2.m_value;
                     break;
                 default:
                     result.m_type = ExpressionType.Error;
@@ -481,9 +493,24 @@ namespace Utility
             result.m_name = "";
             result.m_type = ExpressionType.Result;
             result.m_value = 0;
-            result.m_valueString = "";
+            result.m_values = null;
             switch (name)
             {
+                case "value":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = Utility.Math.Sum(Values);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
                 case "cos":
                     if (args.Length == 1)
                     {
@@ -668,11 +695,10 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        foreach (string Arg in Values)
-                            result.m_value += Convert.ToDouble(Arg);
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = Utility.Math.Sum(Values);
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {
@@ -684,16 +710,16 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        double[] Values = ((Symbol)args[0]).m_values; 
                         for (int i = 0; i < Values.Length; i++)
                         {
                             if (i == 0)
-                                result.m_value = Convert.ToDouble(Values[i]);
+                                result.m_value = Values[i];
                             else
-                                result.m_value -= Convert.ToDouble(Values[i]);
+                                result.m_value -= Values[i];
                         }
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {
@@ -705,16 +731,16 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        double[] Values = ((Symbol)args[0]).m_values;
                         for (int i = 0; i < Values.Length; i++)
                         {
                             if (i == 0)
-                                result.m_value = Convert.ToDouble(Values[i]);
+                                result.m_value = Values[i];
                             else
-                                result.m_value *= Convert.ToDouble(Values[i]);
+                                result.m_value *= Values[i];
                         }
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {
@@ -726,16 +752,16 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        double[] Values = ((Symbol)args[0]).m_values;
                         for (int i = 0; i < Values.Length; i++)
                         {
                             if (i == 0)
-                                result.m_value = Convert.ToDouble(Values[i]);
+                                result.m_value = Values[i];
                             else
-                                result.m_value /= Convert.ToDouble(Values[i]);
+                                result.m_value /= Values[i];
                         }
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {
@@ -747,16 +773,10 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        for (int i = 0; i < Values.Length; i++)
-                        {
-                            if (i == 0)
-                                result.m_value = Convert.ToDouble(Values[i]);
-                            else
-                                result.m_value = System.Math.Min(result.m_value, Convert.ToDouble(Values[i]));
-                        }
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = Utility.Math.Min(Values);
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {
@@ -768,16 +788,10 @@ namespace Utility
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        string[] Values = ((Symbol)args[0]).m_valueString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        for (int i = 0; i < Values.Length; i++)
-                        {
-                            if (i == 0)
-                                result.m_value = Convert.ToDouble(Values[i]);
-                            else
-                                result.m_value = System.Math.Max(result.m_value, Convert.ToDouble(Values[i]));
-                        }
-                        result.m_name = name + "(" + result.m_valueString + ")";
-                        result.m_valueString = "";
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = Utility.Math.Max(Values);
+                        result.m_name = name;
+                        result.m_values = null;
                     }
                     else
                     {

@@ -21,6 +21,7 @@
         <string>Tests\Wheat\RainShelterBiomass.txt</string>
       </FileNames>
     </Input>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
     <Name>APS26</Name>
@@ -148,9 +149,6 @@
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>false</html>
-        <AutoCreate>true</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -159,15 +157,15 @@
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -193,12 +191,11 @@
             <string>[Wheat].NStress.Photo</string>
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
-          <AutoCreateCSV>false</AutoCreateCSV>
+          </EventNames>
         </Report>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -231,8 +228,8 @@ namespace Models
 		[Description("Amount of fertiliser to be applied")]
 		public double Amount { get; set;}
 
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.DayOfYear == FertDayOfYear)
 			{
@@ -501,6 +498,16 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-45</string>
+              <string>45-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -560,7 +567,6 @@ namespace Models
           </Analysis>
           <Sample>
             <Name>Initial Water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -589,7 +595,6 @@ namespace Models
           </Sample>
           <Sample>
             <Name>Initial Nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -664,10 +669,6 @@ namespace Models
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <Operations>
           <Name>IrrigationSchedule</Name>
@@ -767,9 +768,74 @@ namespace Models
           <Name>PredictedObserved</Name>
           <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
         </PredictedObserved>
+        <Manager>
+          <Name>Calculations</Name>
+          <Script>
+            <Offset>460</Offset>
+            <AnnualFronds>24</AnnualFronds>
+            <AnnualBunches>12.2079804062386</AnnualBunches>
+            <BunchOffset>220.202585650071</BunchOffset>
+            <AnnualYield>11.2354924272104</AnnualYield>
+            <AnnualBunchSize>6.8173331756543</AnnualBunchSize>
+            <YieldOffset>27160.2351168953</YieldOffset>
+            <MonthlyPalmYield>25.7855928553127</MonthlyPalmYield>
+            <MonthlyPalmBunches>1.41014686370248</MonthlyPalmBunches>
+            <MonthlyPalmBunchSize>18.2857498882138</MonthlyPalmBunchSize>
+            <MonthlyDenit>0.414461618647461</MonthlyDenit>
+            <MonthlyN2O>0.0786112498666511</MonthlyN2O>
+            <MonthlyN2>0.33585036878081</MonthlyN2>
+            <MonthlyFixation>1.05527435407466</MonthlyFixation>
+            <SurfaceNO3>26.2137804267181</SurfaceNO3>
+            <RootZoneNO3>37.9859183255494</RootZoneNO3>
+            <MonthlyLeach>0</MonthlyLeach>
+            <SoilCtpha>323.202986459283</SoilCtpha>
+            <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>47.3638110918014</TotalNO3>
+            <NitTot>27077.3722617306</NitTot>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+	    public double NitTot {get;set;}
+	    public double CarbonTot {get;set;}
+		
+		public override void OnSimulationCommencing()
+		{	
+			NitTot=0;
+			CarbonTot = 0;
+		}
+		
+		
+       [EventSubscribe("DoManagement")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+		}
+	}
+}
+]]></Code>
+        </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Grain yield</Name>
@@ -793,16 +859,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.Grain.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -828,16 +894,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -880,9 +946,6 @@ namespace Models
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -891,15 +954,15 @@ namespace Models
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -925,12 +988,11 @@ namespace Models
             <string>[Wheat].NStress.Photo</string>
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
-          <AutoCreateCSV>false</AutoCreateCSV>
+          </EventNames>
         </Report>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -1181,6 +1243,15 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -1235,7 +1306,6 @@ namespace Models
           </Analysis>
           <Sample>
             <Name>Initial Water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1262,7 +1332,6 @@ namespace Models
           </Sample>
           <Sample>
             <Name>Initial Nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1334,10 +1403,6 @@ namespace Models
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <Manager>
           <Name>ApplyFertiliser</Name>
@@ -1364,8 +1429,8 @@ namespace Models
 		[Description("Amount of fertiliser to be applied")]
 		public double Amount { get; set;}
 
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.DayOfYear == FertDayOfYear)
 			{
@@ -1461,8 +1526,8 @@ namespace Models
           <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
         </PredictedObserved>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1573,9 +1638,6 @@ namespace Models
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>false</html>
-        <AutoCreate>true</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -1584,15 +1646,15 @@ namespace Models
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -1624,12 +1686,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
-          <AutoCreateCSV>true</AutoCreateCSV>
+          </EventNames>
         </Report>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -1893,6 +1954,16 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-45</string>
+              <string>45-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
             <OC>
               <double>2.2</double>
               <double>1.6</double>
@@ -1952,7 +2023,6 @@ namespace Models
           </Analysis>
           <Sample>
             <Name>Initial Water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1981,7 +2051,6 @@ namespace Models
           </Sample>
           <Sample>
             <Name>Initial Nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2058,10 +2127,6 @@ namespace Models
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <Operations>
           <Name>IrrigationSchedule</Name>
@@ -2253,8 +2318,8 @@ SWC = 0;
 DUL = 0;
 }	   
 
-[EventSubscribe("EndOfDay")]
-private void OnEndOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagementCalculations")]
+private void OnDoManagementCalculations(object sender, EventArgs e)
 {
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
@@ -2313,8 +2378,8 @@ AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
@@ -2325,8 +2390,8 @@ private void OnStartOfDay(object sender, EventArgs e)
 	   ]]></Code>
         </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>NH4</Name>
@@ -2349,16 +2414,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>ExtraVariables.Script.TotalNH4</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -2645,9 +2710,6 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>true</html>
-        <AutoCreate>true</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -2656,15 +2718,15 @@ private void OnStartOfDay(object sender, EventArgs e)
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -2691,11 +2753,10 @@ private void OnStartOfDay(object sender, EventArgs e)
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
-          <AutoCreateCSV>false</AutoCreateCSV>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
         </Report>
         <Soil>
           <Name>MER-86Field</Name>
@@ -2979,6 +3040,18 @@ private void OnStartOfDay(object sender, EventArgs e)
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-20</string>
+              <string>20-30</string>
+              <string>30-40</string>
+              <string>40-50</string>
+              <string>50-60</string>
+              <string>60-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+            </Depth>
             <OC>
               <double>0.5</double>
               <double>0.1</double>
@@ -3048,7 +3121,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           </Analysis>
           <Sample>
             <Name>Initial Water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -3081,7 +3153,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           </Sample>
           <Sample>
             <Name>Initial Nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -3172,10 +3243,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -3341,8 +3408,8 @@ private void OnStartOfDay(object sender, EventArgs e)
           <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -3364,16 +3431,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Mer86NitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Mer86NitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3383,16 +3450,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Mer86NitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Mer86NitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3402,16 +3469,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Mer86NitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Mer86NitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3421,16 +3488,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>Mer86NitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>Mer86NitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -3454,16 +3521,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3473,16 +3540,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3492,16 +3559,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3511,16 +3578,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -3721,9 +3788,6 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>true</html>
-        <AutoCreate>true</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -3732,15 +3796,15 @@ private void OnStartOfDay(object sender, EventArgs e)
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -3767,11 +3831,10 @@ private void OnStartOfDay(object sender, EventArgs e)
             <string>[Wheat].NStress.Expansion</string>
             <string>[Wheat].Total.Wt</string>
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
-          <AutoCreateCSV>false</AutoCreateCSV>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
         </Report>
         <Soil>
           <Name>MER-73Field</Name>
@@ -4055,6 +4118,18 @@ private void OnStartOfDay(object sender, EventArgs e)
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-20</string>
+              <string>20-30</string>
+              <string>30-40</string>
+              <string>40-50</string>
+              <string>50-60</string>
+              <string>60-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+            </Depth>
             <OC>
               <double>0.5</double>
               <double>0.1</double>
@@ -4124,7 +4199,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           </Analysis>
           <Sample>
             <Name>Initial Water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -4157,7 +4231,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           </Sample>
           <Sample>
             <Name>Initial Nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -4248,10 +4321,6 @@ private void OnStartOfDay(object sender, EventArgs e)
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -4517,8 +4586,8 @@ SWC = 0;
 DUL = 0;
 }	   
 
-[EventSubscribe("EndOfDay")]
-private void OnEndOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagementCalculations")]
+private void OnDoManagementCalculations(object sender, EventArgs e)
 {
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
@@ -4577,8 +4646,8 @@ AccumOutflowLat -= OutFlowLat;
 SoilWaterDeficit =  (SWC - DUL);
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //!!!!!! Thermal time calculation !!!!!!
 //!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
@@ -4589,8 +4658,8 @@ private void OnStartOfDay(object sender, EventArgs e)
 	   ]]></Code>
         </Manager>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -4612,16 +4681,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Plant15.Biomass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4631,16 +4700,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Plant15.Biomass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4650,16 +4719,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Plant15.Biomass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4669,16 +4738,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Plant15.Biomass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -4702,16 +4771,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4721,16 +4790,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication15IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4740,16 +4809,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationDry</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4759,16 +4828,16 @@ private void OnStartOfDay(object sender, EventArgs e)
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>ExperimentNitrogenApplication60IrrigationApplicationWet</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Leaf1.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5777,9 +5846,6 @@ private void OnStartOfDay(object sender, EventArgs e)
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
@@ -5788,8 +5854,8 @@ private void OnStartOfDay(object sender, EventArgs e)
         <MinT>11</MinT>
         <Rain>0</Rain>
         <Radn>27.25</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Zone>
@@ -5933,7 +5999,6 @@ public class Script : Model
 }
 				]]></Code>
           </Manager>
-          <Area>0</Area>
         </Folder>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6194,6 +6259,16 @@ public class Script : Model
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-30</string>
+              <string>30-50</string>
+              <string>50-70</string>
+              <string>70-90</string>
+              <string>90-110</string>
+              <string>110-130</string>
+              <string>130-150</string>
+            </Depth>
             <OC>
               <double>0.35</double>
               <double>0.27</double>
@@ -6253,7 +6328,6 @@ public class Script : Model
           </Analysis>
           <Sample>
             <Name>Initial nitrogen</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -6292,7 +6366,6 @@ public class Script : Model
           </Sample>
           <Sample>
             <Name>Initial water</Name>
-            <Date>0001-01-01</Date>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -6331,7 +6404,7 @@ public class Script : Model
         </Soil>
         <Report>
           <Name>Outputfile</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
             <string>[Wheat].Phenology.CurrentStageName</string>
@@ -6364,11 +6437,10 @@ public class Script : Model
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
-          </Events>
-          <AutoCreateCSV>false</AutoCreateCSV>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
         </Report>
         <SurfaceOrganicMatter>
           <Name>Surface Organic Matter</Name>
@@ -6398,10 +6470,6 @@ public class Script : Model
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-          <EOCropFactor>1.5</EOCropFactor>
-          <NSupplyPreference>active</NSupplyPreference>
-          <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
-          <RemovedByAnimal />
         </Plant15>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -6426,8 +6494,8 @@ public class Script : Model
           <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>LAI</Name>
@@ -6449,16 +6517,16 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6469,16 +6537,16 @@ public class Script : Model
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6502,16 +6570,16 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6522,16 +6590,16 @@ public class Script : Model
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Wheat.AboveGroundLive.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6555,16 +6623,16 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Outputfile</TableName>
           <FieldName>Wheat.Head.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6575,16 +6643,16 @@ public class Script : Model
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>NZObservations</TableName>
           <FieldName>Wheat.Head.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6618,6 +6686,8 @@ public class Script : Model
         <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -6649,9 +6719,10 @@ public class Script : Model
         <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
-  <Area>0</Area>
   <ExplorerWidth>328</ExplorerWidth>
 </Simulations>

@@ -8,7 +8,7 @@ using Models.PMF.Phen;
 namespace Models.PMF
 {
     [Serializable]
-    public class Summariser : ModelCollection
+    public class Summariser : Model
     {
         [Link] Biomass AboveGround = null;
         [Link] Biomass BelowGround = null;
@@ -30,12 +30,13 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType PhaseChange)
         {
-            Summary.WriteMessage(FullPath, Clock.Today.ToString("d MMMM yyyy") + " - " + Phenology.CurrentPhase.Start);
+            string message = Phenology.CurrentPhase.Start + "\r\n";
             if (Leaf != null)
             {
-                Summary.WriteMessage(FullPath, "                            LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)");
-                Summary.WriteMessage(FullPath, "           Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)");
+                message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
             }
+            Summary.WriteMessage(FullPath, message);
         }
     }
 

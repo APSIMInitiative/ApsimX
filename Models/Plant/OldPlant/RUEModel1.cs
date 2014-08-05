@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    public class RUEModel1 : ModelCollection
+    public class RUEModel1 : Model
     {
         [Link]
         Plant15 Plant = null;
@@ -26,9 +26,6 @@ namespace Models.PMF.OldPlant
         [Link] Function RUE = null;
         [Link] Function RUEModifier = null;   // used for CO2
 
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-
         public double PotentialDM(double radiationInterceptedGreen)
         {
             double RUEFactor = 1.0;
@@ -40,23 +37,14 @@ namespace Models.PMF.OldPlant
             return radiationInterceptedGreen * RUE.Value * stress_factor * RUEModifier.Value;
         }
 
-        private void PublishNewPotentialGrowth()
+        public double FRGR
         {
-            // Send out a NewPotentialGrowthEvent.
-            if (NewPotentialGrowth != null)
+            get
             {
-                NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
-                GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
-                                                   Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
-                NewPotentialGrowth.Invoke(GrowthType);
+                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                                Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
+
             }
-        }
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
-        {
-            if (Plant.SowingData != null)
-                PublishNewPotentialGrowth();
         }
     }
 }

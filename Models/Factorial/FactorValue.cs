@@ -6,8 +6,8 @@ using Models.Core;
 using System.Xml.Serialization;
 namespace Models.Factorial
 {
-    [AllowDropOn("Factor")]
-    public class FactorValue : ModelCollection
+    [ValidParent(typeof(Factor))]
+    public class FactorValue : Model
     {
         private List<string> FactorPaths;
         private string FactorName;
@@ -105,7 +105,7 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyNameAsValue(Simulation newSimulation, string path, string name)
         {
-            object originalValue = newSimulation.Get(path);
+            object originalValue = newSimulation.Variables.Get(path);
             object newValue;
             if (originalValue is DateTime)
                 newValue = DateTime.Parse(name);
@@ -119,7 +119,7 @@ namespace Models.Factorial
                 newValue = Convert.ToString(name);
             else
                 newValue = name;
-            newSimulation.Set(path, newValue);
+            newSimulation.Variables.Set(path, newValue);
         }
 
         /// <summary>
@@ -127,12 +127,12 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
         {
-            Model newModel = Model.Clone(value);
-            Model modelToReplace = newSimulation.Get(path) as Model;
+            Model newModel = value.Clone();
+            Model modelToReplace = newSimulation.Variables.Get(path) as Model;
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
 
-            modelToReplace.Parent.ReplaceModel(modelToReplace, newModel);
+            modelToReplace.Parent.Children.Replace(modelToReplace, newModel);
         }
 
         /// <summary>

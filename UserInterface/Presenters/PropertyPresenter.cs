@@ -1,33 +1,84 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using UserInterface.Views;
-using System.Reflection;
-using Models.Core;
-
+//-----------------------------------------------------------------------
+// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
-    class PropertyPresenter : IPresenter
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Reflection;
+    using Models.Core;
+    using Views;
+    using Models;
+    using Interfaces;
+    using EventArguments;
+    using Classes;
+
+    /// <summary>
+    /// <para>
+    /// This presenter displays properties of a Model in an IGridView.
+    /// The properties must be public, read/write and have a [Description]
+    /// attribute. Array properties are supported if they are integer, double
+    /// or string arrays.
+    /// </para>
+    /// <para>
+    /// There is also a method (RemoveProperties) for excluding properties from 
+    /// the PropertyGrid. This is important when a PropertyGrid is embedded on
+    /// a ProfileGrid and the ProfileGrid is displaying some properties as well.
+    /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
+    /// </para>
+    /// </summary>
+    public class PropertyPresenter : IPresenter
     {
-        private IGridView Grid;
-        private Model Model;
-        private ExplorerPresenter ExplorerPresenter;
-        private List<PropertyInfo> Properties = new List<PropertyInfo>();
+        /// <summary>
+        /// The underlying grid control to work with.
+        /// </summary>
+        private IGridView grid;
+
+        /// <summary>
+        /// The model we're going to examine for properties.
+        /// </summary>
+        private Model model;
+
+        /// <summary>
+        /// The parent ExplorerPresenter.
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// A list of all properties found in the Model.
+        /// </summary>
+        private List<VariableProperty> properties = new List<VariableProperty>();
+
+        /// <summary>
+        /// Gets a value indicating whether the grid is empty (i.e. no rows).
+        /// </summary>
+        public bool IsEmpty
+        {
+            get
+            {
+                return this.grid.RowCount == 0;
+            }
+        }
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The model to connect to</param>
+        /// <param name="view">The view to connect to</param>
+        /// <param name="explorerPresenter">The parent explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Grid = View as IGridView;
-            this.Model = Model as Model;
-            this.ExplorerPresenter = explorerPresenter;
+            this.grid = view as IGridView;
+            this.model = model as Model;
+            this.explorerPresenter = explorerPresenter;
 
-            PopulateGrid(this.Model);
-            Grid.CellValueChanged += OnCellValueChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.FindAllProperties();
+            this.PopulateGrid(this.model);
+            this.grid.CellsChanged += this.OnCellValueChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -35,151 +86,205 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            Grid.CellValueChanged -= OnCellValueChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.grid.CellsChanged -= this.OnCellValueChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
-
-        /// <summary>
-        /// Return true if the grid is empty of rows.
-        /// </summary>
-        public bool IsEmpty { get { return Grid.RowCount == 0; } }
 
         /// <summary>
         /// Populate the grid
         /// </summary>
+        /// <param name="model">The model to examine for properties</param>
         public void PopulateGrid(Model model)
         {
-            Model = model;
-            DataTable Table = new DataTable();
-            Table.Columns.Add("Description", typeof(string));
-            Table.Columns.Add("Value", typeof(object));
+            this.model = model;
+            DataTable table = new DataTable();
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Value", typeof(object));
 
-            GetAllProperties(Table);
-            Grid.DataSource = Table;
-            FormatGrid();
+            this.FillTable(table);
+            this.grid.DataSource = table;
+            this.FormatGrid();
         }
-
+        
         /// <summary>
-        /// Get a list of all properties from the model that we're going to work with.
+        /// Remove the specified properties from the grid.
         /// </summary>
-        /// <param name="Table"></param>
-        private void GetAllProperties(DataTable Table)
+        /// <param name="propertysToRemove">The names of all properties to remove</param>
+        public void RemoveProperties(IEnumerable<VariableProperty> propertysToRemove)
         {
-            Properties.Clear();
-            if (Model != null)
+            foreach (VariableProperty property in propertysToRemove)
             {
-                foreach (PropertyInfo parameter in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                // Try and find the description in our list of properties.
+                int i = this.properties.FindIndex(p => p.Description == property.Description);
+
+                // If found then remove the property.
+                if (i != -1)
                 {
-                    // Ignore properties that have an [XmlIgnore], are an array or are 'Name'
-                    Attribute XmlIgnore = Utility.Reflection.GetAttribute(parameter, typeof(System.Xml.Serialization.XmlIgnoreAttribute), true);
-                    bool ignoreProperty = XmlIgnore != null;                                 // No [XmlIgnore]
-                    //ignoreProperty |= parameter.PropertyType.GetInterface("IList") != null;   // No List<T>
-                    ignoreProperty |= parameter.Name == "Name";   // No Name properties.
-                    ignoreProperty |= !parameter.CanWrite;         // Must be readwrite
+                    this.properties.RemoveAt(i);
+                }
+            }
 
-                    if (parameter.PropertyType.GetInterface("IList") != null &&
-                        parameter.PropertyType != typeof(double[]) &&
-                        parameter.PropertyType != typeof(int[]) &&
-                        parameter.PropertyType != typeof(string[]))
+            this.PopulateGrid(this.model);
+        }
+        
+        /// <summary>
+        /// Find all properties from the model and fill this.properties.
+        /// </summary>
+        private void FindAllProperties()
+        {
+            this.properties.Clear();
+            if (this.model != null)
+            {
+                foreach (PropertyInfo property in this.model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                {
+                    // Properties must have a [Description], not be called Name, and be read/write.
+                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
+                    bool includeProperty = hasDescription &&
+                                           property.Name != "Name" &&
+                                           property.CanRead &&
+                                           property.CanWrite;
 
-                        ignoreProperty = true;
-
-                    if (!ignoreProperty)
+                    // Only allow lists that are double[], int[] or string[]
+                    if (includeProperty && property.PropertyType.GetInterface("IList") != null)
                     {
-                        string PropertyName = parameter.Name;
-                        Attribute description = Utility.Reflection.GetAttribute(parameter, typeof(Description), true);
-                        if (description != null)
-                            PropertyName = description.ToString();
-                        Table.Rows.Add(new object[] { PropertyName, GetPropertyValue(parameter) });
-                        Properties.Add(parameter);
+                        includeProperty = property.PropertyType == typeof(double[]) ||
+                                          property.PropertyType == typeof(int[]) ||
+                                          property.PropertyType == typeof(string[]);
+                    }
+
+                    if (includeProperty)
+                    {
+                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), true);
+                        this.properties.Add(new VariableProperty(this.model, property));
                     }
                 }
             }
         }
 
-
+        /// <summary>
+        /// Fill the specified table with columns and rows based on this.Properties
+        /// </summary>
+        /// <param name="table">The table that needs to be filled</param>
+        private void FillTable(DataTable table)
+        {
+            foreach (VariableProperty property in this.properties)
+            {
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+            }
+        }
 
         /// <summary>
         /// Format the grid.
         /// </summary>
         private void FormatGrid()
         {
-            for (int i = 0; i < Properties.Count; i++)
-                Grid.SetCellEditor(1, i, GetPropertyValue(Properties[i]));
-            Grid.SetColumnSize(0);
-            Grid.SetColumnSize(1);
-            Grid.SetColumnReadOnly(0, true);
+            for (int i = 0; i < this.properties.Count; i++)
+            {
+                IGridCell cell = this.grid.GetCell(1, i);
+                        
+                if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
+                {
+                    DataStore dataStore = this.model.Scope.Find(typeof(DataStore)) as DataStore;
+                    if (dataStore != null)
+                    {
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = dataStore.TableNames;
+                    }
+                }
+                else
+                {
+                    object cellValue = this.properties[i].ValueWithArrayHandling;
+                    if (cellValue is DateTime)
+                    {
+                        cell.EditorType = EditorTypeEnum.DateTime;
+                    }
+                    else if (cellValue is bool)
+                    {
+                        cell.EditorType = EditorTypeEnum.Boolean;
+                    }
+                    else if (cellValue.GetType().IsEnum)
+                    {
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = Utility.String.EnumToStrings(cellValue);
+                    }
+                    else
+                    {
+                        cell.EditorType = EditorTypeEnum.TextBox;
+                    }
+                }
+            }
+
+            IGridColumn descriptionColumn = this.grid.GetColumn(0);
+            descriptionColumn.Width = -1;
+            descriptionColumn.ReadOnly = true;
+
+            IGridColumn valueColumn = this.grid.GetColumn(1);
+            valueColumn.Width = -1;
         }
 
         /// <summary>
         /// User has changed the value of a cell.
         /// </summary>
-        private void OnCellValueChanged(int Col, int Row, object OldValue, object NewValue)
+        /// <param name="col">The column index of the cell that has changed</param>
+        /// <param name="row">The row index of the cell that has changed</param>
+        /// <param name="oldValue">The cell value before the user changed it</param>
+        /// <param name="newValue">The cell value the user has entered</param>
+        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            SetPropertyValue(Properties[Row], NewValue);
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+
+            foreach (IGridCell cell in e.ChangedCells)
+            {
+                this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+            }
+            
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
+
+
 
         /// <summary>
-        /// Get the value of the specified property
-        /// </summary>
-        private object GetPropertyValue(PropertyInfo property)
-        {
-            object value = property.GetValue(Model, null);
-            if (value == null)
-                return null;
-
-            if (property.PropertyType.IsArray)
-            {
-                string stringValue = "";
-                Array arr = value as Array;
-                for (int j = 0; j < arr.Length; j++)
-                {
-                    if (j > 0)
-                        stringValue += ",";
-                    stringValue += arr.GetValue(j).ToString();
-                }
-                value = stringValue;
-            }
-            return value;
-        }
-
-         /// <summary>
         /// Set the value of the specified property
         /// </summary>
-        private void SetPropertyValue(PropertyInfo property, object newValue)
+        /// <param name="property">The property to set the value of</param>
+        /// <param name="value">The value to set the property to</param>
+        private void SetPropertyValue(VariableProperty property, object value)
         {
-            object value;
-            if (property.PropertyType.IsArray)
+            if (property.DataType.IsArray)
             {
-                string[] stringValues = newValue.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.PropertyType == typeof(double[]))
+                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (property.DataType == typeof(double[]))
+                {
                     value = Utility.Math.StringsToDoubles(stringValues);
-                else if (property.PropertyType == typeof(int[]))
+                }
+                else if (property.DataType == typeof(int[]))
+                {
                     value = Utility.Math.StringsToDoubles(stringValues);
-                else if (property.PropertyType == typeof(string[]))
+                }
+                else if (property.DataType == typeof(string[]))
+                {
                     value = stringValues;
+                }
                 else
-                    throw new ApsimXException(Model.FullPath, "Invalid property type: " + property.PropertyType.ToString());
+                {
+                    throw new ApsimXException(this.model.FullPath, "Invalid property type: " + property.DataType.ToString());
+                }
             }
-            else
-                value = newValue;
 
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Model,
-                                                                                    property.Name,
-                                                                                    value);
-            ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
+            this.explorerPresenter.CommandHistory.Add(cmd, true);
         }
 
         /// <summary>
         /// The model has changed, update the grid.
         /// </summary>
-        private void OnModelChanged(object ChangedModel)
+        /// <param name="changedModel">The model that has changed</param>
+        private void OnModelChanged(object changedModel)
         {
-            if (ChangedModel == Model)
-                PopulateGrid(Model);
+            if (changedModel == this.model)
+            {
+                this.PopulateGrid(this.model);
+            }
         }
-
     }
 }

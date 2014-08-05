@@ -101,16 +101,12 @@ namespace Models.PMF.Organs
             if (Harvesting != null)
                 Harvesting.Invoke();
 
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Harvesting " + Name + " from " + Plant.Name;
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
-            Summary.WriteMessage(FullPath, Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Summary.WriteMessage(FullPath, Indent + Name + " Size: " + Size.ToString("f2") + " (g)");
-            Summary.WriteMessage(FullPath, Indent + Name + " Number: " + Number.ToString("f2") + " (/m^2)");
-
+            Summary.WriteMessage(FullPath, "Harvesting " + Name + " from " + Plant.Name);
+            Summary.WriteMessage(FullPath, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+            Summary.WriteMessage(FullPath, " Size: " + Size.ToString("f2") + " (g)");
+            Summary.WriteMessage(FullPath, " Number: " + Number.ToString("f2") + " (/m^2)");
 
             Live.Clear();
             Dead.Clear();
@@ -124,10 +120,7 @@ namespace Models.PMF.Organs
         public event NullTypeDelegate Harvesting;
         public override void OnCut()
         {
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
 
             Live.Clear();
             Dead.Clear();

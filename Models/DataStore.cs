@@ -8,13 +8,14 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace Models
 {
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    public class DataStore : ModelCollection
+    public class DataStore : Model
     {
         /// <summary>
         /// A SQLite connection shared between all instances of this DataStore.
@@ -25,8 +26,14 @@ namespace Models
         /// <summary>
         /// The filename of the SQLite .db
         /// </summary>
-        [NonSerialized]
-        private string Filename;
+        [XmlIgnore]
+        public string Filename { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the data store should export to text files
+        /// automatically when all simulations finish.
+        /// </summary>
+        public bool AutoExport { get; set; }
 
         /// <summary>
         /// A flag that when true indicates that the DataStore is in post processing model.
@@ -96,9 +103,6 @@ namespace Models
         /// </summary>
         public enum ErrorLevel { Information, Warning, Error };
 
-
-
-
         /// <summary>
         /// A parameterless constructor purely for the XML serialiser. Other models
         /// shouldn't use this contructor.
@@ -110,16 +114,20 @@ namespace Models
         /// <summary>
         /// A constructor that needs to know the calling model.
         /// </summary>
-        public DataStore(Model ownerModel)
+        public DataStore(Model ownerModel, bool baseline = false)
         {
             Simulation simulation = ownerModel.ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation == null)
             {
                 Simulations simulations = ownerModel.ParentOfType(typeof(Simulations)) as Simulations;
-                Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                if (simulations != null)
+                    Filename = Path.ChangeExtension(simulations.FileName, ".db");
             }
             else
                 Filename = Path.ChangeExtension(simulation.FileName, ".db");
+
+            if (Filename != null && baseline)
+                Filename += ".baseline";
         }
 
         /// <summary>
@@ -154,7 +162,7 @@ namespace Models
         /// <summary>
         /// All simulations have run - write all tables
         /// </summary>
-        public override void OnAllCompleted()
+        public override void OnAllSimulationsCompleted()
         {
             // Open the .db for writing.
             Open(forWriting: true);
@@ -191,6 +199,11 @@ namespace Models
 
             // Call each of the child post simulation tools allowing them to run
             RunPostProcessingTools();
+
+            if (AutoExport)
+            {
+                WriteToTextFiles();
+            }
 
             // Disconnect.
             Disconnect();
@@ -451,31 +464,32 @@ namespace Models
         /// <summary>
         /// Write all outputs to a text file (.csv)
         /// </summary>
-        public void WriteOutputFile()
+        public void WriteToTextFiles()
         {
             string originalFileName = Filename;
 
             try
             {
-                // Write baseline .csv
-                Filename = Path.ChangeExtension(originalFileName, ".db.baseline");
-                if (File.Exists(Filename))
-                {
-                    Open(forWriting: false);
-                    StreamWriter report = new StreamWriter(Filename + ".csv");
-                    WriteAllTables(report);
-                    report.Close();
-                }
+                // Write the output CSV file.
+                Open(forWriting: false);
+                WriteAllTables(this, Filename + ".csv");
 
-                if (File.Exists(originalFileName))
-                {
-                    Filename = originalFileName;
+                // Write the summary file.
+                WriteSummaryFile(this, Filename + ".sum");
 
-                    // Write normal .csv
-                    Open(forWriting: false);
-                    StreamWriter report = new StreamWriter(originalFileName + ".csv");
-                    WriteAllTables(report);
-                    report.Close();
+                // If the baseline file exists then write the .CSV and .SUM files
+                string baselineFileName = Filename + ".baseline";
+                if (File.Exists(baselineFileName))
+                {
+                    DataStore baselineDataStore = new DataStore(this, baseline: true);
+
+                    // Write the CSV output file.
+                    WriteAllTables(baselineDataStore, baselineFileName + ".csv");
+
+                    // Write the SUM file.
+                    WriteSummaryFile(baselineDataStore, baselineFileName);
+
+                    baselineDataStore.Disconnect();
                 }
             }
             finally
@@ -483,6 +497,24 @@ namespace Models
                 Filename = originalFileName;
                 Disconnect();
             }
+        }
+
+        /// <summary>
+        /// Write a single summary file.
+        /// </summary>
+        /// <param name="dataStore">The data store containing the data</param>
+        /// <param name="fileName">The file name to create</param>
+        private static void WriteSummaryFile(DataStore dataStore, string fileName)
+        {
+            StreamWriter report = report = new StreamWriter(fileName);
+            foreach (string simulationName in dataStore.SimulationNames)
+            {
+                Summary.WriteReport(dataStore, simulationName, report, null, html: false);
+                report.WriteLine();
+                report.WriteLine();
+                report.WriteLine("############################################################################");
+            }
+            report.Close();
         }
 
         /// <summary>
@@ -517,8 +549,9 @@ namespace Models
         {
             lock (Locks)
             {
-                if (Connection == null || 
-                    (ForWriting == false && forWriting == true))
+                if (Filename != null && 
+                    (Connection == null || 
+                    (ForWriting == false && forWriting == true)))
                 {
                     if (Filename == null)
                         throw new ApsimXException(FullPath, "Cannot find name of .db file");
@@ -537,7 +570,7 @@ namespace Models
                         {
                             Connection = new Utility.SQLite();
                             Connection.OpenDatabase(Filename, readOnly: false);
-                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT)");
+                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
                             Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
 
                             if (!forWriting)
@@ -697,14 +730,16 @@ namespace Models
         /// <summary>
         /// Create a text report from tables in this data store.
         /// </summary>
-        private void WriteAllTables(StreamWriter report)
+        private static void WriteAllTables(DataStore dataStore, string fileName)
         {
+            StreamWriter report = new StreamWriter(fileName);
+
             // Write out each table for this simulation.
-            foreach (string tableName in TableNames)
+            foreach (string tableName in dataStore.TableNames)
             {
-                if (tableName != "Messages" && tableName != "Properties")
+                if (tableName != "Messages" && tableName != "InitialConditions")
                 {
-                    DataTable firstRowOfTable = RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                    DataTable firstRowOfTable = dataStore.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                     if (firstRowOfTable != null)
                     {
                         string fieldNamesString = "";
@@ -719,18 +754,21 @@ namespace Models
                                                    "WHERE Simulations.ID = {1}.SimulationID " +
                                                    "ORDER BY Name",
                                                    fieldNamesString, tableName);
-                        DataTable data = RunQuery(sql);
+                        DataTable data = dataStore.RunQuery(sql);
                         if (data != null && data.Rows.Count > 0)
                         {
 
                             report.WriteLine("TABLE: " + tableName);
 
-                            report.Write(Utility.DataTable.DataTableToCSV(data, 0));
+                            report.Write(Utility.DataTable.DataTableToText(data, 0, ",", true));
                         }
                     }
+
+                    report.WriteLine();
                 }
             }
             report.WriteLine();
+            report.Close();
         }
 
         /// <summary>
@@ -799,7 +837,7 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = simulationNames.IndexOf(simulationName);
+                    int index = Utility.String.IndexOfCaseInsensitive(simulationNames, simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
                     else
@@ -832,11 +870,6 @@ namespace Models
                 return "char(50)";
         }
         #endregion
-
-
-
-
-
     }
 }
 

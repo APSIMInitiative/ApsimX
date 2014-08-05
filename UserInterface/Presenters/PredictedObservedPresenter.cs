@@ -36,7 +36,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             View.ObservedTableNameChanged += OnObservedTableNameChanged;
             View.PredictedTableNameChanged += OnPredictedTableNameChanged;
-            View.GridView.ColumnHeaderClicked += OnColumnHeaderClicked;
+            View.FieldNameChanged += OnColumnNameChanged;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             View.ObservedTableNameChanged -= OnObservedTableNameChanged;
             View.PredictedTableNameChanged -= OnPredictedTableNameChanged;
-            View.GridView.ColumnHeaderClicked -= OnColumnHeaderClicked;
+            View.FieldNameChanged -= OnColumnNameChanged;
         }
 
         /// <summary>
@@ -59,20 +59,12 @@ namespace UserInterface.Presenters
             View.TableNames = DataStore.TableNames;
             View.PredictedTableName = PredictedObserved.PredictedTableName;
             View.ObservedTableName = PredictedObserved.ObservedTableName;
-            View.GridView.DataSource = DataStore.GetData("*", PredictedObserved.ObservedTableName);
-            HighlightMatchingColumn();
-        }
 
-        /// <summary>
-        /// Highlight the column
-        /// </summary>
-        private void HighlightMatchingColumn()
-        {
-            if (View.GridView.DataSource != null)
+            DataTable table = DataStore.GetData("*", PredictedObserved.ObservedTableName);
+            if (table != null)
             {
-                int col = (View.GridView.DataSource as DataTable).Columns.IndexOf(PredictedObserved.FieldNameUsedForMatch);
-                if (col != -1)
-                    View.GridView.SetColumnHeaderColours(col, System.Drawing.Color.Red);
+                View.FieldNames = Utility.DataTable.GetColumnNames(table);
+                View.FieldName = PredictedObserved.FieldNameUsedForMatch;
             }
         }
 
@@ -81,7 +73,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnPredictedTableNameChanged(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(PredictedObserved, "PredictedTableName", View.PredictedTableName));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(PredictedObserved, "PredictedTableName", View.PredictedTableName));
         }
 
         /// <summary>
@@ -89,15 +81,15 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnObservedTableNameChanged(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(PredictedObserved, "ObservedTableName", View.ObservedTableName));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(PredictedObserved, "ObservedTableName", View.ObservedTableName));
         }
 
         /// <summary>
         /// User has clicked a column header.
         /// </summary>
-        void OnColumnHeaderClicked(string HeaderText)
+        void OnColumnNameChanged(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(PredictedObserved, "FieldNameUsedForMatch", HeaderText)); 
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(PredictedObserved, "FieldNameUsedForMatch", View.FieldName)); 
         }
 
         /// <summary>
@@ -107,7 +99,5 @@ namespace UserInterface.Presenters
         {
             PopulateView();
         }
-
-
     }
 }

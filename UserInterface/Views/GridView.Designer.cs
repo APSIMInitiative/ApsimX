@@ -1,11 +1,47 @@
-﻿namespace UserInterface.Views
+﻿// -----------------------------------------------------------------------
+// <copyright file="GridView.Designer.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Views
 {
-    partial class GridView
+    using System.Diagnostics.CodeAnalysis;
+
+    /// <summary>
+    /// A grid control that implements the grid view interface.
+    /// </summary>
+    public partial class GridView
     {
+        /// <summary>
+        /// A grid
+        /// </summary>
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
+        public System.Windows.Forms.DataGridView Grid;
+        
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// A popup menu
+        /// </summary>
+        private System.Windows.Forms.ContextMenuStrip popupMenu;
+
+        /// <summary>
+        /// A copy menu item.
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+
+        /// <summary>
+        /// A paste menu item
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+
+        /// <summary>
+        /// A delete menu item
+        /// </summary>
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -13,10 +49,11 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -29,15 +66,47 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.popupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Grid = new System.Windows.Forms.DataGridView();
+            this.popupMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // PopupMenu
+            // popupMenu
             // 
-            this.PopupMenu.Name = "contextMenuStrip1";
-            this.PopupMenu.Size = new System.Drawing.Size(61, 4);
+            this.popupMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.popupMenu.Name = "contextMenuStrip1";
+            this.popupMenu.Size = new System.Drawing.Size(145, 70);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.OnCopyToClipboard);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.OnPasteFromClipboard);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.OnDeleteClick);
             // 
             // Grid
             // 
@@ -46,7 +115,7 @@
             this.Grid.BackgroundColor = System.Drawing.SystemColors.Window;
             this.Grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.ContextMenuStrip = this.PopupMenu;
+            this.Grid.ContextMenuStrip = this.popupMenu;
             this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Grid.Location = new System.Drawing.Point(0, 0);
             this.Grid.Name = "Grid";
@@ -57,7 +126,7 @@
             this.Grid.TabIndex = 1;
             this.Grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.OnCellBeginEdit);
             this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellClick);
-            this.Grid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.Grid_CellValidating);
+            this.Grid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.OnGridCellValidating);
             this.Grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.OnEditingControlShowing);
             // 
@@ -68,15 +137,10 @@
             this.Controls.Add(this.Grid);
             this.Name = "GridView";
             this.Size = new System.Drawing.Size(354, 345);
+            this.popupMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
-
         }
-
         #endregion
-
-        private System.Windows.Forms.ContextMenuStrip PopupMenu;
-        private System.Windows.Forms.DataGridView Grid;
-
     }
 }

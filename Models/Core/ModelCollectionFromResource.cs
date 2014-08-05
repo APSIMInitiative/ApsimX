@@ -13,7 +13,7 @@ namespace Models.Core
     /// This class loads a model from a resource
     /// </summary>
     [Serializable]
-    public class ModelCollectionFromResource : ModelCollection
+    public class ModelCollectionFromResource : Model
     {
         public string ResourceName { get; set; }
         private List<Model> SavedModels;
@@ -58,8 +58,8 @@ namespace Models.Core
                     {
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(xml);
-                        ModelCollection ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ModelCollection;
-                        Models.AddRange(ModelFromResource.Models);
+                        Model ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as Model;
+                        Models.AddRange(ModelFromResource.Children.All);
                     }
                 }
             }

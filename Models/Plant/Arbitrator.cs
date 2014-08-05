@@ -165,7 +165,7 @@ namespace Models.PMF
         }
 
 
-        public void DoDMArbitration(List<Organ> Organs)
+        public void DoDMArbitration(Organ[] Organs)
         {
             //Work out how much each organ will grow in the absence of nutrient stress, and how much DM they can supply.
             DoDMSetup(Organs);
@@ -175,7 +175,7 @@ namespace Models.PMF
             DoRetranslocation(Organs, DM, DMArbitrationOption);
             DoPotentialDMAllocation(Organs);
         }
-        public void DoNutrientArbitration(List<Organ> Organs)
+        public void DoNutrientArbitration(Organ[] Organs)
         {
             if (NAware) //Note, currently all models N Aware, I have to write some code to take this out
             {
@@ -208,15 +208,15 @@ namespace Models.PMF
         }
 
         #region Arbitration step functions
-        virtual public void DoDMSetup(List<Organ> Organs)
+        virtual public void DoDMSetup(Organ[] Organs)
         {
             //Creat Drymatter variable class
-            DM = new BiomassArbitrationType(Organs.Count);
+            DM = new BiomassArbitrationType(Organs.Length);
 
             // GET INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
             DM.Start = 0;
             // GET SUPPLIES AND CALCULATE TOTAL
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].DMSupply;
                 DM.ReallocationSupply[i] = Supply.Reallocation;
@@ -232,7 +232,7 @@ namespace Models.PMF
             DM.TotalRetranslocationSupply = Utility.Math.Sum(DM.RetranslocationSupply);
 
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].DMDemand;
                 DM.StructuralDemand[i] = Demand.Structural;
@@ -259,7 +259,7 @@ namespace Models.PMF
             DM.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 if (DM.TotalStructuralDemand > 0)
                     DM.RelativeStructuralDemand[i] = DM.StructuralDemand[i] / DM.TotalStructuralDemand;
@@ -269,7 +269,7 @@ namespace Models.PMF
                     DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
             }
         }
-        virtual public void DoPotentialDMAllocation(List<Organ> Organs)
+        virtual public void DoPotentialDMAllocation(Organ[] Organs)
         {
             //  Allocate to meet Organs demands
             DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalReallocationSupply - DM.TotalAllocated);
@@ -283,7 +283,7 @@ namespace Models.PMF
                 throw new Exception("Mass Balance Error in Photosynthesis DM Allocation");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 Organs[i].DMPotentialAllocation = new BiomassPoolType
                 {
@@ -293,16 +293,16 @@ namespace Models.PMF
                 };
             }
         }
-        virtual public void DoSetup(List<Organ> Organs, ref BiomassArbitrationType BAT)
+        virtual public void DoSetup(Organ[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
-            BAT = new BiomassArbitrationType(Organs.Count);
+            BAT = new BiomassArbitrationType(Organs.Length);
 
             // GET ALL INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
             BAT.Start = 0;
 
             // GET ALL SUPPLIES AND DEMANDS AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
@@ -317,7 +317,7 @@ namespace Models.PMF
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
 
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
                 BAT.StructuralDemand[i] = Organs[i].NDemand.Structural;
@@ -344,7 +344,7 @@ namespace Models.PMF
             DM.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 if (BAT.TotalStructuralDemand > 0)
                     BAT.RelativeStructuralDemand[i] = BAT.StructuralDemand[i] / BAT.TotalStructuralDemand;
@@ -354,7 +354,7 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
-        virtual public void DoReAllocation(List<Organ> Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoReAllocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassReallocated = 0;
             if (BAT.TotalReallocationSupply > 0.00000000001)
@@ -368,7 +368,7 @@ namespace Models.PMF
                     PrioritythenRelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
 
                 //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
-                for (int i = 0; i < Organs.Count; i++)
+                for (int i = 0; i < Organs.Length; i++)
                 {
                     if (BAT.ReallocationSupply[i] > 0)
                     {
@@ -378,7 +378,7 @@ namespace Models.PMF
                 }
             }
         }
-        virtual public void DoUptake(List<Organ> Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoUptake(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassTakenUp = 0;
             if (BAT.TotalUptakeSupply > 0.00000000001)
@@ -392,7 +392,7 @@ namespace Models.PMF
                     PrioritythenRelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
-                for (int i = 0; i < Organs.Count; i++)
+                for (int i = 0; i < Organs.Length; i++)
                 {
                     if (BAT.UptakeSupply[i] > 0.00000000001)
                     {
@@ -402,7 +402,7 @@ namespace Models.PMF
                 }
             }
         }
-        virtual public void DoRetranslocation(List<Organ> Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoRetranslocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassRetranslocated = 0;
             if (BAT.TotalRetranslocationSupply > 0.00000000001)
@@ -416,7 +416,7 @@ namespace Models.PMF
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
                 /// Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                for (int i = 0; i < Organs.Count; i++)
+                for (int i = 0; i < Organs.Length; i++)
                 {
                     if (BAT.RetranslocationSupply[i] > 0.00000000001)
                     {
@@ -426,7 +426,7 @@ namespace Models.PMF
                 }
             }
         }
-        virtual public void DoFixation(List<Organ> Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoFixation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassFixed = 0;
             if (BAT.TotalFixationSupply > 0.00000000001)
@@ -442,7 +442,7 @@ namespace Models.PMF
                 // Then calculate how much N is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
-                    for (int i = 0; i < Organs.Count; i++)
+                    for (int i = 0; i < Organs.Length; i++)
                     {
                         if (BAT.FixationSupply[i] > 0.00000000001)
                         {
@@ -463,7 +463,7 @@ namespace Models.PMF
                     double UnallocatedRespirationCost = DM.TotalRespiration - DM.SinkLimitation;
                     if (DM.TotalNonStructuralAllocation > 0)
                     {
-                        for (int i = 0; i < Organs.Count; i++)
+                        for (int i = 0; i < Organs.Length; i++)
                         {
                             double proportion = DM.NonStructuralAllocation[i] / DM.TotalNonStructuralAllocation;
                             double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.NonStructuralAllocation[i]);
@@ -477,7 +477,7 @@ namespace Models.PMF
                     {//Remobilise more Non-structural DM to cover the cost
                         if (DM.TotalRetranslocationSupply > 0)
                         {
-                            for (int i = 0; i < Organs.Count; i++)
+                            for (int i = 0; i < Organs.Length; i++)
                             {
                                 double proportion = DM.RetranslocationSupply[i] / DM.TotalRetranslocationSupply;
                                 double DMRetranslocated = Math.Min(UnallocatedRespirationCost * proportion, DM.RetranslocationSupply[i]);
@@ -492,7 +492,7 @@ namespace Models.PMF
                             if ((DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation) > 0)
                             {
                                 double Costmet = 0;
-                                for (int i = 0; i < Organs.Count; i++)
+                                for (int i = 0; i < Organs.Length; i++)
                                 {
                                     if ((DM.StructuralAllocation[i] + DM.MetabolicAllocation[i]) > 0)
                                     {
@@ -514,14 +514,14 @@ namespace Models.PMF
                 }
             }
         }
-        virtual public void DoActualDMAllocation(List<Organ> Organs)
+        virtual public void DoActualDMAllocation(Organ[] Organs)
         {
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 if (N.TotalAllocation[i] >= N.TotalDemand[i])
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
@@ -534,7 +534,7 @@ namespace Models.PMF
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
             //NutrientLimitatedWtAllocation = 0;
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
@@ -545,7 +545,7 @@ namespace Models.PMF
             }
 
             // Send DM allocations to all Plant Organs
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 Organs[i].DMAllocation = new BiomassAllocationType
                 {
@@ -558,10 +558,10 @@ namespace Models.PMF
                 };
             }
         }
-        virtual public void DoNutrientAllocation(List<Organ> Organs)
+        virtual public void DoNutrientAllocation(Organ[] Organs)
         {
             // Send N allocations to all Plant Organs
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.NonStructuralAllocation[i] < -0.00000001))
                     throw new Exception("-ve N Allocation");
@@ -585,7 +585,7 @@ namespace Models.PMF
 
             //Finally Check Mass balance adds up
             N.End = 0;
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
                 N.End += Organs[i].Live.N + Organs[i].Dead.N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
@@ -594,7 +594,7 @@ namespace Models.PMF
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
                 DM.End += Organs[i].Live.Wt + Organs[i].Dead.Wt;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
             if (DM.BalanceError > 0.0001)
@@ -606,11 +606,11 @@ namespace Models.PMF
         #endregion
 
         #region Arbitrator generic allocation functions
-        private void RelativeAllocation(List<Organ> Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void RelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////allocate to structural and metabolic N first
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
@@ -626,7 +626,7 @@ namespace Models.PMF
                 }
             }
             // Second time round if there is still N to allocate let organs take N up to their Maximum
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
@@ -638,11 +638,11 @@ namespace Models.PMF
                 }
             }
         }
-        private void PriorityAllocation(List<Organ> Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void PriorityAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////First time round allocate to met priority demands of each organ
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
@@ -658,7 +658,7 @@ namespace Models.PMF
                 }
             }
             // Second time round if there is still N to allocate let organs take N up to their Maximum
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]);
                 if (NonStructuralRequirement > 0.0)
@@ -670,11 +670,11 @@ namespace Models.PMF
                 }
             }
         }
-        private void PrioritythenRelativeAllocation(List<Organ> Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void PrioritythenRelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////First time round allocate to met priority demands of each organ
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
                 double MetabolicRequirement = Math.Max(0.0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
@@ -690,7 +690,7 @@ namespace Models.PMF
                 }
             }
             // Second time round if there is still N to allocate let organs take N up to their Maximum
-            for (int i = 0; i < Organs.Count; i++)
+            for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)

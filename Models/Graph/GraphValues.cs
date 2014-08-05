@@ -16,10 +16,8 @@ namespace Models.Graph
     [Serializable]
     public class GraphValues
     {
-        // These three properties are needed to talk to a DataStore.
-        // If SimulationName == null and TableName == null then it is
+        // If TableName == null then it is
         // assumed that FieldName points to a property of an object.
-        public string SimulationName { get; set; }
         public string TableName { get; set; }
         public string FieldName { get; set; }
 
@@ -33,10 +31,10 @@ namespace Models.Graph
         /// </summary>
         public string[] ValidFieldNames(Graph graph)
         {
-            if (graph.DataStore != null && TableName != null && TableName != "")
+            if (graph.DataStore != null && TableName != null && TableName != string.Empty)
             {
                 List<string> Names = new List<string>();
-                Names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData(SimulationName, TableName)));
+                Names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData("*", TableName)));
                 return Names.ToArray();
             }
             return null;

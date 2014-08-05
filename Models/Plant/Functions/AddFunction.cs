@@ -10,15 +10,18 @@ namespace Models.PMF.Functions
     [Description("Add the values of all child functions")]
     public class AddFunction : Function
     {
-        private List<Function> Children { get { return ModelsMatching<Function>(); } }
+        private Model[] ChildFunctions;
 
         public override double Value
         {
             get
             {
+                if (ChildFunctions == null)
+                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+
                 double returnValue = 0.0;
 
-                foreach (Function F in Children)
+                foreach (Function F in ChildFunctions)
                 {
                     returnValue = returnValue + F.Value;
                 }

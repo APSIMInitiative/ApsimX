@@ -215,7 +215,7 @@ namespace Models.SurfaceOM
                         return residueType;
                 }
 
-            return null;
+            throw new ApsimXException("SurfaceOrganicMatter", "Could not find residue name " + name);
         }
     }
         [Serializable]

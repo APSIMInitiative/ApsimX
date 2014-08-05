@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Reflection;
 using Models.Core;
 
 namespace Models.SurfaceOM
@@ -14,21 +15,33 @@ namespace Models.SurfaceOM
         public ResidueTypes ResidueTypes { get; set;}
         public TillageTypes TillageTypes { get; set; }
 
+        [Summary]
+        [Description("Pool name")]
         [Units("")]
         public string PoolName { get; set; }
 
+        [Summary]
+        [Description("Pool type")]
         [Units("")]
         public string type { get; set; }
 
-        [Units("")]
+        [Summary]
+        [Description("Mass")]
+        [Units("kg/ha")]
         public string mass { get; set; }
 
-        [Units("")]
+        [Summary]
+        [Description("Standing fraction")]
+        [Units("0-1")]
         public string standing_fraction { get; set; }
 
+        [Summary]
+        [Description("CPR")]
         [Units("")]
         public string cpr { get; set; }
 
+        [Summary]
+        [Description("CNR")]
         [Units("")]
         public string cnr { get; set; }
 
@@ -177,7 +190,6 @@ namespace Models.SurfaceOM
         [Units("kg/ha")]
         public double surfaceom_wt { get { return SumSurfOMStandingLying(g.SurfOM, x => x.amount); } }
 
-
         [Units("kg/ha")]
         public double carbonbalance { get { return 0 - (surfaceom_c - g.DailyInitialC); } }
 
@@ -188,14 +200,16 @@ namespace Models.SurfaceOM
         ///<summary>
         ///Total mass of all surface organic carbon
         ///</summary>
-
+        [Summary]
+        [Description("Carbon content")]
         [Units("kg/ha")]
         public double surfaceom_c { get { return SumSurfOMStandingLying(g.SurfOM, x => x.C); } }
 
         ///<summary>
         ///Total mass of all surface organic nitrogen
         ///</summary>
-
+        [Summary]
+        [Description("Nitrogen content")]
         [Units("kg/ha")]
         public double surfaceom_n { get { return SumSurfOMStandingLying(g.SurfOM, x => x.N); } }
 
@@ -203,6 +217,8 @@ namespace Models.SurfaceOM
         ///Total mass of all surface organic phosphor
         ///</summary>
 
+        [Summary]
+        [Description("Phosphorus content")]
         [Units("kg/ha")]
         public double surfaceom_p { get { return SumSurfOMStandingLying(g.SurfOM, x => x.P); } }
 
@@ -236,6 +252,7 @@ namespace Models.SurfaceOM
         ///Fraction of ground covered by all surface OMs
         ///</summary>
 
+        [Description("Fraction of ground covered by all surface OMs")]
         [Units("m^2/m^2")]
         public double surfaceom_cover { get { return surfom_cover_total(); } }
 
@@ -278,11 +295,22 @@ namespace Models.SurfaceOM
 
         [Units("")]
         public double surfaceom_wt_algae { get { return surfaceom_wt_("algae", x => x.amount); } }
+       
+        /// <summary>
+        /// Get the weight of the given SOM pool
+        /// </summary>
+        /// <param name="pool">Name of the pool to get the weight from.</param>
+        /// <returns>The weight of the given pool</returns>
+        public double GetWeightFromPool(string pool)
+        {
+             var SomType = g.SurfOM.Find(x => x.name.Equals(pool, StringComparison.CurrentCultureIgnoreCase));
+             return SumOMFractionType(SomType.Standing, y => y.amount) +
+                 SumOMFractionType(SomType.Lying, y => y.amount);
+        }
 
         ///<summary>
         ///Mass of organic matter in all pools
         ///</summary>
-
         [Units("kg/ha")]
         public double[] surfaceom_wt_all
         {

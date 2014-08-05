@@ -13,38 +13,11 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+        [Serializable]
     public class CanopyEnergyBalanceInterceptionlayerType
     {
         public double thickness;
         public double amount;
-    }
-    public class CanopyEnergyBalanceInterceptionType
-    {
-        public string name = "";
-        public string CropType = "";
-        public CanopyEnergyBalanceInterceptionlayerType[] layer;
-    }
-    public class CanopyEnergyBalanceType
-    {
-        public CanopyEnergyBalanceInterceptionType[] Interception;
-        public double transmission;
-    }
-    public class NewPotentialGrowthType
-    {
-        public string sender = "";
-        public double frgr;
-    }
-    public class CanopyWaterBalanceCanopyType
-    {
-        public string name = "";
-        public string CropType = "";
-        public double PotentialEp;
-    }
-    public class CanopyWaterBalanceType
-    {
-        public CanopyWaterBalanceCanopyType[] Canopy;
-        public double eo;
-        public double interception;
     }
     public class KeyValueArraypair_listType
     {
@@ -75,8 +48,6 @@ namespace Models
     }
 
     public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
-    public delegate void CanopyWaterBalanceDelegate(CanopyWaterBalanceType Data);
-    public delegate void CanopyEnergyBalanceDelegate(CanopyEnergyBalanceType Data);
 
 
     /// <remarks>
@@ -138,21 +109,26 @@ namespace Models
 
         #region "Parameters used to initialise the model"
         #region "Parameters set in the GUI by the user"
+        [Description("a_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm/mm")]
         public double a_interception { get; set; }
 
+        [Description("b_interception")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
         public double b_interception {get; set;}
 
+        [Description("c_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         public double c_interception { get; set; }
 
+        [Description("d_interception")]
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
 
+        [Description("soil albedo")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double soil_albedo { get; set; }
 
@@ -222,7 +198,6 @@ namespace Models
         #region "Outputs we make available"
 
         [Units("mm")]
-        [Description("interception")]
         public double interception
         {
             get
@@ -321,17 +296,10 @@ namespace Models
         }
         #endregion
 
-        #region "Events which we publish"
-        public event CanopyWaterBalanceDelegate Canopy_Water_Balance;
-
-        public event CanopyEnergyBalanceDelegate Canopy_Energy_Balance;
-        #endregion
-
         #region "Events to which we subscribe, and their handlers"
 
-
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
@@ -355,18 +323,18 @@ namespace Models
         /// Obtain all relevant met data
         /// </summary>
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            radn = NewMet.radn;
-            maxt = NewMet.maxt;
-            mint = NewMet.mint;
-            rain = NewMet.rain;
-            vp = NewMet.vp;
-            wind = NewMet.wind;
+            radn = Weather.MetData.Radn;
+            maxt = Weather.MetData.Maxt;
+            mint = Weather.MetData.Mint;
+            rain = Weather.MetData.Rain;
+            vp = Weather.MetData.VP;
+            wind = Weather.MetData.Wind;
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoCanopy")]
+        private void OnDoCanopy(object sender, EventArgs e)
         {
             CalculateGc();
             CalculateGa();
@@ -375,15 +343,26 @@ namespace Models
             CalculateOmega();
 
             SendEnergyBalanceEvent();
-            SendWaterBalanceEvent();
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
+        [EventSubscribe("DoCanopyEnergyBalance")]
+        private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
         {
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
+
+            // Loop through all crops and get their potential growth for today.
+            foreach (ICrop crop in Scope.FindAll(typeof(ICrop)))
+            {
+                int senderIdx = FindComponentIndex(crop.CropType);
+                if (senderIdx < 0)
+                {
+                    throw new Exception("Unknown Canopy Component: " + crop.CropType);
+                }
+                ComponentData[senderIdx].Crop = crop;
+                ComponentData[senderIdx].Frgr = crop.FRGR;
+            }
         }
 
         /// <summary>
@@ -470,20 +449,6 @@ namespace Models
             // Round off a bit and convert mm to m
         }
 
-        /// <summary>
-        /// Obtain updated information about a plant's growth capacity
-        /// </summary>
-        [EventSubscribe("NewPotentialGrowth")]
-        private void OnNewPotentialGrowth(NewPotentialGrowthType newPotentialGrowth)
-        {
-            int senderIdx = FindComponentIndex(newPotentialGrowth.sender);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(newPotentialGrowth.sender));
-            }
-            ComponentData[senderIdx].Frgr = newPotentialGrowth.frgr;
-        }
-
         public override void OnLoaded()
         {
             ComponentData = new List<ComponentDataStruct>();
@@ -553,6 +518,8 @@ namespace Models
         {
             public string Name;
             public string Type;
+            public ICrop Crop;
+
             [XmlIgnore]
             public double LAI;
             [XmlIgnore]
@@ -1008,7 +975,7 @@ namespace Models
             double windspeed = windspeed_default;
             if (!windspeed_checked)
             {
-                object val = this.Get("windspeed");
+                object val = this.Variables.Get("windspeed");
                 use_external_windspeed = val != null;
                 if (use_external_windspeed)
                     windspeed = (double)val;
@@ -1140,59 +1107,26 @@ namespace Models
         /// </summary>
         private void SendEnergyBalanceEvent()
         {
-            CanopyEnergyBalanceType lightProfile = new CanopyEnergyBalanceType();
-            Array.Resize<CanopyEnergyBalanceInterceptionType>(ref lightProfile.Interception, ComponentData.Count);
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
                 ComponentDataStruct componentData = ComponentData[j];
-
-                lightProfile.Interception[j] = new CanopyEnergyBalanceInterceptionType();
-                lightProfile.Interception[j].name = componentData.Name;
-                lightProfile.Interception[j].CropType = componentData.Type;
-                Array.Resize<CanopyEnergyBalanceInterceptionlayerType>(ref lightProfile.Interception[j].layer, numLayers);
-                for (int i = 0; i <= numLayers - 1; i++)
+                if (componentData.Crop != null)
                 {
-                    lightProfile.Interception[j].layer[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                    lightProfile.Interception[j].layer[i].thickness = Convert.ToSingle(DeltaZ[i]);
-                    lightProfile.Interception[j].layer[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPotentialEp = 0;
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
+                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
+                        lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                        totalPotentialEp += componentData.PET[i];
+                        totalInterception += componentData.interception[i];
+                    }
+
+                    componentData.Crop.PotentialEP = totalPotentialEp;
+                    componentData.Crop.LightProfile = lightProfile;
                 }
-            }
-            lightProfile.transmission = 0;
-            if (Canopy_Energy_Balance != null)
-            {
-                Canopy_Energy_Balance(lightProfile);
-            }
-        }
-
-        /// <summary>
-        /// Send an water balance event
-        /// </summary>
-        private void SendWaterBalanceEvent()
-        {
-            CanopyWaterBalanceType waterBalance = new CanopyWaterBalanceType();
-            Array.Resize<CanopyWaterBalanceCanopyType>(ref waterBalance.Canopy, ComponentData.Count);
-            double totalInterception = 0.0;
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
-            {
-                ComponentDataStruct componentData = ComponentData[j];
-
-                waterBalance.Canopy[j] = new CanopyWaterBalanceCanopyType();
-                waterBalance.Canopy[j].name = componentData.Name;
-                waterBalance.Canopy[j].CropType = componentData.Type;
-                waterBalance.Canopy[j].PotentialEp = 0;
-                for (int i = 0; i <= numLayers - 1; i++)
-                {
-                    waterBalance.Canopy[j].PotentialEp += Convert.ToSingle(componentData.PET[i]);
-                    totalInterception += componentData.interception[i];
-                }
-            }
-
-            waterBalance.eo = 0f;
-            // need to implement this later
-            waterBalance.interception = Convert.ToSingle(totalInterception);
-            if (Canopy_Water_Balance != null)
-            {
-                Canopy_Water_Balance(waterBalance);
             }
         }
 

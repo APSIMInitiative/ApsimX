@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.Slurp
@@ -38,12 +39,11 @@ namespace Models.PMF.Slurp
         public double Height { get; set; }
         [Description("Depth")]
         public double Depth { get; set; }
-        
-        public string CropType = "Slurp";
+
+        public string CropType { get { return "Slurp"; } }
 
         public event EventHandler StartSlurp;
         public event NewCanopyDelegate NewCanopy;
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
 
         private double PEP;
         private double EP;
@@ -74,7 +74,7 @@ namespace Models.PMF.Slurp
             for (int i = 0; i < kl.Length; i++)
                 kl[i] = 0.5;
 
-            bd = (double[])Soil.Water.Get("BD");
+            bd = (double[])Soil.Water.Variables.Get("BD");
             // Invoke a sowing event. Needed for MicroClimate
             if (StartSlurp != null)
                 StartSlurp.Invoke(this, new EventArgs());
@@ -92,18 +92,28 @@ namespace Models.PMF.Slurp
                 NewCanopy.Invoke(LocalCanopyData);
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        /// <summary>
+        /// MicroClimate needs FRGR
+        /// </summary>
+        public double FRGR { get { return 1; } }
+
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
             DoWaterBalance();
             DoNBalance();
-
-            //for MicroClimate
-            NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-            NewPotentialGrowthData.frgr = 1;
-            NewPotentialGrowthData.sender = Name;
-            if (NewPotentialGrowth != null)
-                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
         }
 
         private void DoWaterBalance()

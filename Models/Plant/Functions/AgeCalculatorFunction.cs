@@ -12,8 +12,8 @@ namespace Models.PMF.Functions
     {
         private int _Age = 0;
 
-        [EventSubscribe("Tick")]
-        private void OnTick()
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             _Age = _Age + 1;
         }

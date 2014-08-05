@@ -1,234 +1,131 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UserInterface.Views;
-using System.Reflection;
-using System.Data;
-using Models.Soils;
-using Models.Core;
-using System.Drawing;
-using Models.Graph;
-using System.IO;
-using System.Xml;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ProfilePresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using System.Reflection;
+    using EventArguments;
+    using Interfaces;
+    using Models.Core;
+    using Models.Graph;
+    using Models.Soils;
+    using Views;
+
     /// <summary>
+    /// <para>
     /// This presenter talks to a ProfileView to display profile (layered) data in a grid.
-    /// It uses reflection to look for public properties that are read/write, don't have an
-    /// [XmlIgnore] attribute and return either double[] or string[].
-    /// 
+    /// It uses reflection to look for public properties that are read/write, have a
+    /// [Description] attribute and return either double[] or string[].
+    /// </para>
+    /// <para>
     /// For each property found it will
     ///   1. optionally look for units via a units attribute:
     ///         [Units("kg/ha")]
-    ///   2. optionally look for changable units via the presense of these properties/  methods:
-    ///         public Enum {Property}Units { get; set; }
-    ///         public string {Property}UnitsToString(Enum Units)
-    ///         public void   {Property}UnitsSet(Enum ToUnits)
-    ///     
+    ///   2. optionally look for settable units via the presence of these properties/methods:
+    ///         {Property}Units { get; set; }
+    ///         {Property}UnitsToString(Units)
+    ///         {Property}UnitsSet(ToUnits)
     ///         where {Property} is the name of the property being examined.
     ///   3. optionally look for a metadata property named:
     ///     {Property}Metadata { get; set; }
+    /// </para>
     /// </summary>
-    class ProfilePresenter : IPresenter
+    public class ProfilePresenter : IPresenter
     {
         /// <summary>
-        /// Encapsulates a discovered property of a model. Provides properties to ProfilePresenter
-        /// returning information about the property.
+        /// The underlying model that this presenter is to work with.
         /// </summary>
-        class ProfileProperty
-        {
-            public Model Model;
-            public PropertyInfo Property;
+        private Model model;
 
-            /// <summary>
-            /// Return name to caller.
-            /// </summary>
-            public string Name 
-            { 
-                get 
-                {
-                    if (Model is SoilCrop)
-                        return (Model as SoilCrop).Name + " " + Property.Name;
-                    return Property.Name; 
-                } 
-            }
+        /// <summary>
+        /// The underlying view that this presenter is to work with.
+        /// </summary>
+        private IProfileView view;
 
-            /// <summary>
-            /// Return units to caller.
-            /// </summary>
-            public string Units
-            {
-                get
-                {
-                    // Get units from property
-                    string UnitString = null;
-                    Units UnitsAttribute = Utility.Reflection.GetAttribute(Property, typeof(Units), false) as Units;
-                    PropertyInfo UnitsInfo = Model.GetType().GetProperty(Property.Name + "Units");
-                    MethodInfo UnitsToStringInfo = Model.GetType().GetMethod(Property.Name + "UnitsToString");
-                    if (UnitsAttribute != null)
-                        UnitString = UnitsAttribute.UnitsString;
-                    else if (UnitsToStringInfo != null)
-                        UnitString = (string)UnitsToStringInfo.Invoke(Model, new object[] { null });
-                    return UnitString;
-                }
-            }
+        /// <summary>
+        /// A reference to the parent 'explorerPresenter'
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
-            /// <summary>
-            /// Return true if this property is readonly.
-            /// </summary>
-            public bool IsReadOnly
-            {
-                get
-                {
-                    if (!Property.CanWrite)
-                        return true;
-                    if (Metadata.Contains("Estimated") || Metadata.Contains("Calculated"))
-                        return true;
-                    return false;
-                }
-            }
+        /// <summary>
+        /// A reference to the 'graphPresenter' responsible for our graph.
+        /// </summary>
+        private GraphPresenter graphPresenter;
 
-            /// <summary>
-            /// Return metadata for each layer. Returns new string[0] if none available.
-            /// </summary>
-            public string[] Metadata
-            {
-                get
-                {
-                    PropertyInfo metadataInfo = Model.GetType().GetProperty(Property.Name + "Metadata");
-                    if (metadataInfo != null)
-                    {
-                        string[] metadata = metadataInfo.GetValue(Model, null) as string[];
-                        if (metadata != null)
-                            return metadata;
-                    }
-                    return new string[0];
-                }
-            }
+        /// <summary>
+        /// A reference to our 'propertyPresenter'
+        /// </summary>
+        private PropertyPresenter propertyPresenter;
 
-            /// <summary>
-            ///  Return true if the property is of type double[]
-            /// </summary>
-            public Type DataType { get { return Property.PropertyType.GetElementType(); } }
+        /// <summary>
+        /// A list of all properties in the profile grid.
+        /// </summary>
+        private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
 
-            /// <summary>
-            /// Return the property value as an array of double.s
-            /// </summary>
-            public object[] Values 
-            { 
-                get 
-                { 
-                    Array A = Property.GetValue(Model, null) as Array;
-                    if (A == null)
-                        return null;
-                    else
-                    {
-                        object[] values = new object[A.Length];
-                        A.CopyTo(values, 0);
-                        return values;
-                    }
-                } 
-            }
+        /// <summary>
+        /// Our graph.
+        /// </summary>
+        private Graph graph;
 
-            /// <summary>
-            /// Return the number of decimal places to be used to display this property.
-            /// </summary>
-            public string Format
-            {
-                get
-                {
-                    DisplayFormat displayFormatAttribute = Utility.Reflection.GetAttribute(Property, typeof(DisplayFormat), false) as DisplayFormat;
-                    if (displayFormatAttribute != null)
-                        return displayFormatAttribute.Format;
-                    return "N3";
-                }
-            }
-
-            /// <summary>
-            /// Return the crop name or null if this property isn't a crop one.
-            /// </summary>
-            public string CropName
-            {
-                get
-                {
-                    if (Model is SoilCrop)
-                        return Model.Name;
-                    return null;
-                }
-            }
-
-            /// <summary>
-            /// If the column has been marked as [DisplayTotal] then return the sum of all values.
-            /// Otherwise return Double.Nan
-            /// </summary>
-            public double Total
-            {
-                get
-                {
-                    if (Utility.Reflection.GetAttribute(Property, typeof(DisplayTotal), false) != null 
-                        && DataType == typeof(double))
-                    {
-                        double sum = 0.0;
-                        foreach (double doubleValue in Values)
-                            sum += doubleValue;
-                        return sum;
-                    }
-                    return Double.NaN;
-                }
-            }
-
-        }
-
-        // Privates
-        private Model Model;
-        private IProfileView View;
-        private ExplorerPresenter ExplorerPresenter;
-        private GraphPresenter GraphPresenter;
-        private PropertyPresenter PropertyPresenter;
-        private List<ProfileProperty> PropertiesInGrid = new List<ProfileProperty>();
-        private Graph g;
-        private Zone ParentZone;
+        /// <summary>
+        /// The parent zone of our model.
+        /// </summary>
+        private Zone parentZone;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The underlying model we are to use</param>
+        /// <param name="view">The underlying view we are to attach to</param>
+        /// <param name="explorerPresenter">Our parent explorerPresenter</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.Model = Model as Model;
-            this.View = View as IProfileView;
-            this.ExplorerPresenter = explorerPresenter;
+            this.model = model as Model;
+            this.view = view as IProfileView;
+            this.explorerPresenter = explorerPresenter;
 
             // Setup the property presenter and view. Hide the view if there are no properties to show.
-            PropertyPresenter = new PropertyPresenter();
-            PropertyPresenter.Attach(Model, this.View.PropertyGrid, ExplorerPresenter);
-            this.View.ShowPropertyGrid(!PropertyPresenter.IsEmpty);
+            this.propertyPresenter = new PropertyPresenter();
+            this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
 
             // Create a list of profile (array) properties. Create a table from them and 
             // hand the table to the profile grid.
-            FindAllProperties(this.Model);
-            DataTable Table = CreateTable();
-            this.View.ProfileGrid.DataSource = Table;
-            
-            // Format the profile grid.
-            FormatGrid(Table);
+            this.FindAllProperties(this.model);
+
+            // Populate the grid
+            this.PopulateGrid();
 
             // Populate the graph.
-            g = Utility.Graph.CreateGraphFromResource(Model.GetType().Name + "Graph");
-            if (g == null)
-                this.View.ShowGraph(false);
+            this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+            if (this.graph == null)
+            {
+                this.view.ShowGraph(false);
+            }
             else
             {
-                ParentZone = this.Model.Find(typeof(Zone)) as Zone;
-                if (ParentZone != null)
+                this.parentZone = this.model.Scope.Find(typeof(Zone)) as Zone;
+                if (this.parentZone != null)
                 {
-                    ParentZone.AddModel(g);
-                    this.View.ShowGraph(true);
-                    GraphPresenter = new GraphPresenter();
-                    GraphPresenter.Attach(g, this.View.Graph, ExplorerPresenter);
+                    this.parentZone.Children.Add(this.graph);
+                    this.view.ShowGraph(true);
+                    this.graphPresenter = new GraphPresenter();
+                    this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                 }
             }
+
+            // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
+            // we can save the contents.
+            this.view.ProfileGrid.CellsChanged += this.OnProfileGridCellValueChanged;
+
+            // Trap the model changed event so that we can handle undo.
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -236,138 +133,335 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            if (ParentZone != null && g != null)
-                ParentZone.RemoveModel(g);
+            this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+       
+            if (this.parentZone != null && this.graph != null)
+            {
+                this.parentZone.Children.Remove(this.graph);
+            }
+        }
+
+        /// <summary>
+        /// Populate the grid with data and formatting.
+        /// </summary>
+        private void PopulateGrid()
+        {
+            DataTable table = this.CreateTable();
+            this.view.ProfileGrid.DataSource = table;
+
+            // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
+            this.propertyPresenter.RemoveProperties(this.propertiesInGrid);
+            this.view.ShowPropertyGrid(!this.propertyPresenter.IsEmpty);
+
+            // Format the profile grid.
+            this.FormatGrid(table);
         }
 
         /// <summary>
         /// Format the grid based on the data in the specified table.
         /// </summary>
-        private void FormatGrid(DataTable Table)
+        /// <param name="table">The table to use to format the grid.</param>
+        private void FormatGrid(DataTable table)
         {
-            Color[] CropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
-            Color[] PredictedCropColors = { Color.FromArgb(233, 191, 255), Color.FromArgb(244, 226, 255) };
+            Color[] cropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
+            Color[] predictedCropColors = { Color.FromArgb(233, 191, 255), Color.FromArgb(244, 226, 255) };
 
-            int CropIndex = 0;
-            int PredictedCropIndex = 0;
+            int cropIndex = 0;
+            int predictedCropIndex = 0;
 
-            Color ForegroundColour = Color.Black;
-            Color BackgroundColour = Color.White;
+            Color foregroundColour = Color.Black;
+            Color backgroundColour = Color.White;
 
-            for (int Col = 0; Col < PropertiesInGrid.Count; Col++)
+            for (int col = 0; col < this.propertiesInGrid.Count; col++)
             {
-                ProfileProperty Property = PropertiesInGrid[Col];
+                VariableProperty property = this.propertiesInGrid[col];
 
-                string ColumnName = Property.Name;
+                string columnName = property.Description;
 
                 // crop colours
-                if (Property.CropName != null)
+                if (property.CropName != null)
                 {
-                    if (Property.Metadata.Contains("Estimated"))
+                    if (property.Metadata.Contains("Estimated"))
                     {
-                        BackgroundColour = PredictedCropColors[PredictedCropIndex];
-                        ForegroundColour = Color.Gray;
-                        if (ColumnName.Contains("XF"))
-                            PredictedCropIndex++;
-                        if (PredictedCropIndex >= PredictedCropColors.Length)
-                            PredictedCropIndex = 0;
+                        backgroundColour = predictedCropColors[predictedCropIndex];
+                        foregroundColour = Color.Gray;
+                        if (columnName.Contains("XF"))
+                        {
+                            predictedCropIndex++;
+                        }
+
+                        if (predictedCropIndex >= predictedCropColors.Length)
+                        {
+                            predictedCropIndex = 0;
+                        }
                     }
                     else
                     {
-                        BackgroundColour = CropColors[CropIndex];
-                        if (ColumnName.Contains("XF"))
-                            CropIndex++;
-                        if (CropIndex >= CropColors.Length)
-                            CropIndex = 0;
+                        backgroundColour = cropColors[cropIndex];
+                        if (columnName.Contains("XF"))
+                        {
+                            cropIndex++;
+                        }
+
+                        if (cropIndex >= cropColors.Length)
+                        {
+                            cropIndex = 0;
+                        }
                     }
                 }
+
                 // tool tips
-                string[] ToolTips = null;
-                if (Property.IsReadOnly)
+                string[] toolTips = null;
+                if (property.IsReadOnly)
                 {
-                    ForegroundColour = Color.Gray;
-                    ToolTips = Utility.String.CreateStringArray("Calculated", View.ProfileGrid.RowCount);
+                    foregroundColour = Color.Gray;
+                    toolTips = Utility.String.CreateStringArray("Calculated", this.view.ProfileGrid.RowCount);
                 }
                 else
                 {
-                    ForegroundColour = Color.Black;
-                    ToolTips = Property.Metadata;
+                    foregroundColour = Color.Black;
+                    toolTips = property.Metadata;
                 }
 
-                View.ProfileGrid.SetColumnFormat(Col, Property.Format, BackgroundColour, ForegroundColour, Property.IsReadOnly, ToolTips);
+                string format = property.Format;
+                if (format == null)
+                {
+                    format = "N3";
+                }
+
+                IGridColumn gridColumn = this.view.ProfileGrid.GetColumn(col);
+                gridColumn.Format = format;
+                gridColumn.BackgroundColour = backgroundColour;
+                gridColumn.ForegroundColour = foregroundColour;
+                gridColumn.ReadOnly = property.IsReadOnly;
+                for (int rowIndex = 0; rowIndex < toolTips.Length; rowIndex++)
+                {
+                    IGridCell cell = this.view.ProfileGrid.GetCell(col, rowIndex);
+                    cell.ToolTip = toolTips[rowIndex];
+                }
 
                 // colour the column headers of total columns.
-                if (!Double.IsNaN(Property.Total))
-                    View.ProfileGrid.SetColumnHeaderColours(Col, null, Color.Red);
+                if (!double.IsNaN(property.Total))
+                {
+                    gridColumn.HeaderForegroundColour = Color.Red;
+                }
             }
 
-            View.ProfileGrid.RowCount = 100;
+            this.view.ProfileGrid.RowCount = 100;
         }
-
-        #region DataTable creation methods.
 
         /// <summary>
         /// Setup the profile grid based on the properties in the model.
         /// </summary>
-        private void FindAllProperties(Model Model)
+        /// <param name="model">The underlying model we are to use to find the properties</param>
+        private void FindAllProperties(Model model)
         {
             // Properties must be public with a getter and a setter. They must also
             // be either double[] or string[] type.
-            foreach (PropertyInfo Property in Model.GetType().GetProperties())
+            foreach (PropertyInfo property in model.GetType().GetProperties())
             {
-                bool Ignore = Property.IsDefined(typeof(UserInterfaceIgnore), false);
-                if (!Ignore && Property.CanRead)
+                bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
+                if (hasDescription && property.CanRead)
                 {
-                    if ((Property.PropertyType == typeof(double[]) || Property.PropertyType == typeof(string[])) &&
-                        !Property.Name.Contains("Metadata"))
+                    if (property.PropertyType == typeof(double[]) || 
+                        property.PropertyType == typeof(string[]))
                     {
-                        PropertiesInGrid.Add(new ProfileProperty() { Model = Model, Property = Property });
+                        this.propertiesInGrid.Add(new VariableProperty(model, property));
                     }
-                    else if (Property.PropertyType.FullName.Contains("SoilCrop"))
+                    else if (property.PropertyType.FullName.Contains("SoilCrop"))
                     {
-                        List<SoilCrop> Crops = Property.GetValue(Model, null) as List<SoilCrop>;
-                        if (Crops != null)
-                            foreach (SoilCrop Crop in Crops)
-                                FindAllProperties(Crop);
+                        List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
+                        if (crops != null)
+                        {
+                            foreach (SoilCrop crop in crops)
+                            {
+                                this.FindAllProperties(crop);
+                            }
+                        }
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// Setup the profile grid based on the properties in the model.
+        /// The column index of the cell that has changed.
         /// </summary>
+        /// <returns>The filled data table. Never returns null.</returns>
         private DataTable CreateTable()
         {
-            DataTable Table = new DataTable();
+            DataTable table = new DataTable();
 
-            foreach (ProfileProperty Property in PropertiesInGrid)
+            foreach (VariableProperty property in this.propertiesInGrid)
             {
-                string ColumnName = Property.Name;
-                if (Property.Units != null)
-                    ColumnName += "\r\n(" + Property.Units + ")";
-
-                // add a total to the column header if necessary.
-                double total = Property.Total;
-                if (!Double.IsNaN(total))
+                string columnName = property.Description;
+                if (property.Units != null)
                 {
-                    ColumnName = ColumnName + "\r\n" + total.ToString("N1") + " mm";
-
+                    columnName += "\r\n(" + property.Units + ")";
                 }
 
-                object[] Values = Property.Values;
+                // add a total to the column header if necessary.
+                double total = property.Total;
+                if (!double.IsNaN(total))
+                {
+                    columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
+                }
 
-                if (Table.Columns.IndexOf(ColumnName) == -1)
-                    Table.Columns.Add(ColumnName, Property.DataType);
+                Array values = property.Value as Array;
 
-                Utility.DataTable.AddColumnOfObjects(Table, ColumnName, Values);
+                if (table.Columns.IndexOf(columnName) == -1)
+                {
+                    table.Columns.Add(columnName, property.DataType.GetElementType());
+                }
+
+                Utility.DataTable.AddColumnOfObjects(table, columnName, values);
             }
-            return Table;
+
+            return table;
         }
 
-        #endregion
+        /// <summary>
+        /// User has changed the value of one or more cells in the profile grid.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event arguments</param>
+        private void OnProfileGridCellValueChanged(object sender, GridCellsChangedArgs e)
+        {
+            this.SaveGrid();
 
+            // Refresh all calculated columns.
+            this.RefreshCalculatedColumns();
+
+            // Refresh the graph.
+            if (this.graph != null)
+            {
+                this.graphPresenter.DrawGraph();
+            }
+        }
+
+        /// <summary>
+        /// Save the grid back to the model.
+        /// </summary>
+        private void SaveGrid()
+        {
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+       
+            // Get the data source of the profile grid.
+            DataTable data = this.view.ProfileGrid.DataSource;
+
+            // Maintain a list of all property changes that we need to make.
+            List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
+
+            // Loop through all non-readonly properties, get an array of values from the data table
+            // for the property and then set the property value.
+            for (int i = 0; i < this.propertiesInGrid.Count; i++)
+            {
+                // If this property is NOT readonly then set its value.
+                if (!this.propertiesInGrid[i].IsReadOnly)
+                {
+                    // Get an array of values for this property.
+                    Array values;
+                    if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
+                    {
+                        values = Utility.DataTable.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                    }
+                    else
+                    {
+                        values = Utility.DataTable.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                    }
+
+                    // Is the value any different to the former property value?
+                    bool changedValues;
+                    if (this.propertiesInGrid[i].DataType == typeof(double[]))
+                    {
+                        changedValues = !Utility.Math.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
+                    }
+                    else
+                    {
+                        changedValues = !Utility.Math.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
+                    }
+
+                    if (changedValues)
+                    {
+                        // Store the property change.
+                        Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
+                        property.Name = this.propertiesInGrid[i].Name;
+                        property.Obj = this.propertiesInGrid[i].Model;
+                        property.NewValue = values;
+                        properties.Add(property);
+                    }
+                }
+            }
+
+            // If there are property changes pending, then commit the changes in a block.
+            if (properties.Count > 0)
+            {
+                Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
+                this.explorerPresenter.CommandHistory.Add(command);
+            }
+
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+        }
+
+        /// <summary>
+        /// Refresh the values of all calculated columns in the profile grid.
+        /// </summary>
+        private void RefreshCalculatedColumns()
+        {
+            // Loop through all calculated properties, get an array of values from the property
+            // a give to profile grid.
+            for (int i = 0; i < this.propertiesInGrid.Count; i++)
+            {
+                if (this.propertiesInGrid[i].IsReadOnly)
+                {
+                    VariableProperty property = this.propertiesInGrid[i];
+                    int col = i;
+                    int row = 0;
+                    foreach (object value in property.Value as IEnumerable<double>)
+                    {
+                        object valueForCell = value;
+                        bool missingValue = (double)value == Utility.Math.MissingValue || double.IsNaN((double)value);
+
+                        if (missingValue)
+                        {
+                            valueForCell = null;
+                        }
+
+                        IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
+                        cell.Value = valueForCell;
+
+                        row++;
+                    }
+
+                    // add a total to the column header if necessary.
+                    double total = property.Total;
+                    if (!double.IsNaN(total))
+                    {
+                        string columnName = property.Description;
+                        if (property.Units != null)
+                        {
+                            columnName += "\r\n(" + property.Units + ")";
+                        }
+
+                        columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
+
+                        IGridColumn column = this.view.ProfileGrid.GetColumn(col);
+                        column.HeaderText = columnName;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The model has changed probably because of an undo.
+        /// </summary>
+        /// <param name="changedModel">The model that has changed.</param>
+        private void OnModelChanged(object changedModel)
+        {
+            this.PopulateGrid();
+            this.RefreshCalculatedColumns();
+            this.graphPresenter.DrawGraph();
+        }
     }
 }
-

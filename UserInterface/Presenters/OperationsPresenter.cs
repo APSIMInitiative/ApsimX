@@ -76,7 +76,7 @@ namespace UserInterface.Presenters
                     operations.Add(operation);
                 }
             }
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Operations, "Schedule", operations));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Operations, "Schedule", operations));
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -85,10 +85,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
         {
-            object o = Operations.Get(e.ObjectName);
+            object o = Operations.Variables.Get(e.ObjectName);
 
             if (o == null)
-                o = Operations.Find(e.ObjectName);
+                o = Operations.Scope.Find(e.ObjectName);
 
             if (o != null)
             {

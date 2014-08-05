@@ -41,18 +41,11 @@ namespace Models.PMF.Organs
         {
             Harvesting.Invoke();
 
-            DateTime Today = new DateTime(Clock.Today.Year, 1, 1);
-            Today = Today.AddDays(Clock.Today.DayOfYear - 1);
-            string Indent = "     ";
-            string Title = Indent + Today.ToString("d MMMM yyyy") + "  - Harvesting " + Name + " from " + Plant.Name;
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
-            Summary.WriteMessage(FullPath, Indent + Name + " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Summary.WriteMessage(FullPath, "");
-
+            string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
+                             "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
+            Summary.WriteMessage(FullPath, message);
 
             Live.Clear();
             Dead.Clear();

@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml;
 using System;
+using System.Collections.Generic;
 
 namespace UserInterface.Commands
 {
@@ -11,14 +12,14 @@ namespace UserInterface.Commands
     class AddModelCommand : ICommand
     {
         private string FromModelXml;
-        private ModelCollection ToParent;
+        private Model ToParent;
         private Model FromModel;
         private bool ModelAdded;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AddModelCommand(string FromModelXml, ModelCollection ToParent)
+        public AddModelCommand(string FromModelXml, Model ToParent)
         {
             this.FromModelXml = FromModelXml;
             this.ToParent = ToParent;
@@ -35,24 +36,9 @@ namespace UserInterface.Commands
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 FromModel.Parent = ToParent;
-                ToParent.AddModel(FromModel);
+
+                ToParent.Children.Add(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
-
-                // ensure the simulations have all the events connected and links resolved
-                Model sims = FromModel;
-                while ((sims != null) && !(sims is Simulations))
-                    sims = (Model)sims.Parent;
-
-                // initialise the simulation
-                Model sim = FromModel;
-                while ((sim != null) && !(sim is Simulation))
-                    sim = (Model)sim.Parent;
-
-                if (sim != null)
-                {
-                    sim.OnLoaded();
-                    sim.OnSimulationCommencing();
-                }
 
                 ModelAdded = true;
             }
@@ -71,7 +57,7 @@ namespace UserInterface.Commands
         {
             if (ModelAdded && FromModel != null)
             {
-                ToParent.RemoveModel(FromModel);
+                ToParent.Children.Remove(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
             }
         }

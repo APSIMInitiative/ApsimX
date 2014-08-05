@@ -11,15 +11,12 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.FactorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
-    [AllowDropOn("Factors")]
-    public class Factor : ModelCollection
+    [ValidParent(ParentModels = new Type[] { typeof(Factorial.Factors) })]
+    public class Factor : Model
     {
         public List<string> Paths { get; set; }
 
         [XmlIgnore]
-        public List<FactorValue> FactorValues { get { return ModelsMatching<FactorValue>(); } }
-
-
-        //public Model Child { get; set; }
+        public Model[] FactorValues { get { return Children.MatchingMultiple(typeof(FactorValue)); } }
     }
 }

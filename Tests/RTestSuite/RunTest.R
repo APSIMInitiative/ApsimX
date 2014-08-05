@@ -1,3 +1,9 @@
+# syntax: Tests\RTestSuite\RunTest.R %OS% %BUILD_NUMBER% [-l]
+# -l: run local; do not try to connect to results storage database
+#
+# Will find all .apsimx files under the working directory.
+# Ignores any .apsimx files in UnitTest directory.
+
 #rm(list=ls()) # for testing only 
 setwd(".\\")
 options(warn = -1)
@@ -8,6 +14,7 @@ library("RSQLite")
 library("RODBC")
 
 args <- commandArgs(TRUE)
+tmp <- 0
 #args <- c("Windows_NT", -1) # for testing only 
 
 if(length(args) == 0)
@@ -18,12 +25,13 @@ source("Tests/RTestSuite/tests.R")
 # if 1 argument, assume it is a single test to run
 ifelse(length(args) == 1, files <- args[1], files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
 
-# create a blank data frame to hold all test output
+# create an empty data frame to hold all test output
 buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 
                           BaseValue=double(), RunValue=double(), Passed=logical(), Paramaters=double())
 
 results <- -1
 
+# for (fileNumber in 3:3){
 for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
@@ -33,12 +41,6 @@ for (fileNumber in 1:length(files)){
   
   print(noquote(files[fileNumber]))
   
-  # get connection string used to store test output
-  if(length(args) > 1){
-    dbConnect <- unlist(read.table("\\ApsimXdbConnect.txt", sep="|", stringsAsFactors=FALSE))
-    connection <- odbcConnect("RDSN", uid=dbConnect[1], pwd=dbConnect[2]) #any computer running this needs an ODBC set up (Windows: admin tools > data sources)
-  } 
-
   time <- proc.time()
   # read tests from .apsimx
   doc <- xmlTreeParse(files[fileNumber], useInternalNodes=TRUE)
@@ -66,16 +68,32 @@ for (fileNumber in 1:length(files)){
     
     for (sim in c(1:length(simsToTest)))
     {
-      #connect to simulator output and baseline data if available
+      #connect to simulator output, input and baseline data if available
       db <- dbConnect(SQLite(), dbname = dbName)
       if(file.exists(paste(dbName, ".baseline", sep="")))
           dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
       
       #get report ID and extract relevant info from table
-      simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+      possibleError <- tryCatch({
+        simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+      }, error = function(err) {
+          print(noquote("Could not find 'Simulations' column. Did the test run?"))
+          haveTestsPassed <<- FALSE
+      })
+      
       possibleError <- tryCatch({
           readSimOutput <- dbReadTable(db, "Report")
           readSimOutput <- readSimOutput[readSimOutput$SimulationID == as.numeric(simID),]
+          
+          #try to read an Input table
+          tables <- dbGetQuery(db, "SELECT name FROM sqlite_master WHERE type='table'")
+          if(length(grep("Input", tables$name)) > 0){
+              inputTable <- dbReadTable(db, "Input")
+              inputTable <- inputTable[inputTable$SimulationID == as.numeric(simID),]
+          }
+          else {
+              inputTable <- NA
+          }
           
           if(nrow(readSimOutput) == 0)
             stop(paste("Error: No data returned for simulation: ", simsToTest[sim]))
@@ -97,9 +115,11 @@ for (fileNumber in 1:length(files)){
           rm(junk)
           
           # drop Date column if it exists
-          readSimOutput     <- readSimOutput[,     -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
+          readSimOutput     <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
           if (!is.na(readSimOutputBase))
               readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
+          if (!is.na(inputTable))
+              inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
                               
           #get tests to run
           tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
@@ -135,8 +155,8 @@ for (fileNumber in 1:length(files)){
 
             #run each test
             ifelse(results == -1,      
-              results <- func(simOutput, tests, params, simOutputBase),
-              results <- c(results, func(simOutput, tests, params, simOutputBase)))
+              results <- func(simOutput, tests, params, simOutputBase, input = inputTable),
+              results <- c(results, func(simOutput, tests, params, simOutputBase, input = inputTable)))
             print(noquote(paste(tests, tail(results,1), cols, sep=" ")))
            }
       }, error = function(err) {
@@ -151,13 +171,6 @@ for (fileNumber in 1:length(files)){
     print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
 
   odbcCloseAll()
-}
-
-if (length(args) > 1){
-    # this line does the save to the external database. comment out to stop this happening for testing
-    print(noquote("Uploading test results."))
-    sqlSave(connection, buildRecord, tablename="BuildOutput", append=TRUE, rownames=FALSE, colnames=FALSE, safer=TRUE, addPK=FALSE)
-    print(noquote("Uploading complete."))
 }
 
 write.csv(buildRecord,"Tests/Test Output.csv")

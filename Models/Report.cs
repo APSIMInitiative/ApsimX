@@ -36,6 +36,7 @@ namespace Models
             private List<object> _Values = new List<object>();
             private int MaxNumArrayElements;
             private Type TypeOfThisMember;
+            private string Alias;
 
             /// <summary>
             /// Constructor
@@ -43,6 +44,12 @@ namespace Models
             public VariableMember(string FullName, Report report)
             {
                 this.FullName = FullName;
+                int posAlias = this.FullName.IndexOf(" as ");
+                if (posAlias != -1)
+                {
+                    Alias = this.FullName.Substring(posAlias + 4);
+                    this.FullName = this.FullName.Substring(0, posAlias);
+                }
                 this.Report = report;
             }
 
@@ -63,13 +70,21 @@ namespace Models
                         Array Arr = _Values[0] as Array;
                         for (int Col = 0; Col < MaxNumArrayElements; Col++)
                         {
-                            string Heading = FullName + "(" + (Col + 1).ToString() + ")";
+                            string Heading = FullName;
+                            if (Alias != null)
+                                Heading = Alias;
+                            Heading += "(" + (Col + 1).ToString() + ")";
                             if (Col < Arr.Length)
                                 AnalyseValue(Heading, Arr.GetValue(Col));
                         }
                     }
                 else if (_Values.Count > 0)
-                    AnalyseValue(FullName, _Values[0]);
+                {
+                    if (Alias != null)
+                        AnalyseValue(Alias, _Values[0]);
+                    else                        
+                        AnalyseValue(FullName, _Values[0]);
+                }
             }
 
             /// <summary>
@@ -233,26 +248,60 @@ namespace Models
         public Simulation Simulation = null;
 
         // Properties read in.
-        public string[] Variables {get; set;}
-        public string[] Events { get; set; }
-        public bool AutoCreateCSV { get; set; }
+        [Summary]
+        [Description("Output variables")]
+        public string[] VariableNames {get; set;}
 
+        [Summary]
+        [Description("Output frequency")]
+        public string[] EventNames { get; set; }
+
+        public object Get(string name)
+        {
+            return base.Variables.Get(name);
+        }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            foreach (string Event in Events)
+            List<string> eventNames = new List<string>();
+            for (int i = 0; i < EventNames.Length; i++ )
             {
-                if (Event != "")
-                    Subscribe(Event, OnReport);
+                if (EventNames[i] != "")
+                {
+                    eventNames.Add(EventNames[i].Trim());
+                    base.Events.Subscribe(EventNames[i].Trim(), OnReport);
+                }
             }
+            EventNames = eventNames.ToArray();
+
+            // sanitise the variable names and remove duplicates
+            List<string> variableNames = new List<string>();
+            for (int i = 0; i < VariableNames.Length; i++)
+            {
+                bool isDuplicate = Utility.String.IndexOfCaseInsensitive(variableNames, VariableNames[i].Trim()) != -1;
+                if (!isDuplicate && VariableNames[i] != "")
+                    variableNames.Add(VariableNames[i].Trim());
+            }
+            VariableNames = variableNames.ToArray();
         }
 
         /// <summary>
         /// Event handler for the report event.
         /// </summary>
         public void OnReport(object sender, EventArgs e)
+        {
+            if (Members == null)
+                FindVariableMembers();
+            foreach (VariableMember Variable in Members)
+                Variable.StoreValue();
+        }
+
+        /// <summary>
+        /// Public method to allow reporting from scripts.
+        /// </summary>
+        public void DoReport()
         {
             if (Members == null)
                 FindVariableMembers();
@@ -269,7 +318,7 @@ namespace Models
 
             List<string> Names = new List<string>();
             List<Type> Types = new List<Type>();
-            foreach (string FullVariableName in Variables)
+            foreach (string FullVariableName in VariableNames)
             {
                 if (FullVariableName != "")
                     Members.Add(new VariableMember(FullVariableName, this));
@@ -281,70 +330,63 @@ namespace Models
         /// </summary>
         public override void OnSimulationCompleted()
         {
-            // Get rid of old data in .db
-            DataStore DataStore = new DataStore(this);
-            DataStore.DeleteOldContentInTable(Simulation.Name, Name);
-
-            // Write and store a table in the DataStore
-            if (Members != null && Members.Count > 0)
+            if (Simulation != null)
             {
-                DataTable table = new DataTable();
+                // Get rid of old data in .db
+                DataStore DataStore = new DataStore(this);
+                DataStore.DeleteOldContentInTable(Simulation.Name, Name);
 
-                foreach (VariableMember Variable in Members)
+                // Write and store a table in the DataStore
+                if (Members != null && Members.Count > 0)
                 {
-                    Variable.Analyse();
-                    for (int i = 0; i < Variable.Names.Length; i++)
-                    {
-                        if (Variable.Types[i] == null)
-                            table.Columns.Add(Variable.Names[i], typeof(int));
-                        else
-                            table.Columns.Add(Variable.Names[i], Variable.Types[i]);
-                    }
-                }
+                    DataTable table = new DataTable();
 
-                for (int Row = 0; Row < Members[0].NumValues; Row++)
-                {
-                    DataRow newRow = table.NewRow();
-                    int colIndex = 0;
                     foreach (VariableMember Variable in Members)
                     {
-                        foreach (object value in Variable.Values(Row))
+                        Variable.Analyse();
+                        for (int i = 0; i < Variable.Names.Length; i++)
                         {
-                            if (value != null)
-                                newRow[colIndex] = value;
-                            colIndex++;
+                            if (Variable.Types[i] == null)
+                                table.Columns.Add(Variable.Names[i], typeof(int));
+                            else
+                                table.Columns.Add(Variable.Names[i], Variable.Types[i]);
                         }
                     }
-                    table.Rows.Add(newRow);
+
+                    for (int Row = 0; Row < Members[0].NumValues; Row++)
+                    {
+                        DataRow newRow = table.NewRow();
+                        int colIndex = 0;
+                        foreach (VariableMember Variable in Members)
+                        {
+                            foreach (object value in Variable.Values(Row))
+                            {
+                                if (value != null)
+                                    newRow[colIndex] = value;
+                                colIndex++;
+                            }
+                        }
+                        table.Rows.Add(newRow);
+                    }
+
+                    DataStore.WriteTable(Simulation.Name, Name, table);
+
+                    Members.Clear();
+                    Members = null;
                 }
 
-                DataStore.WriteTable(Simulation.Name, Name, table);
-
-                Members.Clear();
-                Members = null;
-
-                // If user wants a csv file written, then write it.
-                if (AutoCreateCSV)
-                {
-                    string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
-                                                   Simulation.Name + this.Name + ".csv.");
-                    StreamWriter writer = new StreamWriter(fileName);
-                    writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
-                    writer.Close();
-                }
+                UnsubscribeAllEventHandlers();
+                DataStore.Disconnect();
+                DataStore = null;
             }
-
-            UnsubscribeAllEventHandlers();
-            DataStore.Disconnect();
-            DataStore = null;
         }
 
         private void UnsubscribeAllEventHandlers()
         {
             // Unsubscribe to all events.
-            foreach (string Event in Events)
+            foreach (string Event in EventNames)
                 if ( (Event != null) && (Event != "") )
-                    Unsubscribe(Event);
+                    base.Events.Unsubscribe(Event);
         }
 
     }

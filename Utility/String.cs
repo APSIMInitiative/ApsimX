@@ -540,5 +540,16 @@ namespace Utility
             return Options;
         }
 
+        public static string[] EnumToStrings(object obj)
+        {
+            List<string> items = new List<string>();
+            foreach (object e in obj.GetType().GetEnumValues())
+            {
+                items.Add(e.ToString());
+            }
+
+            return items.ToArray();
+        }
+
     }
 }

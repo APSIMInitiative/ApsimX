@@ -44,6 +44,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>..\Bin\Model.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,11 +57,9 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Numerics.IO">
-      <HintPath>..\packages\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.IO.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MathNet.Numerics.3.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -112,8 +111,23 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Core\Attributes\BoundsAttribute.cs" />
+    <Compile Include="Core\Attributes\SummaryAttribute.cs" />
+    <Compile Include="Core\Attributes\DisplayAttribute.cs" />
+    <Compile Include="Core\Attributes\ValidParentAttribute.cs" />
+    <Compile Include="Core\Attributes\DescriptionAttribute.cs" />
+    <Compile Include="Core\Attributes\ViewNameAttribute.cs" />
+    <Compile Include="Core\Attributes\PresenterNameAttribute.cs" />
+    <Compile Include="Core\Attributes\EventSubscribeAttribute.cs" />
+    <Compile Include="Core\Attributes\UnitsAttribute.cs" />
+    <Compile Include="Core\Attributes\LinkAttribute.cs" />
+    <Compile Include="Core\Events.cs" />
     <Compile Include="Core\IPostSimulationTool.cs" />
+    <Compile Include="Core\IVariable.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
+    <Compile Include="Core\ModelFunctions.cs" />
+    <Compile Include="Core\VariableExpression.cs" />
+    <Compile Include="Core\VariableProperty.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
     <Compile Include="PostSimulationTools\TimeSeriesStats.cs" />
@@ -135,7 +149,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PostSimulationTools\Regression.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
@@ -293,13 +306,11 @@
     <Compile Include="Core\Zone.cs" />
     <Compile Include="DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />
-    <Compile Include="Core\Attributes.cs" />
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />
     <Compile Include="Clock.cs" />
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Utility\DataTableSerialiser.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
     <Compile Include="WeatherFile.cs" />
@@ -311,7 +322,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -342,12 +352,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\Wheat.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Potato.xml">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApServer\ApServer.csproj">
+      <Project>{7726F6D0-1CE6-475E-8790-E93999818545}</Project>
+      <Name>ApServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\OilPalm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

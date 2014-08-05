@@ -30,6 +30,7 @@ namespace Importer
         private bool SurfOMExists = false;
         private bool SoilWaterExists = false;
         private bool MicroClimateExists = false;
+        private DateTime StartDate;
 
         // fertiliser type conversion lookups
         Dictionary<string, string> Fertilisers;
@@ -375,14 +376,18 @@ namespace Importer
                         // make some guesses about the type of component to add
                         string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
                         string compClass = Types.Instance.MetaData(compNode.Name, "class");
-                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 0) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
+                        bool usePlantClass = (compClass.Length == 0) || ( (compClass.Length > 4) && (String.Compare(compClass.Substring(0, 5), "plant", true) == 0) );
                         if (Types.Instance.IsCrop(compNode.Name) &&  usePlantClass)
                         {
                             ImportPlant(compNode, destParent, newNode);
                         }
                         else
                         {
-                            newNode = AddCompNode(destParent, classname, compNode.Name);    //found a model component that should be added to the simulation
+                            // objects like root may have a name attribute
+                            string usename = Utility.Xml.NameAttr(compNode);
+                            if (usename.Length < 1)
+                                usename = compNode.Name;
+                            newNode = AddCompNode(destParent, classname, usename);    //found a model component that should be added to the simulation
                         }
                     }
                 }
@@ -403,80 +408,30 @@ namespace Importer
         /// <returns></returns>
         private XmlNode ImportPlant(XmlNode compNode, XmlNode destParent, XmlNode plantNode)
         {
-            Models.PMF.Plant myplant = new Models.PMF.Plant();
+            string name = Utility.Xml.NameAttr(compNode);
 
-            // Attempt to create a usable plant class in xml. 
-            // This doesn't always work and it does not yet copy all the settings from 
-            // the imported component. (*** There must be a better way!)
-            plantNode = ImportObject(destParent, plantNode, myplant, Utility.Xml.NameAttr(compNode));
+            Model plantModel;
+            if (name == "wheat")
+            {
+                plantModel = new Models.PMF.OldPlant.Plant15();
+            }
+            else if (name == "OilPalm")
+            {
+                plantModel = new Models.PMF.OilPalm.OilPalm();
+            }
+            else
+            {
+                plantModel = new Models.PMF.Plant();
+            }
 
-            AddPhenologyClass(plantNode);
+            plantNode = ImportObject(destParent, plantNode, plantModel, name);
 
-            AddCompNode(plantNode, "Arbitrator", "Arbitrator");
+            Utility.Xml.SetValue(plantNode, "ResourceName", Utility.String.CamelCase(name));
 
-            XmlNode structNode = AddCompNode(plantNode, "Structure", "Structure");
-            AddCompNode(structNode, "AirTemperatureFunction", "ThermalTime");
-            AddCompNode(structNode, "PhaseLookupValue", "MainStemPrimordiaInitiationRate");
-            AddCompNode(structNode, "PhaseLookupValue", "MainStemNodeAppearanceRate");
-            AddCompNode(structNode, "Constant", "MainStemFinalNodeNumber");
-            AddCompNode(structNode, "Constant", "ShadeInducedBranchMortality");
-            AddCompNode(structNode, "Constant", "DroughtInducedBranchMortality");
-            AddCompNode(structNode, "LinearInterpolationFunction", "HeightModel");
-            AddCompNode(structNode, "MultiplyFunction", "BranchingRate");
-            
-            
-            XmlNode leafNode = AddCompNode(plantNode, "Leaf", "Leaf");
-            AddCompNode(leafNode, "CompositeBiomass", "Live");
-            AddCompNode(leafNode, "CompositeBiomass", "Dead");
-            AddCompNode(leafNode, "CompositeBiomass", "Total");
-            AddCompNode(leafNode, "MultiplyFunction", "ExtinctionCoeff");
-            AddCompNode(leafNode, "LinearInterpolationFunction", "FrostFraction");
-            AddCompNode(leafNode, "AirTemperatureFunction", "ThermalTime");
+            XmlNode cropTypeNode = plantNode.AppendChild(plantNode.OwnerDocument.CreateElement("CropType"));
+            cropTypeNode.InnerText = name;
 
-            XmlNode rueNode = AddCompNode(leafNode, "RUEModel", "Photosynthesis");
-            AddCompNode(rueNode, "Constant", "RUE");
-            AddCompNode(rueNode, "RUECO2Function", "FCO2");
-            AddCompNode(rueNode, "LinearInterpolationFunction", "FN");
-            AddCompNode(rueNode, "WeightedTemperatureFunction", "FT");
-            AddCompNode(rueNode, "LinearInterpolationFunction", "FW");
-            AddCompNode(rueNode, "LinearInterpolationFunction", "FVPD");
-
-            XmlNode cohortNode = AddCompNode(leafNode, "InitialLeafValues", "LeafCohortParameters");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaxArea");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "GrowthDuration");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "LagDuration");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "SenescenceDuration");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentLagDuration");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "DetachmentDuration");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMax");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "SpecificLeafAreaMin");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "MaximumNConc");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "MinimumNConc");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "InitialNConc");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "NReallocationFactor");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "NRetranslocationFactor");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "ExpansionStress");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "CriticalNConc");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "DMRetranslocationFactor");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "ShadeInducedSenescenceRate");
-            AddCompNode(cohortNode, "LinearInterpolationFunction", "NonStructuralFraction");
-            AddCompNode(cohortNode, "Constant", "StructuralFraction");
-            
             return plantNode;
-        }
-
-        /// <summary>
-        /// Add the Phenology object
-        /// </summary>
-        /// <param name="destParent"></param>
-        /// <returns></returns>
-        private XmlNode AddPhenologyClass(XmlNode destParent)
-        {
-            XmlNode phenNode = AddCompNode(destParent, "Phenology", "Phenology");
-            AddCompNode(phenNode, "StageBasedInterpolation", "StageCode");
-            AddCompNode(phenNode, "AirTemperatureFunction", "ThermalTime");
-
-            return phenNode;
         }
 
         /// <summary>
@@ -492,7 +447,7 @@ namespace Importer
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy |
                                                                         BindingFlags.NonPublic | BindingFlags.Public))
             {
-                Link link = Utility.Reflection.GetAttribute(field, typeof(Link), false) as Link;
+                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                 {
                     if (!field.FieldType.IsAbstract && !link.IsOptional)
@@ -718,7 +673,7 @@ namespace Importer
         private static XmlNode ImportObject(XmlNode destParent, XmlNode newNode, Model newObject, string objName)
         {
             newObject.Name = objName;
-            string newObjxml = Utility.Xml.Serialise(newObject, true);
+            string newObjxml = Utility.Xml.Serialise(newObject, false);
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(newObjxml);
             newNode = destParent.OwnerDocument.ImportNode(xdoc.DocumentElement, true);
@@ -845,38 +800,38 @@ namespace Importer
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();
             Utility.Xml.FindAllRecursively(compNode, "variable", ref nodes);
-            myreport.Variables = new string[nodes.Count];
+            myreport.VariableNames = new string[nodes.Count];
             int i = 0;
             foreach (XmlNode var in nodes)
             {
                 if ( var.InnerText.Contains("yyyy") ) 
                 {
-                    myreport.Variables[i] = "[Clock].Today";
+                    myreport.VariableNames[i] = "[Clock].Today";
                 }
                 else
                 {
-                    myreport.Variables[i] = var.InnerText;
+                    myreport.VariableNames[i] = var.InnerText;
                 }
                 i++;
             }
             // now for the events
             nodes.Clear();
             Utility.Xml.FindAllRecursively(compNode, "event", ref nodes);
-            myreport.Events = new string[nodes.Count];
+            myreport.EventNames = new string[nodes.Count];
             i = 0;
             foreach (XmlNode _event in nodes)
             {
                 if (String.Compare(_event.InnerText, "end_day", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].EndOfDay";
+                    myreport.EventNames[i] = "[Clock].DoReport";
                 }
                 else if (String.Compare(_event.InnerText, "daily", true) == 0)
                 {
-                    myreport.Events[i] = "[Clock].StartOfDay";
+                    myreport.EventNames[i] = "[Clock].DoReport";
                 }
                 else
                 {
-                    myreport.Events[i] = "[Clock].EndOfDay";
+                    myreport.EventNames[i] = "[Clock].DoReport";
                 }
                 i++;
             }
@@ -899,12 +854,12 @@ namespace Importer
             Models.Manager mymanager = new Models.Manager();
 
             StringBuilder code = new StringBuilder();
-            code.Append("using System;\nusing Models.Core;\nusing Models.PMF;\nnamespace Models\n{\n");
+            code.Append("using System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.PMF.OldPlant;\nnamespace Models\n{\n");
             code.Append("\t[Serializable]\n");
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock TimeClock;\n");
+            code.Append("\t\t[Link] Clock Clock;\n");
 
             List<string> startofdayScripts = new List<string>();
             List<string> endofdayScripts = new List<string>();
@@ -956,8 +911,8 @@ namespace Importer
             }
             if (startofdayScripts.Count > 0)
             {
-                code.Append("\t\t[EventSubscribe(\"StartOfDay\")]\n");
-                code.Append("\t\tprivate void OnStartOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t[EventSubscribe(\"DoManagement\")]\n");
+                code.Append("\t\tprivate void OnDoManagement(object sender, EventArgs e)\n");
                 code.Append("\t\t{\n");
                 foreach (string scripttext in startofdayScripts)
                 {
@@ -969,8 +924,8 @@ namespace Importer
             }
             if (endofdayScripts.Count > 0)
             {
-                code.Append("\t\t[EventSubscribe(\"EndOfDay\")]\n");
-                code.Append("\t\tprivate void OnEndOfDay(object sender, EventArgs e)\n");
+                code.Append("\t\t[EventSubscribe(\"DoCalculations\")]\n");
+                code.Append("\t\tprivate void OnDoCalculations(object sender, EventArgs e)\n");
                 code.Append("\t\t{\n");
                 foreach (string scripttext in endofdayScripts)
                 {
@@ -1062,7 +1017,7 @@ namespace Importer
         /// <returns>The new component node</returns>
         private XmlNode ImportMetFile(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "WeatherFile", Utility.Xml.NameAttr(compNode));
+            newNode = AddCompNode(destParent, "WeatherFile", "WeatherFile");
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
             string metfilepath = Utility.PathUtils.OSFilePath(GetInnerText(compNode, "filename"));
@@ -1086,6 +1041,7 @@ namespace Importer
             string startDate = GetInnerText(compNode, "start_date");
             string endDate = GetInnerText(compNode, "end_date");
             myclock.StartDate = Utility.Date.DMYtoDate(startDate);
+            StartDate = myclock.StartDate;
             myclock.EndDate   = Utility.Date.DMYtoDate(endDate);
 
             // import this object into the new xml document
@@ -1109,8 +1065,19 @@ namespace Importer
 
                 string childText = "";
                 childNode = Utility.Xml.Find(oper, "date");
-                if (childNode != null)
+                DateTime when;
+                if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
+                    childText = when.ToString("yyyy-MM-dd");
+                else if (childNode != null && childNode.InnerText != "")
+                {
                     childText = Utility.Date.DMYtoISO(childNode.InnerText);
+                    if (childText == "0001-01-01")
+                    {
+                        childText = Utility.Date.GetDate(childNode.InnerText, StartDate).ToString("yyyy-MM-dd");
+                    }
+                }
+                else
+                    childText = "0001-01-01";
                 dateNode.InnerText = childText;
                 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));

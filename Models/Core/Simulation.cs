@@ -10,7 +10,7 @@ using System.IO;
 namespace Models.Core
 {
     [Serializable]
-    public class Simulation : Zone, Utility.JobManager.IRunnable
+    public class Simulation : Model, Utility.JobManager.IRunnable
     {
         private bool _IsRunning = false;
 
@@ -39,7 +39,7 @@ namespace Models.Core
         /// <summary>
         /// To commence the simulation, this event will be invoked.
         /// </summary>
-        public event EventHandler Commenced;
+        public event EventHandler DoCommence;
 
         /// <summary>
         /// Return the filename that this simulation sits in.
@@ -142,13 +142,21 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            AllModels.ForEach(Connect);
+            Events.Connect();
+            ResolveLinks();
+            foreach (Model child in Children.AllRecursively)
+            {
+                child.Events.Connect();
+                child.ResolveLinks();
+            }
 
             _IsRunning = true;
+            
             VariableCache.Clear();
             ScopeCache.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
-            AllModels.ForEach(CallOnCommencing);
+            foreach (Model child in Children.AllRecursively)
+                child.OnSimulationCommencing();
         }
 
         /// <summary>
@@ -156,8 +164,8 @@ namespace Models.Core
         /// </summary>
         public void DoRun(object sender)
         {
-            if (Commenced != null)
-                Commenced.Invoke(sender, new EventArgs());
+            if (DoCommence != null)
+                DoCommence.Invoke(sender, new EventArgs());
             else
                 throw new ApsimXException(FullPath, "Cannot invoke Commenced");
         }
@@ -167,15 +175,22 @@ namespace Models.Core
         /// </summary>
         public void CleanupRun()
         {
-            CallOnCompleted(this);
-            AllModels.ForEach(CallOnCompleted);
+            _IsRunning = false;
+
+            OnSimulationCompleted();
+            foreach (Model child in Children.AllRecursively)
+                child.OnSimulationCompleted();
 
             if (OnCompleted != null)
                 OnCompleted.Invoke(this, null);
 
-            _IsRunning = false;
-
-            AllModels.ForEach(Disconnect);
+            Events.Disconnect();
+            UnResolveLinks();
+            foreach (Model child in Children.AllRecursively)
+            {
+                child.Events.Disconnect();
+                child.UnResolveLinks();
+            }
 
             timer.Stop();
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");

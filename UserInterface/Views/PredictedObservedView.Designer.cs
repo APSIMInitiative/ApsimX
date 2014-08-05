@@ -28,103 +28,100 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Grid = new GridView();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.ObservedCombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.PredictedCombo = new System.Windows.Forms.ComboBox();
             this.FileNameLabel = new System.Windows.Forms.Label();
-            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.panel1.SuspendLayout();
+            this.ColumnNameCombo = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Grid
+            // OpenFileDialog
             // 
-            this.Grid.AutoFilterOn = false;
-            this.Grid.DataSource = null;
-            this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Grid.Location = new System.Drawing.Point(0, 85);
-            this.Grid.Name = "Grid";
-            this.Grid.ReadOnly = false;
-            this.Grid.RowCount = 0;
-            this.Grid.Size = new System.Drawing.Size(644, 423);
-            this.Grid.TabIndex = 0;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.ObservedCombo);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.PredictedCombo);
-            this.panel1.Controls.Add(this.FileNameLabel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(644, 85);
-            this.panel1.TabIndex = 1;
+            this.OpenFileDialog.Filter = "All files|*.*";
             // 
             // ObservedCombo
             // 
             this.ObservedCombo.FormattingEnabled = true;
-            this.ObservedCombo.Location = new System.Drawing.Point(106, 48);
+            this.ObservedCombo.Location = new System.Drawing.Point(117, 51);
             this.ObservedCombo.Name = "ObservedCombo";
             this.ObservedCombo.Size = new System.Drawing.Size(210, 21);
-            this.ObservedCombo.TabIndex = 6;
+            this.ObservedCombo.TabIndex = 10;
             this.ObservedCombo.TextChanged += new System.EventHandler(this.OnObservedComboTextChanged);
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(3, 48);
+            this.label1.Location = new System.Drawing.Point(14, 51);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 21);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 9;
             this.label1.Text = "Observed table:";
             // 
             // PredictedCombo
             // 
             this.PredictedCombo.FormattingEnabled = true;
-            this.PredictedCombo.Location = new System.Drawing.Point(106, 11);
+            this.PredictedCombo.Location = new System.Drawing.Point(117, 14);
             this.PredictedCombo.Name = "PredictedCombo";
             this.PredictedCombo.Size = new System.Drawing.Size(210, 21);
-            this.PredictedCombo.TabIndex = 4;
+            this.PredictedCombo.TabIndex = 8;
             this.PredictedCombo.TextChanged += new System.EventHandler(this.OnPredictedComboTextChanged);
             // 
             // FileNameLabel
             // 
             this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FileNameLabel.Location = new System.Drawing.Point(3, 11);
+            this.FileNameLabel.Location = new System.Drawing.Point(14, 14);
             this.FileNameLabel.Name = "FileNameLabel";
             this.FileNameLabel.Size = new System.Drawing.Size(86, 21);
-            this.FileNameLabel.TabIndex = 3;
+            this.FileNameLabel.TabIndex = 7;
             this.FileNameLabel.Text = "Predicted table:";
             // 
-            // OpenFileDialog
+            // ColumnNameCombo
             // 
-            this.OpenFileDialog.Filter = "All files|*.*";
+            this.ColumnNameCombo.FormattingEnabled = true;
+            this.ColumnNameCombo.Location = new System.Drawing.Point(117, 89);
+            this.ColumnNameCombo.Name = "ColumnNameCombo";
+            this.ColumnNameCombo.Size = new System.Drawing.Size(210, 21);
+            this.ColumnNameCombo.TabIndex = 12;
+            this.ColumnNameCombo.TextChanged += new System.EventHandler(this.ColumnNameCombo_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Location = new System.Drawing.Point(14, 89);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 21);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Column name:";
             // 
             // PredictedObservedView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.Grid);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.ColumnNameCombo);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.ObservedCombo);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.PredictedCombo);
+            this.Controls.Add(this.FileNameLabel);
             this.Name = "PredictedObservedView";
             this.Size = new System.Drawing.Size(644, 508);
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private GridView Grid;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label FileNameLabel;
         private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.Windows.Forms.ComboBox ObservedCombo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox PredictedCombo;
+        private System.Windows.Forms.Label FileNameLabel;
+        private System.Windows.Forms.ComboBox ColumnNameCombo;
+        private System.Windows.Forms.Label label2;
     }
 }

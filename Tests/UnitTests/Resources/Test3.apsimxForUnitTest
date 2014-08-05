@@ -19,10 +19,10 @@
       <Name>Field1</Name>
       <Report>
         <Name>Field1Report</Name>
-        <Variables>
-        </Variables>
-        <Events>
-        </Events> 
+        <VariableNames>
+        </VariableNames>
+        <EventNames>
+        </EventNames> 
       </Report>
     </Zone>
     <Zone>
@@ -369,11 +369,11 @@
         <Name>Field2SubZone</Name>
         <Report>
           <Name>Field2SubZoneReport</Name>
-          <Variables>
+          <VariableNames>
             <string>Today</string>
-          </Variables>
-          <Events>
-          </Events>
+          </VariableNames>
+          <EventNames>
+          </EventNames>
         </Report>
       </Zone>
     </Zone>

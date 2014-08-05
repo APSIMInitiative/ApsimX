@@ -1,29 +1,27 @@
-﻿namespace Models.Core
+﻿// -----------------------------------------------------------------------
+// <copyright file="ISummary.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.Core
 {
+    /// <summary>
+    /// A summary model interface for writing to the summary file.
+    /// </summary>
     public interface ISummary
     {
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        void WriteMessage(string FullPath, string Message);
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        void WriteMessage(string fullPath, string message);
 
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        void WriteWarning(string FullPath, string Message);
-
-        /// <summary>
-        /// Return the html for the summary file.
-        /// </summary>
-        string GetSummary(string apsimSummaryImageFileName);
-
-        /// <summary>
-        /// Create a report file in text format.
-        /// </summary>
-        void CreateReportFile(bool baseline);
-
-        bool html { get; set; }
-        bool AutoCreate { get; set; }
-        bool StateVariables { get; set; }
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        void WriteWarning(string fullPath, string message);
     }
 }

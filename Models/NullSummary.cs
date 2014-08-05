@@ -1,15 +1,11 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="NullSummary.cs" company="CSIRO">
-// TODO: Update copyright text.
+// <copyright file="NullSummary.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-
 namespace Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Models.Core;
 
     /// <summary>
@@ -18,59 +14,22 @@ namespace Models
     [Serializable]
     public class NullSummary : Model, ISummary
     {
-
-
-        public void WriteMessage(string FullPath, string Message)
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteMessage(string fullPath, string message)
         {
         }
 
-        public void WriteWarning(string FullPath, string Message)
+        /// <summary>
+        /// Write a message to the summary
+        /// </summary>
+        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteWarning(string fullPath, string message)
         {
-        }
-
-        public string GetSummary(string apsimSummaryImageFileName)
-        {
-            return null;
-        }
-
-        public void CreateReportFile(bool baseline)
-        {
-        }
-
-        public bool html
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-                
-            }
-        }
-
-        public bool AutoCreate
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-                
-            }
-        }
-
-        public bool StateVariables
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-                
-            }
         }
     }
 }

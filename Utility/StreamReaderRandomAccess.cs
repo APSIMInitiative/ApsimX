@@ -4,6 +4,7 @@ using System;
 
 namespace Utility
 {
+    [Serializable]
     class StreamReaderRandomAccess
     {
         const int BUFFER_SIZE = 1024;

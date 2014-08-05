@@ -1,37 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using UserInterface.Views;
-using System.IO;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="SummaryPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.IO;
+    using Models;
+    using Models.Core;
+    using Views;
+
     /// <summary>
     /// Presenter class for working with HtmlView
     /// </summary>
     public class SummaryPresenter : IPresenter
     {
-        private ISummary Summary;
-        private ISummaryView View;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The summary model to work with.
+        /// </summary>
+        private Summary summary;
+
+        /// <summary>
+        /// The view model to work with.
+        /// </summary>
+        private IHTMLView view;
+
+        /// <summary>
+        /// The parent explorer presenter
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
+        /// <param name="model">The model to work with</param>
+        /// <param name="view">The view to attach to</param>
+        /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Summary = model as ISummary;
-            View = view as ISummaryView;
-            ExplorerPresenter = explorerPresenter;
-            PopulateView();
-
-            View.AutoCreateChanged += OnAutoCreateChanged;
-            View.CreateButtonClicked += OnCreateButtonClicked;
-            View.HTMLChanged += OnHTMLChanged;
-            View.StateVariablesChanged += OnStateVariablesChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.summary = model as Summary;
+            this.view = view as IHTMLView;
+            this.explorerPresenter = explorerPresenter;
+            this.PopulateView();
         }
 
         /// <summary>
@@ -39,10 +50,6 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            View.AutoCreateChanged -= OnAutoCreateChanged;
-            View.CreateButtonClicked -= OnCreateButtonClicked;
-            View.HTMLChanged -= OnHTMLChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -50,56 +57,19 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            View.AutoCreate = Summary.AutoCreate;
-            View.html = Summary.html;
-            View.StateVariables = Summary.StateVariables;
-
             Utility.Configuration configuration = new Utility.Configuration();
-            string contents = Summary.GetSummary(configuration.SummaryPngFileName);
-            View.SetSummary(contents, Summary.html);
-        }
 
-        /// <summary>
-        /// User has changed the HTML state.
-        /// </summary>
-        private void OnHTMLChanged(object sender, EventArgs e)
-        {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "html", View.html));
-        }
+            // Get a simulation object.
+            Simulation simulation = this.summary.ParentOfType(typeof(Simulation)) as Simulation;
 
-        /// <summary>
-        /// User has changed the auto create state.
-        /// </summary>
-        private void OnAutoCreateChanged(object sender, EventArgs e)
-        {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "AutoCreate", View.AutoCreate));
-        }
+            DataStore dataStore = new DataStore(simulation, false);
 
-        /// <summary>
-        /// User has changed the state variables state.
-        /// </summary>
-        void OnStateVariablesChanged(object sender, EventArgs e)
-        {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Summary, "StateVariables", View.StateVariables));
-        }
+            StringWriter writer = new StringWriter();
+            Summary.WriteReport(dataStore, simulation.Name, writer, configuration.SummaryPngFileName, html:true);
+            this.view.MemoText = writer.ToString();
 
-        /// <summary>
-        /// User has clicked the create button.
-        /// </summary>
-        void OnCreateButtonClicked(object sender, EventArgs e)
-        {
-            Summary.CreateReportFile(baseline: false);
-            Summary.CreateReportFile(baseline: true);
+            dataStore.Disconnect();
+            writer.Close();
         }
-
-        /// <summary>
-        /// The model has changed probably because of undo/redo.
-        /// </summary>
-        void OnModelChanged(object changedModel)
-        {
-            if (changedModel == Summary)
-                PopulateView();
-        }
-
     }
 }

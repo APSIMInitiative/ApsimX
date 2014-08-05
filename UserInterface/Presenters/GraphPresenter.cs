@@ -6,16 +6,19 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Collections;
+using System.Linq;
 using Models.Factorial;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
-    class GraphPresenter : IPresenter
+    class GraphPresenter : IPresenter, IExportable
     {
         private IGraphView GraphView;
         private Graph Graph;
         private ExplorerPresenter ExplorerPresenter;
         private Models.DataStore DataStore;
+        private IPresenter CurrentPresenter = null;
         private static Color[] colours = {
                                         Color.FromArgb(228,26,28),
                                         Color.FromArgb(55,126,184),
@@ -51,6 +54,7 @@ namespace UserInterface.Presenters
             GraphView.OnLegendClick += OnLegendClick;
             GraphView.OnTitleClick += OnTitleClick;
             ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
+            this.GraphView.AddContextAction("Copy graph XML to clipboard", CopyGraphXML);
 
             // Connect to a datastore.
             DataStore = new Models.DataStore(Graph);
@@ -64,6 +68,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            if (CurrentPresenter != null)
+            {
+                CurrentPresenter.Detach();
+            }
             GraphView.OnAxisClick -= OnAxisClick;
             GraphView.OnPlotClick -= OnPlotClick;
             GraphView.OnLegendClick -= OnLegendClick;
@@ -75,7 +83,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Draw the graph on the screen.
         /// </summary>
-        private void DrawGraph()
+        public void DrawGraph()
         {
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)
@@ -86,12 +94,11 @@ namespace UserInterface.Presenters
                 
                     if (S.X != null && S.Y != null)
                     {
-                        // We need to handle the case where series X and Y SimulationName member
-                        // may be a wildcard '*'. If found then it duplicates the creating of
-                        // graph series for each simulation found in the datastore.
-                        bool simulationWildCard = S.X.SimulationName == "*";
+                        // We need to handle the case where the series needs to be duplicated
+                        // for each simulation in scope.
+                        bool duplicateForEachSimulation = S.SeparateSeriesForAllSimulationsInScope;
                         List<string> simulationNames = new List<string>();
-                        if (simulationWildCard)
+                        if (duplicateForEachSimulation)
                         {
                             // get all simulation names in scope.
                             string[] simulationNamesInScope = FindSimulationNamesInScope();
@@ -100,7 +107,7 @@ namespace UserInterface.Presenters
                                 simulationNames.Add(simulationName);
                         }
                         else
-                            simulationNames.Add(S.X.SimulationName);
+                            simulationNames.Add("*");
 
                         string seriesTitle = S.Title;
                         Color seriesColour = S.Colour;
@@ -114,8 +121,14 @@ namespace UserInterface.Presenters
 
                             // If this is a wildcard series then add the simulation name to the
                             // title of the series.
-                            if (simulationWildCard)
+                            if (duplicateForEachSimulation && simulationNames.Count > 1)
                                 seriesTitle = S.Title + " [" + simulationNames[i] + "]";
+
+                            // If ShowInLegend is false then blank the series title.
+                            if (!S.ShowInLegend)
+                            {
+                                seriesTitle = string.Empty;
+                            }
 
                             // Get data.
                             IEnumerable x = GetData(simulationName, S.X.TableName, S.X.FieldName);
@@ -125,10 +138,19 @@ namespace UserInterface.Presenters
                             if (S.Type == Models.Graph.Series.SeriesType.Bar)
                                 GraphView.DrawBar(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour);
 
-                            else
+                            else if (S.Type == Series.SeriesType.Line || S.Type == Series.SeriesType.Scatter)
+                            {
                                 GraphView.DrawLineAndMarkers(seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour,
                                                              S.Line, S.Marker);
+                            }
+                            else if (S.X2 != null && S.Y2 != null)
+                            {
+                                // Get extra data for area series.
+                                IEnumerable x2 = GetData(simulationName, S.X2.TableName, S.X2.FieldName);
+                                IEnumerable y2 = GetData(simulationName, S.Y2.TableName, S.Y2.FieldName);
 
+                                GraphView.DrawArea(seriesTitle, x, y, x2, y2, S.XAxis, S.YAxis, seriesColour);
+                            }
                             if (S.ShowRegressionLine)
                                 AddRegressionLine(seriesNumber, seriesTitle, x, y, S.XAxis, S.YAxis, seriesColour);
                             
@@ -142,7 +164,7 @@ namespace UserInterface.Presenters
 
                 // Format the axes.
                 foreach (Models.Graph.Axis A in Graph.Axes)
-                    GraphView.FormatAxis(A.Type, A.Title, A.Inverted);
+                    FormatAxis(A);
 
                 // Format the legend.
                 GraphView.FormatLegend(Graph.LegendPosition);
@@ -156,6 +178,37 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Format the specified axis.
+        /// </summary>
+        /// <param name="axis">The axis to format</param>
+        private void FormatAxis(Models.Graph.Axis axis)
+        {
+            string title = axis.Title;
+            if (axis.Title == null || axis.Title == string.Empty)
+            {
+                // Work out a default title by going through all series and getting the
+                // X or Y field name depending on whether 'axis' is an x axis or a y axis.
+                HashSet<string> names = new HashSet<string>();
+
+                foreach (Series series in Graph.Series)
+                {
+                    if (series.X != null && series.XAxis == axis.Type)
+                    {
+                        names.Add(series.X.FieldName);
+                    }
+                    if (series.Y != null && series.YAxis == axis.Type)
+                    {
+                        names.Add(series.Y.FieldName);
+                    }
+                }
+
+                // Create a default title by appending all 'names' together.
+                title = Utility.String.BuildString(names.ToArray(), ", ");
+            }
+            GraphView.FormatAxis(axis.Type, title, axis.Inverted);
+        }
+
+        /// <summary>
         /// Return a list of simulation names in scope.
         /// </summary>
         /// <returns></returns>
@@ -166,6 +219,22 @@ namespace UserInterface.Presenters
                 return (parent as Experiment).Names();
             else if (parent is Simulation)
                 return new string[1] { parent.Name };
+            else if (parent is Folder)
+            {
+                List<string> names = new List<string>();
+                foreach (Model model in parent.Children.AllRecursively)
+                {
+                    if (model is Simulation)
+                    {
+                        names.Add(model.Name);
+                    }
+                    else if (model is Experiment)
+                    {
+                        names.AddRange((model as Experiment).Names());
+                    }
+                }
+                return names.ToArray();
+            }
             else
                 return Graph.DataStore.SimulationNames;
         }
@@ -175,6 +244,7 @@ namespace UserInterface.Presenters
             Model parent = Graph;
             while (parent != null && parent.GetType() != typeof(Simulation) &&
                                      parent.GetType() != typeof(Experiment) &&
+                                     parent.GetType() != typeof(Folder) &&
                                      parent.GetType() != typeof(Simulations))
                 parent = parent.Parent;
             return parent;
@@ -211,13 +281,17 @@ namespace UserInterface.Presenters
 
                     // Draw the equation.
                     double interval = (largestAxisScale - lowestAxisScale) / 20;
-                    double yPosition = largestAxisScale - seriesNumber * interval;
+                    double yPosition = largestAxisScale - (seriesNumber+1) * interval;
 
                     string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
                                      + "r2 = " + stats.R2.ToString("f2") + "\r\n"
                                      + "n = " + stats.n.ToString() + "\r\n"
+                                     + "NSE = " + stats.NSE.ToString("f2") + "\r\n"
+                                     + "ME = " + stats.ME.ToString("f2") + "\r\n"
+                                     + "MAE = " + stats.MAE.ToString("f2") + "\r\n"
+                                     + "RSR = " + stats.RSR.ToString("f2") + "\r\n"
                                      + "RMSD = " + stats.RMSD.ToString("f2");
-                    GraphView.DrawText(equation, minimumX, yPosition, xAxisType, yAxisType, colour);
+                    GraphView.DrawText(equation, lowestAxisScale, yPosition, xAxisType, yAxisType, colour);
                 }
             }
         }
@@ -229,10 +303,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public IEnumerable GetData(string simulationName, string tableName, string fieldName)
         {
-            if (simulationName == null && tableName == null && fieldName != null)
+            if (tableName == null && fieldName != null)
             {
                 // Use reflection to access a property.
-                object Obj = Graph.Get(fieldName);
+                object Obj = Graph.Variables.Get(fieldName);
                 if (Obj != null && Obj.GetType().IsArray)
                     return Obj as Array;
             }
@@ -252,7 +326,21 @@ namespace UserInterface.Presenters
             return null;
         }
 
+        /// <summary>
+        /// Export the contents of this graph to the specified file.
+        /// </summary>
+        public string ConvertToHtml(string folder)
+        {
+            Rectangle r = new Rectangle(0, 0, 600, 600);
+            Bitmap img = new Bitmap(r.Width, r.Height);
 
+            GraphView.Export(img);
+
+            string fileName = Path.Combine(folder, Graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return "<img src=\"" + Graph.Name + ".png" + "\"/>";
+        }
 
 
 
@@ -263,27 +351,31 @@ namespace UserInterface.Presenters
         private void OnGraphModelChanged(object Model)
         {
             if (Graph.Axes.Count >= 2 &&
-                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1]))
+                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1] || Model is Series))
                 DrawGraph();
         }
 
         /// <summary>
         /// User has clicked an axis.
         /// </summary>
-        private void OnAxisClick(OxyPlot.Axes.AxisPosition AxisPosition)
+        private void OnAxisClick(Axis.AxisType axisType)
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
+            CurrentPresenter = AxisPresenter;
             AxisView A = new AxisView();
             GraphView.ShowEditorPanel(A);
-            AxisPresenter.Attach(GetAxis(AxisPosition), A, ExplorerPresenter);
+            AxisPresenter.Attach(GetAxis(axisType), A, ExplorerPresenter);
         }
 
         /// <summary>
         /// User has clicked the plot area.
         /// </summary>
-        private void OnPlotClick()
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnPlotClick(object sender, EventArgs e)
         {
             SeriesPresenter SeriesPresenter = new SeriesPresenter();
+            CurrentPresenter = SeriesPresenter; 
             SeriesView SeriesView = new SeriesView();
             GraphView.ShowEditorPanel(SeriesView);
             SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
@@ -292,9 +384,13 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked a title.
         /// </summary>
-        private void OnTitleClick()
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTitleClick(object sender, EventArgs e)
         {
             TitlePresenter titlePresenter = new TitlePresenter();
+            CurrentPresenter = titlePresenter; 
+            
             TitleView t = new TitleView();
             GraphView.ShowEditorPanel(t);
             titlePresenter.Attach(Graph, t, ExplorerPresenter);
@@ -303,12 +399,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Get an axis 
         /// </summary>
-        private object GetAxis(OxyPlot.Axes.AxisPosition AxisType)
+        private object GetAxis(Axis.AxisType axisType)
         {
             foreach (Axis A in Graph.Axes)
-                if (A.Type.ToString() == AxisType.ToString())
+                if (A.Type.ToString() == axisType.ToString())
                     return A;
-            throw new Exception("Cannot find axis with type: " + AxisType.ToString());
+            throw new Exception("Cannot find axis with type: " + axisType.ToString());
         }
 
         /// <summary>
@@ -322,15 +418,28 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has clicked the legend.
         /// </summary>
-        void OnLegendClick()
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLegendClick(object sender, EventArgs e)
         {
             LegendPresenter presenter = new LegendPresenter();
+            CurrentPresenter = presenter; 
+            
             LegendView view = new LegendView();
             GraphView.ShowEditorPanel(view);
             presenter.Attach(Graph, view, ExplorerPresenter);
         }
 
-
+        /// <summary>
+        /// User has clicked "copy graph xml" menu item.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphXML(object sender, EventArgs e)
+        {
+            // Set the clipboard text.
+            System.Windows.Forms.Clipboard.SetText(this.Graph.Serialise());
+        }
 
         /// <summary>
         /// Creates color with corrected brightness.

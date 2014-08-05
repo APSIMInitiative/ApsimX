@@ -41,6 +41,9 @@ namespace Models.PostSimulationTools
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
+                if (predictedDataNames == null)
+                    throw new ApsimXException(FullPath, "Could not find model data table: " + ObservedTableName);
+                
                 if (observedDataNames == null)
                     throw new ApsimXException(FullPath, "Could not find observed data table: " + ObservedTableName);
 
@@ -54,8 +57,8 @@ namespace Models.PostSimulationTools
                     query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
                     query.Replace("@field", s);
                 }
-                
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN Report R USING (SimulationID) WHERE I.'@match' = R.'@match'");
+
+                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match' = R.'@match'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
                 query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 

@@ -28,82 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.DataSourceCombo = new System.Windows.Forms.ComboBox();
-            this.DataGridView = new GridView();
-            this.SeriesGridView = new GridView();
-            this.XRadio = new System.Windows.Forms.RadioButton();
-            this.YRadio = new System.Windows.Forms.RadioButton();
+            this.components = new System.ComponentModel.Container();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearAllSeriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.seriesEditorView1 = new SeriesEditorView();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 160);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 51;
-            this.label1.Text = "Data source:";
-            // 
-            // DataSourceCombo
-            // 
-            this.DataSourceCombo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DataSourceCombo.FormattingEnabled = true;
-            this.DataSourceCombo.Location = new System.Drawing.Point(88, 157);
-            this.DataSourceCombo.Name = "DataSourceCombo";
-            this.DataSourceCombo.Size = new System.Drawing.Size(287, 21);
-            this.DataSourceCombo.TabIndex = 52;
-            this.DataSourceCombo.TextChanged += new System.EventHandler(this.OnDataSourceComboChanged);
-            // 
-            // DataGridView
-            // 
-            this.DataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DataGridView.DataSource = null;
-            this.DataGridView.Location = new System.Drawing.Point(14, 239);
-            this.DataGridView.Name = "DataGridView";
-            this.DataGridView.ReadOnly = false;
-            this.DataGridView.RowCount = 0;
-            this.DataGridView.Size = new System.Drawing.Size(677, 129);
-            this.DataGridView.TabIndex = 64;
-            // 
-            // SeriesGridView
-            // 
-            this.SeriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeriesGridView.DataSource = null;
-            this.SeriesGridView.Location = new System.Drawing.Point(14, 38);
-            this.SeriesGridView.Name = "SeriesGridView";
-            this.SeriesGridView.ReadOnly = false;
-            this.SeriesGridView.RowCount = 0;
-            this.SeriesGridView.Size = new System.Drawing.Size(677, 113);
-            this.SeriesGridView.TabIndex = 63;
-            // 
-            // XRadio
-            // 
-            this.XRadio.AutoSize = true;
-            this.XRadio.Location = new System.Drawing.Point(17, 216);
-            this.XRadio.Name = "XRadio";
-            this.XRadio.Size = new System.Drawing.Size(73, 17);
-            this.XRadio.TabIndex = 65;
-            this.XRadio.TabStop = true;
-            this.XRadio.Text = "Click on X";
-            this.XRadio.UseVisualStyleBackColor = true;
-            // 
-            // YRadio
-            // 
-            this.YRadio.AutoSize = true;
-            this.YRadio.Location = new System.Drawing.Point(140, 216);
-            this.YRadio.Name = "YRadio";
-            this.YRadio.Size = new System.Drawing.Size(73, 17);
-            this.YRadio.TabIndex = 66;
-            this.YRadio.TabStop = true;
-            this.YRadio.Text = "Click on Y";
-            this.YRadio.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -114,9 +50,9 @@
             this.label2.ForeColor = System.Drawing.SystemColors.InfoText;
             this.label2.Location = new System.Drawing.Point(14, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(677, 23);
+            this.label2.Size = new System.Drawing.Size(164, 23);
             this.label2.TabIndex = 67;
-            this.label2.Text = "The top grid lists all graph series. You can change the values in the grid.";
+            this.label2.Text = "The graph series:";
             // 
             // label3
             // 
@@ -125,40 +61,118 @@
             this.label3.BackColor = System.Drawing.SystemColors.Info;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.label3.Location = new System.Drawing.Point(14, 190);
+            this.label3.Location = new System.Drawing.Point(184, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(677, 23);
+            this.label3.Size = new System.Drawing.Size(517, 23);
             this.label3.TabIndex = 68;
-            this.label3.Text = "You can add series to the graph by clicking on the column headings below.";
+            this.label3.Text = "The series properties";
+            // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
+            this.listView1.FullRowSelect = true;
+            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listView1.HideSelection = false;
+            this.listView1.LabelEdit = true;
+            this.listView1.LabelWrap = false;
+            this.listView1.Location = new System.Drawing.Point(17, 44);
+            this.listView1.MultiSelect = false;
+            this.listView1.Name = "listView1";
+            this.listView1.ShowGroups = false;
+            this.listView1.Size = new System.Drawing.Size(161, 327);
+            this.listView1.TabIndex = 69;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.OnlistView1_AfterLabelEdit);
+            this.listView1.SelectedIndexChanged += new System.EventHandler(this.OnListView1SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 154;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.clearAllSeriesToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 70);
+            // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.addToolStripMenuItem.Text = "Add";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // clearAllSeriesToolStripMenuItem
+            // 
+            this.clearAllSeriesToolStripMenuItem.Name = "clearAllSeriesToolStripMenuItem";
+            this.clearAllSeriesToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.clearAllSeriesToolStripMenuItem.Text = "Clear all series";
+            this.clearAllSeriesToolStripMenuItem.Click += new System.EventHandler(this.clearAllSeriesToolStripMenuItem_Click);
+            // 
+            // seriesEditorView1
+            // 
+            this.seriesEditorView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seriesEditorView1.Colour = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.seriesEditorView1.DataSource = "";
+            this.seriesEditorView1.Location = new System.Drawing.Point(187, 44);
+            this.seriesEditorView1.Name = "seriesEditorView1";
+            this.seriesEditorView1.Regression = false;
+            this.seriesEditorView1.SeparateSeries = false;
+            this.seriesEditorView1.SeriesLineType = "Solid";
+            this.seriesEditorView1.SeriesMarkerType = "None";
+            this.seriesEditorView1.SeriesType = "Scatter";
+            this.seriesEditorView1.ShowInLegend = false;
+            this.seriesEditorView1.Size = new System.Drawing.Size(514, 327);
+            this.seriesEditorView1.TabIndex = 70;
+            this.seriesEditorView1.Visible = false;
+            this.seriesEditorView1.X = "";
+            this.seriesEditorView1.X2 = "";
+            this.seriesEditorView1.XOnTop = false;
+            this.seriesEditorView1.Y = "";
+            this.seriesEditorView1.Y2 = "";
+            this.seriesEditorView1.YOnRight = false;
             // 
             // SeriesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.seriesEditorView1);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.YRadio);
-            this.Controls.Add(this.XRadio);
-            this.Controls.Add(this.DataGridView);
-            this.Controls.Add(this.SeriesGridView);
-            this.Controls.Add(this.DataSourceCombo);
-            this.Controls.Add(this.label1);
             this.Name = "SeriesView";
             this.Size = new System.Drawing.Size(710, 383);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox DataSourceCombo;
-        private GridView SeriesGridView;
-        private GridView DataGridView;
-        private System.Windows.Forms.RadioButton XRadio;
-        private System.Windows.Forms.RadioButton YRadio;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView listView1;
+        private SeriesEditorView seriesEditorView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearAllSeriesToolStripMenuItem;
     }
 }

@@ -526,6 +526,7 @@
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>
@@ -565,8 +566,8 @@
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -663,8 +664,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -693,7 +694,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)this.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -703,7 +704,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -714,8 +715,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -2605,7 +2606,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -2731,11 +2732,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>
@@ -4144,6 +4145,7 @@ namespace Models
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>
@@ -4183,8 +4185,8 @@ namespace Models
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -4281,8 +4283,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -4311,7 +4313,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)this.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -4321,7 +4323,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -4332,8 +4334,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -6223,7 +6225,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -6349,11 +6351,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>
@@ -6429,7 +6431,6 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <Name>Script</Name>
             <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>34</OverRideInterger>
           </Script>
@@ -6456,7 +6457,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			this.Set(OverRidePath, ResetValue);
+			Variables.Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -7794,6 +7795,7 @@ namespace Models
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
+          <CropType>Potato</CropType>
           <ResourceName>Potato</ResourceName>
         </Plant>
         <Manager>
@@ -7833,8 +7835,8 @@ namespace Models
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("StartOfDay")]
-               private void OnStartOfDay(object sender, EventArgs e)
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
                {
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
@@ -7931,8 +7933,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -7961,7 +7963,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)this.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -7971,7 +7973,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)this.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -7982,8 +7984,8 @@ namespace Models
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
@@ -9873,7 +9875,7 @@ namespace Models
         </Folder>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>[Potato].Phenology.CurrentPhaseName</string>
@@ -9999,11 +10001,11 @@ namespace Models
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <SurfaceOrganicMatter>

@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
         {
             Graph.LegendPositionType LegendPosition;
             Enum.TryParse<Graph.LegendPositionType>(NewText, out LegendPosition);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Graph, "LegendPosition", LegendPosition));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "LegendPosition", LegendPosition));
         }
 
     }

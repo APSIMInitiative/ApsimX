@@ -11,7 +11,6 @@ namespace UserInterface.Commands
     class DeleteModelCommand : ICommand
     {
         private Model Model;
-        private ModelCollection Parent;
         private bool ModelRemoved;
 
         /// <summary>
@@ -27,9 +26,8 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            Parent = Model.Parent as ModelCollection;
-            ModelRemoved = Parent.RemoveModel(Model);
-            CommandHistory.InvokeModelStructureChanged(Parent.FullPath);
+            ModelRemoved = Model.Parent.Children.Remove(Model);
+            CommandHistory.InvokeModelStructureChanged(Model.Parent.FullPath);
         }
 
         /// <summary>
@@ -39,8 +37,8 @@ namespace UserInterface.Commands
         {
             if (ModelRemoved)
             {
-                Parent.AddModel(Model);
-                CommandHistory.InvokeModelStructureChanged(Parent.FullPath);
+                Model.Parent.Children.Add(Model);
+                CommandHistory.InvokeModelStructureChanged(Model.Parent.FullPath);
             }
         }
 

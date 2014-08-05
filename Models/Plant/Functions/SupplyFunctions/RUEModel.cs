@@ -7,7 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     [Serializable]
-    public class RUEModel : ModelCollection
+    public class RUEModel : Model
     {
         [Link]
         Plant Plant = null;
@@ -38,8 +38,6 @@ namespace Models.PMF.Functions.SupplyFunctions
         //[Input]
         //public NewMetType MetData;
 
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
         #endregion
 
         #region Associated variables
@@ -50,10 +48,10 @@ namespace Models.PMF.Functions.SupplyFunctions
             {
                 const double SVPfrac = 0.66;
 
-                double VPDmint = Utility.Met.svp((float)MetData.MinT) - MetData.vp;
+                double VPDmint = Utility.Met.svp((float)MetData.MinT) - MetData.VP;
                 VPDmint = Math.Max(VPDmint, 0.0);
 
-                double VPDmaxt = Utility.Met.svp((float)MetData.MaxT) - MetData.vp;
+                double VPDmaxt = Utility.Met.svp((float)MetData.MaxT) - MetData.VP;
                 VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
                 return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
@@ -84,22 +82,12 @@ namespace Models.PMF.Functions.SupplyFunctions
             return RadnInt * RueAct;
         }
 
-        private void PublishNewPotentialGrowth()
+        public double FRGR
         {
-            // Send out a NewPotentialGrowthEvent.
-            if (NewPotentialGrowth != null)
+            get
             {
-                NewPotentialGrowthType GrowthType = new NewPotentialGrowthType();
-                GrowthType.sender = Plant.Name;
-                GrowthType.frgr = (float)Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value));
-                NewPotentialGrowth.Invoke(GrowthType);
+                return Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value));
             }
-        }
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
-        {
-            if (Plant.InGround)
-                PublishNewPotentialGrowth();
         }
     }
 }

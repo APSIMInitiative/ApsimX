@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnTitleChanged(string NewText)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Title", NewText));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Axis, "Title", NewText));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnInvertedChanged(bool Inverted)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Axis, "Inverted", Inverted));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Axis, "Inverted", Inverted));
         }
     }
 }

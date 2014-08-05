@@ -737,7 +737,7 @@
         </MicroClimate>
         <Report>
           <Name>Report</Name>
-          <Variables>
+          <VariableNames>
             <string>[Clock].Today</string>
             <string>[SurfaceOrganicMatter].surfaceom_cover</string>
             <string>[SurfaceOrganicMatter].surfaceom_wt</string>
@@ -795,12 +795,12 @@
             <string />
             <string />
             <string />
-          </Variables>
-          <Events>
-            <string>[Clock].EndOfDay</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
             <string />
             <string />
-          </Events>
+          </EventNames>
           <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <Graph>
@@ -919,8 +919,8 @@ Evaporated_interception = 0;
 SWC60 = 0;
 }	   
 
-[EventSubscribe("EndOfDay")]
-private void OnEndOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagementCalculations")]
+private void OnDoManagementCalculations(object sender, EventArgs e)
 {
 //calculate the amount of water that is going to evaporate from the residue water pool
 
@@ -936,8 +936,8 @@ SWC60 = Soil.SoilWater.sw_dep[0] + Soil.SoilWater.sw_dep[1] + Soil.SoilWater.sw_
 Residue_water = Residue_water - Evaporated_interception;
 }
 
-[EventSubscribe("StartOfDay")]
-private void OnStartOfDay(object sender, EventArgs e)
+[EventSubscribe("DoManagement")]
+private void OnDoManagement(object sender, EventArgs e)
 {
 //Set interception variables
 Precip = Met.Rain + Irrig.IrrigationApplied; 
@@ -1042,8 +1042,8 @@ namespace Models
 			InitialDay = true;
 		}	   
 		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
@@ -1088,8 +1088,8 @@ namespace Models
 			SWDep60 = Soil.SoilWater.sw_dep[0] + Soil.SoilWater.sw_dep[1] + Soil.SoilWater.sw_dep[2];
 		}
 		
-		[EventSubscribe("EndOfDay")]
-		private void OnEndOfDay(object sender, EventArgs e)
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			int layers = Soil.SoilWater.dlayer.Length;			
 			AccumEO -= Soil.SoilWater.eo;

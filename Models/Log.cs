@@ -41,14 +41,11 @@ namespace Models
             Writer.Close();
         }
 
-        [EventSubscribe("Tick")]
-        private void OnTick(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             Writer.WriteLine("Date: " + Clock.Today.ToString());
-            Model[] models = this.FindAll();
-
-            foreach (Model model in models)
-                Summary.WriteModelProperties(Writer, model, false, true);
+            Model[] models = this.Scope.FindAll();
         }
 
     }

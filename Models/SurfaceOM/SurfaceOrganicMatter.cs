@@ -23,6 +23,9 @@ namespace Models.SurfaceOM
         [Link]
         ISummary Summary = null;
 
+        [Link]
+        WeatherFile Weather = null;
+
         //====================================================================
         //    SurfaceOM constants;
         //====================================================================
@@ -42,7 +45,7 @@ namespace Models.SurfaceOM
         //             type definition from datatypes.interface for a structures within a;
         //             structure.
         [Serializable]
-        class OMFractionType
+        public class OMFractionType
         {
             public double amount;
             public double C;
@@ -536,7 +539,7 @@ namespace Models.SurfaceOM
                 return -1;
 
             for (int i = 0; i < g.SurfOM.Count; i++)
-                if (g.SurfOM[i].name == surfomname)
+                if (g.SurfOM[i].name.Equals(surfomname, StringComparison.CurrentCultureIgnoreCase))
                     return i;
 
             return -1;
@@ -611,7 +614,7 @@ namespace Models.SurfaceOM
         private double surfom_tf()
         {
             double
-                ave_temp = divide((g.MetData.maxt + g.MetData.mint), 2.0f, 0.0f);	//today"s average air temp (oC)
+                ave_temp = divide((g.MetData.Maxt + g.MetData.Mint), 2.0f, 0.0f);	//today"s average air temp (oC)
                 //tf;	//temperature factor;
 
             if (ave_temp > 0.0)
@@ -755,7 +758,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Perform actions for current day.
         /// </summary>
-        private void surfom_Process()
+        private SurfaceOrganicMatterDecompType surfom_Process()
         {
             double leach_rain = 0;	//"leaching" rainfall (if rain>10mm)
 
@@ -772,7 +775,7 @@ namespace Models.SurfaceOM
                 //no mineral N or P is leached today;
             }
 
-            surfom_Send_PotDecomp_Event();
+            return surfom_Send_PotDecomp_Event();
 
         }
 
@@ -785,7 +788,7 @@ namespace Models.SurfaceOM
         /// <param name="leach_rain"></param>
         private void surfom_set_vars(out double cumeos, out double leach_rain)
         {
-            double precip = g.MetData.rain + g.irrig;	//daily precipitation (g.rain + irrigation) (mm H2O)
+            double precip = g.MetData.Rain + g.irrig;	//daily precipitation (g.rain + irrigation) (mm H2O)
 
             if (precip > 4.0)
             {
@@ -873,11 +876,11 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Notify other modules of the potential to decompose.
         /// </summary>
-        private void surfom_Send_PotDecomp_Event()
+        private SurfaceOrganicMatterDecompType surfom_Send_PotDecomp_Event()
         {
 
             if (g.num_surfom <= 0)
-                return;
+                return null;
 
             SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType()
             {
@@ -907,10 +910,7 @@ namespace Models.SurfaceOM
                     }
                 };
 
-
-            //APSIM THING
-            publish_SurfaceOrganicMatterDecomp(SOMDecomp);
-
+            return SOMDecomp;
         }
 
         /// <summary>

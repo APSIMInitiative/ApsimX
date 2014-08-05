@@ -13,7 +13,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
-    public class Experiment : ModelCollection
+    public class Experiment : Model
     {
         /// <summary>
         /// Create all simulations.
@@ -21,16 +21,19 @@ namespace Models.Factorial
         public Simulation[] Create()
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
-            Simulation baseSimulation = ModelMatching(typeof(Simulation)) as Simulation;
+            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
+                Simulation newSimulation = baseSimulation.Clone() as Simulation;
                 newSimulation.Name = Name;
+                newSimulation.Parent = null;
+                ModelFunctions.ParentAllChildren(newSimulation);
 
-                // Connect events and links in our new  simulation.
-                newSimulation.AllModels.ForEach(CallOnLoaded);
+                // Call OnLoaded in all models.
+                foreach (Model child in newSimulation.Children.AllRecursively)
+                    child.OnLoaded();
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
@@ -47,7 +50,7 @@ namespace Models.Factorial
         public Simulation CreateSpecificSimulation(string name)
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
-            Simulation baseSimulation = ModelMatching(typeof(Simulation)) as Simulation;
+            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
 
             foreach (List<FactorValue> combination in allCombinations)
             {
@@ -57,11 +60,14 @@ namespace Models.Factorial
 
                 if (newSimulationName == name)
                 {
-                    Simulation newSimulation = Model.Clone(baseSimulation) as Simulation;
+                    Simulation newSimulation = baseSimulation.Clone() as Simulation;
                     newSimulation.Name = Name;
+                    newSimulation.Parent = null;
+                    ModelFunctions.ParentAllChildren(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    newSimulation.AllModels.ForEach(CallOnLoaded);
+                    foreach (Model child in newSimulation.Children.AllRecursively)
+                        child.OnLoaded();
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
@@ -101,7 +107,7 @@ namespace Models.Factorial
         /// </summary>
         private List<List<FactorValue>> AllCombinations()
         {
-            Factors Factors = ModelMatching(typeof(Factors)) as Factors;
+            Factors Factors = Children.Matching(typeof(Factors)) as Factors;
 
             // Create a list of list of factorValuse so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();

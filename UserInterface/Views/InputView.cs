@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
@@ -55,11 +56,17 @@ namespace UserInterface.Views
         {
             get
             {
+            //TODO: This won't work on Linux or Mac
+                if (!FileNameLabel.Text.Contains(':')) // no drive designator, so it's a relative path
+                    FileNameLabel.Text = Utility.PathUtils.GetAbsolutePath(FileNameLabel.Text); //remove bin
+
                 return FileNameLabel.Text;
             }
             set
             {
+                string curdir = Utility.PathUtils.GetAbsolutePath(String.Empty);
                 FileNameLabel.Text = value;
+                FileNameLabel.Text = FileNameLabel.Text.Replace(curdir, String.Empty);
             }
         }
 
@@ -73,7 +80,8 @@ namespace UserInterface.Views
                 OpenDialogArgs args = new OpenDialogArgs();
                 args.FileNames = OpenFileDialog.FileNames;
 
-                string curdir = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().Length - 3);
+                string curdir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3);
                 for (int i=0; i< args.FileNames.Length; i++)
                 {
                     args.FileNames[i] = args.FileNames[i].Replace(curdir, "");

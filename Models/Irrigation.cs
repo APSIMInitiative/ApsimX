@@ -43,14 +43,8 @@ namespace Models
             }
         }
 
-        [EventSubscribe("StartOfDay")]
-        private void OnPrepare(object sender, EventArgs e)
-        {
-            IrrigationApplied = 0;
-        }
-
-        [EventSubscribe("Initialised")]
-        private void OnInitialised(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             IrrigationApplied = 0;
         }

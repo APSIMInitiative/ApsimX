@@ -43,11 +43,11 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Factor.Get(e.ObjectName);
+            object o = Factor.Variables.Get(e.ObjectName);
 
             if (o != null)
             {
-                foreach (IVariable Property in Model.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                     e.Items.Add(Property.Name);
                 e.Items.Sort();
             }
@@ -62,7 +62,7 @@ namespace UserInterface.Presenters
 
             List<string> newPaths = new List<string>();
             newPaths.AddRange(FactorView.Editor.Lines);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Factor, "Paths", newPaths));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Paths", newPaths));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }

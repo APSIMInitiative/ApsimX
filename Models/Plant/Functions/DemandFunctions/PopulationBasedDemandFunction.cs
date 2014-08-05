@@ -34,7 +34,7 @@ namespace Models.PMF.Functions.DemandFunctions
         private double ThermalTimeToday = 0;
 
         [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(Models.WeatherFile.NewMetType NewMet)
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
             if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {

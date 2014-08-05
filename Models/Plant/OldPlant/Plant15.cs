@@ -9,6 +9,7 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace Models.PMF.OldPlant
 {
@@ -91,7 +92,12 @@ namespace Models.PMF.OldPlant
             {
                 if (model is Organ1)
                     Organ1s.Add(model as Organ1);
-            }  
+            }
+
+            EOCropFactor = 1.5;  // wheat
+            NSupplyPreference = "active";
+            DoRetranslocationBeforeNDemand = false;
+
         }
 
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
@@ -185,10 +191,13 @@ namespace Models.PMF.OldPlant
         [Link]
         GenericArbitratorXY Arbitrator1 = null;
 
+        [XmlIgnore]
         public double EOCropFactor { get; set; }
 
+        [XmlIgnore]
         public string NSupplyPreference { get; set; }
 
+        [XmlIgnore]
         public bool DoRetranslocationBeforeNDemand { get; set; }
 
         //[Input]
@@ -205,10 +214,6 @@ namespace Models.PMF.OldPlant
 
         
         public event NewCropDelegate CropEnding;
-
-        
-        public event NewPotentialGrowthDelegate NewPotentialGrowth;
-
         
         public event EventHandler Harvesting;
 
@@ -272,6 +277,17 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>
+        /// MicroClimate supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         
         [Units("kg/ha")]
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
@@ -336,10 +352,18 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        public double FRGR
+        {
+            get
+            {
+                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
+            }
+        }
+
         /// <summary>
         /// Old PLANT1 compat. eventhandler. Not used in Plant2
         /// </summary>
-        [EventSubscribe("StartOfDay")]
         private void OnPrepare(object sender, EventArgs e)
         {
             if (SowingData != null)
@@ -362,13 +386,7 @@ namespace Models.PMF.OldPlant
 
                 DoNDemandEstimate();
 
-                // PUBLISH NewPotentialGrowth event.
-                NewPotentialGrowthType NewPotentialGrowthData = new NewPotentialGrowthType();
-                NewPotentialGrowthData.frgr = (float)Math.Min(Math.Min(TempStress.Value, NStress.Photo),
-                                                                Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
-                NewPotentialGrowthData.sender = Name;
-                NewPotentialGrowth.Invoke(NewPotentialGrowthData);
-                Util.Debug("NewPotentialGrowth.frgr=%f", NewPotentialGrowthData.frgr);
+                Util.Debug("NewPotentialGrowth.frgr=%f", FRGR);
                 //Prepare_p();   // FIXME
             }
         }
@@ -376,9 +394,13 @@ namespace Models.PMF.OldPlant
         /// <summary>
         ///  Old PLANT1 compat. process eventhandler.
         /// </summary>
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
+            // Dean: This call to OnPrepare used to be called at start of day. 
+            // No need to separate the call into separate event (I think)
+            OnPrepare(null, null);
+
             if (SowingData != null)
             {
 
@@ -450,7 +472,7 @@ namespace Models.PMF.OldPlant
                 NStress.DoPlantNStress();
                 if (PhenologyEventToday)
                 {
-                    Summary.WriteMessage(FullPath, Phenology.CurrentPhase.Start);
+                    string message = Phenology.CurrentPhase.Start;
                     if (Phenology.CurrentPhase.Start != "Germination")
                     {
                         double biomass = 0;
@@ -467,11 +489,15 @@ namespace Models.PMF.OldPlant
                             }
                         }
                         double StoverNConc = Utility.Math.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
-                        Summary.WriteMessage(FullPath, string.Format("biomass =       {0,8:F2} (g/m^2)   lai          = {1,7:F2} (m^2/m^2)",
-                                                        biomass, Leaf.LAI));
-                        Summary.WriteMessage(FullPath, string.Format("stover N conc = {0,8:F2} (%)     extractable sw = {1,7:F2} (mm)",
-                                                        StoverNConc, Root.ESWInRootZone));
+                        message += "\r\n";
+                        message += string.Format("  biomass        = {0,8:F2} (g/m^2)\r\n" +
+                                                 "  lai            = {1,8:F2} (m^2/m^2)\r\n" +
+                                                 "  stover N conc  = {2,8:F2} (%)\r\n" +
+                                                 "  extractable sw = {3,8:F2} (mm)",
+                                           biomass, Leaf.LAI, StoverNConc, Root.ESWInRootZone);
                     }
+                    
+                    Summary.WriteMessage(FullPath, message);
                     PhenologyEventToday = false;
                 }
                 //Root.UpdateWaterBalance();
@@ -714,11 +740,14 @@ namespace Models.PMF.OldPlant
             BiomassRemovedData.crop_type = CropType;
             BiomassRemoved.Invoke(BiomassRemovedData);
 
-            Summary.WriteMessage(FullPath, "    Organic matter from crop:-      Tops to surface residue      Roots to soil FOM");
-            Summary.WriteMessage(FullPath, string.Format("                      DM (kg/ha) = {0,21:F1}{1,24:F1}",
-                                            AboveGroundBiomass.Wt, BelowGroundBiomass.Wt));
-            Summary.WriteMessage(FullPath, string.Format("                      N  (kg/ha) = {0,22:F2}{1,24:F2}",
-                                            AboveGroundBiomass.N, BelowGroundBiomass.N));
+            string message = string.Format("Organic matter from crop to surface organic matter:-\r\n" +
+                                           "  DM tops  (kg/ha) = {0,10:F1}\r\n" +
+                                           "  DM roots (kg/ha) = {1,10:F1}\r\n" +
+                                           "  N  tops  (kg/ha) = {0,10:F2}\r\n" +
+                                           "  N  roots (lh/ha) = {1,10:F2}",
+                     AboveGroundBiomass.Wt, BelowGroundBiomass.Wt, 
+                     AboveGroundBiomass.N, BelowGroundBiomass.N);
+            Summary.WriteMessage(FullPath, message);
         }
         
         /// <summary>
@@ -726,26 +755,24 @@ namespace Models.PMF.OldPlant
         /// </summary>
         void WriteSowReport(SowPlant2Type Sow)
         {
-            Summary.WriteMessage(FullPath, "Crop Sow");
+            StringWriter summary = new StringWriter();
+            summary.WriteLine("Crop sow");
+            summary.WriteLine("   cultivar = " + Sow.Cultivar);
+            Phenology.WriteSummary(summary);
+            Grain.WriteCultivarInfo(summary);
 
-            Summary.WriteMessage(FullPath, "   ------------------------------------------------");
-            Summary.WriteMessage(FullPath, "   cultivar                   = " + Sow.Cultivar);
-            Phenology.WriteSummary();
-            Grain.WriteCultivarInfo();
-            Summary.WriteMessage(FullPath, "   ------------------------------------------------\n\n");
+            Root.WriteSummary(summary);
 
-            Root.WriteSummary();
+            summary.WriteLine(string.Format("Crop factor for bounding water use is set to {0,5:F1} times eo.", EOCropFactor));
 
-            Summary.WriteMessage(FullPath, string.Format("    Crop factor for bounding water use is set to {0,5:F1} times eo.", EOCropFactor));
+            summary.WriteLine("");
+            summary.WriteLine("             Crop Sowing Data");
+            summary.WriteLine("------------------------------------------------");
+            summary.WriteLine("Sowing  Depth Plants Spacing Skip  Skip  Cultivar");
+            summary.WriteLine("Day no   mm     m^2     mm   row   plant name");
+            summary.WriteLine("------------------------------------------------");
 
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, "                 Crop Sowing Data");
-            Summary.WriteMessage(FullPath, "    ------------------------------------------------");
-            Summary.WriteMessage(FullPath, "    Sowing  Depth Plants Spacing Skip  Skip  Cultivar");
-            Summary.WriteMessage(FullPath, "    Day no   mm     m^2     mm   row   plant name");
-            Summary.WriteMessage(FullPath, "    ------------------------------------------------");
-
-            Summary.WriteMessage(FullPath, string.Format("   {0,7:D}{1,7:F1}{2,7:F1}{3,7:F1}{4,6:F1}{5,6:F1} {6}", new object[] 
+            summary.WriteLine(string.Format("{0,7:D}{1,7:F1}{2,7:F1}{3,7:F1}{4,6:F1}{5,6:F1} {6}", new object[] 
                             {Clock.Today.DayOfYear, 
                              Sow.Depth,
                              Sow.Population, 
@@ -753,7 +780,7 @@ namespace Models.PMF.OldPlant
                              Sow.SkipRow,
                              Sow.SkipPlant,
                              Sow.Cultivar}));
-            Summary.WriteMessage(FullPath, "    ------------------------------------------------\n");
+            Summary.WriteMessage(FullPath, summary.ToString());
         }
 
         /// <summary>
@@ -803,11 +830,11 @@ namespace Models.PMF.OldPlant
 
             Summary.WriteMessage(FullPath, "Crop harvested.");
 
-            Summary.WriteMessage(FullPath, "    Organic matter from crop:-      Tops to surface residue      Roots to soil FOM");
+            Summary.WriteMessage(FullPath, "Organic matter from crop:-  Tops to surface residue      Roots to soil FOM");
 
-            Summary.WriteMessage(FullPath, string.Format("                      DM (kg/ha) = {0,21:F1}{1,24:F1}",
+            Summary.WriteMessage(FullPath, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
                                             dm_tops_residue, dm_root_residue));
-            Summary.WriteMessage(FullPath, string.Format("                      N  (kg/ha) = {0,22:F2}{1,24:F2}",
+            Summary.WriteMessage(FullPath, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
                                             n_tops_residue, n_root_residue));
 
             double dm_removed_tops = dm_tops_chopped - dm_tops_residue;
@@ -819,9 +846,9 @@ namespace Models.PMF.OldPlant
 
             Summary.WriteMessage(FullPath, "    Organic matter removed from system:-      From Tops               From Roots");
 
-            Summary.WriteMessage(FullPath, string.Format("                      DM (kg/ha) = {0,21:F1}{1,24:F1}",
+            Summary.WriteMessage(FullPath, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
                               dm_removed_tops, dm_removed_root));
-            Summary.WriteMessage(FullPath, string.Format("                      N  (kg/ha) = {0,22:F2}{1,24:F2}",
+            Summary.WriteMessage(FullPath, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
                               n_removed_tops, n_removed_root));
         }
         #endregion
@@ -847,7 +874,7 @@ namespace Models.PMF.OldPlant
         }
 
 
-        
+        [XmlIgnore]
         public RemovedByAnimalType RemovedByAnimal
         {
             get

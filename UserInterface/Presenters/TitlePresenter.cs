@@ -66,7 +66,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnTitleChanged(string NewText)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Graph, "Title", NewText));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Title", NewText));
         }
 
     }

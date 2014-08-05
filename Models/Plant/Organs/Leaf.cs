@@ -29,31 +29,31 @@ namespace Models.PMF.Organs
 
         #region Structures
         [Serializable]
-        public class InitialLeafValues : ModelCollection
+        public class InitialLeafValues : Model
         {
-            [Link(MustBeChild = true)] public Function MaxArea = null;
-            [Link(MustBeChild = true)] public Function GrowthDuration = null;
-            [Link(MustBeChild = true)] public Function LagDuration = null;
-            [Link(MustBeChild = true)] public Function SenescenceDuration = null;
-            [Link(MustBeChild = true)] public Function DetachmentLagDuration = null;
-            [Link(MustBeChild = true)] public Function DetachmentDuration = null;
-            [Link(MustBeChild = true)] public Function SpecificLeafAreaMax = null;
-            [Link(MustBeChild = true)] public Function SpecificLeafAreaMin = null;
-            [Link(MustBeChild = true)] public Function StructuralFraction = null;
-            [Link(MustBeChild = true)] public Function MaximumNConc = null;
-            [Link(MustBeChild = true)] public Function MinimumNConc = null;
-            [Link(IsOptional=true, MustBeChild = true)] public Function StructuralNConc = null;
-            [Link(MustBeChild = true)] public Function InitialNConc = null;
-            [Link(MustBeChild = true)] public Function NReallocationFactor = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function DMReallocationFactor = null;
-            [Link(MustBeChild = true)] public Function NRetranslocationFactor = null;
-            [Link(MustBeChild = true)] public Function ExpansionStress = null;
-            [Link(MustBeChild = true)] public Function CriticalNConc = null;
-            [Link(MustBeChild = true)] public Function DMRetranslocationFactor = null;
-            [Link(MustBeChild = true)] public Function ShadeInducedSenescenceRate = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
-            [Link(MustBeChild = true)] public Function NonStructuralFraction = null;
-            [Link(MustBeChild = true, IsOptional=true)] public Function CellDivisionStress = null;
+            [Link] public Function MaxArea = null;
+            [Link] public Function GrowthDuration = null;
+            [Link] public Function LagDuration = null;
+            [Link] public Function SenescenceDuration = null;
+            [Link] public Function DetachmentLagDuration = null;
+            [Link] public Function DetachmentDuration = null;
+            [Link] public Function SpecificLeafAreaMax = null;
+            [Link] public Function SpecificLeafAreaMin = null;
+            [Link] public Function StructuralFraction = null;
+            [Link] public Function MaximumNConc = null;
+            [Link] public Function MinimumNConc = null;
+            [Link(IsOptional=true)] public Function StructuralNConc = null;
+            [Link] public Function InitialNConc = null;
+            [Link] public Function NReallocationFactor = null;
+            [Link(IsOptional=true)] public Function DMReallocationFactor = null;
+            [Link] public Function NRetranslocationFactor = null;
+            [Link] public Function ExpansionStress = null;
+            [Link] public Function CriticalNConc = null;
+            [Link] public Function DMRetranslocationFactor = null;
+            [Link] public Function ShadeInducedSenescenceRate = null;
+            [Link(IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
+            [Link] public Function NonStructuralFraction = null;
+            [Link(IsOptional=true)] public Function CellDivisionStress = null;
         }
         #endregion
 
@@ -64,19 +64,18 @@ namespace Models.PMF.Organs
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
-        [XmlIgnore]
-        public List<LeafCohort> InitialLeaves { get { return ModelsMatching<LeafCohort>(); } }
-        [Link(MustBeChild = true)] InitialLeafValues LeafCohortParameters = null;
-        [Link(MustBeChild = true)] RUEModel Photosynthesis = null;
-        [Link(MustBeChild = true)] Function ThermalTime = null;
-        [Link(MustBeChild = true)] Function ExtinctionCoeff = null;
-        [Link(MustBeChild = true)] Function FrostFraction = null;
+        private LeafCohort[] InitialLeaves;
+        [Link] InitialLeafValues LeafCohortParameters = null;
+        [Link] RUEModel Photosynthesis = null;
+        [Link] Function ThermalTime = null;
+        [Link] Function ExtinctionCoeff = null;
+        [Link] Function FrostFraction = null;
         //[Link] Function ExpansionStress = null;
         //[Link] Function CriticalNConc = null;
         //[Link] Function MaximumNConc = null;
         //[Link] Function MinimumNConc = null;
-        [Link(MustBeChild = true)] Function StructuralFraction = null;
-        [Link(MustBeChild = true, IsOptional=true)] Function DMDemandFunction = null;
+        [Link] Function StructuralFraction = null;
+        [Link(IsOptional=true)] Function DMDemandFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;
@@ -85,6 +84,15 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
 
         #endregion
+
+        public override void OnLoaded()
+        {
+            base.OnLoaded();
+            List<LeafCohort> initialLeaves = new List<LeafCohort>();
+            foreach (LeafCohort initialLeaf in Children.MatchingMultiple(typeof(LeafCohort)))
+                initialLeaves.Add(initialLeaf);
+            InitialLeaves = initialLeaves.ToArray();
+        }
 
         #region States
         
@@ -665,7 +673,7 @@ namespace Models.PMF.Organs
         public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
         {
             Leaves = new List<LeafCohort>();
-            CopyLeaves(InitialLeaves.ToArray(), Leaves);
+            CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
                 if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day
@@ -703,7 +711,7 @@ namespace Models.PMF.Organs
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
             Leaves.Clear();
-            Summary.WriteMessage(FullPath, "Removing Leaves from plant");
+            Summary.WriteMessage(FullPath, "Removing leaves from plant");
         }
         /// <summary>
         /// Fractional interception "above" a given node position 
@@ -999,7 +1007,17 @@ namespace Models.PMF.Organs
         }
         [XmlIgnore]
         [Units("mm")]
-        public override double WaterDemand { get; set; }
+        public override double WaterDemand
+        {
+            get
+            {
+                return Plant.PotentialEP;
+            }
+            set
+            {
+                Plant.PotentialEP = value;
+            }
+        }
         [XmlIgnore]
         public override double WaterAllocation { get; set;}
        
@@ -1232,7 +1250,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
-            Summary.WriteMessage(FullPath, "Removing Lowest Leaf");
+            Summary.WriteMessage(FullPath, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
         }
 
@@ -1244,34 +1262,10 @@ namespace Models.PMF.Organs
             MaxCover = Sow.MaxCover;
         }
 
-        [EventSubscribe("Canopy_Water_Balance")]
-        private void OnCanopy_Water_Balance(CanopyWaterBalanceType CWB)
-        {
-            if (Plant.InGround)
-            {
-                Boolean found = false;
-                int i = 0;
-                while (!found && (i != CWB.Canopy.Length))
-                {
-                    if (CWB.Canopy[i].name.ToLower() == Plant.Name.ToLower())
-                    {
-                        WaterDemand = CWB.Canopy[i].PotentialEp;
-                        found = true;
-                    }
-                    else
-                        i++;
-                }
-            }
-        }
-
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
-            //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Killing " + KillLeaf.KillFraction + " of leaves on " + Plant.Name;
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+            Summary.WriteMessage(FullPath, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
 
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
@@ -1280,12 +1274,8 @@ namespace Models.PMF.Organs
 
         public override void OnCut()
         {
-            //DateTime Today = DateUtility.JulianDayNumberToDateTime(Convert.ToInt32(MetData.today));
-            string Indent = "     ";
-            string Title = Indent + Clock.Today.ToString("d MMMM yyyy") + "  - Cutting " + Name + " from " + Plant.Name;
-            Summary.WriteMessage(FullPath, "");
-            Summary.WriteMessage(FullPath, Title);
-            Summary.WriteMessage(FullPath, Indent + new string('-', Title.Length));
+
+            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();

@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using System.Runtime.Serialization;
+
 namespace Utility
 {
     /// <summary>
     /// A class for managing asynchronous running of jobs.
     /// </summary>
+    [Serializable]
     public class JobManager
     {
         /// <summary>
@@ -23,6 +26,7 @@ namespace Utility
             void Run(object sender, DoWorkEventArgs e);
         }
 
+        [Serializable]
         public class JobCompleteArgs : EventArgs
         {
             /// <summary>
@@ -63,11 +67,13 @@ namespace Utility
         /// <summary>
         /// Main scheduler thread that goes through all jobs and sets them running.
         /// </summary>
+        [NonSerialized]
         private BackgroundWorker SchedulerThread = null;
 
         /// <summary>
         /// Keep track of all threads created so that we can stop them if needed.
         /// </summary>
+        [NonSerialized]
         private List<BackgroundWorker> Threads = new List<BackgroundWorker>();
 
         /// <summary>
@@ -94,9 +100,15 @@ namespace Utility
         #endregion
 
 
-
-
-
+        /// <summary>
+        /// Used by the binary deserialiser when running on a remote machine.
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext context)
+        {
+            Threads = new List<BackgroundWorker>();
+        }
 
         /// <summary>
         /// Construtor

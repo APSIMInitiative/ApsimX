@@ -543,7 +543,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Returns a clone of this object
         /// </summary>
-        public virtual LeafCohort Clone()
+        public new virtual LeafCohort Clone()
         {
             LeafCohort NewLeaf = (LeafCohort)this.MemberwiseClone();
             NewLeaf.Live = new Biomass();

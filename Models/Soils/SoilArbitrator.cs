@@ -56,17 +56,17 @@ namespace Models.Soils
             formatProvider.TextInfo.ListSeparator = " ";
         }
 
-        [EventSubscribe("MiddleOfDay")]
-        private void OnProcess(object sender, EventArgs e)
+        [EventSubscribe("DoSoilArbitration")]
+        private void OnDoSoilArbitration(object sender, EventArgs e)
         {
             //set up data table
             int NumLayers = 0;
             AllRootSystems.Rows.Clear();
-            List<Model> models = paddock.AllModels;
+            List<Model> models = paddock.Children.AllRecursively;
 
-            foreach (Model m in paddock.AllModels)
+            foreach (Model m in paddock.Children.AllRecursively)
             {
-                string PlantStatus = (string)m.Get("plant_status");
+                string PlantStatus = (string)m.Variables.Get("plant_status");
                 
                 if (PlantStatus == null)//not a plant
                     continue;
@@ -75,7 +75,7 @@ namespace Models.Soils
 
                     if (PlantStatus != "out") //if crop is not in ground, we don't care about it
                     {
-                        RootData = (RootSystem)m.Get("RootSystem");
+                        RootData = (RootSystem)m.Variables.Get("RootSystem");
                         if (RootData != null) //crop has a RootData structre
                         {
                             Dictionary<string, double> SWStrength = CalcSWSourceStrength(RootData);
@@ -93,22 +93,22 @@ namespace Models.Soils
                             RootData.Zones[0].ZoneName = m.Name;
                             RootData.Zones[0].ZoneArea = 1;
 
-                            Root = (Model)m.Find("Root");
+                            Root = (Model)m.Scope.Find("Root");
                             if (Root==null)
                                 throw new Exception("Could not get Root structure for crop " + m.Name);
 
                             try
-                            { RootData.SWDemand = (double)m.Get("WaterDemand"); }
+                            { RootData.SWDemand = (double)m.Variables.Get("WaterDemand"); }
                             catch (Exception) { throw new Exception("Could not get SWDemand for crop " + m.Name); }
 
-                            RootData.Zones[0].RootDepth = (double)Root.Get("RootDepth");
-                            RootData.Zones[0].ll = (double[])Root.Get("ll");
-                            RootData.Zones[0].kl = (double[])Root.Get("kl");
+                            RootData.Zones[0].RootDepth = (double)Root.Variables.Get("RootDepth");
+                            RootData.Zones[0].ll = (double[])Root.Variables.Get("ll");
+                            RootData.Zones[0].kl = (double[])Root.Variables.Get("kl");
 
-                            Soil = (Soil)m.Parent.Find(typeof(Soil));
+                            Soil = (Soil)m.Parent.Scope.Find(typeof(Soil));
                             SWStrength.Add(m.Name, 1);
 
-                            RootData.Zones[0].dlayer = (double[])Soil.SoilWater.Get("dlayer");
+                            RootData.Zones[0].dlayer = (double[])Soil.SoilWater.Variables.Get("dlayer");
 
                             AllRootSystems.Rows.Add(RootData.Zones[0].ZoneName, m.Name, RootData.SWDemand, SWStrength, RootData.Zones[0], true);
                             NumLayers = RootData.Zones[0].kl.Length;
@@ -122,15 +122,15 @@ namespace Models.Soils
             foreach (string PaddockName in paddockNames)
             {
                 IEnumerable<DataRow> RootZones = AllRootSystems.AsEnumerable().Where(row => row.ItemArray[0].Equals(PaddockName));
-                Model p = (Model)paddock.Find(PaddockName);
-                Model fieldProps = (Model)p.Find("FieldProps");
-                double fieldArea = (double)p.Get("Area");
+                Model p = (Model)paddock.Scope.Find(PaddockName);
+                Model fieldProps = (Model)p.Scope.Find("FieldProps");
+                double fieldArea = (double)p.Variables.Get("Area");
 //                if (fieldProps == null)
 //                    throw new Exception("Could not find FieldProps component in field " + PaddockName);
 
-                Soil Soil = (Soil)p.Find(typeof(Soil));
-                double[] SWDep = (double[])Soil.SoilWater.Get("sw_dep");
-                double[] dlayer = (double[])Soil.SoilWater.Get("dlayer");
+                Soil Soil = (Soil)p.Scope.Find(typeof(Soil));
+                double[] SWDep = (double[])Soil.SoilWater.Variables.Get("sw_dep");
+                double[] dlayer = (double[])Soil.SoilWater.Variables.Get("dlayer");
                 double[] CropSWDemand = new double[RootZones.Count()];
                 for (int i = 0; i < RootZones.Count(); i++) //get demand for all crops in paddock using relative SW strength
                 {
@@ -174,12 +174,12 @@ namespace Models.Soils
                     Model CurrentCrop;
                     for (int i = 0; i < RootZones.Count(); i++) //subtract taken water from the supply and demand
                     {
-                        CurrentCrop = (Model)p.Get((string)RootZones.ToArray()[i].ItemArray[0]);
+                        CurrentCrop = (Model)p.Variables.Get((string)RootZones.ToArray()[i].ItemArray[0]);
                       //  CurrentCrop = (Model)CurrentPaddock.Get((string)RootZones.ToArray()[i].ItemArray[1]);
                         CropSWDemand[i] -= Uptake.Row(i).Sum();
                         if (CurrentCrop != null && CurrentCrop.Name.ToLower().Equals("maize"))
                         {
-                            CurrentCrop.Set("SWUptake", Uptake.Row(i).ToArray());
+                            CurrentCrop.Variables.Set("SWUptake", Uptake.Row(i).ToArray());
                         }
                         for (int j = 0; j < NumLayers; j++)
                         {
@@ -193,7 +193,7 @@ namespace Models.Soils
                         SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
                     }
 
-                    Soil.SoilWater.Set("sw_dep", SWDep);
+                   Soil.SoilWater.Variables.Set("sw_dep", SWDep);
                 } while (Utility.Math.Sum(LastCropSWDemand) != Utility.Math.Sum(CropSWDemand) && Utility.Math.Sum(LastSWSupply) != Utility.Math.Sum(SWSupply));
             }
         }
@@ -336,9 +336,9 @@ namespace Models.Soils
             {
                 double[] SWlayers;
                 ZoneNames[i] = RootData.Zones[i].ZoneName;
-                p = (Model)paddock.Find(ZoneNames[i]);
-                Soil = (Soil)p.Find(typeof(Soil));
-                SWlayers = (double[])Soil.SoilWater.Get("sw_dep");
+                p = (Model)paddock.Scope.Find(ZoneNames[i]);
+                Soil = (Soil)p.Scope.Find(typeof(Soil));
+                SWlayers = (double[])Soil.SoilWater.Variables.Get("sw_dep");
                 SWDeps[i] = (double)Utility.Math.Sum(SWlayers);
             }
 

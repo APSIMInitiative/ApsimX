@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using System.IO;
 
 namespace Models.PMF.Phen
 {
@@ -12,7 +13,7 @@ namespace Models.PMF.Phen
         [Link]
         ISummary Summary = null;
 
-        [Link(IsOptional=true, MustBeChild = true)]
+        [Link(IsOptional=true)]
         private Function Target = null;
 
         /// <summary>
@@ -75,11 +76,11 @@ namespace Models.PMF.Phen
             }
         }
 
-        internal override void WriteSummary()
+        internal override void WriteSummary(TextWriter writer)
         {
-            base.WriteSummary();
+            base.WriteSummary(writer);
             if (Target != null)
-                Summary.WriteMessage(FullPath, string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
         }
 
     }

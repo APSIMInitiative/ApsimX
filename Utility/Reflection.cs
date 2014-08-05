@@ -105,22 +105,35 @@ namespace Utility
                     return true;
                 }
 
-                PropertyInfo P = Obj.GetType().GetProperty(Name, Flags);
-                if (P != null)
-                {
-                    if (P.PropertyType == typeof(string))
-                        P.SetValue(Obj, Value.ToString(), null);
-                    else if (P.PropertyType == typeof(double))
-                        P.SetValue(Obj, Convert.ToDouble(Value), null);
-                    else if (P.PropertyType == typeof(int))
-                        P.SetValue(Obj, Convert.ToInt32(Value), null);
-                    else
-                        P.SetValue(Obj, Value, null);
-                    return true;
-                }
-
-                return false;
+                return SetValueOfProperty(Name, Obj, Value);
             }
+        }
+
+        /// <summary>
+        /// Set the value of a object property using reflection. Property must be public.
+        /// </summary>
+        /// <param name="name">Name of the property</param>
+        /// <param name="obj">Object to probe</param>
+        /// <param name="value">The value to set the property to</param>
+        /// <returns>True if value set successfully</returns>
+        public static bool SetValueOfProperty(string name, object obj, object value)
+        {
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+            PropertyInfo P = obj.GetType().GetProperty(name, flags);
+            if (P != null)
+            {
+                if (P.PropertyType == typeof(string))
+                    P.SetValue(obj, value.ToString(), null);
+                else if (P.PropertyType == typeof(double))
+                    P.SetValue(obj, Convert.ToDouble(value), null);
+                else if (P.PropertyType == typeof(int))
+                    P.SetValue(obj, Convert.ToInt32(value), null);
+                else
+                    P.SetValue(obj, value, null);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -297,7 +310,8 @@ namespace Utility
                         Params.ReferencedAssemblies.Add("System.dll");
                         Params.ReferencedAssemblies.Add("System.Xml.dll");
                         Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
-
+                        if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
+                            Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetCallingAssembly().Location));
                         Params.TempFiles = new TempFileCollection(".");
                         Params.TempFiles.KeepFiles = false;
                         string[] source = new string[1];
@@ -352,5 +366,70 @@ namespace Utility
             return formatter.Deserialize(stream);
         }
 
+
+        /// <summary>
+        /// Convert the specified 'stringValue' into an object of the specified 'type'.
+        /// Will throw if cannot convert type.
+        /// </summary>
+        public static object StringToObject(Type type, string stringValue)
+        {
+            if (type.IsArray)
+            {
+                string[] stringValues = stringValue.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (type == typeof(double[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(int[]))
+                    return Utility.Math.StringsToDoubles(stringValues);
+                else if (type == typeof(string[]))
+                    return stringValues;
+                else
+                    throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
+            }
+            else if (type == typeof(double))
+                return Convert.ToDouble(stringValue);
+            else if (type == typeof(float))
+                return Convert.ToSingle(stringValue);
+            else if (type == typeof(int))
+                return Convert.ToInt32(stringValue);
+            else if (type == typeof(DateTime))
+                return Convert.ToDateTime(stringValue);
+            else if (type == typeof(string))
+                return stringValue;
+            else if (type.IsEnum)
+                return Enum.Parse(type, stringValue, true);
+
+            throw new Exception("Cannot convert the string '" + stringValue + "' to a " + type.ToString());
+        }
+
+        /// <summary>
+        /// Convert the specified 'obj' into a string.
+        /// </summary>
+        public static string ObjectToString(object obj)
+        {
+            if (obj.GetType().IsArray)
+            {
+                string stringValue = "";
+                Array arr = obj as Array;
+                for (int j = 0; j < arr.Length; j++)
+                {
+                    if (j > 0)
+                        stringValue += ",";
+                    stringValue += arr.GetValue(j).ToString();
+                }
+                return stringValue;
+            }
+            else
+                return obj.ToString();
+        }
+
+        /// <summary>
+        /// Perform a deep Copy of the specified object
+        /// </summary>
+        public static object Clone(object sourceObj)
+        {
+            Stream stream = BinarySerialise(sourceObj);
+            stream.Seek(0, SeekOrigin.Begin);
+            return BinaryDeserialise(stream);
+        }
     }
 }

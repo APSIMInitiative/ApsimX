@@ -61,21 +61,48 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to           &lt;OilPalm&gt;
+        ///            &lt;Name&gt;OilPalm&lt;/Name&gt;
+        ///            &lt;Constant&gt;
+        ///              &lt;Name&gt;cover_tot&lt;/Name&gt;
+        ///              &lt;Value&gt;0.9&lt;/Value&gt;
+        ///            &lt;/Constant&gt;
+        ///            &lt;Constant&gt;
+        ///              &lt;Name&gt;height&lt;/Name&gt;
+        ///              &lt;Value&gt;10000&lt;/Value&gt;
+        ///            &lt;/Constant&gt;
+        ///            &lt;VariableReference&gt;
+        ///              &lt;Name&gt;UnderstoryCoverMax&lt;/Name&gt;
+        ///              &lt;VariableName /&gt;
+        ///            &lt;/VariableReference&gt;
+        ///            &lt;VariableReference&gt;
+        ///              &lt;Name&gt;UnderstoryLegumeF [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string OilPalm {
+            get {
+                return ResourceManager.GetString("OilPalm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  &lt;Plant&gt;
         ///    &lt;Name&gt;Potato&lt;/Name&gt;
-        ///          &lt;Phenology&gt;
-        ///            &lt;Name&gt;Phenology&lt;/Name&gt;
-        ///            &lt;StageBasedInterpolation&gt;
-        ///              &lt;Name&gt;StageCode&lt;/Name&gt;
-        ///              &lt;Stages&gt;
-        ///                &lt;string&gt;Planting&lt;/string&gt;
-        ///                &lt;string&gt;Peeping&lt;/string&gt;
-        ///                &lt;string&gt;Emergence&lt;/string&gt;
-        ///                &lt;string&gt;TuberInitiation&lt;/string&gt;
-        ///                &lt;string&gt;FinalLeaf&lt;/string&gt;
-        ///                &lt;string&gt;FullSenescence&lt;/string&gt;
-        ///                &lt;string&gt;Maturity&lt;/string&gt;
-        ///   [rest of string was truncated]&quot;;.
+        ///   &lt;CropType&gt;Potato&lt;/CropType&gt;
+        ///   &lt;Cultivars&gt;
+        ///     &lt;Cultivar&gt;
+        ///       &lt;Name&gt;RussetBurbank&lt;/Name&gt;
+        ///     &lt;/Cultivar&gt;
+        ///     &lt;Cultivar&gt;
+        ///       &lt;Name&gt;JerseyBenny&lt;/Name&gt;
+        ///       &lt;Override&gt;
+        ///         &lt;Name&gt;[Structure].MainStemFinalNodeNumber.value&lt;/Name&gt;
+        ///         &lt;Value&gt;19&lt;/Value&gt;
+        ///       &lt;/Override&gt;
+        ///       &lt;Override&gt;
+        ///         &lt;Name&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X&lt;/Name&gt;
+        ///         &lt;Value&gt;0 6 7 10 11&lt;/Value&gt;
+        ///       &lt;/Override&gt;
+        ///       &lt;Override&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {
             get {
@@ -92,14 +119,15 @@ namespace Models.Properties {
         ///  &lt;NSupplyPreference&gt;active&lt;/NSupplyPreference&gt;
         ///  &lt;DoRetranslocationBeforeNDemand&gt;false&lt;/DoRetranslocationBeforeNDemand&gt;
         ///  &lt;RemovedByAnimal /&gt;
-        ///  &lt;Population1&gt;
-        ///    &lt;Name&gt;Population&lt;/Name&gt;
-        ///    &lt;PhaseBasedSwitch&gt;
-        ///      &lt;Name&gt;CropFailureStressPeriod&lt;/Name&gt;
-        ///      &lt;Start&gt;Emergence&lt;/Start&gt;
-        ///      &lt;End&gt;Flowering&lt;/End&gt;
-        ///    &lt;/PhaseBasedSwitch&gt;
-        ///    &lt;SoilTemperatureWeightedFunc [rest of string was truncated]&quot;;.
+        ///  &lt;Cultivars&gt;
+        ///    &lt;Cultivar&gt;
+        ///      &lt;Name&gt;GattonHartog&lt;/Name&gt;
+        ///      &lt;Override&gt;
+        ///        &lt;Name&gt;[Phenology].Vernalisation.VernSens&lt;/Name&gt;
+        ///        &lt;Value&gt;2.5&lt;/Value&gt;
+        ///      &lt;/Override&gt;
+        ///      &lt;Override&gt;
+        ///        &lt;Name&gt;[Phenology].V [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {

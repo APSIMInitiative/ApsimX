@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml;
 using System;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Commands
 {
@@ -30,7 +31,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            ModelCollection parent = ModelToMove.Parent;
+            Model parent = ModelToMove.Parent;
 
             int modelIndex = parent.Models.IndexOf(ModelToMove);
 
@@ -54,7 +55,7 @@ namespace UserInterface.Commands
         {
             if (ModelWasMoved)
             {
-                ModelCollection parent = ModelToMove.Parent;
+                Model parent = ModelToMove.Parent;
                 int modelIndex = parent.Models.IndexOf(ModelToMove);
                 if (MoveUp)
                     MoveModelDown(CommandHistory, parent, modelIndex);
@@ -64,7 +65,7 @@ namespace UserInterface.Commands
         }
 
 
-        private void MoveModelDown(CommandHistory CommandHistory, ModelCollection parent, int modelIndex)
+        private void MoveModelDown(CommandHistory CommandHistory, Model parent, int modelIndex)
         {
             parent.Models.Remove(ModelToMove);
             parent.Models.Insert(modelIndex + 1, ModelToMove);
@@ -73,7 +74,7 @@ namespace UserInterface.Commands
             ModelWasMoved = true;
         }
 
-        private void MoveModelUp(CommandHistory CommandHistory, ModelCollection parent, int modelIndex)
+        private void MoveModelUp(CommandHistory CommandHistory, Model parent, int modelIndex)
         {
             parent.Models.Remove(ModelToMove);
             parent.Models.Insert(modelIndex - 1, ModelToMove);

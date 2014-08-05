@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
-            Manager.RebuildScriptModel();
+           // Manager.RebuildScriptModel();
         }
 
         /// <summary>
@@ -50,20 +50,21 @@ namespace UserInterface.Presenters
             object o = null;
             if (Manager.Script != null)
             {
+                e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
 
                 // If no dot was specified then the object name may be refering to a [Link] in the script.
                 if (!e.ObjectName.Contains("."))
                 {
-                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName.Trim(" \t".ToCharArray()), Manager.Script);
+                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName, Manager.Script);
                     if (o == null)
                     {
                         // Not a [Link] so look for the object within scope
-                        o = Manager.Find(e.ObjectName);
+                        o = Manager.Scope.Find(e.ObjectName);
                     }
                 }
                 // If still not found then try a specific get for the object.
                 if (o == null)
-                    o = Manager.Get(e.ObjectName);
+                    o = Manager.Variables.Get(e.ObjectName);
 
                 // If found then loop through all properties and add to the items list.
                 if (o != null)
@@ -85,7 +86,12 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Manager, "Code", ManagerView.Editor.Text));
+                // set the code property manually first so that compile error can be trapped via
+                // an exception.
+                Manager.Code = ManagerView.Editor.Text;
+
+                // If it gets this far then compiles ok.
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
             }
             catch (Exception err)
             {

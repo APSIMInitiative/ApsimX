@@ -8,6 +8,7 @@ using System.Reflection;
 using Models.Core;
 using System.Data;
 using System.IO;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -27,20 +28,18 @@ namespace UserInterface.Presenters
             this.ExplorerPresenter = explorerPresenter;
             this.View = View as IReportView;
 
-            this.View.VariableList.Lines = Report.Variables;
-            this.View.EventList.Lines = Report.Events;
+            this.View.VariableList.Lines = Report.VariableNames;
+            this.View.EventList.Lines = Report.EventNames;
             this.View.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
-            this.View.OnAutoCreateClick += OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
             Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
             DataStore = new DataStore(Report);
 
             PopulateDataGrid();
-            this.View.AutoCreate = Report.AutoCreateCSV;
         }
 
         /// <summary>
@@ -52,7 +51,6 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
-            this.View.OnAutoCreateClick -= OnAutoCreateClick;
             ExplorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             DataStore.Disconnect();
         }
@@ -68,7 +66,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (IVariable Property in Model.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                 {
                     e.Items.Add(Property.Name);
                 }
@@ -96,7 +94,7 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Variables", View.VariableList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "VariableNames", View.VariableList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -106,7 +104,7 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "Events", View.EventList.Lines));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "EventNames", View.EventList.Lines));
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
@@ -117,9 +115,8 @@ namespace UserInterface.Presenters
         {
             if (changedModel == Report)
             {
-                View.VariableList.Lines = Report.Variables;
-                View.EventList.Lines = Report.Events;
-                View.AutoCreate = Report.AutoCreateCSV;
+                View.VariableList.Lines = Report.VariableNames;
+                View.EventList.Lines = Report.EventNames;
             }
         }
 
@@ -137,25 +134,12 @@ namespace UserInterface.Presenters
                 // Make all numeric columns have a format of N3
                 foreach (DataColumn col in View.DataGrid.DataSource.Columns)
                 {
-                    View.DataGrid.SetColumnAlignment(col.Ordinal, false);
+                    IGridColumn gridColumn = this.View.DataGrid.GetColumn(col.Ordinal);
+                    gridColumn.LeftAlignment = false;
                     if (col.DataType == typeof(double))
-                        View.DataGrid.SetColumnFormat(col.Ordinal, "N3");
+                        gridColumn.Format = "N3";
                 }
             }
         }
-
-        /// <summary>
-        /// User has changed the auto create checkbox.
-        /// </summary>
-        void OnAutoCreateClick(object sender, EventArgs e)
-        {
-            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangePropertyCommand(Report, "AutoCreateCSV", View.AutoCreate));
-            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-        }
-
-
-
-
     }
 }

@@ -1297,7 +1297,7 @@ namespace Models.Soils
 
         [Units("%")]
         [Description("Soil organic carbon (exclude FOM)")]
-        private double[] oc
+        public double[] oc
         {
             get
             {
@@ -2089,9 +2089,7 @@ namespace Models.Soils
         /// <summary>
         /// N carried out in sediment via runoff/erosion
         /// </summary>
-
         [Units("kg")]
-        [Description("N loss carried in sediment")]
         double dlt_n_loss_in_sed
         {
             get
@@ -2108,7 +2106,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net NH4 change today")]
         double[] dlt_nh4_net
         {
             get
@@ -2126,7 +2123,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net NH4 transformation")]
         double[] nh4_transform_net
         {
             get
@@ -2144,7 +2140,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net NO3 change today")]
         double[] dlt_no3_net
         {
             get
@@ -2160,9 +2155,7 @@ namespace Models.Soils
         /// <summary>
         /// Net NO3 transformation today
         /// </summary>
-
         [Units("kg/ha")]
-        [Description("Net NO3 transformation")]
         double[] no3_transform_net
         {
             get
@@ -2180,7 +2173,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net N mineralised in soil")]
         public double[] dlt_n_min
         {
             get
@@ -2198,7 +2190,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net N mineralisation from residue decomposition")]
         public double[] dlt_n_min_res
         {
             get
@@ -2216,7 +2207,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net convertion of NH4 for residue mineralisation/immobilisation")]
         double[] dlt_res_nh4_min
         {
             get
@@ -2234,7 +2224,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net convertion of NO3 for residue mineralisation/immobilisation")]
         double[] dlt_res_no3_min
         {
             get
@@ -2252,7 +2241,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net FOM N mineralised, negative for immobilisation")]
         double[] dlt_fom_n_min
         {
             get
@@ -2270,7 +2258,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net humic N mineralised, negative for immobilisation")]
         double[] dlt_hum_n_min
         {
             get
@@ -2288,7 +2275,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Net biomass N mineralised")]
         double[] dlt_biom_n_min
         {
             get
@@ -2306,7 +2292,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Total net N mineralised (soil plus residues)")]
         public double[] dlt_n_min_tot
         {
             get
@@ -2324,7 +2309,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen coverted by hydrolysis")]
         double[] dlt_urea_hydrol
         {
             get
@@ -2342,7 +2326,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen coverted by nitrification")]
         double[] dlt_rntrf
         {
             get
@@ -2360,7 +2343,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen coverted by nitrification")]
         double[] nitrification
         {
             get
@@ -2378,7 +2360,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Effective nitrogen coverted by nitrification")]
         double[] effective_nitrification
         {
             get
@@ -2396,7 +2377,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("NH4 N denitrified")]
         double[] dlt_nh4_dnit
         {
             get
@@ -2414,7 +2394,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("NO3 N denitrified")]
         double[] dlt_no3_dnit
         {
             get
@@ -2432,8 +2411,7 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Amount of N2O produced")]
-        double[] n2o_atm
+        public double[] n2o_atm
         {
             get
             {
@@ -2450,7 +2428,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Amount of N2O produced by nitrification")]
         double[] n2o_atm_nitrification
         {
             get
@@ -2468,7 +2445,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Amount of N2O produced by dentrification")]
         double[] n2o_atm_dentrification
         {
             get
@@ -2486,7 +2462,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Amount of N2 produced")]
         double[] n2_atm
         {
             get
@@ -2504,7 +2479,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("N converted by denitrification")]
         public double[] dnit
         {
             get
@@ -2522,7 +2496,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("NH4 deficit for immobilisation")]
         double[] nh4_deficit_immob
         {
             get
@@ -2544,7 +2517,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen in FOM")]
         public double[] fom_n
         {
             get
@@ -2562,7 +2534,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen in FOM pool 1")]
         double[] fom_n_pool1
         {
             get
@@ -2580,7 +2551,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen in FOM pool 2")]
         double[] fom_n_pool2
         {
             get
@@ -2598,7 +2568,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Nitrogen in FOM pool 3")]
         double[] fom_n_pool3
         {
             get
@@ -2616,7 +2585,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil humic nitrogen")]
         public double[] hum_n
         {
             get
@@ -2634,7 +2602,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil biomass nitrogen")]
         public double[] biom_n
         {
             get
@@ -2652,8 +2619,7 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Total N in soil")]
-        double[] nit_tot
+        public double[] nit_tot
         {
             get
             {
@@ -2677,7 +2643,6 @@ namespace Models.Soils
         /// Balance of nitrogen: deltaN - losses
         /// </summary>
 
-        [Description("Nitrogen balance")]
         double nitrogenbalance
         {
             get
@@ -2701,7 +2666,6 @@ namespace Models.Soils
         /// Number of fom types read - is this really needed?
         /// </summary>
 
-        [Description("Number of FOM types")]
         private int num_fom_types
         { get { return fom_types.Length; } }
 
@@ -2709,7 +2673,6 @@ namespace Models.Soils
         /// Carbohydrate fraction of FOM (0-1)
         /// </summary>
 
-        [Description("Fraction of carbohydrate in FOM")]
         private double fr_carb
         { get { return fract_carb[fom_type]; } }
 
@@ -2717,7 +2680,6 @@ namespace Models.Soils
         /// Cellulose fraction of FOM (0-1)
         /// </summary>
 
-        [Description("Fraction of cellulose in FOM")]
         private double fr_cell
         { get { return fract_cell[fom_type]; } }
 
@@ -2725,7 +2687,6 @@ namespace Models.Soils
         /// Lignin fraction of FOM (0-1)
         /// </summary>
 
-        [Description("Fraction of lignin in FOM")]
         private double fr_lign
         { get { return fract_lign[fom_type]; } }
 
@@ -2738,7 +2699,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg")]
-        [Description("Carbon loss in sediment")]
         double dlt_c_loss_in_sed
         {
             get
@@ -2755,7 +2715,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C converted to humic")]
         double[] dlt_fom_c_hum
         {
             get
@@ -2773,7 +2732,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C converted to biomass")]
         double[] dlt_fom_c_biom
         {
             get
@@ -2791,7 +2749,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C lost to atmosphere")]
         double[] dlt_fom_c_atm
         {
             get
@@ -2809,7 +2766,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Humic C converted to biomass")]
         double[] dlt_hum_c_biom
         {
             get
@@ -2827,7 +2783,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Humic C lost to atmosphere")]
         double[] dlt_hum_c_atm
         {
             get
@@ -2845,7 +2800,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Biomass C converted to humic")]
         double[] dlt_biom_c_hum
         {
             get
@@ -2863,7 +2817,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Biomass C lost to atmosphere")]
         double[] dlt_biom_c_atm
         {
             get
@@ -2881,7 +2834,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from residues converted to biomass")]
         double[] dlt_res_c_biom
         {
             get
@@ -2899,7 +2851,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from residues converted to humic")]
         double[] dlt_res_c_hum
         {
             get
@@ -2917,7 +2868,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from residues lost to atmosphere")]
         double[] dlt_res_c_atm
         {
             get
@@ -2935,7 +2885,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Delta FOM C pool in fraction 1")]
         double[] dlt_fom_c_pool1
         {
             get
@@ -2953,7 +2902,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Delta FOM C pool in fraction 2")]
         double[] dlt_fom_c_pool2
         {
             get
@@ -2971,7 +2919,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Delta FOM C pool in fraction 3")]
         double[] dlt_fom_c_pool3
         {
             get
@@ -2989,7 +2936,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from all residues to atmosphere")]
         double[] soilp_dlt_res_c_atm
         {
             get
@@ -3007,7 +2953,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from all residues to humic")]
         double[] soilp_dlt_res_c_hum
         {
             get
@@ -3025,7 +2970,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Carbon from all residues to biomass")]
         double[] soilp_dlt_res_c_biom
         {
             get
@@ -3047,7 +2991,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil FOM C")]
         double[] fom_c
         {
             get
@@ -3065,7 +3008,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C in pool 1")]
         double[] fom_c_pool1
         {
             get
@@ -3083,7 +3025,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C in pool 2")]
         double[] fom_c_pool2
         {
             get
@@ -3101,7 +3042,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("FOM C in pool 3")]
         double[] fom_c_pool3
         {
             get
@@ -3119,7 +3059,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil humic C")]
         double[] hum_c
         {
             get
@@ -3137,7 +3076,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil humic inert C")]
         double[] inert_c
         {
             get
@@ -3155,7 +3093,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Soil biomass C")]
         double[] biom_c
         {
             get
@@ -3173,8 +3110,7 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("Total soil carbon")]
-        double[] carbon_tot
+        public double[] carbon_tot
         {
             get
             {
@@ -3198,7 +3134,6 @@ namespace Models.Soils
         /// Balance of C in soil: deltaC - losses
         /// </summary>
 
-        [Description("Carbon balance")]
         double carbonbalance
         {
             get
@@ -3220,7 +3155,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("kg/ha")]
-        [Description("P coverted by residue mineralisation (needed by SoilP)")]
         double[] soilp_dlt_org_p
         {
             get
@@ -3243,7 +3177,6 @@ namespace Models.Soils
         /// </summary>
 
         [Units("oC")]
-        [Description("Soil temperature")]
         public double[] st
         {
             get
@@ -3259,7 +3192,6 @@ namespace Models.Soils
         /// Temperature factor for nitrification and mineralisation
         /// </summary>
 
-        [Description("Temperature factor for nitrification and mineralisation")]
         double[] tf
         {
             get
@@ -3277,7 +3209,6 @@ namespace Models.Soils
         /// Number of internal patches
         /// </summary>
 
-        [Description("Number of internal patches")]
         int numPatches
         { get { return Patch.Count; } }
 
@@ -3285,7 +3216,6 @@ namespace Models.Soils
         /// Relative area of each internal patch
         /// </summary>
 
-        [Description("Relative area of each internal patch")]
         double[] PatchArea
         {
             get
@@ -3304,7 +3234,6 @@ namespace Models.Soils
         /// Relative area of each internal patch
         /// </summary>
 
-        [Description("Data from internal CN patches")]
         public double[][] CNPatch_no3
         {
             get
@@ -3324,7 +3253,6 @@ namespace Models.Soils
         /// Relative area of each internal patch
         /// </summary>
 
-        [Description("Data from internal CN patches")]
         public double[][] CNPatch_hum_c
         {
             get

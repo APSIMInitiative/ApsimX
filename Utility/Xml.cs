@@ -796,15 +796,41 @@ namespace Utility
         public static string Serialise(object Component, bool WithNamespace)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            if (WithNamespace)
+                ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            else
+                ns.Add("", "");
 
             MemoryStream M = new MemoryStream();
             StreamWriter Writer = new StreamWriter(M);
-            XmlSerializer x = new XmlSerializer(Component.GetType());
-            if (WithNamespace)
-                 x.Serialize(Writer, Component, ns);
+
+            // Try using the pre built serialization assembly first.
+            string DeserializerFileName = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location,
+                                                                         ".XmlSerializers.dll");
+
+            // Under MONO it seems that if a class is not in the serialization assembly then exception will 
+            // be thrown. Under windows this doesn't happen. For now, only use the prebuilt serialisation
+            // dll if on windows.
+            if ((Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows) &&
+                File.Exists(DeserializerFileName))
+            {
+                Assembly SerialiserAssembly = Assembly.LoadFile(DeserializerFileName);
+                string SerialiserFullName = "Microsoft.Xml.Serialization.GeneratedAssembly." + Component.GetType().Name + "Serializer";
+                object Serialiser = SerialiserAssembly.CreateInstance(SerialiserFullName);
+
+                if (Serialiser != null)
+                {
+                    MethodInfo Serialise = Serialiser.GetType().GetMethod("Serialize", new Type[] { typeof(StreamWriter), typeof(object), typeof(XmlSerializerNamespaces) });
+                    if (Serialise != null)
+                        Serialise.Invoke(Serialiser, new object[] { Writer, Component, ns });
+                }
+            }
             else
-                x.Serialize(Writer, Component);
+            {
+                XmlSerializer x = new XmlSerializer(Component.GetType());
+                x.Serialize(Writer, Component, ns);
+            }
                
             M.Seek(0, SeekOrigin.Begin);
             StreamReader R = new StreamReader(M);

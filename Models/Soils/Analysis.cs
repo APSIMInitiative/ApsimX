@@ -12,9 +12,10 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Analysis : Model
     {
-        [UserInterfaceIgnore]
         public double[] Thickness { get; set; }
 
+        [Summary]
+        [Description("Depth")]
         [XmlIgnore]
         [Units("cm")]
         public string[] Depth
@@ -29,54 +30,85 @@ namespace Models.Soils
             }
         }        
 
+        [Description("Rocks")]
         [Units("%")]
         public double[] Rocks { get; set; }
         public string[] RocksMetadata { get; set; }
+        [Description("Texture")]
         public string[] Texture { get; set; }
         public string[] TextureMetadata { get; set; }
+        [Description("Munsell Colour")]
         public string[] MunsellColour { get; set; }
         public string[] MunsellMetadata { get; set; }
+
+        [Summary]
+        [Description("EC")]
         [Units("1:5 dS/m")]
         public double[] EC { get; set; }
         public string[] ECMetadata { get; set; }
+
+        [Summary]
+        [Description("PH")]
+        [Display(Format="N1")]
         public double[] PH { get; set; }
         public string[] PHMetadata { get; set; }
+
+        [Summary]
+        [Description("CL")]
         [Units("mg/kg")]
         public double[] CL { get; set; }
         public string[] CLMetadata { get; set; }
+        [Description("Boron")]
         [Units("Hot water mg/kg")]
         public double[] Boron { get; set; }
         public string[] BoronMetadata { get; set; }
+        [Description("CEC")]
         [Units("cmol+/kg")]
         public double[] CEC { get; set; }
         public string[] CECMetadata { get; set; }
+        [Description("Ca")]
         [Units("cmol+/kg")]
         public double[] Ca { get; set; }
         public string[] CaMetadata { get; set; }
+        [Description("Mg")]
         [Units("cmol+/kg")]
         public double[] Mg { get; set; }
         public string[] MgMetadata { get; set; }
+        [Description("Na")]
         [Units("cmol+/kg")]
         public double[] Na { get; set; }
         public string[] NaMetadata { get; set; }
+        [Description("K")]
         [Units("cmol+/kg")]
         public double[] K { get; set; }
         public string[] KMetadata { get; set; }
+
+        [Summary]
+        [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
         public string[] ESPMetadata { get; set; }
+        [Description("Mn")]
         [Units("mg/kg")]
         public double[] Mn { get; set; }
         public string[] MnMetadata { get; set; }
+        [Description("Al")]
         [Units("cmol+/kg")]
         public double[] Al { get; set; }
         public string[] AlMetadata { get; set; }
+
+        [Summary]
+        [Description("Particle size sand")]
         [Units("%")]
         public double[] ParticleSizeSand { get; set; }
         public string[] ParticleSizeSandMetadata { get; set; }
+        [Summary]
+        [Description("Particle size silt")]
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
         public string[] ParticleSizeSiltMetadata { get; set; }
+        [Summary]
+        [Description("Particle size clay")]
         [Units("%")]
         public double[] ParticleSizeClay { get; set; }
         public string[] ParticleSizeClayMetadata { get; set; }
@@ -129,7 +161,6 @@ namespace Models.Soils
         /// <summary>
         /// PH. Units: (1:5 water)
         /// </summary>
-        [UserInterfaceIgnore]
         public double[] PHWater
         {
             get

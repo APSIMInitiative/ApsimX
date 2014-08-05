@@ -9,7 +9,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.OldPlant
 {
     [Serializable]
-    public class Population1 : ModelCollection
+    public class Population1 : Model
     {
         [Link]
         Plant15 Plant = null;

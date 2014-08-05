@@ -13,9 +13,16 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Water : Model
     {
+        private Soil soil
+        {
+            get
+            {
+                return this.ParentOfType(typeof(Soil)) as Soil;
+            }
+        }
+
         private double[] _Thickness;
 
-        [UserInterfaceIgnore]
         public double[] Thickness
         {
             get
@@ -28,8 +35,10 @@ namespace Models.Soils
             }
         }
 
+        [Summary]
         [XmlIgnore]
         [Units("cm")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -42,17 +51,40 @@ namespace Models.Soils
             }
         }
 
+        [Summary]
+        [Description("BD")]
         [Units("g/cc")]
+        [Display(Format = "N2")]
         public double[] BD { get; set; }
+
+        [Summary]
+        [Description("Air dry")]
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] AirDry { get; set; }
+
+        [Summary]
+        [Description("LL15")]
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] LL15 { get; set; }
+
+        [Summary]
+        [Description("DUL")]
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] DUL { get; set; }
+
+        [Summary]
+        [Description("SAT")]
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] SAT { get; set; }
+
+        [Summary]
+        [Description("KS")]
         [Units("mm/day")]
+        [Display(Format = "N1")]
         public double[] KS { get; set; }
 
         public string[] BDMetadata { get; set; }
@@ -62,6 +94,7 @@ namespace Models.Soils
         public string[] SATMetadata { get; set; }
         public string[] KSMetadata { get; set; }
 
+        [Description("Soil crop parameterisations")]
         [XmlElement("SoilCrop")]
         public List<SoilCrop> Crops { get; set; }
 
@@ -96,7 +129,6 @@ namespace Models.Soils
         /// the setting list of names. Also new crops will be added / deleted as required.
         /// </summary>
         [XmlIgnore]
-        [UserInterfaceIgnore]
         public string[] CropNames
         {
             get

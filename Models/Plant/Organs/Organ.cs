@@ -46,7 +46,7 @@ namespace Models.PMF.Organs
     #endregion
 
     [Serializable]
-    abstract public class Organ : ModelCollection
+    abstract public class Organ : Model
     {
         #region Links to other models or compontnets
         [Link] public Biomass Live = null;

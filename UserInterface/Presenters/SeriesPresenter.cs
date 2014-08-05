@@ -1,48 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Graph;
-using UserInterface.Views;
-using Models;
-using System.Data;
-using System.Drawing;
-using Models.Core;
-using System.Reflection;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="SeriesPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Graph;
+    using Views;
+    using Models;
+    using System.Data;
+    using System.Drawing;
+    using Models.Core;
+    using System.Reflection;
+    using Interfaces;
+
+    /// <summary>
+    /// A presenter class for graph series.
+    /// </summary>
     class SeriesPresenter : IPresenter
     {
-        private Graph Graph;
-        private ISeriesView SeriesView;
-        private DataStore DataStore;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The graph model to work with.
+        /// </summary>
+        private Graph graph;
+
+        /// <summary>
+        /// The series view to work with.
+        /// </summary>
+        /// 
+        private ISeriesView seriesView;
+
+        /// <summary>
+        /// The data store where the data is located
+        /// </summary>
+        private DataStore dataStore;
+
+        /// <summary>
+        /// The parent explorer presenter.
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// A flag to stop recursion through the 'PopulateSeriesEditor' method
+        /// </summary>
+        private bool InPopulateSeriesEditor = false;
 
         /// <summary>
         /// Attach the model and view to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The graph model to work with</param>
+        /// <param name="view">The series view to work with</param>
+        /// <param name="explorerPresenter">The parent explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            //Series Series = Model as Series;
-            //Graph = Series.Parent as Graph;
-            Graph = Model as Graph;
-            SeriesView = View as SeriesView;
-            ExplorerPresenter = explorerPresenter;
-            DataStore = Graph.DataStore;
+            this.graph = model as Graph;
+            this.seriesView = view as SeriesView;
+            this.explorerPresenter = explorerPresenter;
+            this.dataStore = graph.DataStore;
 
-            SeriesView.SeriesGrid.AddContextAction("Delete series", OnDeleteSeries);
-            SeriesView.SeriesGrid.AddContextAction("Clear all series", OnClearSeries);
+            // Populate the series names.
+            PopulateSeriesNames();
 
-            SeriesView.DataGrid.ColumnHeaderClicked += OnDataColumnClicked;
-            SeriesView.SeriesGrid.CellValueChanged += OnCellChanged;
+            // Trap events from the view.
+            this.seriesView.SeriesSelected += OnSeriesSelected;
+            this.seriesView.SeriesAdded += OnSeriesAdded;
+            this.seriesView.SeriesDeleted += OnSeriesDeleted;
+            this.seriesView.AllSeriesCleared += OnSeriesCleared;
+            this.seriesView.SeriesRenamed += SeriesRenamed;
+            this.seriesView.SeriesEditor.OnDataSourceChanged += OnDataSourceChanged;
+            this.seriesView.SeriesEditor.OnSeriesTypeChanged += OnSeriesTypeChanged;
+            this.seriesView.SeriesEditor.OnSeriesLineTypeChanged += OnSeriesLineTypeChanged;
+            this.seriesView.SeriesEditor.OnSeriesMarkerTypeChanged += OnSeriesMarkerTypeChanged;
+            this.seriesView.SeriesEditor.OnColourChanged += OnColourChanged;
+            this.seriesView.SeriesEditor.OnRegressionChanged += OnRegressionChanged;
+            this.seriesView.SeriesEditor.OnXOnTopChanged += OnXOnTopChanged;
+            this.seriesView.SeriesEditor.OnYOnRightChanged += OnYOnRightChanged;
+            this.seriesView.SeriesEditor.OnXChanged += OnXChanged;
+            this.seriesView.SeriesEditor.OnYChanged += OnYChanged;
+            this.seriesView.SeriesEditor.OnX2Changed += OnX2Changed;
+            this.seriesView.SeriesEditor.OnY2Changed += OnY2Changed;
+            this.seriesView.SeriesEditor.OnShowInLegendChanged += OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.OnSeparateSeriesChanged += OnSeparateSeriesChanged;
 
-            PopulateDataSources();
-            PopulateSeries();
+            //this.PopulateDataSources();
+            //this.PopulateSeries();
 
-            SeriesView.XFocused = true;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
-
-            SeriesView.DataSourceChanged += OnDataSourceChanged;
-            OnDataSourceChanged(SeriesView.DataSource);
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
         }
 
         /// <summary>
@@ -50,227 +95,521 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            SeriesView.DataSourceChanged -= OnDataSourceChanged;
-            SeriesView.DataGrid.ColumnHeaderClicked -= OnDataColumnClicked;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
+            this.seriesView.SeriesSelected -= OnSeriesSelected;
+            this.seriesView.SeriesAdded -= OnSeriesAdded;
+            this.seriesView.SeriesDeleted -= OnSeriesDeleted;
+            this.seriesView.AllSeriesCleared -= OnSeriesCleared;
+            this.seriesView.SeriesRenamed -= SeriesRenamed;
+            
+            this.seriesView.SeriesEditor.OnDataSourceChanged -= OnDataSourceChanged;
+            this.seriesView.SeriesEditor.OnSeriesTypeChanged -= OnSeriesTypeChanged;
+            this.seriesView.SeriesEditor.OnSeriesLineTypeChanged -= OnSeriesLineTypeChanged;
+            this.seriesView.SeriesEditor.OnSeriesMarkerTypeChanged -= OnSeriesMarkerTypeChanged;
+            this.seriesView.SeriesEditor.OnColourChanged -= OnColourChanged;
+            this.seriesView.SeriesEditor.OnRegressionChanged -= OnRegressionChanged;
+            this.seriesView.SeriesEditor.OnXOnTopChanged -= OnXOnTopChanged;
+            this.seriesView.SeriesEditor.OnYOnRightChanged -= OnYOnRightChanged;
+            this.seriesView.SeriesEditor.OnXChanged -= OnXChanged;
+            this.seriesView.SeriesEditor.OnYChanged -= OnYChanged;
+            this.seriesView.SeriesEditor.OnX2Changed -= OnX2Changed;
+            this.seriesView.SeriesEditor.OnY2Changed -= OnY2Changed;
+            this.seriesView.SeriesEditor.OnShowInLegendChanged -= OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.OnSeparateSeriesChanged -= OnSeparateSeriesChanged;
+
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnGraphModelChanged2;
         }
 
         /// <summary>
-        /// Populate the series grid in the view.
+        /// User has selected a series.
         /// </summary>
-        private void PopulateSeries()
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesSelected(object sender, EventArgs e)
         {
-            DataTable Data = new DataTable();
-            if (Graph != null && Graph.Series.Count > 0)
-            {
-                Data.Columns.Add("Data source", typeof(string));
-                Data.Columns.Add("X", typeof(string));
-                Data.Columns.Add("Y", typeof(string));
-                Data.Columns.Add("Title", typeof(string));
-                Data.Columns.Add("C", typeof(int));
-                Data.Columns.Add("Type", typeof(string));
-                Data.Columns.Add("X on Top?", typeof(bool));
-                Data.Columns.Add("Y on Right?", typeof(bool));
-                Data.Columns.Add("Line", typeof(string));
-                Data.Columns.Add("Marker", typeof(string));
-                Data.Columns.Add("Regression?", typeof(bool));
-                foreach (Series S in Graph.Series)
-                {
-                    DataRow Row = Data.NewRow();
-                    if (S.X != null)
-                    {
-                        if (S.X.SimulationName == null)
-                            Row[0] = S.X.TableName;
-                        else
-                            Row[0] = S.X.SimulationName + "." + S.X.TableName;
-                        Row[1] = S.X.FieldName;
-                    }
-                    if (S.Y != null)
-                        Row[2] = S.Y.FieldName;
-                    Row[3] = S.Title;
-                    Row[4] = S.Colour.ToArgb();
-                    Row[5] = S.Type.ToString();
-                    Row[6] = S.XAxis == Axis.AxisType.Top;
-                    Row[7] = S.YAxis == Axis.AxisType.Right;
-                    Row[8] = S.Line.ToString();
-                    Row[9] = S.Marker.ToString();
-                    Row[10] = S.ShowRegressionLine;
-                    Data.Rows.Add(Row);
-                }
-                SeriesView.SeriesGrid.DataSource = Data;
-                SeriesView.SeriesGrid.SetColumnAlignment(0, true);
-                SeriesView.SeriesGrid.SetColumnAlignment(1, true);
-                SeriesView.SeriesGrid.SetColumnAlignment(2, true);
-                SeriesView.SeriesGrid.SetColumnAlignment(3, true);
+            PopulateSeriesEditor();
+        }
 
-                for (int Row = 0; Row < Data.Rows.Count; Row++)
+        /// <summary>
+        /// User has added a series.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesAdded(object sender, EventArgs e)
+        {
+            Series seriesToAdd;
+
+            int seriesIndex = Array.IndexOf(this.seriesView.SeriesNames, this.seriesView.SelectedSeriesName);
+            if (seriesIndex != -1)
+            {
+                seriesToAdd = Utility.Reflection.Clone(this.graph.Series[seriesIndex]) as Series;
+            }
+            else
+            {
+                seriesToAdd = new Series();
+                seriesToAdd.XAxis = Axis.AxisType.Bottom;
+            }
+
+            List<Series> allSeries = new List<Series>();
+            allSeries.AddRange(graph.Series);
+            allSeries.Add(seriesToAdd);
+            seriesToAdd.Title = "Series" + allSeries.Count.ToString();
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", allSeries);
+            this.explorerPresenter.CommandHistory.Add(command);
+            this.PopulateSeriesNames();
+            this.seriesView.SelectedSeriesName = seriesToAdd.Title;
+        }
+
+        /// <summary>
+        /// User has deleted a series.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesDeleted(object sender, EventArgs e)
+        {
+            int seriesIndex = Array.IndexOf(this.seriesView.SeriesNames, this.seriesView.SelectedSeriesName);
+            if (seriesIndex != -1)
+            {
+                List<Series> allSeries = new List<Series>();
+                allSeries.AddRange(graph.Series);
+                allSeries.RemoveAt(seriesIndex);
+                Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", allSeries);
+                explorerPresenter.CommandHistory.Add(command);
+                PopulateSeriesNames();
+            }
+        }  
+  
+        /// <summary>
+        /// User has cleared all series.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesCleared(object sender, EventArgs e)
+        {
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "Series", new List<Series>());
+            explorerPresenter.CommandHistory.Add(command);
+            PopulateSeriesNames();
+        }
+
+        /// <summary>
+        /// User has renamed a series.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void SeriesRenamed(object sender, EventArgs e)
+        {
+            string[] seriesNames = this.seriesView.SeriesNames;
+            for (int i = 0; i < seriesNames.Length; i++)
+            {
+                if (this.graph.Series[i].Title != seriesNames[i])
                 {
-                    SeriesView.SeriesGrid.SetCellEditor(0, Row, SeriesView.DataSourceItems);
-                    Series S = Graph.Series[Row];
-                    if (S.X != null)
-                        SeriesView.SeriesGrid.SetCellEditor(1, Row, Graph.GetValidFieldNames(S.X));
-                    if (S.Y != null)
-                        SeriesView.SeriesGrid.SetCellEditor(2, Row, Graph.GetValidFieldNames(S.Y));
-                    SeriesView.SeriesGrid.SetCellEditor(4, Row, Color.Red);
-                    SeriesView.SeriesGrid.SetCellEditor(5, Row, S.Type);
-                    SeriesView.SeriesGrid.SetCellEditor(6, Row, Data.Rows[Row][6]);
-                    SeriesView.SeriesGrid.SetCellEditor(7, Row, Data.Rows[Row][7]);
-                    SeriesView.SeriesGrid.SetCellEditor(8, Row, S.Line);
-                    SeriesView.SeriesGrid.SetCellEditor(9, Row, S.Marker);
-                    SeriesView.SeriesGrid.SetCellEditor(10, Row, S.ShowRegressionLine);
+                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph.Series[i], "Title", seriesNames[i]);
+                    explorerPresenter.CommandHistory.Add(command);
+                }
+            }
+        }  
+
+        /// <summary>
+        /// Set the value of the graph models property
+        /// </summary>
+        /// <param name="name">The name of the property to set</param>
+        /// <param name="value">The value of the property to set it to</param>
+        private void SetModelProperty(string name, object value)
+        {
+            Series series = GetCurrentSeries();
+            Commands.ChangeProperty command = new Commands.ChangeProperty(series, name, value);
+            this.explorerPresenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>
+        /// Populate the view with series names.
+        /// </summary>
+        private void PopulateSeriesNames()
+        {
+            List<string> names = new List<string>();
+            int counter = 0;
+            foreach (Series series in this.graph.Series)
+            {
+                if (series.Title == null || series.Title == string.Empty)
+                {
+                    names.Add("Series " + counter.ToString());
+                }
+                else
+                {
+                    names.Add(series.Title);
+                }
+
+                counter++;
+            }
+            this.seriesView.SeriesNames = names.ToArray();
+        }
+
+        #region Events from the view
+
+        /// <summary>
+        /// Series type has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        void OnSeriesTypeChanged(object sender, EventArgs e)
+        {
+            Series.SeriesType seriesType = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), this.seriesView.SeriesEditor.SeriesType);
+            this.SetModelProperty("Type", seriesType);
+        }
+
+        /// <summary>
+        /// Series line type has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesLineTypeChanged(object sender, EventArgs e)
+        {
+            Series.LineType lineType = (Series.LineType)Enum.Parse(typeof(Series.LineType), this.seriesView.SeriesEditor.SeriesLineType);
+            this.SetModelProperty("Line", lineType);
+        }
+        
+        /// <summary>
+        /// Series marker type has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesMarkerTypeChanged(object sender, EventArgs e)
+        {
+            Series.MarkerType markerType = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), this.seriesView.SeriesEditor.SeriesMarkerType);
+            this.SetModelProperty("Marker", markerType);
+        }
+
+        /// <summary>
+        /// Series color has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnColourChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("Colour", this.seriesView.SeriesEditor.Colour);
+        }
+
+        /// <summary>
+        /// Regression checkbox has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnRegressionChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("ShowRegressionLine", this.seriesView.SeriesEditor.Regression);
+        }
+
+        /// <summary>
+        /// X on top has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnXOnTopChanged(object sender, EventArgs e)
+        {
+            Axis.AxisType axisType = Axis.AxisType.Bottom;
+            if (this.seriesView.SeriesEditor.XOnTop)
+            {
+                axisType = Axis.AxisType.Top;
+            }
+            this.SetModelProperty("XAxis", axisType);
+            EnsureAllAxesExistInGraph();
+        }
+
+        /// <summary>
+        /// Y on right has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnYOnRightChanged(object sender, EventArgs e)
+        {
+            Axis.AxisType axisType = Axis.AxisType.Left;
+            if (this.seriesView.SeriesEditor.YOnRight)
+            {
+                axisType = Axis.AxisType.Right;
+            }
+            this.SetModelProperty("YAxis", axisType);
+            EnsureAllAxesExistInGraph();
+        }
+
+        /// <summary>
+        /// X has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnXChanged(object sender, EventArgs e)
+        {
+            GraphValues graphValues = new GraphValues();
+            graphValues.TableName = this.seriesView.SeriesEditor.DataSource;
+            graphValues.FieldName = this.seriesView.SeriesEditor.X;
+            this.SetModelProperty("X", graphValues);
+        }
+
+        /// <summary>
+        /// Y has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnYChanged(object sender, EventArgs e)
+        {
+            GraphValues graphValues = new GraphValues();
+            graphValues.TableName = this.seriesView.SeriesEditor.DataSource;
+            graphValues.FieldName = this.seriesView.SeriesEditor.Y;
+            this.SetModelProperty("Y", graphValues);
+        }
+
+        /// <summary>
+        /// X2 has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnX2Changed(object sender, EventArgs e)
+        {
+            GraphValues graphValues = new GraphValues();
+            graphValues.TableName = this.seriesView.SeriesEditor.DataSource;
+            graphValues.FieldName = this.seriesView.SeriesEditor.X2;
+            this.SetModelProperty("X2", graphValues);
+        }
+
+        /// <summary>
+        /// Y2 has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnY2Changed(object sender, EventArgs e)
+        {
+            GraphValues graphValues = new GraphValues();
+            graphValues.TableName = this.seriesView.SeriesEditor.DataSource;
+            graphValues.FieldName = this.seriesView.SeriesEditor.Y2;
+            this.SetModelProperty("Y2", graphValues);
+        }
+
+        /// <summary>
+        /// User has changed the data source.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnDataSourceChanged(object sender, EventArgs e)
+        {
+            if (this.dataStore != null)
+            {
+                Series series = this.GetCurrentSeries();
+                if (series.X != null && series.X.TableName != this.seriesView.SeriesEditor.DataSource)
+                {
+                    OnXChanged(sender, e);
+                }
+                if (series.Y != null && series.Y.TableName != this.seriesView.SeriesEditor.DataSource)
+                {
+                    OnYChanged(sender, e);
+                }
+                if (series.X2 != null && series.X2.TableName != this.seriesView.SeriesEditor.DataSource)
+                {
+                    OnX2Changed(sender, e);
+                }
+                if (series.Y2 != null && series.Y2.TableName != this.seriesView.SeriesEditor.DataSource)
+                {
+                    OnY2Changed(sender, e);
+                }
+                this.seriesView.SeriesEditor.SetData(dataStore.GetData("*", this.seriesView.SeriesEditor.DataSource));
+            }
+        }
+
+        /// <summary>
+        /// User has changed the show in legend
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnShowInLegendChanged(object sender, EventArgs e)
+        {
+            if (this.dataStore != null)
+            {
+                this.SetModelProperty("ShowInLegend", this.seriesView.SeriesEditor.ShowInLegend);
+            }
+        }
+
+        /// <summary>
+        /// User has changed the separate series checkbox
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeparateSeriesChanged(object sender, EventArgs e)
+        {
+            if (this.dataStore != null)
+            {
+                this.SetModelProperty("SeparateSeriesForAllSimulationsInScope", this.seriesView.SeriesEditor.SeparateSeries);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets the current selected series.
+        /// </summary>
+        /// <returns>Returns the currently selected series or throws if none selected</returns>
+        private Series GetCurrentSeries()
+        {
+            int seriesIndex = Array.IndexOf(this.seriesView.SeriesNames, this.seriesView.SelectedSeriesName);
+            if (seriesIndex != -1)
+            {
+                return this.graph.Series[seriesIndex];
+            }
+            throw new Exception("No series currently selected");
+        }
+
+        /// <summary>
+        /// Populate the views series editor with the current selected series.
+        /// </summary>
+        private void PopulateSeriesEditor()
+        {
+            int seriesIndex = Array.IndexOf(this.seriesView.SeriesNames, this.seriesView.SelectedSeriesName);
+            if (seriesIndex != -1 && seriesIndex < this.graph.Series.Count)
+            {
+                if (!InPopulateSeriesEditor)
+                {
+                    InPopulateSeriesEditor = true;
+
+                    Series series = this.graph.Series[seriesIndex];
+
+                    series.Title = this.seriesView.SeriesNames[seriesIndex];
+
+                    this.seriesView.EditorVisible = true;
+
+                    this.seriesView.SeriesEditor.SeriesType = series.Type.ToString();
+                    this.seriesView.SeriesEditor.SeriesLineType = series.Line.ToString();
+                    this.seriesView.SeriesEditor.SeriesMarkerType = series.Marker.ToString();
+                    this.seriesView.SeriesEditor.Colour = series.Colour;
+                    this.seriesView.SeriesEditor.Regression = series.ShowRegressionLine;
+                    this.seriesView.SeriesEditor.XOnTop = series.XAxis == Axis.AxisType.Top;
+                    this.seriesView.SeriesEditor.YOnRight = series.YAxis == Axis.AxisType.Right;
+                    this.seriesView.SeriesEditor.SeparateSeries = series.SeparateSeriesForAllSimulationsInScope;
+                    this.seriesView.SeriesEditor.ShowInLegend = series.ShowInLegend;
+
+                    // Populate the editor with a list of data sources.
+                    List<string> dataSources = new List<string>();
+                    if (dataStore != null)
+                    {
+                        foreach (string tableName in dataStore.TableNames)
+                        {
+                            if (tableName != "Messages" && tableName != "InitialConditions")
+                                dataSources.Add(tableName);
+                        }
+                        dataSources.Sort();
+                    }
+
+                    this.seriesView.SeriesEditor.SetDataSources(dataSources.ToArray());
+
+                    if (series.X != null)
+                    {
+                        this.seriesView.SeriesEditor.DataSource = series.X.TableName;
+                    }
+                    else if (dataSources.Count > 0)
+                    {
+                        this.seriesView.SeriesEditor.DataSource = dataSources[0];
+                    }
+
+
+                    if (series.X != null)
+                    {
+                        this.seriesView.SeriesEditor.X = series.X.FieldName;
+                    }
+                    else
+                    {
+                        this.seriesView.SeriesEditor.X = null;
+                    }
+
+                    if (series.Y != null)
+                    {
+                        this.seriesView.SeriesEditor.Y = series.Y.FieldName;
+                    }
+                    else
+                    {
+                        this.seriesView.SeriesEditor.Y = null;
+                    }
+
+                    if (series.X2 != null)
+                    {
+                        this.seriesView.SeriesEditor.X2 = series.X2.FieldName;
+                    }
+                    else
+                    {
+                        this.seriesView.SeriesEditor.X2 = null;
+                    }
+
+                    if (series.Y2 != null)
+                    {
+                        this.seriesView.SeriesEditor.Y2 = series.Y2.FieldName;
+                    }
+                    else
+                    {
+                        this.seriesView.SeriesEditor.Y2 = null;
+                    }
+
+                    this.seriesView.SeriesEditor.ShowX2Y2(series.Type == Series.SeriesType.Area);
+
+                    
+
+                    InPopulateSeriesEditor = false;
                 }
             }
             else
-                SeriesView.SeriesGrid.DataSource = null;
+            {
+                this.seriesView.EditorVisible = false;
+            }
         }
 
         /// <summary>
-        /// Populate data sources.
+        /// The graph model has changed - update the view.
         /// </summary>
-        private void PopulateDataSources()
+        private void OnGraphModelChanged2(object G)
         {
-            // Populate the view with a list of data sources.
-            List<string> DataSources = new List<string>();
-            if (DataStore != null)
-            {
-                foreach (string SimulationName in DataStore.SimulationNames)
-                    foreach (string TableName in DataStore.TableNames)
-                        if (TableName != "Messages")
-                            DataSources.Add(SimulationName + "." + TableName);
-                DataSources.Sort();
-
-                // Add in the raw table names e.g. report
-                foreach (string TableName in DataStore.TableNames)
-                    if (TableName != "Messages")
-                        DataSources.Insert(0, TableName);
-
-                // Add in the all simulations in scope tables e.g. *.report
-                foreach (string TableName in DataStore.TableNames)
-                    if (TableName != "Messages") 
-                        DataSources.Insert(0, "*." + TableName);
-            }
-
-            SeriesView.DataSourceItems = DataSources.ToArray();
-        }
-
-        /// <summary>
-        /// User has changed a series cell.
-        /// </summary>
-        private void OnCellChanged(int Col, int Row, object OldValue, object NewContents)
-        {
-            int SeriesIndex = Row;
-            List<Series> AllSeries = new List<Series>();
-            AllSeries.AddRange(Graph.Series);
-           
-            if (SeriesIndex >= Graph.Series.Count)
-            {
-                // Get the simulation and table names.
-                string SimulationName = null;
-                string TableName = null;
-                if (!SeriesView.DataSource.StartsWith("."))
-                {
-                    SimulationName = SeriesView.DataSource;
-                    TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
-                }
-
-                // Add a series.
-                Series NewSeries = new Series();
-                NewSeries.X = new GraphValues() { SimulationName = SimulationName, TableName = TableName };
-                NewSeries.Y = new GraphValues() { SimulationName = SimulationName, TableName = TableName };
-                NewSeries.XAxis = Axis.AxisType.Bottom;
-                NewSeries.YAxis = Axis.AxisType.Left;
-                AllSeries.Add(NewSeries);
-            }
-            Series S = AllSeries[SeriesIndex];
-
-            if (Col == 0) // Data source
-            {
-                string SimulationName = NewContents.ToString();
-                string TableName;
-                if (SimulationName.Contains("."))
-                    TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
-                else
-                {
-                    TableName = SimulationName;
-                    SimulationName = null;
-                }
-                S.X.SimulationName = SimulationName;
-                S.X.TableName = TableName;
-                S.Y.SimulationName = SimulationName;
-                S.Y.TableName = TableName;
-            }
-            else if (Col == 1) // X
-                S.X.FieldName = NewContents.ToString();
-            else if (Col == 2)  // Y
-                S.Y.FieldName = NewContents.ToString();
-            else if (Col == 3) // Title
-                S.Title = NewContents.ToString();
-            else if (Col == 4) // Colour
-                S.Colour = Color.FromArgb((int)NewContents);
-            else if (Col == 5) // Type
-                S.Type = (Series.SeriesType)Enum.Parse(typeof(Series.SeriesType), NewContents.ToString());
-            else if (Col == 6) // Top?
-            {
-                if ((bool)NewContents)
-                    S.XAxis = Axis.AxisType.Top;
-                else
-                    S.XAxis = Axis.AxisType.Bottom;
-            }
-            else if (Col == 7) // Right?
-            {
-                if ((bool)NewContents)
-                    S.YAxis = Axis.AxisType.Right;
-                else
-                    S.YAxis = Axis.AxisType.Left;
-            }
-            else if (Col == 8) // Line
-                S.Line = (Series.LineType)Enum.Parse(typeof(Series.LineType), NewContents.ToString());
-
-            else if (Col == 9) // Marker
-                S.Marker = (Series.MarkerType)Enum.Parse(typeof(Series.MarkerType), NewContents.ToString());
-
-            else if (Col == 10) // Regression line?
-                S.ShowRegressionLine = (bool)NewContents;
-
-            List<Axis> AllAxes = GetAllRequiredAxes(AllSeries);
-            string[] PropertyNamesChanged = new string[] { "Series", "Axes" };
-            object[] PropertyValues = new object[] { AllSeries, AllAxes };
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, PropertyNamesChanged, PropertyValues);
-            ExplorerPresenter.CommandHistory.Add(Cmd);
+            PopulateSeriesEditor();
         }
 
         /// <summary>
         /// Return a list of axis objects such that every series in AllSeries has an associated axis object.
         /// </summary>
-        private List<Axis> GetAllRequiredAxes(List<Series> AllSeries)
+        private void EnsureAllAxesExistInGraph()
         {
-            List<Axis> AllAxes = new List<Axis>();
-
-            // Get a list of all axis types.
-            List<Models.Graph.Axis.AxisType> AllAxisTypes = new List<Models.Graph.Axis.AxisType>();
-            foreach (Series S in AllSeries)
+            // Get a list of all axis types that are referenced by the series.
+            List<Models.Graph.Axis.AxisType> allAxisTypes = new List<Models.Graph.Axis.AxisType>();
+            foreach (Series series in graph.Series)
             {
-                AllAxisTypes.Add(S.XAxis);
-                AllAxisTypes.Add(S.YAxis);
+                allAxisTypes.Add(series.XAxis);
+                allAxisTypes.Add(series.YAxis);
             }
 
             // Go through all graph axis objects. For each, check to see if it is still needed and
             // if so copy to our list.
-            foreach (Axis A in Graph.Axes)
-                if (AllAxisTypes.Contains(A.Type))
-                    AllAxes.Add(A);
+            List<Axis> allAxes = new List<Axis>();
+            bool unNeededAxisFound = false;
+            foreach (Axis axis in this.graph.Axes)
+            {
+                if (allAxisTypes.Contains(axis.Type))
+                    allAxes.Add(axis);
+                else
+                    unNeededAxisFound = true;
+            }
 
             // Go through all series and make sure an axis object is present in our AllAxes list. If
             // not then go create an axis object.
-            foreach (Series S in AllSeries)
+            bool axisWasAdded = false;
+            foreach (Series S in this.graph.Series)
             {
-                if (!FindAxis(AllAxes, S.XAxis))
-                    AllAxes.Add(new Axis() { Type = S.XAxis });
-                if (!FindAxis(AllAxes, S.YAxis))
-                    AllAxes.Add(new Axis() { Type = S.YAxis });
+                if (!FindAxis(allAxes, S.XAxis))
+                {
+                    allAxes.Add(new Axis() { Type = S.XAxis });
+                    axisWasAdded = true;
+                }
+                if (!FindAxis(allAxes, S.YAxis))
+                {
+                    allAxes.Add(new Axis() { Type = S.YAxis });
+                    axisWasAdded = true;
+                }
             }
 
-            return AllAxes;
+            if (unNeededAxisFound || axisWasAdded)
+            {
+                Commands.ChangeProperty command = new Commands.ChangeProperty(graph, "Axes", allAxes);
+                this.explorerPresenter.CommandHistory.Add(command);
+            }
         }
 
         /// <summary>
@@ -283,117 +622,5 @@ namespace UserInterface.Presenters
                     return true;
             return false;
         }
-
-        /// <summary>
-        /// The Graph model has changed - update the graph.
-        /// </summary>
-        private void OnGraphModelChanged(object G)
-        {
-            if (G == Graph)
-            {
-                PopulateSeries();
-            }
-        }
-
-        /// <summary>
-        /// The selected data source has changed.
-        /// </summary>
-        private void OnDataSourceChanged(string NewDataSource)
-        {
-            if (NewDataSource.StartsWith("."))
-            {
-
-                Model M = Graph.Get(NewDataSource) as Model;
-                SeriesView.DataGrid.DataSource = GetAllArrayProperties(M);
-            }
-            else if (!NewDataSource.Contains("."))
-            {
-                string TableName = NewDataSource;
-                SeriesView.DataGrid.DataSource = DataStore.GetData(null, TableName);
-            }
-            else
-            {
-                string SimulationName = NewDataSource;
-                string TableName = Utility.String.SplitOffAfterDelimiter(ref SimulationName, ".");
-                SeriesView.DataGrid.DataSource = DataStore.GetData(SimulationName, TableName);
-            }
-            if (SeriesView.DataGrid.DataSource != null)
-                SeriesView.DataGrid.SetNumericFormat("N3");
-        }
-
-        /// <summary>
-        /// Use reflection to go through all array properties in M, returning a DataTable
-        /// with a column for each.
-        /// </summary>
-        private DataTable GetAllArrayProperties(Model M)
-        {
-            DataTable Table = new DataTable();
-            foreach (PropertyInfo Property in M.GetType().GetProperties())
-            {
-                if (Property.PropertyType.IsArray)
-                {
-                    Array Values = Property.GetValue(M, null) as Array;
-                    if (Values != null)
-                    {
-                        List<object> PropertyValues = new List<object>();
-                        foreach (object Value in Values)
-                            PropertyValues.Add(Value);
-
-                        Utility.DataTable.AddColumnOfObjects(Table, M.FullPath + "." + Property.Name, PropertyValues.ToArray());
-                    }
-                }
-            }
-            return Table;
-        }
-
-        /// <summary>
-        /// User has clicked a column.
-        /// </summary>
-        private void OnDataColumnClicked(string ColumnName)
-        {
-            if (SeriesView.XFocused)
-            {
-                // add a new row.
-                SeriesView.SeriesGrid.RowCount = SeriesView.SeriesGrid.RowCount + 1;
-
-                int Row = SeriesView.SeriesGrid.RowCount-1;
-                SeriesView.SeriesGrid.SetCellValue(0, Row, ColumnName);
-                OnCellChanged(1, Row, null, ColumnName);
-                SeriesView.XFocused = false;
-                SeriesView.YFocused = true;
-            }
-            else
-            {
-                int Row = SeriesView.SeriesGrid.RowCount - 1;
-                SeriesView.SeriesGrid.SetCellValue(1, Row, ColumnName);
-                OnCellChanged(2, Row, null, ColumnName);
-            }
-        }
-
-        /// <summary>
-        /// User has selected Delete Series.
-        /// </summary>
-        private void OnDeleteSeries(object Sender, EventArgs Args)
-        {
-            int SeriesIndex = SeriesView.SeriesGrid.CurrentCell.Y;
-            if (SeriesIndex < Graph.Series.Count)
-            {
-                List<Series> AllSeries = new List<Series>();
-                AllSeries.AddRange(Graph.Series);
-                AllSeries.RemoveAt(SeriesIndex);
-                Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", AllSeries);
-                ExplorerPresenter.CommandHistory.Add(Cmd);
-            }
-        }
-
-        /// <summary>
-        /// User has selected Clear All Series.
-        /// </summary>
-        private void OnClearSeries(object Sender, EventArgs Args)
-        {
-            Commands.ChangePropertyCommand Cmd = new Commands.ChangePropertyCommand(Graph, "Series", new List<Series>());
-            ExplorerPresenter.CommandHistory.Add(Cmd);
-        }
-
     }
 }

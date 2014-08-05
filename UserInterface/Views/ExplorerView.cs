@@ -9,6 +9,7 @@ using System.Globalization;
 using UserInterface.Commands;
 using System.Runtime.Serialization;
 using UserInterface.Views;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
@@ -181,7 +182,8 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            if (Node.Nodes.Count == 0 && Description.HasChildren)
+            Node.Nodes.Clear();
+            if (Description.HasChildren)
                 Node.Nodes.Add("Loading...");
         }
 
@@ -212,7 +214,11 @@ namespace UserInterface.Views
                 if (Node == null)
                     Node = FindNode(TreeView.Nodes, PathBit);
                 else
+                {
+                    if (!Node.IsExpanded)
+                        Node.Expand();
                     Node = FindNode(Node.Nodes, PathBit);
+                }
 
                 if (Node == null)
                     return null;
@@ -316,10 +322,15 @@ namespace UserInterface.Views
         /// <param name="Message"></param>
         public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
         {
-            if (!Message.EndsWith("\n"))
-                Message = Message + "\n";
+
             StatusWindow.Visible = Message != null;
-            //StatusWindow.Select(0, 0);
+            StatusWindow.Select(StatusWindow.TextLength, 0);
+
+            // Output the date.
+            StatusWindow.SelectionColor = Color.Black;
+            StatusWindow.SelectedText = DateTime.Now.ToString() + ":";
+
+            // Output the message
             StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
@@ -329,11 +340,15 @@ namespace UserInterface.Views
             else
                 StatusWindow.SelectionColor = Color.Blue;
 
+            Message = "\n" + Message.TrimEnd("\n".ToCharArray());
+            Message = Message.Replace("\n", "\n                      ");
+            Message += "\n";
+
             StatusWindow.SelectedText = Message;
             StatusWindow.ScrollToCaret();
             //StatusWindow.Select(0, Message.Length);
 
-            Application.DoEvents();
+            //Application.DoEvents();
         }
 
         /// <summary>
@@ -345,6 +360,19 @@ namespace UserInterface.Views
             SaveFileDialog.FileName = OldFilename;
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
                 return SaveFileDialog.FileName;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// A helper function that asks user for a folder.
+        /// </summary>
+        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
+        public string AskUserForFolder(string prompt)
+        {
+            folderBrowserDialog1.Description = prompt;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                return folderBrowserDialog1.SelectedPath;
             else
                 return null;
         }

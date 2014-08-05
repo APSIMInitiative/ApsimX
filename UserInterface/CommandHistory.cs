@@ -92,12 +92,13 @@ namespace UserInterface
                 }
                 lastSaved = -1;
             }
+            commands.Add(command);
+            lastExecuted = commands.Count - 1; 
+
             if (execute)
             {
                 command.Do(this);
             }
-            commands.Add(command);
-            lastExecuted = commands.Count - 1;
 
             OnChanged(true);
         }

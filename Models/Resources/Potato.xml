@@ -1,5 +1,6 @@
  <Plant>
     <Name>Potato</Name>
+   <CropType>Potato</CropType>
    <Cultivars>
      <Cultivar>
        <Name>RussetBurbank</Name>

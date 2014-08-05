@@ -17,7 +17,7 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    public class Zone : ModelCollection
+    public class Zone : Model
     {
         /// <summary>
         /// Area of the zone.
@@ -25,8 +25,8 @@ namespace Models.Core
         [Description("Area of zone (ha)")]
         public double Area { get; set; }
 
-
-
+        [Description("Slope (deg)")]
+        public double Slope { get; set; }
 
     }
 }

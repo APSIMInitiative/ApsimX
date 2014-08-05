@@ -5,6 +5,7 @@ using System;
 using UserInterface.Presenters;
 using System.Diagnostics;
 using System.Threading;
+using Models.Factorial;
 
 namespace UserInterface.Commands
 {
@@ -50,12 +51,10 @@ namespace UserInterface.Commands
                 Simulation simulation = ModelClicked as Simulation;
                 try
                 {
-                    foreach (Model model in Simulations.AllModels)
-                        model.OnAllCommencing();
                     simulation.Run(null, null);
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
-                    foreach (Model model in Simulations.AllModels)
-                        model.OnAllCompleted();
+                    foreach (Model model in Simulations.Children.AllRecursively)
+                        model.OnAllSimulationsCompleted();
                 }
                 catch (Exception err)
                 {
@@ -64,16 +63,7 @@ namespace UserInterface.Commands
                 return;
             }
             else
-            {
-                //Thread.CurrentThread.Priority = ThreadPriority.Highest;
-                //Simulations.SimulationToRun = ModelClicked;
-                
-                (ModelClicked as Simulation).Run(null, null);
-                Timer.Stop();
-                ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
-                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
-                return;
-            }
+                Simulations.SimulationToRun = ModelClicked;
            
             JobManager.AddJob(Simulations);
             JobManager.Start(waitUntilFinished: false);

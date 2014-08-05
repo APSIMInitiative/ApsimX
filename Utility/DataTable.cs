@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 
 namespace Utility
 {
@@ -111,22 +112,48 @@ namespace Utility
             }
         }
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
-        static public void AddColumnOfObjects(System.Data.DataTable Table, string ColumnName, object[] Values)
+        /// <summary>
+        /// Add a column of values to the specified data table
+        /// </summary>
+        /// <param name="table">The table to add values to</param>
+        /// <param name="columnName">The name of the column</param>
+        /// <param name="values">The values to add to the table.</param>
+        static public void AddColumnOfObjects(System.Data.DataTable table, string columnName, IEnumerable values)
         {
-            if (Table.Columns.IndexOf(ColumnName) == -1)
-                Table.Columns.Add(ColumnName, Values.GetType().GetElementType());
-
-            if (Values != null && Values.Length > 0)
+            // Make sure the table has the specified column
+            if (!table.Columns.Contains(columnName))
             {
-                // Make sure there are enough values in the table.
-                while (Table.Rows.Count < Values.Length)
-                    Table.Rows.Add(Table.NewRow());
+                table.Columns.Add(columnName, values.GetType().GetElementType());
+            }
 
-                for (int Row = 0; Row != Values.Length; Row++)
-                    Table.Rows[Row][ColumnName] = Values[Row];
+            if (values != null)
+            {
+                int row = 0;
+                foreach (object value in values)
+                {
+                    // Make sure we have enough rows.
+                    if (table.Rows.Count <= row)
+                    {
+                        table.Rows.Add(table.NewRow());
+                    }
+
+                    // Determine if this value should be put into the table.
+                    // If the value is a double.NaN then don't put into table.
+                    // All other values do get inserted.
+                    bool insertValue = true;
+                    if (value is double && (double.IsNaN((double) value) || (double) value == Math.MissingValue))
+                    {
+                        insertValue = false;
+                    }
+
+                    // Set the cell value in table.
+                    if (insertValue)
+                    {
+                        table.Rows[row][columnName] = value;
+                    }
+
+                    row++;
+                }
             }
         }
 
@@ -391,7 +418,7 @@ namespace Utility
         /// <summary>
         /// Write the specified DataTable to a CSV string, excluding the specified column names.
         /// </summary>
-        static public string DataTableToCSV(System.Data.DataTable data, int startColumnIndex)
+        static public string DataTableToText(System.Data.DataTable data, int startColumnIndex, string delimiter, bool showHeadings)
         {
             // Need to work out column widths
             List<int> columnWidths = new List<int>();
@@ -409,19 +436,22 @@ namespace Utility
 
             // Write out column headings.
             StringBuilder st = new StringBuilder(100000);
-            for (int i = startColumnIndex; i < data.Columns.Count; i++)
+            if (showHeadings)
             {
-                if (i > startColumnIndex) st.Append(',');
-                WriteObject(data.Columns[i].ColumnName, st, columnWidths[i]);
+                for (int i = startColumnIndex; i < data.Columns.Count; i++)
+                {
+                    if (i > startColumnIndex) st.Append(delimiter);
+                    WriteObject(data.Columns[i].ColumnName, st, columnWidths[i]);
+                }
+                st.Append(Environment.NewLine);
             }
-            st.Append(Environment.NewLine);
 
             // Write out each row.
             foreach (DataRow Row in data.Rows)
             {
                 for (int i = startColumnIndex; i < data.Columns.Count; i++)
                 {
-                    if (i > startColumnIndex) st.Append(',');
+                    if (i > startColumnIndex) st.Append(delimiter);
                     WriteObject(Row[i], st, columnWidths[i]);
                 }
                 st.Append(Environment.NewLine);
