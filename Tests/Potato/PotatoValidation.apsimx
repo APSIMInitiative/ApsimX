@@ -6,19 +6,19 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\potato_observations.txt</string>
+        <string>C:\ApsimX\Tests\Potato\Observed\potato_observations.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\Potato_radint_observations.txt</string>
+        <string>C:\ApsimX\Tests\Potato\Observed\Potato_radint_observations.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\cultivar_nodenumber.txt</string>
+        <string>C:\ApsimX\Tests\Potato\Observed\cultivar_nodenumber.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>
@@ -10917,7 +10917,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Graph>
     <Name>Tuber Biomass Comparison</Name>
@@ -10949,7 +10949,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Area>0</Area>
   <ExplorerWidth>334</ExplorerWidth>
