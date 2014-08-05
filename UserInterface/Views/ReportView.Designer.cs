@@ -37,8 +37,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.GridView = new GridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.AutoCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -46,13 +44,12 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 32);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -65,8 +62,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.FrequencyEditor);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(592, 426);
-            this.splitContainer1.SplitterDistance = 280;
+            this.splitContainer1.Size = new System.Drawing.Size(592, 455);
+            this.splitContainer1.SplitterDistance = 299;
             this.splitContainer1.TabIndex = 7;
             // 
             // VariableEditor
@@ -79,10 +76,11 @@
         "",
         "",
         "",
+        "",
         ""};
             this.VariableEditor.Location = new System.Drawing.Point(0, 13);
             this.VariableEditor.Name = "VariableEditor";
-            this.VariableEditor.Size = new System.Drawing.Size(592, 267);
+            this.VariableEditor.Size = new System.Drawing.Size(592, 286);
             this.VariableEditor.TabIndex = 8;
             // 
             // label2
@@ -106,10 +104,11 @@
         "",
         "",
         "",
+        "",
         ""};
             this.FrequencyEditor.Location = new System.Drawing.Point(0, 13);
             this.FrequencyEditor.Name = "FrequencyEditor";
-            this.FrequencyEditor.Size = new System.Drawing.Size(592, 129);
+            this.FrequencyEditor.Size = new System.Drawing.Size(592, 139);
             this.FrequencyEditor.TabIndex = 7;
             // 
             // label1
@@ -149,8 +148,10 @@
             this.GridView.AutoFilterOn = false;
             this.GridView.DataSource = null;
             this.GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridView.GetCurrentCell = null;
             this.GridView.Location = new System.Drawing.Point(3, 3);
             this.GridView.Name = "GridView";
+            this.GridView.NumericFormat = null;
             this.GridView.ReadOnly = false;
             this.GridView.RowCount = 0;
             this.GridView.Size = new System.Drawing.Size(592, 455);
@@ -159,7 +160,6 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer1);
-            this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -167,26 +167,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Properties";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.AutoCheckBox);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(592, 29);
-            this.panel1.TabIndex = 1;
-            // 
-            // AutoCheckBox
-            // 
-            this.AutoCheckBox.AutoSize = true;
-            this.AutoCheckBox.Location = new System.Drawing.Point(3, 6);
-            this.AutoCheckBox.Name = "AutoCheckBox";
-            this.AutoCheckBox.Size = new System.Drawing.Size(126, 17);
-            this.AutoCheckBox.TabIndex = 0;
-            this.AutoCheckBox.Text = "Auto create .csv file?";
-            this.AutoCheckBox.UseVisualStyleBackColor = true;
-            this.AutoCheckBox.CheckedChanged += new System.EventHandler(this.OnAutoCheckBoxChanged);
             // 
             // ReportView
             // 
@@ -204,8 +184,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -221,8 +199,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private GridView GridView;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.CheckBox AutoCheckBox;
 
 
     }

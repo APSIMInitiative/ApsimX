@@ -187,12 +187,6 @@
     <Compile Include="Views\MemoView.Designer.cs">
       <DependentUpon>MemoView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SummaryView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\SummaryView.Designer.cs">
-      <DependentUpon>SummaryView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\InputView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -229,7 +223,7 @@
     <Compile Include="Views\GeneralView.Designer.cs">
       <DependentUpon>GeneralView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\IExplorerView.cs" />
+    <Compile Include="Interfaces\IExplorerView.cs" />
     <Compile Include="Views\ManagerView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -325,9 +319,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MemoView.resx">
       <DependentUpon>MemoView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\SummaryView.resx">
-      <DependentUpon>SummaryView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InputView.resx">
       <DependentUpon>InputView.cs</DependentUpon>

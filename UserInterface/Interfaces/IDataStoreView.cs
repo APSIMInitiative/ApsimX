@@ -25,12 +25,12 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the create now button is clicked.
         /// </summary>
-        event EventHandler CreateNowClicked;
+        event EventHandler ExportNowClicked;
 
         /// <summary>
-        /// Invoked when the run child models button is clicked.
+        /// Invoked when the auto export checkbox is clicked.
         /// </summary>
-        event EventHandler RunChildModelsClicked;
+        event EventHandler AutoExportClicked;
 
         /// <summary>
         /// Gets or sets the list of tables.
@@ -56,6 +56,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets the selected simulation name.
         /// </summary>
         string SelectedSimulationName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the autoexport option
+        /// </summary>
+        bool AutoExport { get; set; }
 
         /// <summary>
         /// Show the summary content.

@@ -491,9 +491,9 @@ namespace Models.PMF.OldPlant
                         double StoverNConc = Utility.Math.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
                         message += "\r\n";
                         message += string.Format("  biomass        = {0,8:F2} (g/m^2)\r\n" +
-                                                 "  lai            = {1,7:F2} (m^2/m^2)\r\n" +
+                                                 "  lai            = {1,8:F2} (m^2/m^2)\r\n" +
                                                  "  stover N conc  = {2,8:F2} (%)\r\n" +
-                                                 "  extractable sw = {3,7:F2} (mm)",
+                                                 "  extractable sw = {3,8:F2} (mm)",
                                            biomass, Leaf.LAI, StoverNConc, Root.ESWInRootZone);
                     }
                     

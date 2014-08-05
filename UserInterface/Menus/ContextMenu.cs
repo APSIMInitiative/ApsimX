@@ -11,12 +11,12 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using System.Xml;
     using Commands;
+    using Interfaces;
     using Microsoft.Win32;
     using Models;
     using Models.Core;
     using Models.Factorial;
     using Models.Soils;
-    using Views;
     
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
 
                 // See if the presenter is happy with this model being added.
                 Model parentModel = this.explorerPresenter.ApsimXFile.Variables.Get(this.explorerPresenter.CurrentNodePath) as Model;
-                AllowDropArgs allowDropArgs = new Views.AllowDropArgs();
+                AllowDropArgs allowDropArgs = new AllowDropArgs();
                 allowDropArgs.NodePath = this.explorerPresenter.CurrentNodePath;
                 allowDropArgs.DragObject = new DragObject()
                 {
@@ -257,6 +257,31 @@ namespace UserInterface.Presenters
             {
                 ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
                 this.explorerPresenter.CommandHistory.Add(command, true);
+            }
+        }
+
+        /// <summary>
+        /// Run post simulation models.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Run post simulation models",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void RunPostSimulationModels(object sender, EventArgs e)
+        {
+            DataStore dataStore = this.explorerPresenter.ApsimXFile.Variables.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                try
+                {
+                    // Run all child model post processors.
+                    dataStore.RunPostProcessingTools();
+                    this.explorerPresenter.ShowMessage("Post processing models have successfully completed", Models.DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
+                }
             }
         }
     }

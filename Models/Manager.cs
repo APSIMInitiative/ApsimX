@@ -52,6 +52,8 @@ namespace Models
         [XmlIgnore]
         public Model Script { get { return _Script; } set { _Script = value; } }
 
+        [Summary]
+        [Description("Script")]
         [XmlIgnore]
         public string Code
         {

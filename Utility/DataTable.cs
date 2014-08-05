@@ -418,7 +418,7 @@ namespace Utility
         /// <summary>
         /// Write the specified DataTable to a CSV string, excluding the specified column names.
         /// </summary>
-        static public string DataTableToCSV(System.Data.DataTable data, int startColumnIndex)
+        static public string DataTableToText(System.Data.DataTable data, int startColumnIndex, string delimiter, bool showHeadings)
         {
             // Need to work out column widths
             List<int> columnWidths = new List<int>();
@@ -436,19 +436,22 @@ namespace Utility
 
             // Write out column headings.
             StringBuilder st = new StringBuilder(100000);
-            for (int i = startColumnIndex; i < data.Columns.Count; i++)
+            if (showHeadings)
             {
-                if (i > startColumnIndex) st.Append(',');
-                WriteObject(data.Columns[i].ColumnName, st, columnWidths[i]);
+                for (int i = startColumnIndex; i < data.Columns.Count; i++)
+                {
+                    if (i > startColumnIndex) st.Append(delimiter);
+                    WriteObject(data.Columns[i].ColumnName, st, columnWidths[i]);
+                }
+                st.Append(Environment.NewLine);
             }
-            st.Append(Environment.NewLine);
 
             // Write out each row.
             foreach (DataRow Row in data.Rows)
             {
                 for (int i = startColumnIndex; i < data.Columns.Count; i++)
                 {
-                    if (i > startColumnIndex) st.Append(',');
+                    if (i > startColumnIndex) st.Append(delimiter);
                     WriteObject(Row[i], st, columnWidths[i]);
                 }
                 st.Append(Environment.NewLine);

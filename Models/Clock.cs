@@ -16,15 +16,18 @@ namespace Models
         [Link]
         private ISummary Summary = null;
 
+        [Summary]
         [Description("The start date of the simulation")]
         public DateTime StartDate { get; set; }
 
+        [Summary]
         [Description("The end date of the simulation")]
         public DateTime EndDate { get; set; }
 
         // Public events that we're going to publish.
         public event EventHandler DoWeather;
         public event EventHandler DoDailyInitialisation;
+        public event EventHandler DoInitialSummary;
         public event EventHandler DoManagement;
         public event EventHandler DoCanopyEnergyBalance;
         public event EventHandler DoSoilWaterMovement;
@@ -56,6 +59,9 @@ namespace Models
         private void OnDoCommence(object sender, EventArgs e)
         {
             System.ComponentModel.BackgroundWorker bw = sender as System.ComponentModel.BackgroundWorker;
+
+            if (DoInitialSummary != null)
+                DoInitialSummary.Invoke(this, args);
 
             while (Today <= EndDate)
             {

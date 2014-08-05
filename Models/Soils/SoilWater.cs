@@ -391,19 +391,24 @@ namespace Models.Soils
         //sv- PURE OUTPUTS
 
 
+        /// <summary>
+        /// Total es
+        /// </summary>
         [Units("mm")]
-        [Description("Total es")]
         public double es                      //! total es
         { get { return Utility.Math.Sum(es_layers); } }
 
-
+        /// <summary>
+        /// Daily effective rainfall
+        /// </summary>
         [Units("mm")]
-        [Description("Daily effective rainfall")]
         private double eff_rain                  //! daily effective rainfall (mm)
         { get { return rain + runon - runoff - drain; } }
 
+        /// <summary>
+        /// Potential extractable sw in profile
+        /// </summary>
         [Units("mm")]
-        [Description("Potential extractable sw in profile")]
         public double esw                       //! potential extractable sw in profile  
         {
             get
@@ -418,69 +423,86 @@ namespace Models.Soils
             }
         }
 
-
-        [Description("Effective total cover")]
+        /// <summary>
+        /// Effective total cover (0-1)
+        /// </summary>
         private double cover_surface_runoff;     //! effective total cover (0-1)   //residue cover + cover from any crops (tall or short)
 
-
+        /// <summary>
+        /// time after which 2nd-stage soil evaporation begins
+        /// </summary>
         [Units("d")]
-        [Description("time after which 2nd-stage soil evaporation begins")]
         private double t;                        //! time after 2nd-stage soil evaporation begins (d)
 
+        /// <summary>
+        /// Effective potential evapotranspiration
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        [Description("Effective potential evapotranspiration")]
         public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
-
+        /// <summary>
+        /// Pot sevap after modification for green cover & residue wt
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        [Description("Pot sevap after modification for green cover & residue wt")]
         public double eos;                      //! pot sevap after modification for green cover & residue wt
 
 
-        [Description("New cn2 after modification for crop cover & residue cover")]
+        /// <summary>
+        /// New cn2 after modification for crop cover & residue cover
+        /// </summary>
         private double cn2_new;                  //! New cn2  after modification for crop cover & residue cover
 
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        [Description("Drainage rate from bottom layer")]
         public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        [Description("Drainage rate from bottom layer")]
         public double LeachNO3 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        [Description("Drainage rate from bottom layer")]
         public double LeachNH4 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        [Description("Drainage rate from bottom layer")]
         public double LeachUrea { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
 
         [XmlIgnore]
         [Units("mm")]
-        [Description("Infiltration")]
         public double infiltration { get; set; }     //! infiltration (mm)
 
         [XmlIgnore]
         [Units("mm")]
-        [Description("Runoff")]
         public double runoff { get; set; }           //! runoff (mm)
-         
+        
+        /// <summary>
+        /// Evaporation from the surface of the pond
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        [Description("Evaporation from the surface of the pond")]
         private double pond_evap;      //! evaporation from the surface of the pond (mm)
 
+        /// <summary>
+        /// Surface water ponding depth
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        [Description("Surface water ponding depth")]
         public double pond { get; set; }           //! surface water ponding depth
 
         //Soilwat2Globals

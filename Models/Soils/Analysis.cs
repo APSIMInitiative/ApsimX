@@ -14,6 +14,7 @@ namespace Models.Soils
     {
         public double[] Thickness { get; set; }
 
+        [Summary]
         [Description("Depth")]
         [XmlIgnore]
         [Units("cm")]
@@ -39,13 +40,20 @@ namespace Models.Soils
         [Description("Munsell Colour")]
         public string[] MunsellColour { get; set; }
         public string[] MunsellMetadata { get; set; }
+
+        [Summary]
         [Description("EC")]
         [Units("1:5 dS/m")]
         public double[] EC { get; set; }
         public string[] ECMetadata { get; set; }
+
+        [Summary]
         [Description("PH")]
+        [Display(Format="N1")]
         public double[] PH { get; set; }
         public string[] PHMetadata { get; set; }
+
+        [Summary]
         [Description("CL")]
         [Units("mg/kg")]
         public double[] CL { get; set; }
@@ -74,6 +82,8 @@ namespace Models.Soils
         [Units("cmol+/kg")]
         public double[] K { get; set; }
         public string[] KMetadata { get; set; }
+
+        [Summary]
         [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
@@ -86,14 +96,18 @@ namespace Models.Soils
         [Units("cmol+/kg")]
         public double[] Al { get; set; }
         public string[] AlMetadata { get; set; }
+
+        [Summary]
         [Description("Particle size sand")]
         [Units("%")]
         public double[] ParticleSizeSand { get; set; }
         public string[] ParticleSizeSandMetadata { get; set; }
+        [Summary]
         [Description("Particle size silt")]
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
         public string[] ParticleSizeSiltMetadata { get; set; }
+        [Summary]
         [Description("Particle size clay")]
         [Units("%")]
         public double[] ParticleSizeClay { get; set; }

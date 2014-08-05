@@ -136,9 +136,22 @@ namespace Models.Soils
             }
         }
 
+        [Summary]
+        [XmlIgnore]
+        [Units("cm")]
+        [Description("Depth")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Soil.Thickness);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the plant available water content
         /// </summary>
+        [Summary]
         [XmlIgnore]
         public double PAW
         {

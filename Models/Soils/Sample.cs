@@ -1,21 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Sample.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Soils
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Xml.Serialization;
+    using Models.Core;
+
+    /// <summary>
+    /// The class represents a soil sample.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Sample : Model
     {
-        public string Date { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sample" /> class.
+        /// </summary>
+        public Sample() 
+        { 
+            this.Name = "Sample"; 
+        }
 
+        #region Enumerations
+        /// <summary>
+        /// An enumeration for specifying nitrogen units.
+        /// </summary>
+        public enum NUnitsEnum
+        {
+            /// <summary>
+            /// parts per million
+            /// </summary>
+            ppm,
+
+            /// <summary>
+            /// kilograms per hectare
+            /// </summary>
+            kgha
+        }
+
+        /// <summary>
+        /// An enumeration for specifying soil water units
+        /// </summary>
+        public enum SWUnitsEnum
+        {
+            /// <summary>
+            /// Volumetric mm/mm
+            /// </summary>
+            Volumetric,
+
+            /// <summary>
+            /// Gravimetric soil water
+            /// </summary>
+            Gravimetric,
+
+            /// <summary>
+            /// mm of water
+            /// </summary>
+            mm
+        }
+
+        /// <summary>
+        /// An enumeration for specifying organic carbon units
+        /// </summary>
+        public enum OCSampleUnitsEnum
+        {
+            /// <summary>
+            /// Organic carbon as total percent
+            /// </summary>
+            Total,
+
+            /// <summary>
+            /// Organic carbon as walkley black percent
+            /// </summary>
+            [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+            WalkleyBlack
+        }
+
+        /// <summary>
+        /// An enumeration for specifying PH units
+        /// </summary>
+        public enum PHSampleUnitsEnum
+        {
+            /// <summary>
+            /// PH as water method
+            /// </summary>
+            Water,
+
+            /// <summary>
+            /// PH as Calcium chloride method
+            /// </summary>
+            CaCl2
+        }
+        #endregion
+
+        /// <summary>
+        /// Gets or sets the sample thickness (mm)
+        /// </summary>
         public double[] Thickness { get; set; }
 
+        /// <summary>
+        /// Gets or sets the depth strings e.g. 0-10
+        /// </summary>
+        [Summary]
         [Description("Depth")]
         [XmlIgnore]
         [Units("cm")]
@@ -23,375 +114,331 @@ namespace Models.Soils
         {
             get
             {
-                return Soil.ToDepthStrings(Thickness);
+                return Soil.ToDepthStrings(this.Thickness);
             }
+
             set
             {
-                Thickness = Soil.ToThickness(value);
+                this.Thickness = Soil.ToThickness(value);
             }
         }
 
-        [Display(Format="N1")]
+        #region Raw variables serialised and edited in GUI
+
+        /// <summary>
+        /// Gets or sets the nitrate NO3. Units will be as specified by NO3Units
+        /// </summary>
         [Description("NO3")]
+        [Display(Format = "N1", ShowTotal = true)]
         public double[] NO3 { get; set; }
-        [Display(Format = "N1")]
+
+        /// <summary>
+        /// Gets or sets ammonia NH4. Units will be as specified by NH4Units
+        /// </summary>
         [Description("NH4")]
+        [Display(Format = "N1", ShowTotal = true)]
         public double[] NH4 { get; set; }
+
+        /// <summary>
+        /// Gets or sets soil water. Units will be as specified by SWUnits
+        /// </summary>
         [Description("SW")]
+        [Display(Format = "N1", ShowTotal = true)]
         public double[] SW { get; set; }
+
+        /// <summary>
+        /// Gets or sets organic carbon. Units will be as specified by OCUnits
+        /// </summary>
         [Description("OC")]
         public double[] OC { get; set; }
+
+        /// <summary>
+        /// Gets or sets electrical conductivity (1:5 dS/m)
+        /// </summary>
         [Description("EC")]
         [Units("1:5 dS/m")]
         public double[] EC { get; set; }
+
+        /// <summary>
+        /// Gets or sets chloride (mg/kg)
+        /// </summary>
         [Description("CL")]
         [Units("mg/kg")]
         public double[] CL { get; set; }
+
+        /// <summary>
+        /// Gets or sets ESP (%)
+        /// </summary>
         [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
+
+        /// <summary>
+        /// Gets or sets PH. Units will be as specified by PHUnits
+        /// </summary>
         [Description("PH")]
         public double[] PH { get; set; }
 
-        public Sample() {Name = "Sample"; }
+        #endregion
 
-        // Support for NO3 units.
-        public enum NUnitsEnum { ppm, kgha }
+        #region Units
+        /// <summary>
+        /// Gets or sets the units of NO3
+        /// </summary>
         public NUnitsEnum NO3Units { get; set; }
-        public string NO3UnitsToString(NUnitsEnum Units)
-        {
-            if (Units == NUnitsEnum.kgha)
-                return "kg/ha";
-            return "ppm";
-        }
-        public void NO3UnitsSet(NUnitsEnum ToUnits, Soil Soil)
-        {
-            if (ToUnits != NO3Units)
-            {
-                // convert the numbers
-                if (ToUnits == NUnitsEnum.ppm)
-                    NO3 = NO3ppm(Soil);
-                else
-                    NO3 = NO3kgha(Soil);
-                NO3Units = ToUnits;
-            }
-        }
-        
-        // Support for NH4 units.
+
+        /// <summary>
+        /// Gets or sets the units of NH4
+        /// </summary>
         public NUnitsEnum NH4Units { get; set; }
-        public string NH4UnitsToString(NUnitsEnum Units)
-        {
-            if (Units == NUnitsEnum.kgha)
-                return "kg/ha";
-            return "ppm";
-        }
-        public void NH4UnitsSet(NUnitsEnum ToUnits, Soil Soil)
-        {
-            double[] BD = Soil.BDMapped(Thickness);
 
-            if (ToUnits != NH4Units)
-            {
-                // convert the numbers
-                if (ToUnits == NUnitsEnum.ppm)
-                    NH4 = NH4ppm(Soil);
-                else
-                    NH4 = NH4kgha(Soil);
-                NH4Units = ToUnits;
-            }
-        }
-        
-        // Support for SW units.
-        public enum SWUnitsEnum { Volumetric, Gravimetric, mm }
+        /// <summary>
+        /// Gets or sets the units of SW
+        /// </summary>
         public SWUnitsEnum SWUnits { get; set; }
-        public string SWUnitsToString(SWUnitsEnum Units)
-        {
-            if (Units == SWUnitsEnum.Gravimetric)
-                return "grav. mm/mm";
-            if (Units == SWUnitsEnum.Volumetric)
-                return "mm/mm";
-            return "mm";
-        }
-        public void SWUnitsSet(SWUnitsEnum ToUnits, Soil Soil)
-        {
-            if (ToUnits != SWUnits)
-            {
-                // convert the numbers
-                if (SWUnits == SWUnitsEnum.Volumetric)
-                {
-                    if (ToUnits == SWUnitsEnum.Gravimetric)
-                        SW = Utility.Math.Divide(SW, Soil.BDMapped(Thickness));
-                    else if (ToUnits == SWUnitsEnum.mm)
-                        SW = Utility.Math.Multiply(SW, Thickness);
-                }
-                else if (SWUnits == SWUnitsEnum.Gravimetric)
-                {
-                    if (ToUnits == SWUnitsEnum.Volumetric)
-                        SW = Utility.Math.Multiply(SW, Soil.BDMapped(Thickness));
-                    else if (ToUnits == SWUnitsEnum.mm)
-                        SW = Utility.Math.Multiply(Utility.Math.Multiply(SW, Soil.BDMapped(Thickness)), Thickness);
-                }
-                else
-                {
-                    if (ToUnits == SWUnitsEnum.Volumetric)
-                        SW = Utility.Math.Divide(SW, Thickness);
-                    else if (ToUnits == SWUnitsEnum.Gravimetric)
-                        SW = Utility.Math.Divide(Utility.Math.Divide(SW, Thickness), Soil.BDMapped(Thickness));
-                }
-                SWUnits = ToUnits;
-            }
-        }
 
-        // Support for OC units.
-        public enum OCSampleUnitsEnum { Total, WalkleyBlack }
+        /// <summary>
+        /// Gets or sets the units of organic carbon
+        /// </summary>
         public OCSampleUnitsEnum OCUnits { get; set; }
-        public string OCUnitsToString(OCSampleUnitsEnum Units)
-        {
-            if (Units == OCSampleUnitsEnum.WalkleyBlack)
-                return "Walkley Black %";
-            return "Total %";
-        }
-        public void OCUnitsSet(OCSampleUnitsEnum ToUnits)
-        {
-            if (ToUnits != OCUnits)
-            {
-                // convert the numbers
-                if (ToUnits == OCSampleUnitsEnum.WalkleyBlack)
-                    OC = Utility.Math.Divide_Value(OC, 1.3);
-                else
-                    OC = Utility.Math.Multiply_Value(OC, 1.3);
-                OCUnits = ToUnits;
-            }
-        }
 
-        // Support for PH units.
-        public enum PHSampleUnitsEnum { Water, CaCl2 }
+        /// <summary>
+        /// Gets or sets the units of P
+        /// </summary>
         public PHSampleUnitsEnum PHUnits { get; set; }
-        public string PHUnitsToString(PHSampleUnitsEnum Units)
-        {
-            if (Units == PHSampleUnitsEnum.CaCl2)
-                return "CaCl2";
-            return "1:5 water";
-        }
-        public void PHUnitsSet(PHSampleUnitsEnum ToUnits)
-        {
-            if (ToUnits != PHUnits)
-            {
-                // convert the numbers
-                if (ToUnits == PHSampleUnitsEnum.Water)
-                {
-                    // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                    PH = Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(PH, 1.1045), 0.1375);
-                }
-                else
-                {
-                    // pH in CaCl = (pH in water + 0.1375) / 1.1045
-                    PH = Utility.Math.Divide_Value(Utility.Math.Add_Value(PH, 0.1375), 1.1045);
-                }
-                PHUnits = ToUnits;
-            }
+        #endregion
 
-
-        }
+        #region Properties for returning variables with particular units
 
         /// <summary>
-        /// Return NO3. Units: ppm.
+        /// Gets NO3. Units: ppm.
         /// </summary>
-        public double[] NO3ppm(Soil Soil)
+        public double[] NO3ppm
         {
-            if (NO3 == null) return null;
-            double[] NO3Values = (double[]) NO3.Clone();
-            if (NO3Units != NUnitsEnum.ppm)
+            get
             {
-                double[] BD = Soil.BDMapped(Thickness);
-                for (int i = 0; i < NO3Values.Length; i++)
+                if (this.NO3 != null && this.Soil != null)
                 {
-                    if (NO3Values[i] != double.NaN)
-                        NO3Values[i] = NO3Values[i] * 100 / (BD[i] * Thickness[i]);
+                    double[] values = (double[])this.NO3.Clone();
+                    if (this.NO3Units != NUnitsEnum.ppm)
+                    {
+                        double[] bd = Soil.BDMapped(this.Thickness);
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] != double.NaN)
+                            {
+                                values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
+                            }
+                        }
+                    }
+
+                    return values;
                 }
+
+                return null;
             }
-                return NO3Values;
         }
         
         /// <summary>
-        /// Return NO3. Units: kg/ha.
+        /// Gets NO3. Units: kg/ha.
         /// </summary>
-        public double[] NO3kgha(Soil Soil)
+        [Summary]
+        [Description("NO3")]
+        [Units("kg/ha")]
+        [Display(Format = "N1", ShowTotal = true)]
+        public double[] NO3kgha
         {
-            if (NO3 == null) return null;
-            double[] NO3Values = (double[])NO3.Clone();
-            if (NO3Units != NUnitsEnum.kgha)
+            get
             {
-                double[] BD = Soil.BDMapped(Thickness);
-                for (int i = 0; i < NO3Values.Length; i++)
+                if (this.NO3 != null && this.Soil != null)
                 {
-                    if (NO3Values[i] != double.NaN)
-                        NO3Values[i] = NO3Values[i] / 100 * (BD[i] * Thickness[i]);
+                    double[] values = (double[])this.NO3.Clone();
+                    if (this.NO3Units != NUnitsEnum.kgha)
+                    {
+                        double[] bd = Soil.BDMapped(this.Thickness);
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] != double.NaN)
+                            {
+                                values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
+                            }
+                        }
+                    }
+
+                    return values;
                 }
+
+                return null;
             }
-            return NO3Values;
         }
         
         /// <summary>
-        /// Return NH4. Units: ppm.
+        /// Gets NH4. Units: ppm.
         /// </summary>
-        public double[] NH4ppm(Soil Soil)
+        public double[] NH4ppm
         {
-            if (NH4 == null) return null;
-            double[] NH4Values = (double[])NH4.Clone();
-            if (NH4Units != NUnitsEnum.ppm)
+            get
             {
-                double[] BD = Soil.BDMapped(Thickness);
-                for (int i = 0; i < NH4Values.Length; i++)
+                if (this.NH4 != null && this.Soil != null)
                 {
-                    if (NH4Values[i] != double.NaN)
-                        NH4Values[i] = NH4Values[i] * 100 / (BD[i] * Thickness[i]);
+                    double[] values = (double[])this.NH4.Clone();
+                    if (this.NH4Units != NUnitsEnum.ppm)
+                    {
+                        double[] bd = Soil.BDMapped(this.Thickness);
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] != double.NaN)
+                            {
+                                values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
+                            }
+                        }
+                    }
+
+                    return values;
                 }
+
+                return null;
             }
-            return NH4Values;
         }
 
         /// <summary>
-        /// Return NH4. Units: kg/ha.
+        /// Gets NH4. Units: kg/ha.
         /// </summary>
-        public double[] NH4kgha(Soil Soil)
+        [Summary]
+        [Description("NH4")]
+        [Units("kg/ha")]
+        [Display(Format = "N1", ShowTotal = true)]
+        public double[] NH4kgha
         {
-            if (NH4 == null) return null;
-            double[] NH4Values = (double[])NH4.Clone();
-            if (NH4Units != NUnitsEnum.kgha)
+            get
             {
-                double[] BD = Soil.BDMapped(Thickness);
-                for (int i = 0; i < NH4Values.Length; i++)
+                if (this.NH4 != null && this.Soil != null)
                 {
-                    if (NH4Values[i] != double.NaN)
-                        NH4Values[i] = NH4Values[i] / 100 * (BD[i] * Thickness[i]);
+                    double[] values = (double[])this.NH4.Clone();
+                    if (this.NH4Units != NUnitsEnum.kgha)
+                    {
+                        double[] bd = Soil.BDMapped(this.Thickness);
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] != double.NaN)
+                            {
+                                values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
+                            }
+                        }
+                    }
+
+                    return values;
                 }
+
+                return null;
             }
-            return NH4Values;
         }
 
-
         /// <summary>
-        /// Return SW. Units: vol mm/mm.
+        /// Gets SW. Units: mm/mm.
         /// </summary>
-        public double[] SWVolumetric(Soil Soil)
+        [Summary]
+        [Description("SW")]
+        [Units("mm")]
+        [Display(Format = "N1", ShowTotal = true)]
+        public double[] SWmm
         {
-            if (SW == null) return null;
-            double[] OriginalValues = (double[]) SW.Clone();
-            SWUnitsSet(SWUnitsEnum.Volumetric, Soil);
-            double[] Values = (double[]) SW.Clone();
-            SW = OriginalValues;
-            return Values;
+            get
+            {
+                if (this.Soil != null && this.SW != null)
+                {
+                    if (this.SWUnits == SWUnitsEnum.Volumetric)
+                    {
+                        return Utility.Math.Multiply(this.SW, this.Thickness);
+                    }
+                    else if (this.SWUnits == SWUnitsEnum.Gravimetric)
+                    {
+                        return Utility.Math.Multiply(Utility.Math.Multiply(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
+                    }
+                    else
+                    {
+                        return this.SW;
+                    }
+                }
+
+                return null;
+            }
         }
 
+        /// <summary>
+        /// Gets SW. Units: mm/mm.
+        /// </summary>
+        public double[] SWVolumetric
+        {
+            get
+            {
+                if (this.Soil != null && this.SW != null)
+                {
+                    if (this.SWUnits == SWUnitsEnum.Volumetric)
+                    {
+                        return this.SW;
+                    }
+                    else if (this.SWUnits == SWUnitsEnum.Gravimetric)
+                    {
+                        return Utility.Math.Multiply(this.SW, this.Soil.BDMapped(this.Thickness));
+                    }
+                    else
+                    {
+                        return Utility.Math.Divide(this.SW, this.Thickness);
+                    }
+                }
+
+                return null;
+            }
+        }
 
         /// <summary>
-        /// Organic carbon. Units: Total %
+        /// Gets organic carbon. Units: Total %
         /// </summary>
         public double[] OCTotal
         {
             get
             {
-                if (OCUnits == OCSampleUnitsEnum.WalkleyBlack)
-                    return Utility.Math.Multiply_Value(OC, 1.3);
+                if (this.OCUnits == OCSampleUnitsEnum.WalkleyBlack)
+                {
+                    return Utility.Math.Multiply_Value(this.OC, 1.3);
+                }
                 else
-                    return OC;
+                {
+                    return this.OC;
+                }
             }
         }
 
         /// <summary>
-        /// PH. Units: (1:5 water)
+        /// Gets PH. Units: (1:5 water)
         /// </summary>
         public double[] PHWater
         {
             get
             {
-                if (PHUnits == PHSampleUnitsEnum.CaCl2)
+                if (this.PHUnits == PHSampleUnitsEnum.CaCl2)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                    return Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(PH, 1.1045), 0.1375);
+                    return Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(this.PH, 1.1045), 0.1375);
                 }
                 else
-                    return PH;
+                {
+                    return this.PH;
+                }
             }
         }
 
-        internal static bool OverlaySampleOnTo(double[] SampleValues, double[] SampleThickness,
-                                               ref double[] SoilValues, ref double[] SoilThickness)
-        {
-            if (Utility.Math.ValuesInArray(SampleValues))
-            {
-                double[] Values = (double[]) SampleValues.Clone();
-                double[] Thicknesses = (double[]) SampleThickness.Clone();
-                InFillValues(ref Values, ref Thicknesses, SoilValues, SoilThickness);
-                SoilValues = Values;
-                SoilThickness = Thicknesses;
-                return true;
-            }
-            return false;
-        }
-
+        #endregion
 
         /// <summary>
-        /// Takes values from SoilValues and puts them at the bottom of SampleValues.  
+        /// Gets the soil associated with this sample
         /// </summary>
-        private static void InFillValues(ref double[] SampleValues, ref double[] SampleThickness,
-                                         double[] SoilValues, double[] SoilThickness)
+        private Soil Soil
         {
-            //-------------------------------------------------------------------------
-            //  e.g. IF             SoilThickness  Values   SampleThickness	SampleValues
-            //                           0-100		2         0-100				10
-            //                         100-250	    3	     100-600			11
-            //                         250-500		4		
-            //                         500-750		5
-            //                         750-900		6
-            //						  900-1200		7
-            //                        1200-1500		8
-            //                        1500-1800		9
-            //
-            // will produce:		SampleThickness	        Values
-            //						     0-100				  10
-            //						   100-600				  11
-            //						   600-750				   5
-            //						   750-900				   6
-            //						   900-1200				   7
-            //						  1200-1500				   8
-            //						  1500-1800				   9
-            //
-            //-------------------------------------------------------------------------
-            if (SoilValues == null || SoilThickness == null) return;
-
-            // remove missing layers.
-            for (int i = 0; i < SampleValues.Length; i++)
+            get
             {
-                if (double.IsNaN(SampleValues[i]) || double.IsNaN(SampleThickness[i]))
-                {
-                    SampleValues[i] = double.NaN;
-                    SampleThickness[i] = double.NaN;
-                }
-            }
-            SampleValues = Utility.Math.RemoveMissingValuesFromBottom(SampleValues);
-            SampleThickness = Utility.Math.RemoveMissingValuesFromBottom(SampleThickness);
-
-            double CumSampleDepth = Utility.Math.Sum(SampleThickness);
-
-            //Work out if we need to create a dummy layer so that the sample depths line up 
-            //with the soil depths
-            double CumSoilDepth = 0.0;
-            for (int SoilLayer = 0; SoilLayer < SoilThickness.Length; SoilLayer++)
-            {
-                CumSoilDepth += SoilThickness[SoilLayer];
-                if (CumSoilDepth > CumSampleDepth)
-                {
-                    Array.Resize(ref SampleThickness, SampleThickness.Length + 1);
-                    Array.Resize(ref SampleValues, SampleValues.Length + 1);
-                    int i = SampleThickness.Length - 1;
-                    SampleThickness[i] = CumSoilDepth - CumSampleDepth;
-                    if (SoilValues[SoilLayer] == Utility.Math.MissingValue)
-                        SampleValues[i] = 0.0;
-                    else
-                        SampleValues[i] = SoilValues[SoilLayer];
-                    CumSampleDepth = CumSoilDepth;
-                }
+                return this.ParentOfType(typeof(Soil)) as Soil;
             }
         }
     }

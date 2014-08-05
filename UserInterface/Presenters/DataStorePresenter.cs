@@ -10,6 +10,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using System.IO;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A data store presenter connecting a data store model with a data store view
@@ -43,15 +44,17 @@ namespace UserInterface.Presenters
             this.dataStoreView = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
 
+            this.dataStoreView.AutoExport = dataStore.AutoExport;
+
             this.dataStoreView.OnTableSelected += this.OnTableSelected;
-            this.dataStoreView.CreateNowClicked += this.OnCreateNowClicked;
-            this.dataStoreView.RunChildModelsClicked += this.OnRunChildModelsClicked;
+            this.dataStoreView.ExportNowClicked += this.OnExportNowClicked;
             this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
+            this.dataStoreView.AutoExportClicked += OnAutoExportClicked;
 
             this.dataStoreView.Grid.ReadOnly = true;
             this.dataStoreView.Grid.AutoFilterOn = true;
             this.dataStoreView.Grid.NumericFormat = "N3";
-            this.dataStoreView.TableNames = this.dataStore.TableNames;
+            this.dataStoreView.TableNames = this.GetTableNames();
             this.dataStoreView.SimulationNames = this.dataStore.SimulationNames;
         }
 
@@ -61,9 +64,27 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.dataStoreView.OnTableSelected -= this.OnTableSelected;
-            this.dataStoreView.CreateNowClicked -= this.OnCreateNowClicked;
-            this.dataStoreView.RunChildModelsClicked -= this.OnRunChildModelsClicked;
+            this.dataStoreView.ExportNowClicked -= this.OnExportNowClicked;
             this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
+            this.dataStoreView.AutoExportClicked -= OnAutoExportClicked;
+        }
+
+        /// <summary>
+        /// Get a list of table names to send to the view.
+        /// </summary>
+        /// <returns>The list of table names</returns>
+        private string[] GetTableNames()
+        {
+            List<string> tableNames = new List<string>();
+            foreach (string tableName in this.dataStore.TableNames)
+            {
+                if (tableName != "Messages" && tableName != "InitialConditions")
+                {
+                    tableNames.Add(tableName);
+                }
+            }
+
+            return tableNames.ToArray();
         }
 
         /// <summary>
@@ -94,30 +115,42 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void OnCreateNowClicked(object sender, EventArgs e)
+        private void OnExportNowClicked(object sender, EventArgs e)
         {
-            this.dataStore.WriteOutputFile();
+            this.dataStore.WriteToTextFiles();
+
+            // Tell user all is done.
+            this.explorerPresenter.ShowMessage("Files created successfully", DataStore.ErrorLevel.Information);
         }
 
         /// <summary>
-        /// User has clicked the run child models button.
+        /// The auto export option has been changed.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void OnRunChildModelsClicked(object sender, EventArgs e)
+        private void OnAutoExportClicked(object sender, EventArgs e)
         {
-            try
-            {
-                // Run all child model post processors.
-                this.dataStore.RunPostProcessingTools();
-            }
-            catch (Exception err)
-            {
-                this.explorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
-            }
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.dataStore, "AutoExport", this.dataStoreView.AutoExport);
+            this.explorerPresenter.CommandHistory.Add(command);
+        }
 
-            this.dataStoreView.TableNames = this.dataStore.TableNames;
-            this.explorerPresenter.ShowMessage("DataStore post processing models have completed", Models.DataStore.ErrorLevel.Information);
+        /// <summary>
+        /// Write the summary report to a file
+        /// </summary>
+        /// <param name="baseline">Indicates whether the baseline data store should be used.</param>
+        private void WriteSummaryFiles(DataStore dataStoreToUse)
+        {
+            string fileName = dataStoreToUse.Filename + ".sum";
+
+            StreamWriter report = report = new StreamWriter(fileName);
+            foreach (string simulationName in dataStoreToUse.SimulationNames)
+            {
+                Summary.WriteReport(dataStoreToUse, simulationName, report, null, html: false);
+                report.WriteLine();
+                report.WriteLine();
+                report.WriteLine("############################################################################");
+            }
+            report.Close();
         }
     }
 }

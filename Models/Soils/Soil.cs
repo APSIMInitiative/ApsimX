@@ -25,37 +25,72 @@ namespace Models.Soils
     {
         private static bool PathFixed = false;
 
+        [Summary]
         [Description("Record number")]
         public int RecordNumber { get; set; }
+
+        [Summary]
         [Description("Australian Soil Classification Order")]
         public string ASCOrder { get; set; }
+
+        [Summary]
         [Description("Australian Soil Classification Sub-Order")]
         public string ASCSubOrder { get; set; }
+
+        [Summary]
         [Description("Soil texture or other descriptor")]
         public string SoilType { get; set; }
+
+        [Summary]
         [Description("Local name")]
         public string LocalName { get; set; }
+
+        [Summary]
+        [Description("Site")]
         public string Site { get; set; }
+
+        [Summary]
         [Description("Nearest town")]
         public string NearestTown { get; set; }
+
+        [Summary]
+        [Description("Region")]
         public string Region { get; set; }
+
+        [Summary]
+        [Description("State")]
         public string State { get; set; }
+
+        [Summary]
+        [Description("Country")]
         public string Country { get; set; }
+
+        [Summary]
         [Description("Natural vegetation")]
         public string NaturalVegetation { get; set; }
+
+        [Summary]
         [Description("APSoil number")]
         public string ApsoilNumber { get; set; }
+
+        [Summary]
         [Description("Latitude (WGS84)")]
         public double Latitude { get; set; }
+
+        [Summary]
         [Description("Longitude (WGS84)")]
         public double Longitude { get; set; }
+
+        [Summary]
         [Description("Location accuracy")]
         public string LocationAccuracy { get; set; }
 
-        //[UILargeText]
+        [Summary]
         [Description("Data source")]
         public string DataSource { get; set; }
-        //[UILargeText]
+
+        [Summary]
+        [Description("Comments")]
         public string Comments { get; set; }
 
         [XmlIgnore] public Water Water { get; private set; }
@@ -188,6 +223,15 @@ namespace Models.Soils
 
         public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
 
+        [Description("Depth")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+        }
+
         /// <summary>
         /// Bulk density at standard thickness. Units: mm/mm
         /// </summary>
@@ -219,7 +263,7 @@ namespace Models.Soils
                     {
                         if (Utility.Math.ValuesInArray(Sample.SW))
                         {
-                            return SWMapped(Sample.SWVolumetric(this), Sample.Thickness, Water.Thickness);
+                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, Water.Thickness);
                         }
                     }
                 }
@@ -279,13 +323,62 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Return the plant available water CAPACITY at standard thickness. Units: mm
+        /// Gets unavailable water at standard thickness. Units:mm
         /// </summary>
+        [Description("Unavailable LL15")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Unavailablemm
+        {
+            get
+            {
+                return Utility.Math.Multiply(LL15, Thickness);
+            }
+        }
+
+        /// <summary>
+        /// Gets available water at standard thickness (SW-LL15). Units:mm
+        /// </summary>
+        [Description("Available SW-LL15")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] PAWTotalmm
+        {
+            get
+            {
+                return Utility.Math.Multiply(CalcPAWC(Thickness,
+                                                      LL15,
+                                                      SW,
+                                                      null),
+                                             Thickness);
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximum plant available water CAPACITY at standard thickness (DUL-LL15). Units: mm
+        /// </summary>
+        [Description("Max. available\r\nPAWC DUL-LL15")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
         public double[] PAWCmm
         {
             get
             {
                 return Utility.Math.Multiply(PAWC, Thickness);
+            }
+        }
+
+        /// <summary>
+        /// Gets the drainable water at standard thickness (SAT-DUL). Units: mm
+        /// </summary>
+        [Description("Drainable\r\nPAWC SAT-DUL")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Drainablemm
+        {
+            get
+            {
+                return Utility.Math.Multiply(Utility.Math.Subtract(SAT, DUL), Thickness);
             }
         }
 
@@ -302,6 +395,9 @@ namespace Models.Soils
                                 null);
             }
         }
+
+
+
         /// <summary>
         /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
         /// </summary>
@@ -668,7 +764,7 @@ namespace Models.Soils
 
                 // Try and find a sample with OC in it.
                 foreach (Sample Sample in Samples)
-                    if (Sample.OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
+                    if (OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
                         break;
                 if (SoilOC == null)
                     return null;
@@ -772,9 +868,9 @@ namespace Models.Soils
             {
                 foreach (Sample Sample in Samples)
                 {
-                    if (Utility.Math.ValuesInArray(Sample.NO3ppm(this)))
+                    if (Utility.Math.ValuesInArray(Sample.NO3ppm))
                     {
-                        double[] Values = Sample.NO3ppm(this);
+                        double[] Values = Sample.NO3ppm;
                         double[] Thicknesses = Sample.Thickness;                
                         return Map(Values, Thicknesses, Thickness, MapType.Concentration, 1.0);
                     }
@@ -794,7 +890,7 @@ namespace Models.Soils
                 {
                     if (Utility.Math.ValuesInArray(Sample.NH4))
                     {
-                        double[] Values = Sample.NH4ppm(this);
+                        double[] Values = Sample.NH4ppm;
                         double[] Thicknesses = Sample.Thickness;                
                         return Map(Values, Thicknesses, Thickness, MapType.Concentration, 0.2);
                     }
@@ -815,7 +911,7 @@ namespace Models.Soils
 
                 // Try and find a sample with CL in it.
                 foreach (Sample Sample in Samples)
-                    if (Sample.OverlaySampleOnTo(Sample.CL, Sample.Thickness, ref Values, ref Thicknesses))
+                    if (OverlaySampleOnTo(Sample.CL, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
                     return Map(Values, Thicknesses, Thickness,
@@ -836,7 +932,7 @@ namespace Models.Soils
 
                 // Try and find a sample with ESP in it.
                 foreach (Sample Sample in Samples)
-                    if (Sample.OverlaySampleOnTo(Sample.ESP, Sample.Thickness, ref Values, ref Thicknesses))
+                    if (OverlaySampleOnTo(Sample.ESP, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
                     return Map(Values, Thicknesses, Thickness,
@@ -857,7 +953,7 @@ namespace Models.Soils
 
                 // Try and find a sample with EC in it.
                 foreach (Sample Sample in Samples)
-                    if (Sample.OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
+                    if (OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
                     return Map(Values, Thicknesses, Thickness,
@@ -878,7 +974,7 @@ namespace Models.Soils
 
                 // Try and find a sample with PH in it.
                 foreach (Sample Sample in Samples)
-                    if (Sample.OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
+                    if (OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
                     return Map(Values, Thicknesses, Thickness,
@@ -1512,6 +1608,96 @@ namespace Models.Soils
             return ToMass;
         }
 
+
+        // <param name="units">The units of the associated field or property</param>
+
+        /// <summary>
+        /// Overlay sample values onto soil values.
+        /// </summary>
+        /// <param name="SampleValues"></param>
+        /// <param name="SampleThickness"></param>
+        /// <param name="SoilValues"></param>
+        /// <param name="SoilThickness"></param>
+        /// <returns></returns>
+        private static bool OverlaySampleOnTo(double[] SampleValues, double[] SampleThickness,
+                                               ref double[] SoilValues, ref double[] SoilThickness)
+        {
+            if (Utility.Math.ValuesInArray(SampleValues))
+            {
+                double[] Values = (double[])SampleValues.Clone();
+                double[] Thicknesses = (double[])SampleThickness.Clone();
+                InFillValues(ref Values, ref Thicknesses, SoilValues, SoilThickness);
+                SoilValues = Values;
+                SoilThickness = Thicknesses;
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// Takes values from SoilValues and puts them at the bottom of SampleValues.  
+        /// </summary>
+        private static void InFillValues(ref double[] SampleValues, ref double[] SampleThickness,
+                                         double[] SoilValues, double[] SoilThickness)
+        {
+            //-------------------------------------------------------------------------
+            //  e.g. IF             SoilThickness  Values   SampleThickness	SampleValues
+            //                           0-100		2         0-100				10
+            //                         100-250	    3	     100-600			11
+            //                         250-500		4		
+            //                         500-750		5
+            //                         750-900		6
+            //						  900-1200		7
+            //                        1200-1500		8
+            //                        1500-1800		9
+            //
+            // will produce:		SampleThickness	        Values
+            //						     0-100				  10
+            //						   100-600				  11
+            //						   600-750				   5
+            //						   750-900				   6
+            //						   900-1200				   7
+            //						  1200-1500				   8
+            //						  1500-1800				   9
+            //
+            //-------------------------------------------------------------------------
+            if (SoilValues == null || SoilThickness == null) return;
+
+            // remove missing layers.
+            for (int i = 0; i < SampleValues.Length; i++)
+            {
+                if (double.IsNaN(SampleValues[i]) || double.IsNaN(SampleThickness[i]))
+                {
+                    SampleValues[i] = double.NaN;
+                    SampleThickness[i] = double.NaN;
+                }
+            }
+            SampleValues = Utility.Math.RemoveMissingValuesFromBottom(SampleValues);
+            SampleThickness = Utility.Math.RemoveMissingValuesFromBottom(SampleThickness);
+
+            double CumSampleDepth = Utility.Math.Sum(SampleThickness);
+
+            //Work out if we need to create a dummy layer so that the sample depths line up 
+            //with the soil depths
+            double CumSoilDepth = 0.0;
+            for (int SoilLayer = 0; SoilLayer < SoilThickness.Length; SoilLayer++)
+            {
+                CumSoilDepth += SoilThickness[SoilLayer];
+                if (CumSoilDepth > CumSampleDepth)
+                {
+                    Array.Resize(ref SampleThickness, SampleThickness.Length + 1);
+                    Array.Resize(ref SampleValues, SampleValues.Length + 1);
+                    int i = SampleThickness.Length - 1;
+                    SampleThickness[i] = CumSoilDepth - CumSampleDepth;
+                    if (SoilValues[SoilLayer] == Utility.Math.MissingValue)
+                        SampleValues[i] = 0.0;
+                    else
+                        SampleValues[i] = SoilValues[SoilLayer];
+                    CumSampleDepth = CumSoilDepth;
+                }
+            }
+        }
 
         #endregion
 

@@ -86,6 +86,8 @@ namespace Models
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
+        [Summary]
+        [Description("Weather file name")]
         public string FileName { get; set; }
 
         /// <summary>

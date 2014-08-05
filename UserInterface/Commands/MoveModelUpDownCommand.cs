@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml;
 using System;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Commands
 {

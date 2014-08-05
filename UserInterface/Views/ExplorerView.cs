@@ -9,6 +9,7 @@ using System.Globalization;
 using UserInterface.Commands;
 using System.Runtime.Serialization;
 using UserInterface.Views;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
@@ -321,10 +322,15 @@ namespace UserInterface.Views
         /// <param name="Message"></param>
         public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
         {
-            if (!Message.EndsWith("\n"))
-                Message = Message + "\n";
+
             StatusWindow.Visible = Message != null;
-            //StatusWindow.Select(0, 0);
+            StatusWindow.Select(StatusWindow.TextLength, 0);
+
+            // Output the date.
+            StatusWindow.SelectionColor = Color.Black;
+            StatusWindow.SelectedText = DateTime.Now.ToString() + ":";
+
+            // Output the message
             StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
@@ -333,6 +339,10 @@ namespace UserInterface.Views
                 StatusWindow.SelectionColor = Color.Brown;
             else
                 StatusWindow.SelectionColor = Color.Blue;
+
+            Message = "\n" + Message.TrimEnd("\n".ToCharArray());
+            Message = Message.Replace("\n", "\n                      ");
+            Message += "\n";
 
             StatusWindow.SelectedText = Message;
             StatusWindow.ScrollToCaret();

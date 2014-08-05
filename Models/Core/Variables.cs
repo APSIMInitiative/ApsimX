@@ -165,8 +165,19 @@ namespace Models.Core
                 if (pos == -1)
                     throw new ApsimXException(relativeTo.FullPath, "Invalid path found: " + namePath);
 
+                // Do a model name search first.
                 string typeName = namePath.Substring(1, pos - 1);
                 Model modelInScope = relativeTo.Scope.Find(typeName);
+
+                // If none found then assume typeName is a type and do a type search.
+                if (modelInScope == null)
+                {
+                    Type t = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                    if (t != null)
+                    {
+                        modelInScope = relativeTo.Scope.Find(t);
+                    }
+                }
 
                 if (modelInScope == null)
                     throw new ApsimXException("Simulation.Variables", "Cannot find type: " + typeName + " while doing a get for: " + namePath);

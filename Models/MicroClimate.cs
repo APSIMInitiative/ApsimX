@@ -198,7 +198,6 @@ namespace Models
         #region "Outputs we make available"
 
         [Units("mm")]
-        [Description("interception")]
         public double interception
         {
             get

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Summary.cs" company="CSIRO">
+// <copyright file="Summary.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Models
     /// It also provides an API for writing messages to the DataStore.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.SummaryView")]
+    [ViewName("UserInterface.Views.HTMLView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
     {      
@@ -44,20 +44,10 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether HTML report is required.
-        /// </summary>
-        public bool Html { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the summary file should be
-        /// created every time the simulation is run.
-        /// </summary>
-        public bool AutoCreate { get; set; }
-
-        /// <summary>
         /// Write the summary report to the specified writer.
         /// </summary>
-        /// <param name="simulation">The simulation to produce a summary report for</param>
+        /// <param name="dataStore">The data store to write a summary report from</param>
+        /// <param name="simulationName">The simulation name to produce a summary report for</param>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="html">Indicates whether to produce html format</param>
@@ -76,12 +66,12 @@ namespace Models
                 writer.WriteLine("<head><title>Summary file</title>");
 
                 writer.WriteLine("<style type=\"text/css\">");
-                writer.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}");
-                writer.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}");
+                writer.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;text-align:right;table-layout:auto;width: 50%;whitespace:nowrap}");
+                writer.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:right}");
                 writer.WriteLine("table.ApsimTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;background-color:#d4e3e5;}");
                 writer.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
 
-                writer.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
+                writer.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;table-layout:fixed;width: 50%}");
                 writer.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
                 writer.WriteLine("table.PropertyTable tr {\r\n" +
                                  "   font-family:Arial,Helvetica,sans-serif;\r\n" +
@@ -115,7 +105,8 @@ namespace Models
                                  "}");
                 writer.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
                 writer.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-
+                writer.WriteLine("tr.TitleRow {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:red;font-weight:bold;}");
+                
                 writer.WriteLine("</style>");
                 writer.WriteLine("</head>");
                 writer.WriteLine("<body>");
@@ -144,16 +135,24 @@ namespace Models
                         string heading = tables[i].TableName;
                         WriteHeading(writer, heading, html);
 
-                        // Write the properties table if we have any properties.
-                        if (tables[i].Rows.Count > 0)
+                        // Write the manager script.
+                        if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script: ")
                         {
-                            WriteTable(writer, tables[i], html, includeHeadings: false, className: "PropertyTable");
+                            WriteScript(writer, tables[i].Rows[0], html);
                         }
-
-                        // Write the general data table if we have any data.
-                        if (tables[i + 1].Rows.Count > 0)
+                        else
                         {
-                            WriteTable(writer, tables[i + 1], html, includeHeadings: true, className: "ApsimTable");
+                            // Write the properties table if we have any properties.
+                            if (tables[i].Rows.Count > 0)
+                            {
+                                WriteTable(writer, tables[i], html, includeHeadings: false, className: "PropertyTable");
+                            }
+
+                            // Write the general data table if we have any data.
+                            if (tables[i + 1].Rows.Count > 0)
+                            {
+                                WriteTable(writer, tables[i + 1], html, includeHeadings: true, className: "ApsimTable");
+                            }
                         }
                     }
                 }
@@ -169,25 +168,6 @@ namespace Models
                 writer.WriteLine("</body>");
                 writer.WriteLine("</html>");
             }
-
-            dataStore.Disconnect();
-            writer.Close();
-        }
-
-        /// <summary>
-        /// Simulation is commencing.
-        /// </summary>
-        public override void OnSimulationCommencing()
-        {
-            // Create our Messages table.
-            this.messagesTable = new DataTable("Messages");
-            this.messagesTable.Columns.Add("ComponentName", typeof(string));
-            this.messagesTable.Columns.Add("Date", typeof(DateTime));
-            this.messagesTable.Columns.Add("Message", typeof(string));
-            this.messagesTable.Columns.Add("MessageType", typeof(int));
-
-            // Create an initial conditions table in the DataStore.
-            CreateInitialConditionsTable(Simulation);
         }
 
         /// <summary>
@@ -199,11 +179,6 @@ namespace Models
             dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
             dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
             dataStore.Disconnect();
-
-            if (this.AutoCreate)
-            {
-                this.WriteReportToFile(baseline: false);
-            }
         }
 
         /// <summary>
@@ -239,36 +214,6 @@ namespace Models
                 newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
                 this.messagesTable.Rows.Add(newRow);
             }
-        }
-
-        /// <summary>
-        /// Write the summary report to a file
-        /// </summary>
-        /// <param name="baseline">Indicates whether the baseline data store should be used.</param>
-        public void WriteReportToFile(bool baseline)
-        {
-            string fileName = Path.Combine(
-                                    Path.GetDirectoryName(Simulation.FileName),
-                                    Simulation.Name + this.Name);
-            if (baseline)
-            {
-                fileName += ".baseline";
-            }
-
-            if (this.Html)
-            {
-                fileName += ".html";
-            }
-            else
-            {
-                fileName += ".csv";
-            }
-
-            DataStore dataStore = new DataStore(Simulation, baseline);
-            
-            StreamWriter report = report = new StreamWriter(fileName);
-            WriteReport(dataStore, this.Simulation.Name, report, null, this.Html);
-            report.Close();
         }
 
         #region Private static summary report generation
@@ -328,7 +273,7 @@ namespace Models
                         previousMessage += message;
                     }
 
-                    previousMessage += "<br/>";
+                    previousMessage += "\r\n";
                 }
             }
 
@@ -350,7 +295,29 @@ namespace Models
             else
             {
                 writer.WriteLine(heading.ToUpper());
+                writer.WriteLine(new string('-', heading.Length));
             }
+        }
+
+        /// <summary>
+        /// Write out manager script
+        /// </summary>
+        /// <param name="writer">Text writer to write to</param>
+        /// <param name="row">The data table row containing the script</param>
+        /// <param name="html">Indicates whether to produce html format</param>
+        private static void WriteScript(TextWriter writer, DataRow row, bool html)
+        {
+            string st = row[1].ToString();
+            st = st.Replace("\t", "    ");
+            if (html)
+            {
+                st = st.Replace("\r", string.Empty);
+                st = st.Replace("\n", "<br/>");
+                st = st.Replace("<br/>", "<br/>\r\n");
+                st = "<pre><code>" + st + "</code></pre>";
+            }
+
+            writer.WriteLine(st);
         }
 
         /// <summary>
@@ -365,7 +332,14 @@ namespace Models
         {
             if (html)
             {
-                writer.WriteLine("<table class=\"" + className + "\">");
+                if (className == string.Empty)
+                {
+                    writer.WriteLine("<table>");
+                }
+                else
+                {
+                    writer.WriteLine("<table class=\"" + className + "\">");
+                }
 
                 if (includeHeadings)
                 {
@@ -382,9 +356,25 @@ namespace Models
 
                 foreach (DataRow row in table.Rows)
                 {
-                    writer.Write("<tr>");
+                    bool titleRow = Convert.IsDBNull(row[0]);
+
+                    if (titleRow)
+                    {
+                        writer.Write("<tr class=\"TitleRow\">");
+                    }
+                    else
+                    {
+                        writer.Write("<tr>");
+                    }
+
                     foreach (DataColumn col in table.Columns)
                     {
+                        string st = row[col].ToString();
+                        if (titleRow && col.Ordinal == 0)
+                        {
+                            st = "Total";
+                        }
+                            
                         if (className == "MessageTable")
                         {
                             if (col.Ordinal == 0)
@@ -395,22 +385,15 @@ namespace Models
                             {
                                 writer.WriteLine("<td class=\"col2\">");
                             }
-                            
                         }
                         else
                         {
                             writer.Write("<td>");
                         }
 
-                        string st = row[col].ToString();
                         if (st.Contains("\n"))
                         {
                             st = st.Replace("\n", "<br/>");
-                        }
-
-                        if (col.Ordinal == 1 && table.Rows.Count == 1 && table.Rows[0][0].ToString() == "Code:")
-                        {
-                            st = "<code><pre>" + st + "</pre></code>";  // manager code
                         }
 
                         if (st.Contains("WARNING:"))
@@ -442,7 +425,8 @@ namespace Models
             }
             else
             {
-                writer.WriteLine(Utility.DataTable.DataTableToCSV(table, 0));
+                bool showHeadings = className != "PropertyTable";
+                writer.WriteLine(Utility.DataTable.DataTableToText(table, 0, "  ", showHeadings));
             }
         }
 
@@ -458,11 +442,32 @@ namespace Models
         {
             foreach (DataRow row in table.Rows)
             {
-                writer.WriteLine("<h3>" + row[0] + "</h3>");
+                if (html)
+                {
+                    writer.WriteLine("<h3>" + row[0] + "</h3>");
+                }
+                else
+                {
+                    writer.WriteLine();
+                    writer.WriteLine();
+                    writer.WriteLine(row[0].ToString());
+                }
 
-                string content = row[1].ToString();
-                content = content.Replace("\r\n", "<br/>");
-                writer.WriteLine("<p>" + content + "</p>");
+                string st = row[1].ToString();
+                st = st.Replace("\t", "    ");
+                if (html)
+                {
+                    st = st.Replace("\r", string.Empty);
+                    st = st.Replace("\n", "<br/>");
+                    st = st.Replace("<br/>", "<br/>\r\n");
+                    st = "<pre><code>" + st + "</code></pre>";
+                }
+                else
+                {
+                    st = Utility.String.IndentText(st, 4);
+                }
+
+                writer.WriteLine(st);
             }
         }
 
@@ -480,10 +485,11 @@ namespace Models
             initialConditionsTable.Columns.Add("DataType", typeof(string));
             initialConditionsTable.Columns.Add("Units", typeof(string));
             initialConditionsTable.Columns.Add("DisplayFormat", typeof(string));
+            initialConditionsTable.Columns.Add("Total", typeof(int));
             initialConditionsTable.Columns.Add("Value", typeof(string));
 
             initialConditionsTable.Rows.Add(
-                new object[] { simulation.FullPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, simulation.Name });
+                new object[] { simulation.FullPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
 
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in simulation.Scope.FindAll())
@@ -496,12 +502,16 @@ namespace Models
                 foreach (VariableProperty property in properties)
                 {
                     string value = property.ValueWithArrayHandling.ToString();
-                    if (value != null && property.DataType == typeof(DateTime))
+                    if (value != string.Empty)
                     {
-                        value = ((DateTime)property.Value).ToString("yyyy-MM-dd hh:mm:ss");
-                    }
+                        if (value != null && property.DataType == typeof(DateTime))
+                        {
+                            value = ((DateTime)property.Value).ToString("yyyy-MM-dd hh:mm:ss");
+                        }
 
-                    initialConditionsTable.Rows.Add(new object[]
+                        bool showTotal = !double.IsNaN(property.Total);
+
+                        initialConditionsTable.Rows.Add(new object[]
                           { 
                               relativeModelPath, 
                               property.Name,
@@ -509,8 +519,10 @@ namespace Models
                               property.DataType.Name,
                               property.Units,
                               property.Format,
+                              showTotal,
                               value
                           });
+                    }
                 }
             }
 
@@ -532,24 +544,11 @@ namespace Models
             {
                 foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                 {
-                    // Properties must have a [Description], not be called Name, and be read/write.
-                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                    bool includeProperty = hasDescription &&
-                                           property.Name != "Name" &&
-                                           property.CanRead &&
-                                           property.CanWrite;
-
-                    // Only allow lists that are double[], int[] or string[]
-                    if (includeProperty && property.PropertyType.GetInterface("IList") != null)
-                    {
-                        includeProperty = property.PropertyType == typeof(double[]) ||
-                                          property.PropertyType == typeof(int[]) ||
-                                          property.PropertyType == typeof(string[]);
-                    }
+                    // Properties must have a [Summary] attribute
+                    bool includeProperty = property.IsDefined(typeof(SummaryAttribute), false);
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), true);
                         properties.Add(new VariableProperty(model, property));
                     }
                 }
@@ -599,11 +598,12 @@ namespace Models
                         propertyName += " (" + units + ")";
                     }
 
-                    AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, row["Value"], generalDataTable);
+                    bool showTotal = Convert.ToInt32(row["Total"]) == 1;
+                    AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, showTotal, row["Value"], generalDataTable);
                 }
                 else
                 {
-                    string value = FormatPropertyValue(row["DataType"].ToString(), row["Value"]);
+                    string value = FormatPropertyValue(row["DataType"].ToString(), row["Value"], displayFormat);
                     if (units != null && units != string.Empty)
                     {
                         value += " (" + units + ")";
@@ -624,9 +624,10 @@ namespace Models
         /// <param name="heading">The new column heading</param>
         /// <param name="dataTypeName">The data type of the value</param>
         /// <param name="displayFormat">The display format to use when writing the column</param>
+        /// <param name="showTotal">A value indicating whether a total should be added.</param>
         /// <param name="value">The values containing the array</param>
         /// <param name="table">The table where a column should be added to</param>
-        private static void AddArrayToTable(string heading, string dataTypeName, string displayFormat, object value, DataTable table)
+        private static void AddArrayToTable(string heading, string dataTypeName, string displayFormat, bool showTotal, object value, DataTable table)
         {
             if (displayFormat == null)
             {
@@ -636,12 +637,24 @@ namespace Models
             string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             if (dataTypeName == "Double[]")
             {
-                double[] values = Utility.Math.StringsToDoubles(stringValues);
+                List<double> values = new List<double>();
+                values.AddRange(Utility.Math.StringsToDoubles(stringValues));
+                if (showTotal)
+                {
+                    values.Add(Utility.Math.Sum(values));
+                }
+
                 stringValues = Utility.Math.DoublesToStrings(values, displayFormat);
             }
             else if (dataTypeName == "Int32[]")
             {
-                double[] values = Utility.Math.StringsToDoubles(stringValues);
+                List<double> values = new List<double>();
+                values.AddRange(Utility.Math.StringsToDoubles(stringValues));
+                if (showTotal)
+                {
+                    values.Add(Utility.Math.Sum(values));
+                }
+
                 stringValues = Utility.Math.DoublesToStrings(values, "N0");
             }
             else if (dataTypeName != "String[]")
@@ -657,8 +670,9 @@ namespace Models
         /// </summary>
         /// <param name="dataTypeName">The name of the data type</param>
         /// <param name="value">The value to format</param>
+        /// <param name="format">The format to use for the value</param>
         /// <returns>The formatted value as a string</returns>
-        private static string FormatPropertyValue(string dataTypeName, object value)
+        private static string FormatPropertyValue(string dataTypeName, object value, string format)
         {
             if (value == null)
             {
@@ -668,7 +682,14 @@ namespace Models
             if (dataTypeName == "Double" || dataTypeName == "Single")
             {
                 double doubleValue = Convert.ToDouble(value);
-                return string.Format("{0:F3}", doubleValue);
+                if (format == null || format == string.Empty)
+                {
+                    return string.Format("{0:F3}", doubleValue);
+                }
+                else
+                {
+                    return string.Format("{0:" + format + "}", doubleValue);
+                }
             }
             else if (dataTypeName == "DateTime")
             {
@@ -682,5 +703,24 @@ namespace Models
         }
 
         #endregion
+
+        /// <summary>
+        /// Simulation is commencing.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            // Create our Messages table.
+            this.messagesTable = new DataTable("Messages");
+            this.messagesTable.Columns.Add("ComponentName", typeof(string));
+            this.messagesTable.Columns.Add("Date", typeof(DateTime));
+            this.messagesTable.Columns.Add("Message", typeof(string));
+            this.messagesTable.Columns.Add("MessageType", typeof(int));
+
+            // Create an initial conditions table in the DataStore.
+            CreateInitialConditionsTable(Simulation);
+        }
     }
 }

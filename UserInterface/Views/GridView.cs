@@ -173,7 +173,10 @@ namespace UserInterface.Views
 
             set
             {
-                this.Grid.CurrentCell = this.Grid[value.ColumnIndex, value.RowIndex];
+                if (value != null)
+                {
+                    this.Grid.CurrentCell = this.Grid[value.ColumnIndex, value.RowIndex];
+                }
             }
         }
 

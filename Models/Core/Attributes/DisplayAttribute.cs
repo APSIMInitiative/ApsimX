@@ -14,6 +14,22 @@ namespace Models.Core
     public class DisplayAttribute : System.Attribute
     {
         /// <summary>
+        /// An enumeration for display types.
+        /// </summary>
+        public enum DisplayTypeEnum 
+        { 
+            /// <summary>
+            /// No specific display editor.
+            /// </summary>
+            None, 
+
+            /// <summary>
+            /// Use the table name editor.
+            /// </summary>
+            TableName 
+        }
+
+        /// <summary>
         /// Gets or sets the display format (e.g. 'N3') that the user interface should
         /// use when showing values in the related property.
         /// </summary>
@@ -24,8 +40,6 @@ namespace Models.Core
         /// a total at the top of the column in a ProfileGrid.
         /// </summary>
         public bool ShowTotal { get; set; }
-
-        public enum DisplayTypeEnum { None, TableName };
 
         /// <summary>
         /// Gets or sets the display type. 

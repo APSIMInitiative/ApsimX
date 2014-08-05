@@ -41,11 +41,6 @@ namespace UserInterface.Views
         private GridView gridView;
 
         /// <summary>
-        /// Run child models button.
-        /// </summary>
-        private System.Windows.Forms.Button button1;
-
-        /// <summary>
         /// The main tab control.
         /// </summary>
         private System.Windows.Forms.TabControl tabControl1;
@@ -100,7 +95,7 @@ namespace UserInterface.Views
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataStoreView));
             this.listBox1 = new System.Windows.Forms.ListView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.createButton = new System.Windows.Forms.Button();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.gridView = new GridView();
@@ -133,7 +128,7 @@ namespace UserInterface.Views
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.createButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
@@ -141,26 +136,28 @@ namespace UserInterface.Views
             this.panel1.Size = new System.Drawing.Size(451, 39);
             this.panel1.TabIndex = 3;
             // 
-            // button1
+            // checkBox1
             // 
-            this.button1.Location = new System.Drawing.Point(135, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(163, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Run DataStore child models";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnRunChildModelsClick);
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(13, 10);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(139, 17);
+            this.checkBox1.TabIndex = 5;
+            this.checkBox1.Text = "Auto export to text files?";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.OnAutoExportCheckedChanged);
             // 
             // createButton
             // 
+            this.createButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.createButton.AutoSize = true;
-            this.createButton.Location = new System.Drawing.Point(3, 3);
+            this.createButton.Location = new System.Drawing.Point(323, 6);
             this.createButton.Name = "createButton";
             this.createButton.Size = new System.Drawing.Size(125, 23);
             this.createButton.TabIndex = 4;
-            this.createButton.Text = "Write output file now";
+            this.createButton.Text = "Export now";
             this.createButton.UseVisualStyleBackColor = true;
-            this.createButton.Click += new System.EventHandler(this.OnCreateButtonClick);
+            this.createButton.Click += new System.EventHandler(this.OnExportButtonClick);
             // 
             // splitter1
             // 
@@ -176,8 +173,10 @@ namespace UserInterface.Views
             this.gridView.AutoFilterOn = false;
             this.gridView.DataSource = null;
             this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridView.GetCurrentCell = null;
             this.gridView.Location = new System.Drawing.Point(3, 142);
             this.gridView.Name = "gridView";
+            this.gridView.NumericFormat = null;
             this.gridView.ReadOnly = false;
             this.gridView.RowCount = 0;
             this.gridView.Size = new System.Drawing.Size(451, 317);
@@ -228,7 +227,7 @@ namespace UserInterface.Views
             this.htmlView1.Location = new System.Drawing.Point(3, 103);
             this.htmlView1.MemoText = resources.GetString("htmlView1.MemoText");
             this.htmlView1.Name = "htmlView1";
-            this.htmlView1.ReadOnly = true;
+            this.htmlView1.ReadOnly = false;
             this.htmlView1.Size = new System.Drawing.Size(451, 356);
             this.htmlView1.TabIndex = 2;
             // 
@@ -271,5 +270,7 @@ namespace UserInterface.Views
 
         }
         #endregion
+
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

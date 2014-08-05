@@ -35,12 +35,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the create now button is clicked.
         /// </summary>
-        public event EventHandler CreateNowClicked;
+        public event EventHandler ExportNowClicked;
 
         /// <summary>
-        /// Invoked when the run child models button is clicked.
+        /// Invoked when the auto export checkbox is clicked.
         /// </summary>
-        public event EventHandler RunChildModelsClicked;
+        public event EventHandler AutoExportClicked;
 
         /// <summary>
         /// Gets or sets the list of tables.
@@ -167,6 +167,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Gets or sets the autoexport option
+        /// </summary>
+        public bool AutoExport
+        {
+            get
+            {
+                return this.checkBox1.Checked;
+            }
+
+            set
+            {
+                this.checkBox1.Checked = value;
+            }
+        }
+
+        /// <summary>
         /// Show the summary content.
         /// </summary>
         /// <param name="content">The html content to show.</param>
@@ -202,28 +218,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The user has clicked the create now button.
+        /// The user has clicked the export now button.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void OnCreateButtonClick(object sender, EventArgs e)
+        private void OnExportButtonClick(object sender, EventArgs e)
         {
-            if (this.CreateNowClicked != null)
+            if (this.ExportNowClicked != null)
             {
-                this.CreateNowClicked(this, e);
+                this.ExportNowClicked(this, e);
             }
         }
 
         /// <summary>
-        /// The user has clicked the run child models button.
+        /// The auto export checkbox has been clicked.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void OnRunChildModelsClick(object sender, EventArgs e)
+        private void OnAutoExportCheckedChanged(object sender, EventArgs e)
         {
-            if (this.RunChildModelsClicked != null)
+            if (this.AutoExportClicked != null)
             {
-                this.RunChildModelsClicked.Invoke(this, e);
+                this.AutoExportClicked(this, e);
             }
         }
     }

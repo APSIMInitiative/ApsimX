@@ -12,19 +12,29 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilOrganicMatter : Model
     {
+        [Summary]
         [Description("Root C:N ratio")]
         public double RootCN { get; set; }
+
+        [Summary]
         [Description("Root Weight (kg/ha)")]
         public double RootWt { get; set; }
+
+        [Summary]
         [Description("Soil C:N ratio")]
         public double SoilCN { get; set; }
+
+        [Summary]
         [Description("Erosion enrichment coefficient A")]
         public double EnrACoeff { get; set; }
+
+        [Summary]
         [Description("Erosion enrichment coefficient B")]
         public double EnrBCoeff { get; set; }
 
         public double[] Thickness { get; set; }
 
+        [Summary]
         [Units("cm")]
         [Description("Depth")]
         public string[] Depth
@@ -39,13 +49,18 @@ namespace Models.Soils
             }
         }
 
+        [Summary]
         [Description("OC")]
+        [Display(Format = "N2")]
         public double[] OC { get; set; }
         public string[] OCMetadata { get; set; }
+
+        [Summary]
         [Description("FBiom")]
         [Units("0-1")]
         public double[] FBiom { get; set; }
 
+        [Summary]
         [Description("FInert")]
         [Units("0-1")]
         public double[] FInert { get; set; }

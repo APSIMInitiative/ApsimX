@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Runtime.Serialization;
-
-namespace UserInterface.Views
+﻿// -----------------------------------------------------------------------
+// <copyright file="IExplorerView.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UserInterface.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using System.Windows.Forms;
+
     /// <summary>
     /// A structure for holding info about an item in the treeview.
     /// </summary>

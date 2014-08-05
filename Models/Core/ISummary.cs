@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ISummary.cs" company="CSIRO">
+// <copyright file="ISummary.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,17 +10,6 @@ namespace Models.Core
     /// </summary>
     public interface ISummary
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether the report should be in HTML format
-        /// </summary>
-        bool Html { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the summary file should be
-        /// created every time the simulation is run.
-        /// </summary>
-        bool AutoCreate { get; set; }
-        
         /// <summary>
         /// Write a message to the summary
         /// </summary>
@@ -34,11 +23,5 @@ namespace Models.Core
         /// <param name="fullPath">The full path of the model writing the message</param>
         /// <param name="message">The message to write</param>
         void WriteWarning(string fullPath, string message);
-
-        /// <summary>
-        /// Write the summary report to a file
-        /// </summary>
-        /// <param name="baseline">Indicates whether the baseline data store should be used.</param>
-        void WriteReportToFile(bool baseline);
     }
 }

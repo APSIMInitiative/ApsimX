@@ -248,9 +248,13 @@ namespace Models
         public Simulation Simulation = null;
 
         // Properties read in.
+        [Summary]
+        [Description("Output variables")]
         public string[] VariableNames {get; set;}
+
+        [Summary]
+        [Description("Output frequency")]
         public string[] EventNames { get; set; }
-        public bool AutoCreateCSV { get; set; }
 
         public object Get(string name)
         {
@@ -369,16 +373,6 @@ namespace Models
 
                     Members.Clear();
                     Members = null;
-
-                    // If user wants a csv file written, then write it.
-                    if (AutoCreateCSV)
-                    {
-                        string fileName = Path.Combine(Path.GetDirectoryName(Simulation.FileName),
-                                                       Simulation.Name + this.Name + ".csv.");
-                        StreamWriter writer = new StreamWriter(fileName);
-                        writer.Write(Utility.DataTable.DataTableToCSV(table, 0));
-                        writer.Close();
-                    }
                 }
 
                 UnsubscribeAllEventHandlers();

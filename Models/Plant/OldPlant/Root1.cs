@@ -706,6 +706,7 @@ namespace Models.PMF.OldPlant
         /// </summary>
         internal void WriteSummary(TextWriter writer)
         {
+            writer.WriteLine();
             writer.WriteLine("               Root Profile");
             writer.WriteLine("-----------------------------------------------");
             writer.WriteLine(" Layer       Kl           Lower    Exploration");
@@ -718,7 +719,7 @@ namespace Models.PMF.OldPlant
             dep_tot = esw_tot = 0.0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                writer.WriteLine(FullPath, string.Format("{0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
+                writer.WriteLine(string.Format("{0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
                                   Soil.SoilWater.dlayer[layer],
                                   getModifiedKL(layer),
                                   Utility.Math.Divide(ll_dep[layer], Soil.SoilWater.dlayer[layer], 0.0),
@@ -726,7 +727,7 @@ namespace Models.PMF.OldPlant
                 dep_tot += Soil.SoilWater.dlayer[layer];
                 esw_tot += Soil.SoilWater.dul_dep[layer] - ll_dep[layer];
             }
-             writer.WriteLine("         -----------------------------------------------");
+             writer.WriteLine("-----------------------------------------------");
             if (HaveModifiedKLValues)
                 writer.WriteLine("**** KL's have been modified using either CL, EC or ESP values.");
 
