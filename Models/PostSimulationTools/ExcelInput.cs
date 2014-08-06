@@ -80,7 +80,7 @@ namespace Models.PostSimulationTools
                     bool keep = Utility.String.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
                     {
-                        dataStore.WriteTable(null, this.Name, table);
+                        dataStore.WriteTable(null, table.TableName, table);
                     }
                 }
 

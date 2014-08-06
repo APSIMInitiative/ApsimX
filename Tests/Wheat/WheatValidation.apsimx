@@ -7,7 +7,7 @@
       <Name>Observed</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
-        <string>Sheet1</string>
+        <string>Observed</string>
       </SheetNames>
     </Model>
     <PredictedObserved>
