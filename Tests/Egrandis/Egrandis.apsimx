@@ -6,7 +6,6 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Egrandis\CoffsHarbourValidationData.txt</string>
         <string>Tests\Egrandis\EucalyptusValidationData.txt</string>
       </FileNames>
     </Input>
