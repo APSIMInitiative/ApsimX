@@ -20,6 +20,7 @@
     <Input>
       <Name>Input</Name>
     </Input>
+    <ExcelInput />
     <PredictedObserved/>
     <TimeSeriesStats>
       <TableName>PredictedObserved</TableName>

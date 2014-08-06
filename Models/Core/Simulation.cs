@@ -196,8 +196,6 @@ namespace Models.Core
             Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
         }
 
-
-
     }
 
 

@@ -57,6 +57,10 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MathNet.Numerics.3.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
@@ -130,6 +134,9 @@
     <Compile Include="Core\VariableProperty.cs" />
     <Compile Include="Plant\Cultivar.cs" />
     <Compile Include="Plant\Organs\TreeCanopy.cs" />
+    <Compile Include="PostSimulationTools\ExcelInput.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PostSimulationTools\TimeSeriesStats.cs" />
     <Compile Include="PostSimulationTools\PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />

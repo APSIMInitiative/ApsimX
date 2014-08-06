@@ -588,6 +588,7 @@
     <None Include="Resources\ExportToHTML.gif" />
     <None Include="Resources\ExportToHTML.png" />
     <None Include="Resources\InitialWaterGraph.xml" />
+    <None Include="Resources\Excel16.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

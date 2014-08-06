@@ -173,6 +173,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ExcelInput16 {
+            get {
+                object obj = ResourceManager.GetObject("ExcelInput16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Experiment16 {
             get {
                 object obj = ResourceManager.GetObject("Experiment16", resourceCulture);
@@ -282,29 +292,27 @@ namespace UserInterface.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;Graph&gt;
-        ///&lt;Name&gt;Graph&lt;/Name&gt;
-        ///&lt;LegendPosition&gt;BottomRight&lt;/LegendPosition&gt;
-        ///&lt;Axis&gt;
-        ///  &lt;Type&gt;Left&lt;/Type&gt;
-        ///  &lt;Title&gt;Depth (mm)&lt;/Title&gt;
-        ///  &lt;Inverted&gt;true&lt;/Inverted&gt;
-        ///&lt;/Axis&gt;
-        ///&lt;Axis&gt;
-        ///  &lt;Type&gt;Top&lt;/Type&gt;
-        ///  &lt;Title&gt;Volumetric water (mm/mm)&lt;/Title&gt;
-        ///  &lt;Inverted&gt;false&lt;/Inverted&gt;
-        ///&lt;/Axis&gt;
-        ///&lt;Series&gt;
-        ///  &lt;Type&gt;Line&lt;/Type&gt;
-        ///  &lt;XAxis&gt;Top&lt;/XAxis&gt;
-        ///  &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///  &lt;ColourArgb&gt;-65536&lt;/ColourArgb&gt;
-        ///  &lt;Marker&gt;None&lt;/Marker&gt;
-        ///  &lt;X&gt;
-        ///    &lt;FieldName&gt;[Soil].AirDry&lt;/FieldName&gt;
-        ///  &lt;/X&gt;
-        ///  &lt;Y&gt;
-        ///    &lt;FieldName&gt;[Soil].DepthMidP [rest of string was truncated]&quot;;.
+        ///  &lt;Name&gt;Graph&lt;/Name&gt;
+        ///  &lt;LegendPosition&gt;BottomRight&lt;/LegendPosition&gt;
+        ///  &lt;Axis&gt;
+        ///    &lt;Type&gt;Left&lt;/Type&gt;
+        ///    &lt;Title&gt;Depth (mm)&lt;/Title&gt;
+        ///    &lt;Inverted&gt;true&lt;/Inverted&gt;
+        ///  &lt;/Axis&gt;
+        ///  &lt;Axis&gt;
+        ///    &lt;Type&gt;Top&lt;/Type&gt;
+        ///    &lt;Title&gt;Volumetric water (mm/mm)&lt;/Title&gt;
+        ///    &lt;Inverted&gt;false&lt;/Inverted&gt;
+        ///  &lt;/Axis&gt;
+        ///  &lt;Series&gt;
+        ///    &lt;Type&gt;Area&lt;/Type&gt;
+        ///    &lt;XAxis&gt;Top&lt;/XAxis&gt;
+        ///    &lt;YAxis&gt;Left&lt;/YAxis&gt;
+        ///    &lt;ColourArgb&gt;-3479297&lt;/ColourArgb&gt;
+        ///    &lt;Marker&gt;None&lt;/Marker&gt;
+        ///    &lt;X&gt;
+        ///      &lt;FieldName&gt;[Soil].LL15&lt;/FieldName&gt;
+        ///    &lt;/ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InitialWaterGraph {
             get {
@@ -695,7 +703,7 @@ namespace UserInterface.Properties {
         ///          &lt;Inverted&gt;false&lt;/Inverted&gt;
         ///        &lt;/Axis&gt;
         ///        &lt;Series&gt;
-        ///          &lt;Type&gt;Line&lt;/Type&gt;
+        ///          &lt;Type&gt;Area&lt;/Type&gt;
         ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
         ///          &lt;ColourArgb [rest of string was truncated]&quot;;.

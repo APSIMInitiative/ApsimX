@@ -3,16 +3,17 @@
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
-    <Input>
-      <Name>Input</Name>
-      <FileNames>
-        <string>Tests\Wheat\WheatObservedData.txt</string>
-      </FileNames>
-    </Input>
+    <Model xsi:type="ExcelInput">
+      <Name>Observed</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Sheet1</string>
+      </SheetNames>
+    </Model>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Input</ObservedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
     </PredictedObserved>
     <Input>
@@ -2458,7 +2459,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>NitrogenApplication</Name>
+        <Name>NRate</Name>
         <FactorValue>
           <Name>15</Name>
           <Operations>
@@ -2484,7 +2485,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Paths>
       </Factor>
       <Factor>
-        <Name>IrrigationApplication</Name>
+        <Name>Water</Name>
         <FactorValue>
           <Name>Dry</Name>
           <Operations>
@@ -3622,7 +3623,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>NitrogenApplication</Name>
+        <Name>NRate</Name>
         <FactorValue>
           <Name>0</Name>
           <Operations>
@@ -3648,7 +3649,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Paths>
       </Factor>
       <Factor>
-        <Name>IrrigationApplication</Name>
+        <Name>Water</Name>
         <FactorValue>
           <Name>Dry</Name>
           <Operations>
@@ -4337,8 +4338,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Operations>
           <Name>SowingOperations</Name>
           <Operation>
-            <Date>1986-05-29T00:00:00</Date>
-            <Action>Wheat.Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); </Action>
+            <Date>1973-06-21T00:00:00</Date>
+            <Action>Wheat.Sow(population:100, cultivar:"GattonHartog", depth:30, rowSpacing:250); </Action>
           </Operation>
         </Operations>
         <Plant15>
@@ -6428,7 +6429,7 @@ public class Script : Model
           <Longitude>0</Longitude>
         </Soil>
         <Report>
-          <Name>Outputfile</Name>
+          <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
@@ -7587,7 +7588,7 @@ public class Script : Model
           <Longitude>0</Longitude>
         </Soil>
         <Report>
-          <Name>Outputfile</Name>
+          <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Wheat].Zadok.Stage</string>
@@ -7847,7 +7848,7 @@ public class Script : Model
       <Inverted>false</Inverted>
     </Axis>
     <Series>
-      <Title>Grain weight</Title>
+      <Title>Series 0</Title>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -7902,5 +7903,5 @@ public class Script : Model
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
-  <ExplorerWidth>328</ExplorerWidth>
+  <ExplorerWidth>239</ExplorerWidth>
 </Simulations>
