@@ -85,6 +85,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Forms\FormInsertHyperlink.cs">
@@ -128,6 +129,7 @@
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
+    <Compile Include="Utility\Colour.cs" />
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />

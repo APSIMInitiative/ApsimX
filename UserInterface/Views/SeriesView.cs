@@ -25,8 +25,7 @@ namespace UserInterface.Views
         /// </summary>
         public SeriesView()
         {
-            InitializeComponent();
-           
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return seriesEditorView1;
+                return this.seriesEditorView1;
             }
         }
 
@@ -72,12 +71,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return seriesEditorView1.Visible;
+                return this.seriesEditorView1.Visible;
             }
 
             set
             {
-                seriesEditorView1.Visible = value;
+                this.seriesEditorView1.Visible = value;
             }
         }
 
@@ -89,19 +88,20 @@ namespace UserInterface.Views
             get
             {
                 List<string> names = new List<string>();
-                foreach (ListViewItem item in listView1.Items)
+                foreach (ListViewItem item in this.listView1.Items)
                 {
                     names.Add(item.Text);
                 }
+
                 return names.ToArray();
             }
 
             set
             {
-                listView1.Items.Clear();
+                this.listView1.Items.Clear();
                 foreach (string st in value)
                 {
-                    listView1.Items.Add(st);
+                    this.listView1.Items.Add(st);
                 }
             }
         }
@@ -113,16 +113,17 @@ namespace UserInterface.Views
         {
             get
             {
-                if (listView1.SelectedItems.Count > 0)
+                if (this.listView1.SelectedItems.Count > 0)
                 {
-                    return listView1.SelectedItems[0].Text;
+                    return this.listView1.SelectedItems[0].Text;
                 }
+
                 return null;
             }
 
             set
             {
-                foreach (ListViewItem item in listView1.Items)
+                foreach (ListViewItem item in this.listView1.Items)
                 {
                     item.Selected = item.Text == value;
                 }
@@ -136,8 +137,10 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SeriesSelected != null)
-                SeriesSelected.Invoke(sender, e);
+            if (this.SeriesSelected != null)
+            {
+                this.SeriesSelected.Invoke(sender, e);
+            }
         }
 
         /// <summary>
@@ -145,7 +148,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnAddToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (this.SeriesAdded != null)
             {
@@ -158,7 +161,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnDeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (this.SeriesDeleted != null)
             {
@@ -171,7 +174,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void clearAllSeriesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnClearAllSeriesToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (this.AllSeriesCleared != null)
             {
@@ -182,7 +185,9 @@ namespace UserInterface.Views
         /// <summary>
         /// User has finished renaming a series name.
         /// </summary>
-        private void OnlistView1_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSeriesRenameAfterLabelEdit(object sender, LabelEditEventArgs e)
         {
             if (this.SeriesRenamed != null)
             {
@@ -190,6 +195,5 @@ namespace UserInterface.Views
                 this.SeriesRenamed.Invoke(sender, null);
             }
         }
-
     }
 }

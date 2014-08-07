@@ -69,20 +69,21 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesDeleted += OnSeriesDeleted;
             this.seriesView.AllSeriesCleared += OnSeriesCleared;
             this.seriesView.SeriesRenamed += SeriesRenamed;
-            this.seriesView.SeriesEditor.OnDataSourceChanged += OnDataSourceChanged;
-            this.seriesView.SeriesEditor.OnSeriesTypeChanged += OnSeriesTypeChanged;
-            this.seriesView.SeriesEditor.OnSeriesLineTypeChanged += OnSeriesLineTypeChanged;
-            this.seriesView.SeriesEditor.OnSeriesMarkerTypeChanged += OnSeriesMarkerTypeChanged;
-            this.seriesView.SeriesEditor.OnColourChanged += OnColourChanged;
-            this.seriesView.SeriesEditor.OnRegressionChanged += OnRegressionChanged;
-            this.seriesView.SeriesEditor.OnXOnTopChanged += OnXOnTopChanged;
-            this.seriesView.SeriesEditor.OnYOnRightChanged += OnYOnRightChanged;
-            this.seriesView.SeriesEditor.OnXChanged += OnXChanged;
-            this.seriesView.SeriesEditor.OnYChanged += OnYChanged;
-            this.seriesView.SeriesEditor.OnX2Changed += OnX2Changed;
-            this.seriesView.SeriesEditor.OnY2Changed += OnY2Changed;
-            this.seriesView.SeriesEditor.OnShowInLegendChanged += OnShowInLegendChanged;
-            this.seriesView.SeriesEditor.OnSeparateSeriesChanged += OnSeparateSeriesChanged;
+
+            this.seriesView.SeriesEditor.DataSourceChanged += OnDataSourceChanged;
+            this.seriesView.SeriesEditor.SeriesTypeChanged += OnSeriesTypeChanged;
+            this.seriesView.SeriesEditor.SeriesLineTypeChanged += OnSeriesLineTypeChanged;
+            this.seriesView.SeriesEditor.SeriesMarkerTypeChanged += OnSeriesMarkerTypeChanged;
+            this.seriesView.SeriesEditor.ColourChanged += OnColourChanged;
+            this.seriesView.SeriesEditor.RegressionChanged += OnRegressionChanged;
+            this.seriesView.SeriesEditor.XOnTopChanged += OnXOnTopChanged;
+            this.seriesView.SeriesEditor.YOnRightChanged += OnYOnRightChanged;
+            this.seriesView.SeriesEditor.XChanged += OnXChanged;
+            this.seriesView.SeriesEditor.YChanged += OnYChanged;
+            this.seriesView.SeriesEditor.X2Changed += OnX2Changed;
+            this.seriesView.SeriesEditor.Y2Changed += OnY2Changed;
+            this.seriesView.SeriesEditor.ShowInLegendChanged += OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.SplitOnChanged += OnSplitChanged;
 
             //this.PopulateDataSources();
             //this.PopulateSeries();
@@ -101,20 +102,20 @@ namespace UserInterface.Presenters
             this.seriesView.AllSeriesCleared -= OnSeriesCleared;
             this.seriesView.SeriesRenamed -= SeriesRenamed;
             
-            this.seriesView.SeriesEditor.OnDataSourceChanged -= OnDataSourceChanged;
-            this.seriesView.SeriesEditor.OnSeriesTypeChanged -= OnSeriesTypeChanged;
-            this.seriesView.SeriesEditor.OnSeriesLineTypeChanged -= OnSeriesLineTypeChanged;
-            this.seriesView.SeriesEditor.OnSeriesMarkerTypeChanged -= OnSeriesMarkerTypeChanged;
-            this.seriesView.SeriesEditor.OnColourChanged -= OnColourChanged;
-            this.seriesView.SeriesEditor.OnRegressionChanged -= OnRegressionChanged;
-            this.seriesView.SeriesEditor.OnXOnTopChanged -= OnXOnTopChanged;
-            this.seriesView.SeriesEditor.OnYOnRightChanged -= OnYOnRightChanged;
-            this.seriesView.SeriesEditor.OnXChanged -= OnXChanged;
-            this.seriesView.SeriesEditor.OnYChanged -= OnYChanged;
-            this.seriesView.SeriesEditor.OnX2Changed -= OnX2Changed;
-            this.seriesView.SeriesEditor.OnY2Changed -= OnY2Changed;
-            this.seriesView.SeriesEditor.OnShowInLegendChanged -= OnShowInLegendChanged;
-            this.seriesView.SeriesEditor.OnSeparateSeriesChanged -= OnSeparateSeriesChanged;
+            this.seriesView.SeriesEditor.DataSourceChanged -= OnDataSourceChanged;
+            this.seriesView.SeriesEditor.SeriesTypeChanged -= OnSeriesTypeChanged;
+            this.seriesView.SeriesEditor.SeriesLineTypeChanged -= OnSeriesLineTypeChanged;
+            this.seriesView.SeriesEditor.SeriesMarkerTypeChanged -= OnSeriesMarkerTypeChanged;
+            this.seriesView.SeriesEditor.ColourChanged -= OnColourChanged;
+            this.seriesView.SeriesEditor.RegressionChanged -= OnRegressionChanged;
+            this.seriesView.SeriesEditor.XOnTopChanged -= OnXOnTopChanged;
+            this.seriesView.SeriesEditor.YOnRightChanged -= OnYOnRightChanged;
+            this.seriesView.SeriesEditor.XChanged -= OnXChanged;
+            this.seriesView.SeriesEditor.YChanged -= OnYChanged;
+            this.seriesView.SeriesEditor.X2Changed -= OnX2Changed;
+            this.seriesView.SeriesEditor.Y2Changed -= OnY2Changed;
+            this.seriesView.SeriesEditor.ShowInLegendChanged -= OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.SplitOnChanged -= OnSplitChanged;
 
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnGraphModelChanged2;
         }
@@ -430,11 +431,11 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnSeparateSeriesChanged(object sender, EventArgs e)
+        private void OnSplitChanged(object sender, EventArgs e)
         {
             if (this.dataStore != null)
             {
-                this.SetModelProperty("SeparateSeriesForAllSimulationsInScope", this.seriesView.SeriesEditor.SeparateSeries);
+                this.SetModelProperty("SplitOn", this.seriesView.SeriesEditor.SplitOn);
             }
         }
 
@@ -479,7 +480,7 @@ namespace UserInterface.Presenters
                     this.seriesView.SeriesEditor.Regression = series.ShowRegressionLine;
                     this.seriesView.SeriesEditor.XOnTop = series.XAxis == Axis.AxisType.Top;
                     this.seriesView.SeriesEditor.YOnRight = series.YAxis == Axis.AxisType.Right;
-                    this.seriesView.SeriesEditor.SeparateSeries = series.SeparateSeriesForAllSimulationsInScope;
+                    this.seriesView.SeriesEditor.SplitOn = series.SplitOn;
                     this.seriesView.SeriesEditor.ShowInLegend = series.ShowInLegend;
 
                     // Populate the editor with a list of data sources.

@@ -868,7 +868,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -903,7 +903,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2449,7 +2449,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -3466,7 +3466,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3485,7 +3485,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3504,7 +3504,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3523,7 +3523,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -3556,7 +3556,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3575,7 +3575,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3594,7 +3594,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -3613,7 +3613,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -4716,7 +4716,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4735,7 +4735,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4754,7 +4754,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4773,7 +4773,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -4806,7 +4806,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4825,7 +4825,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4844,7 +4844,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4863,7 +4863,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6552,7 +6552,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6572,7 +6572,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6605,7 +6605,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6625,7 +6625,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6658,7 +6658,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6678,7 +6678,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7695,36 +7695,36 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>FilledCircle</Marker>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledDiamond</Marker>
         <Line>None</Line>
         <X>
-          <TableName>NZObservations</TableName>
+          <TableName>Observed</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <TableName>NZObservations</TableName>
+          <TableName>Observed</TableName>
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7757,7 +7757,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -7777,7 +7777,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7810,7 +7810,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -7830,7 +7830,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7865,9 +7865,29 @@ public class Script : Model
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>*</SplitOn>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.Grain.Wt</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -7899,7 +7919,27 @@ public class Script : Model
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>*</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.AboveGround.Wt</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>

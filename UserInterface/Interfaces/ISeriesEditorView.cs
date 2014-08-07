@@ -17,72 +17,72 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user changes the series type
         /// </summary>
-        event EventHandler OnSeriesTypeChanged;
+        event EventHandler SeriesTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the series line type
         /// </summary>
-        event EventHandler OnSeriesLineTypeChanged;
+        event EventHandler SeriesLineTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the series marker type
         /// </summary>
-        event EventHandler OnSeriesMarkerTypeChanged;
+        event EventHandler SeriesMarkerTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the color
         /// </summary>
-        event EventHandler OnColourChanged;
+        event EventHandler ColourChanged;
 
         /// <summary>
         /// Invoked when the user changes the regression field
         /// </summary>
-        event EventHandler OnRegressionChanged;
+        event EventHandler RegressionChanged;
 
         /// <summary>
         /// Invoked when the user changes the x on top field
         /// </summary>
-        event EventHandler OnXOnTopChanged;
+        event EventHandler XOnTopChanged;
 
         /// <summary>
         /// Invoked when the user changes the y on right field
         /// </summary>
-        event EventHandler OnYOnRightChanged;
+        event EventHandler YOnRightChanged;
 
         /// <summary>
         /// Invoked when the user changes the x
         /// </summary>
-        event EventHandler OnXChanged;
+        event EventHandler XChanged;
 
         /// <summary>
         /// Invoked when the user changes the y
         /// </summary>
-        event EventHandler OnYChanged;
+        event EventHandler YChanged;
 
         /// <summary>
         /// Invoked when the user changes the x2
         /// </summary>
-        event EventHandler OnX2Changed;
+        event EventHandler X2Changed;
 
         /// <summary>
         /// Invoked when the user changes the y2
         /// </summary>
-        event EventHandler OnY2Changed;
+        event EventHandler Y2Changed;
 
         /// <summary>
         /// Invoked when the user changes the data source
         /// </summary>
-        event EventHandler OnDataSourceChanged;
+        event EventHandler DataSourceChanged;
 
         /// <summary>
         /// Invoked when the user changes the show in legend
         /// </summary>
-        event EventHandler OnShowInLegendChanged;
+        event EventHandler ShowInLegendChanged;
 
         /// <summary>
-        /// Invoked when the user changes the separate series
+        /// Invoked when the user changes the split on field
         /// </summary>
-        event EventHandler OnSeparateSeriesChanged;
+        event EventHandler SplitOnChanged;
 
         /// <summary>
         /// Gets or sets the series type
@@ -145,9 +145,9 @@ namespace UserInterface.Interfaces
         bool ShowInLegend { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a separate series should be created for each simulation
+        /// Gets or sets the split on type e.g. Currently 'Experiment', 'Simulation' or null
         /// </summary>
-        bool SeparateSeries { get; set; }
+        string SplitOn { get; set; }
 
         /// <summary>
         /// Gets or sets the selected data source name.

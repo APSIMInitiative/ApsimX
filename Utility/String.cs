@@ -484,6 +484,52 @@ namespace Utility
         }
 
         /// <summary>
+        /// Build a string for a series of values
+        /// </summary>
+        /// <param name="values">The values to use to construct the string</param>
+        /// <param name="delimiter">The delimiter to use between the strings</param>
+        /// <param name="prefix">The prefix string to put in front of each string - can be null for no prefix</param>
+        /// <param name="suffix">The suffix string to put in after each string - can be null for no suffix</param>
+        /// <param name="format">The format string to use to format the value e.g. N2 - can be null for no format</param>
+        /// <returns>The return string</returns>
+        public static string Build(IEnumerable values, string delimiter, string prefix = null, string suffix = null, string format = null)
+        {
+            string returnString = string.Empty;
+            foreach (object value in values)
+            {
+                // Add in delimiter
+                if (returnString != string.Empty)
+                {
+                    returnString += delimiter;
+                }
+
+                // Add prefix
+                if (prefix != null)
+                {
+                    returnString += prefix;
+                }
+
+                // Add value
+                if (format == null)
+                {
+                    returnString += value.ToString();
+                }
+                else
+                {
+                    returnString += string.Format("{0:" + format + "}", value);
+                }
+
+                // Add suffix
+                if (prefix != null)
+                {
+                    returnString += suffix;
+                }                
+            }
+
+            return returnString;
+        }
+
+        /// <summary>
         /// Look through the specified string for an environment variable name surrounded by
         /// % characters. Replace them with the environment variable value.
         /// </summary>
