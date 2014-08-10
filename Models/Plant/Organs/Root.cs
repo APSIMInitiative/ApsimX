@@ -159,9 +159,8 @@ namespace Models.PMF.Organs
             Length = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 Length += LengthDensity[layer];
-
-   
         }
+
         public override void DoActualGrowth()
         {
             base.DoActualGrowth();

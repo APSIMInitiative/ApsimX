@@ -76,9 +76,9 @@ namespace Models.PMF
     {
         private Organ[] _Organs = null;
         public string CropType { get; set; }
-        [Link] public Phenology Phenology = null;
-        [Link] public Arbitrator Arbitrator = null;
-        [Link] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        [Link(IsOptional = true)] public Phenology Phenology = null;
+        [Link(IsOptional = true)] public Arbitrator Arbitrator = null;
+        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
@@ -157,7 +157,7 @@ namespace Models.PMF
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
-        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string Cultivar, double Population = 0, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = Population;
@@ -269,8 +269,10 @@ namespace Models.PMF
             Population = 0;
             if (Structure != null)
                Structure.Clear();
-            Phenology.Clear();
-            Arbitrator.Clear();
+            if (Phenology != null)
+               Phenology.Clear();
+            if (Arbitrator != null)
+               Arbitrator.Clear();
         }
 
         /// <summary>

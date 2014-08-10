@@ -10,110 +10,53 @@ namespace Models.PMF.Organs
     [Serializable]
     public class SimpleLeaf : BaseOrgan, AboveGround
     {
+        #region Class Links
         [Link]
         Plant Plant = null;
         [Link(IsOptional = true)]
         Structure structure = null;
         [Link]
         ISummary Summary = null;
-
-
-
-        private double _WaterAllocation;
-        private double EP = 0;
-        private double NShortage = 0;   //if an N Shoratge how Much;
-
+        #endregion
         
-        public event NewCanopyDelegate New_Canopy;
-
-        //[Input]
-        //public NewMetType MetData = null;
-
-        public double _Height;         // Height of the canopy (mm) 
-        public double _LAI;            // Leaf Area Index (Green)
-        public double _LAIDead;        // Leaf Area Index (Dead)
-        public double _Frgr;           // Relative Growth Rate Factor
-        public XYPairs FT { get; set; }    // Temperature effect on Growth Interpolation Set
-        public XYPairs FVPD { get; set; }   // VPD effect on Growth Interpolation Set
-        [Link] Function PotentialBiomass = null;
-        [Link] Function DMDemandFunction = null;
-        [Link] Function CoverFunction = null;
-        [Link] Function NitrogenDemandSwitch = null;
-        [Link] Function NConc = null;
-        [Link] Function LaiFunction = null;
-        [Link] RUEModel Photosynthesis = null;
-
-
-
-        public double K = 0.5;                      // Extinction Coefficient (Green)
-        public double KDead = 0;                  // Extinction Coefficient (Dead)
-        public double DeltaBiomass = 1;
-        public double BiomassYesterday = 0;
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double Demand = 0;
-                if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.Value;
-                else
-                    Demand = 1;
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
-
-        public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
-            }
-        }
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                Live.StructuralWt += value.Structural;
-            }
-        }
-        
-        [Units("mm")]
-        public override double WaterDemand { get { return Plant.PotentialEP; } }
-        
-        [Units("mm")]
-        public double Transpiration { get { return EP; } }
-        public override double WaterAllocation
-        {
-            get { return _WaterAllocation; }
-            set
-            {
-                _WaterAllocation = value;
-                EP = EP + _WaterAllocation;
-            }
-        }
-        
-        public double Frgr
-        {
-            get { return _Frgr; }
-            set
-            {
-                _Frgr = value;
-                PublishNewCanopyEvent();
-            }
-        }
-        
-        public double Ft
-        {
-            get
-            {
-                double Tav = (MetData.MaxT + MetData.MinT) / 2.0;
-                return FT.ValueIndexed(Tav);
-            }
-        }
-        
-        public double Fvpd
+        #region Parameters
+              [Link] Function  FTFunction = null;    // Temperature effect on Growth Interpolation Set
+              [Link] Function  FVPDFunction = null;   // VPD effect on Growth Interpolation Set
+              [Link(IsOptional = true)] Function PotentialBiomass = null;
+              [Link] Function DMDemandFunction = null;
+              [Link(IsOptional = true)] Function CoverFunction = null;
+              [Link(IsOptional = true)] Function NitrogenDemandSwitch = null;
+              [Link] Function NConc = null;
+              [Link] Function LaiFunction = null;
+              [Link] Function ExtinctionCoefficientFunction = null;
+              [Link(IsOptional = true)]  RUEModel Photosynthesis = null;
+              [Link] Function HeightFunction = null;
+              [Link (IsOptional = true)] Function LaiDeadFunction = null;
+        #endregion
+                
+        #region States and variables
+               private double _WaterAllocation;
+               private double NShortage = 0;   //if an N Shoratge how Much;
+               public double BiomassYesterday = 0;
+               
+               private double EP { get; set; }
+               public double K {get; set;}                      // Extinction Coefficient (Green)
+               public double KDead { get; set; }                  // Extinction Coefficient (Dead)
+               public double DeltaBiomass {get; set;}
+               [Units("mm")]
+               public override double WaterDemand { get { return Plant.PotentialEP; } }
+               public double Transpiration { get { return EP; } }
+               [Units("mm")]
+               public double Frgr { get; set; }
+               public double Ft
+               {
+                   get
+                   {
+                       double Tav = (MetData.MaxT + MetData.MinT) / 2.0;
+                       return FTFunction.Value;
+                   }
+               }
+               public double Fvpd
         {
             get
             {
@@ -127,13 +70,12 @@ namespace Models.PMF.Organs
 
                 double VPD = SVPfrac * VPDmaxt + (1.0 - SVPfrac) * VPDmint;
 
-                return FVPD.ValueIndexed(VPD);
+                return FVPDFunction.Value;
             }
         }
-        
-        public double Fw
-        {
-            get
+               public double Fw
+               {
+                   get
             {
                 double F = 0;
                 if (WaterDemand > 0)
@@ -142,125 +84,82 @@ namespace Models.PMF.Organs
                     F = 1;
                 return F;
             }
-        }
-        public double Fn
-        {
-            get { return 1; } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
-        }
-
-
-
-        
-        public double LAI
-        {
-            get
-            {
-
-                return _LAI;
-            }
-            set
-            {
-                _LAI = value;
-                PublishNewCanopyEvent();
-            }
-        }
-        
-        public double LAIDead
-        {
-            get { return _LAIDead; }
-            set
-            {
-                _LAIDead = value;
-                PublishNewCanopyEvent();
-            }
-        }
-        [Units("mm")]
-        public double Height
-        {
-            get { return _Height; }
-            set
-            {
-                _Height = value;
-                PublishNewCanopyEvent();
-            }
-        }
-        public double CoverGreen
-        {
-            get
-            {
-
-                if (CoverFunction == null)
-                    return 1.0 - Math.Exp(-K * LAI);
-                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
-            }
-        }
-        public double CoverTot
-        {
-            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
-        }
-        public double CoverDead
-        {
-            get { return 1.0 - Math.Exp(-KDead * LAIDead); }
-        }
-        [Units("MJ/m^2/day")]
-        [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
+               }
+               public double Fn
+               {
+                   get { return 1; } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
+               }
+               public double LAI { get; set; }
+               public double LAIDead { get; set; }
+               [Units("mm")]
+               public double Height { get; set; }
+               public double CoverGreen
+               {
+                   get
+                   {
+                       if (CoverFunction == null)
+                           return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
+                       return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+                   }
+               }
+               public double CoverTot
+               {
+                   get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
+               }
+               public double CoverDead
+               {
+                   get { return 1.0 - Math.Exp(-KDead * LAIDead); }
+               }
+               [Units("MJ/m^2/day")]
+               [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
+               public double RadIntTot
         {
             get
             {
                 return CoverGreen * MetData.Radn;
             }
         }
-        public override void OnSow(SowPlant2Type Data)
-        {
-            PublishNewCanopyEvent();
-        }
+        #endregion
 
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        #region Arbitrator Methods
+             public override double WaterAllocation
+               {
+                   get { return _WaterAllocation; }
+                   set
+                   {
+                       _WaterAllocation = value;
+                       EP += _WaterAllocation;
+                   }
+               }
+             public override BiomassPoolType DMDemand
         {
-            if (PotentialBiomass != null)
+            get
             {
-                DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                BiomassYesterday = PotentialBiomass.Value;
-            }
-
-            EP = 0;
-        }
-
-        private void PublishNewCanopyEvent()
-        {
-            if (New_Canopy != null)
-            {
-                Plant.LocalCanopyData.sender = Plant.Name;
-                Plant.LocalCanopyData.lai = (float)LAI;
-                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
-                Plant.LocalCanopyData.height = (float)Height;
-                Plant.LocalCanopyData.depth = (float)Height;
-                Plant.LocalCanopyData.cover = (float)CoverGreen;
-                Plant.LocalCanopyData.cover_tot = (float)CoverTot;
-                New_Canopy.Invoke(Plant.LocalCanopyData);
+                double Demand = 0;
+                if (DMDemandFunction != null)
+                    Demand = DMDemandFunction.Value;
+                else
+                    Demand = 1;
+                return new BiomassPoolType { Structural = Demand };
             }
         }
-
-        public override void DoPotentialDM()
+             public override BiomassSupplyType DMSupply
         {
-            if (CoverFunction != null)
-                // return _LAI;
-                _LAI = (Math.Log(1 - CoverGreen) / -K);
-            if (LaiFunction != null)
-                _LAI = LaiFunction.Value;
+            get
+            {
+                if (Photosynthesis != null)
+                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+            }
         }
-        public override void OnCut()
+             public override BiomassAllocationType DMAllocation
         {
-            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
-
-            Live.Clear();
-            Dead.Clear();
+            set
+            {
+                Live.StructuralWt += value.Structural;
+            }
         }
-
-
-        public override BiomassPoolType NDemand
+             public override BiomassPoolType NDemand
         {
             get
             {
@@ -279,17 +178,7 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = NDeficit };
             }
         }
-
-        /*  public override void DoActualGrowth()
-          {
-              // Need to limiet potential growth if low on N and water
-
-           return;
-          }
-          */
-
-
-        public override BiomassAllocationType NAllocation
+             public override BiomassAllocationType NAllocation
         {
             set
             {
@@ -340,7 +229,68 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        #endregion
 
+        #region Evnets
+              public event NewCanopyDelegate New_Canopy;
+              
+              [EventSubscribe("DoDailyInitialisation")]
+              private void OnDoDailyInitialisation(object sender, EventArgs e)
+              {
+                  if (PotentialBiomass != null)
+                  {
+                      DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                      BiomassYesterday = PotentialBiomass.Value;
+                  }
+              
+                  EP = 0;
+              }
+        #endregion
+        
+        #region Component Process Functions
+              private void PublishNewCanopyEvent()
+        {
+            if (New_Canopy != null)
+            {
+                Plant.LocalCanopyData.sender = Plant.Name;
+                Plant.LocalCanopyData.lai = (float)LAI;
+                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                Plant.LocalCanopyData.height = (float)Height;
+                Plant.LocalCanopyData.depth = (float)Height;
+                Plant.LocalCanopyData.cover = (float)CoverGreen;
+                Plant.LocalCanopyData.cover_tot = (float)CoverTot;
+                New_Canopy.Invoke(Plant.LocalCanopyData);
+            }
+        }
+              public override void OnCut()
+        {
+            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
+            Live.Clear();
+            Dead.Clear();
+        }
+              public override void OnSow(SowPlant2Type Data)
+              {
+                  PublishNewCanopyEvent();
+              }
+        #endregion
+
+        #region Top Level time step functions
+             public override void DoPotentialDM()
+             {
+                 if (CoverFunction != null)
+                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
+                 if (LaiFunction != null)
+                     LAI = LaiFunction.Value;
+                 
+                 Height = HeightFunction.Value;
+                
+                 if (LaiDeadFunction != null)
+                     LAIDead = LaiDeadFunction.Value;
+                 else
+                     LAIDead = 0;
+                 PublishNewCanopyEvent();
+             }
+        #endregion
 
     }
 }
