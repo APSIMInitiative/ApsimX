@@ -94,6 +94,7 @@
     <Compile Include="Forms\FormInsertHyperlink.designer.cs">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ICultivarView.cs" />
     <Compile Include="Interfaces\IGridCell.cs" />
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Interfaces\IGraphView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\PredictedObservedPresenter.cs" />
@@ -141,6 +143,12 @@
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Views\CultivarView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\CultivarView.Designer.cs">
+      <DependentUpon>CultivarView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -297,6 +305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Utility\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CultivarView.resx">
+      <DependentUpon>CultivarView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
@@ -591,6 +602,7 @@
     <None Include="Resources\ExportToHTML.png" />
     <None Include="Resources\InitialWaterGraph.xml" />
     <None Include="Resources\Excel16.png" />
+    <None Include="Resources\cultivar16.png" />
     <Content Include="Resources\memo16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>

@@ -392,8 +392,12 @@ namespace UserInterface.Presenters
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Children.All)
-                        if (!(ChildModel.Name == "Script"))
+                    {
+                        if (!ChildModel.IsHidden)
+                        {
                             e.Descriptions.Add(GetNodeDescription(ChildModel));
+                        }
+                    }
                 }
             }
         }
@@ -555,8 +559,28 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            description.HasChildren = Model.Children.All.Count > 0;
+            description.HasChildren = this.SomeChildrenVisible(Model);
             return description;
+        }
+
+        /// <summary>
+        /// Returns true if some children of the specified model are visible (not hidden)
+        /// </summary>
+        /// <param name="model">Look at this models children</param>
+        /// <returns>True if some are visible</returns>
+        private bool SomeChildrenVisible(Model model)
+        {
+            if (model.Children.All.Count > 0)
+            {
+                foreach (Model child in model.Children.All)
+                {
+                    if (!child.IsHidden)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

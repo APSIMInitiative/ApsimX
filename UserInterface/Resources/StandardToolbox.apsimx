@@ -575,6 +575,254 @@
       <MicroClimate>
         <Name>MicroClimate</Name>
       </MicroClimate>
+      <Plant15>
+        <Name>Wheat</Name>
+        <Cultivar>
+          <Name>EarlyMid</Name>
+          <Alias>hartog</Alias>
+          <Alias>annuello</Alias>
+          <Alias>diamondbird</Alias>
+          <Alias>frame</Alias>
+          <Alias>goroke</Alias>
+          <Alias>ventura</Alias>
+          <Alias>mitre</Alias>
+          <Alias>yallaroi</Alias>
+          <Alias>yitpi</Alias>
+          <Alias>carnamah</Alias>
+          <Alias>estoc</Alias>
+          <Alias>scout</Alias>
+          <Alias>sunstate</Alias>
+          <Alias>guardian</Alias>
+          <Alias>barunga</Alias>
+          <Alias>catalina</Alias>
+          <Alias>gladius</Alias>
+          <Alias>halbred</Alias>
+          <Alias>stiletto</Alias>
+          <Alias>clf_stiletto</Alias>
+          <Alias>pugsley</Alias>
+          <Alias>impala</Alias>
+          <Alias>spitfire</Alias>
+          <Alias>correll</Alias>
+          <Alias>justica</Alias>
+          <Alias>kord</Alias>
+          <Alias>cobra</Alias>
+          <Alias>corack</Alias>
+          <Alias>grenadeclplus</Alias>
+          <Alias>merlin</Alias>
+          <Alias>shield</Alias>
+          <Alias>sunguard</Alias>
+          <Alias>yawa</Alias>
+          <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+          <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+        </Cultivar>
+        <ResourceName>Wheat</ResourceName>
+        <AutoHarvest>true</AutoHarvest>
+        <CropType>Wheat</CropType>
+      </Plant15>
+      <Folder>
+        <Name>Wheat cultivars</Name>
+        <Folder>
+          <Name>Yield Prophet cultivars</Name>
+          <Cultivar>
+            <Name>Early</Name>
+            <Alias>agtscythe</Alias>
+            <Alias>arrino</Alias>
+            <Alias>bonnie_rock</Alias>
+            <Alias>bowerbird</Alias>
+            <Alias>crusader</Alias>
+            <Alias>dart</Alias>
+            <Alias>drysdale</Alias>
+            <Alias>emurock</Alias>
+            <Alias>hunter</Alias>
+            <Alias>hybrid_mercury</Alias>
+            <Alias>hyperno</Alias>
+            <Alias>imposeclplus</Alias>
+            <Alias>kalka</Alias>
+            <Alias>kirchauff</Alias>
+            <Alias>kukri</Alias>
+            <Alias>livingston</Alias>
+            <Alias>mace</Alias>
+            <Alias>ouyen</Alias>
+            <Alias>perengori</Alias>
+            <Alias>ruby</Alias>
+            <Alias>tamaroi</Alias>
+            <Alias>wyalkatchem</Alias>
+            <Alias>young</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>EarlyMid</Name>
+            <Alias>annuello</Alias>
+            <Alias>barunga</Alias>
+            <Alias>carnamah</Alias>
+            <Alias>catalina</Alias>
+            <Alias>clf_stiletto</Alias>
+            <Alias>cobra</Alias>
+            <Alias>corack</Alias>
+            <Alias>correll</Alias>
+            <Alias>diamondbird</Alias>
+            <Alias>estoc</Alias>
+            <Alias>frame</Alias>
+            <Alias>gladius</Alias>
+            <Alias>goroke</Alias>
+            <Alias>grenadeclplus</Alias>
+            <Alias>guardian</Alias>
+            <Alias>halbred</Alias>
+            <Alias>hartog</Alias>
+            <Alias>impala</Alias>
+            <Alias>justica</Alias>
+            <Alias>kord</Alias>
+            <Alias>merlin</Alias>
+            <Alias>mitre</Alias>
+            <Alias>pugsley</Alias>
+            <Alias>shield</Alias>
+            <Alias>spitfire</Alias>
+            <Alias>stiletto</Alias>
+            <Alias>sunguard</Alias>
+            <Alias>sunstate</Alias>
+            <Alias>ventura</Alias>
+            <Alias>yallaroi</Alias>
+            <Alias>yawa</Alias>
+            <Alias>yitpi</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>VeryEarly</Name>
+            <Alias>h45</Alias>
+            <Alias>h46</Alias>
+            <Alias>saintly</Alias>
+            <Alias>silverstar</Alias>
+            <Alias>tamarinrock</Alias>
+            <Alias>waagan</Alias>
+            <Alias>westonia</Alias>
+            <Alias>wollaroi</Alias>
+            <Alias>zippy</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Mid</Name>
+            <Alias>arrivato</Alias>
+            <Alias>babbler</Alias>
+            <Alias>barham</Alias>
+            <Alias>baxter</Alias>
+            <Alias>buckley</Alias>
+            <Alias>camm</Alias>
+            <Alias>carinya</Alias>
+            <Alias>clf-jnz</Alias>
+            <Alias>derrimut</Alias>
+            <Alias>dollarbird</Alias>
+            <Alias>elmoreclplus</Alias>
+            <Alias>justicaclplus</Alias>
+            <Alias>saphire</Alias>
+            <Alias>wallup</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>MidPlus</Name>
+            <Alias>bellaroi</Alias>
+            <Alias>lang</Alias>
+            <Alias>caparoi</Alias>
+            <Alias>suntop</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>MidLate</Name>
+            <Alias>braewood</Alias>
+            <Alias>calingiri</Alias>
+            <Alias>chara</Alias>
+            <Alias>endure</Alias>
+            <Alias>envoy</Alias>
+            <Alias>gauntlet</Alias>
+            <Alias>gazelle</Alias>
+            <Alias>giles</Alias>
+            <Alias>magenta</Alias>
+            <Alias>phantom</Alias>
+            <Alias>sentinel</Alias>
+            <Alias>sunlin</Alias>
+            <Alias>sunvale</Alias>
+            <Alias>wylie</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.8</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Late</Name>
+            <Alias>beaufont</Alias>
+            <Alias>bolac</Alias>
+            <Alias>forrest</Alias>
+            <Alias>kelallac</Alias>
+            <Alias>preston</Alias>
+            <Alias>strzelecki</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>WinterWheat</Name>
+            <Alias>lorikeet</Alias>
+            <Alias>wylah</Alias>
+            <Alias>rosella</Alias>
+            <Alias>whistler</Alias>
+            <Alias>wedgetail</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
+            <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Axe</Name>
+            <Alias>axe</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Scout</Name>
+            <Alias>scout</Alias>
+            <Alias>l</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Lincoln</Name>
+            <Alias>lincoln</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>GregoryLancer</Name>
+            <Alias>gregory</Alias>
+            <Alias>lancer</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Eaglehawk</Name>
+            <Alias>eaglehawk</Alias>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
+            <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
+            <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 655</Command>
+            <Command>[Phenology].FloweringToStartGrainFill.Target.Value = 250</Command>
+            <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 500</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Marombi</Name>
+            <Alias>marombi</Alias>
+            <Alias />
+            <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
+            <Command />
+          </Cultivar>
+        </Folder>
+      </Folder>
     </Zone>
     <Graph>
       <Name>Graph</Name>

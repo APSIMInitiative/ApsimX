@@ -34,6 +34,11 @@ namespace Models.Core
         private int upperArraySpecifier;
 
         /// <summary>
+        /// The previous value of the property. Kept so that we can undo.
+        /// </summary>
+        private object previousValue = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VariableProperty" /> class.
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
@@ -208,8 +213,17 @@ namespace Models.Core
 
             set
             {
+                previousValue = this.property.GetValue(this.Model, null);
                 this.property.SetValue(this.Model, value, null);
             }
+        }
+
+        /// <summary>
+        /// Undo the previous property set.
+        /// </summary>
+        public void Undo()
+        {
+            Value = previousValue;
         }
 
         /// <summary>
@@ -243,6 +257,49 @@ namespace Models.Core
                 }
 
                 return value;
+            }
+
+            set
+            {
+                if (DataType.IsArray)
+                {
+                    string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (DataType == typeof(double[]))
+                    {
+                        Value = Utility.Math.StringsToDoubles(stringValues);
+                    }
+                    else if (DataType == typeof(int[]))
+                    {
+                        Value = Utility.Math.StringsToDoubles(stringValues);
+                    }
+                    else if (DataType == typeof(string[]))
+                    {
+                        Value = stringValues;
+                    }
+                    else
+                    {
+                        throw new ApsimXException(string.Empty, "Invalid property type: " + DataType.ToString());
+                    }
+                }
+                else
+                {
+                    if (DataType == typeof(double))
+                    {
+                        Value = Convert.ToDouble(value);
+                    }
+                    else if (DataType == typeof(int))
+                    {
+                        Value = Convert.ToInt32(value);
+                    }
+                    else if (DataType == typeof(string))
+                    {
+                        Value = value.ToString();
+                    }
+                    else
+                    {
+                        Value = value;
+                    }
+                }
             }
         }
 

@@ -139,6 +139,7 @@ namespace Models
                     Script = compiledAssembly.CreateInstance("Models.Script") as Model;
                     Script.Models = new System.Collections.Generic.List<Model>();
                     Script.Name = "Script";
+                    Script.IsHidden = true;
                     XmlElement parameters;
                     if (elements == null || elements[0] == null)
                     {

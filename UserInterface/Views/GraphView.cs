@@ -381,6 +381,8 @@ namespace UserInterface.Views
         /// <param name="axis">The axis to format</param>
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
+            axis.IntervalLength = 100;
+
             if (axis is LinearAxis && 
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
