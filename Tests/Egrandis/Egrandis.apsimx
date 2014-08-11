@@ -9,6 +9,7 @@
         <string>Tests\Egrandis\EucalyptusValidationData.txt</string>
       </FileNames>
     </Input>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -22,8 +23,8 @@
       <MinT>19.5</MinT>
       <Rain>18</Rain>
       <Radn>18</Radn>
-      <vp>22.666337519734263</vp>
-      <wind>3</wind>
+      <VP>22.666337519734263</VP>
+      <Wind>3</Wind>
       <CO2>350</CO2>
     </WeatherFile>
     <Clock>
@@ -33,9 +34,6 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Plantation</Name>
@@ -43,9 +41,9 @@
         <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>0.8</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>EvenlyDistributed</PercentMethod>
         </InitialWater>
         <Water>
           <Name>Water</Name>
@@ -283,6 +281,16 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.7497011733628165</double>
+            <double>0.7503932625478924</double>
+            <double>0.46736602468912158</double>
+            <double>0.15527810300793152</double>
+            <double>0.11740238577716336</double>
+            <double>0.10246545484851288</double>
+            <double>0.10245874380214007</double>
+            <double>0.10246412363021393</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -301,6 +309,16 @@
             <double>1000</double>
             <double>1000</double>
           </Thickness>
+          <Depth>
+            <string>0-10</string>
+            <string>10-40</string>
+            <string>40-100</string>
+            <string>100-200</string>
+            <string>200-300</string>
+            <string>300-400</string>
+            <string>400-500</string>
+            <string>500-600</string>
+          </Depth>
           <OC>
             <double>2</double>
             <double>1</double>
@@ -360,7 +378,6 @@
         </Analysis>
         <Sample>
           <Name>Initial nitrogen</Name>
-          <Date>0001-01-01</Date>
           <Thickness>
             <double>100</double>
             <double>300</double>
@@ -460,12 +477,6 @@
       </MicroClimate>
       <Plant>
         <Name>Eucalyptus</Name>
-        <Cultivars>
-          <Name>Cultivars</Name>
-          <Cultivar>
-            <Name>RussetBurbank</Name>
-          </Cultivar>
-        </Cultivars>
         <AccumulateFunction>
           <Name>Age</Name>
           <Constant>
@@ -791,15 +802,15 @@
             </LinearInterpolationFunction>
           </RUEModel>
           <_Height>0</_Height>
-          <_LAI>1.3827190201133106</_LAI>
+          <_LAI>1.3834138867169348</_LAI>
           <_LAIDead>0</_LAIDead>
           <_Frgr>0</_Frgr>
           <K>0.5</K>
           <KDead>0</KDead>
-          <DeltaBiomass>7.7860436991574167</DeltaBiomass>
+          <DeltaBiomass>7.7887580562389109</DeltaBiomass>
           <WaterAllocation>0</WaterAllocation>
           <Frgr>0</Frgr>
-          <LAI>1.3827190201133106</LAI>
+          <LAI>1.3834138867169348</LAI>
           <LAIDead>0</LAIDead>
           <Height>0</Height>
         </TreeCanopy>
@@ -826,7 +837,7 @@
             <Name>TemperatureEffect</Name>
             <Memo>
               <Name>Memo</Name>
-              <MemoText>Assume no temperature effect on root front velocity.</MemoText>
+              <MemoText><![CDATA[]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -943,25 +954,20 @@
             <Name>Dead</Name>
           </Biomass>
         </GenericAboveGroundOrgan>
-        <LocalCanopyData>
-          <sender />
-          <height>0</height>
-          <depth>0</depth>
-          <lai>0</lai>
-          <lai_tot>0</lai_tot>
-          <cover>0</cover>
-          <cover_tot>0</cover_tot>
-        </LocalCanopyData>
+        <Cultivar>
+          <Name>EGrandis</Name>
+          <Alias>EGrandis</Alias>
+          <Command />
+        </Cultivar>
         <CropType>Eucalyptus</CropType>
       </Plant>
       <Manager>
         <Name>TreeSowingRule</Name>
         <Script>
-          <Name>Script</Name>
           <RowSpace>3</RowSpace>
           <RowWidth>3</RowWidth>
           <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>1953-04-01T00:00:00</SowingDate>
+          <SowingDate>1/04/1953 12:00:00 AM</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
@@ -2697,13 +2703,10 @@
           <string>[Eucalyptus].Leaf.LAIFunction.SpecificLeafArea.Value</string>
           <string>[Eucalyptus].Summariser.IndividualTreeLiveWt.Value</string>
           <string>[Eucalyptus].Age.Value</string>
-          <string />
-          <string />
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Graph>
         <Name>Phenology</Name>
@@ -2725,16 +2728,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -2758,16 +2761,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Depth</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -2791,16 +2794,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Age.Value</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -2810,16 +2813,16 @@
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Input</TableName>
             <FieldName>Age</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Input</TableName>
             <FieldName>Eucalyptus.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
       </Graph>
@@ -2844,16 +2847,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -2864,16 +2867,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -2884,16 +2887,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>DeadLeaf</Title>
@@ -2904,16 +2907,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Dead.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -2938,16 +2941,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Root.NSupplyUptake</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>N Demand</Title>
@@ -2958,16 +2961,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Arbitrator.NDemand</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -2991,16 +2994,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Soil.SoilNitrogen.no3(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -3010,16 +3013,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Soil.SoilNitrogen.no3(2)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -3029,16 +3032,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Soil.SoilNitrogen.no3(3)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -3063,16 +3066,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Stem</Title>
@@ -3083,16 +3086,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Stem.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Root</Title>
@@ -3103,16 +3106,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Root.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -3137,16 +3140,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -3171,16 +3174,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.IndividualTreeLiveWt.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -3205,16 +3208,16 @@
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Age.Value</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Observed</Title>
@@ -3225,26 +3228,25 @@
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Input</TableName>
             <FieldName>Age</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Input</TableName>
             <FieldName>Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
     <Input>
       <Name>Input</Name>
     </Input>
-    <Area>0</Area>
   </Simulation>
-  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
