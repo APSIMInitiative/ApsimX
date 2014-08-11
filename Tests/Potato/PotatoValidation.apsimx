@@ -157,8 +157,8 @@
         <MinT>5.5999999046325684</MinT>
         <Rain>0</Rain>
         <Radn>3.2999999523162842</Radn>
-        <VP>0</VP>
-        <Wind>0</Wind>
+        <VP>9.1999998092651367</VP>
+        <Wind>5.4800000190734863</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -385,6 +385,14 @@
               <double>0.1</double>
               <double>1</double>
             </wfpsN2N2O_y>
+            <oc>
+              <double>3.5112487020885994</double>
+              <double>2.4876839296615758</double>
+              <double>1.1997594321640828</double>
+              <double>1.03066828195287</double>
+              <double>0.47032851040153439</double>
+              <double>0.4701281458616568</double>
+            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -2727,19 +2735,9 @@ namespace Models
             <string>[ExtraVariables].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
-            <string />
           </EventNames>
         </Report>
         <SurfaceOrganicMatter>
