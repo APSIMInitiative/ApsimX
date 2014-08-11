@@ -285,7 +285,7 @@ namespace UserInterface.Presenters
         {
             HideRightHandPanel();
             // Get a complete list of all models in this file.
-            List<Model> allModels = ApsimXFile.Children.AllRecursively;
+            List<Model> allModels = ApsimXFile.Children.AllRecursivelyVisible;
 
             // If the current node path is '.Simulations' (the root node) then
             // select the first item in the 'allModels' list.
@@ -309,7 +309,7 @@ namespace UserInterface.Presenters
                 throw new Exception("Cannot find the current selected model in the .apsimx file");
 
             // If the current model is the last one in the list then return false.
-            if (index == allModels.Count - 1)
+            if (index >= allModels.Count - 1)
                 return false;
 
             // Select the next node.
@@ -392,8 +392,12 @@ namespace UserInterface.Presenters
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Children.All)
-                        if (!(ChildModel.Name == "Script"))
+                    {
+                        if (!ChildModel.IsHidden)
+                        {
                             e.Descriptions.Add(GetNodeDescription(ChildModel));
+                        }
+                    }
                 }
             }
         }
@@ -555,8 +559,28 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            description.HasChildren = Model.Children.All.Count > 0;
+            description.HasChildren = this.SomeChildrenVisible(Model);
             return description;
+        }
+
+        /// <summary>
+        /// Returns true if some children of the specified model are visible (not hidden)
+        /// </summary>
+        /// <param name="model">Look at this models children</param>
+        /// <returns>True if some are visible</returns>
+        private bool SomeChildrenVisible(Model model)
+        {
+            if (model.Children.All.Count > 0)
+            {
+                foreach (Model child in model.Children.All)
+                {
+                    if (!child.IsHidden)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

@@ -52,10 +52,25 @@ namespace Utility
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
+        public static string GetAbsolutePath(string path, string SimPath)
+        {
+            //try to find a path relative to the ApsimX\bin directory
+            string NewPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), path);
+            if (File.Exists(NewPath))
+                return NewPath;
+
+            //try to find a path relative to the .apsimx directory
+            NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+            if (File.Exists(NewPath))
+                return NewPath;
+            else
+                return string.Empty;
+        }
+
         public static string GetAbsolutePath(string path)
         {
-            return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), path);
+            return GetAbsolutePath(path, string.Empty);
         }
 
     }

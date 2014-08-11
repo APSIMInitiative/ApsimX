@@ -76,6 +76,8 @@ namespace Models.PMF.OldPlant
 
         public string CropType { get; set; }
 
+        private Cultivar cultivarDefinition;
+
         #region Event handlers and publishers
         
         public event NewCropDelegate NewCrop;
@@ -112,10 +114,8 @@ namespace Models.PMF.OldPlant
                 throw new Exception("Cultivar not specified on sow line.");
 
             // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarObj = Cultivars.FindCultivar(cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + cultivar);
-            cultivarObj.ApplyOverrides(this);
+            cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
 
             if (NewCrop != null)
             {
@@ -712,12 +712,6 @@ namespace Models.PMF.OldPlant
 
             foreach (Organ1 Organ in Organ1s)
                 Organ.OnHarvest(Harvest, BiomassRemovedData);
-
-            // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
-            cultivarObj.UnapplyOverrides(this);
         }
 
         public void OnEndCrop()
@@ -748,6 +742,8 @@ namespace Models.PMF.OldPlant
                      AboveGroundBiomass.Wt, BelowGroundBiomass.Wt, 
                      AboveGroundBiomass.N, BelowGroundBiomass.N);
             Summary.WriteMessage(FullPath, message);
+
+            cultivarDefinition.Unapply();
         }
         
         /// <summary>
@@ -937,8 +933,21 @@ namespace Models.PMF.OldPlant
 
         #endregion
 
-        [Link]
-        Cultivars Cultivars = null;
+        /// <summary>
+        /// A property to return all cultivar definitions.
+        /// </summary>
+        private List<Cultivar> Cultivars
+        {
+            get
+            {
+                List<Cultivar> cultivars = new List<Cultivar>();
+                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                {
+                    cultivars.Add(model as Cultivar);
+                }
 
+                return cultivars;
+            }
+        }
     }
 }

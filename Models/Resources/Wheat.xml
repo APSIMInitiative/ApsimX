@@ -6,30 +6,16 @@
   <NSupplyPreference>active</NSupplyPreference>
   <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
   <RemovedByAnimal />
-  <Cultivars>
-    <Cultivar>
-      <Name>GattonHartog</Name>
-      <Override>
-        <Name>[Phenology].Vernalisation.VernSens</Name>
-        <Value>2.5</Value>
-      </Override>
-      <Override>
-        <Name>[Phenology].Vernalisation.PhotopSens</Name>
-        <Value>3.5</Value>
-      </Override>
-    </Cultivar>    
-    <Cultivar>
-      <Name>Hartog</Name>
-      <Override>
-        <Name>[Phenology].Vernalisation.VernSens</Name>
-        <Value>1.5</Value>
-      </Override>
-      <Override>
-        <Name>[Phenology].Vernalisation.PhotopSens</Name>
-        <Value>3.0</Value>
-      </Override>
-    </Cultivar>
-  </Cultivars>
+  <Cultivar>
+    <Name>GattonHartog</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+  </Cultivar>    
+  <Cultivar>
+    <Name>Hartog</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+  </Cultivar>
   <Population1>
     <Name>Population</Name>
     <PhaseBasedSwitch>

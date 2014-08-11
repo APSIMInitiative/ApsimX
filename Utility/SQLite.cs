@@ -212,7 +212,9 @@ namespace Utility
             //get the number of returned columns
             int columnCount = sqlite3_column_count(stmHandle);
 
-            //populate datatable
+            // Create a datatable that may have column of type object. This occurs
+            // when the first row of a table has null values.
+            bool missingDataFound = false;
             System.Data.DataTable dTable = null;
             while (sqlite3_step(stmHandle) == SQLITE_ROW)
             {
@@ -242,8 +244,10 @@ namespace Utility
                                 dTable.Columns.Add(ColumnName, typeof(string));
                         }
                         else
+                        {
                             dTable.Columns.Add(ColumnName, typeof(object));
-                      //  dTable.Columns.Add(ColumnName, typeof(string));
+                            missingDataFound = true;
+                        }
                     }
                 }
 
@@ -278,71 +282,73 @@ namespace Utility
 
             Finalize(stmHandle);
 
-            if (dTable != null)
+            // At this point the data table may have columns of type object because the 
+            // first row was null for that column. When this happens (missing data) we 
+            // want to convert the column type to a better data type. As .NET doesn't 
+            // allow data tables of tables to change once they have data in them, we
+            // will need to create a new data table with the correct column data types
+            // and them copy all rows to it. When can then return this new data table.
+            // This will maintain the proper column order.
+            if (missingDataFound)
             {
-                for (int i = dTable.Columns.Count - 1; i >= 0; i--)
+                System.Data.DataTable newDataTable = new System.Data.DataTable();
+                foreach (DataColumn column in dTable.Columns)
                 {
-                    if (dTable.Columns[i].DataType.Equals(typeof(object)))
+                    if (column.DataType.Equals(typeof(object)))
                     {
-                        int tryInt;
-                        double tryDouble;
+                        object firstNonNullValue = FindFirstNonNullValueInColumn(column);
+                        if (firstNonNullValue == null)
+                            newDataTable.Columns.Add(column.ColumnName, typeof(object));
+                        else
+                            newDataTable.Columns.Add(column.ColumnName, firstNonNullValue.GetType());
+                    }
+                    else
+                    {
+                        newDataTable.Columns.Add(column.ColumnName, column.DataType);
+                    }
+                }
 
-                        foreach (DataRow dr in dTable.Rows)
-                        {
-                            DataColumn dc = dTable.Columns[i];
-                            if (dr[dc].ToString().Equals(""))
-                                continue;
+                // Now we can copy all data to the new table.
+                foreach (DataRow row in dTable.Rows)
+                {
+                    newDataTable.ImportRow(row);
+                }
 
-                            dc.ColumnName = dc.ColumnName + "_";
-                            // found a value, try to convert it using most restrictive data type (int) first
-                            if (Int32.TryParse(dr[dc].ToString(), out tryInt))
-                            {
-                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(int));
-                                for (int j = 0; j < dTable.Rows.Count; j++)
-                                {
-                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                                }
-                                dTable.Columns.Remove(dc);
-                                break;
-                            }
-                            else if (Double.TryParse(dr[dc].ToString(), out tryDouble)) // double
-                            {
-                                dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(double));
-                                for (int j = 0; j < dTable.Rows.Count; j++)
-                                {
-                                    dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                                }
-                                dTable.Columns.Remove(dc);
-                                break;
-                            }
-                            else
-                            {
-                                DateTime tryDate;
-                                if (DateTime.TryParse(dr[dc].ToString(), out tryDate))
-                                {
-                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(DateTime));
-                                    for (int j = 0; j < dTable.Rows.Count; j++)
-                                    {
-                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                                    }
-                                    dTable.Columns.Remove(dc);
-                                }
-                                else
-                                {
-                                    dTable.Columns.Add(dc.ColumnName.Substring(0, dc.ColumnName.Length - 1), typeof(string));
-                                    for (int j = 0; j < dTable.Rows.Count; j++)
-                                    {
-                                        dTable.Rows[j][dc.ColumnName.Substring(0, dc.ColumnName.Length - 1)] = dTable.Rows[j][dc];
-                                    }
-                                    dTable.Columns.Remove(dc);
-                                }
-                                break;
-                            }
-                        }
+                return newDataTable;
+            }
+            
+            return dTable;
+        }
+
+        /// <summary>
+        /// Find the first non null value in the specified column.
+        /// </summary>
+        /// <param name="dataColumn">The data column to look in</param>
+        /// <returns>The first non null value. Null is returned when all values are null in column.</returns>
+        private object FindFirstNonNullValueInColumn(DataColumn dataColumn)
+        {
+            foreach (DataRow row in dataColumn.Table.Rows)
+            {
+                if (!Convert.IsDBNull(row[dataColumn]))
+                {
+                    string stringValue = row[dataColumn].ToString();
+                    double doubleValue;
+                    DateTime dateValue;
+                    if (double.TryParse(stringValue, out doubleValue))
+                    {
+                        return doubleValue;
+                    }
+                    else if (DateTime.TryParse(stringValue, out dateValue))
+                    {
+                        return dateValue;
+                    }
+                    else
+                    {
+                        return stringValue;
                     }
                 }
             }
-            return dTable;
+            return null;
         }
 
         /// <summary>

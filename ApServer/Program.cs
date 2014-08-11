@@ -68,21 +68,9 @@ namespace ApServer
             string userDir = Path.Combine(dataDir, tcpClient.Client.RemoteEndPoint.ToString().Replace(':', '-'));
             userDir = userDir.Replace(".", "");
 
-            // the acknowledge byte
-            byte[] ack = { 1 };
-
-            byte[] data = new byte[4096];
-            byte[] nameLength = new byte[4]; //hold the length of the next incoming file name
-            byte[] dataLength = new byte[4];
-            byte[] fileListLength = new byte[4];
-            int bytesRead;
-            string fileName;
-            MemoryStream ms;
-
-            bytesRead = 0;
-
-            // old userDir can stick around if client connection was terminated during a run
-            // if so, delete it
+            // Old userDir can stick around if client connection was terminated during a runl; if so, delete it.
+            // Note users port will change constantly, so this won't clean up everything but it will stop conflicts
+            // when a port is recycled.
             if (Directory.Exists(userDir))
                 Directory.Delete(userDir, true);
 
@@ -90,51 +78,7 @@ namespace ApServer
 
             try
             {
-                //get the length of the file name
-                bytesRead = clientStream.Read(fileListLength, 0, 4);
-                Console.WriteLine("Connection accepted from " + tcpClient.Client.RemoteEndPoint);
-                for (int i = 0; i < BitConverter.ToInt32(fileListLength, 0); i++)
-                {
-                    ms = new MemoryStream();
-                    //get the length of the file name
-                    bytesRead = clientStream.Read(nameLength, 0, 4);
-                    if (bytesRead == 0)
-                        break;
-
-                    //get the length of the file
-                    bytesRead = clientStream.Read(dataLength, 0, 4);
-                    if (bytesRead == 0)
-                        break;
-
-                    // next item to arrive is the .apsimx file name
-                    byte[] nameData = new byte[BitConverter.ToInt32(nameLength, 0)];
-                    bytesRead = clientStream.Read(nameData, 0, nameData.Length);
-                    if (bytesRead == 0)
-                    {
-                        Console.WriteLine("Could not read file name.");
-                        break;
-                    }
-                    fileName = Encoding.ASCII.GetString(nameData);
-
-                    // send an acknowledgement
-                    clientStream.Write(ack, 0, 1);
-
-                    // then the .apsimx file itself.
-                    int totalBytes = 0;
-                    while (totalBytes < BitConverter.ToInt32(dataLength, 0))
-                    {
-                        bytesRead = clientStream.Read(data, 0, 4096);
-                        ms.Write(data, 0, bytesRead);
-                        totalBytes += bytesRead;
-                    }
-
-                    File.WriteAllBytes(Path.Combine(userDir, fileName), Convert2.ToByteArray(ms));
-
-                    Console.WriteLine(Path.Combine(userDir, fileName) + " successfully written.");
-
-                    // send an acknowledgement
-                    clientStream.Write(ack, 0, 1);
-                }
+                Utility.ReceiveNetworkFiles(clientStream, tcpClient, userDir);
                 RunSimulations(userDir, clientStream);
             }
             catch
@@ -173,7 +117,7 @@ namespace ApServer
 
             Process process = new Process();
             process.StartInfo.FileName = "model.exe";
-            process.StartInfo.Arguments = Path.Combine(dataDir, dir, "*.apsimx");
+            process.StartInfo.Arguments = Path.Combine(dataDir, dir, "*.apsimx") + " /Recurse";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.OutputDataReceived += new DataReceivedEventHandler((sender, args) => OutputEventHandler(stream, args));
@@ -195,7 +139,12 @@ namespace ApServer
         /// <param name="stream">The users connection.</param>
         private void SendCompletedData(string dir, NetworkStream stream)
         {
-            List<string> DatabaseFiles = Directory.GetFiles(Path.Combine(dataDir, dir), "*.db").ToList();
+            List<string> DatabaseFiles = Directory.GetFiles(dir, "*.db", SearchOption.AllDirectories).ToList();
+
+            //remove the local directory
+            for (int i = 0; i < DatabaseFiles.Count; i++)
+                DatabaseFiles[i] = DatabaseFiles[i].Replace(dir + Path.DirectorySeparatorChar, "");
+
             //hold client acknowledge
             byte[] ack = new byte[1];
             // send the number of files to be sent
@@ -205,21 +154,21 @@ namespace ApServer
             
             foreach(string s in DatabaseFiles)
             {
-                // send the length of the file name
-                dataLength = BitConverter.GetBytes(Path.GetFileName(s).Length);
+                // send the length of the path
+                dataLength = BitConverter.GetBytes(s.Length);
                 stream.Write(dataLength, 0, 4);
                 stream.Flush();
 
                 // read the file and send the length;
-                byte[] FileStream = File.ReadAllBytes(s);
+                byte[] FileStream = File.ReadAllBytes(Path.Combine(dir, s));
                 dataLength = BitConverter.GetBytes(FileStream.Length);
                 stream.Write(dataLength, 0, 4);
                 stream.Flush();
 
-                // then send the file name
+                // then send the path
                 Console.WriteLine("Sending file: " + s);
                 StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
-                writer.Write(Path.GetFileName(s));
+                writer.Write(s);
                 writer.Flush();
 
                 //wait for acknowledgement from client

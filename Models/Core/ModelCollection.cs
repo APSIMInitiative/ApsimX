@@ -57,6 +57,31 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        public List<Model> AllRecursivelyVisible
+        {
+            get
+            {
+                List<Model> models = new List<Model>();
+
+                if (Model.Models != null)
+                {
+                    foreach (Model child in Model.Models)
+                    {
+                        if (!child.IsHidden)
+                        {
+                            models.Add(child);
+                            models.AddRange(child.Children.AllRecursivelyVisible);
+                        }
+                    }
+                }
+                return models;
+            }
+        }
+
+        /// <summary>
         /// Return a list of all child models recursively. Only models of 
         /// the specified 'typeFilter' will be returned. Never returns
         /// null. Can return an empty list.

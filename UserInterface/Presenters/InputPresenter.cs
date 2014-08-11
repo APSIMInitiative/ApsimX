@@ -25,7 +25,11 @@ namespace UserInterface.Presenters
             View = view as IInputView;
             ExplorerPresenter = explorerPresenter;
 
-            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
+            if (Input.FileNames != null)
+            {
+                View.FileName = Utility.String.BuildString(Input.FileNames, ",");
+            }
+
             View.GridView.DataSource = Input.GetTable();
 
             View.BrowseButtonClicked += OnBrowseButtonClicked;

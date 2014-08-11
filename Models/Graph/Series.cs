@@ -14,7 +14,7 @@ namespace Models.Graph
         {
             XAxis = Axis.AxisType.Bottom;
             Colour = Color.Blue;
-            SeparateSeriesForAllSimulationsInScope = true;
+            SplitOn = "Simulation";
         }
 
         public string Title { get; set; }
@@ -52,7 +52,7 @@ namespace Models.Graph
 
         public bool ShowRegressionLine { get; set; }
         public bool ShowInLegend { get; set; }
-        public bool SeparateSeriesForAllSimulationsInScope { get; set; }
+        public string SplitOn { get; set; }
 
     }
 }

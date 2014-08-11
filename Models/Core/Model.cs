@@ -34,6 +34,7 @@ namespace Models.Core
         public Model()
         {
             Children = new ModelCollection(this);
+            IsHidden = false;
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.Stem1))]
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
-        [XmlElement(typeof(Models.PMF.Cultivars))]
+        [XmlElement(typeof(Models.PMF.Cultivar))]
         public List<Model> Models { get; set; }
 
         #region Methods than can be overridden
@@ -287,6 +288,12 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public string FullPath { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a model is hidden from the user.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsHidden { get; set; }
 
         /// <summary>
         /// Provides access to all child models.

@@ -323,6 +323,20 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Ensure the specified filename is always a full path by converting relative
+        /// paths to absolute.
+        /// </summary>
+        /// <param name="fileName">The filename to convert to absolute</param>
+        /// <returns>The full path</returns>
+        public string GetFullFileName(string fileName)
+        {
+            if (fileName != null && fileName != string.Empty)
+            {
+                return Path.Combine(Path.GetDirectoryName(this.FileName), fileName);
+            }
 
+            return null;
+        }
     }
 }

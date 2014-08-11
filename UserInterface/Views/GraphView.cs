@@ -17,6 +17,7 @@ namespace UserInterface.Views
     using OxyPlot.Axes;
     using OxyPlot.Series;
     using OxyPlot.WindowsForms;
+    using EventArguments;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -38,8 +39,9 @@ namespace UserInterface.Views
             this.plot1.Model = new PlotModel();
             this.splitter.Visible = false;
             this.bottomPanel.Visible = false;
+            this.plot1.Model.MouseMove += Model_MouseMove;
         }
-
+        
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
         /// </summary>
@@ -59,6 +61,12 @@ namespace UserInterface.Views
         /// Invoked when the user clicks on the graph title.
         /// </summary>
         public event EventHandler OnTitleClick;
+
+
+        /// <summary>
+        /// Invoked when the user hovers over a series point.
+        /// </summary>
+        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
         /// Clear the graph of everything.
@@ -118,6 +126,7 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+                series.CanTrackerInterpolatePoints = false;
 
                 bool filled = false;
                 string oxyMarkerName = markerType.ToString();
@@ -175,6 +184,7 @@ namespace UserInterface.Views
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+
             this.plot1.Model.Series.Add(series);
         }
 
@@ -219,6 +229,7 @@ namespace UserInterface.Views
                     series.Points2.Add(point);
                 }
             }
+            series.CanTrackerInterpolatePoints = false;
 
             this.plot1.Model.Series.Add(series);
         }
@@ -370,6 +381,8 @@ namespace UserInterface.Views
         /// <param name="axis">The axis to format</param>
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
+            axis.IntervalLength = 100;
+
             if (axis is LinearAxis && 
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
@@ -629,5 +642,50 @@ namespace UserInterface.Views
                 }
             }
         }
+
+        private Label label = new Label();
+
+        private void Model_MouseMove(object sender, OxyMouseEventArgs e)
+        {
+            OxyPlot.Series.Series series = this.plot1.GetSeriesFromPoint(e.Position, 10);
+            if (series != null && this.OnHoverOverPoint != null)
+            {
+                TrackerHitResult t = series.GetNearestPoint(e.Position, false);
+
+                HoverPointArgs hoverArguments = new HoverPointArgs();
+                hoverArguments.SeriesName = series.Title;
+                hoverArguments.X = t.DataPoint.X;
+                hoverArguments.Y = t.DataPoint.Y;
+                this.OnHoverOverPoint.Invoke(this, hoverArguments);
+
+                if (hoverArguments.HoverText != null)
+                {
+                    //this.plot1.Controls.Add(label);
+                    label.Text = hoverArguments.HoverText;
+                    label.BackColor = SystemColors.Info;
+                    label.ForeColor = SystemColors.InfoText;
+                    label.AutoSize = true;
+                    label.Font = new Font(label.Font.FontFamily, 12f);
+                    label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+                    label.TextAlign = ContentAlignment.MiddleCenter;
+
+                    Point p = this.PointToClient(MousePosition);
+                    p.Offset(-label.Width / 2, -30); // make label appear above the cursor.
+
+                    int rightSideOfLabel = p.X + label.Width;
+                    if (rightSideOfLabel > this.Width)
+                    {
+                        p.Offset(-(rightSideOfLabel - this.Width), 0);
+                    }
+                    label.Location = p;
+
+                    this.plot1.Controls.Add(label);
+                    return;
+                }
+            }
+
+            this.plot1.Controls.Remove(label);
+        }
     }
 }
+

@@ -47,7 +47,7 @@ namespace Models
                 {
                     try
                     {
-                        DoNetworkRun(fileName);// send files over network
+                        DoNetworkRun(fileName, args.Contains("/Recurse"));// send files over network
                     }
                     catch (SocketException)
                     {
@@ -91,35 +91,55 @@ namespace Models
         }
 
         /// <summary>
-        /// Get a list of files (weather, input) to send to remote computer.
+        /// Get a list of files (apsimx, weather, input, etc) to send to remote computer.
         /// </summary>
-        /// <param name="fileName">The .apsimx file to parse.</param>
-        /// <returns>A list of weather file names.</returns>
-        private static List<string> GetFileList(string fileName)
+        /// <param name="fileName">The file name to parse (Can include wildcard *).</param>
+        /// <param name="Recurse">Recurse through sub directiories?</param>
+        /// <returns>A list of file names.</returns>
+        private static List<string> GetFileList(string fileName, bool Recurse)
         {
+            string[] files;
             List<string> FileList = new List<string>();
-            XmlNodeList nodes;
-            XmlDocument doc = new XmlDocument();
 
-            doc.Load(fileName);
-            XmlNode root = doc.DocumentElement;
+            if (fileName.Contains('*'))
+                files = Directory.GetFiles(Path.GetDirectoryName(fileName), Path.GetFileName(fileName), Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            else
+                files = new string[] { fileName };
 
-            nodes = root.SelectNodes("//WeatherFile/FileName");
-            foreach (XmlNode node in nodes)
-                FileList.Add(node.InnerText);
-
-            nodes = root.SelectNodes("//Input/FileNames/string");
-            foreach (XmlNode node in nodes)
-                FileList.Add(node.InnerText);
-
-            // resolve relative file name
-            for (int i = 0; i < FileList.Count; i++)
+            foreach (string s in files)
             {
-                if (!File.Exists(FileList[i]))
+                List<string> TempList = new List<string>();
+
+                FileList.Add(s);
+                XmlNodeList nodes;
+                XmlDocument doc = new XmlDocument();
+
+                doc.Load(s);
+                XmlNode root = doc.DocumentElement;
+
+                nodes = root.SelectNodes("//WeatherFile/FileName");
+                foreach (XmlNode node in nodes)
+                    TempList.Add(node.InnerText);
+
+                nodes = root.SelectNodes("//Input/FileNames/string");
+                foreach (XmlNode node in nodes)
+                    TempList.Add(node.InnerText);
+
+                // resolve relative file name
+                for (int i = 0; i < TempList.Count; i++)
                 {
-                    string TryFileName = Utility.PathUtils.GetAbsolutePath(FileList[i]);
-                    if (File.Exists(TryFileName))
-                        FileList[i] = TryFileName;
+                    if (!File.Exists(TempList[i]))
+                    {
+                        // Some of the unit tests are designed to fail so have invalid data
+                        // They probably should go in a different directory.
+                        if (s.Contains("UnitTests"))
+                            continue;
+
+                        string TryFileName = Utility.PathUtils.GetAbsolutePath(TempList[i], s);
+                        if (!File.Exists(TryFileName))
+                            throw new ApsimXException("NetworkRun", "Could not construct absolute path for " + TempList[i]);
+                        else FileList.Add(TryFileName);
+                    }
                 }
             }
                 return FileList;
@@ -129,16 +149,15 @@ namespace Models
         /// Send our .apsimx and associated weather files over the network
         /// </summary>
         /// <param name="FileName">The .apsimx file to send.</param>
-        private static void DoNetworkRun(string FileName)
+        private static void DoNetworkRun(string FileName, bool Recurse)
         {
             string ServerIP = "150.229.142.16";
-            //ServerIP = "127.0.0.1";
+            ServerIP = "127.0.0.1"; //debug only
             //hold server acknowledge
             byte[] ack = new byte[1];
 
             // get a list of files to send
-            List<string> FileList = GetFileList(FileName);
-            FileList.Add(FileName);
+            List<string> FileList = GetFileList(FileName, Recurse);
 
             Console.WriteLine("Attempting connection to " + ServerIP);
             using (TcpClient client = new TcpClient(ServerIP, 50000))
@@ -152,32 +171,7 @@ namespace Models
 
                 foreach (string fileName in FileList)
                 {
-                    // send the length of the file name
-                    dataLength = BitConverter.GetBytes(Path.GetFileName(fileName).Length);
-                    ns.Write(dataLength, 0, 4);
-                    ns.Flush();
-
-                    // read the file and send the length;
-                    byte[] FileStream = File.ReadAllBytes(fileName);
-                    dataLength = BitConverter.GetBytes(FileStream.Length);
-                    ns.Write(dataLength, 0, 4);
-                    ns.Flush();
-
-                    // then send the file name
-                    Console.WriteLine("Sending file: " + fileName);
-                    StreamWriter writer = new StreamWriter(ns, Encoding.ASCII);
-                    writer.Write(Path.GetFileName(fileName));
-                    writer.Flush();
-
-                    //wait for acknowledgement from server
-                    ns.Read(ack, 0, 1);
-
-                    // next, send the file data
-                    ns.Write(FileStream, 0, FileStream.Length);
-                    ns.Flush();
-
-                    //wait for acknowledgement from server
-                    ns.Read(ack, 0, 1);
+                    ApServer.Utility.SendNetworkFile(fileName, ns);
                 }
 
                 //get run updates from server
@@ -195,7 +189,7 @@ namespace Models
                     Console.WriteLine(Encoding.ASCII.GetString(Msg));
                 }
 
-                GetNetworkRun(ns, FileName);
+                ApServer.Utility.ReceiveNetworkFiles(ns, client, Path.GetDirectoryName(FileName));
             }
         }
 
@@ -208,7 +202,7 @@ namespace Models
                 Console.WriteLine(e.ErrorMessage);
         }
 
-        static void GetNetworkRun(NetworkStream stream, string FileName)
+        static void GetNetworkRunResults(NetworkStream stream, string FileName)
         {
             // the acknowledge byte
             byte[] ack = { 1 };
@@ -263,7 +257,7 @@ namespace Models
                     totalBytes += bytesRead;
                 }
 
-                File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(FileName), fileName), ApServer.Convert2.ToByteArray(ms));
+                File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(FileName), fileName), ApServer.Utility.ToByteArray(ms));
 
                 Console.WriteLine(Path.Combine(Path.GetDirectoryName(FileName), fileName) + " successfully written.");
 

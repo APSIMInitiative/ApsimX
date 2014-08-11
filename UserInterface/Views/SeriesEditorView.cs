@@ -39,72 +39,72 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user changes the series type
         /// </summary>
-        public event EventHandler OnSeriesTypeChanged;
+        public event EventHandler SeriesTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the series line type
         /// </summary>
-        public event EventHandler OnSeriesLineTypeChanged;
+        public event EventHandler SeriesLineTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the series marker type
         /// </summary>
-        public event EventHandler OnSeriesMarkerTypeChanged;
+        public event EventHandler SeriesMarkerTypeChanged;
 
         /// <summary>
         /// Invoked when the user changes the color
         /// </summary>
-        public event EventHandler OnColourChanged;
+        public event EventHandler ColourChanged;
 
         /// <summary>
         /// Invoked when the user changes the regression field
         /// </summary>
-        public event EventHandler OnRegressionChanged;
+        public event EventHandler RegressionChanged;
 
         /// <summary>
         /// Invoked when the user changes the x on top field
         /// </summary>
-        public event EventHandler OnXOnTopChanged;
+        public event EventHandler XOnTopChanged;
 
         /// <summary>
         /// Invoked when the user changes the y on right field
         /// </summary>
-        public event EventHandler OnYOnRightChanged;
+        public event EventHandler YOnRightChanged;
 
         /// <summary>
         /// Invoked when the user changes the x
         /// </summary>
-        public event EventHandler OnXChanged;
+        public event EventHandler XChanged;
 
         /// <summary>
         /// Invoked when the user changes the y
         /// </summary>
-        public event EventHandler OnYChanged;
+        public event EventHandler YChanged;
 
         /// <summary>
         /// Invoked when the user changes the x2
         /// </summary>
-        public event EventHandler OnX2Changed;
+        public event EventHandler X2Changed;
 
         /// <summary>
         /// Invoked when the user changes the y2
         /// </summary>
-        public event EventHandler OnY2Changed;
+        public event EventHandler Y2Changed;
 
         /// <summary>
         /// Invoked when the user changes the data source
         /// </summary>
-        public event EventHandler OnDataSourceChanged;
+        public event EventHandler DataSourceChanged;
 
         /// <summary>
         /// Invoked when the user changes the show in legend
         /// </summary>
-        public event EventHandler OnShowInLegendChanged;
+        public event EventHandler ShowInLegendChanged;
 
         /// <summary>
-        /// Invoked when the user changes the separate series
+        /// Invoked when the user changes the split on field
         /// </summary>
-        public event EventHandler OnSeparateSeriesChanged;
+        public event EventHandler SplitOnChanged;
 
         /// <summary>
         /// Gets or sets the series type
@@ -238,18 +238,40 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets or set the separate series checkbox
+        /// Gets or sets the split on type e.g. Currently 'Experiment', 'Simulation' or null
         /// </summary>
-        public bool SeparateSeries
+        public string SplitOn
         {
             get
             {
-                return checkBox5.Checked;
+                if (this.comboBox5.SelectedIndex == 0)
+                {
+                    return "Simulation";
+                }
+                else if (this.comboBox5.SelectedIndex == 1)
+                {
+                    return "Experiment";
+                }
+                else
+                {
+                    return "*";
+                }
             }
 
             set
             {
-                checkBox5.Checked = value;
+                if (value == "Simulation")
+                {
+                    this.comboBox5.SelectedIndex = 0;
+                }
+                else if (value == "Experiment")
+                {
+                    this.comboBox5.SelectedIndex = 1;
+                }
+                else
+                {
+                    this.comboBox5.SelectedIndex = 2;
+                }
             }
         }
 
@@ -371,8 +393,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnComboBox2Changed(object sender, EventArgs e)
         {
-            if (OnSeriesTypeChanged != null)
-                OnSeriesTypeChanged.Invoke(sender, e);
+            if (SeriesTypeChanged != null)
+                SeriesTypeChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -382,8 +404,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnComboBox3Changed(object sender, EventArgs e)
         {
-            if (OnSeriesLineTypeChanged != null)
-                OnSeriesLineTypeChanged.Invoke(sender, e);
+            if (SeriesLineTypeChanged != null)
+                SeriesLineTypeChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -393,8 +415,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnComboBox4Changed(object sender, EventArgs e)
         {
-            if (OnSeriesMarkerTypeChanged != null)
-                OnSeriesMarkerTypeChanged.Invoke(sender, e);
+            if (SeriesMarkerTypeChanged != null)
+                SeriesMarkerTypeChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -408,8 +430,8 @@ namespace UserInterface.Views
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 button1.BackColor = colorDialog1.Color;
-                if (OnColourChanged != null)
-                    OnColourChanged.Invoke(sender, e);
+                if (ColourChanged != null)
+                    ColourChanged.Invoke(sender, e);
             }
         }
 
@@ -420,8 +442,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnCheckBox3Changed(object sender, EventArgs e)
         {
-            if (OnRegressionChanged != null)
-                OnRegressionChanged.Invoke(sender, e);
+            if (RegressionChanged != null)
+                RegressionChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -431,8 +453,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnCheckBox1Changed(object sender, EventArgs e)
         {
-            if (OnXOnTopChanged != null)
-                OnXOnTopChanged.Invoke(sender, e);
+            if (XOnTopChanged != null)
+                XOnTopChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -442,8 +464,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnCheckBox2Changed(object sender, EventArgs e)
         {
-            if (OnYOnRightChanged != null)
-                OnYOnRightChanged.Invoke(sender, e);
+            if (YOnRightChanged != null)
+                YOnRightChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -453,8 +475,8 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnComboBox1Changed(object sender, EventArgs e)
         {
-            if (OnDataSourceChanged != null)
-                OnDataSourceChanged.Invoke(sender, e);
+            if (DataSourceChanged != null)
+                DataSourceChanged.Invoke(sender, e);
         }
 
         /// <summary>
@@ -546,22 +568,9 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnCheckBox4Changed(object sender, EventArgs e)
         {
-            if (OnShowInLegendChanged != null)
+            if (ShowInLegendChanged != null)
             {
-                OnShowInLegendChanged.Invoke(sender, e);
-            }
-        }
-
-        /// <summary>
-        /// The separate series checkbox has been clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCheckBox5Changed(object sender, EventArgs e)
-        {
-            if (OnSeparateSeriesChanged != null)
-            {
-                OnSeparateSeriesChanged.Invoke(sender, e);
+                ShowInLegendChanged.Invoke(sender, e);
             }
         }
 
@@ -572,9 +581,9 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (OnXChanged != null)
+            if (XChanged != null)
             {
-                OnXChanged.Invoke(sender, e);
+                XChanged.Invoke(sender, e);
             }
         }
 
@@ -585,9 +594,9 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            if (OnYChanged != null)
+            if (YChanged != null)
             {
-                OnYChanged.Invoke(sender, e);
+                YChanged.Invoke(sender, e);
             }
 
         }
@@ -599,9 +608,9 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            if (OnX2Changed != null)
+            if (X2Changed != null)
             {
-                OnX2Changed.Invoke(sender, e);
+                X2Changed.Invoke(sender, e);
             }
 
         }
@@ -613,9 +622,17 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            if (OnY2Changed != null)
+            if (Y2Changed != null)
             {
-                OnY2Changed.Invoke(sender, e);
+                Y2Changed.Invoke(sender, e);
+            }
+        }
+
+        private void comboBox5_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (this.SplitOnChanged != null)
+            {
+                this.SplitOnChanged.Invoke(this, null);
             }
         }
     }

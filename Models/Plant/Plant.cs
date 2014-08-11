@@ -106,8 +106,27 @@ namespace Models.PMF
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
 
-        [Link(IsOptional=true)]
-        Cultivars Cultivars = null;
+        /// <summary>
+        /// A property to return all cultivar definitions.
+        /// </summary>
+        private List<Cultivar> Cultivars
+        {
+            get
+            {
+                List<Cultivar> cultivars = new List<Cultivar>();
+                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                {
+                    cultivars.Add(model as Cultivar);
+                }
+
+                return cultivars;
+            }
+        }
+
+        /// <summary>
+        /// The current cultivar definition.
+        /// </summary>
+        private Cultivar cultivarDefinition;
 
         /// <summary>
         /// MicroClimate needs FRGR.
@@ -169,13 +188,8 @@ namespace Models.PMF
             SowingData.CropClass = CropClass;
 
             // Find cultivar and apply cultivar overrides.
-            if (Cultivars == null)
-                throw new ApsimXException(FullPath, "No cultivar definitions found.");
-            
-            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
-            cultivarObj.ApplyOverrides(this);
+            cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
 
             // Invoke a sowing event.
             if (Sowing != null)
@@ -208,12 +222,6 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
-
-            // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
-            cultivarObj.UnapplyOverrides(this);
         }
 
         /// <summary>
@@ -260,6 +268,8 @@ namespace Models.PMF
             foreach (Organ Child in Organs)
                 Child.OnEndCrop();
             Clear();
+
+            cultivarDefinition.Unapply();
         }
 
         private void Clear()
