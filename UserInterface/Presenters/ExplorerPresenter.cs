@@ -285,7 +285,7 @@ namespace UserInterface.Presenters
         {
             HideRightHandPanel();
             // Get a complete list of all models in this file.
-            List<Model> allModels = ApsimXFile.Children.AllRecursively;
+            List<Model> allModels = ApsimXFile.Children.AllRecursivelyVisible;
 
             // If the current node path is '.Simulations' (the root node) then
             // select the first item in the 'allModels' list.
@@ -309,7 +309,7 @@ namespace UserInterface.Presenters
                 throw new Exception("Cannot find the current selected model in the .apsimx file");
 
             // If the current model is the last one in the list then return false.
-            if (index == allModels.Count - 1)
+            if (index >= allModels.Count - 1)
                 return false;
 
             // Select the next node.
