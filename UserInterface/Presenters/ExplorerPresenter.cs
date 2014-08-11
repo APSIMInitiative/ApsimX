@@ -225,11 +225,20 @@ namespace UserInterface.Presenters
         private void WriteLoadErrors()
         {
             if (ApsimXFile.LoadErrors != null)
-                foreach (ApsimXException err in ApsimXFile.LoadErrors)
+                foreach (Exception err in ApsimXFile.LoadErrors)
                 {
-                    string message = String.Format("{0}:\n{1}", new object[] {
-                                                    err.ModelFullPath,
+                    string message;
+                    if (err is ApsimXException)
+                    {
+                        message = String.Format("{0}:\n{1}", new object[] {
+                                                    (err as ApsimXException).ModelFullPath,
                                                     err.Message});
+                    }
+                    else
+                    {
+                        message = String.Format("{0}", new object[] {
+                                                    err.Message + "\r\n" + err.StackTrace});
+                    }
                     View.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
         }
