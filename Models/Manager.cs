@@ -26,7 +26,21 @@ namespace Models
 
         // ----------------- Parameters (XML serialisation)
         [XmlAnyElement]
-        public XmlElement[] elements { get { return _elements; } set { _elements = value; } }
+        public XmlElement[] elements 
+        { 
+            get 
+            {
+                // Capture the current values of all parameters.
+                EnsureParametersAreCurrent();
+
+                return _elements;
+            } 
+            
+            set 
+            { 
+                _elements = value; 
+            } 
+        }
 
         [XmlElement("Code")]
         public XmlNode CodeCData
@@ -141,14 +155,14 @@ namespace Models
                     Script.Name = "Script";
                     Script.IsHidden = true;
                     XmlElement parameters;
-                    if (elements == null || elements[0] == null)
+                    if (_elements == null || _elements[0] == null)
                     {
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(elementsAsXml);
                         parameters = doc.DocumentElement;
                     }
                     else
-                        parameters = elements[0];
+                        parameters = _elements[0];
                     SetParametersInObject(Script, parameters);
 
                     // Add the new script model to our models collection.
@@ -174,12 +188,12 @@ namespace Models
         {
             if (Script != null)
             {
-                if (elements == null)
-                    elements = new XmlElement[1];
-                elements[0] = GetParametersInObject(Script);
+                if (_elements == null)
+                    _elements = new XmlElement[1];
+                _elements[0] = GetParametersInObject(Script);
             }
-            else if (elementsAsXml == null && elements != null && elements.Length >= 1)
-                elementsAsXml = elements[0].OuterXml;
+            else if (elementsAsXml == null && _elements != null && _elements.Length >= 1)
+                elementsAsXml = _elements[0].OuterXml;
             else if (elementsAsXml == null)
                 elementsAsXml = "<Script />";
         }
