@@ -326,6 +326,32 @@ namespace UserInterface.Presenters
             return true;
         }
 
+        /// <summary>
+        /// String must have all alpha numeric or '_' characters
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>True if all chars are alpha numerics and str is not null</returns>
+        public bool IsValidName(string str)
+        {
+            bool valid = true;
+            //test for invalid characters
+            if (!string.IsNullOrEmpty(str))
+            {
+                int i = 0;
+                while (valid && (i < str.Length))
+                {
+                    if (!(char.IsLetter(str[i])) && (!(char.IsNumber(str[i]))) && (str[i] != '_'))
+                        valid = false;
+                    i++;
+                }
+            }
+            else
+            {
+                valid = false;
+            }
+            return valid;
+        }
+
         #region Events from view
 
         /// <summary>
@@ -513,16 +539,29 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
-            if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
+            e.CancelEdit = false;
+            if (e.NewName != null)
             {
-                HideRightHandPanel();
-                string ParentModelPath = Utility.String.ParentName(e.NodePath);
-                RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
-                CommandHistory.Add(Cmd);
-                View.CurrentNodePath = ParentModelPath + "." + e.NewName;
-                ShowRightHandPanel();
-            }            
+                if (IsValidName(e.NewName))
+                {
+                    Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
+                    if (Model != null && Model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != "")
+                    {
+                        HideRightHandPanel();
+                        string ParentModelPath = Utility.String.ParentName(e.NodePath);
+                        RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
+                        CommandHistory.Add(Cmd);
+                        View.CurrentNodePath = ParentModelPath + "." + e.NewName;
+                        ShowRightHandPanel();
+                    }
+                }
+                else
+                {
+                    ShowMessage("Use alpha numeric characters only!", DataStore.ErrorLevel.Error);
+                    e.CancelEdit = true;
+                }
+            }
+
         }
 
         /// <summary>

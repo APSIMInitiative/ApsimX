@@ -61,6 +61,7 @@ namespace UserInterface.Interfaces
     {
         public string NodePath;
         public string NewName;
+        public bool CancelEdit;
     }
 
     /// <summary>
