@@ -202,6 +202,7 @@ namespace Models.PMF
                 Child.OnSow(SowingData);
             if (Structure != null)
                Structure.OnSow(SowingData);
+            if (Phenology != null)
             Phenology.OnSow();
 
             //Set up CanopyData tyep

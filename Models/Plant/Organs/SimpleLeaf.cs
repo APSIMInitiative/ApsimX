@@ -27,7 +27,7 @@ namespace Models.PMF.Organs
               [Link(IsOptional = true)] Function CoverFunction = null;
               [Link(IsOptional = true)] Function NitrogenDemandSwitch = null;
               [Link] Function NConc = null;
-              [Link] Function LaiFunction = null;
+              [Link] Function LAIFunction = null;
               [Link] Function ExtinctionCoefficientFunction = null;
               [Link(IsOptional = true)]  RUEModel Photosynthesis = null;
               [Link] Function HeightFunction = null;
@@ -279,8 +279,8 @@ namespace Models.PMF.Organs
              {
                  if (CoverFunction != null)
                      LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
-                 if (LaiFunction != null)
-                     LAI = LaiFunction.Value;
+                 if (LAIFunction != null)
+                     LAI = LAIFunction.Value;
                  
                  Height = HeightFunction.Value;
                 

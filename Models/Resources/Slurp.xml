@@ -1,11 +1,10 @@
  <Plant>
 	<Name>Slurp</Name>
 	<CropType>Potato</CropType>
-	<Cultivars>
-		<Cultivar>
-			<Name>StaticCrop</Name>
-		</Cultivar>
-	</Cultivars>
+	<Cultivar>
+		<Name>StaticCrop</Name>
+		<Alias>StaticCrop</Alias>
+	</Cultivar>
 	<Arbitrator>
 		<Name>Arbitrator</Name>
 		<NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
@@ -76,6 +75,12 @@
 	</Root>
 	<SimpleLeaf>
 		<Name>Leaf</Name> 
+		<Biomass>
+			<Name>Live</Name>
+		</Biomass>
+		<Biomass>
+			<Name>Dead</Name>
+		</Biomass>
 		<Constant>
 			<Name>FTFunction</Name>
 			<Value>1</Value>
@@ -91,16 +96,16 @@
 		<PartitionFractionDemandFunction>
 			<Name>DMDemandFunction</Name>
 			<Constant>
-			   <Name>PartitionFraction</Name>
-			   <Value>1</Value>
-		    </Constant>
+				<Name>PartitionFraction</Name>
+				<Value>1</Value>
+			</Constant>
 		</PartitionFractionDemandFunction>
 		<Constant>
 			<Name>NConc</Name>
 			<Value>.05</Value>
 		</Constant>
 		<Constant>
-			<Name>LaiFunction</Name>
+			<Name>LAIFunction</Name>
 			<Value>5</Value>
 		</Constant>
 		<Constant>
