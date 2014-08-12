@@ -550,7 +550,7 @@
             <PlantingDepth>120</PlantingDepth>
             <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
             <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>20/10/2003 12:00:00 a.m.</SowingDate>
+            <SowingDate>2003-10-20T00:00:00</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -4166,7 +4166,7 @@ namespace Models
             <PlantingDepth>200</PlantingDepth>
             <StemNumberPerSeedTuber>3</StemNumberPerSeedTuber>
             <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>14/10/1998 12:00:00 a.m.</SowingDate>
+            <SowingDate>1998-10-14T00:00:00</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -7813,7 +7813,7 @@ namespace Models
             <PlantingDepth>170</PlantingDepth>
             <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
             <CultivarName>IlamHardy</CultivarName>
-            <SowingDate>2/05/2000 12:00:00 a.m.</SowingDate>
+            <SowingDate>2000-05-02T00:00:00</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
