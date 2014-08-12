@@ -51,6 +51,8 @@ namespace Models.PMF.Organs
             set { throw new Exception("Cannot set water allocation for " + Name); }
         }
         public override void DoWaterUptake(double Demand) { }
+        [XmlIgnore]
+        public override double FRGR { get { return 0; } set { } }
         public override void DoPotentialDM() { }
         public override void DoPotentialNutrient() { }
         public override void DoActualGrowth() { }

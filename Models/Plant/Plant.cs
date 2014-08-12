@@ -131,8 +131,20 @@ namespace Models.PMF
         /// <summary>
         /// MicroClimate needs FRGR.
         /// </summary>
-        public double FRGR { get { return RUEModel.FRGR; } }
-
+        public double FRGR 
+        { 
+            get 
+            {
+                double frgr = 0;
+                foreach (Organ Child in Organs)
+                {
+                    if (Child.FRGR != null)
+                        frgr = Child.FRGR;
+                }
+                return frgr; 
+            } 
+        }
+            
         /// <summary>
         /// MicroClimate supplies light profile.
         /// </summary>

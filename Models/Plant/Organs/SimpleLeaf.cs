@@ -47,7 +47,7 @@ namespace Models.PMF.Organs
                public override double WaterDemand { get { return Plant.PotentialEP; } }
                public double Transpiration { get { return EP; } }
                [Units("mm")]
-               public double Frgr { get; set; }
+               public double FRGR { get; set; }
                public double Ft
                {
                    get
