@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private ITabbedExplorerView View;
 
-
+        public Utility.Configuration config;    // point to the mainform config
 
         /// <summary>
         /// A list of ExplorerPresenters - one for each open tab.
@@ -38,6 +38,7 @@ namespace UserInterface.Presenters
         {
             this.View = view as ITabbedExplorerView;
             this.View.PopulateStartPage += OnPopulateStartPage;
+            this.View.MruClick += OnMruApsimXFile;
             Presenters = new List<ExplorerPresenter>();
         }
 
@@ -86,6 +87,9 @@ namespace UserInterface.Presenters
                         Presenter.TreeWidth = 250;
                     else
                         Presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, View.TabWidth - 20); // ?
+                    config.Settings.AddMruFile(fileName);
+                    config.Save();
+                    View.FillMruList(config.Settings.MruList);
                 }
                 catch (Exception err)
                 {
@@ -138,6 +142,7 @@ namespace UserInterface.Presenters
                 OnClick = OnImport
             });
 
+            View.FillMruList(config.Settings.MruList);
         }
 
         /// <summary>
@@ -147,6 +152,11 @@ namespace UserInterface.Presenters
         {
             string FileName = View.AskUserForFileName("*.apsimx|*.apsimx");
             OpenApsimXFileInTab(FileName);
+        }
+
+        private void OnMruApsimXFile(object sender, StringArgs s)
+        {
+            OpenApsimXFileInTab(s.Name);
         }
 
         /// <summary>
