@@ -33,9 +33,11 @@ namespace UserInterface
             
             Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
+            Presenter1.config = Configuration;
 
             Presenter2 = new TabbedExplorerPresenter();
             Presenter2.Attach(tabbedExplorerView2);
+            Presenter2.config = Configuration;
 
             SplitContainer.Panel2Collapsed = true;
             commandLineArguments = args;

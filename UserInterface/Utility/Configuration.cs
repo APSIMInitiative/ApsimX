@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace Utility
 {
@@ -16,6 +17,42 @@ namespace Utility
         public Point MainFormLocation;
         public Size MainFormSize;
         public System.Windows.Forms.FormWindowState MainFormWindowState;
+        public List<string> MruList;
+        private int FilesInHistory; // this could be a user setting
+
+        public Settings()
+        {
+            MruList = new List<string>();
+            FilesInHistory = 10;
+        }
+
+        /// <summary>
+        /// Add a filename to the list.
+        /// </summary>
+        /// <param name="filename">File path</param>
+        public void AddMruFile(string filename)
+        {
+            if (filename.Length > 0)
+            {
+                if (MruList.Count > 0)
+                {
+                    if (MruList.IndexOf(filename) < 0)
+                    {
+                        // First time that filename has been added 
+                        if (MruList.Count >= FilesInHistory)
+                            MruList.RemoveAt(MruList.Count - 1);  // Delete the last item 
+                    }
+                    else
+                    {
+                        // Item is in the history list => move to top 
+                        MruList.RemoveAt(MruList.IndexOf(filename));
+                    }
+                    MruList.Insert(0, filename);
+                }
+                else
+                    MruList.Add(filename);
+            }
+        }
     }
 
     //=========================================================================
