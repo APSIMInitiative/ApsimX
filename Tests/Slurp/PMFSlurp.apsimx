@@ -530,7 +530,7 @@ namespace Models
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>14/10/1998 12:00:00 a.m.</SowingDate>
+          <SowingDate>1998-10-14 12:00:00 a.m.</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
