@@ -56,17 +56,12 @@ namespace UserInterface.Views
         {
             get
             {
-            //TODO: This won't work on Linux or Mac
-                if (!FileNameLabel.Text.Contains(':')) // no drive designator, so it's a relative path
-                    FileNameLabel.Text = Utility.PathUtils.GetAbsolutePath(FileNameLabel.Text); //remove bin
-
+                FileNameLabel.Text = Path.GetFullPath(FileNameLabel.Text);
                 return FileNameLabel.Text;
             }
             set
             {
-                string curdir = Utility.PathUtils.GetAbsolutePath(String.Empty);
                 FileNameLabel.Text = value;
-                FileNameLabel.Text = FileNameLabel.Text.Replace(curdir, String.Empty);
             }
         }
 

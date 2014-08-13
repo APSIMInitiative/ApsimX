@@ -51,21 +51,13 @@ namespace Models.PostSimulationTools
                 Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
 
                 dataStore.DeleteTable(Name);
-                DataTable data = GetTable();
+                DataTable data = GetTable(simulations.FileName);
                 for (int i=0;i< FileNames.Length; i++)
                 {
                     if (FileNames[i] == null)
                         continue;
 
-                    string temp = string.Empty;
-                    //make it work in linux
-                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        temp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
-                    else temp = FileNames[i];
-
-                    if (File.Exists(temp))
-                        dataStore.WriteTable(null, this.Name, data);
+                    dataStore.WriteTable(null, this.Name, data);
                 }
             }
         }
@@ -74,7 +66,7 @@ namespace Models.PostSimulationTools
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable()
+        public DataTable GetTable(string SimPath)
         {
             DataTable returnDataTable = null;
             if (FileNames != null)
@@ -84,11 +76,7 @@ namespace Models.PostSimulationTools
                     if (FileNames[i] == null)
                         continue;
 
-                    string file;
-                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        file = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
-                    else file = FileNames[i];
+                    string file = Utility.PathUtils.GetAbsolutePath(fileNames[i], SimPath);
 
                     if ( File.Exists(file))
                     {

@@ -149,6 +149,7 @@ namespace Models
         /// Send our .apsimx and associated weather files over the network
         /// </summary>
         /// <param name="FileName">The .apsimx file to send.</param>
+        /// <param name="Recurse">Recurse through sub directories?</param>
         private static void DoNetworkRun(string FileName, bool Recurse)
         {
             string ServerIP = "150.229.142.16";

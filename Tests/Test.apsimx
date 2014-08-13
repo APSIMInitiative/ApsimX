@@ -7,7 +7,7 @@
       <Name>Test</Name>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>Tests\WeatherFiles\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
         <MaxT>12.300000190734863</MaxT>
         <MinT>7.9000000953674316</MinT>
         <Rain>9.6999998092651367</Rain>

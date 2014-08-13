@@ -50,28 +50,33 @@ namespace Utility
         /// <summary>
         /// Try to find an absolute path from a relative one
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">The relative path to find an abolsute for.</param>
+        /// <param name="SimPath">The file system path of a .apsimx file.</param>
         /// <returns></returns>
         public static string GetAbsolutePath(string path, string SimPath)
         {
-            //try to find a path relative to the ApsimX\bin directory
-            string NewPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), path);
-            if (File.Exists(NewPath))
-                return NewPath;
 
             //try to find a path relative to the .apsimx directory
-            NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+            string NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
             if (File.Exists(NewPath))
-                return NewPath;
-            else
-                return string.Empty;
+                return Path.GetFullPath(NewPath); //use this to strip any relative path leftovers.
+
+            //try to remove any overlapping path data
+            while (path.IndexOf(Path.DirectorySeparatorChar) != -1)
+            {
+                path = ReducePath(path);
+                NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+
+                if (File.Exists(NewPath))
+                    return NewPath;
+            }
+
+            return string.Empty;
         }
 
-        public static string GetAbsolutePath(string path)
+        private static string ReducePath(string path)
         {
-            return GetAbsolutePath(path, string.Empty);
+            return path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1, path.Length - path.IndexOf(Path.DirectorySeparatorChar)  - 1);
         }
-
     }
 }

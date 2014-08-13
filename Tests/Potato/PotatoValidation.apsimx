@@ -6,19 +6,19 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\potato_observations.txt</string>
+        <string>Observed\potato_observations.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\Potato_radint_observations.txt</string>
+        <string>Observed\Potato_radint_observations.txt</string>
       </FileNames>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
       <FileNames>
-        <string>Tests\Potato\Observed\cultivar_nodenumber.txt</string>
+        <string>Observed\cultivar_nodenumber.txt</string>
       </FileNames>
     </Input>
     <PredictedObserved>

@@ -431,7 +431,7 @@
         <Name>Base324</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
-          <FileName>Tests\WeatherFiles\Popondetta.met</FileName>
+          <FileName>..\WeatherFiles\Popondetta.met</FileName>
           <MaxT>33.5</MaxT>
           <MinT>22.100000381469727</MinT>
           <Rain>0</Rain>
@@ -3607,7 +3607,7 @@ namespace Models
         <Name>Base504</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
-          <FileName>Tests\WeatherFiles\Sagarai.met</FileName>
+          <FileName>..\WeatherFiles\Sagarai.met</FileName>
           <MaxT>30.100000381469727</MaxT>
           <MinT>27</MinT>
           <Rain>0.60000002384185791</Rain>
@@ -6023,7 +6023,7 @@ namespace Models
         <Name>Base212</Name>
         <WeatherFile>
           <Name>WeatherFile</Name>
-          <FileName>Tests\WeatherFiles\Hargy.met</FileName>
+          <FileName>..\WeatherFiles\Hargy.met</FileName>
           <MaxT>26.5</MaxT>
           <MinT>25.200000762939453</MinT>
           <Rain>0</Rain>
@@ -8095,7 +8095,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\OilPalm\observed.prn</string>
+        <string>observed.prn</string>
       </FileNames>
     </Input>
     <TimeSeriesStats>

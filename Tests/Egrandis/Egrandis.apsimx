@@ -6,7 +6,7 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Egrandis\EucalyptusValidationData.txt</string>
+        <string>EucalyptusValidationData.txt</string>
       </FileNames>
     </Input>
   </DataStore>

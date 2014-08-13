@@ -99,6 +99,8 @@ namespace Models
             get
             {
                 Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+
+                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
                     
                 string fullFileName = this.FileName;
                 if (this.FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(this.FileName) != this.FileName)

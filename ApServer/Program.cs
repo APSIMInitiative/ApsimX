@@ -14,13 +14,10 @@ using System.Xml;
 /***************************************************
  * This project is an attempt to try to get an Apsim
  * run working across multiple machines.
- *          *** EXPERIMENTAL ***
- *            NOT FOR RELEASE
+ *
  *  AUTHOR: Justin Fainges
  *  TCP Server adapted from http://tech.pro/tutorial/704/csharp-tutorial-simple-threaded-tcp-server
  *  
- * http://www.codeproject.com/Articles/1505/Create-your-own-Web-Server-using-C
- * http://tech.pro/tutorial/704/csharp-tutorial-simple-threaded-tcp-server
  ***************************************************/
 
 namespace ApServer
@@ -89,14 +86,14 @@ namespace ApServer
             finally
             {
                 tcpClient.Close();
-                Directory.Delete(userDir, true);
+              //  Directory.Delete(userDir, true);
             }
         }
 
         private void RunSimulations(string dir, NetworkStream stream)
         {
-            // First, remove all paths from file names
-            foreach (string s in Directory.GetFiles(dir, "*.apsimx"))
+            // First, change paths to external files
+            foreach (string s in Directory.GetFiles(dir, "*.apsimx", SearchOption.AllDirectories))
             {
                 XmlDocument doc = new XmlDocument();
                 XmlNode root;
@@ -107,11 +104,11 @@ namespace ApServer
 
                 nodes = root.SelectNodes("//WeatherFile/FileName");
                 foreach (XmlNode node in nodes)
-                    node.InnerText = Path.Combine(dir,Path.GetFileName(node.InnerText));
+                    node.InnerText = GetAbsolutePath(node.InnerText, s);
 
                 nodes = root.SelectNodes("//Input/FileNames/string");
                 foreach (XmlNode node in nodes)
-                    node.InnerText = Path.Combine(dir, Path.GetFileName(node.InnerText));
+                    node.InnerText = GetAbsolutePath(node.InnerText, s);
                 doc.Save(s);
             }
 
@@ -130,6 +127,33 @@ namespace ApServer
             SendCompletedData(dir, stream);
             
             Console.WriteLine("Run complete.");
+        }
+
+        private string GetAbsolutePath(string path, string SimPath)
+        {
+
+            //try to find a path relative to the .apsimx directory
+            string NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+            if (File.Exists(NewPath))
+                return Path.GetFullPath(NewPath); //use this to strip any relative path leftovers.
+
+            //try to remove any overlapping path data
+            while (path.IndexOf(Path.DirectorySeparatorChar) != -1)
+            {
+                path = ReducePath(path);
+                NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+
+                if (File.Exists(NewPath))
+                    return NewPath;
+            }
+
+            Console.WriteLine("Could not find path to file: " + path + "using: " + SimPath);
+            return "";
+        }
+
+        private string ReducePath(string path)
+        {
+            return path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1, path.Length - path.IndexOf(Path.DirectorySeparatorChar) - 1);
         }
 
         /// <summary>

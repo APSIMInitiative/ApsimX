@@ -19,7 +19,7 @@
     <Name>comparisons</Name>
     <WeatherFile>
       <Name>met</Name>
-      <FileName>Tests\WeatherFiles\WeeWaa1889_2012.met</FileName>
+      <FileName>..\WeatherFiles\WeeWaa1889_2012.met</FileName>
       <MaxT>35.5</MaxT>
       <MinT>19.5</MinT>
       <Rain>0</Rain>
@@ -874,7 +874,7 @@ namespace Models
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\ApsimComparisons\Apsim.out</string>
+        <string>Apsim.out</string>
       </FileNames>
     </Input>
   </DataStore>

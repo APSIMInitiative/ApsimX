@@ -19,7 +19,7 @@
     <Input>
       <Name>NZObservations</Name>
       <FileNames>
-        <string>Tests\Wheat\RainShelterBiomass.txt</string>
+        <string>RainShelterBiomass.txt</string>
       </FileNames>
     </Input>
     <AutoExport>false</AutoExport>
