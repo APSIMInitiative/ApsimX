@@ -52,7 +52,7 @@ namespace Models.PMF.Organs
         }
         public override void DoWaterUptake(double Demand) { }
         [XmlIgnore]
-        public override double FRGR { get { return 0; } set { } }
+        public override double FRGR { get { return 10000; } set { } } //Defalt is a rediculious value so Organs that don't over ride this with something sensible can be screaned easily
         public override void DoPotentialDM() { }
         public override void DoPotentialNutrient() { }
         public override void DoActualGrowth() { }

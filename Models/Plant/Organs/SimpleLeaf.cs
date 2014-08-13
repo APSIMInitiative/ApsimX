@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Functions.SupplyFunctions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -20,8 +22,7 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Parameters
-              [Link] Function  FTFunction = null;    // Temperature effect on Growth Interpolation Set
-              [Link] Function  FVPDFunction = null;   // VPD effect on Growth Interpolation Set
+              [Link] Function  FRGRFunction = null;   // VPD effect on Growth Interpolation Set
               [Link(IsOptional = true)] Function PotentialBiomass = null;
               [Link] Function DMDemandFunction = null;
               [Link(IsOptional = true)] Function CoverFunction = null;
@@ -44,35 +45,20 @@ namespace Models.PMF.Organs
                public double KDead { get; set; }                  // Extinction Coefficient (Dead)
                public double DeltaBiomass {get; set;}
                [Units("mm")]
-               public override double WaterDemand { get { return Plant.PotentialEP; } }
-               public double Transpiration { get { return EP; } }
-               [Units("mm")]
-               public double FRGR { get; set; }
-               public double Ft
+               public override double WaterDemand
                {
                    get
                    {
-                       double Tav = (MetData.MaxT + MetData.MinT) / 2.0;
-                       return FTFunction.Value;
+                       return Plant.PotentialEP;
+                   }
+                   set
+                   {
+                       Plant.PotentialEP = value;
                    }
                }
-               public double Fvpd
-        {
-            get
-            {
-                const double SVPfrac = 0.66;
-
-                double VPDmint = Utility.Met.svp(MetData.MinT) - MetData.VP;
-                VPDmint = Math.Max(VPDmint, 0.0);
-
-                double VPDmaxt = Utility.Met.svp(MetData.MaxT) - MetData.VP;
-                VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                double VPD = SVPfrac * VPDmaxt + (1.0 - SVPfrac) * VPDmint;
-
-                return FVPDFunction.Value;
-            }
-        }
+               public double Transpiration { get { return EP; } }
+               [Units("mm")]
+               public override double FRGR { get; set; }
                public double Fw
                {
                    get
@@ -102,7 +88,7 @@ namespace Models.PMF.Organs
                        return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
                    }
                }
-               public double CoverTot
+               public double CoverTotal
                {
                    get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
                }
@@ -144,14 +130,14 @@ namespace Models.PMF.Organs
             }
         }
              public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
-            }
-        }
+             {
+                 get
+                 {
+                     if (Photosynthesis != null)
+                         DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                     return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+                 }
+             }
              public override BiomassAllocationType DMAllocation
         {
             set
@@ -232,15 +218,16 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Evnets
-              public event NewCanopyDelegate New_Canopy;
+              public event NewCanopyDelegate NewCanopy;
               
               [EventSubscribe("DoDailyInitialisation")]
               private void OnDoDailyInitialisation(object sender, EventArgs e)
               {
                   if (PotentialBiomass != null)
                   {
-                      DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                      BiomassYesterday = PotentialBiomass.Value;
+                      //FIXME.  Have changed potential Biomass function to give delta rather than accumulation.  MCSP will need to be altered
+                      DeltaBiomass = PotentialBiomass.Value; //- BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                      //BiomassYesterday = PotentialBiomass.Value;
                   }
               
                   EP = 0;
@@ -248,20 +235,20 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Component Process Functions
-              private void PublishNewCanopyEvent()
-        {
-            if (New_Canopy != null)
-            {
-                Plant.LocalCanopyData.sender = Plant.Name;
-                Plant.LocalCanopyData.lai = (float)LAI;
-                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
-                Plant.LocalCanopyData.height = (float)Height;
-                Plant.LocalCanopyData.depth = (float)Height;
-                Plant.LocalCanopyData.cover = (float)CoverGreen;
-                Plant.LocalCanopyData.cover_tot = (float)CoverTot;
-                New_Canopy.Invoke(Plant.LocalCanopyData);
-            }
-        }
+              protected virtual void PublishNewCanopyEvent()
+              {
+                  if (NewCanopy != null)
+                  {
+                      Plant.LocalCanopyData.sender = Plant.Name;
+                      Plant.LocalCanopyData.lai = (float)LAI;
+                      Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                      Plant.LocalCanopyData.height = (float)Height;
+                      Plant.LocalCanopyData.depth = (float)Height;
+                      Plant.LocalCanopyData.cover = (float)CoverGreen;
+                      Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
+                      NewCanopy.Invoke(Plant.LocalCanopyData);
+                  }
+              }
               public override void OnCut()
         {
             Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
@@ -277,6 +264,7 @@ namespace Models.PMF.Organs
         #region Top Level time step functions
              public override void DoPotentialDM()
              {
+                 FRGR = FRGRFunction.Value;
                  if (CoverFunction != null)
                      LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
                  if (LAIFunction != null)
