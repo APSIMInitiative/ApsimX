@@ -33,13 +33,15 @@ namespace Models.PMF.Organs
               [Link(IsOptional = true)]  RUEModel Photosynthesis = null;
               [Link] Function HeightFunction = null;
               [Link (IsOptional = true)] Function LaiDeadFunction = null;
+              [Link(IsOptional = true)]  Function StructuralFraction = null;
         #endregion
                 
         #region States and variables
                private double _WaterAllocation;
                private double NShortage = 0;   //if an N Shoratge how Much;
                public double BiomassYesterday = 0;
-               
+               private double _StructuralFraction = 1;
+
                private double EP { get; set; }
                public double K {get; set;}                      // Extinction Coefficient (Green)
                public double KDead { get; set; }                  // Extinction Coefficient (Dead)
@@ -73,7 +75,11 @@ namespace Models.PMF.Organs
                }
                public double Fn
                {
-                   get { return 1; } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
+                   get 
+                   {
+                       double MaxNContent = Live.Wt * NConc.Value;
+                       return Live.N/MaxNContent; 
+                   } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
                }
                public double LAI { get; set; }
                public double LAIDead { get; set; }
@@ -146,24 +152,28 @@ namespace Models.PMF.Organs
             }
         }
              public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double NDeficit = 0;
-                if (NitrogenDemandSwitch == null)
-                    NDeficit = 0;
-                if (NitrogenDemandSwitch != null)
-                {
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-                }
-                if (NConc == null)
-                    NDeficit = 0;
-                else
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N);
-                return new BiomassPoolType { Structural = NDeficit };
-            }
-        }
+             {
+                 get
+                 {
+                     double StructuralDemand = 0; 
+                     double NDeficit = 0;
+                     if (NitrogenDemandSwitch == null)
+                         NDeficit = 0;
+                     if (NitrogenDemandSwitch != null)
+                     {
+                         if (NitrogenDemandSwitch.Value == 0)
+                             NDeficit = 0;
+                     }
+                     
+                     if (NConc == null)
+                         NDeficit = 0;
+                     else
+                     {
+                         StructuralDemand = NConc.Value * DeltaBiomass * _StructuralFraction;
+                         NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N) - StructuralDemand;
+                     } return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                 }
+             }
              public override BiomassAllocationType NAllocation
         {
             set
@@ -177,22 +187,21 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double NSupplyValue = value.Structural;
+                    double NSupplyValue = value.Structural + value.NonStructural;
 
                     if ((NSupplyValue > 0))
                     {
                         //What do we need to meat demand;
-                        double ReqN = NDemand.Structural;
+                        double ReqN = NDemand.Structural + NDemand.NonStructural;
 
                         if (ReqN == NSupplyValue)
                         {
                             // All OK add and leave
                             NShortage = 0;
 
-
-                            Live.StructuralN += ReqN;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
+                            Live.StructuralN += ReqN * StructuralFraction.Value;
+                            Live.MetabolicN += 0;
+                            Live.NonStructuralN += ReqN * (1 - StructuralFraction.Value);
                             return;
 
                         }
@@ -204,9 +213,9 @@ namespace Models.PMF.Organs
                         if (NSupplyValue < ReqN)
                         {
                             NShortage = ReqN - NSupplyValue;
-                            Live.StructuralN += NSupplyValue;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
+                            Live.StructuralN += Math.Min(NSupplyValue, NDemand.Structural);
+                            Live.MetabolicN += 0;
+                            Live.NonStructuralN += Math.Max(0,NSupplyValue - NDemand.Structural);
                             return;
                         }
 
@@ -215,6 +224,13 @@ namespace Models.PMF.Organs
                 }
             }
         }
+             public override double MinNconc
+             {
+                 get
+                 {
+                     return NConc.Value * StructuralFraction.Value;
+                 }
+             }
         #endregion
 
         #region Evnets
@@ -257,6 +273,9 @@ namespace Models.PMF.Organs
         }
               public override void OnSow(SowPlant2Type Data)
               {
+                  if (StructuralFraction != null)
+                      _StructuralFraction = StructuralFraction.Value;
+                
                   PublishNewCanopyEvent();
               }
         #endregion

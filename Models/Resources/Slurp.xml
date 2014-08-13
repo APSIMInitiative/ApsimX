@@ -112,6 +112,9 @@
 			<Name>HeightFunction</Name>
 			<Value>150</Value>
 		</Constant>
-
+		<Constant>
+			<Name>StructuralFraction</Name>
+			<Value>0.5</Value>
+		</Constant>
 	</SimpleLeaf>
 </Plant>
