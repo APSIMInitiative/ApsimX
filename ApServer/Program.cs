@@ -106,6 +106,10 @@ namespace ApServer
                 foreach (XmlNode node in nodes)
                     node.InnerText = GetAbsolutePath(node.InnerText, s);
 
+                nodes = root.SelectNodes("//Model/FileName");
+                foreach (XmlNode node in nodes)
+                    node.InnerText = GetAbsolutePath(node.InnerText, s);
+
                 nodes = root.SelectNodes("//Input/FileNames/string");
                 foreach (XmlNode node in nodes)
                     node.InnerText = GetAbsolutePath(node.InnerText, s);
