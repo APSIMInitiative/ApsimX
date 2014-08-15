@@ -131,8 +131,20 @@ namespace Models.PMF
         /// <summary>
         /// MicroClimate needs FRGR.
         /// </summary>
-        public double FRGR { get { return RUEModel.FRGR; } }
-
+        public double FRGR 
+        { 
+            get 
+            {
+                double frgr = 1;
+                foreach (Organ Child in Organs)
+                {
+                    if (Child.FRGR <= 1)
+                      frgr = Child.FRGR;
+                }
+                return frgr; 
+            } 
+        }
+            
         /// <summary>
         /// MicroClimate supplies light profile.
         /// </summary>
@@ -143,7 +155,7 @@ namespace Models.PMF
         /// MicroClimate supplies Potential EP
         /// </summary>
         [XmlIgnore]
-        public double PotentialEP { get; set; }
+        public double PotentialEP {get; set;}
 
         #region Links
         [Link]
@@ -176,7 +188,7 @@ namespace Models.PMF
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
-        public void Sow(string Cultivar, double Population = 0, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string Cultivar, double Population = 1, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = Population;
@@ -190,6 +202,9 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
+
+            //Set up CanopyData type
+            LocalCanopyData = new NewCanopyType();
 
             // Invoke a sowing event.
             if (Sowing != null)
@@ -205,8 +220,7 @@ namespace Models.PMF
             if (Phenology != null)
             Phenology.OnSow();
 
-            //Set up CanopyData tyep
-            LocalCanopyData = new NewCanopyType();
+            
        
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
