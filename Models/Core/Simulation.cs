@@ -86,7 +86,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = err.Message;
+                string Msg = "Simulation name: " + Name + "\r\n";
+                Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
@@ -101,7 +102,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = err.Message;
+                string Msg = "Simulation name: " + Name + "\r\n";
+                Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
