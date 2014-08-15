@@ -704,7 +704,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -714,7 +714,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -4320,7 +4320,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -4330,7 +4330,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -6452,7 +6452,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Variables.Set(OverRidePath, ResetValue);
+			Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -7967,7 +7967,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Variables.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -7977,7 +7977,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Variables.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;

@@ -74,7 +74,7 @@ namespace Models.PMF.Slurp
             for (int i = 0; i < kl.Length; i++)
                 kl[i] = 0.5;
 
-            bd = (double[])Soil.Water.Variables.Get("BD");
+            bd = (double[])Soil.Water.Get("BD");
             // Invoke a sowing event. Needed for MicroClimate
             if (StartSlurp != null)
                 StartSlurp.Invoke(this, new EventArgs());

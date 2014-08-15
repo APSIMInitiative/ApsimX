@@ -13,15 +13,19 @@
     [Serializable]
     public class VariableObject : IVariable
     {
-        private object Obj;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public VariableObject(object model)
         {
-            Obj = model;
+            Object = model;
         }
+
+        /// <summary>
+        /// Gets or sets the object this variable is relative to
+        /// </summary>
+        public override object Object { get; set; }
 
         /// <summary>
         /// Return the name of the property.
@@ -30,7 +34,7 @@
         {
             get
             {
-                return Utility.Reflection.GetValueOfFieldOrProperty("Name", Obj) as string;
+                return Utility.Reflection.GetValueOfFieldOrProperty("Name", Object) as string;
             }
         }
 
@@ -41,11 +45,11 @@
         {
             get
             {
-                return Obj;
+                return Object;
             }
             set
             {
-                Obj = value;
+                Object = value;
             }
         }
 
@@ -81,7 +85,6 @@
     [Serializable]
     public class VariableField : IVariable
     {
-        private object Obj;
         private FieldInfo FieldInfo;
 
         /// <summary>
@@ -91,9 +94,14 @@
         {
             if (model == null || fieldInfo == null)
                 throw new Exception("Cannot create an instance of class VariableField with a null model or fieldInfo");
-            Obj = model;
+            Object = model;
             FieldInfo = fieldInfo;
         }
+
+        /// <summary>
+        /// Gets or sets the object this variable is relative to
+        /// </summary>
+        public override object Object { get; set; }
 
         /// <summary>
         /// Return the name of the property.
@@ -118,11 +126,11 @@
         { 
             get 
             { 
-                return FieldInfo.GetValue(Obj); 
+                return FieldInfo.GetValue(Object); 
             }
             set
             {
-                FieldInfo.SetValue(Obj, value);
+                FieldInfo.SetValue(Object, value);
             }
         }
 

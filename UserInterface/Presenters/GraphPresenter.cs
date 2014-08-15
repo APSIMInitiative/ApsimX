@@ -601,7 +601,7 @@ namespace UserInterface.Presenters
                 if (graphValues.TableName == null && graphValues.FieldName != null)
                 {
                     // Use reflection to access a property.
-                    object Obj = graph.Variables.Get(graphValues.FieldName);
+                    object Obj = graph.Get(graphValues.FieldName);
                     if (Obj != null && Obj.GetType().IsArray)
                         return Obj as Array;
                 }

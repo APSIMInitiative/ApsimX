@@ -20,8 +20,6 @@ namespace Models.Core
     {
         private string _Name = null;
         private Model _Parent = null;
-        [NonSerialized] private Variables _Variables;
-        [NonSerialized] private Scope _Scope;
         [NonSerialized] private Events _Events;
 
 
@@ -262,8 +260,6 @@ namespace Models.Core
             set
             {
                 _Parent = value;
-                _Variables = new Core.Variables(this);
-                _Scope = new Core.Scope(this);
                 _Events = new Core.Events(this);
                 CalcFullPath();
             }
@@ -302,14 +298,73 @@ namespace Models.Core
         public ModelCollection Children { get; private set;}
 
         /// <summary>
-        /// Provides access to all simulation variables.
+        /// Get the value of a variable or model.
         /// </summary>
-        public Variables Variables { get { return _Variables; } }
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public object Get(string namePath)
+        {
+            return Locater.Get(namePath, this);
+        }
 
         /// <summary>
-        /// Provides access to all simulation models that are in scope.
+        /// Get the underlying variable object for the given path.
         /// </summary>
-        public Scope Scope { get { return _Scope; } }
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public IVariable GetVariableObject(string namePath)
+        {
+            return Locater.GetInternal(namePath, this);
+        }
+
+        /// <summary>
+        /// Set the value of a variable. Will throw if variable doesn't exist.
+        /// </summary>
+        /// <param name="namePath">The name of the object to set</param>
+        /// <param name="value">The value to set the property to</param>
+        public void Set(string namePath, object value)
+        {
+            Locater.Set(namePath, this, value);
+        }
+
+        /// <summary>
+        /// Return a model with the specified name is in scope. Returns null if none found.
+        /// </summary>
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found model or null if not found</returns>
+        public Model Find(string namePath)
+        {
+            return Locater.Find(namePath, this);
+        }
+
+        /// <summary>
+        /// Return a model with the specified type that is in scope. Returns null if none found.
+        /// </summary>
+        /// <param name="type">The type of the object to return</param>
+        /// <returns>The found model or null if not found</returns>
+        public Model Find(Type type)
+        {
+            return Locater.Find(type, this);
+        }
+
+        /// <summary>
+        /// Return all models within scope.
+        /// </summary>
+        /// <returns>The found models or an empty array if not found.</returns>
+        public Model[] FindAll()
+        {
+            return Locater.FindAll(this);
+        }
+
+        /// <summary>
+        /// Return all models of the specified type within scope.
+        /// </summary>
+        /// <param name="type">The type of the models to return</param>
+        /// <returns>The found models or an empty array if not found.</returns>
+        public Model[] FindAll(Type type)
+        {
+            return Locater.FindAll(type, this);
+        }
 
         /// <summary>
         /// Providees access to all simulation events that are in scope.
@@ -449,7 +504,7 @@ namespace Models.Core
                     object linkedObject = null;
                     
                     Model[] allMatches;
-                    allMatches = model.Scope.FindAll(field.FieldType);
+                    allMatches = model.FindAll(field.FieldType);
                     if (allMatches.Length == 1)
                         linkedObject = allMatches[0];
                     else
@@ -500,8 +555,28 @@ namespace Models.Core
         /// </summary>
         private static void ResolveExternalLinks(Model model)
         {
-            foreach (Model externalModel in model.Scope.FindAll())
+            foreach (Model externalModel in model.FindAll())
                 ResolveLinksInternal(externalModel, typeof(Model));
+        }
+
+        /// <summary>
+        /// Return the parent simulation
+        /// </summary>
+        private Locater Locater
+        {
+            get
+            {
+                Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                if (simulation == null)
+                {
+                    // Simulation can be null if this model is not under a simulation e.g. DataStore.
+                    return new Locater();
+                }
+                else
+                {
+                    return simulation.Locater;
+                }
+            }
         }
 
         #endregion

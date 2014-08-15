@@ -25,10 +25,10 @@ namespace Models.PMF.Functions.DemandFunctions
             get
             {
                 double returnValue = 0.0;
-                object XValue = this.Variables.Get(XProperty);
+                object XValue = this.Get(XProperty);
                 if (XValue == null)
                     throw new Exception("Cannot find variable: " + XProperty + " in function: " + this.Name);
-                object YValue = this.Variables.Get(YProperty);
+                object YValue = this.Get(YProperty);
                 if (YValue == null)
                     throw new Exception("Cannot find variable: " + YProperty + " in function: " + this.Name);
 

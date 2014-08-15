@@ -51,7 +51,7 @@ namespace Models.Core
                 throw new ApsimXException(string.Empty, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
             
-            this.Model = model;
+            this.Object = model;
             this.property = property;
             if (arraySpecifier != null)
             {
@@ -73,7 +73,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the underlying model that this property belongs to.
         /// </summary>
-        public object Model { get; set; }
+        public override object Object { get; set; }
 
         /// <summary>
         /// Return the name of the property.
@@ -99,9 +99,9 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Model is SoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    return (this.Model as SoilCrop).Name + " " + descriptionAttribute.ToString();
+                    return (this.Object as SoilCrop).Name + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
@@ -118,15 +118,15 @@ namespace Models.Core
                 // Get units from property
                 string unitString = null;
                 UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Model.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsToStringInfo = this.Model.GetType().GetMethod(this.property.Name + "UnitsToString");
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                MethodInfo unitsToStringInfo = this.Object.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
                 }
                 else if (unitsToStringInfo != null)
                 {
-                    unitString = (string)unitsToStringInfo.Invoke(this.Model, new object[] { null });
+                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 }
 
                 return unitString;
@@ -161,10 +161,10 @@ namespace Models.Core
         {
             get
             {
-                PropertyInfo metadataInfo = this.Model.GetType().GetProperty(this.property.Name + "Metadata");
+                PropertyInfo metadataInfo = this.Object.GetType().GetProperty(this.property.Name + "Metadata");
                 if (metadataInfo != null)
                 {
-                    string[] metadata = metadataInfo.GetValue(this.Model, null) as string[];
+                    string[] metadata = metadataInfo.GetValue(this.Object, null) as string[];
                     if (metadata != null)
                     {
                         return metadata;
@@ -193,7 +193,7 @@ namespace Models.Core
         {
             get
             {
-                object obj = this.property.GetValue(this.Model, null);
+                object obj = this.property.GetValue(this.Object, null);
 
                 if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
                 {
@@ -213,8 +213,8 @@ namespace Models.Core
 
             set
             {
-                previousValue = this.property.GetValue(this.Model, null);
-                this.property.SetValue(this.Model, value, null);
+                previousValue = this.property.GetValue(this.Object, null);
+                this.property.SetValue(this.Object, value, null);
             }
         }
 
@@ -327,9 +327,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Model is SoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    return (this.Model as SoilCrop).Name;
+                    return (this.Object as SoilCrop).Name;
                 }
 
                 return null;

@@ -353,7 +353,7 @@ namespace Models
             BalanceCanopyEnergy();
 
             // Loop through all crops and get their potential growth for today.
-            foreach (ICrop crop in Scope.FindAll(typeof(ICrop)))
+            foreach (ICrop crop in FindAll(typeof(ICrop)))
             {
                 int senderIdx = FindComponentIndex(crop.CropType);
                 if (senderIdx < 0)
@@ -975,7 +975,7 @@ namespace Models
             double windspeed = windspeed_default;
             if (!windspeed_checked)
             {
-                object val = this.Variables.Get("windspeed");
+                object val = this.Get("windspeed");
                 use_external_windspeed = val != null;
                 if (use_external_windspeed)
                     windspeed = (double)val;

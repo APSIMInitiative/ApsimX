@@ -49,7 +49,7 @@ namespace Models.PMF
         /// </summary>
         public static object GetVariable(string namePath, Model relativeTo)
         {
-            return relativeTo.Variables.Get(namePath);
+            return relativeTo.Get(namePath);
         }
 
         public static void ZeroArray(double[] Arr)

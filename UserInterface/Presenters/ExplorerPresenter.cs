@@ -385,7 +385,7 @@ namespace UserInterface.Presenters
         private void OnPopulateContextMenu(object sender, MenuDescriptionArgs e)
         {
             // Get the selected model.
-            object SelectedModel = ApsimXFile.Variables.Get(View.CurrentNodePath);
+            object SelectedModel = ApsimXFile.Get(View.CurrentNodePath);
 
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo Method in typeof(ContextMenu).GetMethods())
@@ -423,7 +423,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
+                Model Model = ApsimXFile.Get(e.NodePath) as Model;
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Children.All)
@@ -461,7 +461,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model Obj = ApsimXFile.Variables.Get(e.NodePath) as Model;
+            Model Obj = ApsimXFile.Get(e.NodePath) as Model;
             if (Obj != null)
             {
                 string xml = Obj.Serialise();
@@ -482,7 +482,7 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            Model DestinationModel = ApsimXFile.Variables.Get(e.NodePath) as Model;
+            Model DestinationModel = ApsimXFile.Get(e.NodePath) as Model;
             if (DestinationModel != null)
             {
                 DragObject DragObject = e.DragObject as DragObject;
@@ -506,7 +506,7 @@ namespace UserInterface.Presenters
         private void OnDrop(object sender, DropArgs e)
         {
             string ToParentPath = e.NodePath;
-            Model ToParent = ApsimXFile.Variables.Get(ToParentPath) as Model;
+            Model ToParent = ApsimXFile.Get(ToParentPath) as Model;
 
             DragObject DragObject = e.DragObject as DragObject;
             if (DragObject != null && ToParent != null)
@@ -521,7 +521,7 @@ namespace UserInterface.Presenters
                 {
                     if (FromParentPath != ToParentPath)
                     {
-                        Model FromModel = ApsimXFile.Variables.Get(DragObject.NodePath) as Model;
+                        Model FromModel = ApsimXFile.Get(DragObject.NodePath) as Model;
                         if (FromModel != null)
                         {
                             Cmd = new MoveModelCommand(FromModel, ToParent);
@@ -544,7 +544,7 @@ namespace UserInterface.Presenters
             {
                 if (IsValidName(e.NewName))
                 {
-                    Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
+                    Model Model = ApsimXFile.Get(e.NodePath) as Model;
                     if (Model != null && Model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != "")
                     {
                         HideRightHandPanel();
@@ -569,7 +569,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnMoveUp(object sender, EventArgs e)
         {
-            Model model = ApsimXFile.Variables.Get(View.CurrentNodePath) as Model;
+            Model model = ApsimXFile.Get(View.CurrentNodePath) as Model;
             
             if (model != null && model.Parent != null)
             {
@@ -584,7 +584,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnMoveDown(object sender, EventArgs e)
         {
-            Model model = ApsimXFile.Variables.Get(View.CurrentNodePath) as Model;
+            Model model = ApsimXFile.Get(View.CurrentNodePath) as Model;
 
             if (model != null && model.Parent != null)
             {
@@ -651,7 +651,7 @@ namespace UserInterface.Presenters
         {
             if (View.CurrentNodePath != "")
             {
-                object Model = ApsimXFile.Variables.Get(View.CurrentNodePath);
+                object Model = ApsimXFile.Get(View.CurrentNodePath);
 
                 if (Model != null)
                 {
@@ -696,7 +696,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelStructureChanged(string ModelPath)
         {
-            Model Model = ApsimXFile.Variables.Get(ModelPath) as Model;
+            Model Model = ApsimXFile.Get(ModelPath) as Model;
             View.InvalidateNode(ModelPath, GetNodeDescription(Model));
         }
 
