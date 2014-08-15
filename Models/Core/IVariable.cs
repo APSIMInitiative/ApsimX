@@ -20,6 +20,11 @@ namespace Models.Core
         public abstract string Name { get; }
 
         /// <summary>
+        /// Gets or sets the object this variable is relative to
+        /// </summary>
+        public abstract object Object { get; set; }
+
+        /// <summary>
         /// Gets or sets the value of the property.
         /// </summary>
         public abstract object Value { get; set; }

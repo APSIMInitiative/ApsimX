@@ -69,7 +69,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (this.Scope.Find(Plant.Name + "Root") != null)
+                if (this.Find(Plant.Name + "Root") != null)
                     return true;
                 else
                     return false;
@@ -92,7 +92,7 @@ namespace Models.PMF.Organs
                 double[] SWSupply;
                 if (TalkDirectlyToRoot)
                 {
-                    SWSupply = (double[])this.Variables.Get(OurName + "Root.SWSupply");
+                    SWSupply = (double[])this.Get(OurName + "Root.SWSupply");
                     return Utility.Math.Sum(SWSupply);
                 }
 

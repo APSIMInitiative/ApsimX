@@ -258,7 +258,7 @@ namespace Models
 
         public object Get(string name)
         {
-            return base.Variables.Get(name);
+            return base.Get(name);
         }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.

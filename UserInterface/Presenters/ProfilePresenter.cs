@@ -110,7 +110,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.parentZone = this.model.Scope.Find(typeof(Zone)) as Zone;
+                this.parentZone = this.model.Find(typeof(Zone)) as Zone;
                 if (this.parentZone != null)
                 {
                     this.parentZone.Children.Add(this.graph);
@@ -387,7 +387,7 @@ namespace UserInterface.Presenters
                         // Store the property change.
                         Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
                         property.Name = this.propertiesInGrid[i].Name;
-                        property.Obj = this.propertiesInGrid[i].Model;
+                        property.Obj = this.propertiesInGrid[i].Object;
                         property.NewValue = values;
                         properties.Add(property);
                     }

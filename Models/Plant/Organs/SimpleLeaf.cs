@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Functions.SupplyFunctions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -20,8 +22,7 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Parameters
-              [Link] Function  FTFunction = null;    // Temperature effect on Growth Interpolation Set
-              [Link] Function  FVPDFunction = null;   // VPD effect on Growth Interpolation Set
+              [Link] Function  FRGRFunction = null;   // VPD effect on Growth Interpolation Set
               [Link(IsOptional = true)] Function PotentialBiomass = null;
               [Link] Function DMDemandFunction = null;
               [Link(IsOptional = true)] Function CoverFunction = null;
@@ -32,47 +33,34 @@ namespace Models.PMF.Organs
               [Link(IsOptional = true)]  RUEModel Photosynthesis = null;
               [Link] Function HeightFunction = null;
               [Link (IsOptional = true)] Function LaiDeadFunction = null;
+              [Link(IsOptional = true)]  Function StructuralFraction = null;
         #endregion
                 
         #region States and variables
                private double _WaterAllocation;
                private double NShortage = 0;   //if an N Shoratge how Much;
                public double BiomassYesterday = 0;
-               
+               private double _StructuralFraction = 1;
+
                private double EP { get; set; }
                public double K {get; set;}                      // Extinction Coefficient (Green)
                public double KDead { get; set; }                  // Extinction Coefficient (Dead)
                public double DeltaBiomass {get; set;}
                [Units("mm")]
-               public override double WaterDemand { get { return Plant.PotentialEP; } }
-               public double Transpiration { get { return EP; } }
-               [Units("mm")]
-               public double FRGR { get; set; }
-               public double Ft
+               public override double WaterDemand
                {
                    get
                    {
-                       double Tav = (MetData.MaxT + MetData.MinT) / 2.0;
-                       return FTFunction.Value;
+                       return Plant.PotentialEP;
+                   }
+                   set
+                   {
+                       Plant.PotentialEP = value;
                    }
                }
-               public double Fvpd
-        {
-            get
-            {
-                const double SVPfrac = 0.66;
-
-                double VPDmint = Utility.Met.svp(MetData.MinT) - MetData.VP;
-                VPDmint = Math.Max(VPDmint, 0.0);
-
-                double VPDmaxt = Utility.Met.svp(MetData.MaxT) - MetData.VP;
-                VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                double VPD = SVPfrac * VPDmaxt + (1.0 - SVPfrac) * VPDmint;
-
-                return FVPDFunction.Value;
-            }
-        }
+               public double Transpiration { get { return EP; } }
+               [Units("mm")]
+               public override double FRGR { get; set; }
                public double Fw
                {
                    get
@@ -87,7 +75,11 @@ namespace Models.PMF.Organs
                }
                public double Fn
                {
-                   get { return 1; } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
+                   get 
+                   {
+                       double MaxNContent = Live.Wt * NConc.Value;
+                       return Live.N/MaxNContent; 
+                   } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
                }
                public double LAI { get; set; }
                public double LAIDead { get; set; }
@@ -102,7 +94,7 @@ namespace Models.PMF.Organs
                        return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
                    }
                }
-               public double CoverTot
+               public double CoverTotal
                {
                    get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
                }
@@ -144,14 +136,14 @@ namespace Models.PMF.Organs
             }
         }
              public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
-            }
-        }
+             {
+                 get
+                 {
+                     if (Photosynthesis != null)
+                         DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                     return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+                 }
+             }
              public override BiomassAllocationType DMAllocation
         {
             set
@@ -160,24 +152,28 @@ namespace Models.PMF.Organs
             }
         }
              public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double NDeficit = 0;
-                if (NitrogenDemandSwitch == null)
-                    NDeficit = 0;
-                if (NitrogenDemandSwitch != null)
-                {
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-                }
-                if (NConc == null)
-                    NDeficit = 0;
-                else
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N);
-                return new BiomassPoolType { Structural = NDeficit };
-            }
-        }
+             {
+                 get
+                 {
+                     double StructuralDemand = 0; 
+                     double NDeficit = 0;
+                     if (NitrogenDemandSwitch == null)
+                         NDeficit = 0;
+                     if (NitrogenDemandSwitch != null)
+                     {
+                         if (NitrogenDemandSwitch.Value == 0)
+                             NDeficit = 0;
+                     }
+                     
+                     if (NConc == null)
+                         NDeficit = 0;
+                     else
+                     {
+                         StructuralDemand = NConc.Value * DeltaBiomass * _StructuralFraction;
+                         NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DeltaBiomass) - Live.N) - StructuralDemand;
+                     } return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                 }
+             }
              public override BiomassAllocationType NAllocation
         {
             set
@@ -191,22 +187,21 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double NSupplyValue = value.Structural;
+                    double NSupplyValue = value.Structural + value.NonStructural;
 
                     if ((NSupplyValue > 0))
                     {
                         //What do we need to meat demand;
-                        double ReqN = NDemand.Structural;
+                        double ReqN = NDemand.Structural + NDemand.NonStructural;
 
                         if (ReqN == NSupplyValue)
                         {
                             // All OK add and leave
                             NShortage = 0;
 
-
-                            Live.StructuralN += ReqN;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
+                            Live.StructuralN += ReqN * StructuralFraction.Value;
+                            Live.MetabolicN += 0;
+                            Live.NonStructuralN += ReqN * (1 - StructuralFraction.Value);
                             return;
 
                         }
@@ -218,9 +213,9 @@ namespace Models.PMF.Organs
                         if (NSupplyValue < ReqN)
                         {
                             NShortage = ReqN - NSupplyValue;
-                            Live.StructuralN += NSupplyValue;
-                            Live.MetabolicN += 0;//Then partition N to Metabolic
-                            Live.NonStructuralN += 0;
+                            Live.StructuralN += Math.Min(NSupplyValue, NDemand.Structural);
+                            Live.MetabolicN += 0;
+                            Live.NonStructuralN += Math.Max(0,NSupplyValue - NDemand.Structural);
                             return;
                         }
 
@@ -229,18 +224,26 @@ namespace Models.PMF.Organs
                 }
             }
         }
+             public override double MinNconc
+             {
+                 get
+                 {
+                     return NConc.Value * StructuralFraction.Value;
+                 }
+             }
         #endregion
 
         #region Evnets
-              public event NewCanopyDelegate New_Canopy;
+              public event NewCanopyDelegate NewCanopy;
               
               [EventSubscribe("DoDailyInitialisation")]
               private void OnDoDailyInitialisation(object sender, EventArgs e)
               {
                   if (PotentialBiomass != null)
                   {
-                      DeltaBiomass = PotentialBiomass.Value - BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                      BiomassYesterday = PotentialBiomass.Value;
+                      //FIXME.  Have changed potential Biomass function to give delta rather than accumulation.  MCSP will need to be altered
+                      DeltaBiomass = PotentialBiomass.Value; //- BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                      //BiomassYesterday = PotentialBiomass.Value;
                   }
               
                   EP = 0;
@@ -248,20 +251,20 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Component Process Functions
-              private void PublishNewCanopyEvent()
-        {
-            if (New_Canopy != null)
-            {
-                Plant.LocalCanopyData.sender = Plant.Name;
-                Plant.LocalCanopyData.lai = (float)LAI;
-                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
-                Plant.LocalCanopyData.height = (float)Height;
-                Plant.LocalCanopyData.depth = (float)Height;
-                Plant.LocalCanopyData.cover = (float)CoverGreen;
-                Plant.LocalCanopyData.cover_tot = (float)CoverTot;
-                New_Canopy.Invoke(Plant.LocalCanopyData);
-            }
-        }
+              protected virtual void PublishNewCanopyEvent()
+              {
+                  if (NewCanopy != null)
+                  {
+                      Plant.LocalCanopyData.sender = Plant.Name;
+                      Plant.LocalCanopyData.lai = (float)LAI;
+                      Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
+                      Plant.LocalCanopyData.height = (float)Height;
+                      Plant.LocalCanopyData.depth = (float)Height;
+                      Plant.LocalCanopyData.cover = (float)CoverGreen;
+                      Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
+                      NewCanopy.Invoke(Plant.LocalCanopyData);
+                  }
+              }
               public override void OnCut()
         {
             Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
@@ -270,6 +273,9 @@ namespace Models.PMF.Organs
         }
               public override void OnSow(SowPlant2Type Data)
               {
+                  if (StructuralFraction != null)
+                      _StructuralFraction = StructuralFraction.Value;
+                
                   PublishNewCanopyEvent();
               }
         #endregion
@@ -277,6 +283,7 @@ namespace Models.PMF.Organs
         #region Top Level time step functions
              public override void DoPotentialDM()
              {
+                 FRGR = FRGRFunction.Value;
                  if (CoverFunction != null)
                      LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
                  if (LAIFunction != null)

@@ -200,7 +200,7 @@ namespace Models.PMF.OldPlant
 
             if (SwimIsPresent)
             {
-                dlt_sw_dep = (double[])this.Variables.Get("uptake_water_" + Plant.CropType);
+                dlt_sw_dep = (double[])this.Get("uptake_water_" + Plant.CropType);
                 dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
             else

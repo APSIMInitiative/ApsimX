@@ -270,8 +270,7 @@ namespace Models.Core
             Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
-                simulation.VariableCache.Clear();
-                simulation.ScopeCache.Clear();
+                simulation.Locater.Clear();
             }
         }
 

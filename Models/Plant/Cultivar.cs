@@ -81,7 +81,7 @@ namespace Models.PMF
 
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
-                        VariableProperty property = model.Variables.GetVariableObject(propertyName) as VariableProperty;
+                        VariableProperty property = model.GetVariableObject(propertyName) as VariableProperty;
                         if (property != null)
                         {
                             property.ValueWithArrayHandling = propertyValue;

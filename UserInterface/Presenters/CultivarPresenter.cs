@@ -105,7 +105,7 @@ namespace UserInterface.Presenters
                 e.ObjectName = ".";
             }
 
-            object o = this.cultivar.Variables.Get(e.ObjectName);
+            object o = this.cultivar.Get(e.ObjectName);
 
             if (o != null)
             {

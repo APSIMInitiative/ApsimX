@@ -17,7 +17,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                object val = this.Variables.Get("ClimateControl.PhotoPeriod");
+                object val = this.Get("ClimateControl.PhotoPeriod");
                 //If simulatation environment has a variable called ClimateControl.PhotoPeriod will use that other wise calculate from day and location
                 if (val != null)  //FIXME.  If climatecontrol does not contain a variable called photoperiod it still returns a value of zero.
                 {

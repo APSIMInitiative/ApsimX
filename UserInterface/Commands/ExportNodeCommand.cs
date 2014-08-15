@@ -39,7 +39,7 @@ namespace UserInterface.Commands
         public void Do(CommandHistory CommandHistory)
         {
             // Get the model we are to export.
-            Model modelToExport = ExplorerPresenter.ApsimXFile.Variables.Get(NodePath) as Model;
+            Model modelToExport = ExplorerPresenter.ApsimXFile.Get(NodePath) as Model;
             if (modelToExport != null)
                 DoExport(modelToExport, FolderPath);
         }

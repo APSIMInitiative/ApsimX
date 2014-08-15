@@ -305,7 +305,7 @@ namespace Models.PMF.Organs
         }
 
         [Units("0-1")]
-        public double FRGR { get { return Photosynthesis.FRGR; } }
+        public override double FRGR { get { return Photosynthesis.FRGR; } }
         
         [Units("0-1")]
         public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); } }

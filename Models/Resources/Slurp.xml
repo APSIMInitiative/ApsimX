@@ -1,6 +1,6 @@
  <Plant>
 	<Name>Slurp</Name>
-	<CropType>Potato</CropType>
+	<CropType>Slurp</CropType>
 	<Cultivar>
 		<Name>StaticCrop</Name>
 		<Alias>StaticCrop</Alias>
@@ -68,7 +68,7 @@
 			<Name>KLModifier</Name>
 			<Value>1</Value>
 		</Constant>
-		<InitialDM>0</InitialDM>
+		<InitialDM>50</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
 		<KNO3>0.02</KNO3>
 		<KNH4>0</KNH4>
@@ -82,13 +82,9 @@
 			<Name>Dead</Name>
 		</Biomass>
 		<Constant>
-			<Name>FTFunction</Name>
+			<Name>FRGRFunction</Name>
 			<Value>1</Value>
 		</Constant>	  
-		<Constant>
-			<Name>FVPDFunction</Name>
-			<Value>1</Value>
-		</Constant>
 		<Constant>
 			<Name>PotentialBiomass</Name>
 			<Value>5</Value>
@@ -116,6 +112,9 @@
 			<Name>HeightFunction</Name>
 			<Value>150</Value>
 		</Constant>
-
+		<Constant>
+			<Name>StructuralFraction</Name>
+			<Value>0.5</Value>
+		</Constant>
 	</SimpleLeaf>
 </Plant>
