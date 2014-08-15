@@ -34,7 +34,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Variables.Set(OverRidePath, ResetValue);
+			Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -466,7 +466,7 @@ namespace Models
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>1998-10-14T00:00:00</SowingDate>
+          <SowingDate>14/10/1998 12:00:00 AM</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
@@ -606,7 +606,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Variables.Get("[Slurp].Root.NUptake");
+			AccumPlantN -= (double)Get("[Slurp].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -616,8 +616,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)Variables.Get("[Slurp].Leaf.Transpiration");
-            AccumEP -= (double)Variables.Get("[Slurp].Root.WaterUptake");
+			//AccumEP -= (double)Get("[Slurp].Leaf.Transpiration");
+            AccumEP -= (double)Get("[Slurp].Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -783,7 +783,7 @@ namespace Models
         <Script>
           <OverRidePath>[Slurp].Leaf.LAIFunction.value</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
-          <ChangeDate>1998-11-14T00:00:00</ChangeDate>
+          <ChangeDate>14/11/1998 12:00:00 AM</ChangeDate>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -813,7 +813,7 @@ namespace Models
             if (Clock.Today.Date == ChangeDate)
             {
 			object ResetValue = OverRideInterger;
-			Variables.Set(OverRidePath, ResetValue);
+			Set(OverRidePath, ResetValue);
 			}
 	    }
 	}
