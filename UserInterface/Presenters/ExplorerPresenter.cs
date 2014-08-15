@@ -225,11 +225,20 @@ namespace UserInterface.Presenters
         private void WriteLoadErrors()
         {
             if (ApsimXFile.LoadErrors != null)
-                foreach (ApsimXException err in ApsimXFile.LoadErrors)
+                foreach (Exception err in ApsimXFile.LoadErrors)
                 {
-                    string message = String.Format("{0}:\n{1}", new object[] {
-                                                    err.ModelFullPath,
+                    string message;
+                    if (err is ApsimXException)
+                    {
+                        message = String.Format("{0}:\n{1}", new object[] {
+                                                    (err as ApsimXException).ModelFullPath,
                                                     err.Message});
+                    }
+                    else
+                    {
+                        message = String.Format("{0}", new object[] {
+                                                    err.Message + "\r\n" + err.StackTrace});
+                    }
                     View.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
         }
@@ -285,7 +294,7 @@ namespace UserInterface.Presenters
         {
             HideRightHandPanel();
             // Get a complete list of all models in this file.
-            List<Model> allModels = ApsimXFile.Children.AllRecursively;
+            List<Model> allModels = ApsimXFile.Children.AllRecursivelyVisible;
 
             // If the current node path is '.Simulations' (the root node) then
             // select the first item in the 'allModels' list.
@@ -309,12 +318,38 @@ namespace UserInterface.Presenters
                 throw new Exception("Cannot find the current selected model in the .apsimx file");
 
             // If the current model is the last one in the list then return false.
-            if (index == allModels.Count - 1)
+            if (index >= allModels.Count - 1)
                 return false;
 
             // Select the next node.
             View.CurrentNodePath = allModels[index + 1].FullPath;
             return true;
+        }
+
+        /// <summary>
+        /// String must have all alpha numeric or '_' characters
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>True if all chars are alpha numerics and str is not null</returns>
+        public bool IsValidName(string str)
+        {
+            bool valid = true;
+            //test for invalid characters
+            if (!string.IsNullOrEmpty(str))
+            {
+                int i = 0;
+                while (valid && (i < str.Length))
+                {
+                    if (!(char.IsLetter(str[i])) && (!(char.IsNumber(str[i]))) && (str[i] != '_'))
+                        valid = false;
+                    i++;
+                }
+            }
+            else
+            {
+                valid = false;
+            }
+            return valid;
         }
 
         #region Events from view
@@ -392,8 +427,12 @@ namespace UserInterface.Presenters
                 if (Model != null)
                 {
                     foreach (Model ChildModel in Model.Children.All)
-                        if (!(ChildModel.Name == "Script"))
+                    {
+                        if (!ChildModel.IsHidden)
+                        {
                             e.Descriptions.Add(GetNodeDescription(ChildModel));
+                        }
+                    }
                 }
             }
         }
@@ -500,16 +539,29 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
-            if (Model != null && Model.GetType().Name != "Simulations" && e.NewName != null && e.NewName != "")
+            e.CancelEdit = false;
+            if (e.NewName != null)
             {
-                HideRightHandPanel();
-                string ParentModelPath = Utility.String.ParentName(e.NodePath);
-                RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
-                CommandHistory.Add(Cmd);
-                View.CurrentNodePath = ParentModelPath + "." + e.NewName;
-                ShowRightHandPanel();
-            }            
+                if (IsValidName(e.NewName))
+                {
+                    Model Model = ApsimXFile.Variables.Get(e.NodePath) as Model;
+                    if (Model != null && Model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != "")
+                    {
+                        HideRightHandPanel();
+                        string ParentModelPath = Utility.String.ParentName(e.NodePath);
+                        RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
+                        CommandHistory.Add(Cmd);
+                        View.CurrentNodePath = ParentModelPath + "." + e.NewName;
+                        ShowRightHandPanel();
+                    }
+                }
+                else
+                {
+                    ShowMessage("Use alpha numeric characters only!", DataStore.ErrorLevel.Error);
+                    e.CancelEdit = true;
+                }
+            }
+
         }
 
         /// <summary>
@@ -555,8 +607,28 @@ namespace UserInterface.Presenters
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = Model.Name;
             description.ResourceNameForImage = Model.GetType().Name + "16";
-            description.HasChildren = Model.Children.All.Count > 0;
+            description.HasChildren = this.SomeChildrenVisible(Model);
             return description;
+        }
+
+        /// <summary>
+        /// Returns true if some children of the specified model are visible (not hidden)
+        /// </summary>
+        /// <param name="model">Look at this models children</param>
+        /// <returns>True if some are visible</returns>
+        private bool SomeChildrenVisible(Model model)
+        {
+            if (model.Children.All.Count > 0)
+            {
+                foreach (Model child in model.Children.All)
+                {
+                    if (!child.IsHidden)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

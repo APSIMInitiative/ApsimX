@@ -56,7 +56,7 @@ namespace UserInterface.Views
         {
             get
             {
-                FileNameLabel.Text = Path.GetFullPath(FileNameLabel.Text);
+               // FileNameLabel.Text = Path.GetFullPath(FileNameLabel.Text);
                 return FileNameLabel.Text;
             }
             set
@@ -75,12 +75,6 @@ namespace UserInterface.Views
                 OpenDialogArgs args = new OpenDialogArgs();
                 args.FileNames = OpenFileDialog.FileNames;
 
-                string curdir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3);
-                for (int i=0; i< args.FileNames.Length; i++)
-                {
-                    args.FileNames[i] = args.FileNames[i].Replace(curdir, "");
-                }
 
                 BrowseButtonClicked.Invoke(this, args);
             }

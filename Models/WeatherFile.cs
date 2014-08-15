@@ -100,18 +100,15 @@ namespace Models
             {
                 Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
 
-                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
+               // return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
                     
                 string fullFileName = this.FileName;
                 if (this.FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(this.FileName) != this.FileName)
                 {
-                    fullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), this.FileName);
+                    //fullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), this.FileName);
                     if (!File.Exists(fullFileName))
                     {
-                        fullFileName = Path.Combine(
-                            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                            .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), 
-                            this.FileName);
+                        fullFileName = Utility.PathUtils.GetAbsolutePath(fullFileName, simulation.FileName);
                     }
                 }
 
@@ -128,10 +125,6 @@ namespace Models
                     Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
                     if (simulation != null && simulation.FileName != null)
                     {
-                        this.FileName = this.FileName.Replace(
-                            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                            .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), 
-                            string.Empty);
                         if (this.FileName.Contains(Path.GetDirectoryName(simulation.FileName)))
                         {
                             this.FileName = this.FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, string.Empty);

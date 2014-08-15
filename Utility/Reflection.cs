@@ -122,7 +122,9 @@ namespace Utility
             PropertyInfo P = obj.GetType().GetProperty(name, flags);
             if (P != null)
             {
-                if (P.PropertyType == typeof(string))
+                if (value == null)
+                    P.SetValue(obj, value, null);
+                else if (P.PropertyType == typeof(string))
                     P.SetValue(obj, value.ToString(), null);
                 else if (P.PropertyType == typeof(double))
                     P.SetValue(obj, Convert.ToDouble(value), null);

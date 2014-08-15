@@ -51,7 +51,7 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // dataGrid
@@ -61,6 +61,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGrid.AutoFilterOn = false;
             this.dataGrid.DataSource = null;
+            this.dataGrid.GetCurrentCell = null;
             this.dataGrid.Location = new System.Drawing.Point(15, 165);
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.NumericFormat = null;
@@ -296,22 +297,25 @@
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.OnCheckBox4Changed);
             // 
-            // checkBox5
+            // comboBox5
             // 
-            this.checkBox5.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.checkBox5.Location = new System.Drawing.Point(515, 65);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(103, 44);
-            this.checkBox5.TabIndex = 27;
-            this.checkBox5.Text = "Separate series for each simulation?";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.OnCheckBox5Changed);
+            this.comboBox5.FormattingEnabled = true;
+            this.comboBox5.Items.AddRange(new object[] {
+            "Split on simulation",
+            "Split on experiment",
+            "Graph all data in table"});
+            this.comboBox5.Location = new System.Drawing.Point(478, 65);
+            this.comboBox5.Name = "comboBox5";
+            this.comboBox5.Size = new System.Drawing.Size(136, 21);
+            this.comboBox5.TabIndex = 28;
+            this.comboBox5.Text = "Split on simulation";
+            this.comboBox5.SelectedValueChanged += new System.EventHandler(this.comboBox5_SelectedValueChanged);
             // 
             // SeriesEditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox5);
+            this.Controls.Add(this.comboBox5);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox3);
@@ -366,6 +370,6 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.ComboBox comboBox5;
     }
 }

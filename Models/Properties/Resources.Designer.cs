@@ -88,25 +88,46 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to  &lt;Plant&gt;
         ///    &lt;Name&gt;Potato&lt;/Name&gt;
         ///   &lt;CropType&gt;Potato&lt;/CropType&gt;
-        ///   &lt;Cultivars&gt;
-        ///     &lt;Cultivar&gt;
-        ///       &lt;Name&gt;RussetBurbank&lt;/Name&gt;
-        ///     &lt;/Cultivar&gt;
-        ///     &lt;Cultivar&gt;
-        ///       &lt;Name&gt;JerseyBenny&lt;/Name&gt;
-        ///       &lt;Override&gt;
-        ///         &lt;Name&gt;[Structure].MainStemFinalNodeNumber.value&lt;/Name&gt;
-        ///         &lt;Value&gt;19&lt;/Value&gt;
-        ///       &lt;/Override&gt;
-        ///       &lt;Override&gt;
-        ///         &lt;Name&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X&lt;/Name&gt;
-        ///         &lt;Value&gt;0 6 7 10 11&lt;/Value&gt;
-        ///       &lt;/Override&gt;
-        ///       &lt;Override&gt; [rest of string was truncated]&quot;;.
+        ///   &lt;Cultivar&gt;
+        ///     &lt;Name&gt;JerseyBenny&lt;/Name&gt;
+        ///     &lt;Alias&gt;JerseyBenny&lt;/Alias&gt;
+        ///     &lt;Command&gt;[Structure].MainStemFinalNodeNumber.value = 19&lt;/Command&gt;
+        ///     &lt;Command&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11&lt;/Command&gt;
+        ///     &lt;Command&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0&lt;/Command&gt;
+        ///     &lt;Command&gt;[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value = 3&lt;/Command&gt;
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {
             get {
                 return ResourceManager.GetString("Potato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  &lt;Plant&gt;
+        ///	&lt;Name&gt;Slurp&lt;/Name&gt;
+        ///	&lt;CropType&gt;Potato&lt;/CropType&gt;
+        ///    &lt;Cultivar&gt;
+        ///			&lt;Name&gt;StaticCrop&lt;/Name&gt;
+        ///			&lt;Alias&gt;StaticCrop&lt;/Alias&gt;
+        ///	&lt;/Cultivar&gt;
+        ///	&lt;Arbitrator&gt;
+        ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
+        ///		&lt;NArbitrationOption&gt;PriorityThenRelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///	&lt;/Arbitrator&gt;
+        ///	&lt;Root&gt;
+        ///		&lt;Name&gt;Root&lt;/Name&gt;
+        ///		&lt;CompositeBiomass&gt;
+        ///			&lt;Name&gt;Live&lt;/Name&gt;
+        ///			&lt;Propertys&gt;
+        ///				&lt;string&gt;[Root].LayerLive&lt;/string&gt;
+        ///			&lt;/Propertys&gt;
+        ///		&lt;/CompositeBiomas [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Slurp {
+            get {
+                return ResourceManager.GetString("Slurp", resourceCulture);
             }
         }
         
@@ -119,15 +140,13 @@ namespace Models.Properties {
         ///  &lt;NSupplyPreference&gt;active&lt;/NSupplyPreference&gt;
         ///  &lt;DoRetranslocationBeforeNDemand&gt;false&lt;/DoRetranslocationBeforeNDemand&gt;
         ///  &lt;RemovedByAnimal /&gt;
-        ///  &lt;Cultivars&gt;
-        ///    &lt;Cultivar&gt;
-        ///      &lt;Name&gt;GattonHartog&lt;/Name&gt;
-        ///      &lt;Override&gt;
-        ///        &lt;Name&gt;[Phenology].Vernalisation.VernSens&lt;/Name&gt;
-        ///        &lt;Value&gt;2.5&lt;/Value&gt;
-        ///      &lt;/Override&gt;
-        ///      &lt;Override&gt;
-        ///        &lt;Name&gt;[Phenology].V [rest of string was truncated]&quot;;.
+        ///  &lt;Cultivar&gt;
+        ///    &lt;Name&gt;GattonHartog&lt;/Name&gt;
+        ///    &lt;Command&gt;[Phenology].Vernalisation.VernSens = 2.5&lt;/Command&gt;
+        ///    &lt;Command&gt;[Phenology].Vernalisation.PhotopSens = 3.5&lt;/Command&gt;
+        ///  &lt;/Cultivar&gt;    
+        ///  &lt;Cultivar&gt;
+        ///    &lt;Name&gt;Hartog&lt;/Nam [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {

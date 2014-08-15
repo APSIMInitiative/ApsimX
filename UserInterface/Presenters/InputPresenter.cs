@@ -28,6 +28,17 @@ namespace UserInterface.Presenters
             View.FileName = Utility.String.BuildString(Input.FileNames, ",");
             View.GridView.DataSource = Input.GetTable(explorerPresenter.ApsimXFile.FileName);
 
+            if (Input.FileNames != null)
+            {
+                for (int i = 0; i < Input.FileNames.Count(); i++)
+                {
+                    Input.FileNames[i] =  Utility.PathUtils.GetRelativePath(Input.FileNames[i], ExplorerPresenter.ApsimXFile.FileName);
+                }
+                    View.FileName = Utility.String.BuildString(Input.FileNames, ",");
+            }
+
+            View.GridView.DataSource = Input.GetTable(ExplorerPresenter.ApsimXFile.FileName);
+
             View.BrowseButtonClicked += OnBrowseButtonClicked;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -62,10 +73,13 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
+            for (int i = 0; i < Input.FileNames.Count(); i++)
+            {
+                Input.FileNames[i] = Utility.PathUtils.GetRelativePath(Input.FileNames[i], ExplorerPresenter.ApsimXFile.FileName);
+            }
+
             View.FileName = Utility.String.BuildString(Input.FileNames, ",");
-            View.GridView.DataSource = Input.GetTable(ExplorerPresenter.ApsimXFile.FullPath);
+            View.GridView.DataSource = Input.GetTable(ExplorerPresenter.ApsimXFile.FileName);
         }
-
-
     }
 }

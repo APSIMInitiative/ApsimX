@@ -16,7 +16,7 @@ namespace Models.Core
     public class ModelCollectionFromResource : Model
     {
         public string ResourceName { get; set; }
-        private List<Model> SavedModels;
+        private List<Model> allModels;
 
         /// <summary>
         /// We're about to be serialised. Remove our 'ModelFromResource' model from the list
@@ -26,9 +26,19 @@ namespace Models.Core
         {
             if (xmlSerialisation && ResourceName != null)
             {
-                SavedModels = new List<Model>();
-                SavedModels.AddRange(Models);
-                Models.Clear();
+                allModels = new List<Model>();
+                allModels.AddRange(Models);
+
+                List<Model> visibleModels = new List<Model>();
+                foreach (Model child in Models)
+                {
+                    if (!child.IsHidden)
+                    {
+                        visibleModels.Add(child);
+                    }
+                }
+
+                Models = visibleModels;
             }
         }
 
@@ -37,8 +47,10 @@ namespace Models.Core
         /// </summary>
         public override void OnSerialised(bool xmlSerialisation)
         {
-            if (xmlSerialisation && SavedModels != null)
-                Models.AddRange(SavedModels);
+            if (xmlSerialisation && allModels != null)
+            {
+                Models = allModels;
+            }
         }
 
         /// <summary>
@@ -60,6 +72,11 @@ namespace Models.Core
                         doc.LoadXml(xml);
                         Model ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as Model;
                         Models.AddRange(ModelFromResource.Children.All);
+
+                        foreach (Model child in ModelFromResource.Children.All)
+                        {
+                            child.IsHidden = true;
+                        }
                     }
                 }
             }

@@ -628,11 +628,15 @@ namespace UserInterface.Views
         private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             if (Rename != null)
-                Rename(this, new NodeRenameArgs()
+            {
+                NodeRenameArgs args = new NodeRenameArgs()
                 {
                     NodePath = NodePathBeforeRename,
                     NewName = e.Label
-                }); 
+                };
+                Rename(this, args);
+                e.CancelEdit = args.CancelEdit;
+            }
         }
 
         /// <summary>

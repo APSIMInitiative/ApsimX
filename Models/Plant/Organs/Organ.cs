@@ -16,6 +16,9 @@ namespace Models.PMF.Organs
     public interface Reproductive
     {
     }
+    public interface Transpiring
+    {
+    }
     #endregion
 
     #region Arbitrator method types
@@ -79,6 +82,8 @@ namespace Models.PMF.Organs
         abstract public double WaterAllocation { get; set; }
         [XmlIgnore]
         abstract public double WaterUptake { get; set; }
+        [XmlIgnore]
+        abstract public double FRGR {get; set;}
         //Communicated organ variables
         [XmlIgnore]
         abstract public double MaxNconc { get; set; }

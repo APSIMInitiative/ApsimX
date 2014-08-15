@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="IGraphView.cs" company="CSIRO">
+// <copyright file="IGraphView.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,6 +10,7 @@ namespace UserInterface.Interfaces
     using System.Drawing;
     using System.Windows.Forms;
     using Models.Graph;
+    using EventArguments;
 
     /// <summary>
     /// Event arguments for a Axis click
@@ -41,6 +42,11 @@ namespace UserInterface.Interfaces
         /// Invoked when the user clicks on the graph title.
         /// </summary>
         event EventHandler OnTitleClick;
+
+        /// <summary>
+        /// Invoked when the user hovers over a series point.
+        /// </summary>
+        event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
         /// Show the specified editor.

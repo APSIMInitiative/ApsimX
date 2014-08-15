@@ -42,7 +42,7 @@ namespace Models.Core
         /// A list of all exceptions thrown during the creation and loading of the simulation.
         /// </summary>
         [XmlIgnore]
-        public List<ApsimXException> LoadErrors { get; private set; }
+        public List<Exception> LoadErrors { get; private set; }
 
         /// <summary>
         /// Create a simulations object by reading the specified filename
@@ -68,7 +68,7 @@ namespace Models.Core
                 ModelFunctions.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.LoadErrors = new List<ApsimXException>();
+                simulations.LoadErrors = new List<Exception>();
                 foreach (Model child in simulations.Children.AllRecursively)
                 {
                     try
@@ -79,7 +79,10 @@ namespace Models.Core
                     {
                         simulations.LoadErrors.Add(err);
                     }
-
+                    catch (Exception err)
+                    {
+                        simulations.LoadErrors.Add(err);
+                    }
                 }
             }
             else

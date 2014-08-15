@@ -7,15 +7,25 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView listView1;
+        private SeriesEditorView seriesEditorView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearAllSeriesToolStripMenuItem;
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -87,7 +97,7 @@
             this.listView1.TabIndex = 69;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.OnlistView1_AfterLabelEdit);
+            this.listView1.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.OnSeriesRenameAfterLabelEdit);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.OnListView1SelectedIndexChanged);
             // 
             // columnHeader1
@@ -101,28 +111,30 @@
             this.deleteToolStripMenuItem,
             this.clearAllSeriesToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.addToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addToolStripMenuItem.Text = "Add";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.OnAddToolStripMenuItemClick);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.OnDeleteToolStripMenuItemClick);
             // 
             // clearAllSeriesToolStripMenuItem
             // 
             this.clearAllSeriesToolStripMenuItem.Name = "clearAllSeriesToolStripMenuItem";
-            this.clearAllSeriesToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.clearAllSeriesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.clearAllSeriesToolStripMenuItem.Text = "Clear all series";
-            this.clearAllSeriesToolStripMenuItem.Click += new System.EventHandler(this.clearAllSeriesToolStripMenuItem_Click);
+            this.clearAllSeriesToolStripMenuItem.Click += new System.EventHandler(this.OnClearAllSeriesToolStripMenuItemClick);
             // 
             // seriesEditorView1
             // 
@@ -133,12 +145,12 @@
             this.seriesEditorView1.Location = new System.Drawing.Point(187, 44);
             this.seriesEditorView1.Name = "seriesEditorView1";
             this.seriesEditorView1.Regression = false;
-            this.seriesEditorView1.SeparateSeries = false;
             this.seriesEditorView1.SeriesLineType = "Solid";
             this.seriesEditorView1.SeriesMarkerType = "None";
             this.seriesEditorView1.SeriesType = "Scatter";
             this.seriesEditorView1.ShowInLegend = false;
             this.seriesEditorView1.Size = new System.Drawing.Size(514, 327);
+            this.seriesEditorView1.SplitOn = "Simulation";
             this.seriesEditorView1.TabIndex = 70;
             this.seriesEditorView1.Visible = false;
             this.seriesEditorView1.X = "";
@@ -164,15 +176,5 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListView listView1;
-        private SeriesEditorView seriesEditorView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearAllSeriesToolStripMenuItem;
     }
 }

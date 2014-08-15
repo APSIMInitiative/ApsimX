@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         {
             if (filename != null)
             {
-                MetData.FullFileName = filename;
+                MetData.FullFileName = Utility.PathUtils.GetAbsolutePath(filename, ExplorerPresenter.ApsimXFile.FileName);
                 DataTable data = MetData.GetAllData();
 
                 //format the data into useful columns
@@ -81,7 +81,7 @@ namespace UserInterface.Presenters
                     }
                 }
                 MetDataView.PopulateData(data);
-                MetDataView.Filename = filename;
+                MetDataView.Filename = Utility.PathUtils.GetRelativePath(filename, ExplorerPresenter.ApsimXFile.FileName);
             }
         }
         /// <summary>

@@ -41,7 +41,7 @@ namespace Models.Core
         /// </summary>
         public object Get(string namePath)
         {
-            IVariable variable = GetInternal(namePath);
+            IVariable variable = GetVariableObject(namePath);
             if (variable == null)
                 return null;
             else
@@ -53,7 +53,7 @@ namespace Models.Core
         /// </summary>
         public void Set(string namePath, object value)
         {
-            IVariable variable = GetInternal(namePath); 
+            IVariable variable = GetVariableObject(namePath); 
             if (variable == null)
                 throw new ApsimXException(RelativeTo.FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             else
@@ -63,7 +63,7 @@ namespace Models.Core
         /// <summary>
         /// Return a variable using the specified NamePath. Returns null if not found.
         /// </summary>
-        private IVariable GetInternal(string namePath)
+        public IVariable GetVariableObject(string namePath)
         {
             // Look in cache first.
             string absolutePath = ToAbsolute(Simulation, namePath, RelativeTo);

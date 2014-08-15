@@ -15,6 +15,8 @@ namespace UserInterface.Views
     {
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
+        event EventHandler<StringArgs> MruClick;
+
         /// <summary>
         /// Add a tab form to the tab control. Optionally select the tab if SelectTab is true.
         /// </summary>
@@ -30,6 +32,8 @@ namespace UserInterface.Views
         /// </summary>
         void ShowError(string message);
 
+        void FillMruList(List<string> files);
+
         Int32 TabWidth { get; }
     }
 
@@ -41,7 +45,8 @@ namespace UserInterface.Views
     public partial class TabbedExplorerView : UserControl, ITabbedExplorerView
     {
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
-
+        public event EventHandler<StringArgs> MruClick;
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -88,6 +93,7 @@ namespace UserInterface.Views
                 Item.ImageIndex = ImageIndex;
                 ListView.Items.Add(Item);
             }
+         
         }
         /// <summary>
         /// User has double clicked. Open. Open a .apsim file.
@@ -228,8 +234,23 @@ namespace UserInterface.Views
             get { return TabControl.Width; }
             
         }
+
+        public void FillMruList(List<string> files)
+        {
+            listBox1.Items.Clear();
+            listBox1.Items.AddRange(files.ToArray());
+        }
+        
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            MruClick(sender, new StringArgs() { Name = listBox1.Items[listBox1.SelectedIndex].ToString() });
+        }
     }
 
+    public class StringArgs : EventArgs
+    {
+        public string Name;
+    }
     public class PopulateStartPageArgs : EventArgs
     {
         public struct Description

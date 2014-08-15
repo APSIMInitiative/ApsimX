@@ -33,11 +33,7 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                //attempt to use relative path for files in ApsimX install directory
-                fileNames = new string[value.Length];
-                for (int i = 0; i < fileNames.Length; i++)
-                    fileNames[i] = value[i].Replace(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), "");
+                fileNames = value;
             }
         }
 

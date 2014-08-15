@@ -1258,7 +1258,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -1311,7 +1311,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>SoilWater.sw_dep(2)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -1364,7 +1364,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>SoilWater.sw_dep(3)</FieldName>
+          <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>
@@ -1417,7 +1417,7 @@ namespace Models
         <Y>
           <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>ExtraVariables.SWDep60</FieldName>
+          <FieldName>ExtraVariables.Script.SWDep60</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
       </Series>

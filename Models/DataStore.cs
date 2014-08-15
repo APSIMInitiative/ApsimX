@@ -418,6 +418,34 @@ namespace Models
         }
 
         /// <summary>
+        /// Return all data from the specified simulation and table name. If simulationName = "*"
+        /// the all simulation data will be returned.
+        /// </summary>
+        public DataTable GetFilteredData(string tableName, string filter)
+        {
+            Open(forWriting: false);
+            if (Connection == null || !TableExists("Simulations") || tableName == null)
+                return null;
+            try
+            {
+                string sql;
+
+                sql = "SELECT S.Name as SimulationName, T.* FROM " + tableName + " T" + ", Simulations S ";
+                sql += "WHERE ID = SimulationID";
+                if (filter != null)
+                {
+                    sql += " AND " + filter;
+                }
+
+                return Connection.ExecuteQuery(sql);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Return all data from the specified simulation and table name.
         /// </summary>
         public DataTable RunQuery(string sql)

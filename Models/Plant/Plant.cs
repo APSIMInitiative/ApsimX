@@ -76,9 +76,9 @@ namespace Models.PMF
     {
         private Organ[] _Organs = null;
         public string CropType { get; set; }
-        [Link] public Phenology Phenology = null;
-        [Link] public Arbitrator Arbitrator = null;
-        [Link] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        [Link(IsOptional = true)] public Phenology Phenology = null;
+        [Link(IsOptional = true)] public Arbitrator Arbitrator = null;
+        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
 
         [XmlIgnore]
@@ -106,14 +106,45 @@ namespace Models.PMF
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
 
-        [Link(IsOptional=true)]
-        Cultivars Cultivars = null;
+        /// <summary>
+        /// A property to return all cultivar definitions.
+        /// </summary>
+        private List<Cultivar> Cultivars
+        {
+            get
+            {
+                List<Cultivar> cultivars = new List<Cultivar>();
+                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                {
+                    cultivars.Add(model as Cultivar);
+                }
+
+                return cultivars;
+            }
+        }
+
+        /// <summary>
+        /// The current cultivar definition.
+        /// </summary>
+        private Cultivar cultivarDefinition;
 
         /// <summary>
         /// MicroClimate needs FRGR.
         /// </summary>
-        public double FRGR { get { return RUEModel.FRGR; } }
-
+        public double FRGR 
+        { 
+            get 
+            {
+                double frgr = 0;
+                foreach (Organ Child in Organs)
+                {
+                    if (Child.FRGR != null)
+                        frgr = Child.FRGR;
+                }
+                return frgr; 
+            } 
+        }
+            
         /// <summary>
         /// MicroClimate supplies light profile.
         /// </summary>
@@ -157,7 +188,7 @@ namespace Models.PMF
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
-        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string Cultivar, double Population = 0, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = Population;
@@ -169,13 +200,8 @@ namespace Models.PMF
             SowingData.CropClass = CropClass;
 
             // Find cultivar and apply cultivar overrides.
-            if (Cultivars == null)
-                throw new ApsimXException(FullPath, "No cultivar definitions found.");
-            
-            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
-            cultivarObj.ApplyOverrides(this);
+            cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
 
             // Invoke a sowing event.
             if (Sowing != null)
@@ -188,6 +214,7 @@ namespace Models.PMF
                 Child.OnSow(SowingData);
             if (Structure != null)
                Structure.OnSow(SowingData);
+            if (Phenology != null)
             Phenology.OnSow();
 
             //Set up CanopyData tyep
@@ -208,12 +235,6 @@ namespace Models.PMF
             // tell all our children about sow
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
-
-            // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarObj = Cultivars.FindCultivar(SowingData.Cultivar);
-            if (cultivarObj == null)
-                throw new ApsimXException(FullPath, "Cannot find a cultivar definition for " + SowingData.Cultivar);
-            cultivarObj.UnapplyOverrides(this);
         }
 
         /// <summary>
@@ -260,6 +281,8 @@ namespace Models.PMF
             foreach (Organ Child in Organs)
                 Child.OnEndCrop();
             Clear();
+
+            cultivarDefinition.Unapply();
         }
 
         private void Clear()
@@ -269,8 +292,10 @@ namespace Models.PMF
             Population = 0;
             if (Structure != null)
                Structure.Clear();
-            Phenology.Clear();
-            Arbitrator.Clear();
+            if (Phenology != null)
+               Phenology.Clear();
+            if (Arbitrator != null)
+               Arbitrator.Clear();
         }
 
         /// <summary>

@@ -60,7 +60,11 @@ namespace Models
                     jobManager.OnComplete += OnError;
                     jobManager.AddJob(runApsim);
                     jobManager.Start(waitUntilFinished: true);
-                    if (jobManager.SomeHadErrors) return 1;
+                    if (jobManager.SomeHadErrors)
+                    {
+                        Console.WriteLine("Errors found");
+                        return 1;
+                    }
 
                     // Write out the number of simulations run to the console.
                     numSimulations = jobManager.NumberOfJobs - 1;
@@ -312,10 +316,31 @@ namespace Models
                 Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
+                bool errorsFound = false;
                 foreach (string apsimxFileName in Files)
                 {
                     Simulations simulations = Simulations.Read(apsimxFileName);
-                    jobManager.AddJob(simulations);
+                    if (simulations.LoadErrors.Count == 0)
+                    {
+                        jobManager.AddJob(simulations);
+                    }
+                    else
+                    {
+                        foreach (Exception err in simulations.LoadErrors)
+                        {
+                            Console.WriteLine(err.Message);
+                            Console.WriteLine("Filename: " + apsimxFileName);
+                            Console.WriteLine(err.StackTrace);
+                            errorsFound = true;
+                        }
+                    }                    
+                }
+                
+                if (errorsFound)
+                {
+                    // We've already outputted the load errors above. Just need to flag
+                    // that an error has occurred.
+                    throw new Exception(""); 
                 }
             }
         }
