@@ -125,10 +125,7 @@ namespace Models
                     Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
                     if (simulation != null && simulation.FileName != null)
                     {
-                        if (this.FileName.Contains(Path.GetDirectoryName(simulation.FileName)))
-                        {
-                            this.FileName = this.FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, string.Empty);
-                        }
+                        this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
                     }
                 }
             }

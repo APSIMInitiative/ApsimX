@@ -43,7 +43,7 @@
       <Name>Base</Name>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>C:\ApsimX\Tests\WeatherFiles\lincoln.met</FileName>
+        <FileName>..\WeatherFiles\lincoln.met</FileName>
         <MaxT>0</MaxT>
         <MinT>0</MinT>
         <Rain>0</Rain>
