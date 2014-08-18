@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
         [Link]
         ISummary Summary = null;
         [Link]
-        public Arbitrator Arbitrator = null;
+        public OrganArbitrator Arbitrator = null;
         [Link]
         public Structure Structure = null;
         [Link]

@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Models.PMF
 {
     [Serializable]
-    public class Arbitrator : Model
+    public class OrganArbitrator : Model
     {
         #region Class Members
         // Input paramaters

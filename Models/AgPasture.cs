@@ -912,8 +912,8 @@ namespace Models
         /// <summary>
         /// Event publication - new canopy 
         /// </summary>
-        
-        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         NewCanopyType LocalCanopyData = new NewCanopyType();
                 
         private void DoNewCanopyEvent()

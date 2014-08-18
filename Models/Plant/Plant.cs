@@ -77,7 +77,7 @@ namespace Models.PMF
         private Organ[] _Organs = null;
         public string CropType { get; set; }
         [Link(IsOptional = true)] public Phenology Phenology = null;
-        [Link(IsOptional = true)] public Arbitrator Arbitrator = null;
+        [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
         [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
 
@@ -102,7 +102,7 @@ namespace Models.PMF
         }
 
         [XmlIgnore]
-        public NewCanopyType CanopyData {get{return LocalCanopyData;}}
+        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
 

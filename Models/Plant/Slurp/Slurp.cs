@@ -8,6 +8,7 @@ using System.Collections;
 using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
+using Models.PMF;
 
 
 namespace Models.PMF.Slurp
@@ -15,8 +16,9 @@ namespace Models.PMF.Slurp
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Slurp : Model, ICrop
+    public class Slurp : Model, ICrop2
     {
+
         public string plant_status = "out";
         [Link]
         Soils.Soil Soil = null;
@@ -60,8 +62,11 @@ namespace Models.PMF.Slurp
         private double RootNConcentration = 0.0;
         private double KNO3 = 0.0;
 
-        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
-        NewCanopyType LocalCanopyData = new NewCanopyType();
+        public CanopyProperties CanopyProperties { get { return LocalCanopyData; } }
+        CanopyProperties LocalCanopyData = new CanopyProperties();
+
+        public RootProperties RootProperties { get { return LocalRootData; } }
+        RootProperties LocalRootData = new RootProperties();
         
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()

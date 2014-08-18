@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
         Plant Plant = null;
         
         [Link]
-        Arbitrator Arbitrator = null;
+        OrganArbitrator Arbitrator = null;
 
         [Link]
         Soils.Soil Soil = null;

@@ -10,10 +10,22 @@ using Models;
 using Models.PMF;
 using Models.PMF.Slurp;
 using System.Xml.Serialization;
+using Models.PMF;
 
 namespace Models
 {
-        [Serializable]
+    [Serializable]
+    public class NewCanopyType
+    {
+        public string sender = "";
+        public double height;
+        public double depth;
+        public double lai;
+        public double lai_tot;
+        public double cover;
+        public double cover_tot;
+    }
+    [Serializable]
     public class CanopyEnergyBalanceInterceptionlayerType
     {
         public double thickness;
@@ -35,17 +47,6 @@ namespace Models
         public KeyValueArraypair_listType[] pair_list;
     }
     
-    [Serializable]
-    public class NewCanopyType
-    {
-        public string sender = "";
-        public double height;
-        public double depth;
-        public double lai;
-        public double lai_tot;
-        public double cover;
-        public double cover_tot;
-    }
 
     public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
 
