@@ -967,7 +967,7 @@
           <RowSpace>3</RowSpace>
           <RowWidth>3</RowWidth>
           <CultivarName>EGrandis</CultivarName>
-          <SowingDate>1/04/1953 12:00:00 a.m.</SowingDate>
+          <SowingDate>1953-04-01</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
