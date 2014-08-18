@@ -82,9 +82,10 @@ namespace Models.Core
         {
             // Look in cache first.
             string cacheKey = relativeTo.FullPath + "|" + namePath;
-            if (this.cache.ContainsKey(cacheKey))
+            object value;
+            if (this.cache.TryGetValue(cacheKey, out value))
             {
-                return this.cache[cacheKey] as IVariable;
+                return value as IVariable;
             }
 
             IVariable returnVariable = null;
@@ -126,9 +127,10 @@ namespace Models.Core
                 // are child models. Stop when we can't find the child model.
                 string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 int i;
+                List<Model> children = relativeTo.Children.All;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    Model localModel = relativeTo.Children.All.FirstOrDefault(m => m.Name == namePathBits[i]);
+                    Model localModel = children.FirstOrDefault(m => m.Name == namePathBits[i]);
                     if (localModel == null)
                     {
                         break;
