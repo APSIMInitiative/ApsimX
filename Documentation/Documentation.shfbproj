@@ -6,47 +6,38 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5752c202-c478-4915-9b30-fe25d54b450b}</ProjectGuid>
+    <ProjectGuid>{c675cefe-583b-4b6d-a0a5-355a44174378}</ProjectGuid>
     <SHFBSchemaVersion>1.9.9.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
-    <AssemblyName>Documentation1</AssemblyName>
-    <RootNamespace>Documentation1</RootNamespace>
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
     <OutputPath>.\Help\</OutputPath>
-    <HtmlHelpName>APSIM</HtmlHelpName>
+    <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
-    <TransformComponentArguments>
-      <Argument Key="logoFile" Value="Help.png" xmlns="" />
-      <Argument Key="logoHeight" Value="" xmlns="" />
-      <Argument Key="logoWidth" Value="" xmlns="" />
-      <Argument Key="logoAltText" Value="" xmlns="" />
-      <Argument Key="logoPlacement" Value="left" xmlns="" />
-      <Argument Key="logoAlignment" Value="left" xmlns="" />
-      <Argument Key="maxVersionParts" Value="" xmlns="" />
-    </TransformComponentArguments>
-    <DocumentationSources>
-      <DocumentationSource sourceFile="..\Bin\Model.exe" />
-      <DocumentationSource sourceFile="..\Bin\Model.XML" />
-    </DocumentationSources>
-    <MaximumGroupParts>2</MaximumGroupParts>
-    <NamespaceGrouping>False</NamespaceGrouping>
-    <SyntaxFilters>Standard</SyntaxFilters>
-    <SdkLinkTarget>Blank</SdkLinkTarget>
-    <RootNamespaceContainer>False</RootNamespaceContainer>
-    <PresentationStyle>VS2013</PresentationStyle>
-    <Preliminary>False</Preliminary>
-    <NamingMethod>Guid</NamingMethod>
-    <HelpTitle>APSIM documentation</HelpTitle>
-    <ContentPlacement>AboveNamespaces</ContentPlacement>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <HelpFileFormat>Website</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CppCommentsFixup>False</CppCommentsFixup>
     <CleanIntermediates>True</CleanIntermediates>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\ApsimX\Models\Bin\Model.exe" xmlns="" />
+<DocumentationSource sourceFile="..\ApsimX\Models\Bin\Model.xml" xmlns="" /></DocumentationSources>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected</VisibleItems>
+    <MaximumGroupParts>2</MaximumGroupParts>
+    <NamespaceGrouping>False</NamespaceGrouping>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <RootNamespaceContainer>True</RootNamespaceContainer>
+    <PresentationStyle>VS2013</PresentationStyle>
+    <Preliminary>False</Preliminary>
+    <NamingMethod>Guid</NamingMethod>
+    <HelpTitle>A Sandcastle Documented Class Library</HelpTitle>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
@@ -66,23 +57,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Content" />
-    <Folder Include="Content\VersionHistory" />
-    <Folder Include="icons" />
-    <Folder Include="Media" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Content\VersionHistory\v1.0.0.0.aml" />
-    <None Include="Content\VersionHistory\VersionHistory.aml" />
-    <None Include="Content\Welcome.aml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ContentLayout Include="ContentLayout.content" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="icons\Help.png" />
-  </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
 </Project>

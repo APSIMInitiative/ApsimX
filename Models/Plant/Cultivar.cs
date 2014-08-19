@@ -19,9 +19,14 @@ namespace Models.PMF
     public class Cultivar : Model
     {
         /// <summary>
-        /// The previous value of the properties before applying the commands.
+        /// The properties for each command
         /// </summary>
-        private List<VariableProperty> properties = new List<VariableProperty>();
+        private List<IVariable> properties = new List<IVariable>();
+
+        /// <summary>
+        /// The original property values before the command was applied. Allows undo.
+        /// </summary>
+        private List<object> oldPropertyValues = new List<object>();
 
         /// <summary>
         /// Gets or sets a collection of names this cultivar is known as.
@@ -81,11 +86,16 @@ namespace Models.PMF
 
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
-                        VariableProperty property = model.GetVariableObject(propertyName) as VariableProperty;
+                        IVariable property = model.GetVariableObject(propertyName) as IVariable;
                         if (property != null)
                         {
-                            property.ValueWithArrayHandling = propertyValue;
+                            this.oldPropertyValues.Add(property.Value);
+                            property.Value = propertyValue;
                             this.properties.Add(property);
+                        }
+                        else
+                        {
+                            throw new ApsimXException(FullPath, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
                         }
                     }
                 }
@@ -107,12 +117,13 @@ namespace Models.PMF
         /// </summary>
         public void Unapply()
         {
-            foreach (VariableProperty property in this.properties)
+            for (int i = 0; i < this.properties.Count; i++)
             {
-                property.Undo();
+                this.properties[i].Value = this.oldPropertyValues[i];
             }
 
             this.properties.Clear();
+            this.oldPropertyValues.Clear();
         }
     }
 }

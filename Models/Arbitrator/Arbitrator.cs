@@ -7,6 +7,10 @@ using Models.PMF;
 
 namespace Models.Arbitrator
 {
+
+    /// <summary>
+    /// Vals ubeaut soil arbitrator
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
