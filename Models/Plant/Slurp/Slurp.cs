@@ -13,45 +13,28 @@ using Models.PMF;
 
 namespace Models.PMF.Slurp
 {
+    /// <summary>
+    /// Slurp is a 'dummy' static crop model.  The user sets very basic input information such as ....  These states will
+    /// not change during the simulation (no growth or death) unless the states are reset by the user.  
+    /// 
+    /// Need to check canopy height and depth units.  Micromet documentation says m but looks like is in mm in the module
+    /// 
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Slurp : Model, ICrop2
     {
-
-        public string plant_status = "out";
-        [Link]
-        Soils.Soil Soil = null;
-
-        [Description ("Cover Green")]
-        public double CoverGreen { get; set; }
-        [Description("Root Depth")]
-        public double RootDepth { get; set; }
+        // Deleted list - keep for a bit
+        //public string plant_status = "out";
         [Description("Leaf Mass")]
         public double LeafMass { get; set; }
-        [Description("kl")]
-        public double[] kl { get; set; }
-        [Description("LAI")]
-        public double LAI { get; set; }
-        [Description("Total LAI")]
-        public double LAItot { get; set; }
-        [Description("Total Cover")]
-        public double CoverTot { get; set; }
-        [Description("Height")]
-        public double Height { get; set; }
-        [Description("Depth")]
-        public double Depth { get; set; }
-
-        public string CropType { get { return "Slurp"; } }
-
-        public event EventHandler StartSlurp;
-        public event NewCanopyDelegate NewCanopy;
-          
+        //public event EventHandler StartSlurp;
+        //public event NewCanopyDelegate NewCanopy;
         private double PEP;
         private double EP;
         private double FW;
         private double FWexpan;
-        private double Ndemand = 0.0;
         private double RootMass = 0.0;
         private double RootN;
         private double[] NUptake = null;
@@ -61,12 +44,114 @@ namespace Models.PMF.Slurp
         private double[] bd = null;
         private double RootNConcentration = 0.0;
         private double KNO3 = 0.0;
+        
+        /// <summary>
+        /// Link to the soil module
+        /// </summary>
+        [Link]
+        Soils.Soil Soil = null;
 
+        // The variables that are in CanopyProperties
+
+        /// <summary>
+        /// Holds the set of crop canopy properties that is used by Arbitrator for light and engergy calculations
+        /// </summary>
         public CanopyProperties CanopyProperties { get { return LocalCanopyData; } }
         CanopyProperties LocalCanopyData = new CanopyProperties();
 
+        /// <summary>
+        /// Crop type was used to assign generic types of properties (e.g. maximum stomatal conductance) to crops
+        /// Probably not needed now as the crops will have to supply these themselves
+        /// ???? delete ????
+        /// </summary>
+        public string CropType { get { return "Slurp"; } }
+
+
+        /// <summary>
+        /// The name as it appears in the GUI e.g. "Wheat3" 
+        /// ???? How is this got?????
+        /// </summary>
+        //public string Name { get { return "Slurp"; } } this does nto work
+
+        /// <summary>
+        /// Greem leaf area index (m2/m2) 
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("LAI")] public double LAI { get; set; }
+
+        /// <summary>
+        /// Total (includes dead) leaf area index (m2/m2) 
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Total LAI")]
+        public double LAItot { get; set; }
+
+        /// <summary>
+        /// Green cover (m2/m2) - fractional cover resulting from the assigned LAI, 
+        /// Calculate this using an assumed light interception coefficient
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Cover Green")]
+        public double CoverGreen { get; set; }
+
+        /// <summary>
+        /// Total (green and dead) cover (m2/m2) - fractional cover resulting from the assigned LAItot, 
+        /// Calculate this using an assumed light interception coefficient
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Total Cover")]
+        public double CoverTot { get; set; }
+
+        /// <summary>
+        /// Height to the top of the canopy (mm) 
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Canopy Height")]
+        public double Height { get; set; }
+
+        /// <summary>
+        /// Depth of the canopy (mm).  If the canopy is continuous from the ground to the top of the canopy then 
+        /// the depth = height, otherwise depth must be less than the height
+        /// Used in the light and energy arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Canopy Depth")]
+        public double Depth { get; set; }
+
+
+        // The variables that in RootProperties
+
+        /// <summary>
+        /// Holds the set of crop root properties that is used by Arbitrator for water and nutrient calculations
+        /// </summary>
         public RootProperties RootProperties { get { return LocalRootData; } }
         RootProperties LocalRootData = new RootProperties();
+
+        /// <summary>
+        /// Depth of the root system (mm).  
+        /// Used in the water and nutrient arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Root Depth")]
+        public double RootDepth { get; set; }
+
+        /// <summary>
+        /// The bastardised Passioura/Monteith K*L (/day)
+        /// At some point this will be replaced by one soil property and the root length density.
+        /// Used in the water and nutrient arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("kl")]
+        public double[] kl { get; set; }
+
+
+        private double Ndemand = 0.0;  // wehre does this sit?
+
         
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
@@ -96,20 +181,20 @@ namespace Models.PMF.Slurp
 
             bd = (double[])Soil.Water.Get("BD");
             // Invoke a sowing event. Needed for MicroClimate
-            if (StartSlurp != null)
-                StartSlurp.Invoke(this, new EventArgs());
+            //if (StartSlurp != null)
+            //    StartSlurp.Invoke(this, new EventArgs());
 
             //Send a NewCanopy event to MicroClimate
-            NewCanopyType LocalCanopyData = new NewCanopyType();
-            LocalCanopyData.cover = CoverGreen;
-            LocalCanopyData.cover_tot = CoverTot;
-            LocalCanopyData.depth = Depth;
-            LocalCanopyData.height = Height;
-            LocalCanopyData.lai = LAI;
-            LocalCanopyData.lai_tot = LAItot;
-            LocalCanopyData.sender = "Slurp";
-            if (NewCanopy != null)
-                NewCanopy.Invoke(LocalCanopyData);
+            //NewCanopyType LocalCanopyData = new NewCanopyType();
+            //LocalCanopyData.cover = CoverGreen;
+            //LocalCanopyData.cover_tot = CoverTot;
+            //LocalCanopyData.depth = Depth;
+            //LocalCanopyData.height = Height;
+            //LocalCanopyData.lai = LAI;
+            //LocalCanopyData.lai_tot = LAItot;
+            //LocalCanopyData.sender = "Slurp";
+            //if (NewCanopy != null)
+            //    NewCanopy.Invoke(LocalCanopyData);
         }
 
         /// <summary>
