@@ -93,6 +93,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Arbitrator16 {
+            get {
+                object obj = ResourceManager.GetObject("Arbitrator16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Axis16 {
             get {
                 object obj = ResourceManager.GetObject("Axis16", resourceCulture);

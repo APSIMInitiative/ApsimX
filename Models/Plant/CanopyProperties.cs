@@ -8,8 +8,7 @@ namespace Models.PMF
     [Serializable]
     public class CanopyProperties
     {
-        public string sender = "";
-        public double height;
+        public double height; 
         public double depth;
         public double lai;
         public double lai_tot;
@@ -25,10 +24,10 @@ namespace Models.PMF
         /// <summary>
         /// This is a generic type of crop (e.g. C3 or wheat) and is used to do something that might not be needed later
         /// </summary>
-        public double CropType;
+        public string CropType;
 
         /// <summary>
-        /// This is that stomatal conductance in (units) that will be seen undernon-limiting light and nutrients
+        /// This is that stomatal conductance in (units) that will be seen under non-limiting light and nutrients
         /// </summary>
         public double MaximumStomatalConductance;
 

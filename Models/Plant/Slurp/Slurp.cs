@@ -71,6 +71,21 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
+            RootProperties.KL = Soil.KL("slurp");
+            RootProperties.LLDep = Soil.LL("slurp");
+            RootProperties.RootDepth = RootDepth;
+            RootProperties.RootExplorationByLayer= new double[] {1.0,1.0,0.5,0.0};
+            RootProperties.RootLengthDensityByVolume = new double[] { 0.05, 0.03, 0.0058, 0.0 };
+
+            CanopyProperties.cover = CoverGreen;
+            CanopyProperties.cover_tot = CoverTot;
+            CanopyProperties.CropType = CropType;
+            CanopyProperties.depth = Depth;
+            CanopyProperties.height = Height;
+            CanopyProperties.lai = LAI;
+            CanopyProperties.lai_tot = LAItot;
+            CanopyProperties.MaximumStomatalConductance = 0.010;
+
             kl = new double[Soil.SoilWater.sw_dep.Length];
             PotSWUptake = new double[kl.Length];
             PotNUptake = new double[kl.Length];
@@ -107,6 +122,12 @@ namespace Models.PMF.Slurp
         /// </summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// Arbitrator supplies ActualEP
+        /// </summary>
+        [XmlIgnore]
+        public double ActualEP { get; set; }
 
         /// <summary>
         /// MicroClimate supplies LightProfile

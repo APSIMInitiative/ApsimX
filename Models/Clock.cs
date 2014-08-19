@@ -29,12 +29,15 @@ namespace Models
         public event EventHandler DoDailyInitialisation;
         public event EventHandler DoInitialSummary;
         public event EventHandler DoManagement;
+        public event EventHandler DoEnergyArbitration;
         public event EventHandler DoCanopyEnergyBalance;
         public event EventHandler DoSoilWaterMovement;
         public event EventHandler DoSoilOrganicMatter;
         public event EventHandler DoSurfaceOrganicMatterDecomposition;
-        public event EventHandler DoSoilArbitration;
+        public event EventHandler DoWaterArbitration;
         public event EventHandler DoCanopy;
+        // need plant potential growth in here
+        public event EventHandler DoNutrientArbitration;
         public event EventHandler DoPlantGrowth;
         public event EventHandler DoUpdate;
         public event EventHandler DoManagementCalculations;
@@ -82,6 +85,9 @@ namespace Models
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
 
+                if (DoEnergyArbitration != null)
+                    DoEnergyArbitration.Invoke(this, args);
+
                 if (DoCanopyEnergyBalance != null)
                     DoCanopyEnergyBalance.Invoke(this, args);
 
@@ -94,11 +100,16 @@ namespace Models
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
 
-                if (DoSoilArbitration != null)
-                    DoSoilArbitration.Invoke(this, args);
+                if (DoWaterArbitration != null)
+                    DoWaterArbitration.Invoke(this, args);
+                
+                // need plant potential growth in here
 
                 if (DoCanopy != null)
                     DoCanopy.Invoke(this, args);
+
+                if (DoNutrientArbitration != null)
+                    DoNutrientArbitration.Invoke(this, args);
 
                 if (DoPlantGrowth != null)
                     DoPlantGrowth.Invoke(this, args);

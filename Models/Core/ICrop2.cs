@@ -35,7 +35,12 @@ namespace Models.Core
         /// Potential evapotranspiration. MicroClimate calculates this and sets
         /// this property in the crop.
         /// </summary>
-        double PotentialEP { get;  }
+        double PotentialEP { get; set; }
+
+        /// <summary>
+        /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
+        /// </summary>
+        double ActualEP { set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
