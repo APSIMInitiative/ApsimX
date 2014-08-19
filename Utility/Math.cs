@@ -379,9 +379,9 @@ namespace Utility
         {
             if (arr != null)
             {
-                for (int i = 0; i < arr.Rank; i++)
+                for (int i = 0; i < arr.GetLength(0); i++)
                 {
-                    for (int j = 0; j < arr.GetLength(i); j++)
+                    for (int j = 0; j < arr.GetLength(1); j++)
                     {
                         arr[i, j] = 0;
                     }
