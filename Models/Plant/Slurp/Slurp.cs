@@ -46,7 +46,7 @@ namespace Models.PMF.Slurp
 
         public event EventHandler StartSlurp;
         public event NewCanopyDelegate NewCanopy;
-
+          
         private double PEP;
         private double EP;
         private double FW;

@@ -95,7 +95,7 @@ namespace Models.Arbitrator
             for (int i = 0; i < plants.Length; i++)
             {
                 plants[i].PotentialEP = 10.0;
-                ArbitEOS = 0.0;
+                ArbitEOS = 0.0;  // need to set EOS but doesnot seem to be effective
             }
         }
 
@@ -158,7 +158,7 @@ namespace Models.Arbitrator
                 {
                     actualEPPlantLayer[i, j] = availWaterDepPlantLayer[i, j] * scalerPlant[i] * scalerLayer[j];
                     actualEP[i] += actualEPPlantLayer[i, j];
-                    dltSWdep[j] += -1.0 * actualEPPlantLayer[i, j];
+                    dltSWdep[j] += -1.0 * actualEPPlantLayer[i, j];  // -ve to reduce water content in the soil
                 }
                 // send the actual EP to the plants
                 plants[i].ActualEP = actualEP[i];
