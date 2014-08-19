@@ -182,6 +182,7 @@ namespace Models
         /// Gets or sets the maximum temperature (oc)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [XmlIgnore]
         public double MaxT 
         { 
             get 
@@ -199,6 +200,7 @@ namespace Models
         /// Gets or sets the minimum temperature (oc)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [XmlIgnore]
         public double MinT 
         { 
             get 
@@ -215,6 +217,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
+        [XmlIgnore]
         public double Rain 
         { 
             get 
@@ -231,6 +234,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
+        [XmlIgnore]
         public double Radn 
         { 
             get 
@@ -247,6 +251,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the vapor pressure
         /// </summary>
+        [XmlIgnore]
         public double VP 
         { 
             get 
@@ -263,6 +268,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
+        [XmlIgnore]
         public double Wind 
         { 
             get
@@ -279,6 +285,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
+        [XmlIgnore]
         public double CO2 { get; set; }
         
         /// <summary>
