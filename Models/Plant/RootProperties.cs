@@ -22,7 +22,7 @@ namespace Models.PMF
         /// The lower limit of water storage that the crops can extract water to from the soil if the soil is fully ramified by roots (mm).
         /// At some point in the future this will be replaced by the minimum leaf water potential.
         /// </summary>
-        public double[] LLDep { get; set; }
+        public double[] LowerLimitDep { get; set; }
 
         /// <summary>
         /// The length of root contained within a unit volume of soil (mm/mm3).  Note that 1 cm/cm3 = 0.01 mm/mm3.  

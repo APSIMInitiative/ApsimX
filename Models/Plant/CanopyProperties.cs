@@ -50,9 +50,14 @@ namespace Models.PMF
         public double depth;
 
         /// <summary>
-        /// This is that stomatal conductance in (m/s) that will be seen under non-limiting light and nutrients
+        /// Stomatal conductance in (m/s) that will be seen under non-limiting light, humidity and nutrients
         /// </summary>
         public double MaximumStomatalConductance;
+
+        /// <summary>
+        /// Fractional relative growth rate (-) with 1.0 at full growth rate and 0.0 at no growth
+        /// </summary>
+        public double Frgr;
 
     }
 }

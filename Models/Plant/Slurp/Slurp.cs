@@ -66,26 +66,25 @@ namespace Models.PMF.Slurp
         /// </summary>
         public string CropType { get { return "Slurp"; } }
 
-
         /// <summary>
         /// The name as it appears in the GUI e.g. "Wheat3" 
         /// ???? How is this got?????
         /// </summary>
-        //public string Name { get { return "Slurp"; } } this does nto work
+        //public string Name { get { return "Slurp"; } } //this does not work
 
         /// <summary>
         /// Greem leaf area index (m2/m2) 
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("LAI")] public double LAI { get; set; }
+        [Description("Green LAI (m2/m2)")] public double LAI { get; set; }
 
         /// <summary>
         /// Total (includes dead) leaf area index (m2/m2) 
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Total LAI")]
+        [Description("Total LAI (m2/m2)")]
         public double LAItot { get; set; }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace Models.PMF.Slurp
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Cover Green")]
+        [Description("Cover Green (m2/m2)")]
         public double CoverGreen { get; set; }
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace Models.PMF.Slurp
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Total Cover")]
+        [Description("Total Cover (m2/m2)")]
         public double CoverTot { get; set; }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace Models.PMF.Slurp
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Canopy Height")]
+        [Description("Canopy Height (mm)")]
         public double Height { get; set; }
 
         /// <summary>
@@ -120,8 +119,27 @@ namespace Models.PMF.Slurp
         /// Used in the light and energy arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Canopy Depth")]
+        [Description("Canopy Depth (mm)")]
         public double Depth { get; set; }
+
+        /// <summary>
+        /// Stomatal conductance in (m/s) that will be seen under non-limiting light, humidity and nutrients
+        /// For default values see:
+        ///     Kelliher, FM, Leuning, R, Raupach, MR, Schulze, E-D (1995) Maximum conductances for evaporation from 
+        ///     global vegetation types. Agricultural and Forest Meteorology 73, 1–16.
+        /// </summary>
+        [Description("Maximum stomatal conductance (m/s)")]
+        public double MaximumStomatalConductance;
+
+        /// <summary>
+        /// Fractional relative growth rate (-) with 1.0 at full growth rate and 0.0 at no growth
+        /// Used in the calculation of actual stomatal conductance by scaling back the MaximumStomatalConductance 
+        /// for stresses other than humidity, water deficit, temperature.  Usually has a value of 1.0.
+        /// </summary>
+        [Description("Frgr (-)")]
+        public double Frgr;
+
+
 
 
         // The variables that in RootProperties
@@ -137,7 +155,7 @@ namespace Models.PMF.Slurp
         /// Used in the water and nutrient arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Root Depth")]
+        [Description("Root Depth (mm)")]
         public double RootDepth { get; set; }
 
         /// <summary>
@@ -146,8 +164,17 @@ namespace Models.PMF.Slurp
         /// Used in the water and nutrient arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("kl")]
+        [Description("kl (/day)")]
         public double[] kl { get; set; }
+
+        /// <summary>
+        /// The bastardised Passioura/Monteith K*L (/day)
+        /// At some point this will be replaced by one soil property and the root length density.
+        /// Used in the water and nutrient arbitration
+        /// Set from the interface and will not change unless reset
+        /// </summary>
+        [Description("Lower Limit of soil water extraction as a depth of water in each soil layer (mm)")]
+        public double[] LowerLimitDep { get; set; }
 
 
         private double Ndemand = 0.0;  // wehre does this sit?
@@ -156,8 +183,8 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
-            RootProperties.KL = Soil.KL("slurp");
-            RootProperties.LLDep = Soil.LL("slurp");
+            RootProperties.KL = Soil.KL(CropType);
+            RootProperties.LowerLimitDep = Soil.LL(CropType);
             RootProperties.RootDepth = RootDepth;
             RootProperties.RootExplorationByLayer= new double[] {1.0,1.0,0.5,0.0};
             RootProperties.RootLengthDensityByVolume = new double[] { 0.05, 0.03, 0.0058, 0.0 };

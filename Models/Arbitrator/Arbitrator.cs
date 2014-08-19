@@ -111,8 +111,8 @@ namespace Models.Arbitrator
                 totalSWDemand += potentialEP[i];
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    
-                    double temp = (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LLDep[j]) * plants[i].RootProperties.KL[j] * plants[i].RootProperties.RootExplorationByLayer[j];
+
+                    double temp = (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]) * plants[i].RootProperties.KL[j] * plants[i].RootProperties.RootExplorationByLayer[j];
                     availWaterDepPlantLayer[i, j] = Math.Max(temp, 0.0);  // 
 
                     // sum by plant for convenience
