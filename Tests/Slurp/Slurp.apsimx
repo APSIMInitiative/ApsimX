@@ -369,21 +369,22 @@
       </SurfaceOrganicMatter>
       <Slurp>
         <Name>Slurp</Name>
-        <plant_status>out</plant_status>
-        <CoverGreen>1</CoverGreen>
-        <RootDepth>900</RootDepth>
+        <MaximumStomatalConductance>0</MaximumStomatalConductance>
+        <Frgr>0</Frgr>
         <LeafMass>3000</LeafMass>
+        <LAI>4.5</LAI>
+        <LAItot>4.5</LAItot>
+        <CoverGreen>1</CoverGreen>
+        <CoverTot>1</CoverTot>
+        <Height>800</Height>
+        <Depth>800</Depth>
+        <RootDepth>900</RootDepth>
         <kl>
           <double>0.5</double>
           <double>0.5</double>
           <double>0.5</double>
           <double>0.5</double>
         </kl>
-        <LAI>4.5</LAI>
-        <LAItot>4.5</LAItot>
-        <CoverTot>1</CoverTot>
-        <Height>800</Height>
-        <Depth>800</Depth>
         <LeafN>4.5</LeafN>
       </Slurp>
       <Arbitrator>
