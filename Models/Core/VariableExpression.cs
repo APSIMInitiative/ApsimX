@@ -28,24 +28,24 @@ namespace Models.Core
         private Utility.ExpressionEvaluator fn = null;
 
         /// <summary>
-        /// A reference to the variables class so that getting of variable values is possible.
-        /// </summary>
-        private Variables variables;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="VariableExpression" /> class.
         /// </summary>
         /// <param name="expression">The string expression</param>
-        public VariableExpression(string expression, Variables variables)
+        public VariableExpression(string expression, Model model)
         {
             this.expression = expression;
-            this.variables = variables;
+            this.Object = model;
 
             // Perform initial parsing.
             this.fn = new Utility.ExpressionEvaluator();
             this.fn.Parse(this.expression.Trim());
             this.fn.Infix2Postfix();
         }
+
+        /// <summary>
+        /// A reference to the variables class so that getting of variable values is possible.
+        /// </summary>
+        public override Object Object { get; set; }
 
         /// <summary>
         /// Gets the name of the property.
@@ -117,7 +117,7 @@ namespace Models.Core
                 Utility.Symbol sym = (Utility.Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = variables.Get(sym.m_name.Trim());
+                object sometypeofobject = (Object as Model).Get(sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)

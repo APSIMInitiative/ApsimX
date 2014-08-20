@@ -282,11 +282,11 @@
 			<End>Unused</End>
 		</EndPhase>
 	</Phenology>
-	<Arbitrator>
+	<OrganArbitrator>
 		<Name>Arbitrator</Name>
 		<NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
 		<DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-	</Arbitrator>
+	</OrganArbitrator>
 	<Structure>
 		<Name>Structure</Name>
 		<AirTemperatureFunction>

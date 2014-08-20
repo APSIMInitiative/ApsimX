@@ -48,8 +48,8 @@
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -59,9 +59,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -70,28 +67,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
@@ -104,7 +79,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -485,6 +459,19 @@
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+              <string>180-210</string>
+              <string>210-240</string>
+              <string>240-270</string>
+              <string>270-300</string>
+            </Depth>
             <OC>
               <double>1.04</double>
               <double>0.89</double>
@@ -572,13 +559,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
-            <PercentMethod>FilledFromTop</PercentMethod>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -678,25 +664,11 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Type>Potato</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Manager>
           <Name>SowingRule</Name>
           <Script>
-            <Name>Script</Name>
-            <RowSpace>280</RowSpace>
-            <RowWidth>770</RowWidth>
-            <PlantingDepth>150</PlantingDepth>
-            <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-            <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>2003-11-10T00:00:00</SowingDate>
+            <SowingDate>10/11/2003 12:00:00 AM</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -719,10 +691,9 @@
         <Manager>
           <Name>FertiliserRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+            <ApplicationDate>30/12/2003 12:00:00 AM</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -759,8 +730,8 @@
 				]]></Code>
         </Manager>
         <Area>0</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -786,8 +757,8 @@
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -797,9 +768,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -808,28 +776,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
@@ -840,7 +786,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -1221,6 +1166,19 @@
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+              <string>180-210</string>
+              <string>210-240</string>
+              <string>240-270</string>
+              <string>270-300</string>
+            </Depth>
             <OC>
               <double>1.04</double>
               <double>0.89</double>
@@ -1308,13 +1266,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
-            <PercentMethod>FilledFromTop</PercentMethod>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1399,10 +1356,9 @@
         <Manager>
           <Name>FertiliserRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+            <ApplicationDate>30/12/2003 12:00:00 AM</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -1439,8 +1395,8 @@
 				]]></Code>
         </Manager>
         <Area>0</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1483,8 +1439,8 @@
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -1494,9 +1450,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -1505,28 +1458,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
@@ -1537,7 +1468,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -1918,6 +1848,19 @@
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+              <string>180-210</string>
+              <string>210-240</string>
+              <string>240-270</string>
+              <string>270-300</string>
+            </Depth>
             <OC>
               <double>1.04</double>
               <double>0.89</double>
@@ -2005,13 +1948,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
-            <PercentMethod>FilledFromTop</PercentMethod>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2111,14 +2053,6 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Type>Potato</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Operations>
           <Name>FertiliserRule</Name>
@@ -2128,8 +2062,8 @@
           </Operation>
         </Operations>
         <Area>0</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -2153,8 +2087,8 @@
             <MinT>0</MinT>
             <Rain>0</Rain>
             <Radn>0</Radn>
-            <vp>0</vp>
-            <wind>0</wind>
+            <VP>0</VP>
+            <Wind>0</Wind>
             <CO2>350</CO2>
           </WeatherFile>
         </FactorValue>
@@ -2173,8 +2107,8 @@
             <MinT>0</MinT>
             <Rain>0</Rain>
             <Radn>0</Radn>
-            <vp>0</vp>
-            <wind>0</wind>
+            <VP>0</VP>
+            <Wind>0</Wind>
             <CO2>350</CO2>
           </WeatherFile>
         </FactorValue>
@@ -2194,8 +2128,8 @@
         <MinT>0</MinT>
         <Rain>0</Rain>
         <Radn>0</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
+        <VP>0</VP>
+        <Wind>0</Wind>
         <CO2>350</CO2>
       </WeatherFile>
       <Clock>
@@ -2205,9 +2139,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -2216,28 +2147,6 @@
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <Definitions>
-            <FertiliserType>
-              <Name>UreaN</Name>
-              <FractionNO3>0</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>1</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-            <FertiliserType>
-              <Name>NO3N</Name>
-              <FractionNO3>1</FractionNO3>
-              <FractionNH4>0</FractionNH4>
-              <FractionUrea>0</FractionUrea>
-              <FractionRockP>0</FractionRockP>
-              <FractionBandedP>0</FractionBandedP>
-              <FractionLabileP>0</FractionLabileP>
-              <FractionCa>0</FractionCa>
-            </FertiliserType>
-          </Definitions>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
@@ -2247,7 +2156,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -2628,6 +2536,19 @@
               <double>300</double>
               <double>300</double>
             </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+              <string>180-210</string>
+              <string>210-240</string>
+              <string>240-270</string>
+              <string>270-300</string>
+            </Depth>
             <OC>
               <double>1.04</double>
               <double>0.89</double>
@@ -2715,13 +2636,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
-            <PercentMethod>FilledFromTop</PercentMethod>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2821,14 +2741,6 @@
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <ComponentData>
-            <Name>Potato</Name>
-            <Type>Potato</Type>
-            <Albedo>0.26</Albedo>
-            <Emissivity>0.96</Emissivity>
-            <R50>200</R50>
-            <Gsmax>0.011</Gsmax>
-          </ComponentData>
         </MicroClimate>
         <Graph>
           <Name>SoilWater</Name>
@@ -2850,16 +2762,16 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.sw_dep(1)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <SplitOn>Simulation</SplitOn>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
         </Graph>
@@ -2871,12 +2783,13 @@
           </Operation>
         </Operations>
         <Area>0</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
   </Experiment>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Graph>
     <Name>Graph</Name>
@@ -2899,16 +2812,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>1-Nov, 20N</Title>
@@ -2919,16 +2832,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>1-Nov, 60N</Title>
@@ -2939,16 +2852,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-11-01: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>20-Dec, 0N</Title>
@@ -2959,16 +2872,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 0</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>20-Dec, 20N</Title>
@@ -2979,16 +2892,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 20</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>20-Dec, 60N</Title>
@@ -2999,16 +2912,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>SowDate 2003-12-20: Fertiliser 60</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Plant.Leaf.Live.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -3211,6 +3124,5 @@
       <Parameters>50</Parameters>
     </Test>
   </Tests>
-  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

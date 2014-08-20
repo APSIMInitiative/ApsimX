@@ -24,7 +24,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                object val = this.Variables.Get(VariableName);
+                object val = this.Get(VariableName);
 
                 if (val != null)
                     return Convert.ToDouble(val);

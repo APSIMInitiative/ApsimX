@@ -99,17 +99,16 @@ namespace Models
             get
             {
                 Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+
+               // return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
                     
                 string fullFileName = this.FileName;
                 if (this.FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(this.FileName) != this.FileName)
                 {
-                    fullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), this.FileName);
+                    //fullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), this.FileName);
                     if (!File.Exists(fullFileName))
                     {
-                        fullFileName = Path.Combine(
-                            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                            .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), 
-                            this.FileName);
+                        fullFileName = Utility.PathUtils.GetAbsolutePath(fullFileName, simulation.FileName);
                     }
                 }
 
@@ -126,14 +125,7 @@ namespace Models
                     Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
                     if (simulation != null && simulation.FileName != null)
                     {
-                        this.FileName = this.FileName.Replace(
-                            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                            .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), 
-                            string.Empty);
-                        if (this.FileName.Contains(Path.GetDirectoryName(simulation.FileName)))
-                        {
-                            this.FileName = this.FileName.Replace(Path.GetDirectoryName(simulation.FileName) + Path.DirectorySeparatorChar, string.Empty);
-                        }
+                        this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
                     }
                 }
             }
@@ -190,6 +182,7 @@ namespace Models
         /// Gets or sets the maximum temperature (oc)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [XmlIgnore]
         public double MaxT 
         { 
             get 
@@ -207,6 +200,7 @@ namespace Models
         /// Gets or sets the minimum temperature (oc)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [XmlIgnore]
         public double MinT 
         { 
             get 
@@ -223,6 +217,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
+        [XmlIgnore]
         public double Rain 
         { 
             get 
@@ -239,6 +234,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
+        [XmlIgnore]
         public double Radn 
         { 
             get 
@@ -255,6 +251,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the vapor pressure
         /// </summary>
+        [XmlIgnore]
         public double VP 
         { 
             get 
@@ -271,6 +268,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
+        [XmlIgnore]
         public double Wind 
         { 
             get
@@ -287,6 +285,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
+        [XmlIgnore]
         public double CO2 { get; set; }
         
         /// <summary>

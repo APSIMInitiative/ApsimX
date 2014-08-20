@@ -30,8 +30,8 @@ namespace Models
                     fileName = args[0];
                 if (args.Length == 2)
                     commandLineSwitch = args[1];
-                if (args.Length < 1 || args.Length > 3)
-                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse] [/Network]");
+                if (args.Length < 1 || args.Length > 4)
+                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse] [/Network] [/IP:<server IP>]");
 
                 // Create a instance of a job that will go find .apsimx files. Then
                 // pass the job to a job runner.
@@ -47,7 +47,17 @@ namespace Models
                 {
                     try
                     {
-                        DoNetworkRun(fileName, args.Contains("/Recurse"));// send files over network
+                        int IPindex = -1;
+                        for (int i = 0; i < args.Length;i++ )
+                            if (args[i].Contains("IP"))
+                            {
+                                IPindex = i;
+                                break;
+                            }
+                        if (IPindex == -1)
+                            throw new Exception("/Network specified, but no IP given (/IP:<server IP>]");
+
+                            DoNetworkRun(fileName, args[IPindex].Split(':')[1], args.Contains("/Recurse"));// send files over network
                     }
                     catch (SocketException)
                     {
@@ -125,6 +135,10 @@ namespace Models
                 foreach (XmlNode node in nodes)
                     TempList.Add(node.InnerText);
 
+                nodes = root.SelectNodes("//Model/FileName");
+                foreach (XmlNode node in nodes)
+                    TempList.Add(node.InnerText);
+
                 nodes = root.SelectNodes("//Input/FileNames/string");
                 foreach (XmlNode node in nodes)
                     TempList.Add(node.InnerText);
@@ -153,10 +167,9 @@ namespace Models
         /// Send our .apsimx and associated weather files over the network
         /// </summary>
         /// <param name="FileName">The .apsimx file to send.</param>
-        private static void DoNetworkRun(string FileName, bool Recurse)
+        /// <param name="Recurse">Recurse through sub directories?</param>
+        private static void DoNetworkRun(string FileName, string ServerIP, bool Recurse)
         {
-            string ServerIP = "150.229.142.16";
-            ServerIP = "127.0.0.1"; //debug only
             //hold server acknowledge
             byte[] ack = new byte[1];
 

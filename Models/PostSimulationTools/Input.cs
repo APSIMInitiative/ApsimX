@@ -33,11 +33,7 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                //attempt to use relative path for files in ApsimX install directory
-                fileNames = new string[value.Length];
-                for (int i = 0; i < fileNames.Length; i++)
-                    fileNames[i] = value[i].Replace(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3), "");
+                fileNames = value;
             }
         }
 
@@ -51,21 +47,13 @@ namespace Models.PostSimulationTools
                 Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
 
                 dataStore.DeleteTable(Name);
-                DataTable data = GetTable();
+                DataTable data = GetTable(simulations.FileName);
                 for (int i=0;i< FileNames.Length; i++)
                 {
                     if (FileNames[i] == null)
                         continue;
 
-                    string temp = string.Empty;
-                    //make it work in linux
-                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        temp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
-                    else temp = FileNames[i];
-
-                    if (File.Exists(temp))
-                        dataStore.WriteTable(null, this.Name, data);
+                    dataStore.WriteTable(null, this.Name, data);
                 }
             }
         }
@@ -74,7 +62,7 @@ namespace Models.PostSimulationTools
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable()
+        public DataTable GetTable(string SimPath)
         {
             DataTable returnDataTable = null;
             if (FileNames != null)
@@ -84,11 +72,7 @@ namespace Models.PostSimulationTools
                     if (FileNames[i] == null)
                         continue;
 
-                    string file;
-                    if (!FileNames[i].Contains(':')) // no drive designator, so it's a relative path
-                        file = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                        .Substring(0, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Length - 3) + FileNames[i]; //remove bin
-                    else file = FileNames[i];
+                    string file = Utility.PathUtils.GetAbsolutePath(fileNames[i], SimPath);
 
                     if ( File.Exists(file))
                     {

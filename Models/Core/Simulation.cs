@@ -20,16 +20,26 @@ namespace Models.Core
         public event EventHandler OnCompleted;
 
         /// <summary>
-        /// Cache to speed up scope lookups.
+        /// A locater object for finding models and variables.
         /// </summary>
         [NonSerialized]
-        private Dictionary<string, Model[]> _ScopeCache = null;
+        private Locater locater;
 
         /// <summary>
-        /// Cache to speed up variable lookups.
+        /// Cache to speed up scope lookups.
         /// </summary>
-        [NonSerialized]
-        private Dictionary<string, IVariable> _VariableCache = null;
+        public Locater Locater
+        {
+            get
+            {
+                if (locater == null)
+                {
+                    locater = new Locater();
+                }
+
+                return locater;
+            }
+        }
 
         /// <summary>
         /// Get a reference to the clock model.
@@ -58,34 +68,7 @@ namespace Models.Core
         /// </summary>
         public Simulation()
         {
-        }
-
-        /// <summary>
-        /// Return a reference to the scope cache.
-        /// </summary>
-        [XmlIgnore]
-        public Dictionary<string, Model[]> ScopeCache 
-        { 
-            get 
-            { 
-                if (_ScopeCache == null)
-                    _ScopeCache = new Dictionary<string, Model[]>();
-                return _ScopeCache; 
-            } 
-        }
-
-        /// <summary>
-        /// Return a reference to the variable cache.
-        /// </summary>
-        [XmlIgnore]
-        public Dictionary<string, IVariable> VariableCache 
-        { 
-            get 
-            { 
-                if (_VariableCache == null)
-                    _VariableCache = new Dictionary<string, IVariable>();
-                return _VariableCache; 
-            } 
+            locater = new Locater();
         }
 
         /// <summary>
@@ -103,7 +86,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = err.Message;
+                string Msg = "Simulation name: " + Name + "\r\n";
+                Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
@@ -118,7 +102,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = err.Message;
+                string Msg = "Simulation name: " + Name + "\r\n";
+                Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
                 else
@@ -152,8 +137,7 @@ namespace Models.Core
 
             _IsRunning = true;
             
-            VariableCache.Clear();
-            ScopeCache.Clear();
+            Locater.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
             foreach (Model child in Children.AllRecursively)
                 child.OnSimulationCommencing();

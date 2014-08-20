@@ -33,7 +33,7 @@ namespace Models.PMF
         [Link] Function ThermalTime = null;
         [Link] Function MainStemPrimordiaInitiationRate = null;
         [Link] public Function MainStemNodeAppearanceRate = null;
-        [Link] Function MainStemFinalNodeNumber = null;
+        [Link] public Function MainStemFinalNodeNumber = null;
         [Link] Function HeightModel = null;
         [Link] Function BranchingRate = null;
         [Link] Function ShadeInducedBranchMortality = null;

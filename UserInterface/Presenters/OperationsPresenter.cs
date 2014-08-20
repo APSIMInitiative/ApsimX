@@ -85,10 +85,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
         {
-            object o = Operations.Variables.Get(e.ObjectName);
+            object o = Operations.Get(e.ObjectName);
 
             if (o == null)
-                o = Operations.Scope.Find(e.ObjectName);
+                o = Operations.Find(e.ObjectName);
 
             if (o != null)
             {

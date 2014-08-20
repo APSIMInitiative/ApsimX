@@ -6,7 +6,7 @@
     <Input>
       <Name>Input</Name>
       <FileNames>
-        <string>Tests\Egrandis\EucalyptusValidationData.txt</string>
+        <string>EucalyptusValidationData.txt</string>
       </FileNames>
     </Input>
     <AutoExport>false</AutoExport>
@@ -557,11 +557,11 @@
             <End>Unused</End>
           </EndPhase>
         </Phenology>
-        <Arbitrator>
+        <OrganArbitrator>
           <Name>Arbitrator</Name>
           <NArbitrationOption>RelativeAllocation</NArbitrationOption>
           <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-        </Arbitrator>
+        </OrganArbitrator>
         <Summariser>
           <Name>Summariser</Name>
           <CompositeBiomass>
@@ -967,7 +967,7 @@
           <RowSpace>3</RowSpace>
           <RowWidth>3</RowWidth>
           <CultivarName>EGrandis</CultivarName>
-          <SowingDate>1/04/1953 12:00:00 AM</SowingDate>
+          <SowingDate>1953-04-01</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;

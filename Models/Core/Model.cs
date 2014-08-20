@@ -1,63 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using System.Reflection;
-using System.Collections;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Xml.Schema;
-using System.Xml;
-
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Model.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Xml;
+    using System.Xml.Serialization;
+
     /// <summary>
-    /// Base class for all models in ApsimX.
+    /// Base class for all models
     /// </summary>
     [Serializable]
     public class Model
     {
-        private string _Name = null;
-        private Model _Parent = null;
-        [NonSerialized] private Variables _Variables;
-        [NonSerialized] private Scope _Scope;
-        [NonSerialized] private Events _Events;
-
-
-
-        ////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// The name of the model.
+        /// </summary>
+        private string name = null;
 
         /// <summary>
-        /// Constructor.
+        /// The parent model. null if no parent
+        /// </summary>
+        private Model parent = null;
+
+        /// <summary>
+        /// The events instance
+        /// </summary>
+        [NonSerialized] 
+        private Events events;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Model" /> class.
         /// </summary>
         public Model()
         {
-            Children = new ModelCollection(this);
-            IsHidden = false;
+            this.Children = new ModelCollection(this);
+            this.IsHidden = false;
         }
 
         /// <summary>
-        /// Get or set the name of the model
+        /// Gets or sets the name of the model
         /// </summary>
         public string Name
         {
             get
             {
-                if (_Name == null)
+                if (this.name == null)
+                {
                     return this.GetType().Name;
+                }
                 else
-                    return _Name;
+                {
+                    return this.name;
+                }
             }
+            
             set
             {
-                _Name = value;
-                CalcFullPath();
+                this.name = value;
+                this.CalcFullPath();
             }
         }
 
         /// <summary>
-        /// A list of child models.   
+        /// Gets or sets a list of child models.   
         /// </summary>
         [XmlElement(typeof(Simulation))]
         [XmlElement(typeof(Simulations))]
@@ -80,6 +94,7 @@ namespace Models.Core
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
+        [XmlElement(typeof(Arbitrator.Arbitrator))]
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Report))]
         [XmlElement(typeof(Summary))]
@@ -106,7 +121,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.SoilTemperature2))]
         [XmlElement(typeof(Soils.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
-        [XmlElement(typeof(Models.PMF.Arbitrator))]
+        [XmlElement(typeof(Models.PMF.OrganArbitrator))]
         [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Summariser))]
         [XmlElement(typeof(Models.PMF.Biomass))]
@@ -205,86 +220,27 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Cultivar))]
         public List<Model> Models { get; set; }
 
-        #region Methods than can be overridden
         /// <summary>
-        /// Called immediately after the model is XML deserialised.
-        /// </summary>
-        public virtual void OnLoaded() { }
-
-        /// <summary>
-        /// Called just before the simulation commences.
-        /// </summary>
-        public virtual void OnSimulationCommencing() { }
-
-        /// <summary>
-        /// Called just after the simulation has completed.
-        /// </summary>
-        public virtual void OnSimulationCompleted() { }
-
-        /// <summary>
-        /// Invoked after all simulations finish running. This allows
-        /// for post simulation analysis models to run.
-        /// </summary>
-        public virtual void OnAllSimulationsCompleted() {}
-
-        /// <summary>
-        /// Called immediately before deserialising.
-        /// </summary>
-        public virtual void OnDeserialising(bool xmlSerialisation) { }
-
-        /// <summary>
-        /// Called immediately after deserialisation.
-        /// </summary>
-        public virtual void OnDeserialised(bool xmlSerialisation) { }
-
-        /// <summary>
-        /// Called immediately before serialising.
-        /// </summary>
-        public virtual void OnSerialising(bool xmlSerialisation) { }
-
-        /// <summary>
-        /// Called immediately after serialisation.
-        /// </summary>
-        public virtual void OnSerialised(bool xmlSerialisation) { }
-
-        #endregion
-
-        /// <summary>
-        /// Get or set the parent of the model.
+        /// Gets or sets the parent of the model.
         /// </summary>
         [XmlIgnore]
         public Model Parent
         {
             get
             {
-                return _Parent;
+                return this.parent;
             }
+            
             set
             {
-                _Parent = value;
-                _Variables = new Core.Variables(this);
-                _Scope = new Core.Scope(this);
-                _Events = new Core.Events(this);
-                CalcFullPath();
+                this.parent = value;
+                this.events = new Core.Events(this);
+                this.CalcFullPath();
             }
         }
 
         /// <summary>
-        /// Return a parent node of the specified type 't'. Will throw if not found.
-        /// </summary>
-        public Model ParentOfType(Type t)
-        {
-            Model obj = this;
-            while (obj.Parent != null && obj.GetType() != t)
-                obj = obj.Parent;
-            if (obj == null)
-                throw new ApsimXException(FullPath, "Cannot find a parent of type: " + t.Name);
-            return obj;
-        }
-
-        /// <summary>
-        /// Return the full path of the model.
-        /// Format: Simulations.SimName.PaddockName.ChildName
+        /// Gets the full path of the model.
         /// </summary>
         [XmlIgnore]
         public string FullPath { get; private set; }
@@ -296,32 +252,222 @@ namespace Models.Core
         public bool IsHidden { get; set; }
 
         /// <summary>
-        /// Provides access to all child models.
+        /// Gets the array of children
         /// </summary>
         [XmlIgnore]
-        public ModelCollection Children { get; private set;}
+        public ModelCollection Children { get; private set; }
 
         /// <summary>
-        /// Provides access to all simulation variables.
+        /// Gets an array of plant models that are in scope.
         /// </summary>
-        public Variables Variables { get { return _Variables; } }
+        [XmlIgnore]
+        public ICrop2[] Plants
+        {
+            get
+            {
+                List<ICrop2> plants = new List<ICrop2>();
+                foreach (ICrop2 plant in this.FindAll(typeof(ICrop2)))
+                {
+                    plants.Add(plant);
+                }
+
+                return plants.ToArray();
+            }
+        }
 
         /// <summary>
-        /// Provides access to all simulation models that are in scope.
+        /// Gets an instance of the models event class
         /// </summary>
-        public Scope Scope { get { return _Scope; } }
+        public Events Events 
+        { 
+            get 
+            { 
+                return this.events; 
+            } 
+        }
 
         /// <summary>
-        /// Providees access to all simulation events that are in scope.
+        /// Gets the parent locater model.
         /// </summary>
-        public Events Events { get { return _Events; } }
+        private Locater Locater
+        {
+            get
+            {
+                Simulation simulation = this.ParentOfType(typeof(Simulation)) as Simulation;
+                if (simulation == null)
+                {
+                    // Simulation can be null if this model is not under a simulation e.g. DataStore.
+                    return new Locater();
+                }
+                else
+                {
+                    return simulation.Locater;
+                }
+            }
+        }
+
+        #region Methods than can be overridden
+        /// <summary>
+        /// Called immediately after the model is XML deserialized.
+        /// </summary>
+        public virtual void OnLoaded()
+        {
+        }
+
+        /// <summary>
+        /// Called just before the simulation commences.
+        /// </summary>
+        public virtual void OnSimulationCommencing()
+        {
+        }
+
+        /// <summary>
+        /// Called just after the simulation has completed.
+        /// </summary>
+        public virtual void OnSimulationCompleted()
+        {
+        }
+
+        /// <summary>
+        /// Invoked after all simulations finish running. This allows
+        /// for post simulation analysis models to run.
+        /// </summary>
+        public virtual void OnAllSimulationsCompleted()
+        {
+        }
+
+        /// <summary>
+        /// Called immediately before deserializing.
+        /// </summary>
+        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        public virtual void OnDeserialising(bool xmlSerialisation)
+        {
+        }
+
+        /// <summary>
+        /// Called immediately after deserialization.
+        /// </summary>
+        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        public virtual void OnDeserialised(bool xmlSerialisation)
+        {
+        }
+
+        /// <summary>
+        /// Called immediately before serializing.
+        /// </summary>
+        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
+        public virtual void OnSerialising(bool xmlSerialisation)
+        {
+        }
+
+        /// <summary>
+        /// Called immediately after serialization.
+        /// </summary>
+        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
+        public virtual void OnSerialised(bool xmlSerialisation)
+        {
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Return a parent node of the specified type 't'. Will throw if not found.
+        /// </summary>
+        /// <param name="t">The name of the parent model to return</param>
+        /// <returns>The parent of the specified type.</returns>
+        public Model ParentOfType(Type t)
+        {
+            Model obj = this;
+            while (obj.Parent != null && obj.GetType() != t)
+            {
+                obj = obj.Parent;
+            }
+
+            if (obj == null)
+            {
+                throw new ApsimXException(this.FullPath, "Cannot find a parent of type: " + t.Name);
+            }
+
+            return obj;
+        }
+
+        /// <summary>
+        /// Gets the value of a variable or model.
+        /// </summary>
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public object Get(string namePath)
+        {
+            return Locater.Get(namePath, this);
+        }
+
+        /// <summary>
+        /// Get the underlying variable object for the given path.
+        /// </summary>
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public IVariable GetVariableObject(string namePath)
+        {
+            return Locater.GetInternal(namePath, this);
+        }
+
+        /// <summary>
+        /// Sets the value of a variable. Will throw if variable doesn't exist.
+        /// </summary>
+        /// <param name="namePath">The name of the object to set</param>
+        /// <param name="value">The value to set the property to</param>
+        public void Set(string namePath, object value)
+        {
+            Locater.Set(namePath, this, value);
+        }
+
+        /// <summary>
+        /// Locates and returns a model with the specified name that is in scope.
+        /// </summary>
+        /// <param name="namePath">The name of the model to return</param>
+        /// <returns>The found model or null if not found</returns>
+        public Model Find(string namePath)
+        {
+            return Locater.Find(namePath, this);
+        }
+
+        /// <summary>
+        /// Locates and returns a model with the specified type that is in scope.
+        /// </summary>
+        /// <param name="type">The type of the model to return</param>
+        /// <returns>The found model or null if not found</returns>
+        public Model Find(Type type)
+        {
+            return Locater.Find(type, this);
+        }
+
+        /// <summary>
+        /// Locates and returns all models in scope.
+        /// </summary>
+        /// <returns>The found models or an empty array if not found.</returns>
+        public Model[] FindAll()
+        {
+            return Locater.FindAll(this);
+        }
+
+        /// <summary>
+        /// Locates and returns all models in scope of the specified type.
+        /// </summary>
+        /// <param name="type">The type of the models to return</param>
+        /// <returns>The found models or an empty array if not found.</returns>
+        public Model[] FindAll(Type type)
+        {
+            return Locater.FindAll(type, this);
+        }
 
         /// <summary>
         /// Connect this model to the others in the simulation.
         /// </summary>
         public void ResolveLinks()
         {
-            Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = this.ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -333,7 +479,9 @@ namespace Models.Core
                     ResolveExternalLinks(this);
                 }
                 else
+                {
                     ResolveLinksInternal(this);
+                }
             }
         }
 
@@ -348,54 +496,67 @@ namespace Models.Core
         /// <summary>
         /// Perform a deep Copy of the this model.
         /// </summary>
+        /// <returns>The clone of the model</returns>
         public Model Clone()
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<Model> modelsToNotify = Children.AllRecursively;
+            List<Model> modelsToNotify = this.Children.AllRecursively;
 
             // Get rid of our parent temporarily as we don't want to serialise that.
-            Models.Core.Model parent = Parent;
-            Parent = null;
+            Models.Core.Model parent = this.Parent;
+            this.Parent = null;
 
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             using (stream)
             {
                 foreach (Model model in modelsToNotify)
+                {
                     model.OnSerialising(xmlSerialisation: false);
+                }
 
                 formatter.Serialize(stream, this);
 
                 foreach (Model model in modelsToNotify)
+                {
                     model.OnSerialised(xmlSerialisation: false);
+                }
 
                 stream.Seek(0, SeekOrigin.Begin);
 
                 foreach (Model model in modelsToNotify)
+                {
                     model.OnDeserialising(xmlSerialisation: false);
+                }
+
                 Model returnObject = (Model)formatter.Deserialize(stream);
                 foreach (Model model in modelsToNotify)
+                {
                     model.OnDeserialised(xmlSerialisation: false);
+                }
 
                 // Reinstate parent
-                Parent = parent;
+                this.Parent = parent;
 
                 return returnObject;
             }
         }
 
         /// <summary>
-        /// Serialise the model to a string and return the string.
+        /// Serialize the model to a string and return the string.
         /// </summary>
+        /// <returns>The string version of the model</returns>
         public string Serialise()
         {
             // Get a list of all child models that we need to notify about the serialisation.
-            List<Model> modelsToNotify = Children.AllRecursively;
+            List<Model> modelsToNotify = this.Children.AllRecursively;
             modelsToNotify.Insert(0, this);
 
             // Let all models know that we're about to serialise.
             foreach (Model model in modelsToNotify)
+            {
                 model.OnSerialising(xmlSerialisation: true);
+            }
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
@@ -403,64 +564,54 @@ namespace Models.Core
 
             // Let all models know that we have completed serialisation.
             foreach (Model model in modelsToNotify)
+            {
                 model.OnSerialised(xmlSerialisation: false);
+            }
 
             // Set the clipboard text.
             return writer.ToString();
         }
+        
         #region Internals
-
+        
         /// <summary>
-        /// Calculate the model's full path. 
-        /// Format: Simulations.SimName.PaddockName.ChildName
+        /// Resolve all Link fields in the specified model.
         /// </summary>
-        private void CalcFullPath()
-        {
-            FullPath = "." + Name;
-            Model parent = Parent;
-            while (parent != null)
-            {
-                FullPath = FullPath.Insert(0, "." + parent.Name);
-                parent = parent.Parent;
-            }
-
-            if (Models != null)
-                foreach (Model child in Models)
-                    child.CalcFullPath();
-
-        }
-
-        /// <summary>
-        /// Resolve all [Link] fields in this model.
-        /// </summary>
+        /// <param name="model">The model to look through for links</param>
+        /// <param name="linkTypeToMatch">If specified, only look for these types of links</param>
         private static void ResolveLinksInternal(Model model, Type linkTypeToMatch = null)
         {
-            string errorMsg = "";
+            string errorMsg = string.Empty;
 
             // Go looking for [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
-                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
-                                                                        BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
+                                                            model.GetType(),
+                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
                 LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null && 
+                if (link != null &&
                     (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
                 {
                     object linkedObject = null;
-                    
+
                     Model[] allMatches;
-                    allMatches = model.Scope.FindAll(field.FieldType);
+                    allMatches = model.FindAll(field.FieldType);
                     if (allMatches.Length == 1)
+                    {
                         linkedObject = allMatches[0];
+                    }
                     else
                     {
                         // more that one match so use name to match.
                         foreach (Model matchingModel in allMatches)
+                        {
                             if (matchingModel.Name == field.Name)
                             {
                                 linkedObject = matchingModel;
                                 break;
                             }
+                        }
+
                         if ((linkedObject == null) && (!link.IsOptional))
                         {
                             errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Length, field.FieldType.FullName, field.Name);
@@ -472,39 +623,69 @@ namespace Models.Core
                         field.SetValue(model, linkedObject);
                     }
                     else if (!link.IsOptional)
-                        throw new ApsimXException(model.FullPath, "Cannot resolve [Link] '" + field.ToString() +
-                                                            "' in class '" + model.FullPath + "'" + errorMsg);
+                    {
+                        throw new ApsimXException(
+                                    model.FullPath, 
+                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + model.FullPath + "'" + errorMsg);
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Unresolve (set to null) all [Link] fields.
+        /// Set to null all link fields in the specified model.
         /// </summary>
+        /// <param name="model">The model to look through for links</param>
         private static void UnresolveLinks(Model model)
         {
             // Go looking for private [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(model.GetType(),
-                                                                        BindingFlags.Instance | BindingFlags.FlattenHierarchy |
-                                                                        BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
+                                                model.GetType(),
+                                                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
                 LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
+                {
                     field.SetValue(model, null);
+                }
             }
         }
 
         /// <summary>
-        /// Go through all other models looking for a [Linl] to the specified 'model'.
+        /// Go through all other models looking for a link to the specified 'model'.
         /// Connect any links found.
         /// </summary>
+        /// <param name="model">The model to exclude from the search</param>
         private static void ResolveExternalLinks(Model model)
         {
-            foreach (Model externalModel in model.Scope.FindAll())
+            foreach (Model externalModel in model.FindAll())
+            {
                 ResolveLinksInternal(externalModel, typeof(Model));
+            }
+        }
+
+        /// <summary>
+        /// Calculate the model's full path. 
+        /// </summary>
+        private void CalcFullPath()
+        {
+            this.FullPath = "." + this.Name;
+            Model parent = this.Parent;
+            while (parent != null)
+            {
+                this.FullPath = this.FullPath.Insert(0, "." + parent.Name);
+                parent = parent.Parent;
+            }
+
+            if (this.Models != null)
+            {
+                foreach (Model child in this.Models)
+                {
+                    child.CalcFullPath();
+                }
+            }
         }
 
         #endregion
-
     }
 }

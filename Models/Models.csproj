@@ -115,6 +115,7 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\SummaryAttribute.cs" />
     <Compile Include="Core\Attributes\DisplayAttribute.cs" />
@@ -125,9 +126,14 @@
     <Compile Include="Core\Attributes\EventSubscribeAttribute.cs" />
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
+    <Compile Include="Core\ICrop2.cs" />
+    <Compile Include="Plant\CanopyProperties.cs" />
+    <Compile Include="Plant\RootProperties.cs" />
+    <Compile Include="Core\VariableComposite.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\IPostSimulationTool.cs" />
     <Compile Include="Core\IVariable.cs" />
+    <Compile Include="Core\Locater.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
     <Compile Include="Core\ModelFunctions.cs" />
     <Compile Include="Core\VariableExpression.cs" />
@@ -141,8 +147,6 @@
     <Compile Include="PostSimulationTools\PredictedObserved.cs" />
     <Compile Include="Core\ApsimXException.cs" />
     <Compile Include="Core\Folder.cs" />
-    <Compile Include="Core\Scope.cs" />
-    <Compile Include="Core\Variables.cs" />
     <Compile Include="Factorial\Factor.cs" />
     <Compile Include="Factorial\Experiment.cs" />
     <Compile Include="Factorial\Factors.cs" />
@@ -171,7 +175,7 @@
     <Compile Include="MicroClimate.cs" />
     <Compile Include="MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
-    <Compile Include="Plant\Arbitrator.cs" />
+    <Compile Include="Plant\OrganArbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
     <Compile Include="Plant\Biomass.cs" />
     <Compile Include="Plant\Comment.cs" />

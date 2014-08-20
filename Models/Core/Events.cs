@@ -64,7 +64,7 @@ namespace Models.Core
             }
             public void Connect(Model model)
             {
-                object Component = model.Variables.Get(ComponentName);
+                object Component = model.Get(ComponentName);
                 if (Component == null)
                     throw new Exception(model.FullPath + " can not find the component: " + ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -75,7 +75,7 @@ namespace Models.Core
             }
             public void Disconnect(Model model)
             {
-                object Component = model.Variables.Get(ComponentName);
+                object Component = model.Get(ComponentName);
                 if (Component != null)
                 {
                     EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -90,7 +90,7 @@ namespace Models.Core
             public bool IsMatch(EventPublisher publisher)
             {
                 if (matchingModel == null)
-                    matchingModel = parent.Variables.Get(ComponentName) as Model;
+                    matchingModel = parent.Get(ComponentName) as Model;
 
                 return publisher.Model.FullPath == matchingModel.FullPath && EventName == publisher.Name;
             }
@@ -367,7 +367,7 @@ namespace Models.Core
         private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
         {
             List<EventPublisher> publishers = new List<EventPublisher>();
-            foreach (Model model in subscriber.Model.Scope.FindAll())
+            foreach (Model model in subscriber.Model.FindAll())
                 publishers.AddRange(FindEventPublishers(subscriber.Name, model));
             return publishers;
 

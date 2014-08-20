@@ -353,6 +353,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -604,6 +605,7 @@
     <None Include="Resources\Excel16.png" />
     <None Include="Resources\cultivar16.png" />
     <Content Include="Resources\memo16.png" />
+    <None Include="Resources\MicroClimate161.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

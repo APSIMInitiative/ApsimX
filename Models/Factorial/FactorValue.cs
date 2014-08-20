@@ -105,7 +105,7 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyNameAsValue(Simulation newSimulation, string path, string name)
         {
-            object originalValue = newSimulation.Variables.Get(path);
+            object originalValue = newSimulation.Get(path);
             object newValue;
             if (originalValue is DateTime)
                 newValue = DateTime.Parse(name);
@@ -119,7 +119,7 @@ namespace Models.Factorial
                 newValue = Convert.ToString(name);
             else
                 newValue = name;
-            newSimulation.Variables.Set(path, newValue);
+            newSimulation.Set(path, newValue);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Models.Factorial
         private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
         {
             Model newModel = value.Clone();
-            Model modelToReplace = newSimulation.Variables.Get(path) as Model;
+            Model modelToReplace = newSimulation.Get(path) as Model;
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
 

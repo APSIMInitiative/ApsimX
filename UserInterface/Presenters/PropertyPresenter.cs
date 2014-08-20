@@ -184,7 +184,7 @@ namespace UserInterface.Presenters
                         
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
-                    DataStore dataStore = this.model.Scope.Find(typeof(DataStore)) as DataStore;
+                    DataStore dataStore = this.model.Find(typeof(DataStore)) as DataStore;
                     if (dataStore != null)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;

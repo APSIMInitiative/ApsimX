@@ -492,7 +492,7 @@ namespace Models
                 new object[] { simulation.FullPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in simulation.Scope.FindAll())
+            foreach (Model model in simulation.FindAll())
             {
                 string relativeModelPath = model.FullPath.Replace(simulation.FullPath + ".", string.Empty);
                 List<VariableProperty> properties = new List<VariableProperty>();

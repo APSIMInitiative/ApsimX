@@ -7,7 +7,7 @@
       <Name>Test</Name>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>Tests\WeatherFiles\Ruakura.met</FileName>
+        <FileName>..\WeatherFiles\Ruakura.met</FileName>
         <MaxT>13.899999618530273</MaxT>
         <MinT>5.9000000953674316</MinT>
         <Rain>3.5999999046325684</Rain>

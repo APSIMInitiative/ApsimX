@@ -45,7 +45,7 @@ namespace Models
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             Writer.WriteLine("Date: " + Clock.Today.ToString());
-            Model[] models = this.Scope.FindAll();
+            Model[] models = this.FindAll();
         }
 
     }

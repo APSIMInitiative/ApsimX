@@ -52,7 +52,7 @@ namespace Models.PMF.Functions
                 symFilled.m_type = Utility.ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
-                object sometypeofobject = RelativeTo.Variables.Get(sym.m_name.Trim());
+                object sometypeofobject = RelativeTo.Get(sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
                 symFilled.m_value = (double)sometypeofobject;

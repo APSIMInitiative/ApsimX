@@ -13,7 +13,7 @@ namespace Models.PMF.Functions.DemandFunctions
         Function PartitionFraction = null;
 
         [Link]
-        Arbitrator Arbitrator = null;
+        OrganArbitrator Arbitrator = null;
 
         public override double Value
         {

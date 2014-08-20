@@ -22,7 +22,7 @@ namespace Models.PMF.OldPlant
 
             foreach (string OrganName in RadiationPartitioningOrder)
             {
-                Organ1 Organ = this.Scope.Find(OrganName) as Organ1;
+                Organ1 Organ = this.Find(OrganName) as Organ1;
 
                 // calc the total interception from this part - what is left is transmitted
                 // to the other parts.

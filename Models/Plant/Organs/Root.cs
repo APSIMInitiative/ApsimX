@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
         Plant Plant = null;
         
         [Link]
-        Arbitrator Arbitrator = null;
+        OrganArbitrator Arbitrator = null;
 
         [Link]
         Soils.Soil Soil = null;
@@ -151,9 +151,26 @@ namespace Models.PMF.Organs
 
             if (Live.Wt == 0)
             {
-                LayerLive[0].StructuralWt = InitialDM * Plant.Population;
-                LayerLive[0].StructuralN = InitialDM * MaxNconc * Plant.Population;
+                //determine how many layers to put initial DM into.
                 Depth = Plant.SowingData.Depth;
+                double AccumulatedDepth = 0;
+                double InitialLayers = 0;
+                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                {
+                    if (AccumulatedDepth < Depth)
+                        InitialLayers += 1;
+                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                }
+                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                {
+                    if (layer <= InitialLayers - 1)
+                    {
+                        //dirstibute root biomass evently through root depth
+                        LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
+                        LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                    }
+                }
+               
             }
 
             Length = 0;

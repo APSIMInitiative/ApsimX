@@ -420,8 +420,14 @@ namespace Utility
                 }
                 return stringValue;
             }
+            else if (obj.GetType() == typeof(DateTime))
+            {
+                return ((DateTime) obj).ToString("yyyy-MM-dd");
+            }
             else
+            {
                 return obj.ToString();
+            }
         }
 
         /// <summary>

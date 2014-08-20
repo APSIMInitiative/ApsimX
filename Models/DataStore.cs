@@ -677,26 +677,28 @@ namespace Models
             types.Add(typeof(int));
             foreach (TableToWrite table in tables)
             {
-                // If the table has a simulationname then go find its ID for later
-                if (table.Data.Columns.Contains("SimulationID"))
+                if (table.Data != null)
                 {
-                    // do nothing.
-                }
-                else if (table.SimulationName != null)
-                    table.SimulationID = GetSimulationID(table.SimulationName);
-                else
-                    AddSimulationIDColumnToTable(table.Data);
-
-                // Go through all columns for this table and add to 'names' and 'types'
-                foreach (DataColumn column in table.Data.Columns)
-                {
-                    if (!names.Contains(column.ColumnName) && column.ColumnName != "SimulationName")
+                    // If the table has a simulationname then go find its ID for later
+                    if (table.Data.Columns.Contains("SimulationID"))
                     {
-                        names.Add(column.ColumnName);
-                        types.Add(column.DataType);
+                        // do nothing.
+                    }
+                    else if (table.SimulationName != null)
+                        table.SimulationID = GetSimulationID(table.SimulationName);
+                    else
+                        AddSimulationIDColumnToTable(table.Data);
+
+                    // Go through all columns for this table and add to 'names' and 'types'
+                    foreach (DataColumn column in table.Data.Columns)
+                    {
+                        if (!names.Contains(column.ColumnName) && column.ColumnName != "SimulationName")
+                        {
+                            names.Add(column.ColumnName);
+                            types.Add(column.DataType);
+                        }
                     }
                 }
-
             }
 
             // Create the table.
@@ -712,19 +714,22 @@ namespace Models
             foreach (TableToWrite table in tables)
             {
                 // Write each row to the .db
-                object[] values = new object[names.Count];
-                foreach (DataRow row in table.Data.Rows)
+                if (table.Data != null)
                 {
-                    for (int i = 0; i < names.Count; i++)
+                    object[] values = new object[names.Count];
+                    foreach (DataRow row in table.Data.Rows)
                     {
-                        if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
-                            values[i] = table.SimulationID;
-                        else if (table.Data.Columns.Contains(names[i]))
-                            values[i] = row[names[i]];
-                    }
+                        for (int i = 0; i < names.Count; i++)
+                        {
+                            if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
+                                values[i] = table.SimulationID;
+                            else if (table.Data.Columns.Contains(names[i]))
+                                values[i] = row[names[i]];
+                        }
 
-                    // Write the row to the .db
-                    Connection.BindParametersAndRunQuery(query, values);
+                        // Write the row to the .db
+                        Connection.BindParametersAndRunQuery(query, values);
+                    }
                 }
             }
 

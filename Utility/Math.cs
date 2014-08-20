@@ -356,6 +356,38 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Zero the specified array.
+        /// </summary>
+        /// <param name="arr">The array to be zeroed</param>
+        static public void Zero(double[] arr)
+        {
+            if (arr != null)
+            {
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    arr[i] = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Zero the specified array.
+        /// </summary>
+        /// <param name="arr">The array to be zeroed</param>
+        static public void Zero(double[,] arr)
+        {
+            if (arr != null)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        arr[i, j] = 0;
+                    }
+                }
+            }
+        }
 
 
         // ---------------------------------------------

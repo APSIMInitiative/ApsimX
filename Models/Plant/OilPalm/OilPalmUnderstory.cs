@@ -109,7 +109,7 @@ namespace Models.PMF.OilPalm
 
         private void DoGrowth()
         {
-            double OPCover = (double)this.Variables.Get("OilPalm.cover_green");
+            double OPCover = (double)this.Get("OilPalm.cover_green");
             double RUE = 1.3;
             DltDM = RUE * MetData.Radn * cover_green * (1 - OPCover) * FW;
 
@@ -117,7 +117,7 @@ namespace Models.PMF.OilPalm
 
         private void DoWaterBalance()
         {
-            double OPCover = (double)this.Variables.Get("OilPalm.cover_green");
+            double OPCover = (double)this.Get("OilPalm.cover_green");
             
             cover_green = 0.40 * (1 - OPCover);
             PEP = SoilWat.eo * cover_green * (1 - OPCover);
