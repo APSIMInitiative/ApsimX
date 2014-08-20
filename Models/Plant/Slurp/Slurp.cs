@@ -64,7 +64,7 @@ namespace Models.PMF.Slurp
         /// Probably not needed now as the crops will have to supply these themselves
         /// ???? delete ????
         /// </summary>
-        public string CropType { get { return "slurp"; } }
+        public string CropType { get { return "Slurp"; } }
 
         /// <summary>
         /// The name as it appears in the GUI e.g. "Wheat3" 
@@ -183,8 +183,8 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
-            RootProperties.KL = Soil.KL("slurp");
-            RootProperties.LowerLimitDep = Soil.LL("slurp");
+            RootProperties.KL = Soil.KL("Slurp");
+            RootProperties.LowerLimitDep = Soil.LL("Slurp");
             RootProperties.RootDepth = RootDepth;
             RootProperties.RootExplorationByLayer= new double[] {1.0,1.0,0.5,0.0};
             RootProperties.RootLengthDensityByVolume = new double[] { 0.05, 0.03, 0.0058, 0.0 };
