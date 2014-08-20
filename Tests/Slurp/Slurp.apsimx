@@ -34,7 +34,6 @@
           <string>[Soil].SoilWater.es</string>
           <string>[Arbitrator].dltSWdep</string>
           <string>[Soil].SoilWater.sw_dep</string>
-          <string>[Slurp].RootProperties.KL</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -372,7 +371,6 @@
       <Slurp>
         <Name>Slurp</Name>
         <localFrgr>0</localFrgr>
-        <LeafMass>3000</LeafMass>
         <localLAI>5</localLAI>
         <localLAItot>5</localLAItot>
         <localCoverGreen>1</localCoverGreen>

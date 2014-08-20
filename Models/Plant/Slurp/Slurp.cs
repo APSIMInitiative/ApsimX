@@ -25,27 +25,6 @@ namespace Models.PMF.Slurp
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Slurp : Model, ICrop2
     {
-        // Deleted list - keep for a bit
-        //public string plant_status = "out";
-        [Description("Leaf Mass - this will soon be deleted")]         public double LeafMass { get; set; }
-        //public event EventHandler StartSlurp;
-        //public event NewCanopyDelegate NewCanopy;
-        private double PEP;
-        private double EP;
-        private double FW;
-        private double FWexpan;
-        private double RootMass = 0.0;
-        private double RootN;
-        private double[] NUptake = null;
-        private double[] PotSWUptake = null;
-        private double[] SWUptake;
-        private double[] PotNUptake = null;
-        private double[] bd = null;
-        private double RootNConcentration = 0.0;
-        private double KNO3 = 0.0;
-        private double[] kl;
-
-        
         /// <summary>
         /// Link to the soil module
         /// </summary>
@@ -132,41 +111,7 @@ namespace Models.PMF.Slurp
             }
             RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
             RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
-
-
-            /*
-            kl = new double[Soil.SoilWater.sw_dep.Length];
-            PotSWUptake = new double[kl.Length];
-            PotNUptake = new double[kl.Length];
-            SWUptake = new double[kl.Length];
-            NUptake = new double[kl.Length];
-            for (int i = 0; i < kl.Length; i++)
-                kl[i] = 0.5;
-
-            bd = (double[])Soil.Water.Get("BD");
-
-             */
-            // Invoke a sowing event. Needed for MicroClimate
-            //if (StartSlurp != null)
-            //    StartSlurp.Invoke(this, new EventArgs());
-
-            //Send a NewCanopy event to MicroClimate
-            //NewCanopyType LocalCanopyData = new NewCanopyType();
-            //LocalCanopyData.cover = CoverGreen;
-            //LocalCanopyData.cover_tot = CoverTot;
-            //LocalCanopyData.depth = Depth;
-            //LocalCanopyData.height = Height;
-            //LocalCanopyData.lai = LAI;
-            //LocalCanopyData.lai_tot = LAItot;
-            //LocalCanopyData.sender = "Slurp";
-            //if (NewCanopy != null)
-            //    NewCanopy.Invoke(LocalCanopyData);
         }
-
-        /// <summary>
-        /// MicroClimate needs FRGR
-        /// </summary>
-        //public double FRGR { get { return 1; } }
 
         /// <summary>
         /// MicroClimate supplies PotentialEP
@@ -186,174 +131,10 @@ namespace Models.PMF.Slurp
         //[XmlIgnore]
         //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        //[EventSubscribe("DoPlantGrowth")]
-        //private void OnDoPlantGrowth(object sender, EventArgs e)
-        //{
-        //    DoWaterBalance();
-        //    DoNBalance();
-       // }
-
-
-        /*
-        private void DoWaterBalance()
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
         {
-            PEP = Soil.SoilWater.eo * localCoverGreen;
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, localRootDepth) * kl[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
-
-            double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
-
-            EP = 0.0;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                EP += SWUptake[j];
-                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
-
-            }
-
-            if (PEP > 0.0)
-            {
-                FW = EP / PEP;
-                FWexpan = Math.Max(0.0, Math.Min(1.0, (TotPotSWUptake / PEP - 0.5) / 1.0));
-
-            }
-            else
-            {
-                FW = 1.0;
-                FWexpan = 1.0;
-            }
-
         }
 
-        private void DoNBalance()
-        {
-            double StartN = PlantN;
-
-            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration / 100.0 - RootN)) * 10.0;  // kg/ha
-            double LeafNDemand = Math.Max(0.0, (LeafMass * LeafNConc / 100 - LeafN)) * 10.0;  // kg/ha 
-
-            Ndemand = LeafNDemand + RootNDemand;  //kg/ha
-
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                double swaf = 0;
-                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
-                swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (bd[j] * Soil.SoilWater.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, localRootDepth) * KNO3 * Soil.SoilNitrogen.no3[j] * swaf);
-            }
-
-            double TotPotNUptake = Utility.Math.Sum(PotNUptake);
-            double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                NUptake[j] = PotNUptake[j] * Fr;
-                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
-            }
-
-            Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / LeafNDemand));
-            double DeltaLeafN = LeafNDemand * Fr;
-
-            LeafN += Math.Max(0.0, LeafMass * LeafNConc / 100.0 - LeafN) * Fr;
-
-            // Calculate fraction of N demand for Vegetative Parts
-            if ((Ndemand - DeltaLeafN) > 0)
-                Fr = Math.Max(0.0, ((Utility.Math.Sum(NUptake) - DeltaLeafN) / (Ndemand - DeltaLeafN)));
-            else
-                Fr = 0.0;
-
-            double[] RootNDef = new double[Soil.SoilWater.ll15_dep.Length];
-            double TotNDef = 1e-20;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                RootNDef[j] = Math.Max(0.0, RootMass * RootNConcentration / 100.0 - RootN);
-                TotNDef += RootNDef[j];
-            }
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                RootN += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
-
-            double EndN = PlantN;
-            double Change = EndN - StartN;
-            double Uptake = Utility.Math.Sum(NUptake) / 10.0;
-            if (Math.Abs(Change - Uptake) > 0.001)
-                throw new Exception("Error in N Allocation");
-        }
-        */
-
-        // from here
-        /*
-        private double RootProportion(int layer, double root_depth)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            double depth_to_layer_top = 0;      // depth to top of layer (mm)
-            double depth_to_root = 0;           // depth to root in layer (mm)
-            double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
-            // Implementation Section ----------------------------------
-            for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
-            depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
-            depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-
-            return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
-        }
-
-        private int LayerIndex(double depth)
-        {
-            double CumDepth = 0;
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-            {
-                CumDepth = CumDepth + Soil.SoilWater.dlayer[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
-        }
-
-
-        public double RootNConc
-        {
-            get
-            {
-                return RootN / RootMass * 100.0;
-            }
-
-        }
-
-        public double PlantN
-        {
-            get
-            {
-                return LeafN + RootN;
-            }
-        }
-
-        //TODO: get a good function for LeafN
-        public double LeafN
-        {
-            get
-            {
-                return localLAI * 1;
-            }
-            set
-            {
-                
-            }
-
-        }
-
-        public double LeafNConc
-        {
-            get
-            {
-                return LeafN / LeafMass * 100.0;
-            }
-
-        }
-        // from here
-        */
     }   
 }
