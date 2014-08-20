@@ -1,16 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.IO;
 using Models.Core;
+using Models;
+using System.Xml.Serialization;
 
 namespace Models.Soils
 {
+    ///<summary>
+    /// .NET port of the Fortran SWIM3 model
+    /// Ported by Eric Zurcher July-August 2014
+    ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class Swim : Model
+    public class Swim3 : Model
     {
+        #region Links
+
+        [Link]
+        private Clock Clock = null;
+
+        //[Link]
+        //private Component My = null;  // Get access to "Warning" function
+
+        [Link]
+        WeatherFile MetFile;
+
+        [Link]
+        Simulation Paddock;
+
+        [Link]
+        private Soil Soil = null;
+       
+        #endregion
+
+        #region Constants
+
+        const double effpar = 0.184;
+        const double psi_ll15 = -15000.0;
+        const double psiad = -1e6;
+        const double psi0 = -0.6e7;
+
+        #endregion
+
+
         [Description("Bare soil albedo")]
         public double Salb { get; set; }
         [Description("Bare soil runoff curve number")]
@@ -38,6 +73,7 @@ namespace Models.Soils
         [Description("Diagnostic Information?")]
         public bool Diagnostics { get; set; }
 
+        
         public SwimSoluteParameters SwimSoluteParameters { get; set; }
         public SwimWaterTable SwimWaterTable { get; set; }
         public SwimSubsurfaceDrain SwimSubsurfaceDrain { get; set; }
