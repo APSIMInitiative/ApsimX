@@ -59,13 +59,23 @@ namespace Models.PMF.Slurp
         public CanopyProperties CanopyProperties { get { return LocalCanopyData; } }
         CanopyProperties LocalCanopyData = new CanopyProperties();
 
+        [Description("Green LAI (m2/m2)")] public double localLAI { get; set; }
+        [Description("Total LAI (m2/m2)")] public double localLAItot { get; set; }
+        [Description("Green cover (m2/m2)")] public double localCoverGreen { get; set; }
+        [Description("Total cover (m2/m2)")] public double localCoverTot { get; set; }
+        [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
+        [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
+        [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
+
+        
         /// <summary>
         /// Crop type was used to assign generic types of properties (e.g. maximum stomatal conductance) to crops
         /// Probably not needed now as the crops will have to supply these themselves
         /// ???? delete ????
         /// </summary>
         public string CropType { get { return "Slurp"; } }
-
+        
+         /*
         /// <summary>
         /// The name as it appears in the GUI e.g. "Wheat3" 
         /// ???? How is this got?????
@@ -139,7 +149,7 @@ namespace Models.PMF.Slurp
         [Description("Frgr (-)")]
         public double Frgr;
 
-
+        */
 
 
         // The variables that in RootProperties
@@ -190,14 +200,14 @@ namespace Models.PMF.Slurp
             RootProperties.RootExplorationByLayer= new double[] {1.0,1.0,0.5,0.0};
             RootProperties.RootLengthDensityByVolume = new double[] { 0.05, 0.03, 0.0058, 0.0 };
 
-            CanopyProperties.cover = CoverGreen;
-            CanopyProperties.cover_tot = CoverTot;
+            CanopyProperties.CoverGreen = localCoverGreen;
+            CanopyProperties.CoverTot = localCoverTot;
             CanopyProperties.CropType = "slurp";
-            CanopyProperties.depth = Depth;
-            CanopyProperties.height = Height;
-            CanopyProperties.lai = LAI;
-            CanopyProperties.lai_tot = LAItot;
-            CanopyProperties.MaximumStomatalConductance = 0.010;
+            CanopyProperties.CanopyDepth = localCanopyDepth;
+            CanopyProperties.CanopyHeight = localCanopyHeight;
+            CanopyProperties.LAI = localLAI;
+            CanopyProperties.LAItot = localLAItot;
+            CanopyProperties.MaximumStomatalConductance = localMaximumStomatalConductance;
 
             kl = new double[Soil.SoilWater.sw_dep.Length];
             PotSWUptake = new double[kl.Length];
@@ -257,7 +267,7 @@ namespace Models.PMF.Slurp
 
         private void DoWaterBalance()
         {
-            PEP = Soil.SoilWater.eo * CoverGreen;
+            PEP = Soil.SoilWater.eo * localCoverGreen;
 
             for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
@@ -393,7 +403,7 @@ namespace Models.PMF.Slurp
         {
             get
             {
-                return LAI * 1;
+                return localLAI * 1;
             }
             set
             {
