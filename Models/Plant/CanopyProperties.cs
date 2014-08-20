@@ -12,7 +12,7 @@ namespace Models.PMF
         /// <summary>
         /// This is a generic type of crop (e.g. C3 or wheat) and is used to do something that might not be needed later
         /// </summary>
-        //public string CropType;
+        public string CropType;
 
         /// <summary>
         /// This is the name as it appears in the GUI e.g. "Wheat3"

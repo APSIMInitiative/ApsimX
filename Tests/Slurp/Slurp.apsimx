@@ -379,12 +379,6 @@
         <Height>800</Height>
         <Depth>800</Depth>
         <RootDepth>900</RootDepth>
-        <kl>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-        </kl>
         <LeafN>4.5</LeafN>
       </Slurp>
       <Arbitrator>

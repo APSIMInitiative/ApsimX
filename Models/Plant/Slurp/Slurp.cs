@@ -164,8 +164,8 @@ namespace Models.PMF.Slurp
         /// Used in the water and nutrient arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("kl (/day)")]
-        public double[] kl { get; set; }
+        //[Description("kl (/day)")]
+        //public double[] kl { get; set; }
 
         /// <summary>
         /// The bastardised Passioura/Monteith K*L (/day)
@@ -173,11 +173,12 @@ namespace Models.PMF.Slurp
         /// Used in the water and nutrient arbitration
         /// Set from the interface and will not change unless reset
         /// </summary>
-        [Description("Lower Limit of soil water extraction as a depth of water in each soil layer (mm)")]
-        public double[] LowerLimitDep { get; set; }
+        //[Description("Lower Limit of soil water extraction as a depth of water in each soil layer (mm)")]
+        //public double[] LowerLimitDep { get; set; }
 
 
         private double Ndemand = 0.0;  // wehre does this sit?
+        private double[] kl;
 
         
         // The following event handler will be called once at the beginning of the simulation
@@ -191,7 +192,7 @@ namespace Models.PMF.Slurp
 
             CanopyProperties.cover = CoverGreen;
             CanopyProperties.cover_tot = CoverTot;
-            //CanopyProperties.CropType = "slurp";
+            CanopyProperties.CropType = "slurp";
             CanopyProperties.depth = Depth;
             CanopyProperties.height = Height;
             CanopyProperties.lai = LAI;
