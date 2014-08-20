@@ -27,12 +27,14 @@
           <string>[Clock].Today</string>
           <string>[Slurp].PotentialEP</string>
           <string>[Slurp].ActualEP</string>
+          <string>[Slurp].localRootDepth</string>
           <string>[Arbitrator].scalerLayer</string>
           <string>[Arbitrator].scalerPlant</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es</string>
           <string>[Arbitrator].dltSWdep</string>
           <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Slurp].RootProperties.KL</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -235,10 +237,10 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0403453014853479</double>
-            <double>0.8898874841889286</double>
-            <double>0.88987504966210085</double>
-            <double>0.88993188792935329</double>
+            <double>1.0401687075031094</double>
+            <double>0.8897529172580011</double>
+            <double>0.88981216204056268</double>
+            <double>0.8875927504516723</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -369,33 +371,45 @@
       </SurfaceOrganicMatter>
       <Slurp>
         <Name>Slurp</Name>
-        <MaximumStomatalConductance>0</MaximumStomatalConductance>
-        <Frgr>0</Frgr>
+        <localFrgr>0</localFrgr>
         <LeafMass>3000</LeafMass>
-        <LAI>4.5</LAI>
-        <LAItot>4.5</LAItot>
-        <CoverGreen>1</CoverGreen>
-        <CoverTot>1</CoverTot>
-        <Height>800</Height>
-        <Depth>800</Depth>
-        <RootDepth>900</RootDepth>
-        <LeafN>4.5</LeafN>
+        <localLAI>5</localLAI>
+        <localLAItot>5</localLAItot>
+        <localCoverGreen>1</localCoverGreen>
+        <localCoverTot>1</localCoverTot>
+        <localCanopyHeight>500</localCanopyHeight>
+        <localCanopyDepth>500</localCanopyDepth>
+        <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
+        <localRootDepth>600</localRootDepth>
+        <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
+        <localRootExplorationByLayer>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>0</double>
+        </localRootExplorationByLayer>
+        <localRootLengthDensityByVolume>
+          <double>0.043750000000000004</double>
+          <double>0.03125</double>
+          <double>0.0125</double>
+          <double>0</double>
+        </localRootLengthDensityByVolume>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <scalerPlant>
-          <double>0.89485458612975388</double>
+          <double>0.63837945352067571</double>
         </scalerPlant>
         <dltSWdep>
           <double>0</double>
           <double>0</double>
-          <double>0</double>
+          <double>-0.046645578108680752</double>
           <double>0</double>
         </dltSWdep>
         <scalerLayer>
           <double>0</double>
           <double>0</double>
-          <double>0</double>
+          <double>0.0081416673511403286</double>
           <double>0</double>
         </scalerLayer>
         <ArbitEOS>0</ArbitEOS>
