@@ -100,7 +100,7 @@ namespace Models.Soils
         [XmlIgnore] public Analysis Analysis { get; private set; }
         [XmlIgnore] public InitialWater InitialWater { get; private set; }
         [XmlIgnore] public Phosphorus Phosphorus { get; private set; }
-        [XmlIgnore] public Swim Swim { get; private set; }
+        [XmlIgnore] public Swim3 Swim { get; private set; }
         [XmlIgnore] public LayerStructure LayerStructure { get; private set; }
         [XmlIgnore] public SoilTemperature SoilTemperature { get; private set; }
         [XmlIgnore] public SoilTemperature2 SoilTemperature2 { get; private set; }
@@ -148,7 +148,7 @@ namespace Models.Soils
             Analysis = Children.Matching(typeof(Analysis)) as Analysis;
             InitialWater = Children.Matching(typeof(InitialWater)) as InitialWater;
             Phosphorus = Children.Matching(typeof(Phosphorus)) as Phosphorus;
-            Swim = Children.Matching(typeof(Swim)) as Swim;
+            Swim = Children.Matching(typeof(Swim3)) as Swim3;
             LayerStructure = Children.Matching(typeof(LayerStructure)) as LayerStructure;
             SoilTemperature = Children.Matching(typeof(SoilTemperature)) as SoilTemperature;
             SoilTemperature2 = Children.Matching(typeof(SoilTemperature2)) as SoilTemperature2;
