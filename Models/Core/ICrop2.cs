@@ -23,7 +23,7 @@ namespace Models.Core
         /// MicroClimate will get 'CropType' and use it to look up
         /// canopy properties for this crop.
         /// </summary>
-        string CropType { get;  }
+        //string CropType { get;  }
 
         /// <summary>
         /// Crop specific relative growth stress factor (0-1). MicroClimate

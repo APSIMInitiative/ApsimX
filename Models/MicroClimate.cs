@@ -8,7 +8,7 @@ using System.Text;
 using Models.Core;
 using Models;
 using Models.PMF;
-using Models.PMF.Slurp;
+//using Models.PMF.Slurp;
 using System.Xml.Serialization;
 using Models.PMF;
 
@@ -387,7 +387,7 @@ namespace Models
             Clear(ComponentData[senderIdx]);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Register presence of slurp
         /// </summary>
         [EventSubscribe("StartSlurp")]
@@ -403,7 +403,7 @@ namespace Models
             ComponentData[senderIdx].Name = newSlurp.Name;
             ComponentData[senderIdx].Type = newSlurp.CropType;
             Clear(ComponentData[senderIdx]);
-        }
+        } */
 
         private void Clear(ComponentDataStruct c)
         {

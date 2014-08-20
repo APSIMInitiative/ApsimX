@@ -14,7 +14,7 @@ namespace Models.PMF
         /// Probably not needed now as the crops will have to supply these themselves
         /// ???? delete ????
         /// </summary>
-        public string CropType;
+        //public string CropType;
 
         /// <summary>
         /// The name as it appears in the GUI e.g. "Wheat3" 
