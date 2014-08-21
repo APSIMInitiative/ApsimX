@@ -47,7 +47,7 @@ namespace Models.PMF.Slurp
         [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr;
         
 
-        // The variables that in RootProperties
+        // The variables that are in RootProperties
         /// <summary>
         /// Holds the set of crop root properties that is used by Arbitrator for water and nutrient calculations
         /// </summary>
@@ -76,6 +76,8 @@ namespace Models.PMF.Slurp
             CanopyProperties.LAI = localLAI;
             CanopyProperties.LAItot = localLAItot;
             CanopyProperties.MaximumStomatalConductance = localMaximumStomatalConductance;
+            CanopyProperties.HalfSatStomatalConductance = 200.0;  // should this be on the UI?
+            CanopyProperties.CanopyEmissivity = 0.96;
             CanopyProperties.Frgr = localFrgr;
 
             RootProperties.KL = Soil.KL(Name);
@@ -114,7 +116,7 @@ namespace Models.PMF.Slurp
         }
 
         /// <summary>
-        /// MicroClimate supplies PotentialEP
+        /// Arbitrator supplies PotentialEP
         /// </summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
@@ -126,14 +128,43 @@ namespace Models.PMF.Slurp
         public double ActualEP { get; set; }
 
         /// <summary>
+        /// Crop calculates potentialNitrogenDemand after getting its water allocation
+        /// </summary>
+        [XmlIgnore]
+        public double potentialNitrogenDemand { get; set; }
+
+        /// <summary>
+        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// </summary>
+        [XmlIgnore]
+        public double actualNitrogenSupply { get; set; }
+
+
+
+
+        
+
+
+        /// <summary>
         /// MicroClimate supplies LightProfile
         /// </summary>
         //[XmlIgnore]
         //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPlantPotentialGrowth(object sender, EventArgs e)
         {
+            // nothing for Slurp to do in here but a full/proper crop model would use the LightProfile, PotenialEP and ActualEP to calculate a 
+            // PotentialNDemand - the N that the plant wants in order to satisfy growth after accounting for the water supply
+
+            potentialNitrogenDemand = 5.0;
+
+        }
+
+        [EventSubscribe("DoPlantActualGrowth")]
+        private void OnDoPlantActualGrowth(object sender, EventArgs e)
+        {
+            // At this stage a full/proper crop model would be supplied the N uptake from Arbitrator and it would then complete its calculations for the day
         }
 
     }   

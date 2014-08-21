@@ -181,6 +181,7 @@ namespace UserInterface.Views
             Color colour)
         {
             Utility.ColumnXYSeries series = new Utility.ColumnXYSeries();
+            series.Title = title;
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);

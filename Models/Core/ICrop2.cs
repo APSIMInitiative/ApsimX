@@ -18,22 +18,8 @@ namespace Models.Core
         /// </summary>
         RootProperties RootProperties { get;  }
 
-        
         /// <summary>
-        /// MicroClimate will get 'CropType' and use it to look up
-        /// canopy properties for this crop.
-        /// </summary>
-        //string CropType { get;  }
-
-        /// <summary>
-        /// Crop specific relative growth stress factor (0-1). MicroClimate
-        /// uses this to calculate the crop canopy conductance
-        /// </summary>
-        //double FRGR { get;  }
-
-        /// <summary>
-        /// Potential evapotranspiration. MicroClimate calculates this and sets
-        /// this property in the crop.
+        /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
         /// </summary>
         double PotentialEP { get; set; }
 
@@ -48,12 +34,18 @@ namespace Models.Core
         /// </summary>
         //CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  }
 
+
         /// <summary>
-        /// Describes the state of the crop, if true then is actually in the ground - sown
+        /// Crop calculates potentialNitrogenDemand after getting its water allocation
         /// </summary>
-        //bool IsActive { get;}
-        // IsActive states that the crop
+        double potentialNitrogenDemand { get; set; }
+
+        /// <summary>
+        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// </summary>
+        double actualNitrogenSupply { set; }
 
 
+        // need to add in the uptake/supply in layers - crop needs this for root growth
         }
 }

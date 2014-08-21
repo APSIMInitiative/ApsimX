@@ -7,17 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Document;
-using UserInterface.EventArguments;
-using System.Reflection;
-using System.IO;
-using System.Xml;
 
-namespace UserInterface.Views
+namespace Utility
 {
 
-  
+    public class NeedContextItems : EventArgs
+    {
+        public string ObjectName;
+        public List<string> Items;
+    }
 
-    public interface IEditorView
+    public interface IEditor
     {
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
@@ -44,32 +44,16 @@ namespace UserInterface.Views
         /// </summary>
         string[] Lines { get; set; }
 
-        /// <summary>
-        /// Set the editor to use the specified resource name to syntax highlighting
-        /// </summary>
-        /// <param name="resourceName">The name of the resource</param>
-        void SetSyntaxHighlighter(string resourceName);
-
-        /// <summary>
-        /// Gets or sets the characters that bring up the intellisense context menu.
-        /// </summary>
-        string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Return the current line number
-        /// </summary>
-        int CurrentLineNumber { get; }
-
     }
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
-    public partial class EditorView : UserControl, IEditorView
+    public partial class Editor : UserControl, IEditor
     {
         private Form CompletionForm;
-
         private ListBox CompletionList;
+
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
@@ -89,7 +73,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Constructor
         /// </summary>
-        public EditorView()
+        public Editor()
         {
             InitializeComponent();
 
@@ -103,8 +87,7 @@ namespace UserInterface.Views
             CompletionList.MouseDoubleClick += new MouseEventHandler(OnComtextListMouseDoubleClick);
             CompletionForm.StartPosition = FormStartPosition.Manual;
 
-            TextBox.ActiveTextAreaControl.TextArea.KeyPress += OnKeyDown;
-            IntelliSenseChars = ".";
+            TextBox.ActiveTextAreaControl.TextArea.KeyDown += OnKeyDown;
         }
 
         /// <summary>
@@ -144,43 +127,14 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets or sets the characters that bring up the intellisense context menu.
-        /// </summary>
-        public string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Return the current line number
-        /// </summary>
-        public int CurrentLineNumber
-        {
-            get
-            {
-                return TextBox.ActiveTextAreaControl.TextArea.Caret.Line;
-            }
-        }
-
-
-        /// <summary>
-        /// Set the editor to use the specified resource name to syntax highlighting
-        /// </summary>
-        /// <param name="resourceName">The name of the resource</param>
-        public void SetSyntaxHighlighter(string resourceName)
-        {
-            ResourceSyntaxModeProvider fsmProvider; // Provider
-            fsmProvider = new ResourceSyntaxModeProvider(resourceName); // Create new provider with the highlighting directory.
-            HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider); // Attach to the text editor.
-            TextBox.SetHighlighting(resourceName); // Activate the highlighting, use the name from the SyntaxDefinition node.
-        }
-
-        /// <summary>
         /// Preprocesses key strokes so that the ContextList can be displayed when needed.
         /// </summary>
-        private void OnKeyDown(object sender, KeyPressEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            // If user one of the IntelliSenseChars, then display contextlist.
-            if (IntelliSenseChars.Contains(e.KeyChar) && ContextItemsNeeded != null)
+            // If user clicks a '.' then display contextlist.
+            if (e.KeyCode == Keys.OemPeriod && e.Shift == false && ContextItemsNeeded != null)
             {
-                if (ShowCompletionWindow(e.KeyChar))
+                if (ShowCompletionWindow())
                     e.Handled = false;
             }
 
@@ -205,7 +159,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Show the context list. Return true if popup box shown
         /// </summary>
-        private bool ShowCompletionWindow(char characterPressed)
+        private bool ShowCompletionWindow()
         {
             // Get a list of items to show and put into completion window.
             string TextBeforePeriod = GetWordBeforePosition(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset);
@@ -216,7 +170,7 @@ namespace UserInterface.Views
 
             if (CompletionList.Items.Count > 0)
             {
-                TextBox.ActiveTextAreaControl.TextArea.InsertChar(characterPressed);
+                TextBox.ActiveTextAreaControl.TextArea.InsertChar('.');
 
                 // Turn readonly on so that the editing window doesn't process keystrokes.
                 TextBox.Document.ReadOnly = true;
@@ -237,7 +191,6 @@ namespace UserInterface.Views
                 if (CompletionList.Items.Count > 0)
                     CompletionList.SelectedIndex = 0;
                 return true;
-
             }
             return false;
         }
@@ -309,60 +262,6 @@ namespace UserInterface.Views
                 LeaveEditor.Invoke(this, e);
         }
 
-        public class ResourceSyntaxModeProvider : ISyntaxModeFileProvider
-        {
-            List<SyntaxMode> syntaxModes = null;
-            private string resourceName;
-
-            public ICollection<SyntaxMode> SyntaxModes
-            {
-                get
-                {
-                    return syntaxModes;
-                }
-            }
-
-            public ResourceSyntaxModeProvider(string resourceName)
-            {
-                this.resourceName = resourceName;
-
-                Assembly assembly = Assembly.GetExecutingAssembly();
-
-
-                string syntaxMode = string.Format("<?xml version=\"1.0\"?>" +
-                                                  "<SyntaxModes version=\"1.0\">" +
-                                                  "  <Mode extensions=\".apsimx\" file=\"{0}.xshd\" name=\"{0}\"></Mode>" +
-                                                  "</SyntaxModes>", resourceName);
-                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(syntaxMode);
-                MemoryStream syntaxModeStream = new MemoryStream(bytes);
-                
-                if (syntaxModeStream != null)
-                {
-                    syntaxModes = SyntaxMode.GetSyntaxModes(syntaxModeStream);
-                }
-                else
-                {
-                    syntaxModes = new List<SyntaxMode>();
-                }
-            }
-
-            public XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-
-                // load syntax schema  
-                byte[] bytes = Properties.Resources.ResourceManager.GetObject(resourceName) as byte[];
-                Stream stream = new MemoryStream(bytes);
-
-                return new XmlTextReader(stream);
-            }
-
-            public void UpdateSyntaxModeList()
-            {
-                // resources don't change during runtime  
-            }
-
-           
-        }
+       
     }
 }

@@ -112,11 +112,23 @@ namespace Models.Core
                     namePath = namePath.Remove(0, posCloseBracket + 1);
                     relativeTo = this.Find(modelName, relativeTo);
                 }
-                else if (namePath.StartsWith(".Simulations"))
+                else if (namePath.StartsWith("."))
                 {
                     // Absolute path
-                    relativeTo = relativeTo.ParentOfType(typeof(Simulations));
-                    namePath = namePath.Remove(0, 12);
+                    Model root = relativeTo;
+                    while (root.Parent != null)
+                    {
+                        root = root.Parent;
+                    }
+                    relativeTo = root;
+
+                    int posPeriod = namePath.IndexOf('.', 1);
+                    if (posPeriod == -1)
+                    {
+                        posPeriod = namePath.Length;
+                    }
+
+                    namePath = namePath.Remove(0, posPeriod);
                     if (namePath.StartsWith("."))
                     {
                         namePath.Remove(1);

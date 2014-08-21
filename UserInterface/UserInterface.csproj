@@ -392,7 +392,9 @@
   <ItemGroup>
     <None Include="Resources\GraphToolbox.apsimx" />
     <None Include="Resources\ManagementToolbox.apsimx" />
-    <None Include="Resources\StandardToolbox.apsimx" />
+    <None Include="Resources\StandardToolbox.apsimx">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\Test.xshd" />
     <None Include="Resources\undo.png" />
   </ItemGroup>
