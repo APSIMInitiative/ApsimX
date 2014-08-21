@@ -53,15 +53,18 @@ namespace Utility
         /// </summary>
         private void MovePointsToItems()
         {
-            double HalfBarWidth = XDataRange() * ColumnWidth / 2.0;
-
-            HalfBarWidth = 0.40; // slightly less that half of 1.0 cartesian coordinate
-            Items.Clear();
-            foreach (DataPoint P in ItemsSource)
+            if (ItemsSource != null)
             {
-                double x0 = P.X - HalfBarWidth;
-                double x1 = P.X + HalfBarWidth;
-                Items.Add(new RectangleBarItem(x0, 0.0, x1, P.Y));
+                double HalfBarWidth = XDataRange() * ColumnWidth / 2.0;
+
+                HalfBarWidth = 0.40; // slightly less that half of 1.0 cartesian coordinate
+                Items.Clear();
+                foreach (DataPoint P in ItemsSource)
+                {
+                    double x0 = P.X - HalfBarWidth;
+                    double x1 = P.X + HalfBarWidth;
+                    Items.Add(new RectangleBarItem(x0, 0.0, x1, P.Y));
+                }
             }
         }
 

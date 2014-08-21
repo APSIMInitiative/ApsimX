@@ -311,6 +311,7 @@ namespace Models
             st = st.Replace("\t", "    ");
             if (html)
             {
+                st = st.Replace("&&", "and");
                 st = st.Replace("\r", string.Empty);
                 st = st.Replace("\n", "<br/>");
                 st = st.Replace("<br/>", "<br/>\r\n");

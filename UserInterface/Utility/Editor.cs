@@ -180,7 +180,7 @@ namespace Utility
                 Point EditorLocation = TextBox.PointToScreen(p);
 
                 // Display completion window.
-                CompletionForm.Parent = TextBox.ActiveTextAreaControl;
+                //CompletionForm.Parent = TextBox.Parent.Parent;
                 CompletionForm.Left = p.X;
                 CompletionForm.Top = p.Y + 20;  // Would be nice not to use a constant number of pixels.
                 CompletionForm.Show();
