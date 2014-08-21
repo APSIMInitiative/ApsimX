@@ -213,7 +213,7 @@ namespace Utility
                         break;
                     case 3:
                         if (Char.IsLetterOrDigit(equation[i]) || (equation[i] == '.') ||
-                            (equation[i] == '[') || (equation[i] == ']') || (equation[i] == ':'))
+                            (equation[i] == '[') || (equation[i] == ']') || (equation[i] == ':') || (equation[i] == '_'))
                             temp += equation[i];
                         else
                         {

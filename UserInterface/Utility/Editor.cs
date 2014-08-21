@@ -179,10 +179,11 @@ namespace Utility
                 Point p = TextBox.ActiveTextAreaControl.TextArea.Caret.ScreenPosition;
                 Point EditorLocation = TextBox.PointToScreen(p);
 
+                Point EditorLocation1 = Application.OpenForms[0].PointToClient(EditorLocation);
                 // Display completion window.
-                //CompletionForm.Parent = TextBox.Parent.Parent;
-                CompletionForm.Left = p.X;
-                CompletionForm.Top = p.Y + 20;  // Would be nice not to use a constant number of pixels.
+                CompletionForm.Parent = Application.OpenForms[0];
+                CompletionForm.Left = EditorLocation1.X;
+                CompletionForm.Top = EditorLocation1.Y + 20;  // Would be nice not to use a constant number of pixels.
                 CompletionForm.Show();
                 CompletionForm.BringToFront();
                 CompletionForm.Controls[0].Focus();
