@@ -86,7 +86,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = "Simulation name: " + Name + "\r\n";
+                string Msg = "ERROR in file: " + FileName + "\r\n" +
+                             "Simulation name: " + Name + "\r\n";
                 Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
@@ -102,7 +103,8 @@ namespace Models.Core
             {
                 DataStore store = new DataStore(this);
 
-                string Msg = "Simulation name: " + Name + "\r\n";
+                string Msg = "ERROR in file: " + FileName + "\r\n" +
+                             "Simulation name: " + Name + "\r\n"; 
                 Msg += err.Message;
                 if (err.InnerException != null)
                     Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
