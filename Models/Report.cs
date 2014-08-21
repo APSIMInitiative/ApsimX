@@ -144,12 +144,20 @@ namespace Models
             public void StoreValue()
             {
                 object Value = Report.Get(FullName);
-                if (Value != null && Value.GetType().IsArray)
+                if (Value != null)
                 {
-                    Array A = Value as Array;
-                    Value = A.Clone();
+                    if (Value.GetType().IsArray)
+                    {
+                        Array A = Value as Array;
+                        Value = A.Clone();
+                    }
+                    else if (Value.GetType().IsClass)
+                    {
+                        Value = Utility.Reflection.Clone(Value);
+                    }
+
+                    _Values.Add(Value);
                 }
-                _Values.Add(Value);
             }
 
             /// <summary>

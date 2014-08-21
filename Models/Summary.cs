@@ -311,6 +311,8 @@ namespace Models
             st = st.Replace("\t", "    ");
             if (html)
             {
+                st = st.Replace("<", "LE");
+                st = st.Replace(">", "GE");
                 st = st.Replace("&&", "and");
                 st = st.Replace("\r", string.Empty);
                 st = st.Replace("\n", "<br/>");

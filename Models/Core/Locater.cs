@@ -93,9 +93,9 @@ namespace Models.Core
             {
                 return null;
             }
-            else if (namePath.StartsWith("("))
+            else if (namePath.StartsWith("evaluate", StringComparison.CurrentCultureIgnoreCase))
             {
-                returnVariable = new VariableExpression(namePath, relativeTo);
+                returnVariable = new VariableExpression(namePath.Remove(0, 8), relativeTo);
             }
             else
             {
