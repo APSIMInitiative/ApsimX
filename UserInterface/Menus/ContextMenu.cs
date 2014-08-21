@@ -120,6 +120,7 @@ namespace UserInterface.Presenters
                                               typeof(Folder) })]
         public void RunAPSIM(object sender, EventArgs e)
         {
+            this.explorerPresenter.Save();
             Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
             RunCommand command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
             command.Do(null);

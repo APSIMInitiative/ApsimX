@@ -461,7 +461,10 @@ namespace UserInterface.Presenters
         {
             this.PopulateGrid();
             this.RefreshCalculatedColumns();
-            this.graphPresenter.DrawGraph();
+            if (this.graphPresenter != null)
+            {
+                this.graphPresenter.DrawGraph();
+            }
         }
     }
 }

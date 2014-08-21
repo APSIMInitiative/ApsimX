@@ -173,6 +173,12 @@ namespace UserInterface.Presenters
                 // Need to hide the right hand panel because some views may not have saved
                 // their contents until they get a 'Detach' call.
                 HideRightHandPanel();
+                
+                if (this.ApsimXFile.FileName == null)
+                {
+                    SaveAs();
+                }
+
                 this.ApsimXFile.Write(this.ApsimXFile.FileName);
             }
             catch (Exception err)
