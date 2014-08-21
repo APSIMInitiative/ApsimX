@@ -409,7 +409,7 @@
             <plant_status>out</plant_status>
             <height>0</height>
             <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <UnderstoryCoverMax>0.01</UnderstoryCoverMax>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <InitialRootDepth>1</InitialRootDepth>
             <MaximumRootDepth>10000</MaximumRootDepth>
@@ -429,7 +429,7 @@
               <SkipPlant>0</SkipPlant>
             </SowingData>
             <UnderstoryCoverGreen>0.074968729485703017</UnderstoryCoverGreen>
-            <UnderstoryRootDepth>300</UnderstoryRootDepth>
+            <UnderstoryRootDepth>500</UnderstoryRootDepth>
             <UnderstoryPEP>0.05963833520620445</UnderstoryPEP>
             <UnderstoryEP>0.05963833520620445</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>

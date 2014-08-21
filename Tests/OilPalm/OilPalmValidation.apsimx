@@ -1437,8 +1437,7 @@
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -1460,7 +1459,12 @@
             <UnderstoryEP>0.08541050685255662</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
             <UnderstoryDltDM>0.42639984101517586</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
             <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Operations>
@@ -1601,29 +1605,29 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
+              <Offset>449</Offset>
+              <AnnualFronds>21</AnnualFronds>
+              <AnnualBunches>13.1687180080027</AnnualBunches>
+              <BunchOffset>196.154097770159</BunchOffset>
+              <AnnualYield>6.05788905942347</AnnualYield>
+              <AnnualBunchSize>3.40756421883708</AnnualBunchSize>
+              <YieldOffset>25308.9284896047</YieldOffset>
               <MonthlyPalmYield>2.15513361744253</MonthlyPalmYield>
+              <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
               <MonthlyPalmBunchSize>19.7926365580748</MonthlyPalmBunchSize>
-              <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
-              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <MonthlyDenit>0.293073131313912</MonthlyDenit>
               <MonthlyN2O>0.0555647257760918</MonthlyN2O>
-              <MonthlyLeach>0</MonthlyLeach>
+              <MonthlyN2>0.237508405537821</MonthlyN2>
               <MonthlyFixation>1.4995570386938</MonthlyFixation>
               <SurfaceNO3>21.2077299855371</SurfaceNO3>
               <RootZoneNO3>30.0560975546784</RootZoneNO3>
-              <MonthlyN2>0.237508405537821</MonthlyN2>
+              <MonthlyLeach>0</MonthlyLeach>
               <SoilCtpha>313.053114529832</SoilCtpha>
-              <NitTot>26213.4928326464</NitTot>
-              <AnnualFronds>21</AnnualFronds>
-              <AnnualBunches>13.1687180080027</AnnualBunches>
-              <AnnualYield>6.05788905942347</AnnualYield>
-              <AnnualBunchSize>3.40756421883708</AnnualBunchSize>
-              <Offset>449</Offset>
-              <BunchOffset>196.154097770159</BunchOffset>
-              <YieldOffset>25308.9284896047</YieldOffset>
+              <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
               <TotalNO3>36.7902910885593</TotalNO3>
+              <NitTot>26213.4928326464</NitTot>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4568,8 +4572,7 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -4591,7 +4594,12 @@ namespace Models
             <UnderstoryEP>0</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
             <UnderstoryDltDM>0</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
             <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Irrigation>
@@ -4662,8 +4670,8 @@ namespace Models
           <Manager>
             <Name>Palm Management</Name>
             <Script>
-              <sowing_date>1996-03-01</sowing_date>
-              <population>135</population>
+              <sowing_date>1991-03-01</sowing_date>
+              <population>127</population>
               <cultivar>Dami</cultivar>
               <sowing_depth>200</sowing_depth>
               <Plant_population>0</Plant_population>
@@ -4857,7 +4865,7 @@ namespace Models
 				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
 				{
 					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+					//AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
 				}
 			}
 
@@ -4887,6 +4895,7 @@ namespace Models
 			   MonthlyPalmBunchSize = 0;
 			   
 			AnnualYield += oilPalm.HarvestFFB;
+			AnnualBunches += oilPalm.CumulativeBunchNumber - BunchOffset;
 						if (AnnualBunches > 0)
 				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (oilPalm.Population * 10000);
 		}
@@ -5567,7 +5576,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -6963,8 +6972,7 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -6986,7 +6994,12 @@ namespace Models
             <UnderstoryEP>0</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
             <UnderstoryDltDM>0</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
             <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Manager>
@@ -8134,7 +8147,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
