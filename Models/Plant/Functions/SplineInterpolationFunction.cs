@@ -45,7 +45,10 @@ namespace Models.PMF.Functions
                 }
 
                 if (spline == null)
-                    spline = CubicSpline.InterpolateAkima(XYPairs.X, XYPairs.Y);
+                {
+                    spline = CubicSpline.InterpolateBoundaries(XYPairs.X, XYPairs.Y, SplineBoundaryCondition.FirstDerivative, 0, SplineBoundaryCondition.FirstDerivative, 0);
+                    
+                }
 
                 return Interpolate(XValue);
             }
