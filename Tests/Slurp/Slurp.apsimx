@@ -27,6 +27,8 @@
           <string>[Clock].Today</string>
           <string>[Slurp].PotentialEP</string>
           <string>[Slurp].ActualEP</string>
+          <string>[Slurp].potentialNitrogenDemand</string>
+          <string>[Slurp].actualNitrogenSupply</string>
           <string>[Slurp].localRootDepth</string>
           <string>[Arbitrator].scalerLayer</string>
           <string>[Arbitrator].scalerPlant</string>
@@ -410,6 +412,33 @@
           <double>0.0081416673511403286</double>
           <double>0</double>
         </scalerLayer>
+        <scalerPlantNitrogen>
+          <double>0</double>
+        </scalerPlantNitrogen>
+        <dltNO3>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNO3>
+        <scalerLayerNitrogen>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </scalerLayerNitrogen>
+        <dltNH4>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNH4>
+        <dltNitrogen>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNitrogen>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Area>0</Area>
