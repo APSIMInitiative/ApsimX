@@ -61,12 +61,10 @@ namespace Models.PMF.OilPalm
         double Ndemand = 0.0;
 
         double RootDepth = 0.0;
-        public double InitialRootDepth = 1.0;
-        public double MaximumRootDepth = 10000.0;
         public double[] kl;
         public double[] ll;
         public double[] xf;
-        public double InterceptionFraction = 0.0;
+        public double InterceptionFraction { get; set; }
         public double[] bd = null;
 
         double[] PotSWUptake;
@@ -179,6 +177,10 @@ namespace Models.PMF.OilPalm
         Function FlowerAbortionFraction = null;
         [Link]
         Function BunchFailureFraction = null;
+        [Link]
+        Function InitialRootDepth = null;
+        [Link]
+        Function MaximumRootDepth = null;
         [Link]
         Function KNO3 = null;
         [Link]
@@ -347,7 +349,7 @@ namespace Models.PMF.OilPalm
                 B.FemaleFraction = FemaleFlowerFraction.Value;
                 Bunches.Add(B);
             }
-            RootDepth = InitialRootDepth;
+            RootDepth = InitialRootDepth.Value;
         }
 
         public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
@@ -476,7 +478,7 @@ namespace Models.PMF.OilPalm
         {
             int RootLayer = LayerIndex(RootDepth);
             RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalm")[RootLayer];
-            RootDepth = Math.Min(MaximumRootDepth, RootDepth);
+            RootDepth = Math.Min(MaximumRootDepth.Value, RootDepth);
             RootDepth = Math.Min(Utility.Math.Sum(Soil.SoilWater.dlayer), RootDepth);
 
             // Calculate Root Activity Values for water and nitrogen
@@ -601,7 +603,7 @@ namespace Models.PMF.OilPalm
             if (Fr > 1.0)
                 Excess = DMAvailable - (TotBunchDMD + TotFrondDMD + StemDMD);
 
-
+            //why is this here? -JF
             if (Age > 10 && Fr < 1)
             { }
 

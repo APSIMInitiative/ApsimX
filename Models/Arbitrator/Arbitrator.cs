@@ -19,134 +19,153 @@ namespace Models.Arbitrator
 
         [Link]
         Soils.Soil Soil = null;
+
+        ICrop2[] plants ;
+
+        // Plant variables
+        double[] actualEP;
+        double[,] actualEPPlantLayer;
+        double[] potentialEP;
+        double totalSWDemand;
+        public double[] scalerPlant {get; set;}  //
+
+        // Soil variables
+        public double[] dltSWdep { get; set; }
+        double[,] swUptakePlantLayer;
+        double[,] availWaterDepPlantLayer ;
+        double[] availWaterDepPlant ;
+        double[] availWaterDepLayer ;
+        double availWaterDepSum;
+        double[] totalAvailWaterDepLayer ;  //water between sw and ll15 - temporary solution
+        public double[] scalerLayer {get; set;}  //how much to scale back the water uptake because there is not enough water in the layer to staisfy
+
+        public double ArbitEOS { get; set; }  //
+
+
                 
         //public double[]  { get; set; }
 
 
         public override void OnSimulationCommencing()
         {
-            /// this is init
+            // this is init
+            //plants = (ICrop2[])this.Children.MatchingMultiple(typeof(ICrop2));
+            plants = this.Plants;
+
+            actualEP = new double[plants.Length];
+            actualEPPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            potentialEP = new double[plants.Length];
+            
+            scalerPlant = new double[plants.Length];  //
+
+            // Soil variables
+            swUptakePlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            availWaterDepPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            availWaterDepPlant = new double[plants.Length];
+            availWaterDepLayer = new double[Soil.SoilWater.dlayer.Length];
+            
+            totalAvailWaterDepLayer = new double[Soil.SoilWater.dlayer.Length];  //water between sw and ll15 - temporary solution
+            scalerLayer = new double[Soil.SoilWater.dlayer.Length];  //how much to scale back the water uptake because there is not enough water in the layer to staisfy
+            dltSWdep = new double[Soil.SoilWater.dlayer.Length];
+
         }
 
+
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDailyInitialisation(object sender, EventArgs e)
+        {
+            Utility.Math.Zero(actualEP);
+            Utility.Math.Zero(actualEPPlantLayer);
+            Utility.Math.Zero(potentialEP);
+            totalSWDemand=0.0;
+            Utility.Math.Zero(swUptakePlantLayer);
+            Utility.Math.Zero(scalerPlant);
+            Utility.Math.Zero(availWaterDepPlantLayer);
+            Utility.Math.Zero(availWaterDepPlant);
+            Utility.Math.Zero(availWaterDepLayer);
+            availWaterDepSum = 0.0;
+            Utility.Math.Zero(totalAvailWaterDepLayer);
+            Utility.Math.Zero(scalerLayer);
+            Utility.Math.Zero(dltSWdep);
+        }
 
         [EventSubscribe("DoEnergyArbitration")]
         private void OnDoEnergyArbitration(object sender, EventArgs e)
         {
+            for (int i = 0; i < plants.Length; i++)
+            {
+                plants[i].PotentialEP = 10.0;
+                ArbitEOS = 0.0;  // need to set EOS but doesnot seem to be effective
+            }
         }
 
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
-            ICrop2[] plants = (ICrop2[])this.Children.MatchingMultiple(typeof(ICrop2));
-
-            // Plant variables
-            double[] actualEP = new double[plants.Length];
-            double[] potentialEP = new double[plants.Length];
-            double totalSWDemand;
-
-            // Soil variables
-            double[,] swUptakePlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            double[,] availWaterDepPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            double[] availWaterDepPlant = new double[plants.Length];
-            double[] availWaterDepLayer = new double[Soil.SoilWater.dlayer.Length];
-            double availWaterDepSum;
-
-
-            // Collect the plant information needed to do the water arbitration
-            // soil water demand, kl, root depth, 
             // use i for the plant loop and j for the layer loop
-
-            // zero some values - if these are delcared in this routine then do not need zeroing as are created each day anyway ??????
-            availWaterDepSum = 0.0;
-            totalSWDemand = 0.0;
-            double swCheck = 0.0;
-            for (int i = 0 ; i<plants.Length; i++)
-            {
-                availWaterDepPlant[i] = 0.0;
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
-                {
-                    availWaterDepPlantLayer[i, j] = 0.0;
-                    availWaterDepLayer[j] = 0.0;
-                    swUptakePlantLayer[i, j] = 0.0;
-                }
-            }
-            // delete above here?
-            
  
             // calculate the potentially available water and sum the demand
             for (int i = 0 ; i<plants.Length; i++)
             {
+                potentialEP[i] = plants[i].PotentialEP; // note that eventually PotentialEP will be calculated above in the EnergyArbitration 
                 totalSWDemand += potentialEP[i];
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    double temp = (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LLDep[j]) * plants[i].RootProperties.KL[j] * plants[i].RootProperties.RootExplorationByLayer[j];
-                    availWaterDepPlantLayer[i, j] = Math.Max(temp, 0.0);  // ?? not sum? - no shoud lonly be one combo that fits in ehre
-                    availWaterDepSum += availWaterDepPlantLayer[i, j];   // needed?
+
+                    double temp = (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]) * plants[i].RootProperties.KL[j] * plants[i].RootProperties.RootExplorationByLayer[j];
+                    availWaterDepPlantLayer[i, j] = Math.Max(temp, 0.0);  // 
+
+                    // sum by plant for convenience
+                    availWaterDepPlant[i] += availWaterDepPlantLayer[i, j];
+               }
+                // if this was the only plant in the system, would there be enough water to satify demand?  If yes then scaler = 1 otherwise < 1
+                // when it comes to uptake then this scaler gets applied across all layers for this plant so that uptake cannot exceed demand
+                if (availWaterDepPlant[i] >= potentialEP[i])
+                {
+                    scalerPlant[i] = Utility.Math.Divide(potentialEP[i], availWaterDepPlant[i], 0.0);
+                }
+                else
+                {
+                    scalerPlant[i] = Utility.Math.Divide(Utility.Math.Sum(availWaterDepPlant), potentialEP[i], 0.0);
+                    scalerPlant[i] = Utility.Math.Constrain(scalerPlant[i], 0.0, 1.0);
                 }
             }
 
-            // sum by plant and layer for convenience
+
+            // calculate the maximum water available in each layer
+            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+                {
+                    availWaterDepLayer[j] = Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j];
+                    double[] tempDemandLayer = new double[Soil.SoilWater.dlayer.Length] ;
+                    tempDemandLayer[j] = 0.0;
+                    for (int i = 0; i < plants.Length; i++)
+                    {
+                        tempDemandLayer[j] += availWaterDepPlantLayer[i, j] * scalerPlant[i];
+                    }
+                // add up all the total (scaled) demand from the solo-plant calculations above and compare against the water in the layer
+                // and see if uptake in any layer needs to be constrained
+                    scalerLayer[j] = Utility.Math.Divide(availWaterDepLayer[j], tempDemandLayer[j], 0.0);
+                    scalerLayer[j] = Utility.Math.Constrain(scalerLayer[j], 0.0, 1.0);
+                }
+
+                
+            // calculate the uptakes as the demands scaled by plant and layer
+            // calculate the dlts to send back to the soil water model
+            // calculate the actual uptake for each plant and send to plant model
             for (int i = 0; i < plants.Length; i++)
             {
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    availWaterDepPlant[i] += availWaterDepPlantLayer[i, j];
-                    availWaterDepLayer[j] += availWaterDepPlantLayer[i, j];
+                    actualEPPlantLayer[i, j] = availWaterDepPlantLayer[i, j] * scalerPlant[i] * scalerLayer[j];
+                    actualEP[i] += actualEPPlantLayer[i, j];
+                    dltSWdep[j] += -1.0 * actualEPPlantLayer[i, j];  // -ve to reduce water content in the soil
                 }
-            }
-            // check the arithmetic!
-            if (!Utility.Math.FloatsAreEqual(Utility.Math.Sum(availWaterDepPlant),Utility.Math.Sum(availWaterDepLayer)))
-            {
-                // do nothing
+                // send the actual EP to the plants
+                plants[i].ActualEP = actualEP[i];
             }
 
-
-            
-            
-
-
-            // zeroth case - sum of demand is zero
-            // first case - sum of all the potentialEP <= sum of all the availWaterDep - if so simple case once thorugh and everyone is happy
-            // second case - sum of all the availWaterDep <= 0.0 - no plants get any water
-            // third case - scale back by a constant factor - this will be significantly improved later and made much more sensible
-
-            if (Utility.Math.Sum(potentialEP) <= availWaterDepSum)
-            {
-                // start doing the calculations to remove water from soil
-                for (int i = 0; i < plants.Length; i++)
-                {
-                    actualEP[i] = potentialEP[i] ;  // each crop gets what it wants
-                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)  // look across the soil layers
-                    {
-                        swUptakePlantLayer[i,j] += (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LLDep[j]) * plants[i].RootProperties.KL[j] * plants[i].RootProperties.RootExplorationByLayer[j];
-                    }
-                }
-            }
-            else if (availWaterDepSum <= 0.0)
-            {
-                for (int i = 0; i < plants.Length; i++)
-                {
-                    actualEP[i] = 0.0;
-                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)  // look across the soil layers
-                    {
-                        swUptakePlantLayer[i, j] = 0.0;
-                    }
-                }
-            }
-            else 
-            {
-                // calculate the scaling factor
-                double tempScaling = Utility.Math.Divide(availWaterDepSum, Utility.Math.Sum(potentialEP), 0.0);   //Check hte default
-                for (int i = 0; i < plants.Length; i++)
-                {
-                    actualEP[i] = tempScaling * potentialEP[i];
-                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)  // look across the soil layers
-                    {
-                        swUptakePlantLayer[i, j] = 0.0;
-                    }
-                }
-            }
-
+            // send the change in soil water to the soil water module
+            Soil.SoilWater.dlt_sw_dep = dltSWdep;
         }
 
         [EventSubscribe("DoNutrientArbitration")]

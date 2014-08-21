@@ -9,12 +9,12 @@ namespace Models.Core
     public interface ICrop2
     {
         /// <summary>
-        /// Provides canopy data to SoilWater.
+        /// Provides canopy data to Arbitrator.
         /// </summary>
         CanopyProperties CanopyProperties { get;  }
 
         /// <summary>
-        /// Provides canopy data to SoilWater.
+        /// Provides canopy data to Arbitrator.
         /// </summary>
         RootProperties RootProperties { get;  }
 
@@ -23,25 +23,30 @@ namespace Models.Core
         /// MicroClimate will get 'CropType' and use it to look up
         /// canopy properties for this crop.
         /// </summary>
-        string CropType { get;  }
+        //string CropType { get;  }
 
         /// <summary>
         /// Crop specific relative growth stress factor (0-1). MicroClimate
         /// uses this to calculate the crop canopy conductance
         /// </summary>
-        double FRGR { get;  }
+        //double FRGR { get;  }
 
         /// <summary>
         /// Potential evapotranspiration. MicroClimate calculates this and sets
         /// this property in the crop.
         /// </summary>
-        double PotentialEP { get;  }
+        double PotentialEP { get; set; }
+
+        /// <summary>
+        /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
+        /// </summary>
+        double ActualEP { set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
         /// </summary>
-        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  }
+        //CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  }
 
         /// <summary>
         /// Describes the state of the crop, if true then is actually in the ground - sown

@@ -28,6 +28,7 @@
     <Zone>
       <Name>Field</Name>
       <Area>0</Area>
+      <Arbitrator/>
       <Report>
         <Name>Report</Name>
         <VariableNames>

@@ -56,7 +56,7 @@ namespace Models.Soils
             formatProvider.TextInfo.ListSeparator = " ";
         }
 
-        [EventSubscribe("DoSoilArbitration")]
+        [EventSubscribe("DoWaterArbitration")]
         private void OnDoSoilArbitration(object sender, EventArgs e)
         {
             //set up data table

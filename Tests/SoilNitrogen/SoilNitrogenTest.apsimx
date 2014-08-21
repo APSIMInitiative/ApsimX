@@ -6,13 +6,6 @@
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-      <MaxT>12.199999809265137</MaxT>
-      <MinT>9.3999996185302734</MinT>
-      <Rain>0.60000002384185791</Rain>
-      <Radn>3.2999999523162842</Radn>
-      <vp>11.800000190734863</vp>
-      <wind>2.7999999523162842</wind>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -21,9 +14,6 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -34,13 +24,10 @@
           <string>[WeatherFile].MaxT</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
-          <string />
-          <string />
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -209,7 +196,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SlurpSoilCrop</Name>
+            <Name>Slurp</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -400,6 +387,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.0471668461298749</double>
+            <double>0.88949650222067322</double>
+            <double>0.888494836034746</double>
+            <double>0.88943913460768487</double>
+            <double>0.76980518485306348</double>
+            <double>0.44990520372196285</double>
+            <double>0.26995480019232959</double>
+            <double>0.21996395130652985</double>
+            <double>0.15997599899712525</double>
+            <double>0.12998067035164873</double>
+            <double>0.11998080664544882</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -421,6 +421,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -508,13 +521,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -583,29 +595,16 @@
       </SurfaceOrganicMatter>
       <Slurp>
         <Name>Slurp</Name>
-        <plant_status>out</plant_status>
-        <CropType>Slurp</CropType>
-        <CoverGreen>0.5</CoverGreen>
-        <RootDepth>200</RootDepth>
+        <MaximumStomatalConductance>0</MaximumStomatalConductance>
+        <Frgr>0</Frgr>
         <LeafMass>1</LeafMass>
-        <kl>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-          <double>0.5</double>
-        </kl>
         <LAI>2</LAI>
         <LAItot>2</LAItot>
+        <CoverGreen>0.5</CoverGreen>
         <CoverTot>0.5</CoverTot>
         <Height>800</Height>
         <Depth>100</Depth>
+        <RootDepth>200</RootDepth>
         <LeafN>2</LeafN>
       </Slurp>
       <MicroClimate>
@@ -628,24 +627,18 @@
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-      <MaxT>12.199999809265137</MaxT>
-      <MinT>9.3999996185302734</MinT>
-      <Rain>0.60000002384185791</Rain>
-      <Radn>3.2999999523162842</Radn>
-      <vp>11.800000190734863</vp>
-      <wind>2.7999999523162842</wind>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -654,9 +647,6 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -666,13 +656,10 @@
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
-          <string />
-          <string />
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -1032,6 +1019,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.0394689866136577</double>
+            <double>0.88634994467382933</double>
+            <double>0.88849784160151635</double>
+            <double>0.88944020107263133</double>
+            <double>0.76980497654563118</double>
+            <double>0.449904950148074</double>
+            <double>0.26995458683192625</double>
+            <double>0.21996374392550275</double>
+            <double>0.15997583826755923</double>
+            <double>0.12998054052803287</double>
+            <double>0.11998069317336697</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -1053,6 +1053,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -1140,13 +1153,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1214,9 +1226,8 @@
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
   </Simulation>
-  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
