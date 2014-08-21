@@ -31,9 +31,6 @@ namespace UserInterface.Views
         public SeriesEditorView()
         {
             InitializeComponent();
-
-            // Colour the x edit box.
-            textBox1.BackColor = selectedColour;
         }
 
         /// <summary>
@@ -282,12 +279,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return textBox1.Text;
+                return xComboBox.Text;
             }
 
             set
             {
-                textBox1.Text = value;
+                xComboBox.Text = value;
             }
         }
 
@@ -298,12 +295,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return textBox2.Text;
+                return yComboBox.Text;
             }
 
             set
             {
-                textBox2.Text = value;
+                yComboBox.Text = value;
             }
         }
 
@@ -314,12 +311,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return textBox3.Text;
+                return x2ComboBox.Text;
             }
 
             set
             {
-                textBox3.Text = value;
+                x2ComboBox.Text = value;
             }
         }
 
@@ -330,12 +327,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return textBox4.Text;
+                return y2ComboBox.Text;
             }
 
             set
             {
-                textBox4.Text = value;
+                y2ComboBox.Text = value;
             }
         }
 
@@ -345,8 +342,8 @@ namespace UserInterface.Views
         /// <param name="show">Indicates whether the fields should be shown</param>
         public void ShowX2Y2(bool show)
         {
-            this.textBox3.Visible = show;
-            this.textBox4.Visible = show;
+            this.x2ComboBox.Visible = show;
+            this.y2ComboBox.Visible = show;
             this.label4.Visible = show;
             this.label5.Visible = show;
         }
@@ -378,12 +375,19 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Provides data for the currently selected data source.
+        /// Gets or sets a list of field names 
         /// </summary>
-        /// <param name="data">The data to show</param>
-        public void SetData(DataTable data)
+        /// <param name="fieldNames">The available field names</param>
+        public void SetFieldNames(string[] fieldNames)
         {
-            dataGrid.DataSource = data;
+            xComboBox.Items.Clear();
+            xComboBox.Items.AddRange(fieldNames);
+            yComboBox.Items.Clear();
+            yComboBox.Items.AddRange(fieldNames);
+            x2ComboBox.Items.Clear();
+            x2ComboBox.Items.AddRange(fieldNames);
+            y2ComboBox.Items.Clear();
+            y2ComboBox.Items.AddRange(fieldNames);
         }
 
         /// <summary>
@@ -480,88 +484,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The x edit box has been clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnTextBox1Click(object sender, EventArgs e)
-        {
-            textBox1.BackColor = selectedColour;
-            textBox2.BackColor = SystemColors.Window;
-            textBox3.BackColor = SystemColors.Window;
-            textBox4.BackColor = SystemColors.Window;
-        }
-
-        /// <summary>
-        /// The y edit box has been clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnTextBox2Click(object sender, EventArgs e)
-        {
-            textBox1.BackColor = SystemColors.Window;
-            textBox2.BackColor = selectedColour;
-            textBox3.BackColor = SystemColors.Window;
-            textBox4.BackColor = SystemColors.Window;
-
-        }
-
-        /// <summary>
-        /// The x2 edit box has been clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnTextBox3Click(object sender, EventArgs e)
-        {
-            textBox1.BackColor = SystemColors.Window;
-            textBox2.BackColor = SystemColors.Window;
-            textBox3.BackColor = selectedColour;
-            textBox4.BackColor = SystemColors.Window;
-
-        }
-
-        /// <summary>
-        /// The y2 edit box has been clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnTextBox4Click(object sender, EventArgs e)
-        {
-            textBox1.BackColor = SystemColors.Window;
-            textBox2.BackColor = SystemColors.Window;
-            textBox3.BackColor = SystemColors.Window;
-            textBox4.BackColor = selectedColour;
-
-        }
-
-        /// <summary>
-        /// The data grid has had one of its column headers clicked.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnDataGridColumnHeaderClicked(object sender, EventArguments.GridHeaderClickedArgs e)
-        {
-            if (textBox1.BackColor == selectedColour)
-            {
-                textBox1.Text = e.Column.HeaderText;
-                OnTextBox2Click(null, null);
-            }
-            else if (textBox2.BackColor == selectedColour)
-            {
-                textBox2.Text = e.Column.HeaderText;
-            }
-            else if (textBox3.BackColor == selectedColour)
-            {
-                textBox3.Text = e.Column.HeaderText;
-            }
-            else if (textBox4.BackColor == selectedColour)
-            {
-                textBox4.Text = e.Column.HeaderText;
-            }
-
-        }
-
-        /// <summary>
         /// The show in legend checkbox has been clicked.
         /// </summary>
         /// <param name="sender">Sender of event</param>
@@ -579,7 +501,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void xComboBox_TextChanged(object sender, EventArgs e)
         {
             if (XChanged != null)
             {
@@ -592,7 +514,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void yComboBox_TextChanged(object sender, EventArgs e)
         {
             if (YChanged != null)
             {
@@ -606,7 +528,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void textBox3_TextChanged(object sender, EventArgs e)
+        private void x2ComboBox_TextChanged(object sender, EventArgs e)
         {
             if (X2Changed != null)
             {
@@ -620,7 +542,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void textBox4_TextChanged(object sender, EventArgs e)
+        private void y2ComboBox_TextChanged(object sender, EventArgs e)
         {
             if (Y2Changed != null)
             {

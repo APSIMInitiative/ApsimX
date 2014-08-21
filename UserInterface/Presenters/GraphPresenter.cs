@@ -118,7 +118,7 @@ namespace UserInterface.Presenters
                         foreach (string simulationName in simulationNamesInScope)
                         {
                             int seriesIndex = Array.IndexOf(simulationNamesInScope, simulationName);
-                                
+                            
                             SeriesInfo info = new SeriesInfo(
                                 graph: Graph,
                                 dataStore: DataStore,
@@ -127,6 +127,11 @@ namespace UserInterface.Presenters
                                 filter: "Name = '" + simulationName + "'",
                                 seriesIndex: seriesIndex,
                                 numSeries: simulationNamesInScope.Length);
+
+                            if (simulationNamesInScope.Length == 1)
+                            {
+                                info.Title = S.Y.FieldName;
+                            }
                             seriesMetadata.Add(info);
                         }
                     }
@@ -470,7 +475,7 @@ namespace UserInterface.Presenters
             /// <summary>
             /// Gets the series title.
             /// </summary>
-            public string Title { get; private set; }
+            public string Title { get; set; }
 
             /// <summary>
             /// Gets the series colour.
