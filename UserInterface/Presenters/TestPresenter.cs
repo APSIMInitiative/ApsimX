@@ -49,14 +49,19 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             // Populate the table list.
-            this.view.TableNames = dataStore.TableNames;
-
-            // Set the name of the table.
-            if (this.tests.AllTests.Length > 0)
+            if (dataStore != null)
             {
-                this.view.TableName = this.tests.AllTests[0].TableName;
-                this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
+                this.view.TableNames = dataStore.TableNames;
+
+                // Set the name of the table.
+                if (this.tests.AllTests.Length > 0)
+                {
+                    this.view.TableName = this.tests.AllTests[0].TableName;
+                    this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
+                }
             }
+
+           
 
             // Work out the test strings that we're going to pass to our view
             List<string> testStrings = new List<string>();
@@ -108,10 +113,14 @@ namespace UserInterface.Presenters
             string testString = "Simulation:" + test.SimulationName + " " +
                                 "     Test:" + test.ColumnNames + " ";
 
-            string[] parameterBits = test.Parameters.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parameterBits = null;
+            if (test.Parameters != null)
+            {
+                parameterBits = test.Parameters.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
             if (test.Type == Test.TestType.EqualTo)
             {
-                testString += "=";
+                testString += " = ";
                 if (parameterBits.Length > 0)
                 {
                     testString += parameterBits[0];
@@ -119,7 +128,7 @@ namespace UserInterface.Presenters
             }
             else if (test.Type == Test.TestType.LessThan)
             {
-                testString += "<";
+                testString += " < ";
                 if (parameterBits.Length > 0)
                 {
                     testString += parameterBits[0];
@@ -127,7 +136,7 @@ namespace UserInterface.Presenters
             }
             else if (test.Type == Test.TestType.GreaterThan)
             {
-                testString += ">";
+                testString += " > ";
                 if (parameterBits.Length > 0)
                 {
                     testString += parameterBits[0];
@@ -135,19 +144,19 @@ namespace UserInterface.Presenters
             }
             else if (test.Type == Test.TestType.Between)
             {
-                testString += "between";
+                testString += " between ";
                 if (parameterBits.Length > 1)
                 {
-                    testString += parameterBits[0] + "," + parameterBits[1];
+                    testString += parameterBits[0] + " " + parameterBits[1];
                 }
             }
-            else if (test.Type == Test.TestType.Between)
+            else if (test.Type == Test.TestType.AllPos)
             {
-                testString += "AllPositive";
+                testString += " AllPositive ";
             }
             else if (test.Type == Test.TestType.Mean)
             {
-                testString += "mean=";
+                testString += " mean= ";
                 if (parameterBits.Length > 1)
                 {
                     testString += parameterBits[1] + " " + parameterBits[0] + "%";
@@ -155,7 +164,7 @@ namespace UserInterface.Presenters
             }
             else if (test.Type == Test.TestType.Tolerance)
             {
-                testString += "tolerance=";
+                testString += " tolerance= ";
                 if (parameterBits.Length > 1)
                 {
                     testString += parameterBits[0] + "%";
@@ -163,7 +172,7 @@ namespace UserInterface.Presenters
             }
             else if (test.Type == Test.TestType.CompareToInput)
             {
-                testString += "CompareToInput=";
+                testString += " CompareToInput= ";
                 if (parameterBits.Length > 1)
                 {
                     testString += parameterBits[0] + "%";
@@ -193,6 +202,11 @@ namespace UserInterface.Presenters
                     test.ColumnNames = testBits[0];
                     string operatorString = testBits[1];
                     string[] parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (testBits.Length == 4)
+                    {
+                        Array.Resize(ref parameterBits, parameterBits.Length + 1);
+                        parameterBits[parameterBits.Length - 1] = testBits[3];
+                    }
                     if (operatorString == "=")
                     {
                         test.Type = Test.TestType.EqualTo;
