@@ -854,7 +854,7 @@
     <Log />
   </Simulation>
   <DataStore />
-  <Tests />
+
   <Experiment>
     <Factors>
       <Factor>

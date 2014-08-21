@@ -6,9 +6,7 @@
 namespace UserInterface.Interfaces
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using EventArguments;
 
     /// <summary>
     /// An interface for a cultivar view.
@@ -28,7 +26,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        event EventHandler<Utility.NeedContextItems> ContextItemsNeeded; 
+        event EventHandler<NeedContextItems> ContextItemsNeeded; 
 
         /// <summary>
         /// Gets or sets a list of all aliases.

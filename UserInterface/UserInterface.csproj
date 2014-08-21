@@ -85,6 +85,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
@@ -105,6 +106,7 @@
     </Compile>
     <Compile Include="Interfaces\IGraphView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
+    <Compile Include="Interfaces\ITestView.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
@@ -136,11 +138,11 @@
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
-    <Compile Include="Utility\Editor.cs">
+    <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Utility\Editor.Designer.cs">
-      <DependentUpon>Editor.cs</DependentUpon>
+    <Compile Include="Views\EditorView.Designer.cs">
+      <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Views\CultivarView.cs">
@@ -173,6 +175,12 @@
     <Compile Include="Views\SeriesEditorView.Designer.cs">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TestView.Designer.cs">
+      <DependentUpon>TestView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\TitleView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -185,12 +193,6 @@
     <Compile Include="Views\LegendView.Designer.cs">
       <DependentUpon>LegendView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\FactorView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\FactorView.Designer.cs">
-      <DependentUpon>FactorView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\MemoView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,12 +204,6 @@
     </Compile>
     <Compile Include="Views\InputView.Designer.cs">
       <DependentUpon>InputView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OperationsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\OperationsView.Designer.cs">
-      <DependentUpon>OperationsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ProfileView.cs">
       <SubType>UserControl</SubType>
@@ -247,12 +243,6 @@
       <DependentUpon>ReportView.cs</DependentUpon>
     </Compile>
     <Compile Include="Presenters\GraphPresenter.cs" />
-    <Compile Include="Views\EditorView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\EditorView.Designer.cs">
-      <DependentUpon>EditorView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\GraphView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -303,8 +293,8 @@
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utility\Editor.resx">
-      <DependentUpon>Editor.cs</DependentUpon>
+    <EmbeddedResource Include="Views\EditorView.resx">
+      <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CultivarView.resx">
       <DependentUpon>CultivarView.cs</DependentUpon>
@@ -321,14 +311,14 @@
     <EmbeddedResource Include="Views\SeriesEditorView.resx">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\TestView.resx">
+      <DependentUpon>TestView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\TitleView.resx">
       <DependentUpon>TitleView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LegendView.resx">
       <DependentUpon>LegendView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\FactorView.resx">
-      <DependentUpon>FactorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MemoView.resx">
       <DependentUpon>MemoView.cs</DependentUpon>
@@ -336,17 +326,11 @@
     <EmbeddedResource Include="Views\InputView.resx">
       <DependentUpon>InputView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\OperationsView.resx">
-      <DependentUpon>OperationsView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\ProfileView.resx">
       <DependentUpon>ProfileView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SeriesView.resx">
       <DependentUpon>SeriesView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\EditorView.resx">
-      <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ExplorerView.resx">
       <DependentUpon>ExplorerView.cs</DependentUpon>
@@ -409,6 +393,7 @@
     <None Include="Resources\GraphToolbox.apsimx" />
     <None Include="Resources\ManagementToolbox.apsimx" />
     <None Include="Resources\StandardToolbox.apsimx" />
+    <None Include="Resources\Test.xshd" />
     <None Include="Resources\undo.png" />
   </ItemGroup>
   <ItemGroup>

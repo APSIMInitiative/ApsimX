@@ -1,4 +1,5 @@
-﻿namespace UserInterface.Views
+﻿using UserInterface.EventArguments;
+namespace UserInterface.Views
 {
     partial class CultivarView
     {
@@ -31,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.editor1 = new Utility.Editor();
+            this.editor1 = new EditorView();
             this.SuspendLayout();
             // 
             // label1
@@ -77,7 +78,7 @@
             this.editor1.Name = "editor1";
             this.editor1.Size = new System.Drawing.Size(285, 347);
             this.editor1.TabIndex = 4;
-            this.editor1.ContextItemsNeeded += new System.EventHandler<Utility.NeedContextItems>(this.OnContextItemsNeeded);
+            this.editor1.ContextItemsNeeded += new System.EventHandler<NeedContextItems>(this.OnContextItemsNeeded);
             this.editor1.TextHasChangedByUser += new System.EventHandler(this.OnTextHasChangedByUser);
             // 
             // CultivarView
@@ -100,6 +101,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
-        private Utility.Editor editor1;
+        private EditorView editor1;
     }
 }

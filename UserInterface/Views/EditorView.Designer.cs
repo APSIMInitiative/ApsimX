@@ -28,19 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.TextBox = new ICSharpCode.TextEditor.TextEditorControl();
             this.SuspendLayout();
             // 
-            // EditorView
+            // TextBox
+            // 
+            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextBox.IsReadOnly = false;
+            this.TextBox.Location = new System.Drawing.Point(0, 0);
+            this.TextBox.Name = "TextBox";
+            this.TextBox.Size = new System.Drawing.Size(558, 485);
+            this.TextBox.TabIndex = 0;
+            this.TextBox.Text = "textEditorControl1";
+            this.TextBox.Leave += new System.EventHandler(this.OnTextBoxLeave);
+            // 
+            // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "EditorView";
-            this.Size = new System.Drawing.Size(425, 349);
+            this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
+            this.Controls.Add(this.TextBox);
+            this.Name = "Editor";
+            this.Size = new System.Drawing.Size(558, 485);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private ICSharpCode.TextEditor.TextEditorControl TextBox;
 
     }
 }

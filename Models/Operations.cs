@@ -31,7 +31,7 @@ namespace Models
     /// This class encapsulates an operations schedule.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.OperationsView")]
+    [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     public class Operations : Model
     {

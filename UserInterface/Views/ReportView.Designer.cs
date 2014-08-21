@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.VariableEditor = new Utility.Editor();
+            this.VariableEditor = new EditorView();
             this.label2 = new System.Windows.Forms.Label();
-            this.FrequencyEditor = new Utility.Editor();
+            this.FrequencyEditor = new EditorView();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -191,10 +191,10 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Utility.Editor FrequencyEditor;
+        private EditorView FrequencyEditor;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private Utility.Editor VariableEditor;
+        private EditorView VariableEditor;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private GridView GridView;
