@@ -21,6 +21,9 @@ namespace Models.Arbitrator
         [Link]
         Soils.Soil Soil = null;
 
+        [Link]
+        WeatherFile Weather = null;
+
         ICrop2[] plants ;
 
         // Plant variables
@@ -83,12 +86,25 @@ namespace Models.Arbitrator
                 
         //public double[]  { get; set; }
 
+        class CanopyProps
+        {
+            public double laiGreen;
+            public double laiTotal;
+        }
+        //public CanopyProps[,] myCanopy;
 
         public override void OnSimulationCommencing()
         {
             // this is init
             //plants = (ICrop2[])this.Children.MatchingMultiple(typeof(ICrop2));
             plants = this.Plants;
+
+            // myCanopy = new CanopyProps[plants.Length, 0];  // later make this the layering in the canopy
+            // for (int i = 0; i < plants.Length; i++)
+            // {
+            //    myCanopy[0, 0].laiGreen = plants[i].CanopyProperties.LAI;
+            // }
+            
 
             actualEP = new double[plants.Length];
             actualEPPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
@@ -174,16 +190,56 @@ namespace Models.Arbitrator
         [EventSubscribe("DoEnergyArbitration")]
         private void OnDoEnergyArbitration(object sender, EventArgs e)
         {
+            //ToDO
+            // Soil water evaporation
+            //
+
+            // i is for plants
+            // j is for layers in the canopy - layers are from the top downwards
+
+            // THIS NEEDS TO GO ONCE THE PROPER STUFF IS IN HERE
             for (int i = 0; i < plants.Length; i++)
             {
                 plants[i].PotentialEP = 10.0;
                 ArbitEOS = 0.0;  // need to set EOS but doesnot seem to be effective
             }
+
+            //Agenda
+            //?when does rainfall and irrigation interception happen? - deal with this later!
+            // break the canopy into layers
+            // calculate the light profile down the canopy and to the soil surface
+            //      - available to crops for growth
+            //      - radiation to soil surface goes to SoilTemperature for heat calculations
+            // calculate the Penman-Monteith potential evapotranspiration for each compartment (species x canopy layer) and potential soil water evaporation
+            //      - ? crops should have supplied the non-water effects of stomatal conductance by this time (based on yesterday's states) - check
+            //      - send the soil water transpiration demand back to the crops and the soil water evaporative demand to the soil water balance
+            // consistent with the 2004 documentation, interception of irrigation is not considered in Arbitrator
+
+            // Get the canopy height and depth information and break it into layers and compoents
+            // FOR NOW WILL ONLY DEAL WITH A SINGLE LAYER - HEIGHT IS THE MAXIMUM HEIGHT AND DEPTH = HEIGHT
+            // Create an array to hold the properties
+
+            for (int i = 0; i < plants.Length; i++)
+            {
+                for (int j = 0; j < plants.Length; j++)
+                {
+                }
+            }
+
+
+
         }
 
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
+            //ToDO
+            // Actual soil water evaporation
+            //
+
+
+
+
             // use i for the plant loop and j for the layer loop
  
             // calculate the potentially available water and sum the demand

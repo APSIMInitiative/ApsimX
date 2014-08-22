@@ -44,7 +44,8 @@ namespace Models.PMF.Slurp
         [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
         [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
         [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
-        [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr;
+        [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr { get; set; }
+        [Description("Nitrogen demand (kgN /ha /day)")] public double localPotentialNitrogenDemand { get; set; }
         
 
         // The variables that are in RootProperties
@@ -60,15 +61,46 @@ namespace Models.PMF.Slurp
         public double[] localRootExplorationByLayer { get; set; }
         public double[] localRootLengthDensityByVolume { get; set; }
 
-        private double Ndemand = 0.0;  // wehre does this sit?
         double tempDepthUpper;
         double tempDepthMiddle;
         double tempDepthLower;
 
-        
+        /// <summary>
+        /// Arbitrator supplies PotentialEP
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>
+        /// Arbitrator supplies ActualEP
+        /// </summary>
+        [XmlIgnore]
+        public double ActualEP { get; set; }
+
+        /// <summary>
+        /// Crop calculates potentialNitrogenDemand after getting its water allocation
+        /// </summary>
+        [XmlIgnore]
+        public double potentialNitrogenDemand { get; set; }
+
+        /// <summary>
+        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// </summary>
+        [XmlIgnore]
+        public double actualNitrogenSupply { get; set; }
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        //[XmlIgnore]
+        //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
+            //Summary.WriteMessage(FullPath, "Simulation cancelled");
+            CanopyProperties.Name = "Slurp";
             CanopyProperties.CoverGreen = localCoverGreen;
             CanopyProperties.CoverTot = localCoverTot;
             CanopyProperties.CanopyDepth = localCanopyDepth;
@@ -115,41 +147,6 @@ namespace Models.PMF.Slurp
             RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
         }
 
-        /// <summary>
-        /// Arbitrator supplies PotentialEP
-        /// </summary>
-        [XmlIgnore]
-        public double PotentialEP { get; set; }
-
-        /// <summary>
-        /// Arbitrator supplies ActualEP
-        /// </summary>
-        [XmlIgnore]
-        public double ActualEP { get; set; }
-
-        /// <summary>
-        /// Crop calculates potentialNitrogenDemand after getting its water allocation
-        /// </summary>
-        [XmlIgnore]
-        public double potentialNitrogenDemand { get; set; }
-
-        /// <summary>
-        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
-        /// </summary>
-        [XmlIgnore]
-        public double actualNitrogenSupply { get; set; }
-
-
-
-
-        
-
-
-        /// <summary>
-        /// MicroClimate supplies LightProfile
-        /// </summary>
-        //[XmlIgnore]
-        //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPlantPotentialGrowth(object sender, EventArgs e)
@@ -157,7 +154,7 @@ namespace Models.PMF.Slurp
             // nothing for Slurp to do in here but a full/proper crop model would use the LightProfile, PotenialEP and ActualEP to calculate a 
             // PotentialNDemand - the N that the plant wants in order to satisfy growth after accounting for the water supply
 
-            potentialNitrogenDemand = 5.0;
+            potentialNitrogenDemand = localPotentialNitrogenDemand;
 
         }
 
