@@ -187,15 +187,10 @@ namespace Models
                     else
                     {
                         // class or struct.
-                        foreach (PropertyInfo Property in T.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        foreach (PropertyInfo Property in Utility.Reflection.GetPropertiesSorted(T, BindingFlags.Instance | BindingFlags.Public))
                         {
                             _Names.Add(cleanName + "." + Property.Name);
                             _Types.Add(Property.PropertyType);
-                        }
-                        foreach (FieldInfo Field in T.GetFields(BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            _Names.Add(cleanName + "." + Field.Name);
-                            _Types.Add(Field.FieldType);
                         }
                     }
                 }
@@ -222,14 +217,11 @@ namespace Models
                     else
                     {
                         // class or struct.
-                        foreach (PropertyInfo Property in T.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        foreach (PropertyInfo Property in Utility.Reflection.GetPropertiesSorted(T, BindingFlags.Instance | BindingFlags.Public))
                         {
                             AllValues.Add(Property.GetValue(Value, null));
                         }
-                        foreach (FieldInfo Field in T.GetFields(BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            AllValues.Add(Field.GetValue(Value));
-                        }
+                        
                     }
                 }
             }

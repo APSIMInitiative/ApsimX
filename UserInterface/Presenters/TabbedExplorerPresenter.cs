@@ -39,7 +39,18 @@ namespace UserInterface.Presenters
             this.View = view as ITabbedExplorerView;
             this.View.PopulateStartPage += OnPopulateStartPage;
             this.View.MruClick += OnMruApsimXFile;
+            this.View.TabClosing += OnTabClosing;
             Presenters = new List<ExplorerPresenter>();
+        }
+
+        /// <summary>
+        /// Detach this presenter from the view.
+        /// </summary>
+        public void Detach(object view)
+        {
+            this.View.PopulateStartPage -= OnPopulateStartPage;
+            this.View.MruClick -= OnMruApsimXFile;
+            this.View.TabClosing -= OnTabClosing;
         }
 
         /// <summary>
@@ -157,6 +168,17 @@ namespace UserInterface.Presenters
         private void OnMruApsimXFile(object sender, StringArgs s)
         {
             OpenApsimXFileInTab(s.Name);
+        }
+
+        /// <summary>
+        /// Current tab is closing - remove presenter from our presenters list
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="s">Event arguments</param>
+        private void OnTabClosing(object sender, EventArgs e)
+        {
+            Presenters[this.View.CurrentTabIndex].SaveIfChanged();
+            Presenters.RemoveAt(this.View.CurrentTabIndex);
         }
 
         /// <summary>

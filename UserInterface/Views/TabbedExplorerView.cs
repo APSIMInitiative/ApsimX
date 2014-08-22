@@ -17,6 +17,8 @@ namespace UserInterface.Views
 
         event EventHandler<StringArgs> MruClick;
 
+        event EventHandler TabClosing;
+
         /// <summary>
         /// Add a tab form to the tab control. Optionally select the tab if SelectTab is true.
         /// </summary>
@@ -35,6 +37,11 @@ namespace UserInterface.Views
         void FillMruList(List<string> files);
 
         Int32 TabWidth { get; }
+
+        /// <summary>
+        /// Gets the current tab index.
+        /// </summary>
+        int CurrentTabIndex { get; }
     }
 
 
@@ -46,6 +53,7 @@ namespace UserInterface.Views
     {
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler<StringArgs> MruClick;
+        public event EventHandler TabClosing;
         
         /// <summary>
         /// Constructor
@@ -54,6 +62,19 @@ namespace UserInterface.Views
         {
             InitializeComponent();
         }
+
+
+        /// <summary>
+        /// Gets the current tab index.
+        /// </summary>
+        public int CurrentTabIndex
+        {
+            get
+            {
+                return TabControl.SelectedIndex;
+            }
+        }
+
 
         /// <summary>
         /// View has loaded
@@ -135,6 +156,9 @@ namespace UserInterface.Views
         /// </summary>
         private void OnCloseTabClick(object sender, EventArgs e)
         {
+            if (TabClosing != null)
+                TabClosing.Invoke(this, e);
+            
             if (TabControl.SelectedTab.Text != " ")
                 TabControl.TabPages.Remove(TabControl.SelectedTab);
         }

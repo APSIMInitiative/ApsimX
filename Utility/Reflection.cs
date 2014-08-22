@@ -439,5 +439,25 @@ namespace Utility
             stream.Seek(0, SeekOrigin.Begin);
             return BinaryDeserialise(stream);
         }
+
+        public static PropertyInfo[] GetPropertiesSorted(Type type, BindingFlags flags)
+        {
+            List<PropertyInfo> properties = new List<PropertyInfo>();
+
+            properties.AddRange(type.GetProperties(flags));
+            properties.Sort(new PropertyInfoComparer());
+
+            return properties.ToArray();
+
+        }
+
+        private class PropertyInfoComparer : IComparer<PropertyInfo>
+        {
+            // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
+            public int Compare(PropertyInfo x, PropertyInfo y)
+            {
+                return x.Name.CompareTo(y.Name);
+            }
+        }
     }
 }
