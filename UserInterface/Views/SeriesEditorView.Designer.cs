@@ -284,6 +284,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(198, 21);
             this.comboBox1.TabIndex = 33;
+            this.comboBox1.TextChanged += new System.EventHandler(this.OnComboBox1Changed);
             // 
             // label1
             // 
