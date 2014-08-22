@@ -65,8 +65,8 @@ namespace Models.Core
             }
             else
             {
-                lowerArraySpecifier = 1;
-                upperArraySpecifier = 1;
+                lowerArraySpecifier = 0;
+                upperArraySpecifier = 0;
             }
         }
 
@@ -195,9 +195,14 @@ namespace Models.Core
             {
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (obj != null && obj.GetType().IsArray)
+                if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
                 {
                     Array array = obj as Array;
+                    if (array.Length == 0)
+                    {
+                        return null;
+                    }
+
                     int numElements = upperArraySpecifier - lowerArraySpecifier + 1;
                     Array values = Array.CreateInstance(this.property.PropertyType.GetElementType(), numElements);
                     for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
