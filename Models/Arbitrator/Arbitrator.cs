@@ -200,7 +200,7 @@ namespace Models.Arbitrator
             // THIS NEEDS TO GO ONCE THE PROPER STUFF IS IN HERE
             for (int i = 0; i < plants.Length; i++)
             {
-                plants[i].PotentialEP = 10.0;
+                //plants[i].PotentialEP = 5.0;
                 ArbitEOS = 0.0;  // need to set EOS but doesnot seem to be effective
             }
 

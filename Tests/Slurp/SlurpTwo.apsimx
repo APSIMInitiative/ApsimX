@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>Memo</Name>
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+ <head>
+  <title></title>
+ </head>
+ <body>
+  <p>replace cover with a k and calculate</p>
+  <p></p>
+  <p></p>
+  <p></p>
+ </body>
+</html>]]></MemoText>
+  </Memo>
   <Simulation>
     <Name>Slurp</Name>
     <WeatherFile>
@@ -64,7 +80,28 @@
             <double>100</double>
           </KS>
           <SoilCrop>
-            <Name>Slurp</Name>
+            <Name>Slurp1</Name>
+            <LL>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>Slurp2</Name>
             <LL>
               <double>0.3</double>
               <double>0.3</double>
@@ -347,53 +384,6 @@
         <cnr>80</cnr>
       </SurfaceOrganicMatter>
       <Manager>
-        <Name>SlurpUpdates</Name>
-        <Script>
-          <DateToUpdate>1990-01-01</DateToUpdate>
-          <VariableToUpdate>[Slurp].CanopyProperties.LAI</VariableToUpdate>
-          <tempValue>3.5</tempValue>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Slurp;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Slurp Slurp;
-		[Link] Report Report;
-		[Link] Summary Summary;
-		
-
-		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
-		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
-        [Description("Value to update to")] public double tempValue { get; set; }
-
-		public string myString;
-
-		public override void OnSimulationCommencing()
-		{
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{	
-			if (Clock.Today == DateToUpdate)
-			{
-                myString="SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
-			    Summary.WriteMessage(FullPath, myString);
-			    this.Set(VariableToUpdate, tempValue);
-			}
-        }
-	}
-}
-]]></Code>
-      </Manager>
-      <Manager>
         <Name>Diffs</Name>
         <Script />
         <Code><![CDATA[using System;
@@ -408,8 +398,8 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] Slurp Slurp;
-		[Link] Report Report;
+		[Link] Report ReportWater;
+		[Link] Report ReportNitrogen;
 		[Link] Summary Summary;
 		[Link] Soils.Soil Soil;
 
@@ -460,51 +450,81 @@ namespace Models
 ]]></Code>
       </Manager>
       <Slurp>
-        <Name>Slurp</Name>
-        <localLAI>5</localLAI>
-        <localLAItot>5</localLAItot>
+        <Name>Slurp1</Name>
+        <localLAI>2.5</localLAI>
+        <localLAItot>2.5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
         <localCanopyDepth>500</localCanopyDepth>
-        <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
+        <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
         <localPotentialWaterDemand>5</localPotentialWaterDemand>
-        <localPotentialNitrogenDemand>5</localPotentialNitrogenDemand>
-        <localCoverGreen>1</localCoverGreen>
-        <localCoverTot>1</localCoverTot>
-        <localRootDepth>500</localRootDepth>
+        <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
+        <localCoverGreen>0</localCoverGreen>
+        <localCoverTot>0</localCoverTot>
+        <localRootDepth>750</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
         <localRootExplorationByLayer>
           <double>1</double>
           <double>1</double>
           <double>1</double>
-          <double>0</double>
+          <double>1</double>
         </localRootExplorationByLayer>
         <localRootLengthDensityByVolume>
-          <double>0.0425</double>
-          <double>0.027500000000000004</double>
-          <double>0.0049999999999999992</double>
+          <double>0.045000000000000005</double>
+          <double>0.034999999999999996</double>
+          <double>0.020000000000000004</double>
+          <double>0</double>
+        </localRootLengthDensityByVolume>
+      </Slurp>
+      <Slurp>
+        <Name>Slurp2</Name>
+        <localLAI>2.5</localLAI>
+        <localLAItot>2.5</localLAItot>
+        <localLightExtinction>0.6</localLightExtinction>
+        <localCanopyHeight>500</localCanopyHeight>
+        <localCanopyDepth>500</localCanopyDepth>
+        <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
+        <localFrgr>1</localFrgr>
+        <localPotentialWaterDemand>10</localPotentialWaterDemand>
+        <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
+        <localCoverGreen>0</localCoverGreen>
+        <localCoverTot>0</localCoverTot>
+        <localRootDepth>750</localRootDepth>
+        <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
+        <localRootExplorationByLayer>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </localRootExplorationByLayer>
+        <localRootLengthDensityByVolume>
+          <double>0.045000000000000005</double>
+          <double>0.034999999999999996</double>
+          <double>0.020000000000000004</double>
           <double>0</double>
         </localRootLengthDensityByVolume>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <scalerPlant>
-          <double>0.28164861628981852</double>
+          <double>0.19086639780556777</double>
+          <double>0.38173279561113554</double>
         </scalerPlant>
         <dltSWdep>
           <double>0</double>
-          <double>-6.3609425602351166E-05</double>
-          <double>-1.6414619684313296</double>
+          <double>0</double>
+          <double>0</double>
           <double>0</double>
         </dltSWdep>
         <scalerLayer>
           <double>0</double>
-          <double>5.052492887303086E-05</double>
-          <double>0.6380507808511745</double>
+          <double>0</double>
+          <double>0</double>
           <double>0</double>
         </scalerLayer>
         <scalerPlantNitrogen>
+          <double>0</double>
           <double>0</double>
         </scalerPlantNitrogen>
         <dltNO3>
@@ -534,17 +554,30 @@ namespace Models
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
-        <Name>Report</Name>
+        <Name>ReportWater</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Slurp].PotentialEP</string>
-          <string>[Slurp].ActualEP</string>
-          <string>[Slurp].potentialNitrogenDemand</string>
-          <string>[Slurp].actualNitrogenSupply</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake</string>
+          <string>[Slurp1].PotentialEP</string>
+          <string>[Slurp2].PotentialEP</string>
+          <string>[Slurp1].ActualEP</string>
+          <string>[Slurp2].ActualEP</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Report>
+        <Name>ReportNitrogen</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake</string>
+          <string>[Slurp1].potentialNitrogenDemand</string>
+          <string>[Slurp2].potentialNitrogenDemand</string>
+          <string>[Slurp1].actualNitrogenSupply</string>
+          <string>[Slurp2].actualNitrogenSupply</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -579,12 +612,12 @@ namespace Models
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <TableName>Report</TableName>
+        <TableName>ReportWater</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Report</TableName>
-        <FieldName>MinN</FieldName>
+        <TableName>ReportWater</TableName>
+        <FieldName>Slurp1.PotentialEP</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
@@ -594,20 +627,60 @@ namespace Models
       <Title>Series2</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
-      <YAxis>Right</YAxis>
-      <ColourArgb>-32768</ColourArgb>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
-      <Line>Solid</Line>
+      <Line>Dash</Line>
       <X>
-        <TableName>Report</TableName>
+        <TableName>ReportWater</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Report</TableName>
-        <FieldName>Diffs.Script.diffMinNUptake</FieldName>
+        <TableName>ReportWater</TableName>
+        <FieldName>Slurp1.ActualEP</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series3</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744320</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>ReportWater</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportWater</TableName>
+        <FieldName>Slurp2.PotentialEP</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series4</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744320</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Dash</Line>
+      <X>
+        <TableName>ReportWater</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportWater</TableName>
+        <FieldName>Slurp2.ActualEP</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
       <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
@@ -618,62 +691,6 @@ namespace Models
   </DataStore>
   <Folder>
     <Name>Folder</Name>
-    <Manager>
-      <Name>SlurpUpdates</Name>
-      <Script>
-        <DateToUpdate>2000-01-15</DateToUpdate>
-        <VariableToUpdate>[Slurp].CanopyProperties.LAI</VariableToUpdate>
-        <tempValue>3.5</tempValue>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Slurp;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Slurp Slurp;
-		[Link] Report Report;
-		[Link] Summary Summary;
-		
-
-		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
-		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
-        [Description("Value to update to")] public double tempValue { get; set; }
-
-        //[Description("Green LAI (m2/m2)")] public double tempLAI { get; set;}
-        //[Description("Total LAI (m2/m2)")] public double tempLAItot { get; set; }
-        //[Description("Green cover (m2/m2)")] public double tempCoverGreen { get; set; }
-        //[Description("Total cover (m2/m2)")] public double tempCoverTot { get; set; }
-        //[Description("Height of the canopy (mm)")] public double tempCanopyHeight { get; set; }
-        //[Description("Depth of the canopy (mm)")] public double tempCanopyDepth { get; set; }
-        //[Description("Maximum stomatal conductance (m/s)")] public double tempMaximumStomatalConductance { get; set; }
-        //[Description("Frgr - effect on stomatal conductance (-)")] public double tempFrgr { get; set; }
-        //[Description("Nitrogen demand (kgN /ha /day)")] public double tempPotentialNitrogenDemand { get; set; }
-        //[Description("Rooting Depth (mm)")] public double tempRootDepth { get; set; }
-        //[Description("Root length density at the soil surface (mm/mm3)")] public double tempSurfaceRootLengthDensity { get; set; }
-
-		public override void OnSimulationCommencing()
-		{
-		    
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{	
-			if (Clock.Today == DateToUpdate)
-			{
-			    this.Set(VariableToUpdate, tempValue);
-			}
-        }
-	}
-}
-]]></Code>
-    </Manager>
     <Slurp>
       <Name>Slurp</Name>
       <localLAI>5</localLAI>
@@ -685,8 +702,8 @@ namespace Models
       <localFrgr>1</localFrgr>
       <localPotentialWaterDemand>0</localPotentialWaterDemand>
       <localPotentialNitrogenDemand>0</localPotentialNitrogenDemand>
-      <localCoverGreen>1</localCoverGreen>
-      <localCoverTot>1</localCoverTot>
+      <localCoverGreen>0</localCoverGreen>
+      <localCoverTot>0</localCoverTot>
       <localRootDepth>600</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
       <localRootExplorationByLayer>
@@ -732,6 +749,53 @@ namespace Models
  </body>
 </html>]]></MemoText>
     </Memo>
+    <Manager>
+      <Name>SlurpUpdates</Name>
+      <Script>
+        <DateToUpdate>1990-01-01</DateToUpdate>
+        <VariableToUpdate>[Slurp1].CanopyProperties.LAI</VariableToUpdate>
+        <tempValue>3.5</tempValue>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Slurp;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Slurp Slurp1;
+		[Link] Report Report;
+		[Link] Summary Summary;
+		
+
+		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
+		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
+        [Description("Value to update to")] public double tempValue { get; set; }
+
+		public string myString;
+
+		public override void OnSimulationCommencing()
+		{
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{	
+			if (Clock.Today == DateToUpdate)
+			{
+                myString="SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
+			    Summary.WriteMessage(FullPath, myString);
+			    this.Set(VariableToUpdate, tempValue);
+			}
+        }
+	}
+}
+]]></Code>
+    </Manager>
   </Folder>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

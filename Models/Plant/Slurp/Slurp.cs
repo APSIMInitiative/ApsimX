@@ -39,14 +39,16 @@ namespace Models.PMF.Slurp
 
         [Description("Green LAI (m2/m2)")] public double localLAI { get; set; }
         [Description("Total LAI (m2/m2)")] public double localLAItot { get; set; }
-        [Description("Green cover (m2/m2)")] public double localCoverGreen { get; set; }
-        [Description("Total cover (m2/m2)")] public double localCoverTot { get; set; }
+        [Description("Light extinction coefficient (-)")]        public double localLightExtinction { get; set; }
         [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
         [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
         [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
         [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr { get; set; }
+        [Description("Water demand (mm /day)")] public double localPotentialWaterDemand { get; set; }
         [Description("Nitrogen demand (kgN /ha /day)")] public double localPotentialNitrogenDemand { get; set; }
-        
+
+        public double localCoverGreen { get; set; }
+        public double localCoverTot { get; set; }
 
         // The variables that are in RootProperties
         /// <summary>
@@ -101,8 +103,8 @@ namespace Models.PMF.Slurp
         {
             //Summary.WriteMessage(FullPath, "Simulation cancelled");
             CanopyProperties.Name = "Slurp";
-            CanopyProperties.CoverGreen = localCoverGreen;
-            CanopyProperties.CoverTot = localCoverTot;
+            CanopyProperties.CoverGreen = 1.0 - Math.Exp(-1*localLightExtinction*localLAI);
+            CanopyProperties.CoverTot = 1.0 - Math.Exp(-1 * localLightExtinction * localLAItot);
             CanopyProperties.CanopyDepth = localCanopyDepth;
             CanopyProperties.CanopyHeight = localCanopyHeight;
             CanopyProperties.LAI = localLAI;
@@ -122,6 +124,8 @@ namespace Models.PMF.Slurp
             tempDepthUpper = 0.0;
             tempDepthMiddle = 0.0;
             tempDepthLower = 0.0;
+
+            PotentialEP = localPotentialWaterDemand;
 
             for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
             {

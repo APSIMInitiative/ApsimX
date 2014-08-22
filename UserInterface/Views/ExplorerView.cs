@@ -639,7 +639,7 @@ namespace UserInterface.Views
         /// </summary>
         private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            if (Rename != null)
+            if (Rename != null && e.Label != null)
             {
                 NodeRenameArgs args = new NodeRenameArgs()
                 {
