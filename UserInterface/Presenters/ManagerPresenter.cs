@@ -37,6 +37,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            OnEditorLeave(null, null);  
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
