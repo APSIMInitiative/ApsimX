@@ -85,6 +85,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />

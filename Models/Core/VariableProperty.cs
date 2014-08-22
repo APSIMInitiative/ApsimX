@@ -63,6 +63,11 @@ namespace Models.Core
                     upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
                 }
             }
+            else
+            {
+                lowerArraySpecifier = 1;
+                upperArraySpecifier = 1;
+            }
         }
 
         /// <summary>
@@ -190,7 +195,7 @@ namespace Models.Core
             {
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
+                if (obj != null && obj.GetType().IsArray)
                 {
                     Array array = obj as Array;
                     int numElements = upperArraySpecifier - lowerArraySpecifier + 1;
@@ -198,8 +203,18 @@ namespace Models.Core
                     for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
                     {
                         int index = i - lowerArraySpecifier;
-                        values.SetValue(array.GetValue(i), index);
+                        if (i < 1 || i > array.Length)
+                        {
+                            throw new Exception("Array index out of bounds while getting variable: " + Name);
+                        }
+
+                        values.SetValue(array.GetValue(i - 1), index);
                     }
+                    if (values.Length == 1)
+                    {
+                    //    return values.GetValue(0);
+                    }
+
                     return values;
                 }
 
@@ -236,6 +251,11 @@ namespace Models.Core
                 {
                     string stringValue = string.Empty;
                     Array arr = value as Array;
+                    if (arr == null)
+                    {
+                        return stringValue;
+                    }
+
                     for (int j = 0; j < arr.Length; j++)
                     {
                         if (j > 0)

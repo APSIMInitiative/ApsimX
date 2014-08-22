@@ -17,6 +17,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Models.Soils;
+    using System.Windows.Forms;
     
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -117,7 +118,8 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
-                                              typeof(Folder) })]
+                                              typeof(Folder) },
+                     ShortcutKey = Keys.F5)]
         public void RunAPSIM(object sender, EventArgs e)
         {
             this.explorerPresenter.Save();

@@ -9,6 +9,7 @@ namespace UserInterface.Interfaces
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
+    using EventArguments;
 
     /// <summary>
     /// A structure for holding info about an item in the treeview.
@@ -40,6 +41,7 @@ namespace UserInterface.Interfaces
             public string ResourceNameForImage;
             public EventHandler OnClick;
             public bool Checked;
+            public Keys ShortcutKey;
         }
 
         public List<Description> Descriptions = new List<Description>();
@@ -161,11 +163,20 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<EventArgs> OnMoveUp;
 
+        /// <summary>
+        /// Invoked when a shortcut key is pressed.
+        /// </summary>
+        event EventHandler<KeysArgs> OnShortcutKeyPress;
 
         /// <summary>
         /// Return the current node path.
         /// </summary>
         string CurrentNodePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shortcut keys.
+        /// </summary>
+        Keys[] ShortcutKeys { get; set; }
 
         /// <summary>
         /// Invalidate (redraw) the specified node and its direct child nodes.

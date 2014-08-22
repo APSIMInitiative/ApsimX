@@ -6,6 +6,7 @@
 namespace Models.Core
 {
     using System;
+using System.Windows.Forms;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view
@@ -23,5 +24,7 @@ namespace Models.Core
         /// Gets or sets the model types that this menu applies to
         /// </summary>
         public Type[] AppliesTo { get; set; }
+
+        public Keys ShortcutKey { get; set; }
     } 
 }

@@ -10,6 +10,7 @@ using UserInterface.Commands;
 using System.Runtime.Serialization;
 using UserInterface.Views;
 using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Views
 {
@@ -102,6 +103,10 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<EventArgs> OnMoveUp;
 
+        /// <summary>
+        /// Invoked when a global key is pressed.
+        /// </summary>
+        public event EventHandler<KeysArgs> OnShortcutKeyPress;
 
         /// <summary>
         /// Constructor
@@ -111,6 +116,12 @@ namespace UserInterface.Views
             InitializeComponent();
             StatusWindow.Visible = false;
         }
+
+
+        /// <summary>
+        /// Gets or sets the shortcut keys.
+        /// </summary>
+        public Keys[] ShortcutKeys { get; set; }
 
         /// <summary>
         /// Form has loaded.
@@ -501,6 +512,7 @@ namespace UserInterface.Views
                     ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                     Button.Checked = Description.Checked;
+                    Button.ShortcutKeys = Description.ShortcutKey;
                 }
             }
             e.Cancel = false;
@@ -676,6 +688,23 @@ namespace UserInterface.Views
             else if (e.Control && e.KeyCode == Keys.Down && OnMoveDown != null)
                 OnMoveDown.Invoke(this, new EventArgs());
 
+        }
+
+        /// <summary>
+        /// Override the process command key method so that we can implement global keyboard
+        /// shortcuts.
+        /// </summary>
+        /// <param name="msg">The windows message to process</param>
+        /// <param name="keyData">The key to process</param>
+        /// <returns></returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (OnShortcutKeyPress != null && ShortcutKeys != null && ShortcutKeys.Contains(keyData))
+            {
+                OnShortcutKeyPress.Invoke(this, new KeysArgs() { Keys = keyData });
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
