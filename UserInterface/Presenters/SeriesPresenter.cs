@@ -64,12 +64,33 @@ namespace UserInterface.Presenters
             PopulateSeriesNames();
 
             // Trap events from the view.
+            ConnectViewEvents();
+
+            //this.PopulateDataSources();
+            //this.PopulateSeries();
+
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
+        }
+
+        /// <summary>
+        /// Detach the model and view from this presenter.
+        /// </summary>
+        public void Detach()
+        {
+            DisconnectViewEvents();
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnGraphModelChanged2;
+        }
+
+        /// <summary>
+        /// Connect all view events.
+        /// </summary>
+        private void ConnectViewEvents()
+        {
             this.seriesView.SeriesSelected += OnSeriesSelected;
             this.seriesView.SeriesAdded += OnSeriesAdded;
             this.seriesView.SeriesDeleted += OnSeriesDeleted;
             this.seriesView.AllSeriesCleared += OnSeriesCleared;
             this.seriesView.SeriesRenamed += SeriesRenamed;
-
             this.seriesView.SeriesEditor.DataSourceChanged += OnDataSourceChanged;
             this.seriesView.SeriesEditor.SeriesTypeChanged += OnSeriesTypeChanged;
             this.seriesView.SeriesEditor.SeriesLineTypeChanged += OnSeriesLineTypeChanged;
@@ -84,24 +105,19 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.Y2Changed += OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged += OnShowInLegendChanged;
             this.seriesView.SeriesEditor.SplitOnChanged += OnSplitChanged;
-
-            //this.PopulateDataSources();
-            //this.PopulateSeries();
-
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
         }
 
         /// <summary>
-        /// Detach the model and view from this presenter.
+        /// Disconnect all view events.
         /// </summary>
-        public void Detach()
+        private void DisconnectViewEvents()
         {
             this.seriesView.SeriesSelected -= OnSeriesSelected;
             this.seriesView.SeriesAdded -= OnSeriesAdded;
             this.seriesView.SeriesDeleted -= OnSeriesDeleted;
             this.seriesView.AllSeriesCleared -= OnSeriesCleared;
             this.seriesView.SeriesRenamed -= SeriesRenamed;
-            
+
             this.seriesView.SeriesEditor.DataSourceChanged -= OnDataSourceChanged;
             this.seriesView.SeriesEditor.SeriesTypeChanged -= OnSeriesTypeChanged;
             this.seriesView.SeriesEditor.SeriesLineTypeChanged -= OnSeriesLineTypeChanged;
@@ -116,8 +132,6 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.Y2Changed -= OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged -= OnShowInLegendChanged;
             this.seriesView.SeriesEditor.SplitOnChanged -= OnSplitChanged;
-
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnGraphModelChanged2;
         }
 
         /// <summary>
@@ -465,6 +479,7 @@ namespace UserInterface.Presenters
                 if (!InPopulateSeriesEditor)
                 {
                     InPopulateSeriesEditor = true;
+                    DisconnectViewEvents();
 
                     Series series = this.graph.Series[seriesIndex];
 
@@ -552,7 +567,8 @@ namespace UserInterface.Presenters
 
                     this.seriesView.SeriesEditor.ShowX2Y2(series.Type == Series.SeriesType.Area);
 
-                    
+
+                    ConnectViewEvents();
 
                     InPopulateSeriesEditor = false;
                 }

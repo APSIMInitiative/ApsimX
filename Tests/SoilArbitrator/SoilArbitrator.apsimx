@@ -6,13 +6,6 @@
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>.\norain.met</FileName>
-      <MaxT>32.200000762939453</MaxT>
-      <MinT>21.600000381469727</MinT>
-      <Rain>0</Rain>
-      <Radn>24.6200008392334</Radn>
-      <vp>25.798530559851905</vp>
-      <wind>3</wind>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -21,9 +14,6 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -42,7 +32,6 @@
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -423,6 +412,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -510,13 +512,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -765,6 +766,7 @@
         <fields>Field, Field1, Field2</fields>
       </SimpleTree>
       <Area>1</Area>
+      <Slope>0</Slope>
     </Zone>
     <Zone>
       <Name>Field1</Name>
@@ -780,7 +782,6 @@
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -1161,6 +1162,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -1248,13 +1262,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1356,6 +1369,7 @@
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Area>100</Area>
+      <Slope>0</Slope>
     </Zone>
     <Zone>
       <Name>Field2</Name>
@@ -1371,7 +1385,6 @@
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -1752,6 +1765,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -1839,13 +1865,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1947,24 +1972,18 @@
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Area>1</Area>
+      <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Simulation>
     <Name>NoTree</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>.\norain.met</FileName>
-      <MaxT>32.200000762939453</MaxT>
-      <MinT>21.600000381469727</MinT>
-      <Rain>0</Rain>
-      <Radn>24.6200008392334</Radn>
-      <vp>25.798530559851905</vp>
-      <wind>3</wind>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -1973,9 +1992,6 @@
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -1991,7 +2007,6 @@
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -2372,6 +2387,19 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -2459,13 +2487,12 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2627,8 +2654,8 @@
         <fields>Field</fields>
       </SimpleTree>
       <Area>1</Area>
+      <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
   </Simulation>
   <Graph>
     <Name>Graph</Name>
@@ -2650,16 +2677,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -2683,16 +2710,16 @@
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -2727,6 +2754,5 @@
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
-  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

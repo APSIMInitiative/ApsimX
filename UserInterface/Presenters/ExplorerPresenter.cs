@@ -10,6 +10,7 @@ using Models;
 using System.Collections.Generic;
 using System.Data;
 using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -70,6 +71,7 @@ namespace UserInterface.Presenters
             this.MainMenu = new MainMenu(this);
             this.ContextMenu = new ContextMenu(this);
 
+            this.View.ShortcutKeys = new Keys[] { Keys.F5 };
             this.View.PopulateChildNodes += OnPopulateNodes;
             this.View.PopulateContextMenu += OnPopulateContextMenu;
             this.View.PopulateMainMenu += OnPopulateMainMenu;
@@ -81,6 +83,7 @@ namespace UserInterface.Presenters
             this.View.Rename += OnRename;
             this.View.OnMoveDown += OnMoveDown;
             this.View.OnMoveUp += OnMoveUp;
+            this.View.OnShortcutKeyPress += OnShortcutKeyPress;
 
             this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
 
@@ -104,6 +107,7 @@ namespace UserInterface.Presenters
             View.Rename -= OnRename;
             View.OnMoveDown -= OnMoveDown;
             View.OnMoveUp -= OnMoveUp;
+            this.View.OnShortcutKeyPress -= OnShortcutKeyPress;
 
             CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
         }
@@ -404,6 +408,7 @@ namespace UserInterface.Presenters
                         MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
                         Desc.Name = contextMenu.MenuName;
                         Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
+                        Desc.ShortcutKey = contextMenu.ShortcutKey;
 
                         EventHandler Handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), ContextMenu, Method);
                         Desc.OnClick = Handler;
@@ -553,12 +558,14 @@ namespace UserInterface.Presenters
                     Model Model = ApsimXFile.Get(e.NodePath) as Model;
                     if (Model != null && Model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != "")
                     {
+                        this.CommandHistory.ModelStructureChanged -= OnModelStructureChanged;
                         HideRightHandPanel();
                         string ParentModelPath = Utility.String.ParentName(e.NodePath);
                         RenameModelCommand Cmd = new RenameModelCommand(Model, ParentModelPath, e.NewName);
                         CommandHistory.Add(Cmd);
                         View.CurrentNodePath = ParentModelPath + "." + e.NewName;
                         ShowRightHandPanel();
+                        this.CommandHistory.ModelStructureChanged += OnModelStructureChanged;
                     }
                 }
                 else
@@ -600,7 +607,19 @@ namespace UserInterface.Presenters
             }
         }
 
-
+        /// <summary>
+        /// User has pressed one of our shortcut keys.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnShortcutKeyPress(object sender, KeysArgs e)
+        {
+            if (e.Keys == Keys.F5)
+            {
+                ContextMenu contextMenu = new ContextMenu(this);
+                contextMenu.RunAPSIM(sender, null);
+            }
+        }
         #endregion
 
         #region Privates 

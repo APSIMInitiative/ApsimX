@@ -29,6 +29,19 @@ namespace UserInterface.Commands
 
             JobManager = new Utility.JobManager();
             JobManager.OnComplete += OnComplete;
+            if (!(ModelClicked is Simulation) && !(ModelClicked is Experiment) && !(ModelClicked is Simulations))
+            {
+                Model simulation = ModelClicked.Find(typeof(Simulation));
+                if (simulation == null)
+                {
+                    simulation = ModelClicked.Find(typeof(Experiment));
+                }
+                if (simulation == null)
+                {
+                    simulation = ModelClicked.Find(typeof(Simulations));
+                }
+                ModelClicked = simulation;
+            }
 
         }
 
