@@ -29,16 +29,17 @@ namespace Models
         public event EventHandler DoDailyInitialisation;
         public event EventHandler DoInitialSummary;
         public event EventHandler DoManagement;
-        public event EventHandler DoEnergyArbitration;
-        public event EventHandler DoCanopyEnergyBalance;
+        public event EventHandler DoEnergyArbitration;                               //Arbitrator
+        public event EventHandler DoCanopyEnergyBalance;                             //MicroClimate only
         public event EventHandler DoSoilWaterMovement;
         public event EventHandler DoSoilOrganicMatter;
         public event EventHandler DoSurfaceOrganicMatterDecomposition;
-        public event EventHandler DoWaterArbitration;
-        public event EventHandler DoCanopy;
-        // need plant potential growth in here
-        public event EventHandler DoNutrientArbitration;
-        public event EventHandler DoPlantGrowth;
+        public event EventHandler DoWaterArbitration;                                //Arbitrator
+        public event EventHandler DoPotentialPlantGrowth;
+        public event EventHandler DoCanopy;                                          //MicroClimate only
+        public event EventHandler DoNutrientArbitration;                            //Arbitrator
+        public event EventHandler DoActualPlantGrowth;
+        public event EventHandler DoPlantGrowth;                                    //MicroClimate only
         public event EventHandler DoUpdate;
         public event EventHandler DoManagementCalculations;
         public event EventHandler DoReport;
@@ -102,14 +103,18 @@ namespace Models
 
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
-                
-                // need plant potential growth in here
+
+                if (DoPotentialPlantGrowth != null)
+                    DoPotentialPlantGrowth.Invoke(this, args);
 
                 if (DoCanopy != null)
                     DoCanopy.Invoke(this, args);
 
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
+
+                if (DoActualPlantGrowth != null)
+                    DoActualPlantGrowth.Invoke(this, args);
 
                 if (DoPlantGrowth != null)
                     DoPlantGrowth.Invoke(this, args);

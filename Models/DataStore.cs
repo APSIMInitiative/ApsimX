@@ -337,7 +337,7 @@ namespace Models
 
                 try
                 {
-                    DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations");
+                    DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations ORDER BY Name");
                     if (table == null)
                         return new string[0];
                     return Utility.DataTable.GetColumnAsStrings(table, "Name");

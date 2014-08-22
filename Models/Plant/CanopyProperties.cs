@@ -8,14 +8,6 @@ namespace Models.PMF
     [Serializable]
     public class CanopyProperties
     {
-
-        /// <summary>
-        /// Crop type was used to assign generic types of properties (e.g. maximum stomatal conductance) to crops
-        /// Probably not needed now as the crops will have to supply these themselves
-        /// ???? delete ????
-        /// </summary>
-        //public string CropType;
-
         /// <summary>
         /// The name as it appears in the GUI e.g. "Wheat3" 
         /// </summary>
@@ -67,6 +59,18 @@ namespace Models.PMF
         ///     global vegetation types. Agricultural and Forest Meteorology 73, 1–16.
         /// </summary>
         public double MaximumStomatalConductance;
+
+        /// <summary>
+        /// HalfSatStomatalConductance (W/m2) is the indicent solar radiation at which stomatal conductance is half of MaximumStomatalConductance
+        /// It is generally about 200 W/m2 for agricultural crops but about 150 W/m2 in C4 plants.  This is used in the calculation of canopy conductance 
+        /// and so feeds into the calculation of water demand.
+        /// </summary>
+        public double HalfSatStomatalConductance;
+        
+        /// <summary>
+        /// Canopy emissivity (-) is used in the calculation of long-wave radiation.  A value of 0.96 is generally acceptable.
+        /// </summary>
+        public double CanopyEmissivity;
 
         /// <summary>
         /// Fractional relative growth rate (-) with 1.0 at full growth rate and 0.0 at no growth

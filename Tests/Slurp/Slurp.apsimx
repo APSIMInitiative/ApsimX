@@ -14,30 +14,13 @@
     <Clock>
       <Name>Clock</Name>
       <StartDate>2000-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
+      <EndDate>2000-01-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
     </Summary>
     <Zone>
       <Name>Field</Name>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Slurp].PotentialEP</string>
-          <string>[Slurp].ActualEP</string>
-          <string>[Arbitrator].scalerLayer</string>
-          <string>[Arbitrator].scalerPlant</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.es</string>
-          <string>[Arbitrator].dltSWdep</string>
-          <string>[Soil].SoilWater.sw_dep</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
       <Soil>
         <Name>Soil</Name>
         <Water>
@@ -235,10 +218,10 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0403453014853479</double>
-            <double>0.8898874841889286</double>
-            <double>0.88987504966210085</double>
-            <double>0.88993188792935329</double>
+            <double>1.0401687075031094</double>
+            <double>0.8897529172580011</double>
+            <double>0.88982433505222436</double>
+            <double>0.88979533846202152</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -369,37 +352,173 @@
       </SurfaceOrganicMatter>
       <Slurp>
         <Name>Slurp</Name>
-        <MaximumStomatalConductance>0</MaximumStomatalConductance>
-        <Frgr>0</Frgr>
-        <LeafMass>3000</LeafMass>
-        <LAI>4.5</LAI>
-        <LAItot>4.5</LAItot>
-        <CoverGreen>1</CoverGreen>
-        <CoverTot>1</CoverTot>
-        <Height>800</Height>
-        <Depth>800</Depth>
-        <RootDepth>900</RootDepth>
-        <LeafN>4.5</LeafN>
+        <localFrgr>1</localFrgr>
+        <localLAI>5</localLAI>
+        <localLAItot>5</localLAItot>
+        <localCoverGreen>1</localCoverGreen>
+        <localCoverTot>1</localCoverTot>
+        <localCanopyHeight>500</localCanopyHeight>
+        <localCanopyDepth>500</localCanopyDepth>
+        <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
+        <localRootDepth>600</localRootDepth>
+        <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
+        <localRootExplorationByLayer>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>0</double>
+        </localRootExplorationByLayer>
+        <localRootLengthDensityByVolume>
+          <double>0.043750000000000004</double>
+          <double>0.03125</double>
+          <double>0.0125</double>
+          <double>0</double>
+        </localRootLengthDensityByVolume>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <scalerPlant>
-          <double>0.89485458612975388</double>
+          <double>0.58006648573265951</double>
         </scalerPlant>
         <dltSWdep>
           <double>0</double>
           <double>0</double>
-          <double>0</double>
+          <double>-0.1852960813534992</double>
           <double>0</double>
         </dltSWdep>
         <scalerLayer>
           <double>0</double>
           <double>0</double>
-          <double>0</double>
+          <double>0.035538558445043646</double>
           <double>0</double>
         </scalerLayer>
+        <scalerPlantNitrogen>
+          <double>0</double>
+        </scalerPlantNitrogen>
+        <dltNO3>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNO3>
+        <scalerLayerNitrogen>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </scalerLayerNitrogen>
+        <dltNH4>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNH4>
+        <dltNitrogen>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+          <double>0</double>
+        </dltNitrogen>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
+      <Manager>
+        <Name>SlurpUpdates</Name>
+        <Script>
+          <DateToUpdate>2000-01-15</DateToUpdate>
+          <VariableToUpdate>LAI</VariableToUpdate>
+          <tempValue>3.5</tempValue>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Slurp;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Slurp Slurp;
+		[Link] Report Report;
+		[Link] Summary Summary;
+		
+
+		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
+		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
+        [Description("Value to update to")] public double tempValue { get; set; }
+
+        //[Description("Green LAI (m2/m2)")] public double tempLAI { get; set;}
+        //[Description("Total LAI (m2/m2)")] public double tempLAItot { get; set; }
+        //[Description("Green cover (m2/m2)")] public double tempCoverGreen { get; set; }
+        //[Description("Total cover (m2/m2)")] public double tempCoverTot { get; set; }
+        //[Description("Height of the canopy (mm)")] public double tempCanopyHeight { get; set; }
+        //[Description("Depth of the canopy (mm)")] public double tempCanopyDepth { get; set; }
+        //[Description("Maximum stomatal conductance (m/s)")] public double tempMaximumStomatalConductance { get; set; }
+        //[Description("Frgr - effect on stomatal conductance (-)")] public double tempFrgr { get; set; }
+        //[Description("Nitrogen demand (kgN /ha /day)")] public double tempPotentialNitrogenDemand { get; set; }
+        //[Description("Rooting Depth (mm)")] public double tempRootDepth { get; set; }
+        //[Description("Root length density at the soil surface (mm/mm3)")] public double tempSurfaceRootLengthDensity { get; set; }
+
+		public override void OnSimulationCommencing()
+		{
+		    
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{	
+		    int temp = 15;
+		    int temp1 = 16;
+		    //if(temp1 < temp)
+	        //if (Slurp.ActualEP < 10.0)	
+	        //if (Math.Round(Clock.Today.Day, 0) > temp)	
+			//if (Utility.Math.Round(Clock.Today.Day, 0) == Utility.Math.Round(DateToUpdate.Day,0))
+			//if (Clock.Today.Day == DateToUpdate.Day)
+			//if ((Clock.Today.Year == DateToUpdate.Year) && (Clock.Today.Month == DateToUpdate.Month) && (Clock.Today.Day == DateToUpdate.Day))
+			if (Clock.Today > DateToUpdate)
+			//if(DateTime.Compare(Clock.Today.Date, DateToUpdate.Date)==0);
+			{
+			    if (VariableToUpdate.Equals("LAI", StringComparison.Ordinal))
+			    {
+                	Summary.WriteMessage(FullPath, "Bloody if statement");
+			        Slurp.CanopyProperties.LAI = tempValue;
+			    }
+			    else if (VariableToUpdate.Equals("LAItot", StringComparison.Ordinal))
+			    {
+			        Slurp.CanopyProperties.LAItot = tempValue;
+			    }
+			}
+        }
+	}
+}
+]]></Code>
+      </Manager>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Clock].Today.Day</string>
+          <string>[SlurpUpdates].DateToUpdate</string>
+          <string>[SlurpUpdates].tempValue</string>
+          <string>[Slurp].localLAI</string>
+          <string>[Slurp].CanopyProperties</string>
+          <string>[Slurp].PotentialEP</string>
+          <string>[Slurp].ActualEP</string>
+          <string>[Slurp].potentialNitrogenDemand</string>
+          <string>[Slurp].actualNitrogenSupply</string>
+          <string>[Slurp].localRootDepth</string>
+          <string>[Arbitrator].scalerLayer</string>
+          <string>[Arbitrator].scalerPlant</string>
+          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.es</string>
+          <string>[Arbitrator].dltSWdep</string>
+          <string>[Soil].SoilWater.sw_dep</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -408,5 +527,79 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Graph>
+    <Name>Graph</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>Slurp.ActualEP</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-8388480</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>Slurp.actualNitrogenSupply</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series3</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>Slurp.PotentialEP</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

@@ -7,6 +7,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Reflection;
+    using EventArguments;
     using Interfaces;
     using Models.Core;
     using Models.PMF;
@@ -98,7 +99,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItems e)
         {
             if (e.ObjectName == string.Empty)
             {

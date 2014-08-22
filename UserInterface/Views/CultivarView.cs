@@ -6,13 +6,8 @@
 namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
     using System.Windows.Forms;
+    using EventArguments;
     using Interfaces;
 
     /// <summary>
@@ -41,7 +36,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        public event EventHandler<Utility.NeedContextItems> ContextItemsNeeded; 
+        public event EventHandler<NeedContextItems> ContextItemsNeeded; 
 
         /// <summary>
         /// Gets or sets a list of all aliases.
@@ -80,7 +75,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItems e)
         {
             if (this.ContextItemsNeeded != null)
             {

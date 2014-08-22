@@ -21,7 +21,7 @@ namespace Models
     }
 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.TestView")]
     [PresenterName("UserInterface.Presenters.TestPresenter")]
     public class Tests : Model
     {

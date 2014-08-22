@@ -5,6 +5,7 @@ using System.Text;
 using UserInterface.Views;
 using Models;
 using System.Reflection;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -15,7 +16,7 @@ namespace UserInterface.Presenters
     public class OperationsPresenter : IPresenter
     {
         private Operations Operations;
-        private OperationsView View;
+        private EditorView View;
         private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
@@ -24,12 +25,12 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Operations = model as Operations;
-            View = view as OperationsView;
+            View = view as EditorView;
             ExplorerPresenter = explorerPresenter;
 
             PopulateEditorView();
-            View.EditorView.ContextItemsNeeded += OnContextItemsNeeded;
-            View.EditorView.TextHasChangedByUser += OnTextHasChangedByUser;
+            View.ContextItemsNeeded += OnContextItemsNeeded;
+            View.TextHasChangedByUser += OnTextHasChangedByUser;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -38,8 +39,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            View.EditorView.ContextItemsNeeded -= OnContextItemsNeeded;
-            View.EditorView.TextHasChangedByUser -= OnTextHasChangedByUser;
+            View.ContextItemsNeeded -= OnContextItemsNeeded;
+            View.TextHasChangedByUser -= OnTextHasChangedByUser;
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
@@ -53,7 +54,7 @@ namespace UserInterface.Presenters
             {
                 st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
             }
-            View.EditorView.Text = st;
+            View.Text = st;
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace UserInterface.Presenters
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             List<Operation> operations = new List<Operation>();
-            foreach (string line in View.EditorView.Lines)
+            foreach (string line in View.Lines)
             {
                 int Pos = line.IndexOf(' ');
                 if (Pos != -1)
@@ -83,7 +84,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Editor needs context items.
         /// </summary>
-        private void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItems e)
         {
             object o = Operations.Get(e.ObjectName);
 

@@ -9,7 +9,7 @@ using System.Xml;
 namespace Models.Factorial
 {
     [Serializable]
-    [ViewName("UserInterface.Views.FactorView")]
+    [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
     [ValidParent(ParentModels = new Type[] { typeof(Factorial.Factors) })]
     public class Factor : Model

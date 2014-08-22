@@ -616,6 +616,7 @@ namespace Models
             SetupCropTypes("canola", "Crop");
             SetupCropTypes("kale2", "Crop");
             SetupCropTypes("Carrots4", "Crop");
+            SetupCropTypes("PMFSlurp", "Crop");
             SetupCropTypes("Slurp", "Crop");
             SetupCropTypes("AgPasture", "Crop");
         }

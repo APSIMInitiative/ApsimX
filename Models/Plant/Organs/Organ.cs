@@ -22,12 +22,14 @@ namespace Models.PMF.Organs
     #endregion
 
     #region Arbitrator method types
+    [Serializable]
     public class BiomassPoolType
     {
         public double Structural { get; set; }
         public double NonStructural { get; set; }
         public double Metabolic { get; set; }
     }
+    [Serializable]
     public class BiomassSupplyType
     {
         public double Fixation { get; set; }
@@ -35,6 +37,7 @@ namespace Models.PMF.Organs
         public double Uptake { get; set; }
         public double Retranslocation { get; set; }
     }
+    [Serializable]
     public class BiomassAllocationType
     {
         public double Structural { get; set; }

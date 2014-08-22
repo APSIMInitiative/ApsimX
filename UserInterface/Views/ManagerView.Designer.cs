@@ -32,7 +32,7 @@
             this.Grid = new GridView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Script = new System.Windows.Forms.TabPage();
-            this.ScriptEditor = new Utility.Editor();
+            this.ScriptEditor = new EditorView();
             Properties = new System.Windows.Forms.TabPage();
             Properties.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -116,7 +116,7 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage Script;
-        private Utility.Editor ScriptEditor;
+        private EditorView ScriptEditor;
         private GridView Grid;
 
     }

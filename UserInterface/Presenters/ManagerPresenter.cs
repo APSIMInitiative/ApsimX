@@ -5,6 +5,7 @@ using System.Text;
 using UserInterface.Views;
 using System.Reflection;
 using Models;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -36,6 +37,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            OnEditorLeave(null, null);  
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
@@ -45,7 +47,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
+        void OnNeedVariableNames(object Sender, NeedContextItems e)
         {
             object o = null;
             if (Manager.Script != null)

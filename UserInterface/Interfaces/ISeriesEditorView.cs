@@ -155,16 +155,16 @@ namespace UserInterface.Interfaces
         string DataSource { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of field names 
+        /// </summary>
+        /// <param name="fieldNames">The available field names</param>
+        void SetFieldNames(string[] fieldNames);    
+
+        /// <summary>
         /// Sets the list of available data sources.
         /// </summary>
         /// <param name="dataSources">The available data sources</param>
         void SetDataSources(string[] dataSources);
-
-        /// <summary>
-        /// Provides data for the currently selected data source.
-        /// </summary>
-        /// <param name="data">The data to show</param>
-        void SetData(DataTable data);
 
         /// <summary>
         /// Show the x2 an y2 fields?

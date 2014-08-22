@@ -153,13 +153,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>lincoln.met</FileName>
-        <MaxT>17.299999237060547</MaxT>
-        <MinT>5.5999999046325684</MinT>
-        <Rain>0</Rain>
-        <Radn>3.2999999523162842</Radn>
-        <VP>9.1999998092651367</VP>
-        <Wind>5.4800000190734863</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -550,7 +543,7 @@
             <PlantingDepth>120</PlantingDepth>
             <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
             <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>20/10/2003 12:00:00 AM</SowingDate>
+            <SowingDate>2003-10-20</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -3742,13 +3735,6 @@ namespace Models
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>lincoln.met</FileName>
-        <MaxT>13.600000381469727</MaxT>
-        <MinT>7.9000000953674316</MinT>
-        <Rain>0.20000000298023224</Rain>
-        <Radn>4.2399997711181641</Radn>
-        <VP>11.899999618530273</VP>
-        <Wind>1.1200000047683716</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -4166,7 +4152,7 @@ namespace Models
             <PlantingDepth>200</PlantingDepth>
             <StemNumberPerSeedTuber>3</StemNumberPerSeedTuber>
             <CultivarName>RussetBurbank</CultivarName>
-            <SowingDate>14/10/1998 12:00:00 AM</SowingDate>
+            <SowingDate>1998-10-14</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -7389,13 +7375,6 @@ namespace Models
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>Pukehohe.met</FileName>
-        <MaxT>18.799999237060547</MaxT>
-        <MinT>10.300000190734863</MinT>
-        <Rain>0</Rain>
-        <Radn>27.299999237060547</Radn>
-        <VP>14.199999809265137</VP>
-        <Wind>1.7999999523162842</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -7813,7 +7792,7 @@ namespace Models
             <PlantingDepth>170</PlantingDepth>
             <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
             <CultivarName>IlamHardy</CultivarName>
-            <SowingDate>2/05/2000 12:00:00 AM</SowingDate>
+            <SowingDate>2000-05-02</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -10949,5 +10928,8 @@ namespace Models
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+  </Tests>
   <ExplorerWidth>259</ExplorerWidth>
 </Simulations>

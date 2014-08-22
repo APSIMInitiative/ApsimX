@@ -25,34 +25,12 @@ namespace Models.PMF.Slurp
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Slurp : Model, ICrop2
     {
-        // Deleted list - keep for a bit
-        //public string plant_status = "out";
-        [Description("Leaf Mass")]
-        public double LeafMass { get; set; }
-        //public event EventHandler StartSlurp;
-        //public event NewCanopyDelegate NewCanopy;
-        private double PEP;
-        private double EP;
-        private double FW;
-        private double FWexpan;
-        private double RootMass = 0.0;
-        private double RootN;
-        private double[] NUptake = null;
-        private double[] PotSWUptake = null;
-        private double[] SWUptake;
-        private double[] PotNUptake = null;
-        private double[] bd = null;
-        private double RootNConcentration = 0.0;
-        private double KNO3 = 0.0;
-        
         /// <summary>
         /// Link to the soil module
         /// </summary>
-        [Link]
-        Soils.Soil Soil = null;
+        [Link] Soils.Soil Soil = null;
 
         // The variables that are in CanopyProperties
-
         /// <summary>
         /// Holds the set of crop canopy properties that is used by Arbitrator for light and engergy calculations
         /// </summary>
@@ -66,182 +44,79 @@ namespace Models.PMF.Slurp
         [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
         [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
         [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
-
+        [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr;
         
-        /// <summary>
-        /// Crop type was used to assign generic types of properties (e.g. maximum stomatal conductance) to crops
-        /// Probably not needed now as the crops will have to supply these themselves
-        /// ???? delete ????
-        /// </summary>
-        //public string CropType { get { return "Slurp"; } }
-        
-         /*
-        /// <summary>
-        /// The name as it appears in the GUI e.g. "Wheat3" 
-        /// ???? How is this got?????
-        /// </summary>
-        //public string Name { get { return "Slurp"; } } //this does not work
 
-        /// <summary>
-        /// Greem leaf area index (m2/m2) 
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Green LAI (m2/m2)")] public double LAI { get; set; }
-
-        /// <summary>
-        /// Total (includes dead) leaf area index (m2/m2) 
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Total LAI (m2/m2)")]
-        public double LAItot { get; set; }
-
-        /// <summary>
-        /// Green cover (m2/m2) - fractional cover resulting from the assigned LAI, 
-        /// Calculate this using an assumed light interception coefficient
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Cover Green (m2/m2)")]
-        public double CoverGreen { get; set; }
-
-        /// <summary>
-        /// Total (green and dead) cover (m2/m2) - fractional cover resulting from the assigned LAItot, 
-        /// Calculate this using an assumed light interception coefficient
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Total Cover (m2/m2)")]
-        public double CoverTot { get; set; }
-
-        /// <summary>
-        /// Height to the top of the canopy (mm) 
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Canopy Height (mm)")]
-        public double Height { get; set; }
-
-        /// <summary>
-        /// Depth of the canopy (mm).  If the canopy is continuous from the ground to the top of the canopy then 
-        /// the depth = height, otherwise depth must be less than the height
-        /// Used in the light and energy arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Canopy Depth (mm)")]
-        public double Depth { get; set; }
-
-        /// <summary>
-        /// Stomatal conductance in (m/s) that will be seen under non-limiting light, humidity and nutrients
-        /// For default values see:
-        ///     Kelliher, FM, Leuning, R, Raupach, MR, Schulze, E-D (1995) Maximum conductances for evaporation from 
-        ///     global vegetation types. Agricultural and Forest Meteorology 73, 1–16.
-        /// </summary>
-        [Description("Maximum stomatal conductance (m/s)")]
-        public double MaximumStomatalConductance;
-
-        /// <summary>
-        /// Fractional relative growth rate (-) with 1.0 at full growth rate and 0.0 at no growth
-        /// Used in the calculation of actual stomatal conductance by scaling back the MaximumStomatalConductance 
-        /// for stresses other than humidity, water deficit, temperature.  Usually has a value of 1.0.
-        /// </summary>
-        [Description("Frgr (-)")]
-        public double Frgr;
-
-        */
-
-
-        // The variables that in RootProperties
-
+        // The variables that are in RootProperties
         /// <summary>
         /// Holds the set of crop root properties that is used by Arbitrator for water and nutrient calculations
         /// </summary>
         public RootProperties RootProperties { get { return LocalRootData; } }
         RootProperties LocalRootData = new RootProperties();
 
-        /// <summary>
-        /// Depth of the root system (mm).  
-        /// Used in the water and nutrient arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        [Description("Root Depth (mm)")]
-        public double RootDepth { get; set; }
+        [Description("Rooting Depth (mm)")] public double localRootDepth { get; set; }
+        [Description("Root length density at the soil surface (mm/mm3)")] public double localSurfaceRootLengthDensity { get; set; }
 
-        /// <summary>
-        /// The bastardised Passioura/Monteith K*L (/day)
-        /// At some point this will be replaced by one soil property and the root length density.
-        /// Used in the water and nutrient arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        //[Description("kl (/day)")]
-        //public double[] kl { get; set; }
-
-        /// <summary>
-        /// The bastardised Passioura/Monteith K*L (/day)
-        /// At some point this will be replaced by one soil property and the root length density.
-        /// Used in the water and nutrient arbitration
-        /// Set from the interface and will not change unless reset
-        /// </summary>
-        //[Description("Lower Limit of soil water extraction as a depth of water in each soil layer (mm)")]
-        //public double[] LowerLimitDep { get; set; }
-
+        public double[] localRootExplorationByLayer { get; set; }
+        public double[] localRootLengthDensityByVolume { get; set; }
 
         private double Ndemand = 0.0;  // wehre does this sit?
-        private double[] kl;
+        double tempDepthUpper;
+        double tempDepthMiddle;
+        double tempDepthLower;
 
         
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
-            RootProperties.KL = Soil.KL(Name);
-            RootProperties.LowerLimitDep = Soil.LL(Name);
-            RootProperties.RootDepth = RootDepth;
-            RootProperties.RootExplorationByLayer= new double[] {1.0,1.0,0.5,0.0};
-            RootProperties.RootLengthDensityByVolume = new double[] { 0.05, 0.03, 0.0058, 0.0 };
-
             CanopyProperties.CoverGreen = localCoverGreen;
             CanopyProperties.CoverTot = localCoverTot;
-            //CanopyProperties.CropType = Name;
             CanopyProperties.CanopyDepth = localCanopyDepth;
             CanopyProperties.CanopyHeight = localCanopyHeight;
             CanopyProperties.LAI = localLAI;
             CanopyProperties.LAItot = localLAItot;
             CanopyProperties.MaximumStomatalConductance = localMaximumStomatalConductance;
+            CanopyProperties.HalfSatStomatalConductance = 200.0;  // should this be on the UI?
+            CanopyProperties.CanopyEmissivity = 0.96;
+            CanopyProperties.Frgr = localFrgr;
 
-            kl = new double[Soil.SoilWater.sw_dep.Length];
-            PotSWUptake = new double[kl.Length];
-            PotNUptake = new double[kl.Length];
-            SWUptake = new double[kl.Length];
-            NUptake = new double[kl.Length];
-            for (int i = 0; i < kl.Length; i++)
-                kl[i] = 0.5;
+            RootProperties.KL = Soil.KL(Name);
+            RootProperties.LowerLimitDep = Soil.LL(Name);
+            RootProperties.RootDepth = localRootDepth;
 
-            bd = (double[])Soil.Water.Get("BD");
-            // Invoke a sowing event. Needed for MicroClimate
-            //if (StartSlurp != null)
-            //    StartSlurp.Invoke(this, new EventArgs());
+            localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
+            localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
 
-            //Send a NewCanopy event to MicroClimate
-            //NewCanopyType LocalCanopyData = new NewCanopyType();
-            //LocalCanopyData.cover = CoverGreen;
-            //LocalCanopyData.cover_tot = CoverTot;
-            //LocalCanopyData.depth = Depth;
-            //LocalCanopyData.height = Height;
-            //LocalCanopyData.lai = LAI;
-            //LocalCanopyData.lai_tot = LAItot;
-            //LocalCanopyData.sender = "Slurp";
-            //if (NewCanopy != null)
-            //    NewCanopy.Invoke(LocalCanopyData);
+            tempDepthUpper = 0.0;
+            tempDepthMiddle = 0.0;
+            tempDepthLower = 0.0;
+
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            {
+                tempDepthLower += Soil.SoilWater.dlayer[i];  // increment soil depth thorugh the layers
+                tempDepthMiddle = tempDepthLower - Soil.SoilWater.dlayer[i]*0.5;
+                tempDepthUpper = tempDepthLower - Soil.SoilWater.dlayer[i];
+                if (tempDepthUpper < localRootDepth)        // set the root exploration
+                {
+                    localRootExplorationByLayer[i] = 1.0;
+                }
+                else if (tempDepthLower <= localRootDepth)
+                {
+                    localRootExplorationByLayer[i] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.SoilWater.dlayer[i], 0.0);
+                }
+                else
+                {
+                    localRootExplorationByLayer[i] = 0.0;
+                }
+                // set a triangular root length density by scaling layer depth against maximum rooting depth, constrain the multiplier between 0 and 1
+                localRootLengthDensityByVolume[i] = localSurfaceRootLengthDensity * localRootExplorationByLayer[i] * (1.0 - Utility.Math.Constrain(Utility.Math.Divide(tempDepthMiddle, localRootDepth, 0.0), 0.0, 1.0));
+            }
+            RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
+            RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
         }
 
         /// <summary>
-        /// MicroClimate needs FRGR
-        /// </summary>
-        public double FRGR { get { return 1; } }
-
-        /// <summary>
-        /// MicroClimate supplies PotentialEP
+        /// Arbitrator supplies PotentialEP
         /// </summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
@@ -253,172 +128,44 @@ namespace Models.PMF.Slurp
         public double ActualEP { get; set; }
 
         /// <summary>
-        /// MicroClimate supplies LightProfile
+        /// Crop calculates potentialNitrogenDemand after getting its water allocation
         /// </summary>
         [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        public double potentialNitrogenDemand { get; set; }
 
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        /// <summary>
+        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// </summary>
+        [XmlIgnore]
+        public double actualNitrogenSupply { get; set; }
+
+
+
+
+        
+
+
+        /// <summary>
+        /// MicroClimate supplies LightProfile
+        /// </summary>
+        //[XmlIgnore]
+        //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPlantPotentialGrowth(object sender, EventArgs e)
         {
-            DoWaterBalance();
-            DoNBalance();
-        }
+            // nothing for Slurp to do in here but a full/proper crop model would use the LightProfile, PotenialEP and ActualEP to calculate a 
+            // PotentialNDemand - the N that the plant wants in order to satisfy growth after accounting for the water supply
 
-        private void DoWaterBalance()
-        {
-            PEP = Soil.SoilWater.eo * localCoverGreen;
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
-
-            double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
-
-            EP = 0.0;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                EP += SWUptake[j];
-                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
-
-            }
-
-            if (PEP > 0.0)
-            {
-                FW = EP / PEP;
-                FWexpan = Math.Max(0.0, Math.Min(1.0, (TotPotSWUptake / PEP - 0.5) / 1.0));
-
-            }
-            else
-            {
-                FW = 1.0;
-                FWexpan = 1.0;
-            }
+            potentialNitrogenDemand = 5.0;
 
         }
 
-        private void DoNBalance()
+        [EventSubscribe("DoPlantActualGrowth")]
+        private void OnDoPlantActualGrowth(object sender, EventArgs e)
         {
-            double StartN = PlantN;
-
-            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration / 100.0 - RootN)) * 10.0;  // kg/ha
-            double LeafNDemand = Math.Max(0.0, (LeafMass * LeafNConc / 100 - LeafN)) * 10.0;  // kg/ha 
-
-            Ndemand = LeafNDemand + RootNDemand;  //kg/ha
-
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                double swaf = 0;
-                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
-                swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (bd[j] * Soil.SoilWater.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3 * Soil.SoilNitrogen.no3[j] * swaf);
-            }
-
-            double TotPotNUptake = Utility.Math.Sum(PotNUptake);
-            double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
-
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                NUptake[j] = PotNUptake[j] * Fr;
-                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - NUptake[j];
-            }
-
-            Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / LeafNDemand));
-            double DeltaLeafN = LeafNDemand * Fr;
-
-            LeafN += Math.Max(0.0, LeafMass * LeafNConc / 100.0 - LeafN) * Fr;
-
-            // Calculate fraction of N demand for Vegetative Parts
-            if ((Ndemand - DeltaLeafN) > 0)
-                Fr = Math.Max(0.0, ((Utility.Math.Sum(NUptake) - DeltaLeafN) / (Ndemand - DeltaLeafN)));
-            else
-                Fr = 0.0;
-
-            double[] RootNDef = new double[Soil.SoilWater.ll15_dep.Length];
-            double TotNDef = 1e-20;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-            {
-                RootNDef[j] = Math.Max(0.0, RootMass * RootNConcentration / 100.0 - RootN);
-                TotNDef += RootNDef[j];
-            }
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                RootN += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
-
-            double EndN = PlantN;
-            double Change = EndN - StartN;
-            double Uptake = Utility.Math.Sum(NUptake) / 10.0;
-            if (Math.Abs(Change - Uptake) > 0.001)
-                throw new Exception("Error in N Allocation");
+            // At this stage a full/proper crop model would be supplied the N uptake from Arbitrator and it would then complete its calculations for the day
         }
 
-        private double RootProportion(int layer, double root_depth)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            double depth_to_layer_top = 0;      // depth to top of layer (mm)
-            double depth_to_root = 0;           // depth to root in layer (mm)
-            double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
-            // Implementation Section ----------------------------------
-            for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
-            depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
-            depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-
-            return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
-        }
-
-        private int LayerIndex(double depth)
-        {
-            double CumDepth = 0;
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-            {
-                CumDepth = CumDepth + Soil.SoilWater.dlayer[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
-        }
-
-
-        public double RootNConc
-        {
-            get
-            {
-                return RootN / RootMass * 100.0;
-            }
-
-        }
-
-        public double PlantN
-        {
-            get
-            {
-                return LeafN + RootN;
-            }
-        }
-
-        //TODO: get a good function for LeafN
-        public double LeafN
-        {
-            get
-            {
-                return localLAI * 1;
-            }
-            set
-            {
-                
-            }
-
-        }
-
-        public double LeafNConc
-        {
-            get
-            {
-                return LeafN / LeafMass * 100.0;
-            }
-
-        }
     }   
 }

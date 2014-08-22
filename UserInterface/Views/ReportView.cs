@@ -18,12 +18,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the variable list.
         /// </summary>
-        Utility.IEditor VariableList { get; }
+        IEditorView VariableList { get; }
 
         /// <summary>
         /// Provides access to the variable list.
         /// </summary>
-        Utility.IEditor EventList { get; }
+        IEditorView EventList { get; }
 
         /// <summary>
         /// Provides access to the DataGrid.
@@ -46,12 +46,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the variable list.
         /// </summary>
-        public Utility.IEditor VariableList { get { return VariableEditor; } }
+        public IEditorView VariableList { get { return VariableEditor; } }
 
         /// <summary>
         /// Provides access to the variable list.
         /// </summary>
-        public Utility.IEditor EventList { get { return FrequencyEditor; } }
+        public IEditorView EventList { get { return FrequencyEditor; } }
 
         /// <summary>
         /// Provides access to the DataGrid.

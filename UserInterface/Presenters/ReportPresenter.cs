@@ -9,6 +9,7 @@ using Models.Core;
 using System.Data;
 using System.IO;
 using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -58,7 +59,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for variable names.
         /// </summary>
-        void OnNeedVariableNames(object Sender, Utility.NeedContextItems e)
+        void OnNeedVariableNames(object Sender, NeedContextItems e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
@@ -77,7 +78,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for event names.
         /// </summary>
-        void OnNeedEventNames(object Sender, Utility.NeedContextItems e)
+        void OnNeedEventNames(object Sender, NeedContextItems e)
         {
             object o = Report.Get(e.ObjectName);
 

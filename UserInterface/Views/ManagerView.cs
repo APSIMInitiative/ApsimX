@@ -20,7 +20,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the editor.
         /// </summary>
-        Utility.IEditor Editor { get; }
+        IEditorView Editor { get; }
     }
 
     public partial class ManagerView : UserControl, IManagerView
@@ -34,7 +34,7 @@ namespace UserInterface.Views
         }
 
         public IGridView GridView { get { return Grid; } }
-        public Utility.IEditor Editor { get { return ScriptEditor; } }
+        public IEditorView Editor { get { return ScriptEditor; } }
        
     }
 }

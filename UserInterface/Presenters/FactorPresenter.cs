@@ -4,6 +4,7 @@ using UserInterface.Views;
 using System.Reflection;
 using System.Collections.Generic;
 using Models.Core;
+using UserInterface.EventArguments;
 namespace UserInterface.Presenters
 {
     /// <summary>
@@ -12,34 +13,34 @@ namespace UserInterface.Presenters
     public class FactorPresenter : IPresenter
     {
         private Factor Factor;
-        private IFactorView FactorView;
+        private IEditorView FactorView;
         private ExplorerPresenter ExplorerPresenter;
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             Factor = model as Factor;
-            FactorView = view as IFactorView;
+            FactorView = view as IEditorView;
             ExplorerPresenter = explorerPresenter;
 
-            FactorView.Editor.Lines = Factor.Paths.ToArray();
+            FactorView.Lines = Factor.Paths.ToArray();
 
-            FactorView.Editor.TextHasChangedByUser += OnTextHasChangedByUser;
-            FactorView.Editor.ContextItemsNeeded += OnContextItemsNeeded;
+            FactorView.TextHasChangedByUser += OnTextHasChangedByUser;
+            FactorView.ContextItemsNeeded += OnContextItemsNeeded;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
 
         public void Detach()
         {
-            FactorView.Editor.TextHasChangedByUser -= OnTextHasChangedByUser;
-            FactorView.Editor.ContextItemsNeeded -= OnContextItemsNeeded;
+            FactorView.TextHasChangedByUser -= OnTextHasChangedByUser;
+            FactorView.ContextItemsNeeded -= OnContextItemsNeeded;
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;            
         }
 
         /// <summary>
         /// Intellisense lookup.
         /// </summary>
-        void OnContextItemsNeeded(object sender, Utility.NeedContextItems e)
+        void OnContextItemsNeeded(object sender, NeedContextItems e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
@@ -61,7 +62,7 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             List<string> newPaths = new List<string>();
-            newPaths.AddRange(FactorView.Editor.Lines);
+            newPaths.AddRange(FactorView.Lines);
             ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Paths", newPaths));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -73,7 +74,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            FactorView.Editor.Lines = Factor.Paths.ToArray();
+            FactorView.Lines = Factor.Paths.ToArray();
         }
 
 

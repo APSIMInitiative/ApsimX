@@ -432,13 +432,6 @@
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>..\WeatherFiles\Popondetta.met</FileName>
-          <MaxT>33.5</MaxT>
-          <MinT>22.100000381469727</MinT>
-          <Rain>0</Rain>
-          <Radn>16.299999237060547</Radn>
-          <VP>0</VP>
-          <Wind>0</Wind>
-          <CO2>350</CO2>
         </WeatherFile>
         <Clock>
           <Name>Clock</Name>
@@ -447,8 +440,6 @@
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <Html>false</Html>
-          <AutoCreate>false</AutoCreate>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -765,18 +756,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>2.6665930299392149</double>
-                <double>0.8205377836922344</double>
-                <double>0.58937972728448329</double>
-                <double>0.49634197097161614</double>
-                <double>0.40517147123366387</double>
-                <double>0.40480692926261325</double>
-                <double>0.40234945905292491</double>
-                <double>0.40223959682716426</double>
-                <double>0.40209359626028379</double>
-                <double>0.39833675066015073</double>
-                <double>0.39834329634370769</double>
-                <double>0.3983412961950803</double>
+                <double>2.6316460132855459</double>
+                <double>0.720717136272112</double>
+                <double>0.49542496881060544</double>
+                <double>0.40465973238607245</double>
+                <double>0.40462046272944913</double>
+                <double>0.40431155281026493</double>
+                <double>0.40202252439927905</double>
+                <double>0.4019341848575636</double>
+                <double>0.40179178193738735</double>
+                <double>0.39833683653656288</double>
+                <double>0.39834338023785865</double>
+                <double>0.3983412858676198</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -899,7 +890,6 @@
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <Date>0001-01-01</Date>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -969,7 +959,6 @@
               <string>[Calculations].Script.AnnualBunchSize</string>
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
@@ -999,7 +988,6 @@
               <string>[Calculations].Script.NitTot</string>
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -1449,15 +1437,11 @@
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <InitialRootDepth>1</InitialRootDepth>
-            <MaximumRootDepth>10000</MaximumRootDepth>
             <kl />
             <ll />
             <xf />
-            <InterceptionFraction>0</InterceptionFraction>
             <SowingData>
               <Cultivar>Dami</Cultivar>
               <Population>0.0135</Population>
@@ -1469,12 +1453,18 @@
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryCoverGreen>0.074968729485703017</UnderstoryCoverGreen>
+            <UnderstoryCoverGreen>0.089716649124997175</UnderstoryCoverGreen>
             <UnderstoryRootDepth>300</UnderstoryRootDepth>
-            <UnderstoryPEP>0.05963833520620445</UnderstoryPEP>
-            <UnderstoryEP>0.05963833520620445</UnderstoryEP>
+            <UnderstoryPEP>0.08541050685255662</UnderstoryPEP>
+            <UnderstoryEP>0.08541050685255662</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0.29773592954125117</UnderstoryDltDM>
+            <UnderstoryDltDM>0.42639984101517586</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Operations>
@@ -1550,7 +1540,7 @@
           <Manager>
             <Name>Palm Management</Name>
             <Script>
-              <sowing_date>1/03/1996 12:00:00 AM</sowing_date>
+              <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
               <cultivar>Dami</cultivar>
               <sowing_depth>200</sowing_depth>
@@ -1615,29 +1605,29 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>460</Offset>
-              <AnnualFronds>24</AnnualFronds>
-              <AnnualBunches>12.2079804062386</AnnualBunches>
-              <BunchOffset>220.202585650071</BunchOffset>
-              <AnnualYield>11.2354924272104</AnnualYield>
-              <AnnualBunchSize>6.8173331756543</AnnualBunchSize>
-              <YieldOffset>27160.2351168953</YieldOffset>
-              <MonthlyPalmYield>25.7855928553127</MonthlyPalmYield>
-              <MonthlyPalmBunches>1.41014686370248</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>18.2857498882138</MonthlyPalmBunchSize>
-              <MonthlyDenit>0.414461618647461</MonthlyDenit>
-              <MonthlyN2O>0.0786112498666511</MonthlyN2O>
-              <MonthlyN2>0.33585036878081</MonthlyN2>
-              <MonthlyFixation>1.05527435407466</MonthlyFixation>
-              <SurfaceNO3>26.2137804267181</SurfaceNO3>
-              <RootZoneNO3>37.9859183255494</RootZoneNO3>
+              <Offset>449</Offset>
+              <AnnualFronds>21</AnnualFronds>
+              <AnnualBunches>13.1687180080027</AnnualBunches>
+              <BunchOffset>196.154097770159</BunchOffset>
+              <AnnualYield>6.05788905942347</AnnualYield>
+              <AnnualBunchSize>3.40756421883708</AnnualBunchSize>
+              <YieldOffset>25308.9284896047</YieldOffset>
+              <MonthlyPalmYield>2.15513361744253</MonthlyPalmYield>
+              <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
+              <MonthlyPalmBunchSize>19.7926365580748</MonthlyPalmBunchSize>
+              <MonthlyDenit>0.293073131313912</MonthlyDenit>
+              <MonthlyN2O>0.0555647257760918</MonthlyN2O>
+              <MonthlyN2>0.237508405537821</MonthlyN2>
+              <MonthlyFixation>1.4995570386938</MonthlyFixation>
+              <SurfaceNO3>21.2077299855371</SurfaceNO3>
+              <RootZoneNO3>30.0560975546784</RootZoneNO3>
               <MonthlyLeach>0</MonthlyLeach>
-              <SoilCtpha>323.202986459283</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <SoilCtpha>313.053114529832</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
               <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>47.3638110918014</TotalNO3>
-              <NitTot>27077.3722617306</NitTot>
+              <TotalNO3>36.7902910885593</TotalNO3>
+              <NitTot>26213.4928326464</NitTot>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1790,25 +1780,26 @@ namespace Models
             <Manager>
               <Name>Calculations</Name>
               <Script>
-                <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
-                <MonthlyPalmYield>4.70321281348923</MonthlyPalmYield>
-                <MonthlyPalmBunchSize>5.87901601686154</MonthlyPalmBunchSize>
-                <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-                <MonthlyDenit>0.0373002330305299</MonthlyDenit>
-                <MonthlyN2O>0.0068170905060165</MonthlyN2O>
-                <MonthlyLeach>0.00267246506393858</MonthlyLeach>
-                <MonthlyFixation>0</MonthlyFixation>
-                <SurfaceNO3>3.94200116253156</SurfaceNO3>
-                <RootZoneNO3>5.39243200293918</RootZoneNO3>
-                <MonthlyN2>0.0304831425245134</MonthlyN2>
-                <SoilCtpha>6.59462574311495</SoilCtpha>
-                <AnnualFronds>9</AnnualFronds>
-                <AnnualBunches>2.57428283276997</AnnualBunches>
+                <Offset>449</Offset>
+                <AnnualFronds>21</AnnualFronds>
+                <AnnualBunches>13.1687180080027</AnnualBunches>
+                <BunchOffset>196.154097770159</BunchOffset>
                 <AnnualYield>0</AnnualYield>
-                <Offset>317</Offset>
-                <BunchOffset>137.720848697411</BunchOffset>
-                <YieldOffset>6551.07871084665</YieldOffset>
+                <YieldOffset>25308.9284896047</YieldOffset>
+                <MonthlyPalmYield>2.15513361744253</MonthlyPalmYield>
+                <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
+                <MonthlyPalmBunchSize>19.7926365580748</MonthlyPalmBunchSize>
+                <MonthlyDenit>0.293073131313912</MonthlyDenit>
+                <MonthlyN2O>0.0555647257760918</MonthlyN2O>
+                <MonthlyN2>0.237508405537821</MonthlyN2>
+                <MonthlyFixation>1.4995570386938</MonthlyFixation>
+                <SurfaceNO3>21.2077299855371</SurfaceNO3>
+                <RootZoneNO3>30.0560975546784</RootZoneNO3>
+                <MonthlyLeach>0</MonthlyLeach>
+                <SoilCtpha>313.053114529832</SoilCtpha>
+                <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
                 <OilPalmYield>0</OilPalmYield>
+                <TotalNO3>36.7902910885593</TotalNO3>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -1979,9 +1970,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>ReportAnnually</Name>
-            <Script>
-              <OilPalmYield>0</OilPalmYield>
-            </Script>
+            <Script />
             <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
@@ -2010,6 +1999,37 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <Report>
+            <Name>daily</Name>
+            <VariableNames>
+              <string>[Clock].Today.Year</string>
+              <string>[Clock].Today</string>
+              <string>[Clock].Today.Month</string>
+              <string>[OilPalm].Age</string>
+              <string>[SurfaceOM].surfaceom_n</string>
+              <string>[SurfaceOM].surfaceom_wt</string>
+              <string>[OilPalm].CumulativeFrondNumber</string>
+              <string>[Calculations].Script.MonthlyPalmBunches</string>
+              <string>[Calculations].Script.MonthlyPalmYield</string>
+              <string>[Calculations].Script.MonthlyPalmBunchSize</string>
+              <string>[OilPalm].LAI</string>
+              <string>[OilPalm].StemMass</string>
+              <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
+              <string>[Calculations].Script.surfaceom_wt_oilpalmunderstory</string>
+              <string>[Calculations].Script.MonthlyDenit</string>
+              <string>[Calculations].Script.MonthlyN2O</string>
+              <string>[Calculations].Script.MonthlyLeach</string>
+              <string>[Calculations].Script.MonthlyFixation</string>
+              <string>[Calculations].Script.SurfaceNO3</string>
+              <string>[Calculations].Script.RootZoneNO3</string>
+              <string>[Calculations].Script.MonthlyN2</string>
+              <string>[Calculations].Script.SoilCtpha</string>
+              <string>[Calculations].Script.NitTot</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -2045,7 +2065,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2064,7 +2084,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2084,7 +2104,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2103,7 +2123,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2123,7 +2143,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2142,7 +2162,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2176,7 +2196,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2195,7 +2215,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2215,7 +2235,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2234,7 +2254,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2254,7 +2274,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2273,7 +2293,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2307,7 +2327,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2326,7 +2346,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2346,7 +2366,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2365,7 +2385,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2385,7 +2405,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2404,7 +2424,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2438,7 +2458,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2457,7 +2477,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2477,7 +2497,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2496,7 +2516,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2516,7 +2536,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2535,7 +2555,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2569,7 +2589,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2588,7 +2608,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2608,7 +2628,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2627,7 +2647,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2647,7 +2667,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2666,7 +2686,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2700,7 +2720,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2719,7 +2739,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2739,7 +2759,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2758,7 +2778,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -2778,7 +2798,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -2797,7 +2817,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -2835,7 +2855,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>N</Title>
@@ -2855,7 +2875,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -2889,7 +2909,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
@@ -3608,13 +3628,6 @@ namespace Models
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>..\WeatherFiles\Sagarai.met</FileName>
-          <MaxT>30.100000381469727</MaxT>
-          <MinT>27</MinT>
-          <Rain>0.60000002384185791</Rain>
-          <Radn>23.600000381469727</Radn>
-          <VP>0</VP>
-          <Wind>0</Wind>
-          <CO2>350</CO2>
         </WeatherFile>
         <Clock>
           <Name>Clock</Name>
@@ -3623,8 +3636,6 @@ namespace Models
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <Html>false</Html>
-          <AutoCreate>false</AutoCreate>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -4023,7 +4034,6 @@ namespace Models
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <Date>0001-01-01</Date>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -4076,7 +4086,6 @@ namespace Models
               <string />
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
@@ -4106,7 +4115,6 @@ namespace Models
               <string />
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -4564,15 +4572,11 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <InitialRootDepth>1</InitialRootDepth>
-            <MaximumRootDepth>10000</MaximumRootDepth>
             <kl />
             <ll />
             <xf />
-            <InterceptionFraction>0</InterceptionFraction>
             <SowingData>
               <Cultivar>Dami</Cultivar>
               <Population>0.0127</Population>
@@ -4590,6 +4594,12 @@ namespace Models
             <UnderstoryEP>0</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
             <UnderstoryDltDM>0</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Irrigation>
@@ -4660,8 +4670,8 @@ namespace Models
           <Manager>
             <Name>Palm Management</Name>
             <Script>
-              <sowing_date>1/03/1996 12:00:00 AM</sowing_date>
-              <population>135</population>
+              <sowing_date>1991-03-01</sowing_date>
+              <population>127</population>
               <cultivar>Dami</cultivar>
               <sowing_depth>200</sowing_depth>
               <Plant_population>0</Plant_population>
@@ -4855,7 +4865,7 @@ namespace Models
 				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
 				{
 					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+					//AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
 				}
 			}
 
@@ -4885,6 +4895,7 @@ namespace Models
 			   MonthlyPalmBunchSize = 0;
 			   
 			AnnualYield += oilPalm.HarvestFFB;
+			AnnualBunches += oilPalm.CumulativeBunchNumber - BunchOffset;
 						if (AnnualBunches > 0)
 				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (oilPalm.Population * 10000);
 		}
@@ -4927,7 +4938,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4946,7 +4957,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -4966,7 +4977,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -4985,7 +4996,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5005,7 +5016,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5024,7 +5035,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5058,7 +5069,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5077,7 +5088,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5097,7 +5108,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5116,7 +5127,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5136,7 +5147,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5155,7 +5166,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5189,7 +5200,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5208,7 +5219,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5228,7 +5239,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5247,7 +5258,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5267,7 +5278,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5286,7 +5297,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5320,7 +5331,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5339,7 +5350,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5359,7 +5370,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5378,7 +5389,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5398,7 +5409,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5417,7 +5428,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5451,7 +5462,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5470,7 +5481,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5490,7 +5501,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5509,7 +5520,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5529,7 +5540,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5548,7 +5559,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -5565,7 +5576,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5582,7 +5593,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5601,7 +5612,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5621,7 +5632,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5640,7 +5651,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -5660,7 +5671,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -5679,7 +5690,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -6024,13 +6035,6 @@ namespace Models
         <WeatherFile>
           <Name>WeatherFile</Name>
           <FileName>..\WeatherFiles\Hargy.met</FileName>
-          <MaxT>26.5</MaxT>
-          <MinT>25.200000762939453</MinT>
-          <Rain>0</Rain>
-          <Radn>14</Radn>
-          <VP>0</VP>
-          <Wind>0</Wind>
-          <CO2>350</CO2>
         </WeatherFile>
         <Clock>
           <Name>Clock</Name>
@@ -6039,8 +6043,6 @@ namespace Models
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <Html>false</Html>
-          <AutoCreate>false</AutoCreate>
         </Summary>
         <Zone>
           <Name>Field</Name>
@@ -6405,7 +6407,6 @@ namespace Models
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <Date>0001-01-01</Date>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -6458,7 +6459,6 @@ namespace Models
               <string />
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
@@ -6488,7 +6488,6 @@ namespace Models
               <string />
             </VariableNames>
             <EventNames />
-            <AutoCreateCSV>false</AutoCreateCSV>
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -6973,15 +6972,11 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0</cover_tot>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <cover_tot>0.9</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <InitialRootDepth>1</InitialRootDepth>
-            <MaximumRootDepth>10000</MaximumRootDepth>
             <kl />
             <ll />
             <xf />
-            <InterceptionFraction>0</InterceptionFraction>
             <SowingData>
               <Cultivar>Dami</Cultivar>
               <Population>0.014</Population>
@@ -6999,6 +6994,12 @@ namespace Models
             <UnderstoryEP>0</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
             <UnderstoryDltDM>0</UnderstoryDltDM>
+            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+            <InterceptionFraction>0</InterceptionFraction>
+            <PEP>0</PEP>
+            <EP>0</EP>
+            <FW>0</FW>
+            <Fn>0</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Manager>
@@ -7066,7 +7067,7 @@ namespace Models
           <Manager>
             <Name>Palm Management</Name>
             <Script>
-              <sowing_date>1/03/1996 12:00:00 AM</sowing_date>
+              <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
               <cultivar>Dami</cultivar>
               <sowing_depth>200</sowing_depth>
@@ -7333,7 +7334,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7352,7 +7353,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7372,7 +7373,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7391,7 +7392,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7411,7 +7412,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7430,7 +7431,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7464,7 +7465,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7483,7 +7484,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7503,7 +7504,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7522,7 +7523,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7542,7 +7543,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7561,7 +7562,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7595,7 +7596,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7614,7 +7615,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7634,7 +7635,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7653,7 +7654,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7673,7 +7674,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7692,7 +7693,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7726,7 +7727,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7745,7 +7746,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7765,7 +7766,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7784,7 +7785,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7804,7 +7805,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7823,7 +7824,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7857,7 +7858,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7876,7 +7877,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7896,7 +7897,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7915,7 +7916,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -7935,7 +7936,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -7954,7 +7955,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -7988,7 +7989,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -8007,7 +8008,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -8027,7 +8028,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -8046,7 +8047,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title />
@@ -8066,7 +8067,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -8085,7 +8086,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -8114,6 +8115,7 @@ namespace Models
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Graph>
     <Name>LAI</Name>
@@ -8145,7 +8147,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8179,7 +8181,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8213,7 +8215,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -8247,7 +8249,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>false</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>

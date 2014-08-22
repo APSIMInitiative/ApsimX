@@ -409,7 +409,6 @@ namespace UserInterface.Presenters
                 {
                     OnY2Changed(sender, e);
                 }
-                this.seriesView.SeriesEditor.SetData(dataStore.GetData("*", this.seriesView.SeriesEditor.DataSource));
             }
         }
 
@@ -506,6 +505,14 @@ namespace UserInterface.Presenters
                         this.seriesView.SeriesEditor.DataSource = dataSources[0];
                     }
 
+                    if (this.seriesView.SeriesEditor.DataSource != null)
+                    {
+                        DataTable data = dataStore.GetData("*", this.seriesView.SeriesEditor.DataSource);
+                        if (data != null)
+                        {
+                            this.seriesView.SeriesEditor.SetFieldNames(Utility.DataTable.GetColumnNames(data));
+                        }
+                    }
 
                     if (series.X != null)
                     {

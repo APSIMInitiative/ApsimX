@@ -11,179 +11,339 @@ namespace UserInterface.Presenters
 {
     class TestPresenter : IPresenter
     {
-        private IGridView Grid;
-        private Tests Tests;
-        private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore = null;
+        private ITestView view;
+        private Tests tests;
+        private ExplorerPresenter explorerPresenter;
+        private DataStore dataStore = null;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
         public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
-            Grid = View as IGridView;
-            this.Tests = Model as Tests;
-            ExplorerPresenter = explorerPresenter;
+            this.view = View as ITestView;
+            this.tests = Model as Tests;
+            this.explorerPresenter = explorerPresenter;
 
-            Models.Core.Model RootModel = Tests;
-            while (RootModel.Parent != null)
-                RootModel = RootModel.Parent;
+            this.dataStore = this.tests.Find(typeof(DataStore)) as DataStore;
+            this.view.Editor.IntelliSenseChars = " :";
+            this.view.Editor.ContextItemsNeeded += OnContextItemsNeeded;
 
-            if (RootModel != null && RootModel is Models.Core.Simulations)
-            {
-                Models.Core.Simulations simulations = RootModel as Models.Core.Simulations;
-                DataStore = new Models.DataStore(Tests);
-            }
-
-            PopulateGrid();
-            Grid.CellsChanged += OnCellValueChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.PopulateView();
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
-         /// <summary>
+        /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public void Detach()
         {
-            Grid.CellsChanged -= OnCellValueChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            DataStore.Disconnect();
-            DataStore = null;
+            this.view.Editor.ContextItemsNeeded -= OnContextItemsNeeded;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.SaveViewToModel();
         }
 
         /// <summary>
         /// Populate the grid
         /// </summary>
-        private void PopulateGrid()
+        private void PopulateView()
         {
-            DataTable Table = TestsToDataTable();
-            Grid.DataSource = Table;
-
-            // Set up cell editors for all cells.
-            Test.TestType dummy = new Test.TestType();
-            this.Grid.RowCount = 100;
-            for (int Row = 0; Row < Grid.RowCount; Row++)
+            // Populate the table list.
+            if (dataStore != null)
             {
-                PopulateComboItemsInRow(Row);
-                IGridCell testTypeCell = this.Grid.GetCell(3, Row);
+                this.view.TableNames = dataStore.TableNames;
 
-                testTypeCell.EditorType = EditorTypeEnum.DropDown;
-                testTypeCell.DropDownStrings = Utility.String.EnumToStrings(dummy);
-            }
-
-            this.Grid.GetColumn(2).Width = -1;
-        }
-
-        /// <summary>
-        /// Populate the specified row with the correct combo boxes.
-        /// </summary>
-        /// <param name="Row">Row index</param>
-        private void PopulateComboItemsInRow(int Row)
-        {
-            DataTable Table = Grid.DataSource;
-            
-            IGridCell simulationCell = this.Grid.GetCell(0, Row);
-            simulationCell.EditorType = EditorTypeEnum.DropDown;
-            simulationCell.DropDownStrings = DataStore.SimulationNames;
-
-            string[] TableNames = new string[0];
-            string[] ColumnNames = new string[0];
-
-            if (Row < Table.Rows.Count)
-            {
-                string SimulationName = Table.Rows[Row][0].ToString();
-                if (SimulationName != "")
+                // Set the name of the table.
+                if (this.tests.AllTests.Length > 0)
                 {
-                    TableNames = DataStore.TableNames;
-                    string TableName = Table.Rows[Row][1].ToString();
-                    if (TableName != "")
-                        ColumnNames = Utility.DataTable.GetColumnNames(DataStore.GetData(SimulationName, TableName));
+                    this.view.TableName = this.tests.AllTests[0].TableName;
+                    this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
                 }
             }
 
-            IGridCell tableNameCell = this.Grid.GetCell(1, Row);
-            tableNameCell.EditorType = EditorTypeEnum.DropDown;
-            tableNameCell.DropDownStrings = TableNames;
+           
 
-            IGridCell columnNameCell = this.Grid.GetCell(2, Row);
-            columnNameCell.EditorType = EditorTypeEnum.DropDown;
-            columnNameCell.DropDownStrings = ColumnNames;
-        }
-
-        /// <summary>
-        /// Convert all tests to a datatable.
-        /// </summary>
-        private DataTable TestsToDataTable()
-        {
-            DataTable Table = new DataTable();
-            Table.Columns.Add("Simulation name", typeof(string));
-            Table.Columns.Add("Table name", typeof(string));
-            Table.Columns.Add("Column name", typeof(string));
-            Table.Columns.Add("Test type", typeof(string));
-            Table.Columns.Add("Parameters", typeof(string));
-
-            if (Tests.AllTests != null)
-                foreach (Test Test in Tests.AllTests)
-                {
-                    Table.Rows.Add(new string[] { Test.SimulationName,
-                                                  Test.TableName, 
-                                                  Test.ColumnNames,
-                                                  Test.Type.ToString(), 
-                                                  Test.Parameters});
-                }
-
-            return Table;
-        }
-
-        /// <summary>
-        /// Convert the specified datatable to an array of tests.
-        /// </summary>
-        private Test[] DataTableToTests(DataTable Table)
-        {
-            Test[] AllTests = new Test[Table.Rows.Count];
-            for (int Row = 0; Row < Table.Rows.Count; Row++)
+            // Work out the test strings that we're going to pass to our view
+            List<string> testStrings = new List<string>();
+            foreach (Test test in this.tests.AllTests)
             {
-                AllTests[Row] = new Test();
-                AllTests[Row].SimulationName = Table.Rows[Row][0].ToString();
-                AllTests[Row].TableName = Table.Rows[Row][1].ToString();
-                AllTests[Row].ColumnNames = Table.Rows[Row][2].ToString();
-                if (Table.Rows[Row][3].ToString() != "")
-                    AllTests[Row].Type = (Test.TestType)Enum.Parse(typeof(Test.TestType), Table.Rows[Row][3].ToString());
-                AllTests[Row].Parameters = Table.Rows[Row][4].ToString();
+                testStrings.Add(this.TestToString(test));
             }
-            return AllTests;
+
+            this.view.Editor.Lines = testStrings.ToArray();
+            this.view.Editor.SetSyntaxHighlighter("Test");
         }
 
         /// <summary>
-        /// User has changed the value of a cell.
+        /// Save the state of the view back to the model class.
         /// </summary>
-        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
+        private void SaveViewToModel()
         {
             // The ChangePropertyCommand below will trigger a call to OnModelChanged. We don't need to 
             // repopulate the grid so stop the event temporarily until end of this method.
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
-            // Get a list of rows that have changed.
-            SortedSet<int> changedRows = new SortedSet<int>();
-            foreach (IGridCell cell in e.ChangedCells)
+            List<Test> tests = new List<Test>();
+            for (int lineNumber = 0; lineNumber < this.view.Editor.Lines.Length; lineNumber++)
             {
-                changedRows.Add(cell.RowIndex);
+                Test test = this.StringToTest(lineNumber);
+                if (test != null)
+                {
+                    tests.Add(test);
+                }
             }
 
-            // Repopulate each changed row.
-            foreach (int rowIndex in changedRows)
-            {
-                this.PopulateComboItemsInRow(rowIndex);
-            }
-
-            // Convert grid datatable back to an array of test objects and store in Tests model
-            // via a command.
-            Test[] AllTests = DataTableToTests(Grid.DataSource);
-            Commands.ChangeProperty Cmd = new Commands.ChangeProperty(Tests, "AllTests", AllTests);
-            ExplorerPresenter.CommandHistory.Add(Cmd, true);
+            // Store 'tests' in model via a command.
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.tests, "AllTests", tests.ToArray());
+            explorerPresenter.CommandHistory.Add(command, true);
 
             // Reinstate the model changed event.
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+       
+
+        /// <summary>
+        /// Convert a test type to an operator string.
+        /// </summary>
+        /// <param name="testType">The test type</param>
+        /// <returns>The operator string</returns>
+        private string TestToString(Test test)
+        {
+            string testString = "Simulation:" + test.SimulationName + " " +
+                                "     Test:" + test.ColumnNames + " ";
+
+            string[] parameterBits = null;
+            if (test.Parameters != null)
+            {
+                parameterBits = test.Parameters.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
+            if (test.Type == Test.TestType.EqualTo)
+            {
+                testString += " = ";
+                if (parameterBits.Length > 0)
+                {
+                    testString += parameterBits[0];
+                }
+            }
+            else if (test.Type == Test.TestType.LessThan)
+            {
+                testString += " < ";
+                if (parameterBits.Length > 0)
+                {
+                    testString += parameterBits[0];
+                }
+            }
+            else if (test.Type == Test.TestType.GreaterThan)
+            {
+                testString += " > ";
+                if (parameterBits.Length > 0)
+                {
+                    testString += parameterBits[0];
+                }
+            }
+            else if (test.Type == Test.TestType.Between)
+            {
+                testString += " between ";
+                if (parameterBits.Length > 1)
+                {
+                    testString += parameterBits[0] + " " + parameterBits[1];
+                }
+            }
+            else if (test.Type == Test.TestType.AllPos)
+            {
+                testString += " AllPositive ";
+            }
+            else if (test.Type == Test.TestType.Mean)
+            {
+                testString += " mean= ";
+                if (parameterBits.Length > 1)
+                {
+                    testString += parameterBits[1] + " " + parameterBits[0] + "%";
+                }
+            }
+            else if (test.Type == Test.TestType.Tolerance)
+            {
+                testString += " tolerance= ";
+                if (parameterBits.Length > 1)
+                {
+                    testString += parameterBits[0] + "%";
+                }
+            }
+            else if (test.Type == Test.TestType.CompareToInput)
+            {
+                testString += " CompareToInput= ";
+                if (parameterBits.Length > 1)
+                {
+                    testString += parameterBits[0] + "%";
+                }
+            }
+
+            return testString;
+        }
+        
+        /// <summary>
+        /// Convert a line from the view to a test.
+        /// </summary>
+        /// <param name="lineNumber">The line number to examine</param>
+        /// <returns>The newly created test or null if line not valid</returns>
+        private Test StringToTest(int lineNumber)
+        {
+            string simulationName = this.GetWordFromLine(lineNumber, "Simulation:", false);
+            string testString = this.GetWordFromLine(lineNumber, "Test:", true);
+            if (simulationName != null && testString != null)
+            {
+                string[] testBits = testString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (testBits.Length >= 3)
+                {
+                    Test test = new Test();
+                    test.SimulationName = simulationName;
+                    test.TableName = this.view.TableName;
+                    test.ColumnNames = testBits[0];
+                    string operatorString = testBits[1];
+                    string[] parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (testBits.Length == 4)
+                    {
+                        Array.Resize(ref parameterBits, parameterBits.Length + 1);
+                        parameterBits[parameterBits.Length - 1] = testBits[3];
+                    }
+                    if (operatorString == "=")
+                    {
+                        test.Type = Test.TestType.EqualTo;
+                        if (parameterBits.Length > 0)
+                        {
+                            test.Parameters = parameterBits[0];
+                        }
+                    }
+                    else if (operatorString == "<")
+                    {
+                        test.Type = Test.TestType.LessThan;
+                        if (parameterBits.Length > 0)
+                        {
+                            test.Parameters = parameterBits[0];
+                        }
+                    }
+                    else if (operatorString == ">")
+                    {
+                        test.Type = Test.TestType.GreaterThan;
+                        if (parameterBits.Length > 0)
+                        {
+                            test.Parameters = parameterBits[0];
+                        }
+                    }
+                    else if (operatorString == "between")
+                    {
+                        test.Type = Test.TestType.Between;
+                        if (parameterBits.Length > 1)
+                        {
+                            test.Parameters = parameterBits[0] + "," + parameterBits[1];
+                        }
+                    }
+                    else if (operatorString == "AllPositive")
+                    {
+                        test.Type = Test.TestType.AllPos;
+                    }
+                    else if (operatorString == "mean=")
+                    {
+                        test.Type = Test.TestType.Mean;
+                        if (parameterBits.Length > 1)
+                        {
+                            test.Parameters = parameterBits[1].Replace("%", "") + "," + parameterBits[0];
+                        }
+                    }
+                    else if (operatorString == "tolerance=")
+                    {
+                        test.Type = Test.TestType.Tolerance;
+                        if (parameterBits.Length > 0)
+                        {
+                            test.Parameters = "1," + parameterBits[0].Replace("%", "");
+                        }
+                    }
+                    else if (operatorString == "CompareToInput=")
+                    {
+                        test.Type = Test.TestType.Tolerance;
+                        if (parameterBits.Length > 0)
+                        {
+                            test.Parameters = "1," + parameterBits[0].Replace("%", "");
+                        }
+                    }
+                    
+                    return test;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Invoked when the view wants context items.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        void OnContextItemsNeeded(object sender, NeedContextItems e)
+        {
+            if (e.ObjectName.Trim() == "Simulation")
+            {
+                e.Items.AddRange(dataStore.SimulationNames);
+            }
+            else if (e.ObjectName.Trim() == "Test")
+            {
+                string tableName = GetWordFromLine(this.view.Editor.CurrentLineNumber, "Table:", toEndOfLine: false);
+                if (tableName != null)
+                {
+                    DataTable data = dataStore.GetData("*", tableName);
+                    if (data != null)
+                    {
+                        e.Items.AddRange(Utility.DataTable.GetColumnNames(data));
+                    }
+                }
+            }
+            else if (e.ObjectName.Contains("."))
+            {
+                e.Items.Add("=");
+                e.Items.Add("<");
+                e.Items.Add(">");
+                e.Items.Add("AllPositive");
+                e.Items.Add("between");
+                e.Items.Add("mean=");
+                e.Items.Add("tolerance=");
+                e.Items.Add("CompareToInput=");
+            }
+        }
+
+        /// <summary>
+        /// Return the name of the table from the specified line.
+        /// </summary>
+        /// <param name="lineNumber">The line number to parse</param>
+        /// <param name="toEndOfLine">If true then the remainder of the line will be returned, othewise a space is used as a delimiter</param>
+        /// <returns>Returns the table name or null if none was specified</returns>
+        private string GetWordFromLine(int lineNumber, string keyWord, bool toEndOfLine)
+        {
+            if (lineNumber < this.view.Editor.Lines.Length)
+            {
+                string line = this.view.Editor.Lines[lineNumber];
+                int pos = line.IndexOf(keyWord);
+                if (pos != -1)
+                {
+                    pos += keyWord.Length; // get past 'TableName'
+                    int posSpace;
+                    if (toEndOfLine)
+                    {
+                        posSpace = line.Length;
+                    }
+                    else
+                    {
+                        posSpace = line.IndexOf(' ', pos);
+                    }
+                    if (posSpace == -1)
+                    {
+                        posSpace = line.Length - 1;
+                    }
+
+                    return line.Substring(pos, posSpace - pos).Trim();
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -191,8 +351,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnModelChanged(object ChangedModel)
         {
-            if (ChangedModel == Tests)
-                PopulateGrid();
+            if (ChangedModel == tests)
+            {
+                PopulateView();
+            }
         }
 
 
