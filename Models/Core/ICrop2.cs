@@ -21,12 +21,12 @@ namespace Models.Core
         /// <summary>
         /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
         /// </summary>
-        double PotentialEP { get; set; }
+        double demandWater { get; set; }
 
         /// <summary>
         /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
         /// </summary>
-        double ActualEP { set; }
+        double[] supplyWater { set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets

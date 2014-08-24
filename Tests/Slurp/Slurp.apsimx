@@ -468,8 +468,8 @@ namespace Models
         <localCanopyDepth>500</localCanopyDepth>
         <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
-        <localPotentialWaterDemand>5</localPotentialWaterDemand>
-        <localPotentialNitrogenDemand>5</localPotentialNitrogenDemand>
+        <localDemandWater>2</localDemandWater>
+        <localPotentialNitrogenDemand>10</localPotentialNitrogenDemand>
         <localCoverGreen>1</localCoverGreen>
         <localCoverTot>1</localCoverTot>
         <localRootDepth>500</localRootDepth>
@@ -489,56 +489,21 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <scalerPlant>
-          <double>0.28164861628981852</double>
-        </scalerPlant>
+        <ArbitrationMethod>PropDemand</ArbitrationMethod>
         <dltSWdep>
-          <double>0</double>
-          <double>-6.3609425602351166E-05</double>
-          <double>-1.6414619684313296</double>
+          <double>-0.41809771778772969</double>
+          <double>-0.49987416021527487</double>
+          <double>-1.0820281219969952</double>
           <double>0</double>
         </dltSWdep>
-        <scalerLayer>
-          <double>0</double>
-          <double>5.052492887303086E-05</double>
-          <double>0.6380507808511745</double>
-          <double>0</double>
-        </scalerLayer>
-        <scalerPlantNitrogen>
-          <double>0</double>
-        </scalerPlantNitrogen>
-        <dltNO3>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNO3>
-        <scalerLayerNitrogen>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </scalerLayerNitrogen>
-        <dltNH4>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNH4>
-        <dltNitrogen>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNitrogen>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Slurp].PotentialEP</string>
-          <string>[Slurp].ActualEP</string>
+          <string>[Slurp].demandWater</string>
+          <string>Evaluate sum([Slurp].supplyWater[1:4]) as UptakeWater</string>
           <string>[Slurp].potentialNitrogenDemand</string>
           <string>[Slurp].actualNitrogenSupply</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
@@ -566,10 +531,6 @@ namespace Models
       <Title />
       <Inverted>false</Inverted>
     </Axis>
-    <Axis>
-      <Type>Right</Type>
-      <Inverted>false</Inverted>
-    </Axis>
     <Series>
       <Title>Series1</Title>
       <Type>Line</Type>
@@ -584,7 +545,7 @@ namespace Models
       </X>
       <Y>
         <TableName>Report</TableName>
-        <FieldName>MinN</FieldName>
+        <FieldName>Slurp.demandWater</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
@@ -594,7 +555,7 @@ namespace Models
       <Title>Series2</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
-      <YAxis>Right</YAxis>
+      <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
@@ -604,7 +565,7 @@ namespace Models
       </X>
       <Y>
         <TableName>Report</TableName>
-        <FieldName>Diffs.Script.diffMinNUptake</FieldName>
+        <FieldName>UptakeWater</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
@@ -683,7 +644,7 @@ namespace Models
       <localCanopyDepth>500</localCanopyDepth>
       <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
       <localFrgr>1</localFrgr>
-      <localPotentialWaterDemand>0</localPotentialWaterDemand>
+      <localDemandWater>0</localDemandWater>
       <localPotentialNitrogenDemand>0</localPotentialNitrogenDemand>
       <localCoverGreen>1</localCoverGreen>
       <localCoverTot>1</localCoverTot>

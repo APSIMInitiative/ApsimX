@@ -44,7 +44,7 @@ namespace Models.PMF.Slurp
         [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
         [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
         [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr { get; set; }
-        [Description("Water demand (mm /day)")] public double localPotentialWaterDemand { get; set; }
+        [Description("Water demand (mm /day)")] public double localDemandWater { get; set; }
         [Description("Nitrogen demand (kgN /ha /day)")] public double localPotentialNitrogenDemand { get; set; }
 
         public double localCoverGreen { get; set; }
@@ -71,13 +71,13 @@ namespace Models.PMF.Slurp
         /// Arbitrator supplies PotentialEP
         /// </summary>
         [XmlIgnore]
-        public double PotentialEP { get; set; }
+        public double demandWater { get; set; }
 
         /// <summary>
         /// Arbitrator supplies ActualEP
         /// </summary>
         [XmlIgnore]
-        public double ActualEP { get; set; }
+        public double[] supplyWater { get; set; }
 
         /// <summary>
         /// Crop calculates potentialNitrogenDemand after getting its water allocation
@@ -101,7 +101,7 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
-            //Summary.WriteMessage(FullPath, "Simulation cancelled");
+            // set the canopy and root properties here - no need to capture the sets from any Managers as they directly set the properties
             CanopyProperties.Name = "Slurp";
             CanopyProperties.CoverGreen = 1.0 - Math.Exp(-1*localLightExtinction*localLAI);
             CanopyProperties.CoverTot = 1.0 - Math.Exp(-1 * localLightExtinction * localLAItot);
@@ -121,14 +121,18 @@ namespace Models.PMF.Slurp
             localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
             localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
 
+            supplyWater = new double[Soil.SoilWater.dlayer.Length];
+
             tempDepthUpper = 0.0;
             tempDepthMiddle = 0.0;
             tempDepthLower = 0.0;
 
-            PotentialEP = localPotentialWaterDemand;
+            demandWater = localDemandWater;
 
+            // calculate root exploration (proprotion of the layer occupied by the roots) for each layer
             for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
             {
+
                 tempDepthLower += Soil.SoilWater.dlayer[i];  // increment soil depth thorugh the layers
                 tempDepthMiddle = tempDepthLower - Soil.SoilWater.dlayer[i]*0.5;
                 tempDepthUpper = tempDepthLower - Soil.SoilWater.dlayer[i];

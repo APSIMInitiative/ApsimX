@@ -458,7 +458,7 @@ namespace Models
         <localCanopyDepth>500</localCanopyDepth>
         <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
-        <localPotentialWaterDemand>5</localPotentialWaterDemand>
+        <localDemandWater>2.5</localDemandWater>
         <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
         <localCoverGreen>0</localCoverGreen>
         <localCoverTot>0</localCoverTot>
@@ -486,7 +486,7 @@ namespace Models
         <localCanopyDepth>500</localCanopyDepth>
         <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
-        <localPotentialWaterDemand>10</localPotentialWaterDemand>
+        <localDemandWater>2.5</localDemandWater>
         <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
         <localCoverGreen>0</localCoverGreen>
         <localCoverTot>0</localCoverTot>
@@ -507,50 +507,13 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <scalerPlant>
-          <double>0.19086639780556777</double>
-          <double>0.38173279561113554</double>
-        </scalerPlant>
+        <ArbitrationMethod>PropDemand</ArbitrationMethod>
         <dltSWdep>
           <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
+          <double>-0.0074905181065182923</double>
+          <double>-1.594849007009294</double>
+          <double>-1.594849007009294</double>
         </dltSWdep>
-        <scalerLayer>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </scalerLayer>
-        <scalerPlantNitrogen>
-          <double>0</double>
-          <double>0</double>
-        </scalerPlantNitrogen>
-        <dltNO3>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNO3>
-        <scalerLayerNitrogen>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </scalerLayerNitrogen>
-        <dltNH4>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNH4>
-        <dltNitrogen>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </dltNitrogen>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
@@ -559,10 +522,10 @@ namespace Models
           <string>[Clock].Today</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake</string>
-          <string>[Slurp1].PotentialEP</string>
-          <string>[Slurp2].PotentialEP</string>
-          <string>[Slurp1].ActualEP</string>
-          <string>[Slurp2].ActualEP</string>
+          <string>[Slurp1].demandWater</string>
+          <string>[Slurp2].demandWater</string>
+          <string>Evaluate sum([Slurp1].supplyWater[1:4]) as Slurp1Uptake</string>
+          <string>Evaluate sum([Slurp2].supplyWater[1:4]) as Slurp2Uptake</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -700,7 +663,7 @@ namespace Models
       <localCanopyDepth>500</localCanopyDepth>
       <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
       <localFrgr>1</localFrgr>
-      <localPotentialWaterDemand>0</localPotentialWaterDemand>
+      <localDemandWater>0</localDemandWater>
       <localPotentialNitrogenDemand>0</localPotentialNitrogenDemand>
       <localCoverGreen>0</localCoverGreen>
       <localCoverTot>0</localCoverTot>
