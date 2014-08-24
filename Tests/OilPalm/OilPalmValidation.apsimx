@@ -10,7 +10,61 @@
   <title></title>
  </head>
  <body>
-  <p>Add information about the trial.</p>
+  <h1>Testing Datasets</h1>
+  <p>Data from three sites across PNG with different climate and soils were used for model testing . Soils ranged from sandy clay (volcanic ash) to alluvial clay. Mean annual rainfall ranged from 2400 mm at Sagarai (1990-2008) and Sangara (1986-2009) to 4350 mm at Hargy(1989-2008) with annual rainfall variability larger at Sagarai than the other two sites. Whilst there is only a small difference in temperature across the sites, rainfall patterns do impact on both annual (Hargy 15.9 MJ; Sangara 17.0 MJ; Sagarai 18.1 MJ) and monthly variation in mean daily solar radiation.</p>
+  <p>Fertiliser trial data were obtained for each location from the PNG Oil Palm Research Association trial database (Table Below). All trials had the same commercial dura x pisifera palms planted in an equilateral triangular pattern. Trials included multiple rates of nitrogen including a control in which no nitrogen was applied. Fertilisers were applied in two to three applications per year. Trial 324 evaluated the effect of nitrogen rate and source (five sources). There was no effect of nitrogen source and so tThese data have been combined in this study as there was no effect of nitrogen source. Trial 504 investigated nutrient interactions (N x K). Data from treatments for which potassium was not limiting were combined. Trial 212 investigated nitrogen rate only. All other macro- and micronutrients were maintained at sufficient levels in all trials. Plots in each trial consisted of 16 to 30 palms surrounded by guard rows between neighbouring plots. Levels of replication ranged from two to four. In trials 324 and 504, trenches were dug around plots to minimise poaching of nutrients by palms from neighbouring plots.</p>
+  <h2>Description of fertiliser trials and selected treatments used in model development and testing.</h2>
+  <table>
+   <tr>
+    <td>Location</td>
+    <td>Trial Number</td>
+    <td>Previous Land Use</td>
+    <td>Year Planted</td>
+    <td>Treatment Commenced</td>
+    <td>Population (palms/ha)</td>
+    <td>N Rates (kg/palm/ha/y)</td>
+   </tr>
+   <tr>
+    <td>Hargy</td>
+    <td>212</td>
+    <td>Oil Palm</td>
+    <td>1996</td>
+    <td>2002</td>
+    <td>140</td>
+    <td>0,1.0,2.0</td>
+   </tr>
+   <tr>
+    <td>Sangara</td>
+    <td>324</td>
+    <td>Oil Palm</td>
+    <td>1996</td>
+    <td>2001</td>
+    <td>135</td>
+    <td>0,0.42,1.68</td>
+   </tr>
+   <tr>
+    <td>Sagarai</td>
+    <td>504</td>
+    <td>Forest/Rubber Plantation</td>
+    <td>1991</td>
+    <td>1995</td>
+    <td>127</td>
+    <td>0,0.42,1.26</td>
+   </tr>
+  </table>
+  <p>Harvested ripe bunches were counted and weighed (together with loose fruits) fortnightly for every palm. Leaf samples were collected from frond 17 from selected palms in all plots at least once a year and were oven dried and analysed for nitrogen content. Petiole cross-sectional area, leaflet lengths and frond length of frond 17 was measured to allow calculation of leaf area and mass (Corley et al., 1971). The total number of fronds on each palm was counted, and the first frond was marked twice a year to determine frond production rate. Stem heights of selected palms were measured periodically in two of the trials, and these were combined with a single measurement of stem diameter to calculate stem mass, assuming a linear increase in stem density with plantation age (Corley et al., 1971).</p>
+  <p>Parameterisation of soil process models used information from a variety of sources. Soil hydraulic properties were derived from pressure plate water retention data. Runoff curve number (Hawkins, 1996) was estimated to 72 for clay soils and 50 for ash soils using runoff data from PNG oil palm plantations (Banabas et al., 2008b). Soil organic carbon data were available for Trials 324 and 504. Simulations of Trial 212 utilised carbon measurements available for a nearby planting. The fractionation of soil organic carbon into the various model pools is very important for model accuracy. It has been shown that it is possible to deduce, a priori, the apparent soil organic matter composition from observed patterns (Huth et al., 2010). The inert fraction of the total soil organic matter is an important parameter and methods for its determination for the volcanic soils in PNG have not been developed. In this study, we have assumed that the inert carbon content does not vary significantly with depth and that it can be approximated using the carbon content at a depth of approximately 0.5 m. Most carbon cycling occurs above this depth and carbon contents vary less below this depth. Therefore we assumed that carbon above this value is available for decomposition. Finally, as trials 212 and 324 were planted after felling of existing plantations, we initialised the surface organic matter pools to consist of 24 t/ ha-1 of fronds with a C:N of 39 and 63 t/ ha-1 of stems with a C:N of 145. In the absence of other information, the same initial surface organic matter was used for trial 504.</p>
+  <p>Daily meteorological data (rainfall, sunshine hours, temperature) for Trial 324 were taken from the nearby research station of the PNG Oil Palm Research Association. Sunshine hour data was used to calculate incoming global shortwave radiation as described by Banabas (2007). Complete daily meteorological datasets were not available for the other two sites apart from a limited number of monthly totals for sunshine hours and rainfall. Daily estimates of the required climate weather data for these sites were derived from estimates obtained from the NASA Langley Research Center POWER Project funded through the NASA Earth Science Directorate Applied Science Program (http://power.larc.nasa.gov/). Adequacy of this dataset was tested via comparison of satellite-derived estimates of monthly mean solar radiation with that calculated from measured monthly sunshine hours for Hargy (data not shown). No data on sunshine hours were available for Sagarai and neither site had measured temperature data for comparison. Satellite-derived estimates of monthly rainfall proved inadequate when compared to available monthly data. Therefore, observed monthly rainfall totals were disaggregated into daily data using the satellite-derived daily rainfall estimates. Satellite-derived estimates of daily temperatures were used for these two sites but could not be tested for accuracy.</p>
+  <h1></h1>
+  <h1>References</h1>
+  <p>Banabas, M., 2007. Study of Nitrogen loss pathways in oil palm (Elaeis guineensis Jacq.) growing agro-ecosystems in volcanic ash soils in Papua New Guinea. Soil Sci. Massey University, Palmerston North, New Zealand.</p>
+  <p>Banabas, M., Turner, M.A., Scotter, D.R., Nelson, P.N., 2008. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 1. Water balance, and nitrogen in soil solution and runoff. Aust J Soil Res 46, 332-339.</p>
+  <p>Banabas, M., Scotter, D.R., Turner, M.A., 2008. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 2. Nitrogen transformations and leaching, and a residence time model. Aust J Soil Res 46, 340-347.</p>
+  <p>Corley, R.H.V., Hardon, J.J., Tan, G.Y., 1971. Analysis of growth of oil palm (Elaeis-guineensis Jacq) .1. Estimation of growth parameters and application in breeding. Euphytica 20, 307-315.</p>
+  <p>Hawkins, R.H., 1996. Runoff Curve Number: Has It Reached Maturity? Journal of Hydrologic Engineering 1, 11-19.</p>
+  <p>Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010. Impacts of fertilisers and legumes on N2O and CO2 emissions from soils in subtropical agricultural systems: A simulation study. Agriculture Ecosystems And Environment 136, 351-357.</p>
+  <p></p>
+  <p></p>
  </body>
 </html>]]></MemoText>
   </Memo>
@@ -21,9 +75,9 @@
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Operations</Name>
+          <Name>N</Name>
           <FactorValue>
-            <Name>N0</Name>
+            <Name>0</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -93,7 +147,7 @@
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N1</Name>
+            <Name>1</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -203,7 +257,7 @@
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N2</Name>
+            <Name>2</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -313,7 +367,7 @@
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N3</Name>
+            <Name>3</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -2921,9 +2975,9 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Operations</Name>
+          <Name>N</Name>
           <FactorValue>
-            <Name>N0</Name>
+            <Name>0</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -2953,7 +3007,7 @@ namespace Models
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N1</Name>
+            <Name>1</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -3175,7 +3229,7 @@ namespace Models
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N2</Name>
+            <Name>2</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -3397,7 +3451,7 @@ namespace Models
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N3</Name>
+            <Name>3</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -5702,9 +5756,9 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Operations</Name>
+          <Name>N</Name>
           <FactorValue>
-            <Name>N0</Name>
+            <Name>0</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -5758,7 +5812,7 @@ namespace Models
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N1</Name>
+            <Name>1</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -5892,7 +5946,7 @@ namespace Models
             </Operations>
           </FactorValue>
           <FactorValue>
-            <Name>N2</Name>
+            <Name>2</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -7306,6 +7360,7 @@ namespace Models
     </Experiment>
     <Graph>
       <Name>LAI</Name>
+      <Title>Leaf Area Index (LAI)</Title>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -7317,7 +7372,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7337,6 +7392,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7352,85 +7408,7 @@ namespace Models
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
