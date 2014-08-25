@@ -166,9 +166,10 @@ namespace Models.Arbitrator
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
                     // this step gives the proportion of the root zone that is this layer
-                    potentialSupplyWaterPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
-                    potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
-                    tempSupply+=potentialSupplyWaterPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                    //potentialSupplyWaterPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
+                    //potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
+                    potentialSupplyWaterPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
+                    tempSupply += potentialSupplyWaterPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
                 }
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
@@ -237,8 +238,9 @@ namespace Models.Arbitrator
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
                     // this step gives the proportion of the root zone that is this layer
-                    potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
-                    potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
+                    //potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
+                    //potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
+                    potentialSupplyNitrogenPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
                     tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
                 }
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
