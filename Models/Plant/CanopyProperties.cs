@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// Holds the collection of canopy properties that each crop must supply to the rest of the world
+    /// </summary>
     [Serializable]
     public class CanopyProperties
     {
@@ -17,7 +20,7 @@ namespace Models.PMF
         /// Green leaf area index (m2/m2) 
         /// Used in the light and energy arbitration
         /// </summary>
-        public double LAI { get; set; }
+        public double LAIGreen { get; set; }
 
         /// <summary>
         /// Total (includes dead) leaf area index (m2/m2) 
