@@ -31,8 +31,8 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
-# for (fileNumber in 3:3){
-for (fileNumber in 1:length(files)){
+ for (fileNumber in 5:5){
+#for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
@@ -66,16 +66,21 @@ for (fileNumber in 1:length(files)){
     dbName <- gsub(".apsimx", "", dbName)
     simsToTest <- unlist(strsplit(currentSimGroup[1, 1], ","))
     
-    for (sim in c(1:length(simsToTest)))
+    #connect to simulator output, input and baseline data if available
+    db <- dbConnect(SQLite(), dbname = dbName)
+    if(file.exists(paste(dbName, ".baseline", sep="")))
+      dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
+    
+    if (simsToTest == "All")
     {
-      #connect to simulator output, input and baseline data if available
-      db <- dbConnect(SQLite(), dbname = dbName)
-      if(file.exists(paste(dbName, ".baseline", sep="")))
-          dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
-      
+      simsToTest <- dbGetQuery(db, "SELECT Name FROM Simulations")
+    }
+    
+    for (sim in c(1:length(simsToTest)))
+    {    
       #get report ID and extract relevant info from table
       possibleError <- tryCatch({
-        simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+        simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim,], "'", sep=""))
       }, error = function(err) {
           print(noquote("Could not find 'Simulations' column. Did the test run?"))
           haveTestsPassed <<- FALSE
