@@ -256,7 +256,7 @@ namespace Models
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
-        public object Get(string name)
+        new public object Get(string name)
         {
             return base.Get(name);
         }
