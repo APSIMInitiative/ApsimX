@@ -7721,12 +7721,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.8448912015458285</double>
-              <double>1.4671644704476756</double>
-              <double>1.1995737848698893</double>
-              <double>1.0302859834032077</double>
-              <double>0.4703885759217401</double>
-              <double>0.47017199717239655</double>
+              <double>1.82</double>
+              <double>1.47</double>
+              <double>1.2</double>
+              <double>1.03</double>
+              <double>0.47</double>
+              <double>0.47</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -7769,8 +7769,8 @@ namespace Models
               <double>0.01</double>
             </FBiom>
             <FInert>
-              <double>0.3</double>
-              <double>0.4</double>
+              <double>0.6</double>
+              <double>0.7</double>
               <double>0.75</double>
               <double>0.9</double>
               <double>0.96</double>
@@ -7789,12 +7789,12 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>33.3333333333333</double>
-              <double>22.5</double>
-              <double>1.38888888888889</double>
-              <double>1.38888888888889</double>
-              <double>1.38888888888889</double>
-              <double>1.38888888888889</double>
+              <double>15</double>
+              <double>7</double>
+              <double>7</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </NO3>
             <NH4>
               <double>0.1</double>
@@ -7804,6 +7804,54 @@ namespace Models
               <double>0.1</double>
               <double>0.1</double>
             </NH4>
+            <SW>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
             <SWUnits>Volumetric</SWUnits>
@@ -13716,6 +13764,41 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
           </Graph>
         </Folder>
+        <Manager>
+          <Name>SetIntergerCropParameter</Name>
+          <Script>
+            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRideInterger>10</OverRideInterger>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+	[Link] Plant Plant;          
+					
+		[Description("Path for coefficient to be Overwritten")]
+		public string OverRidePath { get; set; }
+		[Description("Value for new coefficient Interger")]
+        public int OverRideInterger { get; set; }
+        
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			object ResetValue = OverRideInterger;
+			Set(OverRidePath, ResetValue);
+	    }
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -14661,7 +14744,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>

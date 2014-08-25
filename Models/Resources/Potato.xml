@@ -63,6 +63,13 @@
 		<Command />
 	</Cultivar>
 	<Cultivar>
+		<Name>Nadine</Name>
+		<Alias>Nadine</Alias>
+		<Command>[Structure].MainStemFinalNodeNumber.value = 29</Command>
+		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
+		<Command />
+	</Cultivar>
+	<Cultivar>
 		<Name>RussetBurbank</Name>
 		<Alias>RussetBurbank</Alias>
 		<Command>[Structure].MainStemFinalNodeNumber.value = 46</Command>
@@ -72,7 +79,6 @@
 		<Name>Others</Name>
 		<Alias>Fianna</Alias>
 		<Alias>RussetRanger</Alias>
-		<Alias>Nadine</Alias>
 		<Alias>Coliban</Alias>
 		<Alias>Moonlight</Alias>
 		<Alias>Agria</Alias>
