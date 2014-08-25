@@ -39,14 +39,9 @@ namespace UserInterface.Views
             set
             {
                 this.comboBox1.Items.Clear();
-                bool isFirstItem = true;
                 foreach (string tableName in value)
                 {
-                    ListViewItem newItem = new ListViewItem();
-                    newItem.Text = tableName;
-                    this.comboBox1.Items.Add(newItem);
-                    newItem.Selected = isFirstItem;
-                    isFirstItem = false;
+                    this.comboBox1.Items.Add(tableName);
                 }
             }
         }

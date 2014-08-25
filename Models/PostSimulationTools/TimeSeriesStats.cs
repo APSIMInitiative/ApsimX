@@ -74,7 +74,7 @@ namespace Models.PostSimulationTools
                                 }
 
                                 // Calculate stats for all simulations and store in a row of the stats table.
-                                string overallSeriesName = "Combined";
+                                string overallSeriesName = "Combined " + observedColumnName.Replace("Observed.", "");
                                 view.RowFilter = null;
                                 CalcStatsRow(view, observedColumnName, predictedColumnName, overallSeriesName, statsData);
                             }
