@@ -268,7 +268,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run post simulation models",
+        [ContextMenu(MenuName = "Refresh",
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void RunPostSimulationModels(object sender, EventArgs e)
         {
@@ -287,5 +287,22 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
+        /// <summary>
+        /// Empty the datastore
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Empty the data store",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void EmptyDataStore(object sender, EventArgs e)
+        {
+            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                dataStore.DeleteAllTables();
+            }
+        }
+
     }
 }

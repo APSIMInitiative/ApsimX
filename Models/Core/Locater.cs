@@ -111,6 +111,10 @@ namespace Models.Core
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
                     relativeTo = this.Find(modelName, relativeTo);
+                    if (relativeTo == null)
+                    {
+                        throw new Exception("Cannot find model: " + modelName);
+                    }
                 }
                 else if (namePath.StartsWith("."))
                 {

@@ -7,12 +7,18 @@ namespace UserInterface.Interfaces
 {
     using System.Data;
     using Views;
+using System;
 
     /// <summary>
     /// An interface for a test view
     /// </summary>
     public interface ITestView
     {
+        /// <summary>
+        /// The table name has changed.
+        /// </summary>
+        event EventHandler TableNameChanged;
+
         /// <summary>
         /// Gets or sets a list of table names
         /// </summary>

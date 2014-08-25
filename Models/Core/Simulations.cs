@@ -274,9 +274,7 @@ namespace Models.Core
             {
                 // As we are going to run all simulations, we can delete all tables in the DataStore. This
                 // will clean up order of columns in the tables and removed unused ones.
-                foreach (string tableName in store.TableNames)
-                    if (tableName != "Simulations" && tableName != "Messages")
-                        store.DeleteTable(tableName);
+                store.DeleteAllTables();
 
                 store.Disconnect();
 
