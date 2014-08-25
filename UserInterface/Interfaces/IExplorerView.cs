@@ -42,6 +42,7 @@ namespace UserInterface.Interfaces
             public EventHandler OnClick;
             public bool Checked;
             public Keys ShortcutKey;
+            public bool Enabled;
         }
 
         public List<Description> Descriptions = new List<Description>();

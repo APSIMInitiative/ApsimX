@@ -17,6 +17,7 @@ namespace UserInterface.Commands
         private ExplorerPresenter ExplorerPresenter;
         private Stopwatch Timer = new Stopwatch(); 
         public bool ok { get; set; }
+        public bool IsRunning { get; set; }
 
         /// <summary>
         /// Constructor
@@ -50,6 +51,8 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
+            IsRunning = true;
+
             if (ExplorerPresenter != null)
                 ExplorerPresenter.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
 
@@ -103,7 +106,7 @@ namespace UserInterface.Commands
                 if (JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete " 
+                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 
                 SoundPlayer player = new SoundPlayer();
@@ -112,8 +115,9 @@ namespace UserInterface.Commands
                 else
                     player.Stream = Properties.Resources.success;
                 player.Play();
+                IsRunning = false;
             }
-        }
 
+        }
     }
 }

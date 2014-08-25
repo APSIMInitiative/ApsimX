@@ -197,14 +197,19 @@ namespace UserInterface.Presenters
             if (simulationName != null && testString != null)
             {
                 string[] testBits = testString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (testBits.Length >= 3)
+                if (testBits.Length >= 2)
                 {
                     Test test = new Test();
                     test.SimulationName = simulationName;
                     test.TableName = this.view.TableName;
                     test.ColumnNames = testBits[0];
                     string operatorString = testBits[1];
-                    string[] parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parameterBits = null;
+                    if (testBits.Length > 2)
+                    {
+                        parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    }
+
                     if (testBits.Length == 4)
                     {
                         Array.Resize(ref parameterBits, parameterBits.Length + 1);

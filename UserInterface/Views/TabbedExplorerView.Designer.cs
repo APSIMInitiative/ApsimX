@@ -45,7 +45,6 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.TabControl.SuspendLayout();
             this.StartPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -194,7 +193,6 @@
             this.StartPage.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.TabPopupMenu.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -212,7 +210,7 @@
         private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.Windows.Forms.ContextMenuStrip TabPopupMenu;
         private System.Windows.Forms.ToolStripMenuItem CloseTabMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+		private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListView ListView;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;

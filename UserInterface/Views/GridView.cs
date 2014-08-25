@@ -303,7 +303,8 @@ namespace UserInterface.Views
 
                             if (row == 0)
                             {
-                                this.Grid.Columns[col].Width = this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
+                                this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
+                                                                        this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
                             }
                         }
 
