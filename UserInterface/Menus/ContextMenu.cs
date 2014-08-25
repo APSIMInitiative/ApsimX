@@ -109,6 +109,9 @@ namespace UserInterface.Presenters
             }
         }
 
+
+        private RunCommand command = null;
+
         /// <summary>
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
@@ -124,8 +127,24 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.Save();
             Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
-            RunCommand command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
+            command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
             command.Do(null);
+        }
+
+        /// <summary>
+        /// A run has completed so reenable the run button.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public bool RunAPSIMEnabled()
+        {
+            bool isRunning = command != null && command.IsRunning;
+            if (!isRunning)
+            {
+                command = null;
+            }
+
+            return !isRunning;
         }
 
         /// <summary>

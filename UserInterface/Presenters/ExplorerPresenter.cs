@@ -410,6 +410,17 @@ namespace UserInterface.Presenters
                         Desc.ResourceNameForImage = Desc.Name.Replace(" ", "");
                         Desc.ShortcutKey = contextMenu.ShortcutKey;
 
+                        // Check for an enabled method.
+                        MethodInfo enabledMethod = typeof(ContextMenu).GetMethod(Desc.ResourceNameForImage + "Enabled");
+                        if (enabledMethod != null)
+                        {
+                            Desc.Enabled = (bool)enabledMethod.Invoke(ContextMenu, null);
+                        }
+                        else
+                        {
+                            Desc.Enabled = true;
+                        }
+
                         EventHandler Handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), ContextMenu, Method);
                         Desc.OnClick = Handler;
 
