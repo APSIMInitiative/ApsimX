@@ -485,47 +485,28 @@ namespace Models
         <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
         <localDemandWater>10</localDemandWater>
-        <localPotentialNitrogenDemand>10</localPotentialNitrogenDemand>
-        <localCoverGreen>1</localCoverGreen>
-        <localCoverTot>1</localCoverTot>
+        <localDemandNitrogen>5</localDemandNitrogen>
         <localRootDepth>500</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-        <localRootExplorationByLayer>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>0</double>
-        </localRootExplorationByLayer>
-        <localRootLengthDensityByVolume>
-          <double>0.0425</double>
-          <double>0.027500000000000004</double>
-          <double>0.0049999999999999992</double>
-          <double>0</double>
-        </localRootLengthDensityByVolume>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
-        <dltSWdep>
-          <double>0</double>
-          <double>-0.052368723302564146</double>
-          <double>-0.20476497809127625</double>
-          <double>0</double>
-        </dltSWdep>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
         <Name>ReportOne</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Slurp].demandWater</string>
+          <string>[Slurp].demandWater as demandWater</string>
           <string>Evaluate sum([Slurp].supplyWater[1:4]) as UptakeWater</string>
-          <string>[Slurp].potentialNitrogenDemand</string>
-          <string>[Slurp].actualNitrogenSupply</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
-          <string>[Diffs].Script.diffSWDepUptake</string>
+          <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
+          <string>[Slurp].demandNitrogen as demandNitrogen</string>
+          <string>Evaluate sum([Slurp].supplyNitrogen[1:4]) as UptakeNitrogen</string>
+          <string>Evaluate sum([Slurp].supplyNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
-          <string>[Diffs].Script.diffMinNUptake</string>
+          <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -853,17 +834,53 @@ namespace Models
             <double>300</double>
           </Thickness>
           <NO3>
-            <double>40</double>
-            <double>30</double>
-            <double>14</double>
-            <double>14</double>
+            <double>100</double>
+            <double>50</double>
+            <double>20</double>
+            <double>10</double>
           </NO3>
           <NH4>
-            <double>0.1</double>
-            <double>0.1</double>
+            <double>10</double>
+            <double>5</double>
             <double>0.1</double>
             <double>0.1</double>
           </NH4>
+          <SW>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </SW>
+          <OC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </OC>
+          <EC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </EC>
+          <CL>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </CL>
+          <ESP>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ESP>
+          <PH>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </PH>
           <NO3Units>kgha</NO3Units>
           <NH4Units>kgha</NH4Units>
           <SWUnits>Volumetric</SWUnits>
@@ -969,69 +986,35 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp1</Name>
-        <localLAI>2.5</localLAI>
-        <localLAItot>2.5</localLAItot>
-        <localLightExtinction>0.6</localLightExtinction>
-        <localCanopyHeight>500</localCanopyHeight>
-        <localCanopyDepth>500</localCanopyDepth>
-        <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
-        <localFrgr>1</localFrgr>
-        <localDemandWater>7.5</localDemandWater>
-        <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
-        <localCoverGreen>0</localCoverGreen>
-        <localCoverTot>0</localCoverTot>
-        <localRootDepth>750</localRootDepth>
-        <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-        <localRootExplorationByLayer>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-        </localRootExplorationByLayer>
-        <localRootLengthDensityByVolume>
-          <double>0.045000000000000005</double>
-          <double>0.034999999999999996</double>
-          <double>0.020000000000000004</double>
-          <double>0</double>
-        </localRootLengthDensityByVolume>
-      </Slurp>
-      <Slurp>
-        <Name>Slurp2</Name>
-        <localLAI>2.5</localLAI>
-        <localLAItot>2.5</localLAItot>
+        <localLAI>5</localLAI>
+        <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
         <localCanopyDepth>500</localCanopyDepth>
         <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
         <localDemandWater>5</localDemandWater>
-        <localPotentialNitrogenDemand>1</localPotentialNitrogenDemand>
-        <localCoverGreen>0</localCoverGreen>
-        <localCoverTot>0</localCoverTot>
-        <localRootDepth>750</localRootDepth>
+        <localDemandNitrogen>5</localDemandNitrogen>
+        <localRootDepth>300</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-        <localRootExplorationByLayer>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-        </localRootExplorationByLayer>
-        <localRootLengthDensityByVolume>
-          <double>0.045000000000000005</double>
-          <double>0.034999999999999996</double>
-          <double>0.020000000000000004</double>
-          <double>0</double>
-        </localRootLengthDensityByVolume>
+      </Slurp>
+      <Slurp>
+        <Name>Slurp2</Name>
+        <localLAI>7.5</localLAI>
+        <localLAItot>7.5</localLAItot>
+        <localLightExtinction>0.6</localLightExtinction>
+        <localCanopyHeight>750</localCanopyHeight>
+        <localCanopyDepth>750</localCanopyDepth>
+        <localMaximumStomatalConductance>0.01</localMaximumStomatalConductance>
+        <localFrgr>1</localFrgr>
+        <localDemandWater>7.5</localDemandWater>
+        <localDemandNitrogen>7.5</localDemandNitrogen>
+        <localRootDepth>600</localRootDepth>
+        <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
-        <dltSWdep>
-          <double>0</double>
-          <double>-0.058964833110804</double>
-          <double>-0.01150867055861958</double>
-          <double>-0.01183755746097977</double>
-        </dltSWdep>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
@@ -1055,12 +1038,12 @@ namespace Models
         <Name>ReportNitrogen</Name>
         <VariableNames>
           <string>[Clock].Today</string>
+          <string>[Slurp1].demandNitrogen as demandNitrogen1</string>
+          <string>[Slurp2].demandNitrogen as demandNitrogen2</string>
+          <string>Evaluate sum([Slurp1].supplyNitrogen[1:4]) as Slurp1UptakeN</string>
+          <string>Evaluate sum([Slurp2].supplyNitrogen[1:4]) as Slurp2UptakeN</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake</string>
-          <string>[Slurp1].potentialNitrogenDemand</string>
-          <string>[Slurp2].potentialNitrogenDemand</string>
-          <string>[Slurp1].actualNitrogenSupply</string>
-          <string>[Slurp2].actualNitrogenSupply</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1071,7 +1054,7 @@ namespace Models
     </Zone>
   </Simulation>
   <Graph>
-    <Name>Graph</Name>
+    <Name>GraphWater2</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -1188,6 +1171,124 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
+  <Graph>
+    <Name>GraphNitrogen2</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+    </Axis>
+    <Axis>
+      <Type>Right</Type>
+      <Inverted>false</Inverted>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>demandNitrogen1</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Dash</Line>
+      <X>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Slurp1UptakeN</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series3</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744320</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>demandNitrogen2</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series4</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744320</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Dash</Line>
+      <X>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Slurp2UptakeN</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series5</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32513</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>ReportNitrogen</TableName>
+        <FieldName>Diffs.Script.diffMinNUptake</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+  </Graph>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
@@ -1204,23 +1305,9 @@ namespace Models
       <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
       <localFrgr>1</localFrgr>
       <localDemandWater>0</localDemandWater>
-      <localPotentialNitrogenDemand>0</localPotentialNitrogenDemand>
-      <localCoverGreen>0</localCoverGreen>
-      <localCoverTot>0</localCoverTot>
+      <localDemandNitrogen>0</localDemandNitrogen>
       <localRootDepth>600</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-      <localRootExplorationByLayer>
-        <double>1</double>
-        <double>1</double>
-        <double>1</double>
-        <double>0</double>
-      </localRootExplorationByLayer>
-      <localRootLengthDensityByVolume>
-        <double>0.043750000000000004</double>
-        <double>0.03125</double>
-        <double>0.0125</double>
-        <double>0</double>
-      </localRootLengthDensityByVolume>
     </Slurp>
     <Memo>
       <Name>Memo</Name>

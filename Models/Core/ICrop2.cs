@@ -38,12 +38,17 @@ namespace Models.Core
         /// <summary>
         /// Crop calculates potentialNitrogenDemand after getting its water allocation
         /// </summary>
-        double potentialNitrogenDemand { get; set; }
+        double demandNitrogen { get; set; }
 
         /// <summary>
         /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
         /// </summary>
-        double actualNitrogenSupply { set; }
+        double[] supplyNitrogen { set; }
+
+        /// <summary>
+        /// The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4
+        /// </summary>
+        double[] supplyNitrogenPropNO3 { set; }
 
 
         // need to add in the uptake/supply in layers - crop needs this for root growth
