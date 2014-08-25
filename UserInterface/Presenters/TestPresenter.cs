@@ -54,24 +54,26 @@ namespace UserInterface.Presenters
                 this.view.TableNames = dataStore.TableNames;
 
                 // Set the name of the table.
-                if (this.tests.AllTests.Length > 0)
+                if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
                 {
                     this.view.TableName = this.tests.AllTests[0].TableName;
                     this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
                 }
             }
 
-           
 
-            // Work out the test strings that we're going to pass to our view
-            List<string> testStrings = new List<string>();
-            foreach (Test test in this.tests.AllTests)
+            if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
             {
-                testStrings.Add(this.TestToString(test));
-            }
+                // Work out the test strings that we're going to pass to our view
+                List<string> testStrings = new List<string>();
+                foreach (Test test in this.tests.AllTests)
+                {
+                    testStrings.Add(this.TestToString(test));
+                }
 
-            this.view.Editor.Lines = testStrings.ToArray();
-            this.view.Editor.SetSyntaxHighlighter("Test");
+                this.view.Editor.Lines = testStrings.ToArray();
+                this.view.Editor.SetSyntaxHighlighter("Test");
+            }
         }
 
         /// <summary>
@@ -283,6 +285,7 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName.Trim() == "Simulation")
             {
+                e.Items.Add("All");
                 e.Items.AddRange(dataStore.SimulationNames);
             }
             else if (e.ObjectName.Trim() == "Test")
