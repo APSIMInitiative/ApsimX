@@ -21,7 +21,6 @@ namespace UserInterface
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
             this.tabbedExplorerView1 = new TabbedExplorerView();
             this.tabbedExplorerView2 = new TabbedExplorerView();
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.Panel1.SuspendLayout();
             this.SplitContainer.Panel2.SuspendLayout();
             this.SplitContainer.SuspendLayout();
@@ -69,7 +68,7 @@ namespace UserInterface
             this.Controls.Add(this.SplitContainer);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            //this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "MainForm";
             this.Text = "ApsimX";
@@ -77,7 +76,6 @@ namespace UserInterface
             this.Load += new System.EventHandler(this.OnLoad);
             this.SplitContainer.Panel1.ResumeLayout(false);
             this.SplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
             this.SplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
