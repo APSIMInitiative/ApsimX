@@ -255,6 +255,16 @@ namespace Models
         }
 
         /// <summary>
+        /// Delete all tables
+        /// </summary>
+        public void DeleteAllTables()
+        {
+            foreach (string tableName in this.TableNames)
+                if (tableName != "Simulations" && tableName != "Messages")
+                    DeleteTable(tableName);
+        }
+
+        /// <summary>
         /// Determine whether a table exists in the database
         /// </summary>
         public bool TableExists(string tableName)

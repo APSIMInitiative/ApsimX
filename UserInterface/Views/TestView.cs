@@ -13,6 +13,11 @@ namespace UserInterface.Views
     public partial class TestView : UserControl, ITestView
     {
         /// <summary>
+        /// The table name has changed.
+        /// </summary>
+        public event EventHandler TableNameChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TestView" /> class.
         /// </summary>
         public TestView()
@@ -86,6 +91,19 @@ namespace UserInterface.Views
             get
             {
                 return editorView1;
+            }
+        }
+
+        /// <summary>
+        /// The table name combo has changed.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTableNameChanged(object sender, EventArgs e)
+        {
+            if (TableNameChanged != null)
+            {
+                TableNameChanged.Invoke(this, e);
             }
         }
     }
