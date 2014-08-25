@@ -24,6 +24,9 @@ namespace Models.Arbitrator
         [Link]
         WeatherFile Weather = null;
 
+        [Link]
+        Summary Summary = null;
+
         ICrop2[] plants ;
 
         [Description("Arbitration method: PropDemand/RotatingCall/Others to come")]        public string ArbitrationMethod { get; set; }
@@ -133,7 +136,7 @@ namespace Models.Arbitrator
 
             // use i for the plant loop and j for the layer loop
 
-            double tempSupply;  // this zeros the variable for each crop - calculates the potentialSupply for the crop for all layers - will be used to compare against demand
+            tempSupply = 0.0;  // this zeros the variable for each crop - calculates the potentialSupply for the crop for all layers - will be used to compare against demand
             // calculate the potentially available water and sum the demand
             for (int i = 0 ; i<plants.Length; i++)
             {
@@ -149,7 +152,7 @@ namespace Models.Arbitrator
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
                     // if the potential supply calculated above is greater than demand then scale it back - note that this is still a potential supply as a solo crop
-                    potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(Utility.Math.Sum(demandWater), tempSupply, 0.0));
+                    potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandWater[i], tempSupply, 0.0));
                 }
             }
 
@@ -181,6 +184,10 @@ namespace Models.Arbitrator
                     tempDepthArray[j] = supplyWaterPlantLayer[i, j];
                 }
                 plants[i].supplyWater = tempDepthArray;
+
+                //myString = "SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
+                //Summary.WriteMessage(FullPath, myString);
+
             }
 
             // send the change in soil water to the soil water module
