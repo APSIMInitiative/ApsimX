@@ -213,8 +213,8 @@ namespace Models.PMF.OilPalm
         Function FrondCriticalNConcentration = null;
         [Link]
         Function FrondMinimumNConcentration = null;
-
-        public double UnderstoryCoverGreen = 0;
+        [XmlIgnore]
+        public double UnderstoryCoverGreen { get; set; }
         private double UnderstoryKLmax = 0.12;
 
         double[] UnderstoryPotSWUptake;
@@ -316,6 +316,7 @@ namespace Models.PMF.OilPalm
             CropInGround = false;
             NUptake = new double[] { 0 };
             UnderstoryNUptake = new double[] { 0 };
+            UnderstoryCoverGreen = 0;
             StemGrowth = 0;
             RootGrowth = 0;
             FrondGrowth = 0;

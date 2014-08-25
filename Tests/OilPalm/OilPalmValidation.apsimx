@@ -12,7 +12,7 @@
  <body>
   <h1>Testing Datasets</h1>
   <p>Data from three sites across PNG with different climate and soils were used for model testing . Soils ranged from sandy clay (volcanic ash) to alluvial clay. Mean annual rainfall ranged from 2400 mm at Sagarai (1990-2008) and Sangara (1986-2009) to 4350 mm at Hargy(1989-2008) with annual rainfall variability larger at Sagarai than the other two sites. Whilst there is only a small difference in temperature across the sites, rainfall patterns do impact on both annual (Hargy 15.9 MJ; Sangara 17.0 MJ; Sagarai 18.1 MJ) and monthly variation in mean daily solar radiation.</p>
-  <p>Fertiliser trial data were obtained for each location from the PNG Oil Palm Research Association trial database (Table Below). All trials had the same commercial dura x pisifera palms planted in an equilateral triangular pattern. Trials included multiple rates of nitrogen including a control in which no nitrogen was applied. Fertilisers were applied in two to three applications per year. Trial 324 evaluated the effect of nitrogen rate and source (five sources). There was no effect of nitrogen source and so tThese data have been combined in this study as there was no effect of nitrogen source. Trial 504 investigated nutrient interactions (N x K). Data from treatments for which potassium was not limiting were combined. Trial 212 investigated nitrogen rate only. All other macro- and micronutrients were maintained at sufficient levels in all trials. Plots in each trial consisted of 16 to 30 palms surrounded by guard rows between neighbouring plots. Levels of replication ranged from two to four. In trials 324 and 504, trenches were dug around plots to minimise poaching of nutrients by palms from neighbouring plots.</p>
+  <p>Fertiliser trial data were obtained for each location from the PNG Oil Palm Research Association trial database (Table Below). All trials had the same commercial dura x pisifera palms planted in an equilateral triangular pattern. Trials included multiple rates of nitrogen including a control in which no nitrogen was applied. Fertilisers were applied in two to three applications per year. Trial 324 evaluated the effect of nitrogen rate and source (five sources). There was no effect of nitrogen source and so these data have been combined in this study as there was no effect of nitrogen source. Trial 504 investigated nutrient interactions (N x K). Data from treatments for which potassium was not limiting were combined. Trial 212 investigated nitrogen rate only. All other macro- and micronutrients were maintained at sufficient levels in all trials. Plots in each trial consisted of 16 to 30 palms surrounded by guard rows between neighbouring plots. Levels of replication ranged from two to four. In trials 324 and 504, trenches were dug around plots to minimise poaching of nutrients by palms from neighbouring plots.</p>
   <h2>Description of fertiliser trials and selected treatments used in model development and testing.</h2>
   <table>
    <tr>
@@ -53,7 +53,7 @@
    </tr>
   </table>
   <p>Harvested ripe bunches were counted and weighed (together with loose fruits) fortnightly for every palm. Leaf samples were collected from frond 17 from selected palms in all plots at least once a year and were oven dried and analysed for nitrogen content. Petiole cross-sectional area, leaflet lengths and frond length of frond 17 was measured to allow calculation of leaf area and mass (Corley et al., 1971). The total number of fronds on each palm was counted, and the first frond was marked twice a year to determine frond production rate. Stem heights of selected palms were measured periodically in two of the trials, and these were combined with a single measurement of stem diameter to calculate stem mass, assuming a linear increase in stem density with plantation age (Corley et al., 1971).</p>
-  <p>Parameterisation of soil process models used information from a variety of sources. Soil hydraulic properties were derived from pressure plate water retention data. Runoff curve number (Hawkins, 1996) was estimated to 72 for clay soils and 50 for ash soils using runoff data from PNG oil palm plantations (Banabas et al., 2008b). Soil organic carbon data were available for Trials 324 and 504. Simulations of Trial 212 utilised carbon measurements available for a nearby planting. The fractionation of soil organic carbon into the various model pools is very important for model accuracy. It has been shown that it is possible to deduce, a priori, the apparent soil organic matter composition from observed patterns (Huth et al., 2010). The inert fraction of the total soil organic matter is an important parameter and methods for its determination for the volcanic soils in PNG have not been developed. In this study, we have assumed that the inert carbon content does not vary significantly with depth and that it can be approximated using the carbon content at a depth of approximately 0.5 m. Most carbon cycling occurs above this depth and carbon contents vary less below this depth. Therefore we assumed that carbon above this value is available for decomposition. Finally, as trials 212 and 324 were planted after felling of existing plantations, we initialised the surface organic matter pools to consist of 24 t/ ha-1 of fronds with a C:N of 39 and 63 t/ ha-1 of stems with a C:N of 145. In the absence of other information, the same initial surface organic matter was used for trial 504.</p>
+  <p>Parameterisation of soil process models used information from a variety of sources. Soil hydraulic properties were derived from pressure plate water retention data. Runoff curve number (Hawkins, 1996) was estimated to 72 for clay soils and 50 for ash soils using runoff data from PNG oil palm plantations (Banabas et al., 2008b). Soil organic carbon data were available for Trials 324 and 504. Simulations of Trial 212 utilised carbon measurements available for a nearby planting. The fractionation of soil organic carbon into the various model pools is very important for model accuracy. It has been shown that it is possible to deduce, a priori, the apparent soil organic matter composition from observed patterns (Huth et al., 2010). The inert fraction of the total soil organic matter is an important parameter and methods for its determination for the volcanic soils in PNG have not been developed. In this study, we have assumed that the inert carbon content does not vary significantly with depth and that it can be approximated using the carbon content at a depth of approximately 0.5 m. Most carbon cycling occurs above this depth and carbon contents vary less below this depth. Therefore we assumed that carbon above this value is available for decomposition. Finally, as trials 212 and 324 were planted after felling of existing plantations, we initialised the surface organic matter pools to consist of 24 t/ ha of fronds with a C:N of 39 and 63 t/ ha of stems with a C:N of 145. In the absence of other information, the same initial surface organic matter was used for trial 504.</p>
   <p>Daily meteorological data (rainfall, sunshine hours, temperature) for Trial 324 were taken from the nearby research station of the PNG Oil Palm Research Association. Sunshine hour data was used to calculate incoming global shortwave radiation as described by Banabas (2007). Complete daily meteorological datasets were not available for the other two sites apart from a limited number of monthly totals for sunshine hours and rainfall. Daily estimates of the required climate weather data for these sites were derived from estimates obtained from the NASA Langley Research Center POWER Project funded through the NASA Earth Science Directorate Applied Science Program (http://power.larc.nasa.gov/). Adequacy of this dataset was tested via comparison of satellite-derived estimates of monthly mean solar radiation with that calculated from measured monthly sunshine hours for Hargy (data not shown). No data on sunshine hours were available for Sagarai and neither site had measured temperature data for comparison. Satellite-derived estimates of monthly rainfall proved inadequate when compared to available monthly data. Therefore, observed monthly rainfall totals were disaggregated into daily data using the satellite-derived daily rainfall estimates. Satellite-derived estimates of daily temperatures were used for these two sites but could not be tested for accuracy.</p>
   <h1></h1>
   <h1>References</h1>
@@ -258,116 +258,6 @@
           </FactorValue>
           <FactorValue>
             <Name>2</Name>
-            <Operations>
-              <Name>operations</Name>
-              <Operation>
-                <Date>1996-04-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-06-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-09-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-12-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-07-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-11-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-07-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-11-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-07-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-11-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-07-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-11-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2001-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2002-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2003-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2004-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2005-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2006-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2007-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2008-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2009-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2010-03-01T00:00:00</Date>
-                <Action>Fertiliser.Apply(113, Fertiliser.Types.UreaN, 10);</Action>
-              </Operation>
-            </Operations>
-          </FactorValue>
-          <FactorValue>
-            <Name>3</Name>
             <Operations>
               <Name>operations</Name>
               <Operation>
@@ -810,18 +700,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>2.6316460132855459</double>
-                <double>0.720717136272112</double>
-                <double>0.49542496881060544</double>
-                <double>0.40465973238607245</double>
-                <double>0.40462046272944913</double>
-                <double>0.40431155281026493</double>
-                <double>0.40202252439927905</double>
-                <double>0.4019341848575636</double>
-                <double>0.40179178193738735</double>
-                <double>0.39833683653656288</double>
-                <double>0.39834338023785865</double>
-                <double>0.3983412858676198</double>
+                <double>2.2909944256023844</double>
+                <double>0.71568686239105439</double>
+                <double>0.49544603960874911</double>
+                <double>0.40492780520186689</double>
+                <double>0.40486267197944886</double>
+                <double>0.40466936628154687</double>
+                <double>0.4020701782253987</double>
+                <double>0.40200520268492657</double>
+                <double>0.40197302404995411</double>
+                <double>0.39834104163510708</double>
+                <double>0.39834788385526521</double>
+                <double>0.39834228978969871</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -1029,6 +919,8 @@
               <string>[Calculations].Script.MonthlyPalmBunchSize</string>
               <string>[OilPalm].LAI</string>
               <string>[OilPalm].StemMass</string>
+              <string>[OilPalm].UnderstoryCoverGreen</string>
+              <string>[OilPalm].UnderstoryNFixation</string>
               <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
               <string>[Calculations].Script.surfaceom_wt_oilpalmunderstory</string>
               <string>[Calculations].Script.MonthlyDenit</string>
@@ -1045,25 +937,6 @@
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <MicroClimate>
-              <Name>MicroClimate</Name>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
-              <refheight>2</refheight>
-              <albedo>0.15</albedo>
-              <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
-              <a_interception>0</a_interception>
-              <b_interception>1</b_interception>
-              <c_interception>0</c_interception>
-              <d_interception>0</d_interception>
-              <soil_albedo>0.23</soil_albedo>
-            </MicroClimate>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -1507,18 +1380,17 @@
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryCoverGreen>0.089716649124997175</UnderstoryCoverGreen>
             <UnderstoryRootDepth>300</UnderstoryRootDepth>
-            <UnderstoryPEP>0.08541050685255662</UnderstoryPEP>
-            <UnderstoryEP>0.08541050685255662</UnderstoryEP>
+            <UnderstoryPEP>0.090757280024460318</UnderstoryPEP>
+            <UnderstoryEP>0.090757280024460318</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0.42639984101517586</UnderstoryDltDM>
+            <UnderstoryDltDM>0.4723763761745528</UnderstoryDltDM>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
             <InterceptionFraction>0</InterceptionFraction>
-            <PEP>0</PEP>
-            <EP>0</EP>
-            <FW>0</FW>
-            <Fn>0</Fn>
+            <PEP>3.1070621813843831</PEP>
+            <EP>3.1070621813843831</EP>
+            <FW>1</FW>
+            <Fn>0.74823865798204425</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Operations>
@@ -1659,29 +1531,20 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>449</Offset>
-              <AnnualFronds>21</AnnualFronds>
-              <AnnualBunches>13.1687180080027</AnnualBunches>
-              <BunchOffset>196.154097770159</BunchOffset>
-              <AnnualYield>6.05788905942347</AnnualYield>
-              <AnnualBunchSize>3.40756421883708</AnnualBunchSize>
-              <YieldOffset>25308.9284896047</YieldOffset>
-              <MonthlyPalmYield>2.15513361744253</MonthlyPalmYield>
-              <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>19.7926365580748</MonthlyPalmBunchSize>
-              <MonthlyDenit>0.293073131313912</MonthlyDenit>
-              <MonthlyN2O>0.0555647257760918</MonthlyN2O>
-              <MonthlyN2>0.237508405537821</MonthlyN2>
-              <MonthlyFixation>1.4995570386938</MonthlyFixation>
-              <SurfaceNO3>21.2077299855371</SurfaceNO3>
-              <RootZoneNO3>30.0560975546784</RootZoneNO3>
-              <MonthlyLeach>0</MonthlyLeach>
-              <SoilCtpha>313.053114529832</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
               <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <NitTot>25820.2900496667</NitTot>
+              <AnnualFronds>22</AnnualFronds>
+              <AnnualBunches>5.69865594380177</AnnualBunches>
+              <AnnualYield>12.9162392124131</AnnualYield>
+              <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
+              <Offset>452</Offset>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>36.7902910885593</TotalNO3>
-              <NitTot>26213.4928326464</NitTot>
+              <TotalNO3>34.6493742173966</TotalNO3>
+              <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
+              <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
+              <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1697,7 +1560,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
+		[Link] OilPalm OilPalm;
 		[Link] Soil Soil;
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
@@ -1705,27 +1568,18 @@ namespace Models
 		public double Offset {get; set;}
 		public double AnnualFronds {get; set;}
 		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
 		public double AnnualYield {get; set;}
 		public double AnnualBunchSize {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
 		public double SoilCtpha {get; set;}
 		public double surfaceom_wt_oilpalmstem {get; set;}
 		public double surfaceom_wt_oilpalmunderstory {get; set;}
 	    public double OilPalmYield {get; set;}
 	    public double TotalNO3 {get; set;}
 	    public double NitTot {get;set;}
-		
+	    public double AnnualUnderstoryNFixation {get; set;}	
+	    public double AnnualUnderstoryNPP {get; set;}	
+	    public double AnnualUnderstoryNUptake {get; set;}	
+	    
 		public override void OnSimulationCommencing()
 		{	
 			Offset = 0;
@@ -1733,23 +1587,15 @@ namespace Models
 			AnnualFronds = 0;
 			AnnualBunches = 0;
 			AnnualBunchSize = 0;
-			BunchOffset = 0;
 			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
 			SoilCtpha = 0;
 			surfaceom_wt_oilpalmstem = 0;
 			surfaceom_wt_oilpalmunderstory = 0;	
 			NitTot=0;
+			TotalNO3 = 0;
+			AnnualUnderstoryNFixation = 0;
+			AnnualUnderstoryNPP = 0;
+			AnnualUnderstoryNUptake = 0;
 		}
 		
 		[EventSubscribe("DoDailyInitialisation")]
@@ -1757,73 +1603,51 @@ namespace Models
 		{			
 			if (Clock.Today.Day == 1)
 			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
+               // zero monthly data
 			}
 		}
 		
-	   [EventSubscribe("DoHarvest")]
-	   private void OnDoHarvest(object sender, EventArgs e)
-	   {
-	   	   AnnualYield += oilPalm.HarvestFFB;
-	   }
 		
-       [EventSubscribe("DoManagement")]
+       [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
 
-			if (oilPalm.IsCropInGround)
+			if (OilPalm.IsCropInGround)
 			{
 				if (Clock.Today.DayOfYear == 1)
 				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;
+				   Offset = OilPalm.CumulativeFrondNumber;
 				   AnnualYield = 0;
+				   AnnualBunches = 0;
 				   AnnualBunchSize = 0;
+				   AnnualUnderstoryNFixation = 0;
+				   AnnualUnderstoryNPP = 0;
+				   AnnualUnderstoryNUptake = 0;
 				}
 				
 				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
 				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+					AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 				}
 			}
 
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
 			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+
+			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
 		}
 		
 		[EventSubscribe("Harvesting")]
 		private void OnHarvesting(object sender, EventArgs e)
 		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-			   
-			AnnualYield += oilPalm.HarvestFFB;
+			AnnualYield += OilPalm.HarvestFFB;
+			AnnualBunches += OilPalm.HarvestBunches;
 			if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (oilPalm.Population * 10000);
+				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
 		}
 	}
 }
@@ -1831,168 +1655,6 @@ namespace Models
           </Manager>
           <Manager>
             <Name>ReportMonthly</Name>
-            <Manager>
-              <Name>Calculations</Name>
-              <Script>
-                <Offset>449</Offset>
-                <AnnualFronds>21</AnnualFronds>
-                <AnnualBunches>13.1687180080027</AnnualBunches>
-                <BunchOffset>196.154097770159</BunchOffset>
-                <AnnualYield>0</AnnualYield>
-                <YieldOffset>25308.9284896047</YieldOffset>
-                <MonthlyPalmYield>2.15513361744253</MonthlyPalmYield>
-                <MonthlyPalmBunches>0.108885625779012</MonthlyPalmBunches>
-                <MonthlyPalmBunchSize>19.7926365580748</MonthlyPalmBunchSize>
-                <MonthlyDenit>0.293073131313912</MonthlyDenit>
-                <MonthlyN2O>0.0555647257760918</MonthlyN2O>
-                <MonthlyN2>0.237508405537821</MonthlyN2>
-                <MonthlyFixation>1.4995570386938</MonthlyFixation>
-                <SurfaceNO3>21.2077299855371</SurfaceNO3>
-                <RootZoneNO3>30.0560975546784</RootZoneNO3>
-                <MonthlyLeach>0</MonthlyLeach>
-                <SoilCtpha>313.053114529832</SoilCtpha>
-                <surfaceom_wt_oilpalmstem>1.12886403148575E-10</surfaceom_wt_oilpalmstem>
-                <OilPalmYield>0</OilPalmYield>
-                <TotalNO3>36.7902910885593</TotalNO3>
-              </Script>
-              <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-using Models.Soils;
-using Models.SurfaceOM;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Link] Summary Summary;
-		
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
-		public double AnnualYield {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-	    public double OilPalmYield {get; set;}
-	    public double TotalNO3 {get; set;}
-		
-		public override void OnSimulationCommencing()
-		{	
-			Offset = 0;
-			OilPalmYield = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			BunchOffset = 0;
-			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-		}
-		
-		[EventSubscribe("DoDailyInitialisation")]
-		private void OnDoDailyInitialisation(object sender, EventArgs e)
-		{			
-			if (Clock.Today.Day == 1)
-			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
-			}
-		}
-		
-	   [EventSubscribe("DoHarvest")]
-	   private void OnDoHarvest(object sender, EventArgs e)
-	   {
-	   	   Summary.WriteMessage(this.FullPath, "Harverst event.");
-	   	   AnnualYield += oilPalm.HarvestFFB;
-	   }
-		
-       [EventSubscribe("DoManagement")]
-       private void OnDoManagement(object sender, EventArgs e)
-		{
-
-			if (oilPalm.IsCropInGround)
-			{
-			    // Note that using Convert.ToDateTime(string) will use current regional settings
-			    // which may be different to the script authors. This is why we specify DMY as
-			    // seperate integers.
-				if (Clock.Today.DayOfYear == 1)
-				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;				   
-                  // AnnualYield = oilPalm.CumulativeYield - YieldOffset;
-				}
-				
-				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
-				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
-				}
-			}
-
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-
-		}
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-		}
-	}
-}
-]]></Code>
-            </Manager>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -2060,25 +1722,8 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Month</string>
               <string>[OilPalm].Age</string>
-              <string>[SurfaceOM].surfaceom_n</string>
-              <string>[SurfaceOM].surfaceom_wt</string>
-              <string>[OilPalm].CumulativeFrondNumber</string>
-              <string>[Calculations].Script.MonthlyPalmBunches</string>
-              <string>[Calculations].Script.MonthlyPalmYield</string>
-              <string>[Calculations].Script.MonthlyPalmBunchSize</string>
-              <string>[OilPalm].LAI</string>
-              <string>[OilPalm].StemMass</string>
-              <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
-              <string>[Calculations].Script.surfaceom_wt_oilpalmunderstory</string>
-              <string>[Calculations].Script.MonthlyDenit</string>
-              <string>[Calculations].Script.MonthlyN2O</string>
-              <string>[Calculations].Script.MonthlyLeach</string>
+              <string>[OilPalm].UnderstoryNFixation</string>
               <string>[Calculations].Script.MonthlyFixation</string>
-              <string>[Calculations].Script.SurfaceNO3</string>
-              <string>[Calculations].Script.RootZoneNO3</string>
-              <string>[Calculations].Script.MonthlyN2</string>
-              <string>[Calculations].Script.SoilCtpha</string>
-              <string>[Calculations].Script.NitTot</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2102,7 +1747,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2122,6 +1767,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title />
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2137,85 +1783,7 @@ namespace Models
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -2253,6 +1821,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2268,85 +1837,7 @@ namespace Models
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -2384,6 +1875,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2399,88 +1891,10 @@ namespace Models
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -2495,7 +1909,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2515,6 +1929,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2530,88 +1945,10 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>AnnualFFB</Name>
@@ -2646,6 +1983,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2661,85 +1999,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -2777,6 +2037,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2792,85 +2053,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -2967,6 +2150,60 @@ namespace Models
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
+    <Graph>
+      <Name>CoverCrop</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>OilPalm.UnderstoryCoverGreen</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>MonthlyOutput</TableName>
+          <FieldName>Calculations.Script.MonthlyFixation</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
   </Folder>
   <Folder>
     <Name>Sagarai</Name>
@@ -3011,219 +2248,219 @@ namespace Models
             <Operations>
               <Name>operations</Name>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
             </Operations>
@@ -3233,441 +2470,219 @@ namespace Models
             <Operations>
               <Name>operations</Name>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1994-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1994-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1994-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1995-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1995-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1995-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1996-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1997-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1998-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1999-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2000-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2001-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2001-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2001-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2002-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2002-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2002-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2003-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2003-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2003-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2004-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2004-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2004-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2005-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2005-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2005-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2006-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2006-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2006-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2007-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2007-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2007-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2008-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2008-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>2008-01-02T00:00:00</Date>
-                <Action>Fertiliser.Apply(35.6, Fertiliser.Types.NH4N, 10);</Action>
-              </Operation>
-            </Operations>
-          </FactorValue>
-          <FactorValue>
-            <Name>3</Name>
-            <Operations>
-              <Name>operations</Name>
-              <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1991-01-02T00:00:00</Date>
+                <Date>1991-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1992-01-02T00:00:00</Date>
+                <Date>1992-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1993-01-02T00:00:00</Date>
+                <Date>1993-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1994-01-02T00:00:00</Date>
+                <Date>1994-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1995-01-02T00:00:00</Date>
+                <Date>1995-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1996-01-02T00:00:00</Date>
+                <Date>1996-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1997-01-02T00:00:00</Date>
+                <Date>1997-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1998-01-02T00:00:00</Date>
+                <Date>1998-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>1999-01-02T00:00:00</Date>
+                <Date>1999-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2000-01-02T00:00:00</Date>
+                <Date>2000-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2001-01-02T00:00:00</Date>
+                <Date>2001-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2003-01-02T00:00:00</Date>
+                <Date>2003-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2004-01-02T00:00:00</Date>
+                <Date>2004-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2005-01-02T00:00:00</Date>
+                <Date>2005-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2006-01-02T00:00:00</Date>
+                <Date>2006-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2007-01-02T00:00:00</Date>
+                <Date>2007-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-02-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-06-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
               <Operation>
-                <Date>2008-01-02T00:00:00</Date>
+                <Date>2008-10-01T00:00:00</Date>
                 <Action>Fertiliser.Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
               </Operation>
             </Operations>
@@ -4642,7 +3657,6 @@ namespace Models
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryCoverGreen>0</UnderstoryCoverGreen>
             <UnderstoryRootDepth>500</UnderstoryRootDepth>
             <UnderstoryPEP>0</UnderstoryPEP>
             <UnderstoryEP>0</UnderstoryEP>
@@ -4792,27 +3806,20 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>317</Offset>
-              <AnnualFronds>9</AnnualFronds>
-              <AnnualBunches>2.57515090354195</AnnualBunches>
-              <BunchOffset>137.704103916953</BunchOffset>
-              <AnnualYield>3.11362841309565</AnnualYield>
-              <AnnualBunchSize>32496.319245489</AnnualBunchSize>
-              <YieldOffset>6551.11544239668</YieldOffset>
-              <MonthlyPalmYield>4.70341946051109</MonthlyPalmYield>
-              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>5.87927432563886</MonthlyPalmBunchSize>
-              <MonthlyDenit>0.0373018205202907</MonthlyDenit>
-              <MonthlyN2O>0.00681741849940021</MonthlyN2O>
-              <MonthlyN2>0.0304844020208905</MonthlyN2>
-              <MonthlyFixation>0</MonthlyFixation>
-              <SurfaceNO3>3.94205321978469</SurfaceNO3>
-              <RootZoneNO3>5.39251570361473</RootZoneNO3>
-              <MonthlyLeach>0.00267348465781614</MonthlyLeach>
-              <SoilCtpha>6.59449389162885</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>4.28234064110367E-10</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <NitTot>25820.2900496667</NitTot>
+              <AnnualFronds>22</AnnualFronds>
+              <AnnualBunches>5.69865594380177</AnnualBunches>
+              <AnnualYield>12.9162392124131</AnnualYield>
+              <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
+              <Offset>452</Offset>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>5.42843013656791</TotalNO3>
+              <TotalNO3>34.6493742173966</TotalNO3>
+              <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
+              <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
+              <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4828,7 +3835,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
+		[Link] OilPalm OilPalm;
 		[Link] Soil Soil;
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
@@ -4836,25 +3843,18 @@ namespace Models
 		public double Offset {get; set;}
 		public double AnnualFronds {get; set;}
 		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
 		public double AnnualYield {get; set;}
 		public double AnnualBunchSize {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
 		public double SoilCtpha {get; set;}
 		public double surfaceom_wt_oilpalmstem {get; set;}
+		public double surfaceom_wt_oilpalmunderstory {get; set;}
 	    public double OilPalmYield {get; set;}
 	    public double TotalNO3 {get; set;}
-		
+	    public double NitTot {get;set;}
+	    public double AnnualUnderstoryNFixation {get; set;}	
+	    public double AnnualUnderstoryNPP {get; set;}	
+	    public double AnnualUnderstoryNUptake {get; set;}	
+	    
 		public override void OnSimulationCommencing()
 		{	
 			Offset = 0;
@@ -4862,21 +3862,15 @@ namespace Models
 			AnnualFronds = 0;
 			AnnualBunches = 0;
 			AnnualBunchSize = 0;
-			BunchOffset = 0;
 			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
 			SoilCtpha = 0;
 			surfaceom_wt_oilpalmstem = 0;
+			surfaceom_wt_oilpalmunderstory = 0;	
+			NitTot=0;
+			TotalNO3 = 0;
+			AnnualUnderstoryNFixation = 0;
+			AnnualUnderstoryNPP = 0;
+			AnnualUnderstoryNUptake = 0;
 		}
 		
 		[EventSubscribe("DoDailyInitialisation")]
@@ -4884,74 +3878,51 @@ namespace Models
 		{			
 			if (Clock.Today.Day == 1)
 			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
+               // zero monthly data
 			}
 		}
 		
-	   [EventSubscribe("DoHarvest")]
-	   private void OnDoHarvest(object sender, EventArgs e)
-	   {
-	   	   AnnualYield += oilPalm.HarvestFFB;
-	   }
 		
        [EventSubscribe("DoManagementCalculations")]
-       private void DoManagementCalculations(object sender, EventArgs e)
+       private void OnDoManagement(object sender, EventArgs e)
 		{
 
-			if (oilPalm.IsCropInGround)
+			if (OilPalm.IsCropInGround)
 			{
 				if (Clock.Today.DayOfYear == 1)
 				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;
+				   Offset = OilPalm.CumulativeFrondNumber;
 				   AnnualYield = 0;
+				   AnnualBunches = 0;
 				   AnnualBunchSize = 0;
+				   AnnualUnderstoryNFixation = 0;
+				   AnnualUnderstoryNPP = 0;
+				   AnnualUnderstoryNUptake = 0;
 				}
 				
 				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
 				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					//AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+					AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 				}
 			}
 
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
 
+			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
 		}
 		
 		[EventSubscribe("Harvesting")]
 		private void OnHarvesting(object sender, EventArgs e)
 		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-			   
-			AnnualYield += oilPalm.HarvestFFB;
-			AnnualBunches += oilPalm.CumulativeBunchNumber - BunchOffset;
-						if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (oilPalm.Population * 10000);
+			AnnualYield += OilPalm.HarvestFFB;
+			AnnualBunches += OilPalm.HarvestBunches;
+			if (AnnualBunches > 0)
+				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
 		}
 	}
 }
@@ -4975,7 +3946,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4995,6 +3966,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5010,85 +3982,7 @@ namespace Models
           <FieldName>OilPalm.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -5106,26 +4000,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5141,11 +4016,11 @@ namespace Models
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
-        <Title />
+        <Title>Series 2</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5158,64 +4033,6 @@ namespace Models
         </X>
         <Y>
           <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -5257,6 +4074,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5272,88 +4090,10 @@ namespace Models
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -5388,6 +4128,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5403,88 +4144,10 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>AnnualYield</Name>
@@ -5519,6 +4182,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5534,85 +4198,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -5650,6 +4236,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5665,85 +4252,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -7042,7 +5551,6 @@ namespace Models
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryCoverGreen>0</UnderstoryCoverGreen>
             <UnderstoryRootDepth>300</UnderstoryRootDepth>
             <UnderstoryPEP>0</UnderstoryPEP>
             <UnderstoryEP>0</UnderstoryEP>
@@ -7189,27 +5697,20 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>317</Offset>
-              <AnnualFronds>9</AnnualFronds>
-              <AnnualBunches>2.57515090354195</AnnualBunches>
-              <BunchOffset>137.704103916953</BunchOffset>
-              <AnnualYield>3.11362841309565</AnnualYield>
-              <AnnualBunchSize>32496.319245489</AnnualBunchSize>
-              <YieldOffset>6551.11544239668</YieldOffset>
-              <MonthlyPalmYield>4.70341946051109</MonthlyPalmYield>
-              <MonthlyPalmBunches>0.8</MonthlyPalmBunches>
-              <MonthlyPalmBunchSize>5.87927432563886</MonthlyPalmBunchSize>
-              <MonthlyDenit>0.0373018205202907</MonthlyDenit>
-              <MonthlyN2O>0.00681741849940021</MonthlyN2O>
-              <MonthlyN2>0.0304844020208905</MonthlyN2>
-              <MonthlyFixation>0</MonthlyFixation>
-              <SurfaceNO3>3.94205321978469</SurfaceNO3>
-              <RootZoneNO3>5.39251570361473</RootZoneNO3>
-              <MonthlyLeach>0.00267348465781614</MonthlyLeach>
-              <SoilCtpha>6.59449389162885</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>4.28234064110367E-10</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <NitTot>25820.2900496667</NitTot>
+              <AnnualFronds>22</AnnualFronds>
+              <AnnualBunches>5.69865594380177</AnnualBunches>
+              <AnnualYield>12.9162392124131</AnnualYield>
+              <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
+              <Offset>452</Offset>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>5.42843013656791</TotalNO3>
+              <TotalNO3>34.6493742173966</TotalNO3>
+              <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
+              <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
+              <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -7225,7 +5726,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
+		[Link] OilPalm OilPalm;
 		[Link] Soil Soil;
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
@@ -7233,25 +5734,18 @@ namespace Models
 		public double Offset {get; set;}
 		public double AnnualFronds {get; set;}
 		public double AnnualBunches {get; set;}
-		public double BunchOffset {get; set;}
 		public double AnnualYield {get; set;}
 		public double AnnualBunchSize {get; set;}
-		public double YieldOffset {get; set;}
-		public double MonthlyPalmYield {get; set;}
-		public double MonthlyPalmBunches {get; set;}
-		public double MonthlyPalmBunchSize {get; set;}
-		public double MonthlyDenit {get; set;}
-		public double MonthlyN2O {get; set;}
-		public double MonthlyN2 {get; set;}
-		public double MonthlyFixation {get; set;}
-		public double SurfaceNO3 {get; set;}
-		public double RootZoneNO3 {get; set;}
-		public double MonthlyLeach {get; set;}
 		public double SoilCtpha {get; set;}
 		public double surfaceom_wt_oilpalmstem {get; set;}
+		public double surfaceom_wt_oilpalmunderstory {get; set;}
 	    public double OilPalmYield {get; set;}
 	    public double TotalNO3 {get; set;}
-		
+	    public double NitTot {get;set;}
+	    public double AnnualUnderstoryNFixation {get; set;}	
+	    public double AnnualUnderstoryNPP {get; set;}	
+	    public double AnnualUnderstoryNUptake {get; set;}	
+	    
 		public override void OnSimulationCommencing()
 		{	
 			Offset = 0;
@@ -7259,21 +5753,15 @@ namespace Models
 			AnnualFronds = 0;
 			AnnualBunches = 0;
 			AnnualBunchSize = 0;
-			BunchOffset = 0;
 			AnnualYield = 0;
-			YieldOffset = 0;
-			MonthlyPalmYield = 0;
-			MonthlyPalmBunches = 0;
-			MonthlyPalmBunchSize = 0;
-			MonthlyDenit = 0;
-			MonthlyN2O = 0;
-			MonthlyN2 = 0;
-			MonthlyFixation = 0;
-			SurfaceNO3 = 0;
-			RootZoneNO3 = 0;
-			MonthlyLeach = 0;
 			SoilCtpha = 0;
 			surfaceom_wt_oilpalmstem = 0;
+			surfaceom_wt_oilpalmunderstory = 0;	
+			NitTot=0;
+			TotalNO3 = 0;
+			AnnualUnderstoryNFixation = 0;
+			AnnualUnderstoryNPP = 0;
+			AnnualUnderstoryNUptake = 0;
 		}
 		
 		[EventSubscribe("DoDailyInitialisation")]
@@ -7281,73 +5769,51 @@ namespace Models
 		{			
 			if (Clock.Today.Day == 1)
 			{
-			   MonthlyPalmYield = 0;
-			   MonthlyPalmBunches = 0;
-			   MonthlyPalmBunchSize = 0;
-			   MonthlyDenit = 0;
-			   MonthlyN2O = 0;
-			   MonthlyN2 = 0;
-			   MonthlyFixation = 0;
-			   MonthlyLeach = 0;
+               // zero monthly data
 			}
 		}
 		
-	   [EventSubscribe("DoHarvest")]
-	   private void OnDoHarvest(object sender, EventArgs e)
-	   {
-	   	   AnnualYield += oilPalm.HarvestFFB;
-	   }
 		
-       [EventSubscribe("DoManagement")]
+       [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
 
-			if (oilPalm.IsCropInGround)
+			if (OilPalm.IsCropInGround)
 			{
 				if (Clock.Today.DayOfYear == 1)
 				{
-				   Offset = oilPalm.CumulativeFrondNumber;
-				   BunchOffset = oilPalm.CumulativeBunchNumber;
-				   YieldOffset = oilPalm.CumulativeYield;
+				   Offset = OilPalm.CumulativeFrondNumber;
 				   AnnualYield = 0;
+				   AnnualBunches = 0;
 				   AnnualBunchSize = 0;
+				   AnnualUnderstoryNFixation = 0;
+				   AnnualUnderstoryNPP = 0;
+				   AnnualUnderstoryNUptake = 0;
 				}
 				
 				if ((Clock.Today.Year % 4 == 0 && Clock.Today.DayOfYear == 366) || (Clock.Today.Year % 4 != 0 && Clock.Today.DayOfYear == 365))
 				{
-					AnnualFronds = oilPalm.CumulativeFrondNumber - Offset;		
-					AnnualBunches = oilPalm.CumulativeBunchNumber - BunchOffset;
+					AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 				}
 			}
 
-			MonthlyDenit = MonthlyDenit + Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			MonthlyN2O = MonthlyN2O + Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-			MonthlyN2 = MonthlyDenit - MonthlyN2O;
-			SurfaceNO3  = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2];
-			RootZoneNO3 = Soil.SoilNitrogen.no3[0] + Soil.SoilNitrogen.no3[1] + Soil.SoilNitrogen.no3[2]
-			            + Soil.SoilNitrogen.no3[3] + Soil.SoilNitrogen.no3[4] + Soil.SoilNitrogen.no3[4]
-			            + Soil.SoilNitrogen.no3[6] + Soil.SoilNitrogen.no3[7] + Soil.SoilNitrogen.no3[8];
-			MonthlyFixation = MonthlyFixation + oilPalm.UnderstoryNFixation;
-			MonthlyLeach = MonthlyLeach + Soil.SoilWater.LeachNO3;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
 
+			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
 		}
 		
 		[EventSubscribe("Harvesting")]
 		private void OnHarvesting(object sender, EventArgs e)
 		{
-			MonthlyPalmYield = MonthlyPalmYield + oilPalm.HarvestBunchSize * oilPalm.HarvestBunches / 1000;
-			MonthlyPalmBunches = MonthlyPalmBunches + oilPalm.HarvestBunches;
-			if (MonthlyPalmBunches > 0)
-			   MonthlyPalmBunchSize = MonthlyPalmYield / MonthlyPalmBunches;
-			else
-			   MonthlyPalmBunchSize = 0;
-			   
-			AnnualYield += oilPalm.HarvestFFB;
+			AnnualYield += OilPalm.HarvestFFB;
+			AnnualBunches += OilPalm.HarvestBunches;
 			if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (oilPalm.Population * 10000);
+				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
 		}
 	}
 }
@@ -7446,6 +5912,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7461,85 +5928,7 @@ namespace Models
           <FieldName>OilPalm.StemMass</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -7577,6 +5966,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7592,88 +5982,10 @@ namespace Models
           <FieldName>OilPalm.AnnualFronds</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -7708,6 +6020,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7723,88 +6036,10 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunches</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
     </Graph>
     <Graph>
       <Name>AnnualYield</Name>
@@ -7839,6 +6074,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7854,85 +6090,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualYield</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -7970,6 +6128,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7985,85 +6144,7 @@ namespace Models
           <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title />
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -8079,7 +6160,7 @@ namespace Models
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
-      <TableName>PredictedObserved</TableName>
+      <TableName>POAnnual</TableName>
     </TimeSeriesStats>
     <PredictedObserved>
       <Name>POMonthly</Name>
@@ -8127,7 +6208,27 @@ namespace Models
       <ShowInLegend>false</ShowInLegend>
       <SplitOn>*</SplitOn>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POMonthly</TableName>
+        <FieldName>Predicted.OilPalm.LAI</FieldName>
+      </X>
+      <Y>
+        <TableName>POMonthly</TableName>
+        <FieldName>Observed.OilPalm.LAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Graph>
     <Name>FFB</Name>
@@ -8159,9 +6260,29 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualYield</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Graph>
     <Name>BunchSize</Name>
@@ -8193,9 +6314,29 @@ namespace Models
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
-    <LegendPosition>TopLeft</LegendPosition>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualBunchSize</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
   </Graph>
   <Graph>
     <Name>BunchProduction</Name>
@@ -8223,13 +6364,36 @@ namespace Models
       </X>
       <Y>
         <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
+        <FieldName>Observed.Calculations.Script.AnnualBunches</FieldName>
       </Y>
       <ShowRegressionLine>true</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <SplitOn>*</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>POAnnual</TableName>
+        <FieldName>Predicted.Calculations.Script.AnnualBunches</FieldName>
+      </X>
+      <Y>
+        <TableName>POAnnual</TableName>
+        <FieldName>Observed.Calculations.Script.AnnualBunches</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
-  <ExplorerWidth>250</ExplorerWidth>
+  <Folder>
+    <Name>Malaysia</Name>
+  </Folder>
+  <ExplorerWidth>296</ExplorerWidth>
 </Simulations>
