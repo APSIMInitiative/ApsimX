@@ -30,8 +30,8 @@
         {
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.gridView1 = new UserInterface.Views.GridView();
-            this.editorView1 = new UserInterface.Views.EditorView();
+            this.gridView1 = new GridView();
+            this.editorView1 = new EditorView();
             this.SuspendLayout();
             // 
             // comboBox1
