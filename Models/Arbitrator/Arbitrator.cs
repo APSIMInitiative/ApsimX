@@ -166,8 +166,6 @@ namespace Models.Arbitrator
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
                     // this step gives the proportion of the root zone that is this layer
-                    //potentialSupplyWaterPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
-                    //potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
                     potentialSupplyWaterPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
                     tempSupply += potentialSupplyWaterPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
                 }
@@ -235,13 +233,27 @@ namespace Models.Arbitrator
             {
                 demandNitrogen[i] = plants[i].demandNitrogen; // note that eventually demandWater will be calculated above in the EnergyArbitration 
                 tempSupply = 0.0;
+                int method = 2;  // method 1 is KL, method 2 is KNO3
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    // this step gives the proportion of the root zone that is this layer
-                    //potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
-                    //potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
-                    potentialSupplyNitrogenPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
-                    tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                    // this step gives the proportion of the layer that is rooted
+                    if (method == 1)
+                    {
+                        potentialSupplyNitrogenPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
+                        tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                    }
+                    else
+                    {
+                        double swaf = 0.0;
+                        double KNO3 = 0.2;
+                        double KNH4 = 0.2;
+                        swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
+                        swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                        double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
+                        double noh4ppm = Soil.SoilNitrogen.nh4[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
+                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (KNO3 * Soil.SoilNitrogen.no3[j]+KNH4 * Soil.SoilNitrogen.nh4[j]) * swaf);
+                        tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                    }
                 }
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
