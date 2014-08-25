@@ -1531,17 +1531,17 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-              <SoilCtpha>308.794974236805</SoilCtpha>
-              <NitTot>25820.2900496667</NitTot>
+              <Offset>452</Offset>
               <AnnualFronds>22</AnnualFronds>
               <AnnualBunches>5.69865594380177</AnnualBunches>
               <AnnualYield>12.9162392124131</AnnualYield>
               <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
-              <Offset>452</Offset>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
               <TotalNO3>34.6493742173966</TotalNO3>
+              <NitTot>25820.2900496667</NitTot>
               <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
               <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
               <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
@@ -3806,17 +3806,17 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-              <SoilCtpha>308.794974236805</SoilCtpha>
-              <NitTot>25820.2900496667</NitTot>
+              <Offset>452</Offset>
               <AnnualFronds>22</AnnualFronds>
               <AnnualBunches>5.69865594380177</AnnualBunches>
               <AnnualYield>12.9162392124131</AnnualYield>
               <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
-              <Offset>452</Offset>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
               <TotalNO3>34.6493742173966</TotalNO3>
+              <NitTot>25820.2900496667</NitTot>
               <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
               <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
               <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
@@ -5697,17 +5697,17 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
-              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-              <SoilCtpha>308.794974236805</SoilCtpha>
-              <NitTot>25820.2900496667</NitTot>
+              <Offset>452</Offset>
               <AnnualFronds>22</AnnualFronds>
               <AnnualBunches>5.69865594380177</AnnualBunches>
               <AnnualYield>12.9162392124131</AnnualYield>
               <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
-              <Offset>452</Offset>
+              <SoilCtpha>308.794974236805</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
               <TotalNO3>34.6493742173966</TotalNO3>
+              <NitTot>25820.2900496667</NitTot>
               <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
               <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
               <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
