@@ -47,6 +47,9 @@ namespace Models.PMF.OilPalm
 
         public string CropType { get { return "OilPalm"; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double FRGR { get { return 1; } }
 
         /// <summary>
@@ -63,9 +66,12 @@ namespace Models.PMF.OilPalm
 
         public double height = 0.0;
 
-        public double cover_tot = 0.8;
+        public double cover_tot {
+            get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
+                }
 
         double interception = 0.0;
+
 
         public double UnderstoryCoverMax { get; set; }
         public double UnderstoryLegumeFraction = 0;

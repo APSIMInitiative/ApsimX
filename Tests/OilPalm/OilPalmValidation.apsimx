@@ -635,12 +635,12 @@
                 <double>0.7</double>
                 <double>0.7</double>
                 <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
               </SWCON>
               <KLAT>
                 <double>0</double>
@@ -700,18 +700,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>2.2909944256023844</double>
-                <double>0.71568686239105439</double>
-                <double>0.49544603960874911</double>
-                <double>0.40492780520186689</double>
-                <double>0.40486267197944886</double>
-                <double>0.40466936628154687</double>
-                <double>0.4020701782253987</double>
-                <double>0.40200520268492657</double>
-                <double>0.40197302404995411</double>
-                <double>0.39834104163510708</double>
-                <double>0.39834788385526521</double>
-                <double>0.39834228978969871</double>
+                <double>2.3586390883063273</double>
+                <double>0.71614691613765891</double>
+                <double>0.49548107372360917</double>
+                <double>0.40495443611023352</double>
+                <double>0.40489242080282484</double>
+                <double>0.40471146263363456</double>
+                <double>0.40218919413284526</double>
+                <double>0.40213608082717378</double>
+                <double>0.40206123764929425</double>
+                <double>0.398369068373315</double>
+                <double>0.39837614676372052</double>
+                <double>0.39835669813681707</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -1364,7 +1364,7 @@
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0.9</cover_tot>
+            <cover_tot>0.8</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -1380,17 +1380,17 @@
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryRootDepth>300</UnderstoryRootDepth>
-            <UnderstoryPEP>0.090757280024460318</UnderstoryPEP>
-            <UnderstoryEP>0.090757280024460318</UnderstoryEP>
-            <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0.4723763761745528</UnderstoryDltDM>
+            <UnderstoryRootDepth>500</UnderstoryRootDepth>
+            <UnderstoryPEP>0.08707250439017776</UnderstoryPEP>
+            <UnderstoryEP>0.087072504390177774</UnderstoryEP>
+            <UnderstoryFW>1.0000000000000002</UnderstoryFW>
+            <UnderstoryDltDM>0.45331893789376942</UnderstoryDltDM>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
             <InterceptionFraction>0</InterceptionFraction>
-            <PEP>3.1070621813843831</PEP>
-            <EP>3.1070621813843831</EP>
-            <FW>1</FW>
-            <Fn>0.74823865798204425</Fn>
+            <PEP>3.1257447452909868</PEP>
+            <EP>3.1257447452909863</EP>
+            <FW>0.99999999999999989</FW>
+            <Fn>0.75546699920443983</Fn>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Operations>
@@ -1531,20 +1531,20 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>452</Offset>
-              <AnnualFronds>22</AnnualFronds>
-              <AnnualBunches>5.69865594380177</AnnualBunches>
-              <AnnualYield>12.9162392124131</AnnualYield>
-              <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
-              <SoilCtpha>308.794974236805</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <Offset>453</Offset>
+              <AnnualFronds>21</AnnualFronds>
+              <AnnualBunches>5.64728901965002</AnnualBunches>
+              <AnnualYield>13.0245642628767</AnnualYield>
+              <AnnualBunchSize>17.0839943667458</AnnualBunchSize>
+              <SoilCtpha>309.68648810102</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>3.77117428565014E-11</surfaceom_wt_oilpalmstem>
               <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>34.6493742173966</TotalNO3>
-              <NitTot>25820.2900496667</NitTot>
-              <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
-              <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
-              <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
+              <TotalNO3>36.1947276655358</TotalNO3>
+              <NitTot>25897.4102434337</NitTot>
+              <AnnualUnderstoryNFixation>14.5178370869775</AnnualUnderstoryNFixation>
+              <AnnualUnderstoryNPP>1571.19448993263</AnnualUnderstoryNPP>
+              <AnnualUnderstoryNUptake>18.4772472016077</AnnualUnderstoryNUptake>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1723,7 +1723,9 @@ namespace Models
               <string>[Clock].Today.Month</string>
               <string>[OilPalm].Age</string>
               <string>[OilPalm].UnderstoryNFixation</string>
-              <string>[Calculations].Script.MonthlyFixation</string>
+              <string>[OilPalm].FW</string>
+              <string>[Soil].SoilWater.es</string>
+              <string>[OilPalm].cover_green</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2200,6 +2202,108 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Fw</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>OilPalm.FW</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Es</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>Soil.SoilWater.es</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>CoverGreen</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>OilPalm.cover_green</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
@@ -3641,7 +3745,7 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0.9</cover_tot>
+            <cover_tot>0.8</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -5535,7 +5639,7 @@ namespace Models
             </Constant>
             <plant_status>out</plant_status>
             <height>0</height>
-            <cover_tot>0.9</cover_tot>
+            <cover_tot>0.8</cover_tot>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <kl />
             <ll />
@@ -5551,7 +5655,7 @@ namespace Models
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryRootDepth>300</UnderstoryRootDepth>
+            <UnderstoryRootDepth>500</UnderstoryRootDepth>
             <UnderstoryPEP>0</UnderstoryPEP>
             <UnderstoryEP>0</UnderstoryEP>
             <UnderstoryFW>1</UnderstoryFW>
