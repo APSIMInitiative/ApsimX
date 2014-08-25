@@ -170,6 +170,9 @@ namespace Models.PMF.Slurp
 
             potentialNitrogenDemand = localPotentialNitrogenDemand;
 
+            Summary.WriteMessage(FullPath, "Slurp " + CanopyProperties.Name + " has a value of " + supplyWater[3].ToString() + " for the last element in the soil water supply");
+
+
         }
 
         [EventSubscribe("DoPlantActualGrowth")]

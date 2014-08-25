@@ -36,7 +36,7 @@ namespace Models.Arbitrator
         double[,] potentialSupplyWaterPlantLayer;
         double[,] supplyWaterPlantLayer;
 
-        double[] tempDepthArray;
+        //double[] tempDepthArray;
         double tempSupply; // used as a temporary holder for the amount of water across all depths for a particular plant
         
         // Soil variables
@@ -79,7 +79,7 @@ namespace Models.Arbitrator
             demandWater = new double[plants.Length];
             potentialSupplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             supplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            tempDepthArray = new double[Soil.SoilWater.dlayer.Length];
+            //tempDepthArray = new double[Soil.SoilWater.dlayer.Length];
         }
 
 
@@ -179,15 +179,15 @@ namespace Models.Arbitrator
             
             for (int i = 0; i < plants.Length; i++)
             {
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+                double[] dummyArray = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing
+                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)           // cannot set a particular dimension from a 2D arrary into a 1D array directly so need a temporary variable
                 {
-                    tempDepthArray[j] = supplyWaterPlantLayer[i, j];
+                    dummyArray[j] = supplyWaterPlantLayer[i, j];
                 }
-                plants[i].supplyWater = tempDepthArray;
-
-                //myString = "SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
-                Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" +i.ToString() + "].supplyWater(3) to  " + tempDepthArray[3].ToString());
-
+                //tempDepthArray.CopyTo(plants[i].supplyWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
+                plants[i].supplyWater = dummyArray;
+                // debugging into SummaryFile
+                //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].supplyWater(3) to  " + plants[i].supplyWater[3].ToString());
             }
 
             // send the change in soil water to the soil water module
