@@ -90,6 +90,8 @@ namespace UserInterface.Presenters
                 Presenters.Add(Presenter);
                 try
                 {
+                    Cursor.Current = Cursors.WaitCursor;
+
                     Simulations simulations = Simulations.Read(fileName);
                     Presenter.Attach(simulations, ExplorerView, null);
                     View.AddTab(fileName, Properties.Resources.apsim_logo32, ExplorerView, true);
@@ -101,6 +103,8 @@ namespace UserInterface.Presenters
                     config.Settings.AddMruFile(fileName);
                     config.Save();
                     View.FillMruList(config.Settings.MruList);
+
+                    Cursor.Current = Cursors.Default;
                 }
                 catch (Exception err)
                 {

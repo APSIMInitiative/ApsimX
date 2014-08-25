@@ -513,6 +513,7 @@ namespace UserInterface.Views
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                     Button.Checked = Description.Checked;
                     Button.ShortcutKeys = Description.ShortcutKey;
+                    Button.Enabled = Description.Enabled;
                 }
             }
             e.Cancel = false;

@@ -412,7 +412,6 @@
             <UnderstoryCoverMax>0.01</UnderstoryCoverMax>
             <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
             <InitialRootDepth>1</InitialRootDepth>
-            <MaximumRootDepth>10000</MaximumRootDepth>
             <kl />
             <ll />
             <xf />
@@ -428,11 +427,6 @@
               <SkipRow>0</SkipRow>
               <SkipPlant>0</SkipPlant>
             </SowingData>
-            <UnderstoryCoverGreen>0.074968729485703017</UnderstoryCoverGreen>
             <UnderstoryRootDepth>500</UnderstoryRootDepth>
-            <UnderstoryPEP>0.05963833520620445</UnderstoryPEP>
-            <UnderstoryEP>0.05963833520620445</UnderstoryEP>
-            <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0.29773592954125117</UnderstoryDltDM>
             <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>

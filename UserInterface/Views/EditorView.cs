@@ -249,6 +249,7 @@ namespace UserInterface.Views
         {
             CompletionForm.Visible = false;
             TextBox.Document.ReadOnly = false;
+            this.Focus();
         }
 
         private void OnContextListKeyDown(object sender, KeyEventArgs e)
