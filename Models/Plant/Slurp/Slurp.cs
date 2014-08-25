@@ -87,7 +87,20 @@ namespace Models.PMF.Slurp
         /// <summary>
         /// The initial value of nitrogen demand (kgN/ha/day)
         /// </summary>
-        [Description("Nitrogen demand (kgN /ha /day)")] public double localDemandNitrogen { get; set; }
+        [Description("Nitrogen demand (kgN /ha /day)")]
+        public double localDemandNitrogen { get; set; }
+
+        /// <summary>
+        /// The initial value for nitrate uptake coefficient
+        /// </summary>
+        [Description("Nitrate uptake coefficient")]
+        public double localKNO3 { get; set; }
+
+        /// <summary>
+        /// The initial value for ammonium uptake coefficient
+        /// </summary>
+        [Description("Nitrate uptake coefficient")]
+        public double localKNH4 { get; set; }
 
         /// <summary>
         /// The initial value of green cover (-)
@@ -188,6 +201,8 @@ namespace Models.PMF.Slurp
             RootProperties.KL = Soil.KL(Name);
             RootProperties.LowerLimitDep = Soil.LL(Name);
             RootProperties.RootDepth = localRootDepth;
+            RootProperties.KNO3 = localKNO3;
+            RootProperties.KNH4 = localKNH4;
 
             localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
             localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];

@@ -245,13 +245,11 @@ namespace Models.Arbitrator
                     else
                     {
                         double swaf = 0.0;
-                        double KNO3 = 0.2;
-                        double KNH4 = 0.2;
                         swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
                         swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                         double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
                         double noh4ppm = Soil.SoilNitrogen.nh4[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
-                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (KNO3 * Soil.SoilNitrogen.no3[j]+KNH4 * Soil.SoilNitrogen.nh4[j]) * swaf);
+                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (plants[i].RootProperties.KNO3 * Soil.SoilNitrogen.no3[j] + plants[i].RootProperties.KNH4 * Soil.SoilNitrogen.nh4[j]) * swaf);
                         tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
                     }
                 }

@@ -41,7 +41,17 @@ namespace Models.PMF
         /// </summary>
         public double[] RootExplorationByLayer { get; set; }
 
-        
+        /// <summary>
+        /// Nitrate uptake coefficient
+        /// </summary>
+        public double KNO3 { get; set; }
+
+        /// <summary>
+        /// Nitrate uptake coefficient
+        /// </summary>
+        public double KNH4 { get; set; }
+
+
         // if want to make this more generic and useful for other routines then add root biomass, C and nutrients
     
     }
