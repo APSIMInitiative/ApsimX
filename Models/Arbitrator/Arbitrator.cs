@@ -186,7 +186,7 @@ namespace Models.Arbitrator
                 plants[i].supplyWater = tempDepthArray;
 
                 //myString = "SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
-                //Summary.WriteMessage(FullPath, myString);
+                Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" +i.ToString() + "].supplyWater(3) to  " + tempDepthArray[3].ToString());
 
             }
 

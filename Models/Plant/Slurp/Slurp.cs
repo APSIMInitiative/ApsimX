@@ -30,6 +30,12 @@ namespace Models.PMF.Slurp
         /// </summary>
         [Link] Soils.Soil Soil = null;
 
+        /// <summary>
+        /// Link to the Summary file for reporting all sorts of useful information
+        /// </summary>
+        [Link]
+        Summary Summary = null;
+
         // The variables that are in CanopyProperties
         /// <summary>
         /// Holds the set of crop canopy properties that is used by Arbitrator for light and engergy calculations

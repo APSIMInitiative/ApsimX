@@ -544,7 +544,7 @@ namespace Models
     <Clock>
       <Name>Clock</Name>
       <StartDate>2000-01-01T00:00:00</StartDate>
-      <EndDate>2000-01-31T00:00:00</EndDate>
+      <EndDate>2000-01-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -1027,10 +1027,10 @@ namespace Models
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
         <dltSWdep>
-          <double>0</double>
-          <double>-0.058964833110804</double>
-          <double>-0.01150867055861958</double>
-          <double>-0.01183755746097977</double>
+          <double>-1.8987555529790356</double>
+          <double>-2.0998291422814903</double>
+          <double>-4.2496917989025462</double>
+          <double>-4.2517235058369263</double>
         </dltSWdep>
         <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
