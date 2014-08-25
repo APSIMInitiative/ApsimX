@@ -29,6 +29,9 @@ namespace Models.Arbitrator
 
         ICrop2[] plants ;
 
+        /// <summary>
+        /// This will hold a range of arbitration methods for testing - will eventually settle on one standard method
+        /// </summary>
         [Description("Arbitration method: PropDemand/RotatingCall/Others to come")]        public string ArbitrationMethod { get; set; }
 
         // Plant variables
@@ -41,23 +44,35 @@ namespace Models.Arbitrator
         double[,] supplyNitrogenPlantLayer;
         double[,] supplyNitrogenPropNO3PlantLayer;
 
-        
-        //double[] tempDepthArray;
-        //double tempSupply; // used as a temporary holder for the amount of water across all depths for a particular plant
-
         // soil water evaporation stuff
-        public double ArbitEOS { get; set; }  //
+        //public double ArbitEOS { get; set; }  //
 
+        /// <summary>
+        /// The NitrogenChangedDelegate is for the Arbitrator to set the change in nitrate and ammonium in SoilNitrogen
+        /// </summary>
+        /// <param name="Data"></param>
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        /// <summary>
+        /// To publish the change event
+        /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
         class CanopyProps
         {
+            /// <summary>
+            /// Grean leaf area index (m2/m2)
+            /// </summary>
             public double laiGreen;
+            /// <summary>
+            /// Total leaf area index (m2/m2)
+            /// </summary>
             public double laiTotal;
         }
         //public CanopyProps[,] myCanopy;
 
+        /// <summary>
+        /// Runs at the start of the simulation, here only reads the aribtration method to be used
+        /// </summary>
         public override void OnSimulationCommencing()
         {
             // Check that ArbitrationMethod is valid
@@ -78,7 +93,7 @@ namespace Models.Arbitrator
             //    myCanopy[0, 0].laiGreen = plants[i].CanopyProperties.LAI;
             // }
             
-
+            // size the arrays
             demandWater = new double[plants.Length];
             potentialSupplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             supplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
@@ -109,12 +124,6 @@ namespace Models.Arbitrator
         {
             // i is for plants
             // j is for layers in the canopy - layers are from the top downwards
-
-            // THIS NEEDS TO GO ONCE THE PROPER STUFF IS IN HERE
-            for (int i = 0; i < plants.Length; i++)
-            {
-                ArbitEOS = 0.0;  // need to set EOS but doesnot seem to be effective
-            }
 
             //Agenda
             //?when does rainfall and irrigation interception happen? - deal with this later!
@@ -230,14 +239,12 @@ namespace Models.Arbitrator
                     // this step gives the proportion of the root zone that is this layer
                     potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.RootExplorationByLayer[j], Utility.Math.Sum(plants[i].RootProperties.RootExplorationByLayer), 0.0);
                     potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
-                    //potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
                     tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
                 }
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
                     // if the potential supply calculated above is greater than demand then scale it back - note that this is still a potential supply as a solo crop
                     potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandNitrogen[i], tempSupply, 0.0));
-                    //potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandWater[i], tempSupply, 0.0));
                 }
             }
 
@@ -261,7 +268,6 @@ namespace Models.Arbitrator
                     {
                         supplyNitrogenPropNO3PlantLayer[i, j] = Utility.Math.Divide(Soil.SoilNitrogen.no3[j], (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]), 0.0);
                     }
-                    //supplyNitrogenPropNO3PlantLayer[i, j] = supplyNitrogenPlantLayer[i, j] * Utility.Math.Divide(Soil.SoilNitrogen.no3[j], (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]), 0.0);
                     NUptakeType.DeltaNO3[j] += -1.0 * supplyNitrogenPlantLayer[i, j] * supplyNitrogenPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
                     NUptakeType.DeltaNH4[j] += -1.0 * supplyNitrogenPlantLayer[i, j] * (1.0 - supplyNitrogenPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
                 }
@@ -276,7 +282,6 @@ namespace Models.Arbitrator
                     dummyArray1[j] = supplyNitrogenPlantLayer[i, j];
                     dummyArray2[j] = supplyNitrogenPropNO3PlantLayer[i, j];
                 }
-                //tempDepthArray.CopyTo(plants[i].supplyWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
                 plants[i].supplyNitrogen = dummyArray1;
                 plants[i].supplyNitrogenPropNO3 = dummyArray2;
                 // debugging into SummaryFile

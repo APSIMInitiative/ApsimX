@@ -477,7 +477,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp</Name>
-        <localLAI>5</localLAI>
+        <localLAIGreen>0</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
@@ -492,7 +492,6 @@ namespace Models
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
-        <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
         <Name>ReportOne</Name>
@@ -515,6 +514,104 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
+    <Graph>
+      <Name>Graph1</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744193</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportOne</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportOne</TableName>
+          <FieldName>demandWater</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744193</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportOne</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportOne</TableName>
+          <FieldName>UptakeWater</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32513</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportOne</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportOne</TableName>
+          <FieldName>demandNitrogen</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32513</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportOne</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportOne</TableName>
+          <FieldName>UptakeNitrogen</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
   </Simulation>
   <Simulation>
     <Name>SlurpTwo</Name>
@@ -986,7 +1083,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp1</Name>
-        <localLAI>5</localLAI>
+        <localLAIGreen>0</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
@@ -1000,7 +1097,7 @@ namespace Models
       </Slurp>
       <Slurp>
         <Name>Slurp2</Name>
-        <localLAI>7.5</localLAI>
+        <localLAIGreen>0</localLAIGreen>
         <localLAItot>7.5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>750</localCanopyHeight>
@@ -1015,7 +1112,6 @@ namespace Models
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
-        <ArbitEOS>0</ArbitEOS>
       </Arbitrator>
       <Report>
         <Name>ReportWater</Name>
@@ -1052,398 +1148,246 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
+    <Graph>
+      <Name>GraphWater2</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportWater</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportWater</TableName>
+          <FieldName>Slurp1.demandWater</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportWater</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportWater</TableName>
+          <FieldName>Slurp1Uptake</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744320</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportWater</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportWater</TableName>
+          <FieldName>Slurp2.demandWater</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744320</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportWater</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportWater</TableName>
+          <FieldName>Slurp2Uptake</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series5</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportWater</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportWater</TableName>
+          <FieldName>Diffs.Script.diffSWDepUptake</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>GraphNitrogen2</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>demandNitrogen1</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Slurp1UptakeN</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744320</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>demandNitrogen2</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744320</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Slurp2UptakeN</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series5</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32513</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportNitrogen</TableName>
+          <FieldName>Diffs.Script.diffMinNUptake</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
   </Simulation>
-  <Graph>
-    <Name>GraphWater2</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Right</Type>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Slurp1.demandWater</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Dash</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Slurp1Uptake</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series3</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744320</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Slurp2.demandWater</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series4</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744320</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Dash</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Slurp2Uptake</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series5</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Diffs.Script.diffSWDepUptake</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-  </Graph>
-  <Graph>
-    <Name>GraphNitrogen2</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Right</Type>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>demandNitrogen1</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Dash</Line>
-      <X>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Slurp1UptakeN</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series3</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744320</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>demandNitrogen2</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series4</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744320</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Dash</Line>
-      <X>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Slurp2UptakeN</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series5</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32513</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportNitrogen</TableName>
-        <FieldName>Diffs.Script.diffMinNUptake</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-  </Graph>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Folder>
-    <Name>Folder</Name>
-    <Slurp>
-      <Name>Slurp</Name>
-      <localLAI>5</localLAI>
-      <localLAItot>5</localLAItot>
-      <localLightExtinction>0</localLightExtinction>
-      <localCanopyHeight>500</localCanopyHeight>
-      <localCanopyDepth>500</localCanopyDepth>
-      <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
-      <localFrgr>1</localFrgr>
-      <localDemandWater>0</localDemandWater>
-      <localDemandNitrogen>0</localDemandNitrogen>
-      <localRootDepth>600</localRootDepth>
-      <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-    </Slurp>
-    <Memo>
-      <Name>Memo</Name>
-      <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
- <head>
-  <title></title>
- </head>
- <body>
-  <p>[Clock].Today</p>
-  <p>[SlurpUpdates].DateToUpdate</p>
-  <p>[SlurpUpdates].tempValue</p>
-  <p>[Slurp].localLAI</p>
-  <p>[Slurp].CanopyProperties</p>
-  <p>[Slurp].PotentialEP</p>
-  <p>[Slurp].ActualEP</p>
-  <p>[Slurp].potentialNitrogenDemand</p>
-  <p>[Slurp].actualNitrogenSupply</p>
-  <p>[Slurp].localRootDepth</p>
-  <p>[Arbitrator].scalerLayer</p>
-  <p>[Arbitrator].scalerPlant</p>
-  <p>[Soil].SoilWater.drain</p>
-  <p>[Soil].SoilWater.es</p>
-  <p>[Arbitrator].dltSWdep</p>
-  <p>[Soil].SoilWater.sw_dep</p>
-  <p>Evaluate (sum(([Soil].SoilWater.sw_dep[0:3] - (SoilWater.es)))) as TotalSW1</p>
-  <p></p>
- </body>
-</html>]]></MemoText>
-    </Memo>
-    <Manager>
-      <Name>SlurpUpdates</Name>
-      <Script>
-        <DateToUpdate>1990-01-01</DateToUpdate>
-        <VariableToUpdate>[Slurp1].CanopyProperties.LAI</VariableToUpdate>
-        <tempValue>3.5</tempValue>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Slurp;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Slurp Slurp1;
-		[Link] Report Report;
-		[Link] Summary Summary;
-		
-
-		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
-		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
-        [Description("Value to update to")] public double tempValue { get; set; }
-
-		public string myString;
-
-		public override void OnSimulationCommencing()
-		{
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{	
-			if (Clock.Today == DateToUpdate)
-			{
-                myString="SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
-			    Summary.WriteMessage(FullPath, myString);
-			    this.Set(VariableToUpdate, tempValue);
-			}
-        }
-	}
-}
-]]></Code>
-    </Manager>
-  </Folder>
-  <Graph>
-    <Name>Graph1</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Right</Type>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Slurp1.demandWater</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>ReportWater</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>ReportWater</TableName>
-        <FieldName>Diffs.Script.diffSWDepUptake</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

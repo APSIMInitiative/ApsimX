@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// Holds the collection of root properties that each crop must supply to the rest of the world
+    /// </summary>
     public class RootProperties
     {
         /// <summary>
