@@ -10930,13 +10930,7 @@ namespace Models
   </Graph>
   <Tests>
     <Name>Tests</Name>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>residual</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
+    
   </Tests>
   <ExplorerWidth>259</ExplorerWidth>
 </Simulations>
