@@ -23,7 +23,9 @@ if(length(args) == 0)
 source("Tests/RTestSuite/tests.R")
 
 # if 1 argument, assume it is a single test to run
-ifelse(length(args) == 1, files <- args[1], files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
+ifelse(length(args) == 1,
+       files <- args[1],
+       files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
 
 # create an empty data frame to hold all test output
 buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 
@@ -31,8 +33,8 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
- for (fileNumber in 5:5){
-#for (fileNumber in 1:length(files)){
+# for (fileNumber in 5:5){
+for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
@@ -80,7 +82,11 @@ results <- -1
     {    
       #get report ID and extract relevant info from table
       possibleError <- tryCatch({
-        simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim,], "'", sep=""))
+        if (length(simsToTest) > 1)
+          simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim,], "'", sep=""))
+        else
+          simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
+        
       }, error = function(err) {
           print(noquote("Could not find 'Simulations' column. Did the test run?"))
           haveTestsPassed <<- FALSE
