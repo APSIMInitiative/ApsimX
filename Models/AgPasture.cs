@@ -216,7 +216,7 @@ namespace Models
         private double[] initialDMFractions_grass = new double[] {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
         private double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
 
-        private double[] PreferenceForGreenDM= new double[] { 1.0, 1.0, 1.0 };
+        private double[] PreferenceForGreenDM= new double[] { 1.0, 1.0, 1.0};
         private double[] PreferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
 
 		#endregion
