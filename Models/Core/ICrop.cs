@@ -36,5 +36,9 @@
         /// </summary>
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        string[] CultivarNames { get; }
         }
 }

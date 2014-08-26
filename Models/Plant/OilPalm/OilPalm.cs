@@ -17,7 +17,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm : Model, ICrop
+    public class OilPalm : ModelCollectionFromResource, ICrop
     {
 
         public NewCanopyType CanopyData 
@@ -34,7 +34,7 @@ namespace Models.PMF.OilPalm
                 return LocalCanopyData; 
             } 
         }
-
+        [XmlIgnore]
         public string plant_status = "out";
         [Link]
         Clock Clock = null;
@@ -46,6 +46,47 @@ namespace Models.PMF.OilPalm
         ISummary Summary = null;
 
         public string CropType { get { return "OilPalm"; } }
+
+        private Cultivar cultivarDefinition;
+
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                SortedSet<string> cultivarNames = new SortedSet<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    cultivarNames.Add(cultivar.Name);
+                    if (cultivar.Aliases != null)
+                    {
+                        foreach (string alias in cultivar.Aliases)
+                            cultivarNames.Add(alias);
+                    }
+                }
+
+                return new List<string>(cultivarNames).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all cultivar definitions.
+        /// </summary>
+        private List<Cultivar> Cultivars
+        {
+            get
+            {
+                List<Cultivar> cultivars = new List<Cultivar>();
+                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                {
+                    cultivars.Add(model as Cultivar);
+                }
+
+                return cultivars;
+            }
+        }
 
         /// <summary>
         /// 
@@ -64,6 +105,7 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        [XmlIgnore]
         public double height = 0.0;
 
         public double cover_tot {
@@ -72,34 +114,44 @@ namespace Models.PMF.OilPalm
 
         double interception = 0.0;
 
-
+        [XmlIgnore]
         public double UnderstoryCoverMax { get; set; }
+        [XmlIgnore]
         public double UnderstoryLegumeFraction = 0;
 
         double Ndemand = 0.0;
 
         double RootDepth = 0.0;
+        [XmlIgnore]
         public double[] kl;
+        [XmlIgnore]
         public double[] ll;
+        [XmlIgnore]
         public double[] xf;
+        [XmlIgnore]
         public double InterceptionFraction { get; set; }
+        [XmlIgnore]
         public double[] bd = null;
 
         double[] PotSWUptake;
 
         double[] SWUptake;
 
+        [XmlIgnore]
         public double PEP { get; set; }
 
+        [XmlIgnore]
         public double EP { get; set; }
 
         double DltDM = 0.0;
         double Excess = 0.0;
 
+        [XmlIgnore]
         public double FW { get; set; }
 
         double FWexpan = 0.0;
 
+        [XmlIgnore]
         public double Fn { get; set; }
 
         [XmlIgnore]
@@ -136,12 +188,14 @@ namespace Models.PMF.OilPalm
 
         [XmlIgnore]
         public double Population { get; set; }
+
+        [XmlIgnore]
         public SowPlant2Type SowingData = new SowPlant2Type();
 
         double[] PotNUptake;
         [XmlIgnore]
         public double[] NUptake { get; set; }
-                [XmlIgnore]
+        [XmlIgnore]
         public double StemGrowth { get; set; }
         [XmlIgnore]
         public double FrondGrowth { get; set; }
@@ -232,14 +286,19 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         public double[] UnderstoryNUptake { get; set; }
 
+        [XmlIgnore]
         public double UnderstoryRootDepth = 0;
 
+        [XmlIgnore]
         public double UnderstoryPEP = 0;
 
+        [XmlIgnore]
         public double UnderstoryEP = 0;
 
+        [XmlIgnore]
         public double UnderstoryFW = 0;
 
+        [XmlIgnore]
         public double UnderstoryDltDM = 0;
 
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
@@ -375,24 +434,31 @@ namespace Models.PMF.OilPalm
             RootDepth = InitialRootDepth.Value;
         }
 
-        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string cultivar, double population, double depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string cropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Population;
-            this.Population = Population;
-            SowingData.Depth = Depth;
-            SowingData.Cultivar = Cultivar;
+            SowingData.Population = population;
+            this.Population = population;
+            SowingData.Depth = depth;
+            SowingData.Cultivar = cultivar;
             SowingData.MaxCover = MaxCover;
             SowingData.BudNumber = BudNumber;
             SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = CropClass;
+            SowingData.CropClass = cropClass;
             CropInGround = true;
+
+            if (SowingData.Cultivar == "")
+                throw new Exception("Cultivar not specified on sow line.");
+
+            // Find cultivar and apply cultivar overrides.
+            cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
 
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
+            Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>
@@ -1158,7 +1224,7 @@ namespace Models.PMF.OilPalm
 
         }
 
-
+        [XmlIgnore]
         public double DefoliationFraction
         {
             get

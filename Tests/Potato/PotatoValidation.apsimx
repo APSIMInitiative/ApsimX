@@ -567,6 +567,7 @@
                [Description("Number of stems per seed tuber")]
                public double StemNumberPerSeedTuber { get; set; }
                [Description("Cultivar")]
+               [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -2745,7 +2746,6 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -6357,7 +6357,6 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -10048,7 +10047,6 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -11462,7 +11460,6 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -15152,7 +15149,6 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>0</mass>
