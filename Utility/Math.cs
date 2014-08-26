@@ -931,7 +931,15 @@ namespace Utility
 
         static public bool AreEqual(IList<string> L1, IList<string> L2)
         {
-            if (L1.Count != L2.Count)
+            if (L1 == null && L2 == null)
+            {
+                return true;
+            }
+            else if (L1 == null || L2 == null)
+            {
+                return false;
+            }
+            else if (L1.Count != L2.Count)
             {
                 return false;
             }
