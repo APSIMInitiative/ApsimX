@@ -635,12 +635,12 @@
                 <double>0.7</double>
                 <double>0.7</double>
                 <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
               </SWCON>
               <KLAT>
                 <double>0</double>
@@ -700,18 +700,18 @@
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>2.2909944256023844</double>
-                <double>0.71568686239105439</double>
-                <double>0.49544603960874911</double>
-                <double>0.40492780520186689</double>
-                <double>0.40486267197944886</double>
-                <double>0.40466936628154687</double>
-                <double>0.4020701782253987</double>
-                <double>0.40200520268492657</double>
-                <double>0.40197302404995411</double>
-                <double>0.39834104163510708</double>
-                <double>0.39834788385526521</double>
-                <double>0.39834228978969871</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
@@ -956,442 +956,7 @@
           </MicroClimate>
           <OilPalm>
             <Name>OilPalm</Name>
-            <Constant>
-              <Name>cover_tot</Name>
-              <Value>0.9</Value>
-            </Constant>
-            <Constant>
-              <Name>height</Name>
-              <Value>10000</Value>
-            </Constant>
-            <VariableReference>
-              <Name>UnderstoryCoverMax</Name>
-              <VariableName />
-            </VariableReference>
-            <VariableReference>
-              <Name>UnderstoryLegumeFraction</Name>
-              <VariableName />
-            </VariableReference>
-            <Constant>
-              <Name>InterceptionFraction</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>InitialRootDepth</Name>
-              <Value>300</Value>
-            </Constant>
-            <Constant>
-              <Name>MaximumRootDepth</Name>
-              <Value>5000</Value>
-            </Constant>
-            <Constant>
-              <Name>KNO3</Name>
-              <Value>0.02</Value>
-            </Constant>
-            <Constant>
-              <Name>RootFraction</Name>
-              <Value>0.1</Value>
-            </Constant>
-            <Constant>
-              <Name>RootNConcentration</Name>
-              <Value>0.39</Value>
-            </Constant>
-            <Constant>
-              <Name>RootSenescenceRate</Name>
-              <Value>0.001</Value>
-            </Constant>
-            <Constant>
-              <Name>InitialFrondNumber</Name>
-              <Value>5</Value>
-            </Constant>
-            <AirTemperatureFunction>
-              <Name>RelativeDevelopmentalRate</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>13</double>
-                  <double>32</double>
-                  <double>35</double>
-                  <double>46</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <LinearInterpolationFunction>
-              <Name>FrondAppRate</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                </X>
-                <Y>
-                  <double>5.25</double>
-                  <double>5.25</double>
-                  <double>7.725</double>
-                  <double>10.1</double>
-                  <double>10.1</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>ExpandingFronds</Name>
-              <Value>5</Value>
-            </Constant>
-            <Constant>
-              <Name>FrondMaximumNConcentration</Name>
-              <Value>1.15</Value>
-            </Constant>
-            <Constant>
-              <Name>FrondCriticalNConcentration</Name>
-              <Value>1.1</Value>
-            </Constant>
-            <Constant>
-              <Name>FrondMinimumNConcentration</Name>
-              <Value>0.5</Value>
-            </Constant>
-            <SplineInterpolationFunction>
-              <Name>FrondMaxArea</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>4.5</double>
-                  <double>8.5</double>
-                  <double>14</double>
-                </X>
-                <Y>
-                  <double>0.1</double>
-                  <double>1</double>
-                  <double>7</double>
-                  <double>12</double>
-                  <double>14</double>
-                </Y>
-              </XYPairs>
-            </SplineInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>BunchSizeMax</Name>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>6</double>
-                  <double>10</double>
-                  <double>14</double>
-                </X>
-                <Y>
-                  <double>53</double>
-                  <double>265</double>
-                  <double>7000</double>
-                  <double>11600</double>
-                  <double>12750</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>HarvestFrondNumber</Name>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>6</double>
-                  <double>10</double>
-                </X>
-                <Y>
-                  <double>50</double>
-                  <double>40</double>
-                  <double>33</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>FemaleFlowerFraction</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>4</double>
-                  <double>6</double>
-                  <double>8</double>
-                  <double>10</double>
-                </X>
-                <Y>
-                  <double>0.8</double>
-                  <double>0.8</double>
-                  <double>0.8</double>
-                  <double>0.8</double>
-                  <double>0.8</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>FFFStressImpact</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].CarbonStress</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0.06</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>StemToFrondFraction</Name>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>4</double>
-                  <double>7</double>
-                  <double>12</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0.15</double>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>StemNConcentration</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>8.5</double>
-                </X>
-                <Y>
-                  <double>1.37</double>
-                  <double>0.351</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>BunchOilConversionFactor</Name>
-              <Value>1.55</Value>
-            </Constant>
-            <Constant>
-              <Name>RipeBunchWaterContent</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <Value>0.47</Value>
-            </Constant>
-            <Constant>
-              <Name>BunchNConcentration</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <Value>0.603</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>SpecificLeafArea</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>5</double>
-                  <double>13</double>
-                </X>
-                <Y>
-                  <double>0.003</double>
-                  <double>0.003</double>
-                  <double>0.003</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>SpecificLeafAreaMax</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Age</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>5</double>
-                  <double>13</double>
-                </X>
-                <Y>
-                  <double>0.0035</double>
-                  <double>0.0035</double>
-                  <double>0.0035</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>FlowerAbortionFraction</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].CarbonStress</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0.15</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>BunchFailureFraction</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].CarbonStress</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0.15</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>DirectExtinctionCoeff</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Population</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0.0056</double>
-                  <double>0.0186</double>
-                </X>
-                <Y>
-                  <double>0.175</double>
-                  <double>0.35</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>DiffuseExtinctionCoeff</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XProperty>[OilPalm].Population</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0.0056</double>
-                  <double>0.0186</double>
-                </X>
-                <Y>
-                  <double>0.225</double>
-                  <double>0.45</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>RUE</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <Value>1.22</Value>
-            </Constant>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <Value>30</Value>
-            </Constant>
-            <plant_status>out</plant_status>
-            <height>0</height>
-            <cover_tot>0.9</cover_tot>
-            <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <kl />
-            <ll />
-            <xf />
-            <SowingData>
-              <Cultivar>Dami</Cultivar>
-              <Population>0.0135</Population>
-              <Depth>200</Depth>
-              <RowSpacing>150</RowSpacing>
-              <MaxCover>1</MaxCover>
-              <BudNumber>1</BudNumber>
-              <CropClass>Plant</CropClass>
-              <SkipRow>0</SkipRow>
-              <SkipPlant>0</SkipPlant>
-            </SowingData>
-            <UnderstoryRootDepth>300</UnderstoryRootDepth>
-            <UnderstoryPEP>0.090757280024460318</UnderstoryPEP>
-            <UnderstoryEP>0.090757280024460318</UnderstoryEP>
-            <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0.4723763761745528</UnderstoryDltDM>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-            <InterceptionFraction>0</InterceptionFraction>
-            <PEP>3.1070621813843831</PEP>
-            <EP>3.1070621813843831</EP>
-            <FW>1</FW>
-            <Fn>0.74823865798204425</Fn>
-            <DefoliationFraction>0</DefoliationFraction>
+            <ResourceName>OilPalm</ResourceName>
           </OilPalm>
           <Operations>
             <Name>operations</Name>
@@ -1531,20 +1096,20 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <Script>
-              <Offset>452</Offset>
-              <AnnualFronds>22</AnnualFronds>
-              <AnnualBunches>5.69865594380177</AnnualBunches>
-              <AnnualYield>12.9162392124131</AnnualYield>
-              <AnnualBunchSize>16.7891950244756</AnnualBunchSize>
-              <SoilCtpha>308.794974236805</SoilCtpha>
-              <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+              <Offset>6</Offset>
+              <AnnualFronds>0</AnnualFronds>
+              <AnnualBunches>0</AnnualBunches>
+              <AnnualYield>0</AnnualYield>
+              <AnnualBunchSize>0</AnnualBunchSize>
+              <SoilCtpha>NaN</SoilCtpha>
+              <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
               <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
               <OilPalmYield>0</OilPalmYield>
-              <TotalNO3>34.6493742173966</TotalNO3>
-              <NitTot>25820.2900496667</NitTot>
-              <AnnualUnderstoryNFixation>14.8478263347726</AnnualUnderstoryNFixation>
-              <AnnualUnderstoryNPP>1606.90761198838</AnnualUnderstoryNPP>
-              <AnnualUnderstoryNUptake>18.8972335169834</AnnualUnderstoryNUptake>
+              <TotalNO3>NaN</TotalNO3>
+              <NitTot>NaN</NitTot>
+              <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
+              <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+              <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1723,7 +1288,9 @@ namespace Models
               <string>[Clock].Today.Month</string>
               <string>[OilPalm].Age</string>
               <string>[OilPalm].UnderstoryNFixation</string>
-              <string>[Calculations].Script.MonthlyFixation</string>
+              <string>[OilPalm].FW</string>
+              <string>[Soil].SoilWater.es</string>
+              <string>[OilPalm].cover_green</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2200,6 +1767,108 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Fw</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>OilPalm.FW</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>Es</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>Soil.SoilWater.es</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopRight</LegendPosition>
+    </Graph>
+    <Graph>
+      <Name>CoverGreen</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Year</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>daily</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>daily</TableName>
+          <FieldName>OilPalm.cover_green</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
@@ -3639,36 +3308,6 @@ namespace Models
               </Memo>
               <Value>30</Value>
             </Constant>
-            <plant_status>out</plant_status>
-            <height>0</height>
-            <cover_tot>0.9</cover_tot>
-            <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <kl />
-            <ll />
-            <xf />
-            <SowingData>
-              <Cultivar>Dami</Cultivar>
-              <Population>0.0127</Population>
-              <Depth>200</Depth>
-              <RowSpacing>150</RowSpacing>
-              <MaxCover>1</MaxCover>
-              <BudNumber>1</BudNumber>
-              <CropClass>Plant</CropClass>
-              <SkipRow>0</SkipRow>
-              <SkipPlant>0</SkipPlant>
-            </SowingData>
-            <UnderstoryRootDepth>500</UnderstoryRootDepth>
-            <UnderstoryPEP>0</UnderstoryPEP>
-            <UnderstoryEP>0</UnderstoryEP>
-            <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0</UnderstoryDltDM>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-            <InterceptionFraction>0</InterceptionFraction>
-            <PEP>0</PEP>
-            <EP>0</EP>
-            <FW>0</FW>
-            <Fn>0</Fn>
-            <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -5533,36 +5172,6 @@ namespace Models
               </Memo>
               <Value>30</Value>
             </Constant>
-            <plant_status>out</plant_status>
-            <height>0</height>
-            <cover_tot>0.9</cover_tot>
-            <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-            <kl />
-            <ll />
-            <xf />
-            <SowingData>
-              <Cultivar>Dami</Cultivar>
-              <Population>0.014</Population>
-              <Depth>200</Depth>
-              <RowSpacing>150</RowSpacing>
-              <MaxCover>1</MaxCover>
-              <BudNumber>1</BudNumber>
-              <CropClass>Plant</CropClass>
-              <SkipRow>0</SkipRow>
-              <SkipPlant>0</SkipPlant>
-            </SowingData>
-            <UnderstoryRootDepth>300</UnderstoryRootDepth>
-            <UnderstoryPEP>0</UnderstoryPEP>
-            <UnderstoryEP>0</UnderstoryEP>
-            <UnderstoryFW>1</UnderstoryFW>
-            <UnderstoryDltDM>0</UnderstoryDltDM>
-            <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-            <InterceptionFraction>0</InterceptionFraction>
-            <PEP>0</PEP>
-            <EP>0</EP>
-            <FW>0</FW>
-            <Fn>0</Fn>
-            <DefoliationFraction>0</DefoliationFraction>
           </OilPalm>
           <Manager>
             <Name>ReportMonthly</Name>

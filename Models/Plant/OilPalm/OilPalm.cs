@@ -17,7 +17,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm : Model, ICrop
+    public class OilPalm : ModelCollectionFromResource, ICrop
     {
 
         public NewCanopyType CanopyData 
@@ -34,7 +34,7 @@ namespace Models.PMF.OilPalm
                 return LocalCanopyData; 
             } 
         }
-
+        [XmlIgnore]
         public string plant_status = "out";
         [Link]
         Clock Clock = null;
@@ -47,6 +47,9 @@ namespace Models.PMF.OilPalm
 
         public string CropType { get { return "OilPalm"; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double FRGR { get { return 1; } }
 
         /// <summary>
@@ -61,39 +64,53 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        [XmlIgnore]
         public double height = 0.0;
 
-        public double cover_tot = 0.8;
+        public double cover_tot {
+            get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
+                }
 
         double interception = 0.0;
 
+        [XmlIgnore]
         public double UnderstoryCoverMax { get; set; }
+        [XmlIgnore]
         public double UnderstoryLegumeFraction = 0;
 
         double Ndemand = 0.0;
 
         double RootDepth = 0.0;
+        [XmlIgnore]
         public double[] kl;
+        [XmlIgnore]
         public double[] ll;
+        [XmlIgnore]
         public double[] xf;
+        [XmlIgnore]
         public double InterceptionFraction { get; set; }
+        [XmlIgnore]
         public double[] bd = null;
 
         double[] PotSWUptake;
 
         double[] SWUptake;
 
+        [XmlIgnore]
         public double PEP { get; set; }
 
+        [XmlIgnore]
         public double EP { get; set; }
 
         double DltDM = 0.0;
         double Excess = 0.0;
 
+        [XmlIgnore]
         public double FW { get; set; }
 
         double FWexpan = 0.0;
 
+        [XmlIgnore]
         public double Fn { get; set; }
 
         [XmlIgnore]
@@ -130,12 +147,14 @@ namespace Models.PMF.OilPalm
 
         [XmlIgnore]
         public double Population { get; set; }
+
+        [XmlIgnore]
         public SowPlant2Type SowingData = new SowPlant2Type();
 
         double[] PotNUptake;
         [XmlIgnore]
         public double[] NUptake { get; set; }
-                [XmlIgnore]
+        [XmlIgnore]
         public double StemGrowth { get; set; }
         [XmlIgnore]
         public double FrondGrowth { get; set; }
@@ -226,14 +245,19 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         public double[] UnderstoryNUptake { get; set; }
 
+        [XmlIgnore]
         public double UnderstoryRootDepth = 0;
 
+        [XmlIgnore]
         public double UnderstoryPEP = 0;
 
+        [XmlIgnore]
         public double UnderstoryEP = 0;
 
+        [XmlIgnore]
         public double UnderstoryFW = 0;
 
+        [XmlIgnore]
         public double UnderstoryDltDM = 0;
 
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
@@ -1152,7 +1176,7 @@ namespace Models.PMF.OilPalm
 
         }
 
-
+        [XmlIgnore]
         public double DefoliationFraction
         {
             get

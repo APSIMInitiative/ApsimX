@@ -43,18 +43,74 @@ namespace Models.PMF.Slurp
         public CanopyProperties CanopyProperties { get { return LocalCanopyData; } }
         CanopyProperties LocalCanopyData = new CanopyProperties();
 
-        [Description("Green LAI (m2/m2)")] public double localLAI { get; set; }
-        [Description("Total LAI (m2/m2)")] public double localLAItot { get; set; }
-        [Description("Light extinction coefficient (-)")]        public double localLightExtinction { get; set; }
-        [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
-        [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
-        [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
-        [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr { get; set; }
-        [Description("Water demand (mm /day)")] public double localDemandWater { get; set; }
-        [Description("Nitrogen demand (kgN /ha /day)")] public double localPotentialNitrogenDemand { get; set; }
+        /// <summary>
+        /// The initial value of leaf area index (m2/m2)
+        /// </summary>
+        [Description("Green LAI (m2/m2)")] public double localLAIGreen { get; set; }
 
-        public double localCoverGreen { get; set; }
-        public double localCoverTot { get; set; }
+        /// <summary>
+        /// The initial value of total (green and dead) leaf area index (m2/m2)
+        /// </summary>
+        [Description("Total LAI (m2/m2)")] public double localLAItot { get; set; }
+
+        /// <summary>
+        /// The initial value of the light extinction coefficient (-)
+        /// THe simple Beer's law is used to calculate CoverGreen and CoverTot from the LAI values
+        /// </summary>
+        [Description("Light extinction coefficient (-)")]        public double localLightExtinction { get; set; }
+
+        /// <summary>
+        /// The initial value of canopy height (mm)
+        /// </summary>
+        [Description("Height of the canopy (mm)")] public double localCanopyHeight { get; set; }
+
+        /// <summary>
+        /// The intial value of canopy depth (mm)
+        /// </summary>
+        [Description("Depth of the canopy (mm)")] public double localCanopyDepth { get; set; }
+
+        /// <summary>
+        /// The initial value of maximum stomatal conductance (m/s)
+        /// </summary>
+        [Description("Maximum stomatal conductance (m/s)")] public double localMaximumStomatalConductance { get; set; }
+
+        /// <summary>
+        /// The initial value of the relative growth rate factor (-)
+        /// </summary>
+        [Description("Frgr - effect on stomatal conductance (-)")] public double localFrgr { get; set; }
+
+        /// <summary>
+        /// The initial value of water demand (mm/day) - will eventually be replaced by a calculation by MicroClimate
+        /// </summary>
+        [Description("Water demand (mm /day)")] public double localDemandWater { get; set; }
+
+        /// <summary>
+        /// The initial value of nitrogen demand (kgN/ha/day)
+        /// </summary>
+        [Description("Nitrogen demand (kgN /ha /day)")]
+        public double localDemandNitrogen { get; set; }
+
+        /// <summary>
+        /// The initial value for nitrate uptake coefficient
+        /// </summary>
+        [Description("Nitrate uptake coefficient")]
+        public double localKNO3 { get; set; }
+
+        /// <summary>
+        /// The initial value for ammonium uptake coefficient
+        /// </summary>
+        [Description("Nitrate uptake coefficient")]
+        public double localKNH4 { get; set; }
+
+        /// <summary>
+        /// The initial value of green cover (-)
+        /// </summary>
+        [XmlIgnore]        public double localCoverGreen { get; set; }
+
+        /// <summary>
+        /// The initial value of total cover (-)
+        /// </summary>
+        [XmlIgnore]        public double localCoverTot { get; set; }
 
         // The variables that are in RootProperties
         /// <summary>
@@ -63,57 +119,79 @@ namespace Models.PMF.Slurp
         public RootProperties RootProperties { get { return LocalRootData; } }
         RootProperties LocalRootData = new RootProperties();
 
+        /// <summary>
+        /// The initial value of rooting depth (mm)
+        /// This is used to calculate RootExplorationByLayer and RootLengthDensityByVolume
+        /// </summary>
         [Description("Rooting Depth (mm)")] public double localRootDepth { get; set; }
+
+        /// <summary>
+        /// The initial value of the root length density at the soil surface (mm/mm3)
+        /// This is used to calculate RootExplorationByLayer and RootLengthDensityByVolume
+        /// </summary>
         [Description("Root length density at the soil surface (mm/mm3)")] public double localSurfaceRootLengthDensity { get; set; }
 
-        public double[] localRootExplorationByLayer { get; set; }
-        public double[] localRootLengthDensityByVolume { get; set; }
+        /// <summary>
+        /// The initial value of the extent to which the roots have penetrated the soil layer (0-1)
+        /// </summary>
+        [XmlIgnore] public double[] localRootExplorationByLayer { get; set; }
+
+        /// <summary>
+        /// The initial value of the root length densities for each soil layer (mm/mm3)
+        /// </summary>
+        [XmlIgnore] public double[] localRootLengthDensityByVolume { get; set; }
 
         double tempDepthUpper;
         double tempDepthMiddle;
         double tempDepthLower;
 
         /// <summary>
-        /// Arbitrator supplies PotentialEP
+        /// Water demand (mm/day) - at the moment is set from the UI but eventually will be supplied by the Arbitrator (or MicroClimate)
         /// </summary>
-        [XmlIgnore]
-        public double demandWater { get; set; }
+        [XmlIgnore]        public double demandWater { get; set; }
 
         /// <summary>
-        /// Arbitrator supplies ActualEP
+        /// The is the actual supply of water to the plant as an array (mm) of values for each soil layer - calculated  by the Arbitrator 
+        /// Note that Arbitrator does the uptake so the plant does not do the removal from the soil
         /// </summary>
-        [XmlIgnore]
-        public double[] supplyWater { get; set; }
+        [XmlIgnore]        public double[] supplyWater { get; set; }
 
         /// <summary>
-        /// Crop calculates potentialNitrogenDemand after getting its water allocation
+        /// Nitrogen demand (kg N /ha /day) - directly set from the UI
         /// </summary>
-        [XmlIgnore]
-        public double potentialNitrogenDemand { get; set; }
+        [XmlIgnore]        public double demandNitrogen { get; set; }
 
         /// <summary>
-        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// The is the actual supply of nitrogen (nitrate plus ammonium) to the plant as an array (kgN/ha/day) of values for each soil layer - calculated  by the Arbitrator 
+        /// Note that Arbitrator does the uptake so the plant does not do the removal from the soil
         /// </summary>
-        [XmlIgnore]
-        public double actualNitrogenSupply { get; set; }
+        [XmlIgnore]        public double[] supplyNitrogen { get; set; }
+
+        /// <summary>
+        /// This is the proportion of the nitrogen uptake from any layer that is nitrate (-)
+        /// </summary>
+        [XmlIgnore]        public double[] supplyNitrogenPropNO3 { get; set; } 
 
         /// <summary>
         /// MicroClimate supplies LightProfile
         /// </summary>
-        //[XmlIgnore]
-        //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        //[XmlIgnore]       public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
 
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
+            supplyWater = new double[Soil.SoilWater.dlayer.Length];
+            supplyNitrogen = new double[Soil.SoilWater.dlayer.Length];
+            supplyNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+            
             // set the canopy and root properties here - no need to capture the sets from any Managers as they directly set the properties
             CanopyProperties.Name = "Slurp";
-            CanopyProperties.CoverGreen = 1.0 - Math.Exp(-1*localLightExtinction*localLAI);
+            CanopyProperties.CoverGreen = 1.0 - Math.Exp(-1*localLightExtinction*localLAIGreen);
             CanopyProperties.CoverTot = 1.0 - Math.Exp(-1 * localLightExtinction * localLAItot);
             CanopyProperties.CanopyDepth = localCanopyDepth;
             CanopyProperties.CanopyHeight = localCanopyHeight;
-            CanopyProperties.LAI = localLAI;
+            CanopyProperties.LAIGreen = localLAIGreen;
             CanopyProperties.LAItot = localLAItot;
             CanopyProperties.MaximumStomatalConductance = localMaximumStomatalConductance;
             CanopyProperties.HalfSatStomatalConductance = 200.0;  // should this be on the UI?
@@ -123,6 +201,8 @@ namespace Models.PMF.Slurp
             RootProperties.KL = Soil.KL(Name);
             RootProperties.LowerLimitDep = Soil.LL(Name);
             RootProperties.RootDepth = localRootDepth;
+            RootProperties.KNO3 = localKNO3;
+            RootProperties.KNH4 = localKNH4;
 
             localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
             localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
@@ -168,7 +248,10 @@ namespace Models.PMF.Slurp
             // nothing for Slurp to do in here but a full/proper crop model would use the LightProfile, PotenialEP and ActualEP to calculate a 
             // PotentialNDemand - the N that the plant wants in order to satisfy growth after accounting for the water supply
 
-            potentialNitrogenDemand = localPotentialNitrogenDemand;
+            demandNitrogen = localDemandNitrogen;
+
+            //Summary.WriteMessage(FullPath, "Slurp " + CanopyProperties.Name + " has a value of " + supplyWater[3].ToString() + " for the last element in the soil water supply");
+
 
         }
 
