@@ -16,30 +16,23 @@ namespace Models.SurfaceOM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SurfaceOrganicMatter : Model
     {
-
         #region links to other components
         [Link]
-        Soil Soil = null;
+        private Soil soil = null;
 
         [Link]
-        Clock Clock = null;
+        private ISummary summary = null;
 
         [Link]
-        ISummary Summary = null;
-
-        [Link]
-        WeatherFile Weather = null;
+        private WeatherFile weather = null;
         #endregion
 
         //====================================================================
         //    SurfaceOM constants;
         //====================================================================
 
-        //static int max_table = 10;                              //number of points allowed for specifying coeff tables;
         static int max_layer = 100;
         static int max_residues = 100;                          //maximum number of residues in at once;
-        //static int MaxStringSize = 100;                         //max length of the crop type.
-        static int MaxArraySize = 10;                           //maximum number of dry matter types;
         static int MaxFr = 3;
         //    ================================================================
 
@@ -146,13 +139,11 @@ namespace Models.SurfaceOM
                 pond_active = "no";
                 oldSOMState = new OMFractionType();
             }
-
         }
 
         [Serializable]
-        class SurfaceOMParameters
+        private class SurfaceOMParameters
         {
-
             public double[] standing_fraction;	                //standing fraction array;
             public string report_additions;
             public string report_removals;
@@ -166,7 +157,7 @@ namespace Models.SurfaceOM
         }
 
         [Serializable]
-        class SurfaceOMConstants
+        private class SurfaceOMConstants
         {
             public string[] fom_types;
             public int num_fom_types;
@@ -221,8 +212,6 @@ namespace Models.SurfaceOM
                 no3ppm = new double[max_residues];
                 po4ppm = new double[max_residues];
                 specific_area = new double[max_residues];
-
-
             }
         }
 
@@ -231,12 +220,10 @@ namespace Models.SurfaceOM
         SurfaceOMParameters p;
         SurfaceOMConstants c;
 
-
         public SurfaceOrganicMatter()
             : base()
         {
         }
-
 
         #region exposed properties
         #region BensParams
@@ -483,25 +470,25 @@ namespace Models.SurfaceOM
 
         [Description("Fraction of ground covered by all surface OMs")]
         [Units("m^2/m^2")]
-        public double surfaceom_cover { get { return surfom_cover_total(); } }
+        public double surfaceom_cover { get { return CoverTotal(); } }
 
         ///<summary>
         ///Temperature factor for decomposition
         ///</summary>
 
         [Units("0-1")]
-        public double tf { get { return surfom_tf(); } }
+        public double tf { get { return TemperatureFactor(); } }
 
         ///<summary>
         ///Contact factor for decomposition
         ///</summary>
 
         [Units("0-1")]
-        public double cf { get { return surfom_cf(); } }
+        public double cf { get { return ContactFactor(); } }
 
 
         [Units("0-1")]
-        public double wf { get { return surfom_wf(); } }
+        public double wf { get { return MoistureFactor(); } }
 
 
         [Units("")]
@@ -674,7 +661,7 @@ namespace Models.SurfaceOM
             get
             {
                 double[] c, n, p;
-                surfom_Pot_Decomp(out c, out n, out p);
+                PotDecomp(out c, out n, out p);
 
                 return c;
             }
@@ -690,7 +677,7 @@ namespace Models.SurfaceOM
             get
             {
                 double[] c, n, p;
-                surfom_Pot_Decomp(out c, out n, out p);
+                PotDecomp(out c, out n, out p);
 
                 return n;
             }
@@ -706,7 +693,7 @@ namespace Models.SurfaceOM
             get
             {
                 double[] c, n, p;
-                surfom_Pot_Decomp(out c, out n, out p);
+                PotDecomp(out c, out n, out p);
 
                 return p;
             }
@@ -736,7 +723,7 @@ namespace Models.SurfaceOM
             {
                 double[] result = new double[g.SurfOM.Count];
                 for (int i = 0; i < result.Length; i++)
-                    result[i] = surfom_cover(i);
+                    result[i] = Cover(i);
 
                 return result;
             }
@@ -753,7 +740,7 @@ namespace Models.SurfaceOM
             {
                 double[] result = new double[g.SurfOM.Count];
                 for (int i = 0; i < result.Length; i++)
-                    result[i] = surfom_cnrf(i);
+                    result[i] = CNRatioFactor(i);
 
                 return result;
             }
@@ -1023,11 +1010,9 @@ namespace Models.SurfaceOM
                 fr_n = new double[3] { 0.2, 0.7, 0.1 };
                 fr_p = new double[3] { 0.2, 0.7, 0.1 };
             }
-
-
         }
-        [Serializable]
 
+        [Serializable]
         public class TillageTypes : Model
         {
             public List<TillageType> TillageType { get; set; }
@@ -1063,22 +1048,11 @@ namespace Models.SurfaceOM
         /// <param name="cover1"></param>
         /// <param name="cover2"></param>
         /// <returns></returns>
-        private double add_cover(double cover1, double cover2)
+        private double AddCover(double cover1, double cover2)
         {
-            double bare = (1 - cover1) * (1 - cover2);
-            return 1 - bare;
+            double bare = (1.0 - cover1) * (1.0 - cover2);
+            return 1.0 - bare;
         }
-
-        private int count_of_real_vals(double[] p, int max_layer)
-        {
-            throw new NotImplementedException();
-        }
-
-        private double l_bound(double val, double bound)
-        {
-            return Math.Max(val, bound);
-        }
-
 
         const string apsim_bounds_warning_error =
     @"'{0}' out of bounds!
@@ -1086,9 +1060,8 @@ namespace Models.SurfaceOM
 
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
-
             if (Utility.Math.IsLessThan(value, lower) || Utility.Math.IsGreaterThan(value, upper))
-                Summary.WriteWarning(FullPath, String.Format(apsim_bounds_warning_error, vname, lower, value, upper));
+                summary.WriteWarning(FullPath, String.Format(apsim_bounds_warning_error, vname, lower, value, upper));
         }
 
         private bool reals_are_equal(double first, double second)
@@ -1121,9 +1094,8 @@ namespace Models.SurfaceOM
         /// <param name="array">array to be searched</param>
         /// <param name="size_of">size_of of array</param>
         /// <returns>Index for a 1-BASED ARRAY</returns>
-        private int get_cumulative_index_real(double cum_sum, double[] array, int size_of)
+        private int GetCumulativeIndexReal(double cum_sum, double[] array, int size_of)
         {
-
             double cum = 0;
             for (int i = 0; i < size_of; i++)
                 if ((cum += array[i]) >= cum_sum)
@@ -1158,7 +1130,9 @@ namespace Models.SurfaceOM
         {
             double result = 0;
             foreach (double f in _2Darray)
+            {
                 result += f;
+            }
 
             return result;
         }
@@ -1194,33 +1168,31 @@ namespace Models.SurfaceOM
 
         #endregion
 
-
         /// <summary>
         /// Initialise residue module
         /// </summary>
-        private void surfom_Reset()
+        private void SurfomReset()
         {
             //Save State;
-            surfom_save_state();
-            surfom_zero_variables();
-            //surfom_get_other_variables();
-            surfom_read_coeff();
-            surfom_read_param();
+            SaveState();
+            ZeroVariables();
+            //GetOtherVariables();
+            ReadCoeff();
+            ReadParam();
 
             //Change of State;
-            surfom_delta_state();
+            DeltaState();
         }
 
-
-        private void surfom_save_state()
+        private void SaveState()
         {
-            g.oldSOMState = surfom_total_state();
+            g.oldSOMState = SurfomTotalState();
         }
 
-        private void surfom_delta_state()
+        private void DeltaState()
         {
             //  Local Variables;
-            OMFractionType newSOMState = surfom_total_state();
+            OMFractionType newSOMState = SurfomTotalState();
             Models.Soils.ExternalMassFlowType massBalanceChange = new Models.Soils.ExternalMassFlowType();
 
             //- Implementation Section ----------------------------------
@@ -1228,7 +1200,7 @@ namespace Models.SurfaceOM
             massBalanceChange.C = newSOMState.C - g.oldSOMState.C;
             massBalanceChange.N = newSOMState.N - g.oldSOMState.N;
             massBalanceChange.P = newSOMState.P - g.oldSOMState.P;
-            massBalanceChange.SW = 0.0f;
+            massBalanceChange.SW = 0.0;
 
             if (massBalanceChange.DM >= 0.0)
             {
@@ -1247,7 +1219,7 @@ namespace Models.SurfaceOM
         #region published events
 
         public event Models.Soils.SoilNitrogen.ExternalMassFlowDelegate ExternalMassFlow;
-        private void publish_ExternalMassFlow(ExternalMassFlowType massBalanceChange)
+        private void PublishExternalMassFlow(ExternalMassFlowType massBalanceChange)
         {
             if (ExternalMassFlow != null)
                 ExternalMassFlow.Invoke(massBalanceChange);
@@ -1256,7 +1228,7 @@ namespace Models.SurfaceOM
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
         public event SurfaceOrganicMatterDecompDelegate PotentialResidueDecompositionCalculated;
 
-        private void publish_SurfaceOrganicMatterDecomp(SurfaceOrganicMatterDecompType SOMDecomp)
+        private void PublishSurfaceOrganicMatterDecomp(SurfaceOrganicMatterDecompType SOMDecomp)
         {
             if (PotentialResidueDecompositionCalculated != null)
                 PotentialResidueDecompositionCalculated.Invoke(SOMDecomp);
@@ -1329,7 +1301,6 @@ namespace Models.SurfaceOM
 
         public event NitrogenChangedDelegate NitrogenChanged;
 
-
         #endregion
 
         #region event handlers
@@ -1344,7 +1315,7 @@ namespace Models.SurfaceOM
 
         public void OnTillage(TillageType data)
         {
-            surfom_tillage(data);
+            Tillage(data);
         }
 
         public class Add_surfaceomType
@@ -1363,8 +1334,9 @@ namespace Models.SurfaceOM
             data.f_incorp = fraction;
             data.tillage_depth = depth;
             data.Name = "User";
-            surfom_tillage(data);
+            Tillage(data);
         }
+
         public void Add(string type, double mass, double N, string name = null)
         {
             Add_surfaceomType data = new Add_surfaceomType();
@@ -1377,9 +1349,8 @@ namespace Models.SurfaceOM
             data.n = N;
 
 
-            surfom_add_surfom(data);
+            AddSurfom(data);
         }
-
 
         public override void OnSimulationCommencing()
         {
@@ -1388,20 +1359,26 @@ namespace Models.SurfaceOM
             g = new SurfaceOMGlobals();
             p = new SurfaceOMParameters();
             c = new SurfaceOMConstants();
-            surfom_zero_variables();
+            ZeroVariables();
             OnReset();
         }
 
         [EventSubscribe("Reset")]
-        private void OnReset() { initialised = true; surfom_Reset(); }
+        private void OnReset()
+        {
+            initialised = true; SurfomReset();
+        }
 
         [EventSubscribe("RemoveSurfaceOM")]
-        private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM) { surfom_remove_surfom(SOM); }
+        private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM)
+        {
+            RemoveSurfom(SOM);
+        }
 
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            g.MetData = Weather.MetData;
+            g.MetData = weather.MetData;
         }
 
         public class IrrigationApplicationType : EventArgs
@@ -1415,7 +1392,10 @@ namespace Models.SurfaceOM
         }
 
         [EventSubscribe("Irrigated")]
-        private void OnIrrigated(object sender, IrrigationApplicationType data) { surfom_ONirrigated(data); }
+        private void OnIrrigated(object sender, IrrigationApplicationType data)
+        {
+            surfom_ONirrigated(data);
+        }
 
         public class CropChoppedType
         {
@@ -1429,18 +1409,24 @@ namespace Models.SurfaceOM
 
 
         [EventSubscribe("CropChopped")]
-        private void OnCrop_chopped(CropChoppedType data) { surfom_ON_Crop_chopped(data); }
+        private void OnCrop_chopped(CropChoppedType data)
+        {
+            surfom_ON_Crop_chopped(data);
+        }
 
         [EventSubscribe("BiomassRemoved")]
-        private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved) { SurfOMOnBiomassRemoved(BiomassRemoved); }
+        private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
+        {
+            SurfOMOnBiomassRemoved(BiomassRemoved);
+        }
 
         /// <summary>
         /// Return the potential residue decomposition for today.
         /// </summary>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            surfom_get_other_variables();
-            return surfom_Process();
+            GetOtherVariables();
+            return Process();
         }
 
         /// <summary>
@@ -1455,7 +1441,7 @@ namespace Models.SurfaceOM
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
-            surfom_decompose_surfom(ActualSOMDecomp);
+            DecomposeSurfom(ActualSOMDecomp);
         }
 
         public class Prop_upType
@@ -1463,8 +1449,9 @@ namespace Models.SurfaceOM
             public string name = "";
             public double standing_fract;
         }
+
         [EventSubscribe("PropUp")]
-        private void OnPropUp(Prop_upType data) { surfom_prop_up(data); }
+        private void OnPropUp(Prop_upType data) { PropUp(data); }
 
         public class AddFaecesType
         {
@@ -1485,17 +1472,17 @@ namespace Models.SurfaceOM
 
 
         [EventSubscribe("AddFaeces")]
-        private void OnAddFaeces(AddFaecesType data) { surfom_add_faeces(data); }
+        private void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
         #endregion
 
         private void surfom_ExternalMassFlow(ExternalMassFlowType massBalanceChange)
         {
             massBalanceChange.PoolClass = "surface";
-            publish_ExternalMassFlow(massBalanceChange);
+            PublishExternalMassFlow(massBalanceChange);
         }
 
-        private OMFractionType surfom_total_state()
+        private OMFractionType SurfomTotalState()
         {
             OMFractionType SOMstate = new OMFractionType();
 
@@ -1520,7 +1507,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Set all variables in this module to zero.
         /// </summary>
-        private void surfom_zero_variables()
+        private void ZeroVariables()
         {
             g.cumeos = 0;
             g.irrig = 0;
@@ -1537,24 +1524,16 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Get the values of variables from other modules
         /// </summary>
-        private void surfom_get_other_variables()
+        private void GetOtherVariables()
         {
-            //APSIM THING - DONE
-            //Get_real_var(unknown_module, "eos", "(mm)", g.eos, numvals, 0.0, 100.0);
-            //Get_real_array(unknown_module, "dlayer", max_layer, "(mm)",g.dlayer, numvals, 1.0, 10000.0);
+            g.eos = soil.SoilWater.eos;
+            g.dlayer = soil.Thickness;
 
-            g.eos = Soil.SoilWater.eos;
-            g.dlayer = Soil.Thickness;
-
-            surfom_check_pond();
+            CheckPond();
         }
 
-        private void surfom_check_pond()
+        private void CheckPond()
         {
-            //APSIM THING - DONE
-            //get_char_var_optional (Unknown_module,"pond_active","",g.pond_active,numvals);
-
-
             if (pond_active == null || pond_active.Length < 1)
                 g.pond_active = "no";
             else
@@ -1564,7 +1543,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Redundant
         /// </summary>
-        private void surfom_read_coeff()
+        private void ReadCoeff()
         {
 
             //APSIM THING
@@ -1575,7 +1554,7 @@ namespace Models.SurfaceOM
 
             //  Constant Values;
             string  my_name              //name of current procedure;
-            parameter (my_name = "surfom_read_coeff")
+            parameter (my_name = "ReadCoeff")
             //
             string  Section_Name;
             parameter (section_name = "constants")
@@ -1624,7 +1603,7 @@ namespace Models.SurfaceOM
         /// This now just modifies the inputs and puts them into global structs, reading in is handled by .NET
         /// </para>
         /// </summary>
-        private void surfom_read_param()
+        private void ReadParam()
         {
             //  Local Variables;
             string[] temp_name = ToArray<string>(PoolName);	                    //temporary array for residue names;
@@ -1682,7 +1661,7 @@ namespace Models.SurfaceOM
             {
                 double pot_decomp_rate;
                 //collect relevant type-specific constants from the ini-file;
-                surfom_read_type_specific_constants(temp_type[i], i, out pot_decomp_rate);
+                ReadTypeSpecificConstants(temp_type[i], i, out pot_decomp_rate);
 
                 g.SurfOM.Add(
                     new SurfOrganicMatterType()
@@ -1691,9 +1670,9 @@ namespace Models.SurfaceOM
                         OrganicMatterType = temp_type[i],
 
                         //convert the ppm figures into kg/ha;
-                        no3 = Utility.Math.Divide(c.no3ppm[i], 1000000.0f, 0.0f) * temp_wt[i],
-                        nh4 = Utility.Math.Divide(c.nh4ppm[i], 1000000.0f, 0.0f) * temp_wt[i],
-                        po4 = Utility.Math.Divide(c.po4ppm[i], 1000000.0f, 0.0f) * temp_wt[i],
+                        no3 = Utility.Math.Divide(c.no3ppm[i], 1000000.0, 0.0) * temp_wt[i],
+                        nh4 = Utility.Math.Divide(c.nh4ppm[i], 1000000.0, 0.0) * temp_wt[i],
+                        po4 = Utility.Math.Divide(c.po4ppm[i], 1000000.0, 0.0) * temp_wt[i],
 
                         PotDecompRate = pot_decomp_rate
 
@@ -1704,8 +1683,8 @@ namespace Models.SurfaceOM
                 );
 
                 tot_c[i] = temp_wt[i] * c.C_fract[i];
-                tot_n[i] = Utility.Math.Divide(tot_c[i], temp_residue_cnr[i], 0.0f);
-                tot_p[i] = Utility.Math.Divide(tot_c[i], temp_residue_cpr[i], 0.0f);
+                tot_n[i] = Utility.Math.Divide(tot_c[i], temp_residue_cnr[i], 0.0);
+                tot_p[i] = Utility.Math.Divide(tot_c[i], temp_residue_cpr[i], 0.0);
 
                 for (int j = 0; j < MaxFr; j++)
                 {
@@ -1715,16 +1694,16 @@ namespace Models.SurfaceOM
                             C = tot_c[i] * c.fr_pool_C[j, i] * p.standing_fraction[i],
                             N = tot_n[i] * c.fr_pool_N[j, i] * p.standing_fraction[i],
                             P = tot_p[i] * c.fr_pool_P[j, i] * p.standing_fraction[i],
-                            AshAlk = 0.0f
+                            AshAlk = 0.0
                         };
 
                     g.SurfOM[i].Lying[j] = new OMFractionType()
                         {
-                            amount = temp_wt[i] * c.fr_pool_C[j, i] * (1 - p.standing_fraction[i]),
-                            C = tot_c[i] * c.fr_pool_C[j, i] * (1 - p.standing_fraction[i]),
-                            N = tot_n[i] * c.fr_pool_N[j, i] * (1 - p.standing_fraction[i]),
-                            P = tot_p[i] * c.fr_pool_P[j, i] * (1 - p.standing_fraction[i]),
-                            AshAlk = 0.0f
+                            amount = temp_wt[i] * c.fr_pool_C[j, i] * (1.0 - p.standing_fraction[i]),
+                            C = tot_c[i] * c.fr_pool_C[j, i] * (1.0 - p.standing_fraction[i]),
+                            N = tot_n[i] * c.fr_pool_N[j, i] * (1.0 - p.standing_fraction[i]),
+                            P = tot_p[i] * c.fr_pool_P[j, i] * (1.0 - p.standing_fraction[i]),
+                            AshAlk = 0.0
                         };
                 }
 
@@ -1753,7 +1732,6 @@ namespace Models.SurfaceOM
 
         //surfom_ONnewmet used to sit here but it's now defunct thanks to newer APSIM methods :)
 
-
         /// <summary>
         /// Performs manure decomposition taking into account environmental;
         ///  and manure factors (independant to soil N but N balance can modify;
@@ -1761,7 +1739,7 @@ namespace Models.SurfaceOM
         ///  because pools are not updated until end of time step - see post routine)
         /// </summary>
         /// <returns>pool decompositions for all residues</returns>
-        private void surfom_Pot_Decomp(out double[] c_pot_decomp, out double[] n_pot_decomp, out double[] p_pot_decomp)
+        private void PotDecomp(out double[] c_pot_decomp, out double[] n_pot_decomp, out double[] p_pot_decomp)
         {
 
             //(these pools are not updated until end of time step - see post routine)
@@ -1772,14 +1750,13 @@ namespace Models.SurfaceOM
             //  Local Variables;
 
             double
-                mf = surfom_wf(),	    //moisture factor for decomp (0-1)
-                tf = surfom_tf(),	    //temperature factor for decomp (0-1)
-                cf = surfom_cf();	    //manure/soil contact factor for decomp (0-1)
+                mf = MoistureFactor(),	    //moisture factor for decomp (0-1)
+                tf = TemperatureFactor(),	    //temperature factor for decomp (0-1)
+                cf = ContactFactor();	    //manure/soil contact factor for decomp (0-1)
 
             for (int residue = 0; residue < g.num_surfom; residue++)
             {
-
-                double cnrf = surfom_cnrf(residue);    //C:N factor for decomp (0-1) for surfom under consideration
+                double cnrf = CNRatioFactor(residue);    //C:N factor for decomp (0-1) for surfom under consideration
 
                 double
                     Fdecomp = -1,       //decomposition fraction for the given surfom
@@ -1802,10 +1779,8 @@ namespace Models.SurfaceOM
                 c_pot_decomp[residue] = Fdecomp * sumC;
                 n_pot_decomp[residue] = Fdecomp * g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N); ;
                 p_pot_decomp[residue] = Fdecomp * g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.P); ;
-
             }
         }
-
 
         /// <summary>
         /// Calculate temperature factor for manure decomposition (0-1).
@@ -1817,15 +1792,15 @@ namespace Models.SurfaceOM
         /// </para>
         /// </summary>
         /// <returns>temperature factor</returns>
-        private double surfom_tf()
+        private double TemperatureFactor()
         {
             double
-                ave_temp = Utility.Math.Divide((g.MetData.Maxt + g.MetData.Mint), 2.0f, 0.0f);	//today"s average air temp (oC)
+                ave_temp = Utility.Math.Divide((g.MetData.Maxt + g.MetData.Mint), 2.0, 0.0);	//today"s average air temp (oC)
             //tf;	//temperature factor;
 
             if (ave_temp > 0.0)
                 return Utility.Math.Bound(
-                    (double)Math.Pow(Utility.Math.Divide(ave_temp, c.opt_temp, 0.0f), 2.0),
+                    (double)Math.Pow(Utility.Math.Divide(ave_temp, c.opt_temp, 0.0), 2.0),
                     0,
                     1
                     );
@@ -1833,13 +1808,11 @@ namespace Models.SurfaceOM
                 return 0;
         }
 
-
-
         /// <summary>
         /// Calculate manure/soil contact factor for manure decomposition (0-1).
         /// </summary>
         /// <returns></returns>
-        private double surfom_cf()
+        private double ContactFactor()
         {
             double eff_surfom_wt = 0;	//Total residue wt across all instances;
 
@@ -1851,31 +1824,28 @@ namespace Models.SurfaceOM
                 eff_surfom_wt += g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.amount) * c.cf_contrib[residue];
 
             if (eff_surfom_wt <= c.crit_residue_wt)
-                return 1.0f;
+                return 1.0;
             else
-                return Utility.Math.Bound(Utility.Math.Divide(c.crit_residue_wt, eff_surfom_wt, 0.0f), 0, 1);
+                return Utility.Math.Bound(Utility.Math.Divide(c.crit_residue_wt, eff_surfom_wt, 0.0), 0, 1);
         }
-
-
 
         /// <summary>
         /// Calculate C:N factor for decomposition (0-1).
         /// </summary>
         /// <param name="residue">residue number</param>
         /// <returns>C:N factor for decomposition(0-1)</returns>
-        private double surfom_cnrf(int residue)
+        private double CNRatioFactor(int residue)
         {
             if (residue < 0)
                 return 1;
             else
             {
-
                 //Note: C:N ratio factor only based on lying fraction
                 double
                     total_C = g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C),    //organic C component of this residue (kg/ha)
                     total_N = g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N),    //organic N component of this residue (kg/ha)
                     total_mineral_n = g.SurfOM[residue].no3 + g.SurfOM[residue].nh4,    //mineral N component of this surfom (no3 + nh4)(kg/ha)
-                    cnr = Utility.Math.Divide(total_C, (total_N + total_mineral_n), 0.0f);               //C:N for this residue  (unitless)
+                    cnr = Utility.Math.Divide(total_C, (total_N + total_mineral_n), 0.0);               //C:N for this residue  (unitless)
 
                 //As C:N increases above optcn cnrf decreases exponentially toward zero;
                 //As C:N decreases below optcn cnrf is constrained to one;
@@ -1885,19 +1855,17 @@ namespace Models.SurfaceOM
                 else
                     return Utility.Math.Bound(
                         (double)Math.Exp(-c.cnrf_coeff * ((cnr - c.cnrf_optcn) / c.cnrf_optcn)),
-                        0.0f,
-                        1.0f
+                        0.0,
+                        1.0
                     );
             }
         }
-
-
 
         /// <summary>
         /// Calculate moisture factor for manure decomposition (0-1).
         /// </summary>
         /// <returns></returns>
-        private double surfom_wf()
+        private double MoistureFactor()
         {
             /*
                 double mf;	//moisture factor for decomp (0-1)
@@ -1925,17 +1893,15 @@ namespace Models.SurfaceOM
             if (g.pond_active == "yes")
                 return 0.5f;
             else
-                return Utility.Math.Bound(1 - Utility.Math.Divide(g.cumeos, c.cum_eos_max, 0), 0, 1);
-
+                return Utility.Math.Bound(1.0 - Utility.Math.Divide(g.cumeos, c.cum_eos_max, 0.0), 0.0, 1.0);
         }
 
         /// <summary>
         /// Calculate total cover
         /// </summary>
         /// <returns></returns>
-        private double surfom_cover_total()
+        private double CoverTotal()
         {
-
             /*
              * Old way of doing it (:S not sure why this had to be so complicated)
              *
@@ -1945,8 +1911,8 @@ namespace Models.SurfaceOM
 
             for (int i = 0; i < g.num_surfom; i++)
             {
-                cover2 = surfom_cover(i);
-                combined_cover = add_cover(cover1, cover2);
+                cover2 = Cover(i);
+                combined_cover = AddCover(cover1, cover2);
                 cover1 = combined_cover;
             }
 
@@ -1956,7 +1922,7 @@ namespace Models.SurfaceOM
             double combined_cover = 0;	//effective combined cover(0-1)
 
             for (int i = 0; i < g.num_surfom; i++)
-                combined_cover = add_cover(combined_cover, surfom_cover(i));
+                combined_cover = AddCover(combined_cover, Cover(i));
 
             return combined_cover;
         }
@@ -1964,24 +1930,24 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Perform actions for current day.
         /// </summary>
-        private SurfaceOrganicMatterDecompType surfom_Process()
+        private SurfaceOrganicMatterDecompType Process()
         {
             double leach_rain = 0;	//"leaching" rainfall (if rain>10mm)
 
-            surfom_set_phosphorus_aware();
+            SetPhosphorusAware();
 
-            surfom_set_vars(out g.cumeos, out leach_rain);
+            SetVars(out g.cumeos, out leach_rain);
 
             if (leach_rain > 0.0)
             {
-                surfom_Leach(leach_rain);
+                Leach(leach_rain);
             }
             else
             {
                 //no mineral N or P is leached today;
             }
 
-            return surfom_Send_PotDecomp_Event();
+            return SendPotDecompEvent();
 
         }
 
@@ -1992,7 +1958,7 @@ namespace Models.SurfaceOM
         /// </summary>
         /// <param name="cumeos"></param>
         /// <param name="leach_rain"></param>
-        private void surfom_set_vars(out double cumeos, out double leach_rain)
+        private void SetVars(out double cumeos, out double leach_rain)
         {
             double precip = g.MetData.Rain + g.irrig;	//daily precipitation (g.rain + irrigation) (mm H2O)
 
@@ -2006,7 +1972,7 @@ namespace Models.SurfaceOM
                 //keep accumulating g.eos
                 cumeos = g.cumeos + g.eos - precip;
             }
-            cumeos = l_bound(cumeos, 0.0f);
+            cumeos = Math.Max(cumeos, 0.0);
 
             if (precip >= c.min_rain_to_leach)
             {
@@ -2014,11 +1980,11 @@ namespace Models.SurfaceOM
             }
             else
             {
-                leach_rain = 0.0f;
+                leach_rain = 0.0;
             }
 
             //reset irrigation log now that we have used that information;
-            g.irrig = 0.0f;
+            g.irrig = 0.0;
         }
 
 
@@ -2027,7 +1993,7 @@ namespace Models.SurfaceOM
         ///pass to Soil N and Soil P modules.
         /// </summary>
         /// <param name="leach_rain"></param>
-        private void surfom_Leach(double leach_rain)
+        private void Leach(double leach_rain)
         {
 
             double[] nh4_incorp = new double[max_layer];
@@ -2035,7 +2001,7 @@ namespace Models.SurfaceOM
             double[] po4_incorp = new double[max_layer];
 
             // Calculate Leaching Fraction;
-            g.leaching_fr = Utility.Math.Bound(Utility.Math.Divide(leach_rain, c.leach_rain_tot, 0.0f), 0.0f, 1.0f);
+            g.leaching_fr = Utility.Math.Bound(Utility.Math.Divide(leach_rain, c.leach_rain_tot, 0.0), 0.0, 1.0);
 
 
             //Apply leaching fraction to all mineral pools;
@@ -2059,8 +2025,6 @@ namespace Models.SurfaceOM
 
                 NitrogenChanged.Invoke(NitrogenChanges);
 
-                // deepest_layer = count_of_real_vals(g.dlayer, max_layer);
-
                 if (g.phosphorus_aware)
                 {
                     throw new NotImplementedException();
@@ -2070,9 +2034,9 @@ namespace Models.SurfaceOM
 
             for (int i = 0; i < g.num_surfom; i++)
             {
-                g.SurfOM[i].no3 = g.SurfOM[i].no3 * (1 - g.leaching_fr);
-                g.SurfOM[i].nh4 = g.SurfOM[i].nh4 * (1 - g.leaching_fr);
-                g.SurfOM[i].po4 = g.SurfOM[i].po4 * (1 - g.leaching_fr);
+                g.SurfOM[i].no3 = g.SurfOM[i].no3 * (1.0 - g.leaching_fr);
+                g.SurfOM[i].nh4 = g.SurfOM[i].nh4 * (1.0 - g.leaching_fr);
+                g.SurfOM[i].po4 = g.SurfOM[i].po4 * (1.0 - g.leaching_fr);
             }
 
         }
@@ -2082,7 +2046,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Notify other modules of the potential to decompose.
         /// </summary>
-        private SurfaceOrganicMatterDecompType surfom_Send_PotDecomp_Event()
+        private SurfaceOrganicMatterDecompType SendPotDecompEvent()
         {
 
             if (g.num_surfom <= 0)
@@ -2098,7 +2062,7 @@ namespace Models.SurfaceOM
                 n_pot_decomp,
                 p_pot_decomp;
 
-            surfom_Pot_Decomp(out c_pot_decomp, out n_pot_decomp, out p_pot_decomp);
+            PotDecomp(out c_pot_decomp, out n_pot_decomp, out p_pot_decomp);
 
             for (int residue = 0; residue < g.num_surfom; residue++)
                 SOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType()
@@ -2108,11 +2072,11 @@ namespace Models.SurfaceOM
 
                     FOM = new FOMType()
                     {
-                        amount = Utility.Math.Divide(c_pot_decomp[residue], c.C_fract[residue], 0.0f),
+                        amount = Utility.Math.Divide(c_pot_decomp[residue], c.C_fract[residue], 0.0),
                         C = c_pot_decomp[residue],
                         N = n_pot_decomp[residue],
                         P = p_pot_decomp[residue],
-                        AshAlk = 0.0f
+                        AshAlk = 0.0
                     }
                 };
 
@@ -2166,35 +2130,29 @@ namespace Models.SurfaceOM
                         AshAlk = g.SurfOM[residue].Lying[pool].AshAlk
                     };
                 }
-
             }
 
             publish_SurfaceOrganicMatter(SOM);
             return SOM;
-
         }
 
         /// <summary>
         /// Calculates surfom removal as a result of remove_surfom message
         /// </summary>
-        /// <param name="variant"></param>
-        private void surfom_remove_surfom(SurfaceOrganicMatterType SOM)
+        /// <param name="SOM"></param>
+        private void RemoveSurfom(SurfaceOrganicMatterType SOM)
         {
             //- Implementation Section ----------------------------------
 
-            //APSIM THING
-            //SOM = unpack_SurfaceOrganicMatter(variant);
-
             for (int som_index = 0; som_index < g.num_surfom; som_index++)
             {
-
                 //Determine which residue pool corresponds to this index in the array;
                 int SOMNo = surfom_number(SOM.Pool[som_index].Name);
 
                 if (SOMNo < 0)
                 {
                     //This is an unknown type - error (<- original comment, not really an error as original code didn't throw one :S)
-                    Summary.WriteMessage(FullPath, "Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
+                    summary.WriteMessage(FullPath, "Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
                 }
                 else
                 {
@@ -2226,7 +2184,7 @@ namespace Models.SurfaceOM
                         }
                         else
                         {
-                            Summary.WriteMessage(FullPath,
+                            summary.WriteMessage(FullPath,
                                 "Attempting to remove more dm from " + SOM.Pool[som_index].Name + " standing Surface Organic Matter pool " + pool + " than available" + Environment.NewLine
                                 + "Removing " + SOM.Pool[SOMNo].LyingFraction[pool].amount + " (kg/ha) " + "from " + g.SurfOM[SOMNo].Lying[pool].amount + " (kg/ha) available."
                            );
@@ -2254,7 +2212,7 @@ namespace Models.SurfaceOM
 
                 //Report Removals;
                 if (p.report_removals == "yes")
-                    Summary.WriteMessage(FullPath, String.Format(
+                    summary.WriteMessage(FullPath, String.Format(
     @"Removed SurfaceOM
     SurfaceOM name  = {0}
     SurfaceOM Type  = {1}
@@ -2284,7 +2242,6 @@ namespace Models.SurfaceOM
                    );
 
             }
-
         }
 
         /// <summary>
@@ -2300,17 +2257,14 @@ namespace Models.SurfaceOM
             g.irrig += data.Amount;
         }
 
-        private void surfom_decompose_surfom(SurfaceOrganicMatterDecompType SOMDecomp)
+        private void DecomposeSurfom(SurfaceOrganicMatterDecompType SOMDecomp)
         {
-
             //  Local Variables;
-            //int numvals;                    //number of values from postbox;
-            //int layer;                      //layer counter;
-            int num_surfom;                    //local surfom counter from received event;
-            int residue_no;                 //Index into the global array;
-            double[] c_pot_decomp = new double[max_residues];	//pot amount of C to decompose (kg/ha)
-            double[] n_pot_decomp = new double[max_residues];	//pot amount of N to decompose (kg/ha)
-            double[] p_pot_decomp = new double[max_residues];	//pot amount of P to decompose (kg/ha)
+            int num_surfom = SOMDecomp.Pool.Length;             //local surfom counter from received event;
+            int residue_no;                                     //Index into the global array;
+            double[] c_pot_decomp = new double[num_surfom];	//pot amount of C to decompose (kg/ha)
+            double[] n_pot_decomp = new double[num_surfom];	//pot amount of N to decompose (kg/ha)
+            double[] p_pot_decomp = new double[num_surfom];	//pot amount of P to decompose (kg/ha)
             double tot_c_decomp;	//total amount of c to decompose;
             double tot_n_decomp;	//total amount of c to decompose;
             double tot_p_decomp;	//total amount of c to decompose;
@@ -2322,16 +2276,9 @@ namespace Models.SurfaceOM
             double SOMcnr = 0;
             double SOMc = 0;
             double SOMn = 0;
-            //string Err_string;
-
-            //APSIM THING - Handled in method signature
-            //unpack_SurfaceOrganicMatterDecomp(variant, SOMDecomp);
-
-            num_surfom = SOMDecomp.Pool.Length;
-
 
             //calculate potential decompostion of C, N, and P;
-            surfom_Pot_Decomp(out c_pot_decomp, out n_pot_decomp, out p_pot_decomp);
+            PotDecomp(out c_pot_decomp, out n_pot_decomp, out p_pot_decomp);
 
             for (int counter = 0; counter < num_surfom; counter++)
             {
@@ -2343,14 +2290,14 @@ namespace Models.SurfaceOM
                 tot_c_decomp = SOMDecomp.Pool[counter].FOM.C;
                 tot_n_decomp = SOMDecomp.Pool[counter].FOM.N;
 
-                Bound_check_real_var(tot_n_decomp, 0.0f, n_pot_decomp[residue_no], "total n decomposition");
+                Bound_check_real_var(tot_n_decomp, 0.0, n_pot_decomp[residue_no], "total n decomposition");
 
                 SOMc = g.SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + g.SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
                 SOMn = g.SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.N) + g.SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.N);
 
-                SOMcnr = Utility.Math.Divide(SOMc, SOMn, 0.0f);
+                SOMcnr = Utility.Math.Divide(SOMc, SOMn, 0.0);
 
-                if (reals_are_equal(tot_c_decomp, 0.0f) && reals_are_equal(tot_n_decomp, 0.0f))
+                if (reals_are_equal(tot_c_decomp, 0.0) && reals_are_equal(tot_n_decomp, 0.0))
                 {
                     //all OK - nothing happening;
                 }
@@ -2363,7 +2310,7 @@ namespace Models.SurfaceOM
                     throw new Exception("SurfaceOM - N decomposition exceeds potential rate");
                     //NIH - If both the following tests are empty then they can both be deleted.
                 }
-                else if (reals_are_equal(Utility.Math.Divide(tot_c_decomp, tot_n_decomp, 0.0f), SOMcnr))
+                else if (reals_are_equal(Utility.Math.Divide(tot_c_decomp, tot_n_decomp, 0.0), SOMcnr))
                 {
                     //all ok - decomposition and residue pool have same C:N;
                 }
@@ -2374,15 +2321,12 @@ namespace Models.SurfaceOM
                 }
 
                 //calculate total p decomposition;
-                tot_p_decomp = tot_c_decomp * Utility.Math.Divide(p_pot_decomp[residue_no], c_pot_decomp[residue_no], 0.0f);
+                tot_p_decomp = tot_c_decomp * Utility.Math.Divide(p_pot_decomp[residue_no], c_pot_decomp[residue_no], 0.0);
 
                 //Do actual decomposing - update pools for C, N, and P;
-                surfom_Decomp(tot_c_decomp, tot_n_decomp, tot_p_decomp, residue_no);
+                Decomp(tot_c_decomp, tot_n_decomp, tot_p_decomp, residue_no);
             }
-
         }
-
-
 
         /// <summary>
         /// Performs updating of pools due to surfom decomposition
@@ -2391,36 +2335,34 @@ namespace Models.SurfaceOM
         /// <param name="N_decomp">N to be decomposed</param>
         /// <param name="P_decomp">P to be decomposed</param>
         /// <param name="residue">residue number being dealt with</param>
-        private void surfom_Decomp(double C_decomp, double N_decomp, double P_decomp, int residue)
+        private void Decomp(double C_decomp, double N_decomp, double P_decomp, int residue)
         {
 
             double Fdecomp;  //decomposing fraction;
 
             //do C
-            Fdecomp = Utility.Math.Bound(Utility.Math.Divide(C_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C), 0.0f), 0.0f, 1.0f);
+            Fdecomp = Utility.Math.Bound(Utility.Math.Divide(C_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C), 0.0), 0.0, 1.0);
             for (int i = 0; i < MaxFr; i++)
             {
-                g.SurfOM[residue].Lying[i].C = g.SurfOM[residue].Lying[i].C * (1 - Fdecomp);
-                g.SurfOM[residue].Lying[i].amount = g.SurfOM[residue].Lying[i].amount * (1 - Fdecomp);
+                g.SurfOM[residue].Lying[i].C = g.SurfOM[residue].Lying[i].C * (1.0 - Fdecomp);
+                g.SurfOM[residue].Lying[i].amount = g.SurfOM[residue].Lying[i].amount * (1.0 - Fdecomp);
             }
 
             //do N
-            Fdecomp = Utility.Math.Divide(N_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N), 0.0f);
+            Fdecomp = Utility.Math.Divide(N_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N), 0.0);
             for (int i = 0; i < MaxFr; i++)
-                g.SurfOM[residue].Lying[i].N = g.SurfOM[residue].Lying[i].N * (1 - Fdecomp);
+                g.SurfOM[residue].Lying[i].N = g.SurfOM[residue].Lying[i].N * (1.0 - Fdecomp);
 
             //do P
-            Fdecomp = Utility.Math.Divide(P_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.P), 0.0f);
+            Fdecomp = Utility.Math.Divide(P_decomp, g.SurfOM[residue].Lying.Sum<OMFractionType>(x => x.P), 0.0);
             for (int i = 0; i < MaxFr; i++)
-                g.SurfOM[residue].Lying[i].P = g.SurfOM[residue].Lying[i].P * (1 - Fdecomp);
-
+                g.SurfOM[residue].Lying[i].P = g.SurfOM[residue].Lying[i].P * (1.0 - Fdecomp);
         }
-
 
         /// <summary>
         /// Calculates surfom incorporation as a result of tillage operations.
         /// </summary>
-        private void surfom_tillage(TillageType data)
+        private void Tillage(TillageType data)
         {
             /*
             double[] type_info;	//Array containing information about;
@@ -2439,7 +2381,7 @@ namespace Models.SurfaceOM
             //----------------------------------------------------------
             if (data.f_incorp == 0 && data.tillage_depth == 0)
             {
-                Summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
+                summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
 
                 data = tillageTypes.GetTillageData(data.Name);
 
@@ -2453,9 +2395,9 @@ namespace Models.SurfaceOM
             //             Now incorporate the residues;
             //----------------------------------------------------------
 
-            surfom_incorp(data.Name, data.f_incorp, data.tillage_depth);
+            Incorp(data.Name, data.f_incorp, data.tillage_depth);
 
-            Summary.WriteMessage(FullPath, String.Format(
+            summary.WriteMessage(FullPath, String.Format(
     @"Residue removed using {0}
     Fraction Incorporated = {1:0.0##}
     Incorporated Depth    = {2:0.0##}", data.Name, data.f_incorp, data.tillage_depth
@@ -2474,7 +2416,7 @@ namespace Models.SurfaceOM
         /// <param name="action_type"></param>
         /// <param name="F_incorp"></param>
         /// <param name="Tillage_depth"></param>
-        private void surfom_incorp(string action_type, double F_incorp, double Tillage_depth)
+        private void Incorp(string action_type, double F_incorp, double Tillage_depth)
         //================================================================
         {
             double cum_depth;	//
@@ -2493,11 +2435,11 @@ namespace Models.SurfaceOM
             FOMPoolType FPoolProfile = new FOMPoolType();
             ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
-            F_incorp = Utility.Math.Bound(F_incorp, 0.0f, 1.0f);
+            F_incorp = Utility.Math.Bound(F_incorp, 0.0, 1.0);
 
-            deepest_Layer = get_cumulative_index_real(Tillage_depth, g.dlayer, max_layer - 1);
+            deepest_Layer = GetCumulativeIndexReal(Tillage_depth, g.dlayer, max_layer - 1);
 
-            cum_depth = 0.0f;
+            cum_depth = 0.0;
 
             for (int layer = 0; layer <= deepest_Layer; layer++)
             {
@@ -2507,7 +2449,7 @@ namespace Models.SurfaceOM
 
                     depth_to_go = Tillage_depth - cum_depth;
                     layer_incorp_depth = Math.Min(depth_to_go, g.dlayer[layer]);
-                    F_incorp_layer = Utility.Math.Divide(layer_incorp_depth, Tillage_depth, 0.0f);
+                    F_incorp_layer = Utility.Math.Divide(layer_incorp_depth, Tillage_depth, 0.0);
                     for (int i = 0; i < MaxFr; i++)
                     {
                         C_pool[i, layer] += (g.SurfOM[residue].Lying[i].C + g.SurfOM[residue].Standing[i].C) * F_incorp * F_incorp_layer;
@@ -2561,7 +2503,7 @@ namespace Models.SurfaceOM
 
                 //dsg 160104  Keep this event for the time being - will be replaced by ResidueChanged;
 
-                residue2_Send_Res_removed_Event(action_type, F_incorp, residue_incorp_fraction, deepest_Layer);
+                SendResRemovedEvent(action_type, F_incorp, residue_incorp_fraction, deepest_Layer);
 
             }
             else
@@ -2575,11 +2517,11 @@ namespace Models.SurfaceOM
 
                 massBalanceChange.PoolClass = "surface";
                 massBalanceChange.FlowType = "loss";
-                massBalanceChange.DM = 0.0f;
-                massBalanceChange.C = 0.0f;
-                massBalanceChange.N = 0.0f;
-                massBalanceChange.P = 0.0f;
-                massBalanceChange.SW = 0.0f;
+                massBalanceChange.DM = 0.0;
+                massBalanceChange.C = 0.0;
+                massBalanceChange.N = 0.0;
+                massBalanceChange.P = 0.0;
+                massBalanceChange.SW = 0.0;
 
                 for (int pool = 0; pool < MaxFr; pool++)
                 {
@@ -2598,184 +2540,35 @@ namespace Models.SurfaceOM
             {
                 for (int i = 0; i < g.SurfOM.Count; i++)
                 {
-                    g.SurfOM[i].Lying[pool].amount = g.SurfOM[i].Lying[pool].amount * (1 - F_incorp);
-                    g.SurfOM[i].Standing[pool].amount = g.SurfOM[i].Standing[pool].amount * (1 - F_incorp);
+                    g.SurfOM[i].Lying[pool].amount = g.SurfOM[i].Lying[pool].amount * (1.0 - F_incorp);
+                    g.SurfOM[i].Standing[pool].amount = g.SurfOM[i].Standing[pool].amount * (1.0 - F_incorp);
 
-                    g.SurfOM[i].Lying[pool].C = g.SurfOM[i].Lying[pool].C * (1 - F_incorp);
-                    g.SurfOM[i].Standing[pool].C = g.SurfOM[i].Standing[pool].C * (1 - F_incorp);
+                    g.SurfOM[i].Lying[pool].C = g.SurfOM[i].Lying[pool].C * (1.0 - F_incorp);
+                    g.SurfOM[i].Standing[pool].C = g.SurfOM[i].Standing[pool].C * (1.0 - F_incorp);
 
-                    g.SurfOM[i].Lying[pool].N = g.SurfOM[i].Lying[pool].N * (1 - F_incorp);
-                    g.SurfOM[i].Standing[pool].N = g.SurfOM[i].Standing[pool].N * (1 - F_incorp);
+                    g.SurfOM[i].Lying[pool].N = g.SurfOM[i].Lying[pool].N * (1.0 - F_incorp);
+                    g.SurfOM[i].Standing[pool].N = g.SurfOM[i].Standing[pool].N * (1.0 - F_incorp);
 
-                    g.SurfOM[i].Lying[pool].P = g.SurfOM[i].Lying[pool].P * (1 - F_incorp);
-                    g.SurfOM[i].Standing[pool].P = g.SurfOM[i].Standing[pool].P * (1 - F_incorp);
+                    g.SurfOM[i].Lying[pool].P = g.SurfOM[i].Lying[pool].P * (1.0 - F_incorp);
+                    g.SurfOM[i].Standing[pool].P = g.SurfOM[i].Standing[pool].P * (1.0 - F_incorp);
 
-                    g.SurfOM[i].Lying[pool].AshAlk = g.SurfOM[i].Lying[pool].AshAlk * (1 - F_incorp);
-                    g.SurfOM[i].Standing[pool].AshAlk = g.SurfOM[i].Standing[pool].AshAlk * (1 - F_incorp);
+                    g.SurfOM[i].Lying[pool].AshAlk = g.SurfOM[i].Lying[pool].AshAlk * (1.0 - F_incorp);
+                    g.SurfOM[i].Standing[pool].AshAlk = g.SurfOM[i].Standing[pool].AshAlk * (1.0 - F_incorp);
                 }
             }
 
             for (int i = 0; i < g.SurfOM.Count; i++)
             {
-                g.SurfOM[i].no3 *= (1 - F_incorp);
-                g.SurfOM[i].nh4 *= (1 - F_incorp);
-                g.SurfOM[i].po4 *= (1 - F_incorp);
+                g.SurfOM[i].no3 *= (1.0 - F_incorp);
+                g.SurfOM[i].nh4 *= (1.0 - F_incorp);
+                g.SurfOM[i].po4 *= (1.0 - F_incorp);
             }
         }
-
-        /// <summary>
-        /// Calculate surfom incorporation as a result of tillage and update;
-        ///  residue and N pools.
-        ///  <para>
-        ///  Notes;
-        ///  I do not like updating the pools here but we need to be able to handle;
-        ///  the case of multiple tillage events per day.</para>
-        /// </summary>
-        /// <param name="action_type"></param>
-        /// <param name="F_incorp"></param>
-        /// <param name="Tillage_depth"></param>
-        private void surfom_incorp_single(string surfom_name, string action_type, double F_incorp, double Tillage_depth)
-        //================================================================
-        {
-
-            double cum_depth;	//
-            int deepest_Layer;         //
-            double depth_to_go;	//
-            double F_incorp_layer = 0;	//
-            double[] residue_incorp_fraction = new double[max_layer];
-            double layer_incorp_depth;	//
-            double[,] C_pool = new double[MaxFr, max_layer];	//total C in each Om fraction and layer (from all surfOM"s) incorporated;
-            double[,] N_pool = new double[MaxFr, max_layer];	//total N in each Om fraction and layer (from all surfOM"s) incorporated;
-            double[,] P_pool = new double[MaxFr, max_layer];	//total P in each Om fraction and layer (from all surfOM"s) incorporated;
-            double[,] AshAlk_pool = new double[MaxFr, max_layer];	//total AshAlk in each Om fraction and layer (from all surfOM"s) incorporated;
-            double[] no3 = new double[max_layer];	//total no3 to go into each soil layer (from all surfOM"s)
-            double[] nh4 = new double[max_layer];	//total nh4 to go into each soil layer (from all surfOM"s)
-            double[] po4 = new double[max_layer];	//total po4 to go into each soil layer (from all surfOM"s)
-            FOMPoolType FPoolProfile = new FOMPoolType();
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-
-            F_incorp = Utility.Math.Bound(F_incorp, 0.0f, 1.0f);
-
-            deepest_Layer = get_cumulative_index_real(Tillage_depth, g.dlayer, max_layer - 1);
-
-            cum_depth = 0.0f;
-
-            int residue = surfom_number(surfom_name);
-
-            for (int layer = 0; layer <= deepest_Layer; layer++)
-            {
-                depth_to_go = Tillage_depth - cum_depth;
-                layer_incorp_depth = Math.Min(depth_to_go, g.dlayer[layer]);
-                F_incorp_layer = Utility.Math.Divide(layer_incorp_depth, Tillage_depth, 0.0f);
-                for (int i = 0; i < MaxFr; i++)
-                {
-                    C_pool[i, layer] += (g.SurfOM[residue].Lying[i].C + g.SurfOM[residue].Standing[i].C) * F_incorp * F_incorp_layer;
-                    N_pool[i, layer] += (g.SurfOM[residue].Lying[i].N + g.SurfOM[residue].Standing[i].N) * F_incorp * F_incorp_layer;
-                    P_pool[i, layer] += (g.SurfOM[residue].Lying[i].P + g.SurfOM[residue].Standing[i].P) * F_incorp * F_incorp_layer;
-                    AshAlk_pool[i, layer] += (g.SurfOM[residue].Lying[i].AshAlk + g.SurfOM[residue].Standing[i].AshAlk) * F_incorp * F_incorp_layer;
-                }
-                no3[layer] += g.SurfOM[residue].no3 * F_incorp * F_incorp_layer;
-                nh4[layer] += g.SurfOM[residue].nh4 * F_incorp * F_incorp_layer;
-                po4[layer] += g.SurfOM[residue].po4 * F_incorp * F_incorp_layer;
-
-                cum_depth += g.dlayer[layer];
-
-                //dsg 160104  Remove the following variable after Res_removed_Event is scrapped;
-                residue_incorp_fraction[layer] = F_incorp_layer;
-            }
-
-            if (Sum2DArray(C_pool) > 0.0)
-            {
-
-                //Pack up the incorporation info and send to SOILN2 and SOILP as part of a;
-                //IncorpFOMPool Event;
-
-                for (int layer = 0; layer < deepest_Layer; layer++)
-                {
-                    FPoolProfile.Layer[layer].thickness = g.dlayer[layer];
-                    FPoolProfile.Layer[layer].no3 = no3[layer];
-                    FPoolProfile.Layer[layer].nh4 = nh4[layer];
-                    FPoolProfile.Layer[layer].po4 = po4[layer];
-                    FPoolProfile.Layer[layer].Pool = new FOMType[MaxFr];
-
-                    for (int i = 0; i < MaxFr; i++)
-                        FPoolProfile.Layer[layer].Pool[i] = new FOMType()
-                        {
-                            C = C_pool[i, layer],
-                            N = N_pool[i, layer],
-                            P = P_pool[i, layer],
-                            AshAlk = AshAlk_pool[i, layer]
-                        };
-                }
-
-                //APSIM THING
-                //publish_FOMPool(id.IncorpFOMPool, FPoolProfile);
-
-                //dsg 160104  Keep this event for the time being - will be replaced by ResidueChanged;
-
-                residue2_Send_Res_removed_Event(action_type, F_incorp, residue_incorp_fraction, deepest_Layer);
-
-            }
-            else
-            {
-                //no residue incorporated;
-            }
-
-            if (Tillage_depth <= 0.000001)
-            {
-                //the OM is not incorporated and is lost from the system;
-
-                massBalanceChange.PoolClass = "surface";
-                massBalanceChange.FlowType = "loss";
-                massBalanceChange.DM = 0.0f;
-                massBalanceChange.C = 0.0f;
-                massBalanceChange.N = 0.0f;
-                massBalanceChange.P = 0.0f;
-                massBalanceChange.SW = 0.0f;
-
-                for (int pool = 0; pool < MaxFr; pool++)
-                {
-                    massBalanceChange.DM += g.SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].amount + x.Lying[pool].amount) * F_incorp;
-                    massBalanceChange.C += g.SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].C + x.Lying[pool].C) * F_incorp;
-                    massBalanceChange.N += g.SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].N + x.Lying[pool].N) * F_incorp;
-                    massBalanceChange.P += g.SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].P + x.Lying[pool].P) * F_incorp;
-                }
-                surfom_ExternalMassFlow(massBalanceChange);
-            }
-
-            //Now update globals.  They must be updated here because there is the possibility of;
-            //more than one incorporation on any given day;
-
-            for (int pool = 0; pool < MaxFr; pool++)
-            {
-                g.SurfOM[residue].Lying[pool].amount = g.SurfOM[residue].Lying[pool].amount * (1 - F_incorp);
-                g.SurfOM[residue].Standing[pool].amount = g.SurfOM[residue].Standing[pool].amount * (1 - F_incorp);
-
-                g.SurfOM[residue].Lying[pool].C = g.SurfOM[residue].Lying[pool].C * (1 - F_incorp);
-                g.SurfOM[residue].Standing[pool].C = g.SurfOM[residue].Standing[pool].C * (1 - F_incorp);
-
-                g.SurfOM[residue].Lying[pool].N = g.SurfOM[residue].Lying[pool].N * (1 - F_incorp);
-                g.SurfOM[residue].Standing[pool].N = g.SurfOM[residue].Standing[pool].N * (1 - F_incorp);
-
-                g.SurfOM[residue].Lying[pool].P = g.SurfOM[residue].Lying[pool].P * (1 - F_incorp);
-                g.SurfOM[residue].Standing[pool].P = g.SurfOM[residue].Standing[pool].P * (1 - F_incorp);
-
-                g.SurfOM[residue].Lying[pool].AshAlk = g.SurfOM[residue].Lying[pool].AshAlk * (1 - F_incorp);
-                g.SurfOM[residue].Standing[pool].AshAlk = g.SurfOM[residue].Standing[pool].AshAlk * (1 - F_incorp);
-            }
-
-            for (int i = 0; i < g.SurfOM.Count; i++)
-            {
-                g.SurfOM[residue].no3 *= (1 - F_incorp);
-                g.SurfOM[residue].nh4 *= (1 - F_incorp);
-                g.SurfOM[residue].po4 *= (1 - F_incorp);
-            }
-        }
-
+        
         /// <summary>
         /// Calculates surfom addition as a result of add_surfom message
         /// </summary>
-        private void surfom_add_surfom(Add_surfaceomType data)
+        private void AddSurfom(Add_surfaceomType data)
         {
 
             int SOMNo = 0;                 //specific system number for this residue name;
@@ -2808,7 +2601,7 @@ namespace Models.SurfaceOM
                 g.SurfOM.Add(new SurfOrganicMatterType(surfom_name, surfom_type));
                 SOMNo = g.num_surfom - 1;
 
-                surfom_read_type_specific_constants(g.SurfOM[SOMNo].OrganicMatterType, SOMNo, out g.SurfOM[SOMNo].PotDecompRate);
+                ReadTypeSpecificConstants(g.SurfOM[SOMNo].OrganicMatterType, SOMNo, out g.SurfOM[SOMNo].PotDecompRate);
             }
             else
             {
@@ -2828,7 +2621,7 @@ namespace Models.SurfaceOM
                 {
                     //APSIM THING
                     //collect_real_var_optional ("cnr", "()", surfom_cnr_added, numval_cnr, 0.0, 10000.0);
-                    surfom_n_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cnr_added, 0.0f);
+                    surfom_n_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cnr_added, 0.0);
 
                     //If no N info provided, and no cnr info provided then throw error
                     if (surfom_cnr_added == 0)
@@ -2841,11 +2634,11 @@ namespace Models.SurfaceOM
                     //use default cpr and throw warning error to notify user;
                     if (surfom_cpr_added == 0)
                     {
-                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), c.default_cpr, 0.0f);
-                        Summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
+                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), c.default_cpr, 0.0);
+                        summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
-                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cpr_added, 0.0f);
+                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cpr_added, 0.0);
 
                 //convert the ppm figures into kg/ha;
                 surfom_no3_added = Utility.Math.Divide(c.no3ppm[SOMNo], 1000000, 0) * surfom_mass_added;
@@ -2855,7 +2648,6 @@ namespace Models.SurfaceOM
                 g.SurfOM[SOMNo].no3 += surfom_no3_added;
                 g.SurfOM[SOMNo].nh4 += surfom_nh4_added;
                 g.SurfOM[SOMNo].po4 += surfom_po4_added;
-
 
                 if (surfom_mass_added > 0.0)
                     //Assume all residue added is in the LYING pool, ie No STANDING component;
@@ -2876,33 +2668,33 @@ namespace Models.SurfaceOM
 
                     tot_mass = lying + standing;
 
-                    removed_from_standing = surfom_mass_added * (Utility.Math.Divide(standing, tot_mass, 0.0f));
+                    removed_from_standing = surfom_mass_added * (Utility.Math.Divide(standing, tot_mass, 0.0));
                     removed_from_lying = surfom_mass_added - removed_from_standing;
 
                     for (int i = 0; i < MaxFr; i++)
                     {
                         g.SurfOM[SOMNo].Lying[i].amount = g.SurfOM[SOMNo].Lying[i].amount + removed_from_lying * c.fr_pool_C[i, SOMNo];
                         g.SurfOM[SOMNo].Lying[i].C = g.SurfOM[SOMNo].Lying[i].C + removed_from_lying * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                        g.SurfOM[SOMNo].Lying[i].N = g.SurfOM[SOMNo].Lying[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0f)) * c.fr_pool_N[i, SOMNo];
-                        g.SurfOM[SOMNo].Lying[i].P = g.SurfOM[SOMNo].Lying[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0f)) * c.fr_pool_P[i, SOMNo];
-                        g.SurfOM[SOMNo].Lying[i].AshAlk = 0.0f;
+                        g.SurfOM[SOMNo].Lying[i].N = g.SurfOM[SOMNo].Lying[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0)) * c.fr_pool_N[i, SOMNo];
+                        g.SurfOM[SOMNo].Lying[i].P = g.SurfOM[SOMNo].Lying[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0)) * c.fr_pool_P[i, SOMNo];
+                        g.SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
                         g.SurfOM[SOMNo].Standing[i].amount = g.SurfOM[SOMNo].Standing[i].amount + removed_from_standing * c.fr_pool_C[i, SOMNo];
                         g.SurfOM[SOMNo].Standing[i].C = g.SurfOM[SOMNo].Standing[i].C + removed_from_standing * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                        g.SurfOM[SOMNo].Standing[i].N = g.SurfOM[SOMNo].Standing[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0f)) * c.fr_pool_N[i, SOMNo];
-                        g.SurfOM[SOMNo].Standing[i].P = g.SurfOM[SOMNo].Standing[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0f)) * c.fr_pool_P[i, SOMNo];
-                        g.SurfOM[SOMNo].Standing[i].AshAlk = 0.0f;
+                        g.SurfOM[SOMNo].Standing[i].N = g.SurfOM[SOMNo].Standing[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0)) * c.fr_pool_N[i, SOMNo];
+                        g.SurfOM[SOMNo].Standing[i].P = g.SurfOM[SOMNo].Standing[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0)) * c.fr_pool_P[i, SOMNo];
+                        g.SurfOM[SOMNo].Standing[i].AshAlk = 0.0;
                     }
                 }
                 //Report Additions;
                 if (p.report_additions == "yes")
-                    Summary.WriteMessage(FullPath, String.Format(
+                    summary.WriteMessage(FullPath, String.Format(
     @"Added SurfaceOM
     SurfaceOM name       = {0}
     SurfaceOM Type       = {1}
     Amount Added [kg/ha] = {2:0.0##}", g.SurfOM[SOMNo].name.Trim(), g.SurfOM[SOMNo].OrganicMatterType.Trim(), surfom_mass_added
                                          ));
 
-                residue2_Send_Res_added_Event(g.SurfOM[SOMNo].OrganicMatterType, g.SurfOM[SOMNo].OrganicMatterType, surfom_mass_added, surfom_n_added, surfom_p_added);
+                SendResAddedEvent(g.SurfOM[SOMNo].OrganicMatterType, g.SurfOM[SOMNo].OrganicMatterType, surfom_mass_added, surfom_n_added, surfom_p_added);
 
                 //assumption is this event comes only from the manager for applying from an external source.
                 surfom_ExternalMassFlow(
@@ -2914,8 +2706,9 @@ namespace Models.SurfaceOM
                         C = surfom_c_added,
                         N = surfom_n_added + surfom_no3_added + surfom_nh4_added,
                         P = surfom_p_added + surfom_po4_added,
-                        SW = 0.0f
+                        SW = 0.0
                     }
+
                 );
             }
         }
@@ -2925,7 +2718,7 @@ namespace Models.SurfaceOM
         /// This is a still the minimalist version, providing
         /// an alternative to using add_surfaceom directly
         /// </summary>
-        private void surfom_add_faeces(AddFaecesType data)
+        private void AddFaeces(AddFaecesType data)
         {
             string Manure = "manure";
             AddSurfaceOM((double)(data.OMWeight * fractionFaecesAdded),
@@ -2940,7 +2733,7 @@ namespace Models.SurfaceOM
             // it follows the same pattern as P.
             int SOMNo = surfom_number(Manure);
 
-            if (SOMNo >= 0) // Should always be OK, following creation in surfom_add_surfom
+            if (SOMNo >= 0) // Should always be OK, following creation in AddSurfom
             {
                 for (int i = 0; i < MaxFr; i++)
                 {
@@ -2954,7 +2747,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Calculates surfom addition as a result of add_surfom message
         /// </summary>
-        private void surfom_prop_up(Prop_upType data)
+        private void PropUp(Prop_upType data)
         {
             int SOMNo = 0;                      //surfaceom pool number;
             double
@@ -2966,10 +2759,6 @@ namespace Models.SurfaceOM
                 new_lying = 0,	            //new lying residue mass in specified pool;
                 standing_change_fract = 0,	//fractional change to standing material in specified residue pool;
                 lying_change_fract = 0;	    //fractional change to lying material in specified residue pool;
-
-            //APIM THING
-            //collect_char_var ("name", "()", surfom_name, numvals);
-
 
             SOMNo = surfom_number(data.name);
             if (SOMNo < 0)
@@ -2984,8 +2773,8 @@ namespace Models.SurfaceOM
 
             if (old_standing > 0.0)
             {
-                standing_change_fract = Utility.Math.Divide(new_standing, old_standing, 0.0f);
-                lying_change_fract = Utility.Math.Divide(new_lying, old_lying, 0.0f);
+                standing_change_fract = Utility.Math.Divide(new_standing, old_standing, 0.0);
+                lying_change_fract = Utility.Math.Divide(new_lying, old_lying, 0.0);
 
                 for (int i = 0; i < MaxFr; i++)
                 {
@@ -3004,28 +2793,25 @@ namespace Models.SurfaceOM
             }
             else
             {
-
-                lying_change_fract = Utility.Math.Divide(new_lying, old_lying, 0.0f);
+                lying_change_fract = Utility.Math.Divide(new_lying, old_lying, 0.0);
                 for (int i = 0; i < MaxFr; i++)
                 {
-                    g.SurfOM[SOMNo].Standing[i].amount = g.SurfOM[SOMNo].Lying[i].amount * (1 - lying_change_fract);
-                    g.SurfOM[SOMNo].Standing[i].C = g.SurfOM[SOMNo].Lying[i].C * (1 - lying_change_fract);
-                    g.SurfOM[SOMNo].Standing[i].N = g.SurfOM[SOMNo].Lying[i].N * (1 - lying_change_fract);
-                    g.SurfOM[SOMNo].Standing[i].P = g.SurfOM[SOMNo].Lying[i].P * (1 - lying_change_fract);
-                    g.SurfOM[SOMNo].Standing[i].AshAlk = g.SurfOM[SOMNo].Lying[i].AshAlk * (1 - lying_change_fract);
+                    g.SurfOM[SOMNo].Standing[i].amount = g.SurfOM[SOMNo].Lying[i].amount * (1.0 - lying_change_fract);
+                    g.SurfOM[SOMNo].Standing[i].C = g.SurfOM[SOMNo].Lying[i].C * (1.0 - lying_change_fract);
+                    g.SurfOM[SOMNo].Standing[i].N = g.SurfOM[SOMNo].Lying[i].N * (1.0 - lying_change_fract);
+                    g.SurfOM[SOMNo].Standing[i].P = g.SurfOM[SOMNo].Lying[i].P * (1.0 - lying_change_fract);
+                    g.SurfOM[SOMNo].Standing[i].AshAlk = g.SurfOM[SOMNo].Lying[i].AshAlk * (1.0 - lying_change_fract);
                     g.SurfOM[SOMNo].Lying[i].amount = g.SurfOM[SOMNo].Lying[i].amount * lying_change_fract;
                     g.SurfOM[SOMNo].Lying[i].C = g.SurfOM[SOMNo].Lying[i].C * lying_change_fract;
                     g.SurfOM[SOMNo].Lying[i].N = g.SurfOM[SOMNo].Lying[i].N * lying_change_fract;
                     g.SurfOM[SOMNo].Lying[i].P = g.SurfOM[SOMNo].Lying[i].P * lying_change_fract;
                     g.SurfOM[SOMNo].Lying[i].AshAlk = g.SurfOM[SOMNo].Lying[i].AshAlk * lying_change_fract;
                 }
-
             }
-
 
             //Report Additions;
             if (p.report_additions == "yes")
-                Summary.WriteMessage(FullPath, String.Format(
+                summary.WriteMessage(FullPath, String.Format(
     @"Propped-up SurfaceOM
     SurfaceOM name        = {0}
     SurfaceOM Type        = {1}
@@ -3039,7 +2825,7 @@ namespace Models.SurfaceOM
         /// </summary>
         /// <param name="surfom_type"></param>
         /// <param name="i"></param>
-        private void surfom_read_type_specific_constants(string surfom_type, int i, out double pot_decomp_rate)
+        private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
             ResidueType thistype = residueTypes.getResidue(surfom_type);
             if (thistype == null)
@@ -3062,8 +2848,6 @@ namespace Models.SurfaceOM
                 c.fr_pool_N[j, i] = thistype.fr_n[j];
                 c.fr_pool_P[j, i] = thistype.fr_p[j];
             }
-
-
         }
 
         /// <summary>
@@ -3082,9 +2866,8 @@ namespace Models.SurfaceOM
         /// </summary>
         /// <param name="SOMindex"></param>
         /// <returns></returns>
-        private double surfom_cover(int SOMindex)
+        private double Cover(int SOMindex)
         {
-
             double F_Cover;	            //Fraction of soil surface covered by residue (0-1)
             double Area_lying;	        //area of lying component;
             double Area_standing;	    //effective area of standing component (the 0.5 extinction coefficient in area calculation
@@ -3102,20 +2885,16 @@ namespace Models.SurfaceOM
             Area_lying = c.specific_area[SOMindex] * sum_lying_amount;
             Area_standing = c.specific_area[SOMindex] * sum_stand_amount;
 
-            F_Cover = add_cover(1.0f - (double)Math.Exp(-Area_lying), 1.0f - (double)Math.Exp(-(c.standing_extinct_coeff) * Area_standing));
-            F_Cover = Utility.Math.Bound(F_Cover, 0.0f, 1.0f);
+            F_Cover = AddCover(1.0 - (double)Math.Exp(-Area_lying), 1.0 - (double)Math.Exp(-(c.standing_extinct_coeff) * Area_standing));
+            F_Cover = Utility.Math.Bound(F_Cover, 0.0, 1.0);
 
             return F_Cover;
-
         }
-
-        private void surfom_set_my_variable(string Variable_name)
-        { }
 
         /// <summary>
         /// Check that soil phosphorus is in system
         /// </summary>
-        private void surfom_set_phosphorus_aware()
+        private void SetPhosphorusAware()
         {
             g.phosphorus_aware = labile_p != null;
         }
@@ -3125,13 +2904,6 @@ namespace Models.SurfaceOM
         /// </summary>
         private void surfom_ON_Crop_chopped(CropChoppedType data)
         {
-            //APSIM THING
-
-            string[] dm_type = new string[MaxArraySize];
-            double[] dlt_crop_dm = new double[MaxArraySize];
-            double[] dlt_dm_N = new double[MaxArraySize];
-            double[] dlt_dm_P = new double[MaxArraySize];
-            double[] fraction_to_Residue = new double[MaxArraySize];
             double surfom_added = 0;	//amount of residue added (kg/ha)
             double surfom_N_added = 0;	//amount of residue N added (kg/ha)
             double surfom_P_added = 0;	//amount of residue N added (kg/ha)
@@ -3139,12 +2911,16 @@ namespace Models.SurfaceOM
             if (data.fraction_to_residue.Sum() != 0)
             {
                 for (int i = 0; i < data.dlt_crop_dm.Length; i++)
+                {
                     surfom_added += data.dlt_crop_dm[i] * data.fraction_to_residue[i];
+                }
 
                 if (surfom_added > 0.0)
                 {
                     for (int i = 0; i < data.dlt_dm_n.Length; i++)
+                    {
                         surfom_N_added += data.dlt_dm_n[i] * data.fraction_to_residue[i];
+                    }
 
                     //Find the amount of P added in surfom today, if phosphorus aware;
                     if (g.phosphorus_aware)
@@ -3159,7 +2935,7 @@ namespace Models.SurfaceOM
         /// <summary>
         /// Get information on surfom added from the crops
         /// </summary>
-        /// <param name="variant"></param>
+        /// <param name="BiomassRemoved"></param>
         private void SurfOMOnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             double
@@ -3193,10 +2969,13 @@ namespace Models.SurfaceOM
 
             //Report Additions;
             if (p.report_additions == "yes")
-                Summary.WriteMessage(FullPath, String.Format(
+            {
+                summary.WriteMessage(FullPath, String.Format(
+
     @"Added surfom
     SurfaceOM Type          = {0}
     Amount Added [kg/ha]    = {1}", crop_type.TrimEnd(), surfom_added));
+            }
 
             //Assume the "crop_type" is the unique name.  Now check whether this unique "name" already exists in the system.
             SOMNo = surfom_number(crop_type);
@@ -3210,18 +2989,14 @@ namespace Models.SurfaceOM
                 SOMNo = g.num_surfom - 1;
 
                 //NOW UPDATE ALL VARIABLES;
-                surfom_read_type_specific_constants(g.SurfOM[SOMNo].OrganicMatterType, SOMNo, out g.SurfOM[SOMNo].PotDecompRate);
-
+                ReadTypeSpecificConstants(g.SurfOM[SOMNo].OrganicMatterType, SOMNo, out g.SurfOM[SOMNo].PotDecompRate);
             }
-            else
-            {
-                //THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
-            }
+            // else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             //convert the ppm figures into kg/ha;
-            g.SurfOM[SOMNo].no3 += Utility.Math.Divide(c.no3ppm[SOMNo], 1000000.0f, 0.0f) * surfom_added;
-            g.SurfOM[SOMNo].nh4 += Utility.Math.Divide(c.nh4ppm[SOMNo], 1000000.0f, 0.0f) * surfom_added;
-            g.SurfOM[SOMNo].po4 += Utility.Math.Divide(c.po4ppm[SOMNo], 1000000.0f, 0.0f) * surfom_added;
+            g.SurfOM[SOMNo].no3 += Utility.Math.Divide(c.no3ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            g.SurfOM[SOMNo].nh4 += Utility.Math.Divide(c.nh4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            g.SurfOM[SOMNo].po4 += Utility.Math.Divide(c.po4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
 
             //Assume all surfom added is in the LYING pool, ie No STANDING component;
             for (int i = 0; i < MaxFr; i++)
@@ -3230,10 +3005,10 @@ namespace Models.SurfaceOM
                 g.SurfOM[SOMNo].Lying[i].C += surfom_added * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
                 g.SurfOM[SOMNo].Lying[i].N += surfom_N_added * c.fr_pool_N[i, SOMNo];
                 g.SurfOM[SOMNo].Lying[i].P += surfom_P_added * c.fr_pool_P[i, SOMNo];
-                g.SurfOM[SOMNo].Lying[i].AshAlk = 0.0f;
+                g.SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
             }
 
-            residue2_Send_Res_added_Event(g.SurfOM[SOMNo].OrganicMatterType, g.SurfOM[SOMNo].OrganicMatterType, surfom_added, surfom_N_added, surfom_P_added);
+            SendResAddedEvent(g.SurfOM[SOMNo].OrganicMatterType, g.SurfOM[SOMNo].OrganicMatterType, surfom_added, surfom_N_added, surfom_P_added);
         }
 
         /// <summary>
@@ -3244,7 +3019,7 @@ namespace Models.SurfaceOM
         /// <param name="dlt_residue_wt"></param>
         /// <param name="dlt_residue_N_wt"></param>
         /// <param name="dlt_residue_P_wt"></param>
-        private void residue2_Send_Res_added_Event(string residue_type, string dm_type, double dlt_residue_wt, double dlt_residue_N_wt, double dlt_residue_P_wt)
+        private void SendResAddedEvent(string residue_type, string dm_type, double dlt_residue_wt, double dlt_residue_N_wt, double dlt_residue_P_wt)
         {
             if (Residue_added != null)
             {
@@ -3268,13 +3043,12 @@ namespace Models.SurfaceOM
         /// <param name="dlt_residue_fraction"></param>
         /// <param name="residue_incorp_fraction"></param>
         /// <param name="deepest_layer"></param>
-        private void residue2_Send_Res_removed_Event(string residue_removed_action, double dlt_residue_fraction, double[] residue_incorp_fraction, int deepest_layer)
+        private void SendResRemovedEvent(string residue_removed_action, double dlt_residue_fraction, double[] residue_incorp_fraction, int deepest_layer)
         {
             if (Residue_removed != null)
             {
                 ResidueRemovedType data = new ResidueRemovedType()
                 {
-
                     residue_removed_action = residue_removed_action,
                     dlt_residue_fraction = dlt_residue_fraction,
                     residue_incorp_fraction = residue_incorp_fraction
@@ -3314,7 +3088,5 @@ namespace Models.SurfaceOM
             g.DailyInitialC = SumSurfOMStandingLying(g.SurfOM, x => x.C);
             g.DailyInitialN = SumSurfOMStandingLying(g.SurfOM, x => x.N);
         }
-
     }
-
 }
