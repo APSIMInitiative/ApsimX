@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Models.Soils
 {
-    //class IrrigationApplicationType
-    //{
-    //    public double Amount;
-    //    public int will_runoff;
-    //    public double Depth;
-    //    public double NO3;
-    //    public double NH4;
-    //    public double CL;
-    //}
+    public class IrrigationApplicationType : EventArgs
+    {
+        public double Amount;
+        public bool will_runoff;
+        public double Depth;
+        public double NO3;
+        public double NH4;
+        public double CL;
+    }
 }
