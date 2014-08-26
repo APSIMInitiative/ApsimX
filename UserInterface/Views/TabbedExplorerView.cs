@@ -15,8 +15,8 @@ namespace UserInterface.Views
     {
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
-        event EventHandler<StringArgs> MruClick;
-
+        event EventHandler MruFileClick;
+       
         event EventHandler TabClosing;
 
         /// <summary>
@@ -34,7 +34,17 @@ namespace UserInterface.Views
         /// </summary>
         void ShowError(string message);
 
+        /// <summary>
+        /// Fill the recent files group with file names
+        /// </summary>
+        /// <param name="files"></param>
         void FillMruList(List<string> files);
+        /// <summary>
+        /// Return the selected filename from a double click on 
+        /// a recent file item
+        /// </summary>
+        /// <returns></returns>
+        string SelectedMruFileName();
 
         Int32 TabWidth { get; }
 
@@ -51,8 +61,10 @@ namespace UserInterface.Views
     /// </summary>
     public partial class TabbedExplorerView : UserControl, ITabbedExplorerView
     {
+        private ListViewGroup recentFilesGroup;
+
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
-        public event EventHandler<StringArgs> MruClick;
+        public event EventHandler MruFileClick;
         public event EventHandler TabClosing;
         
         /// <summary>
@@ -61,6 +73,8 @@ namespace UserInterface.Views
         public TabbedExplorerView()
         {
             InitializeComponent();
+            
+            recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);           
         }
 
 
@@ -74,7 +88,6 @@ namespace UserInterface.Views
                 return TabControl.SelectedIndex;
             }
         }
-
 
         /// <summary>
         /// View has loaded
@@ -90,9 +103,10 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateStartPageList()
         {
+            listViewMain.Groups.Insert(0, new ListViewGroup("Standard", HorizontalAlignment.Left));
             PopulateStartPageArgs Args = new PopulateStartPageArgs();
+            listViewMain.Items.Clear();
             PopulateStartPage(this, Args);
-            ListView.Items.Clear();
             foreach (PopulateStartPageArgs.Description Description in Args.Descriptions)
             {
                 ListViewItem Item = new ListViewItem();
@@ -112,16 +126,58 @@ namespace UserInterface.Views
                     }
                 }
                 Item.ImageIndex = ImageIndex;
-                ListView.Items.Add(Item);
+                listViewMain.Items.Add(Item);
+                Item.Group = listViewMain.Groups[0];
             }
          
         }
+
+        /// <summary>
+        /// File the most recently used files group
+        /// </summary>
+        /// <param name="files"></param>
+        public void FillMruList(List<string> files)
+        {
+            // cleanup the list so it can be reshown in the correct order
+            foreach (ListViewItem item in listViewMain.Items)
+            {
+                if (item.Group == recentFilesGroup)
+                {
+                    item.Remove();
+                }
+            }
+            listViewMain.Groups.Add(recentFilesGroup);
+            // now add each item from the list of files
+            foreach (string xfile in files)
+            {
+                ListViewItem Item = new ListViewItem();
+                Item.Text = Path.GetFileNameWithoutExtension(xfile);
+                Item.Tag = MruFileClick;
+                Item.ToolTipText = xfile;
+
+                // Load image
+                int ImageIndex = ListViewImages.Images.IndexOfKey("apsim_logo32");
+                if (ImageIndex == -1)
+                {
+                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject("apsim_logo32") as Bitmap;
+                    if (Icon != null)
+                    {
+                        ListViewImages.Images.Add("apsim_logo32", Icon);
+                        ImageIndex = ListViewImages.Images.Count - 1;
+                    }
+                }
+                Item.ImageIndex = ImageIndex;
+                listViewMain.Items.Add(Item);
+                Item.Group = recentFilesGroup;
+            }
+        }
+        
         /// <summary>
         /// User has double clicked. Open. Open a .apsim file.
         /// </summary>
         private void ListView_DoubleClick(object sender, EventArgs e)
         {
-            EventHandler OnClick = ListView.SelectedItems[0].Tag as EventHandler;
+            EventHandler OnClick = listViewMain.SelectedItems[0].Tag as EventHandler;
             if (OnClick != null)
                 OnClick(this, e);
         }
@@ -259,22 +315,22 @@ namespace UserInterface.Views
             
         }
 
-        public void FillMruList(List<string> files)
+        /// <summary>
+        /// Get the filename from a recent file item. 
+        /// </summary>
+        /// <returns>The full path name for the file</returns>
+        public string SelectedMruFileName()
         {
-            listBox1.Items.Clear();
-            listBox1.Items.AddRange(files.ToArray());
-        }
-        
-        private void listBox1_DoubleClick(object sender, EventArgs e)
-        {
-            MruClick(sender, new StringArgs() { Name = listBox1.Items[listBox1.SelectedIndex].ToString() });
+            ListViewItem item = listViewMain.SelectedItems[0];
+            if (item.Group == recentFilesGroup)
+            {
+                return item.ToolTipText;    // full path for the file
+            }
+            else
+                return "";  //invalid item
         }
     }
 
-    public class StringArgs : EventArgs
-    {
-        public string Name;
-    }
     public class PopulateStartPageArgs : EventArgs
     {
         public struct Description
