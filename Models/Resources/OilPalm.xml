@@ -1,5 +1,15 @@
 <OilPalm>
   <Name>OilPalm</Name>
+  <Cultivar>
+    <Name>Dami</Name>
+    <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
+    <Command>[FrondMaxArea].XYPairs.Y = 0.1,1,7,12,14</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>SuperFamily</Name>
+    <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
+    <Command>[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6</Command>
+  </Cultivar>
   <Constant>
     <Name>cover_tot</Name>
     <Value>0.9</Value>

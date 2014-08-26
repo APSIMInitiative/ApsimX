@@ -294,6 +294,17 @@ namespace Models
         };
         private Species[] pSP = new Species[3];
 
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         //component constant
         private const double SVPfrac = 0.66;
         //private WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();  // Daily Met Data

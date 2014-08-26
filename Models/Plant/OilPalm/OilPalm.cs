@@ -47,6 +47,47 @@ namespace Models.PMF.OilPalm
 
         public string CropType { get { return "OilPalm"; } }
 
+        private Cultivar cultivarDefinition;
+
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                SortedSet<string> cultivarNames = new SortedSet<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    cultivarNames.Add(cultivar.Name);
+                    if (cultivar.Aliases != null)
+                    {
+                        foreach (string alias in cultivar.Aliases)
+                            cultivarNames.Add(alias);
+                    }
+                }
+
+                return new List<string>(cultivarNames).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all cultivar definitions.
+        /// </summary>
+        private List<Cultivar> Cultivars
+        {
+            get
+            {
+                List<Cultivar> cultivars = new List<Cultivar>();
+                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                {
+                    cultivars.Add(model as Cultivar);
+                }
+
+                return cultivars;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -393,24 +434,31 @@ namespace Models.PMF.OilPalm
             RootDepth = InitialRootDepth.Value;
         }
 
-        public void Sow(string Cultivar, double Population, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        public void Sow(string cultivar, double population, double depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string cropClass = "Plant")
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Population;
-            this.Population = Population;
-            SowingData.Depth = Depth;
-            SowingData.Cultivar = Cultivar;
+            SowingData.Population = population;
+            this.Population = population;
+            SowingData.Depth = depth;
+            SowingData.Cultivar = cultivar;
             SowingData.MaxCover = MaxCover;
             SowingData.BudNumber = BudNumber;
             SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = CropClass;
+            SowingData.CropClass = cropClass;
             CropInGround = true;
+
+            if (SowingData.Cultivar == "")
+                throw new Exception("Cultivar not specified on sow line.");
+
+            // Find cultivar and apply cultivar overrides.
+            cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
 
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
+            Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>
