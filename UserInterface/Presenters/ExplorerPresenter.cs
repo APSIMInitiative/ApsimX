@@ -407,7 +407,18 @@ namespace UserInterface.Presenters
                 ContextMenuAttribute contextMenu = Utility.Reflection.GetAttribute(Method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
                 if (contextMenu != null)
                 {
-                    if (contextMenu.AppliesTo == null || Array.IndexOf(contextMenu.AppliesTo, SelectedModel.GetType()) != -1)
+                    bool ok = true;
+                    if (contextMenu.AppliesTo != null)
+                    {
+                        ok =false;
+                        foreach (Type t in contextMenu.AppliesTo)
+                        {
+                            if (t.IsAssignableFrom(SelectedModel.GetType()))
+                                ok = true;
+                        }
+                    }
+
+                    if (ok)
                     {
                         MenuDescriptionArgs.Description Desc = new MenuDescriptionArgs.Description();
                         Desc.Name = contextMenu.MenuName;

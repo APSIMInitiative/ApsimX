@@ -70,6 +70,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Classes\PMFDocumentation.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
@@ -591,6 +592,7 @@
     <None Include="Resources\gfolder_32.png" />
     <Content Include="Resources\memo16.png" />
     <None Include="Resources\MicroClimate161.png" />
+    <None Include="Resources\Plant2.css" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

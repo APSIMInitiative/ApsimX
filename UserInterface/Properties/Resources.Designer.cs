@@ -342,9 +342,7 @@ namespace UserInterface.Properties {
         ///    &lt;Marker&gt;None&lt;/Marker&gt;
         ///    &lt;X&gt;
         ///      &lt;FieldName&gt;[Soil].LL15&lt;/FieldName&gt;
-        ///    &lt;/X&gt;
-        ///    &lt;Y&gt;
-        ///      &lt;Fie [rest of string was truncated]&quot;;.
+        ///    &lt;/ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InitialWaterGraph {
             get {
@@ -458,6 +456,37 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("Paste", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #toc {
+        ///  border-style: none;
+        ///  font-family: Arial,Helvetica,sans-serif;
+        ///  font-size: medium;
+        ///}
+        ///body {
+        ///  background: white url(ApsruTile.jpg) repeat-y scroll left top;
+        ///  font-family: Verdana,Arial,Helvetica,sans-serif;
+        ///  font-size: 9pt;
+        ///  color: black;
+        ///  padding-left: 70px;
+        ///  text-align: left;
+        ///}
+        ///p {
+        ///  font-family: Verdana,Arial,Helvetica,sans-serif;
+        ///  font-size: 9pt;
+        ///  color: black;
+        ///}
+        ///table {
+        ///  border: 1px solid #cccccc;
+        ///  font-size: 9pt;
+        ///  font-family: Arial,Helvetica,sans-serif;
+        ///  border-collapse: collapse [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Plant2 {
+            get {
+                return ResourceManager.GetString("Plant2", resourceCulture);
             }
         }
         
@@ -748,7 +777,7 @@ namespace UserInterface.Properties {
         ///          &lt;Type&gt;Area&lt;/Type&gt;
         ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///          &lt;ColourArgb&gt;-3479297&lt;/Colour [rest of string was truncated]&quot;;.
+        ///          &lt;ColourArgb [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {
