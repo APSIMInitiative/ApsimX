@@ -31,7 +31,7 @@
       <Name>FinalYieldData</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
-      <FieldNameUsedForMatch>ExtraVariables.Script.FinalTag</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>PotatoHarvestRule.Script.FinalTag</FieldNameUsedForMatch>
     </PredictedObserved>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
@@ -660,10 +660,7 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
-		
-        public override void OnSimulationCommencing()
+		 public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   
@@ -690,8 +687,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -733,13 +728,6 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
 		}
 	}
 }
@@ -2723,7 +2711,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -2746,6 +2734,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -2799,6 +2788,68 @@ namespace Models
             <Action>Irrigation.Apply(25);</Action>
           </Operation>
         </Operations>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>2000-06-03</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2908,7 +2959,7 @@ namespace Models
             <FieldName>Potato.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
@@ -4018,12 +4069,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.8426499264298177</double>
-              <double>1.4647870775890322</double>
-              <double>1.1998004179057327</double>
-              <double>1.03010571782778</double>
-              <double>0.47033946185261083</double>
-              <double>0.47013921807297082</double>
+              <double>1.8418112271872957</double>
+              <double>1.4652101309242342</double>
+              <double>1.1998004159405926</double>
+              <double>1.0301057169207393</double>
+              <double>0.47033946181323144</double>
+              <double>0.47013921816845083</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -4272,10 +4323,7 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
-		
-        public override void OnSimulationCommencing()
+	    public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   
@@ -4302,8 +4350,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -4345,13 +4391,6 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
 		}
 	}
 }
@@ -6335,7 +6374,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -6358,6 +6397,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -6446,6 +6486,68 @@ namespace Models
 	}
 }
 	   ]]></Code>
+        </Manager>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>1999-04-27</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
         </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -7661,12 +7763,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.82</double>
-              <double>1.47</double>
-              <double>1.2</double>
-              <double>1.03</double>
-              <double>0.47</double>
-              <double>0.47</double>
+              <double>1.8494029364579521</double>
+              <double>1.4708047043281425</double>
+              <double>1.1995597874191508</double>
+              <double>1.0302733909670494</double>
+              <double>0.47037892528320407</double>
+              <double>0.47016418639210422</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -7963,9 +8065,6 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
-		
         public override void OnSimulationCommencing()
         {
 			InitialDay = true;
@@ -7993,8 +8092,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -8036,13 +8133,6 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
 		}
 	}
 }
@@ -10026,7 +10116,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -10049,6 +10139,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -10067,6 +10158,68 @@ namespace Models
             <Action>Fertiliser.Apply(170, Fertiliser.Types.UreaN, 10);</Action>
           </Operation>
         </Operations>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>2000-10-16</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11294,12 +11447,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.8352540316896027</double>
-              <double>1.4699214402479297</double>
-              <double>1.1994533180048239</double>
-              <double>1.0302608325037235</double>
-              <double>0.47034517998792563</double>
-              <double>0.4701368862473938</double>
+              <double>1.8338307767956048</double>
+              <double>1.4698903428997019</double>
+              <double>1.1994518658791602</double>
+              <double>1.0302606193338755</double>
+              <double>0.47034513778191933</double>
+              <double>0.4701368410904479</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -11462,6 +11615,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -11634,10 +11788,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
-		
+	
         public override void OnSimulationCommencing()
         {
 			InitialDay = true;
@@ -11665,8 +11816,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -11708,13 +11857,6 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
 		}
 	}
 }
@@ -11836,7 +11978,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -13741,6 +13883,68 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>2004-11-01</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -14983,12 +15187,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>4.4834037055034486</double>
-              <double>3.4823068178135057</double>
-              <double>1.1999621444663073</double>
-              <double>1.0307564114777497</double>
-              <double>0.47033410355995109</double>
-              <double>0.4701324719243089</double>
+              <double>4.48223713065296</double>
+              <double>3.475967396388389</double>
+              <double>1.1998027036878516</double>
+              <double>1.0306817283949197</double>
+              <double>0.47032391259443185</double>
+              <double>0.4701222334072126</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -15151,6 +15355,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>0</mass>
@@ -15404,10 +15609,7 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
-		
-        public override void OnSimulationCommencing()
+		public override void OnSimulationCommencing()
         {
 			InitialDay = true;
 		}	   
@@ -15434,8 +15636,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -15477,13 +15677,7 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
+
 		}
 	}
 }
@@ -15605,7 +15799,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -17509,6 +17703,68 @@ namespace Models
 	}
 }
 	   ]]></Code>
+        </Manager>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>2000-04-03</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
         </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -18415,6 +18671,9 @@ namespace Models
           <FactorValue>
             <Name>67</Name>
           </FactorValue>
+          <FactorValue>
+            <Name>2008-03-05</Name>
+          </FactorValue>
         </FactorValue>
         <FactorValue>
           <Name>3Dec</Name>
@@ -18460,6 +18719,9 @@ namespace Models
           </FactorValue>
           <FactorValue>
             <Name>72</Name>
+          </FactorValue>
+          <FactorValue>
+            <Name>2008-04-14</Name>
           </FactorValue>
         </FactorValue>
         <FactorValue>
@@ -18507,6 +18769,9 @@ namespace Models
           <FactorValue>
             <Name>58</Name>
           </FactorValue>
+          <FactorValue>
+            <Name>2007-04-14</Name>
+          </FactorValue>
         </FactorValue>
         <Paths>
           <string>[PotatoSowingRule].Script.SowingDate</string>
@@ -18514,6 +18779,7 @@ namespace Models
           <string>[FertiliserRule].Script.Day1</string>
           <string>[FertiliserRule].Script.Day2</string>
           <string>[FertiliserRule].Script.Day3</string>
+          <string>[PotatoHarvestRule].Script.HarvestDate</string>
         </Paths>
       </Factor>
       <Factor>
@@ -18819,12 +19085,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>0.70235878423487175</double>
-              <double>0.49805734771058568</double>
-              <double>0.30045531499253414</double>
-              <double>0.30068239499684157</double>
-              <double>0.3003910688587087</double>
-              <double>0.30014500851785642</double>
+              <double>0.70120538100823793</double>
+              <double>0.49697377277334165</double>
+              <double>0.30010044876298847</double>
+              <double>0.30040523333744457</double>
+              <double>0.30028333565818977</double>
+              <double>0.30008595372322128</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -18939,6 +19205,7 @@ namespace Models
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>0</mass>
@@ -19020,7 +19287,6 @@ namespace Models
 				if (Clock.Today.Date == SowingDate)
 				{
                     Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
-                  //  Fertiliser.Apply(PlantingFertiliser, Fertiliser.Types.UreaN, 10);
                  }
                     
                 //Potato.Sow(... Contains the following arguements:
@@ -19787,9 +20053,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-		[XmlIgnore] public string FinalTag { get; set;}
-		[XmlIgnore] public bool FinalYeildObtained {get; set;}
+
 		
         public override void OnSimulationCommencing()
         {
@@ -19818,8 +20082,6 @@ namespace Models
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
-				FinalTag = "";
-				FinalYeildObtained = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
@@ -19861,13 +20123,7 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
-			
-			if ((Potato.Phenology.StageCode.Value>=7)&&(FinalYeildObtained==false))
-				{
-					FinalTag = "yield";
-					FinalYeildObtained = true;
-				}
-			else FinalTag = "";
+
 		}
 	}
 }
@@ -19989,7 +20245,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[ExtraVariables].Script.FinalTag</string>
+            <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>[Potato].Tuber.LiveFWt</string>
             <string>[Potato].Tuber.DryMatterContent.Value</string>
           </VariableNames>
@@ -21894,6 +22150,68 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Manager>
+          <Name>PotatoHarvestRule</Name>
+          <Script>
+            <HarvestDate>2008-03-05</HarvestDate>
+          </Script>
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [Description("HarvestDate Date")]
+               public DateTime HarvestDate { get; set; }    		
+		       [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               public override void OnSimulationCommencing()
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   Potato.Harvest();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((Clock.Today == HarvestDate)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
+                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+				{
+					FinalTag = "yield";
+					ReadyForHarvest = true;
+				}
+			   }
+            }
+        }
+				]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -22738,7 +23056,7 @@ namespace Models
           </Y>
           <ShowRegressionLine>true</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
+          <SplitOn>*</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>

@@ -256,9 +256,13 @@ namespace Models.PMF
             if (Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
 
-            // tell all our children about sow
+            // tell all our children about harvest
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
+
+            Phenology.OnHarvest();
+
+            Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
 
         /// <summary>
