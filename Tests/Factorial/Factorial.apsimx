@@ -44,13 +44,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>0</MaxT>
-        <MinT>0</MinT>
-        <Rain>0</Rain>
-        <Radn>0</Radn>
-        <VP>0</VP>
-        <Wind>0</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -668,7 +661,7 @@
         <Manager>
           <Name>SowingRule</Name>
           <Script>
-            <SowingDate>10/11/2003 12:00:00 AM</SowingDate>
+            <SowingDate>2003-11-10</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -693,7 +686,7 @@
           <Script>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>30/12/2003 12:00:00 AM</ApplicationDate>
+            <ApplicationDate>2003-12-30</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -753,13 +746,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>0</MaxT>
-        <MinT>0</MinT>
-        <Rain>0</Rain>
-        <Radn>0</Radn>
-        <VP>0</VP>
-        <Wind>0</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -1358,7 +1344,7 @@
           <Script>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>30/12/2003 12:00:00 AM</ApplicationDate>
+            <ApplicationDate>2003-12-30</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -1435,18 +1421,11 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>0</MaxT>
-        <MinT>0</MinT>
-        <Rain>0</Rain>
-        <Radn>0</Radn>
-        <VP>0</VP>
-        <Wind>0</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-11-15T00:00:00</StartDate>
-        <EndDate>2003-11-15T00:00:00</EndDate>
+        <EndDate>2003-11-16T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
@@ -2083,13 +2062,6 @@
           <WeatherFile>
             <Name>WeatherFile</Name>
             <FileName>..\WeatherFiles\Dalby.met</FileName>
-            <MaxT>0</MaxT>
-            <MinT>0</MinT>
-            <Rain>0</Rain>
-            <Radn>0</Radn>
-            <VP>0</VP>
-            <Wind>0</Wind>
-            <CO2>350</CO2>
           </WeatherFile>
         </FactorValue>
         <FactorValue>
@@ -2103,13 +2075,6 @@
           <WeatherFile>
             <Name>WeatherFile</Name>
             <FileName>..\WeatherFiles\Goond.met</FileName>
-            <MaxT>0</MaxT>
-            <MinT>0</MinT>
-            <Rain>0</Rain>
-            <Radn>0</Radn>
-            <VP>0</VP>
-            <Wind>0</Wind>
-            <CO2>350</CO2>
           </WeatherFile>
         </FactorValue>
         <Paths>
@@ -2124,13 +2089,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>0</MaxT>
-        <MinT>0</MinT>
-        <Rain>0</Rain>
-        <Radn>0</Radn>
-        <VP>0</VP>
-        <Wind>0</Wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>

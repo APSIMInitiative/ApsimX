@@ -33,8 +33,8 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
-# for (fileNumber in 5:5){
-for (fileNumber in 1:length(files)){
+ for (fileNumber in 3:3){
+#for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
@@ -73,116 +73,136 @@ for (fileNumber in 1:length(files)){
     if(file.exists(paste(dbName, ".baseline", sep="")))
       dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
     
-    if (simsToTest == "All")
-    {
-      simsToTest <- dbGetQuery(db, "SELECT Name FROM Simulations")
-    }
-    
-    for (sim in c(1:length(simsToTest)))
+    if (simsToTest == "All"){    
+      simsToTest <- dbGetQuery(db, "SELECT DISTINCT(Name) FROM Simulations, Report 
+                                    WHERE Simulations.ID = Report.SimulationID")
+      #filter sims not in Report
+      isDF <- TRUE
+    } else
+      isDF <- FALSE    
+
+    for (sim in 1:(ifelse(isDF, nrow(simsToTest), 1)))
     {    
       #get report ID and extract relevant info from table
-      possibleError <- tryCatch({
-        if (length(simsToTest) > 1)
+      possibleError <- tryCatch({      
+        if (isDF){
           simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim,], "'", sep=""))
-        else
-          simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
-        
+        }else
+          simID <- dbGetQuery(db, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))              
       }, error = function(err) {
-          print(noquote("Could not find 'Simulations' column. Did the test run?"))
+          print(noquote("Could not find 'Simulations' table. Did the test run?"))
           haveTestsPassed <<- FALSE
       })
-      
-      possibleError <- tryCatch({
-          readSimOutput <- dbReadTable(db, "Report")
-          readSimOutput <- readSimOutput[readSimOutput$SimulationID == as.numeric(simID),]
           
-          #try to read an Input table
-          tables <- dbGetQuery(db, "SELECT name FROM sqlite_master WHERE type='table'")
-          if(length(grep("Input", tables$name)) > 0){
-              inputTable <- dbReadTable(db, "Input")
-              inputTable <- inputTable[inputTable$SimulationID == as.numeric(simID),]
-          }
-          else {
-              inputTable <- NA
-          }
-          
-          if(nrow(readSimOutput) == 0)
-            stop(paste("Error: No data returned for simulation: ", simsToTest[sim]))
-          
-          #do the same thing for baseline data
-          if(file.exists(paste(dbName, ".baseline", sep=""))){
-            simID <- dbGetQuery(dbBase, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim], "'", sep=""))
-            readSimOutputBase <- dbReadTable(dbBase, "Report")
-            readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]
-          }
-          else
-            readSimOutputBase <- NA
-          
-          
-          # redirect result to temp var so we dont have it appearing in output
-          junk <- dbDisconnect(db)
-          if (!is.na(readSimOutputBase))
-            junk <- dbDisconnect(dbBase)
-          rm(junk)
-          
-          # drop Date column if it exists
-          readSimOutput     <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
-          if (!is.na(readSimOutputBase))
-              readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
-          if (!is.na(inputTable))
-              inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
-                              
-          #get tests to run
-          tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
-          
-          #prepare to run the tests
-          for (i in c(1:length(tests))) {    
-            #get columns to run them on
-               cols <- unlist(strsplit(currentSimGroup[4, 1], ","))
-               cols <- gsub("[()]", "\\.", cols) # replace ( and ) with . to handle R's renaming of these characters
-               
-               tryCatch({
-                   simOutput    <- subset(readSimOutput, select=unlist(cols))
-               }, error = function(err) {
-                   print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
-				   haveTestsPassed <<- FALSE
-               })
-               
-               if(!is.na(readSimOutputBase))
+        possibleError <- tryCatch({
+            readSimOutput <- dbReadTable(db, currentSimGroup[2,1])
+            readSimOutput <- readSimOutput[readSimOutput$SimulationID == as.numeric(simID),]
+            
+            #try to read an Input table
+            tables <- dbGetQuery(db, "SELECT name FROM sqlite_master WHERE type='table'")
+            if(length(grep("Input", tables$name)) > 0){
+                inputTable <- dbReadTable(db, "Input")
+                inputTable <- inputTable[inputTable$SimulationID == as.numeric(simID),]
+            } else 
+                inputTable <- NA
+            
+            if(nrow(readSimOutput) == 0)
+              stop(paste("Error: No data returned for simulation: ", simsToTest[sim]))
+            
+            #do the same thing for baseline data
+            if(file.exists(paste(dbName, ".baseline", sep=""))){
+              if (isDF){
+                simID <- dbGetQuery(dbBase, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest[sim,], "'", sep=""))
+              }else
+                simID <- dbGetQuery(dbBase, paste("SELECT ID FROM Simulations WHERE Name='", simsToTest, "'", sep=""))
+              
+              readSimOutputBase <- dbReadTable(dbBase, currentSimGroup[2,1])
+              readSimOutputBase <- readSimOutputBase[readSimOutputBase$SimulationID == as.numeric(simID),]
+            } else
+              readSimOutputBase <- NA         
+                        
+            # drop Date column if it exists
+            if (length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)) > 0)
+              readSimOutput <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
+            if (!is.na(readSimOutputBase) & length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase))> 0)
+                readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
+            if (!is.na(inputTable) & length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable))> 0)
+                inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
+                                
+            #get tests to run
+            tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
+            
+            #prepare to run the tests
+            for (i in c(1:length(tests))) {    
+              #get columns to run them on
+                 cols <- unlist(strsplit(currentSimGroup[4, 1], ","))
+                 cols <- gsub("[()]", "\\.", cols) # replace ( and ) with . to handle R's renaming of these characters
+                 
                  tryCatch({
-                   simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
-                   }, error = function(err) {
-                     print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutputBase), collapse=", "),
-                                 "]. Do you need to update the baseline?", sep="")))
-					 haveTestsPassed <<- FALSE 
-                   })
-               else
-                 simOutputBase <- NA
-                  
-            # retrieve the test name
-            func <- match.fun(tests[i])
-            #unpack parameters - TODO: catch error when invalid
-            params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
-
-            #run each test
-            ifelse(results == -1,      
-              results <- func(simOutput, tests, params, simOutputBase, input = inputTable),
-              results <- c(results, func(simOutput, tests, params, simOutputBase, input = inputTable)))
-            print(noquote(paste(tests, tail(results,1), cols, sep=" ")))
-           }
-      }, error = function(err) {
-        #print(paste("Could not find Report table for ", dbName, sep=""))
-        print(noquote(err))
-        haveTestsPassed <<- FALSE
-      }) 
+                   if (unlist(cols) %in% names(readSimOutput)){
+                     simOutput    <- subset(readSimOutput, select=unlist(cols))
+                   }
+                 }, error = function(err) {
+                       print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
+  				             haveTestsPassed <<- FALSE
+                 })
+                 
+                 if(!is.na(readSimOutputBase)){
+                   tryCatch({
+                     if (unlist(cols) %in% names(readSimOutputBase)){
+                        simOutputBase <- subset(readSimOutputBase, select=unlist(cols))
+                      }
+                     }, error = function(err) {
+                         print(noquote(paste("A column in the set: [", cols, "] could not be found in the database set: [", paste(names(readSimOutput), collapse=", "), "]", sep="")))
+                         haveTestsPassed <<- FALSE
+                     })
+                   } else
+                    simOutputBase <- NA
+                    
+              # retrieve the test name
+              func <- match.fun(tests[i])
+              #unpack parameters - TODO: catch error when invalid
+              params <- as.numeric(unlist(strsplit(currentSimGroup[5, 1], ",")))
+  
+              #run each test              
+              if(class(simOutput) == "data.frame")
+              {
+                 simOutput <- as.numeric(simOutput[,1])
+              } else
+                simOutput <- as.numeric(simOutput)
+      
+              if(class(simOutputBase) == "data.frame")
+              {
+                simOutputBase <- as.numeric(simOutputBase[,1])
+              } else
+                simOutputBase <- as.numeric(simOutputBase)
+              
+              ifelse(results == -1,      
+                results <- func(simOutput, tests, params, simOutputBase, input = inputTable),
+                results <- c(results, func(simOutput, tests, params, simOutputBase, input = inputTable)))
+              print(noquote(paste(ifelse(isDF, simsToTest[sim,], simsToTest), tests, tail(results,1), cols, sep=" ")))
+             }
+        }, error = function(err) {
+          #print(paste("Could not find Report table for ", dbName, sep=""))
+          print(noquote(err))
+          haveTestsPassed <<- FALSE
+        })
+      
       if(inherits(possibleError, "error")) next
       }
   }
   if(exists("results"))
     print(noquote(paste((proc.time() - time)[3], "seconds", sep=" ")))
+  
+  # redirect result to temp var so we dont have it appearing in output
+  junk <- dbDisconnect(db)
+  if (!is.na(readSimOutputBase))
+    junk <- dbDisconnect(dbBase)
+  rm(junk)
 
   odbcCloseAll()
 }
 
 write.csv(buildRecord,"Tests/Test Output.csv")
 if (haveTestsPassed == FALSE) stop("One or more tests failed.")
+

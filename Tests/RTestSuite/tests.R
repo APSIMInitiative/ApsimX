@@ -14,29 +14,29 @@
 # @Param baseData: baseline data for the test
 ######################################
 Output <- function(x, passed, output, func, params=NA, baseData=NA, ...) {
-  split <- unlist(strsplit(as.character(Sys.time()), " ", fixed=TRUE))
-  date <-split[1]
-  time <- split[2]
-  temp <- list()
-  output <- cbind(x,output)
-  #reorder the columns
-  index <- 0
-  for (i in seq(1, ncol(output) / 2, by = 1)) {
-    index <- c(index, i, i + ncol(output) / 2)
-  }
-  index <- index[-1]
-  output <- output[, index]
-  output <- cbind(baseData, output)
-  output <- cbind(tests, output)
-  output <- cbind(cols, output)
-  output <- cbind(simsToTest, output)
-  output <- cbind(time, output)
-  output <- cbind(date, output)
-  output <- cbind(args[1], output)
-  output <- cbind(args[2], output)
-  output <- cbind(output, paste(params, collapse=","))
-  names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
-  buildRecord <<- rbind(buildRecord, output)
+#   split <- unlist(strsplit(as.character(Sys.time()), " ", fixed=TRUE))
+#   date <-split[1]
+#   time <- split[2]
+#   temp <- list()
+#   output <- cbind(x,output)
+#   #reorder the columns
+#   index <- 0
+#   for (i in seq(1, ncol(output) / 2, by = 1)) {
+#     index <- c(index, i, i + ncol(output) / 2)
+#   }
+#   index <- index[-1]
+#   output <- output[, index]
+#   output <- cbind(baseData, output)
+#   output <- cbind(tests, output)
+#   output <- cbind(cols, output)
+#   output <- cbind(ifelse(isDF, simsToTest[sim,], simsToTest), output)
+#   output <- cbind(time, output)
+#   output <- cbind(date, output)
+#   output <- cbind(args[1], output)
+#   output <- cbind(args[2], output)
+#   output <- cbind(output, paste(params, collapse=","))
+#   names(output) <- c("BuildID", "System", "Date","Time","Simulation", "ColumnName", "Test","BaseValue", "RunValue","Passed", "Paramaters")
+#   buildRecord <<- rbind(buildRecord, output)
   if (!passed)
     haveTestsPassed <<- FALSE
   return(passed)
@@ -110,8 +110,13 @@ Mean <- function (x, func, params, ...) {
 # @baseData: vector - reference data
 ##################################
 Tolerance <- function (x, func, params, baseData, ...) {
-  if (is.na(baseData))
-    stop("Tolerance test requires a baseline and one was not found.")
+  if (is.na(baseData)){
+    if (class(baseData) == "logical") {
+      stop(paste(noquote("Tolerance test requires a baseline and one was not found.")))
+    }
+  }else
+    return
+  
   if (params[1]) {
       output <- abs(x) <= abs(baseData) + abs(baseData) * params[2] / 100 &
                 abs(x) >= abs(baseData) - abs(baseData) * params[2] / 100
@@ -142,7 +147,7 @@ CompareToInput <- function (x, func, params, input, ...) {
 
     if (params[1]) {
         output <- abs(x) <= abs(compare) + abs(compare) * params[2] / 100 &
-            abs(x) >= abs(compare) - abs(compare) * params[2] / 100
+                  abs(x) >= abs(compare) - abs(compare) * params[2] / 100
     } else {
         output <- x <= compare + params[2] &
             x >= compare - params[2]
