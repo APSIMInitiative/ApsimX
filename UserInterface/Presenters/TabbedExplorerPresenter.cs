@@ -235,7 +235,7 @@ namespace UserInterface.Presenters
             string initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
 
-            string FileName = View.AskUserForFileName( initialPath, "*.apsim|*.apsim");
+            string FileName = View.AskUserForFileName( initialPath, "*.apsimx|*.apsimx");
             OpenApsimXFileInTab(FileName);
         }
     }
