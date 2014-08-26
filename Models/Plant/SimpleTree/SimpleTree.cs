@@ -37,6 +37,16 @@ namespace Models.PMF
 
         public string CropType { get { return "Wheat"; } }
         public double FRGR { get { return 1; } }
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// MicroClimate supplies PotentialEP
