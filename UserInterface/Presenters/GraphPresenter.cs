@@ -244,7 +244,7 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         private Experiment[] FindExperimentsInScope()
         {
-            Type[] parentTypes = new Type[] { typeof(Folder), typeof(Experiment), typeof(Simulations) };
+            Type[] parentTypes = new Type[] { typeof(Experiment), typeof(Simulations) };
             Model parent = FindParent(parentTypes);
             if (parent is Experiment)
             {
