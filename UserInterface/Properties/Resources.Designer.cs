@@ -273,6 +273,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gfolder_32 {
+            get {
+                object obj = ResourceManager.GetObject("gfolder_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Graph16 {
             get {
                 object obj = ResourceManager.GetObject("Graph16", resourceCulture);
@@ -332,7 +342,9 @@ namespace UserInterface.Properties {
         ///    &lt;Marker&gt;None&lt;/Marker&gt;
         ///    &lt;X&gt;
         ///      &lt;FieldName&gt;[Soil].LL15&lt;/FieldName&gt;
-        ///    &lt;/ [rest of string was truncated]&quot;;.
+        ///    &lt;/X&gt;
+        ///    &lt;Y&gt;
+        ///      &lt;Fie [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InitialWaterGraph {
             get {
@@ -736,7 +748,7 @@ namespace UserInterface.Properties {
         ///          &lt;Type&gt;Area&lt;/Type&gt;
         ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///          &lt;ColourArgb [rest of string was truncated]&quot;;.
+        ///          &lt;ColourArgb&gt;-3479297&lt;/Colour [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {

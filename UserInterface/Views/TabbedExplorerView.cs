@@ -27,7 +27,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        string AskUserForFileName(string fileSpec);
+        string AskUserForFileName(string initialDir, string fileSpec);
 
         /// <summary>
         /// Show an error message to caller.
@@ -293,9 +293,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        public string AskUserForFileName(string fileSpec)
+        public string AskUserForFileName(string initialDir, string fileSpec)
         {
             OpenFileDialog.Filter = fileSpec;
+            if (initialDir.Length > 0)
+                OpenFileDialog.InitialDirectory = initialDir;
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
                 return OpenFileDialog.FileName;
             return null;

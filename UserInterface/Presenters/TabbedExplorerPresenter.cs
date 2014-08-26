@@ -157,6 +157,13 @@ namespace UserInterface.Presenters
                 OnClick = OnImport
             });
 
+            e.Descriptions.Add(new PopulateStartPageArgs.Description()
+            {
+                Name = "Open an example",
+                ResourceNameForImage = "gfolder_32",
+                OnClick = OnExample
+            });
+
             View.FillMruList(config.Settings.MruList);
         }
 
@@ -165,7 +172,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("*.apsimx|*.apsimx");
+            string FileName = View.AskUserForFileName("", "*.apsimx|*.apsimx");
             OpenApsimXFileInTab(FileName);
         }
 
@@ -201,7 +208,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnImport(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("*.apsim|*.apsim");
+            string FileName = View.AskUserForFileName("", "*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
             try
@@ -217,5 +224,19 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Open a file open dialog with the initial dir in an Examples directory
+        /// that is at the same level as this app directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExample(object sender, EventArgs e)
+        {
+            string initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
+
+            string FileName = View.AskUserForFileName( initialPath, "*.apsim|*.apsim");
+            OpenApsimXFileInTab(FileName);
+        }
     }
 }
