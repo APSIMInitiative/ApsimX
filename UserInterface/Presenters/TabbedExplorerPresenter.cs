@@ -39,6 +39,7 @@ namespace UserInterface.Presenters
             this.View = view as ITabbedExplorerView;
             this.View.PopulateStartPage += OnPopulateStartPage;
             this.View.MruFileClick += OnMruApsimOpenFile;
+            this.View.ReloadMruView += OnReloadMruView;
             this.View.TabClosing += OnTabClosing;
             Presenters = new List<ExplorerPresenter>();
         }
@@ -50,6 +51,7 @@ namespace UserInterface.Presenters
         {
             this.View.PopulateStartPage -= OnPopulateStartPage;
             this.View.MruFileClick -= OnMruApsimOpenFile;
+            this.View.ReloadMruView -= OnReloadMruView;
             this.View.TabClosing -= OnTabClosing;
         }
 
@@ -92,6 +94,7 @@ namespace UserInterface.Presenters
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
+                    Presenter.config = config;  // give it access to the configuration settings for MRU's
                     Simulations simulations = Simulations.Read(fileName);
                     Presenter.Attach(simulations, ExplorerView, null);
                     View.AddTab(fileName, Properties.Resources.apsim_logo32, ExplorerView, true);
@@ -164,6 +167,11 @@ namespace UserInterface.Presenters
                 OnClick = OnExample
             });
 
+            View.FillMruList(config.Settings.MruList);
+        }
+
+        private void OnReloadMruView(object sender, EventArgs e)
+        {
             View.FillMruList(config.Settings.MruList);
         }
 

@@ -16,6 +16,7 @@ namespace UserInterface.Views
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
         event EventHandler MruFileClick;
+        event EventHandler ReloadMruView;
        
         event EventHandler TabClosing;
 
@@ -65,6 +66,7 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
+        public event EventHandler ReloadMruView;
         public event EventHandler TabClosing;
         
         /// <summary>
@@ -330,6 +332,19 @@ namespace UserInterface.Views
             }
             else
                 return "";  //invalid item
+        }
+
+        /// <summary>
+        /// When changing back to the main tab reload the mru list into the listview
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPage.Text == " ")
+            {
+                ReloadMruView(sender, e);
+            }
         }
     }
 
