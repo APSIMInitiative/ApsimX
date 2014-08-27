@@ -125,7 +125,7 @@ Tolerance <- function (x, func, params, baseData, ...) {
                 x >= baseData - params[2]
     }  
    ifelse(all(output), Output(x, TRUE, output, func, params, baseData), Output(x, FALSE, output, func, params, baseData))
-  }
+}
   
 ############# CompareToInput ############
 # Return true if each value in x is within +-[2](%) of [3]

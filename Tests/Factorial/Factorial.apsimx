@@ -628,11 +628,6 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
@@ -1328,11 +1323,6 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
@@ -1407,6 +1397,10 @@
             <Name>FertiliserRule</Name>
             <Operation>
               <Date>2003-11-15T00:00:00</Date>
+              <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-11-16T00:00:00</Date>
               <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
           </Operations>
@@ -2003,11 +1997,6 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
@@ -2670,11 +2659,6 @@
           <default_standing_fraction>0</default_standing_fraction>
           <standing_extinct_coeff>0.5</standing_extinct_coeff>
           <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
