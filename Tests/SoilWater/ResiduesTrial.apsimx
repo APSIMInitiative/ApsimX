@@ -28,7 +28,7 @@
     <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
-    <Name>Tests</Name>
+    <Name>TestsBinary</Name>
     <Test>
       <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
       <TableName>Report</TableName>
@@ -43,6 +43,72 @@
       <ColumnNames>SurfaceOrganicMatter.surfaceom_wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
+    <Test>
+      <SimulationName>ResiduesCoverBareSoil</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>ResiduesCoverMownStubble</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>ResiduesCoverStandingStubble</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
+  <Tests>
+    <Name>TestsStats</Name>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>R^2</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>residual</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>RMSD</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>n</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>%</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
   </Tests>
   <Experiment>
     <Name>Residues</Name>
@@ -54,116 +120,92 @@
           <Name>StandingStubble</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble left by harvester</Name>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
             <c_fract>0.4</c_fract>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <default_standing_fraction>0</default_standing_fraction>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
-            <ResidueTypes />
-            <TillageTypes>
-              <Name>TillageTypes</Name>
-              <TillageType />
-            </TillageTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>2026</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
+            <crit_residue_wt>2000</crit_residue_wt>
+            <opt_temp>20</opt_temp>
+            <cum_eos_max>20</cum_eos_max>
+            <cnrf_coeff>0.277</cnrf_coeff>
+            <cnrf_optcn>25</cnrf_optcn>
+            <leach_rain_tot>25</leach_rain_tot>
+            <min_rain_to_leach>10</min_rain_to_leach>
+            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <default_cpr>0</default_cpr>
+            <standing_extinct_coeff>0.5</standing_extinct_coeff>
+            <fractionFaecesAdded>0.5</fractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>HarvesterWindrow</Name>
           <SurfaceOrganicMatter>
             <Name>Windrow left by harvester</Name>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
             <c_fract>0.4</c_fract>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <default_standing_fraction>0</default_standing_fraction>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
-            <ResidueTypes />
-            <TillageTypes>
-              <Name>TillageTypes</Name>
-              <TillageType />
-            </TillageTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>8300</mass>
             <standing_fraction>0</standing_fraction>
             <cnr>80</cnr>
+            <crit_residue_wt>2000</crit_residue_wt>
+            <opt_temp>20</opt_temp>
+            <cum_eos_max>20</cum_eos_max>
+            <cnrf_coeff>0.277</cnrf_coeff>
+            <cnrf_optcn>25</cnrf_optcn>
+            <leach_rain_tot>25</leach_rain_tot>
+            <min_rain_to_leach>10</min_rain_to_leach>
+            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <default_cpr>0</default_cpr>
+            <standing_extinct_coeff>0.5</standing_extinct_coeff>
+            <fractionFaecesAdded>0.5</fractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>MownStubble</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble mown and bailed</Name>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
             <c_fract>0.4</c_fract>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <default_standing_fraction>0</default_standing_fraction>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
-            <ResidueTypes />
-            <TillageTypes>
-              <Name>TillageTypes</Name>
-              <TillageType />
-            </TillageTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>400</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
+            <crit_residue_wt>2000</crit_residue_wt>
+            <opt_temp>20</opt_temp>
+            <cum_eos_max>20</cum_eos_max>
+            <cnrf_coeff>0.277</cnrf_coeff>
+            <cnrf_optcn>25</cnrf_optcn>
+            <leach_rain_tot>25</leach_rain_tot>
+            <min_rain_to_leach>10</min_rain_to_leach>
+            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <default_cpr>0</default_cpr>
+            <standing_extinct_coeff>0.5</standing_extinct_coeff>
+            <fractionFaecesAdded>0.5</fractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>BareSoil</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble mown, bailed and cultivared</Name>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
             <c_fract>0.4</c_fract>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <default_standing_fraction>0</default_standing_fraction>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
-            <ResidueTypes />
-            <TillageTypes>
-              <Name>TillageTypes</Name>
-              <TillageType />
-            </TillageTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>0</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
+            <crit_residue_wt>2000</crit_residue_wt>
+            <opt_temp>20</opt_temp>
+            <cum_eos_max>20</cum_eos_max>
+            <cnrf_coeff>0.277</cnrf_coeff>
+            <cnrf_optcn>25</cnrf_optcn>
+            <leach_rain_tot>25</leach_rain_tot>
+            <min_rain_to_leach>10</min_rain_to_leach>
+            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <default_cpr>0</default_cpr>
+            <standing_extinct_coeff>0.5</standing_extinct_coeff>
+            <fractionFaecesAdded>0.5</fractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <Paths>
@@ -700,29 +742,23 @@
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
-          <TillageTypes>
-            <Name>TillageTypes</Name>
-            <TillageType />
-          </TillageTypes>
           <PoolName>Barley</PoolName>
           <type>Barley</type>
           <mass>2026</mass>
           <standing_fraction>1</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
