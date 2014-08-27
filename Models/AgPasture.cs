@@ -61,6 +61,22 @@ namespace Models
         // = General parameters  ==================================================================
         // * Parameters that are set via user interface -------------------------------------------
 
+        private string swardName = "AgPasture";
+        [Description("Sward name (as shown on the simulation tree)")]
+        public string SwardName
+        {
+            get { return swardName; }
+            set { swardName = value; }
+        }
+
+        private int numSpecies = 1;
+        [Description("Number of species")]
+        public int NumSpecies
+        {
+            get { return numSpecies; }
+            set { numSpecies = value; }
+        }
+
         private string waterUptakeSource = "calc";
         [Description("Water uptake done by AgPasture (calc) or by apsim?")]
         public string WaterUptakeSource
@@ -78,22 +94,6 @@ namespace Models
 
         // = Parameters for each species  =========================================================
         // * Inputs from user interface -----------------------------------------------------------
-        private int numSpecies = 1;
-        [Description("Number of species")]
-        public int NumSpecies
-        {
-            get { return numSpecies; }
-            set { numSpecies = value; }
-        }
-
-        private string swardName = "AgPasture";
-        [Description("Sward name (as shown on the simulation tree)")]
-        public string SwardName
-        {
-            get { return swardName; }
-            set { swardName = value; }
-        }
-
         private string[] speciesName = new string[] { "Ryegrass" };
         [Description("Name of pasture species")]
         public string[] SpeciesName
@@ -164,17 +164,17 @@ namespace Models
             }
         }
 
-        private double[] iniDMgreen = new double[] { 0.0 };
-        [Description("Initial above ground green DM")]
-        public double[] InitialDMGreen
+        private double[] minimumGreenWt = new double[] { 0.0 };
+        [Description("Minimum above ground green DM")]
+        public double[] MinimumGreenWt
         {
-            get { return iniDMgreen; }
+            get { return minimumGreenWt; }
             set
             {
                 int NSp = value.Length;
-                iniDMgreen = new double[NSp];
+                minimumGreenWt = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
-                    iniDMgreen[sp] = value[sp];
+                    minimumGreenWt[sp] = value[sp];
             }
         }
 
@@ -737,25 +737,8 @@ namespace Models
                     digestibilityDead[sp] = value[sp];
             }
         }
-        
-        private double[] minimumGreenWt = new double[] { 200.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MinimumGreenWt
-        {
-            get { return minimumGreenWt; }
-            set
-            {
-                int NSp = value.Length;
-                minimumGreenWt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumGreenWt[sp] = value[sp];
-            }
-        }
-        
-        private double[] minimumDeadWt = new double[] { 50.0 };
+                
+        private double[] minimumDeadWt = new double[] { 0.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -1076,20 +1059,20 @@ namespace Models
             }
         }
         
-        private double[] offsetCO2EffectOnPhoto = new double[] { 700.0 };
+        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0 };
         /// <summary>
         /// 
         /// </summary>
         [XmlIgnore]
-        public double[] OffsetCO2EffectOnPhoto
+        public double[] OffsetCO2EffectOnPhotosynthesis
         {
-            get { return offsetCO2EffectOnPhoto; }
+            get { return offsetCO2EffectOnPhotosynthesis; }
             set
             {
                 int NSp = value.Length;
-                offsetCO2EffectOnPhoto = new double[NSp];
+                offsetCO2EffectOnPhotosynthesis = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
-                    offsetCO2EffectOnPhoto[sp] = value[sp];
+                    offsetCO2EffectOnPhotosynthesis[sp] = value[sp];
             }
         }
         
@@ -3745,7 +3728,6 @@ namespace Models
             SP[s].photoPath = speciesCType[s].ToUpper();
             SP[s].dmshootInit = iniDMshoot[s];
             SP[s].dmrootInit = iniDMroot[s];
-            SP[s].dmGreenInit = iniDMgreen[s];
             SP[s].rootDepthInit = iniRootDepth[s];
 
             Species.CO2ambient = CO2ambient;
