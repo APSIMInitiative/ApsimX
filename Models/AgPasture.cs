@@ -21,6 +21,8 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AgPasture : Model, ICrop
     {
+        #region Links and event declarations
+
         [Link]
         private Clock clock = null;
 
@@ -32,371 +34,6 @@ namespace Models
 
         [Link]
         private ISummary Summary = null;
-        private int Debug_Level = 0;
-
-        [XmlIgnore]
-        public Species[] SP;
-        //public Species[] SP = new Species[3] { 
-        //    new Species { 
-        //        speciesName = "ryegrass", 
-        //        micrometType = "grass",
-        //        isAnnual         = false,
-        //        isLegume         = false,
-        //        photoPath        = 3,
-        //        dayEmerg         = 0,
-        //        monEmerg         = 0,
-        //        dayAnth          = 0,
-        //        monAnth          = 0,
-        //        daysToMature     = 0,
-        //        dRootDepth       = 50,
-        //        maxRootDepth     = 900,
-        //        rootDepth        = 900,
-        //        growthTmin       = 2,
-        //        growthTmax       = 32,
-        //        growthTopt       = 20,
-        //        growthTq         = 2,
-        //        massFluxTmin     = 2,
-        //        massFluxTopt     = 20,
-        //        massFluxW0       = 2,
-        //        massFluxWopt     = 0.5,
-        //        heatOnsetT       = 60,
-        //        heatFullT        = 70,
-        //        heatSumT         = 50,
-        //        coldOnsetT       = -20,
-        //        coldFullT        = -30,
-        //        coldSumT         = 20,
-        //        Pm               = 1,
-        //        maintRespiration = 3,
-        //        growthEfficiency = 0.75,
-        //        SLA              = 20,
-        //        lightExtCoeff    = 0.5,
-        //        rue              = 1.65,
-        //        maxAssimiRate    = 330,
-        //        rateLive2Dead    = 0.05,
-        //        rateDead2Litter  = 0.11,
-        //        rateRootSen      = 0.02,
-        //        stockParameter   = 0.05,
-        //        maxSRratio       = (1.0 - 0.25)/0.25,
-        //        allocationSeasonF= 0.8,
-        //        leafRate         = 3,
-        //        fLeaf            = 0.7,
-        //        fStolon          = 0.0,
-        //        digestLive       = 0.6,
-        //        digestDead       = 0.2,
-        //        dmtotal          = 1500,
-        //        dmroot           = 450,
-        //        dmlitter         = 200,
-        //        dmgreenmin       = 500,
-        //        CO2PmaxScale     = 700,
-        //        CO2NScale        = 600,
-        //        CO2NMin          = 0.7,
-        //        CO2NCurvature    = 2,
-        //        NcleafOpt        = 4 * 0.01,
-        //        NcleafMax        = 5 * 0.01,
-        //        NcleafMin        = 1.2 * 0.01,
-        //        NcstemFr         = 0.5,
-        //        NcstolFr         = 0.5,
-        //        NcrootFr         = 0.5,
-        //        MinFix           = 0,
-        //        MaxFix           = 0,
-        //        NdilutCoeff      = 0.5,
-        //        Frgr             = 1,
-        //        waterStressFactor= 1,
-        //        soilSatFactor    = 0.1
-        //    },
-
-        //    new Species { 
-        //        speciesName      = "whiteclover", 
-        //        micrometType     = "grass",
-        //        isAnnual         = false,
-        //        isLegume         = true,
-        //        photoPath        = 3,
-        //        dayEmerg         = 1,
-        //        monEmerg         = 3,
-        //        dayAnth          = 1,
-        //        monAnth          = 11,
-        //        daysToMature     = 0,
-        //        dRootDepth       = 50,
-        //        maxRootDepth     = 300,
-        //        rootDepth        = 300,
-        //        growthTmin       = 4,
-        //        growthTmax       = 32,
-        //        growthTopt       = 20,
-        //        growthTq         = 2,
-        //        massFluxTmin     = 2,
-        //        massFluxTopt     = 20,
-        //        massFluxW0       = 2,
-        //        massFluxWopt     = 0.5,
-        //        heatOnsetT       = 60,
-        //        heatFullT        = 70,
-        //        heatSumT         = 50,
-        //        coldOnsetT       = -20,
-        //        coldFullT        = -30,
-        //        coldSumT         = 20,
-        //        Pm               = 1,
-        //        maintRespiration = 3,
-        //        growthEfficiency = 0.75,
-        //        SLA              = 20,
-        //        lightExtCoeff    = 0.8,
-        //        rue              = 1.65,
-        //        maxAssimiRate    = 330,
-        //        rateLive2Dead    = 0.05,
-        //        rateDead2Litter  = 0.11,
-        //        rateRootSen      = 0.02,
-        //        stockParameter   = 0.05,
-        //        maxSRratio       = (1.0 - 0.25)/0.25,
-        //        allocationSeasonF= 0.8,
-        //        leafRate         = 3,
-        //        fLeaf            = 0.7,
-        //        fStolon          = 0.2,
-        //        digestLive       = 0.6,
-        //        digestDead       = 0.2,
-        //        dmtotal          = 350,
-        //        dmroot           = 120,
-        //        dmlitter         = 50,
-        //        dmgreenmin       = 50,
-        //        CO2PmaxScale     = 700,
-        //        CO2NScale        = 600,
-        //        CO2NMin          = 0.7,
-        //        CO2NCurvature    = 2,
-        //        NcleafOpt        = 4.5 * 0.01,
-        //        NcleafMax        = 5.5 * 0.01,
-        //        NcleafMin        = 1.2 * 0.01,
-        //        NcstemFr         = 0.5,
-        //        NcstolFr         = 0.5,
-        //        NcrootFr         = 0.5,
-        //        MinFix           = 0.2,
-        //        MaxFix           = 0.6,
-        //        NdilutCoeff      = 1.0,
-        //        Frgr             = 1,
-        //        waterStressFactor= 1,
-        //        soilSatFactor    = 0.1
-        //    },
-
-        //    new Species { 
-        //        speciesName      = "paspalum", 
-        //        micrometType     = "grass",
-        //        isAnnual         = false,
-        //        isLegume         = false,
-        //        photoPath        = 4,
-        //        dayEmerg         = 1,
-        //        monEmerg         = 3,
-        //        dayAnth          = 1,
-        //        monAnth          = 1,
-        //        daysToMature     = 0,
-        //        dRootDepth       = 50,
-        //        maxRootDepth     = 900,
-        //        rootDepth        = 900,
-        //        growthTmin       = 10,
-        //        growthTmax       = 40,
-        //        growthTopt       = 20,
-        //        growthTq         = 1.2,
-        //        massFluxTmin     = 5,
-        //        massFluxTopt     = 20,
-        //        massFluxW0       = 2,
-        //        massFluxWopt     = 0.5,
-        //        heatOnsetT       = 60,
-        //        heatFullT        = 70,
-        //        heatSumT         = 50,
-        //        coldOnsetT       = -20,
-        //        coldFullT        = -30,
-        //        coldSumT         = 50,
-        //        Pm               = 1.2,
-        //        maintRespiration = 3,
-        //        growthEfficiency = 0.75,
-        //        SLA              = 20,
-        //        lightExtCoeff    = 0.6,
-        //        rue              = 1.65,
-        //        maxAssimiRate    = 330,
-        //        rateLive2Dead    = 0.05,
-        //        rateDead2Litter  = 0.11,
-        //        rateRootSen      = 0.02,
-        //        stockParameter   = 0.05,
-        //        maxSRratio       = (1.0 - 0.25)/0.25,
-        //        allocationSeasonF= 0.8,
-        //        leafRate         = 3.5,
-        //        fLeaf            = 0.7,
-        //        fStolon          = 0.0,
-        //        digestLive       = 0.6,
-        //        digestDead       = 0.2,
-        //        dmtotal          = 100,
-        //        dmroot           = 30,
-        //        dmlitter         = 10,
-        //        dmgreenmin       = 20,
-        //        CO2PmaxScale     = 150,
-        //        CO2NScale        = 600,
-        //        CO2NMin          = 0.7,
-        //        CO2NCurvature    = 2,
-        //        NcleafOpt        = 3 * 0.01,
-        //        NcleafMax        = 3.5 * 0.01,
-        //        NcleafMin        = 0.8 * 0.01,
-        //        NcstemFr         = 0.5,
-        //        NcstolFr         = 0,
-        //        NcrootFr         = 0.5,
-        //        MaxFix           = 0,
-        //        MinFix           = 0,
-        //        NdilutCoeff      = 0.5,
-        //        Frgr             = 1,
-        //        waterStressFactor= 1,
-        //        soilSatFactor    = 0.1
-        //    }
-                                                             
-        //};
-        private Species[] pSP = new Species[3];
-
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
-        public string[] CultivarNames
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        //component constant
-        private const double SVPfrac = 0.66;
-        //private WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();  // Daily Met Data
-        private double _IntRadn;    // Intercepted Radn   
-        private CanopyEnergyBalanceInterceptionlayerType[] _LightProfile;
-
-        [Units("MJ")]
-        public double IntRadn { get { return _IntRadn; }}
-
-        //Parameters that get initial values from the .xml    
-        private int _Nsp = 3;
-        [Description("Number of species")]
-        public int Nsp { get { return _Nsp; } set { _Nsp = value; } }                //can't read in integer directly 
-        //public double Nspecies { get; set; }         //Number of species in pasture
-
-        private double[] ftArray;                     //used for returning species values
-
-        private string _thisCropName = "ryegrass_clover_paspalum";
-        [Description("Crop name shown as on the simulation tree")]
-        public string thisCropName { get { return _thisCropName; } set { _thisCropName = value; } }
-
-        public double[] allocationSeasonF;	    //growth allocation (shoot/root) season factor,
-        //made this accessable from xml 
-        public double[] NdilutCoeff;           //N dilution coefficient, making it accessible on 23 Mar 2012
-
-        private double[] myRootDepth;          //int:current root depth (mm)
-        public double[] rootDepth
-        {
-            get
-            {
-                return myRootDepth;
-            }
-            set
-            {
-                myRootDepth = value;
-                p_rootFrontier = 0;
-                foreach (double x in myRootDepth)
-                {
-                    p_rootFrontier = (x > p_rootFrontier) ? x : p_rootFrontier;
-                }
-            }
-        }
-        private double[] rootDist;         //Broken stick parameter [0-1]
-        public double[] rootFnType;	        //int:Root function 0=default_1=Ritchie_2=power_law_3=proportional_depth
-
-        // not used till Mar2010
-        //    [Param]
-        //    private double CO2ambient = 380; //ambient [CO2]
-        private double CO2ambient = 380; //expected to be updated from MET  
-        private double co2 = 380; //expected to be updated from MAE and ClimateControl 
-
-        //Senescence rate is affected by min(gf-N, gf_water)
-        public LinearInterpolation FVPDFunction = new LinearInterpolation
-        {
-            X = new double[3] { 0.0, 10.0, 50.0 },
-            Y = new double[3] { 1.0, 1.0, 1.0 }
-        };
-        public LinearInterpolation HeightMassFN = new LinearInterpolation
-        {
-            X = new double[5] { 0, 1000, 2000, 3000, 4000 },
-            Y = new double[5] { 0, 25, 75, 150, 250 }
-        };
-
-        //Soil & roots 
-        public double[] rlvp = new double[7] { 0.05, 0.05, 0.03, 0.02, 0.01, 0.00, 0.00 }; //Root Length Density proportion (relative)  
-        public double[] kl = new double[7] { 0.10, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06 };   //SW uptake parameter (/day)
-        public double[] ll = new double[7] { 0.20, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23 };         //Crop Lower Limit (mm/mm)
-        public double[] xf = new double[7] { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.80 };      //effects of X-factors on root growth(fraction)
-
-        //for SWIM options
-        private string _WaterUptakeSource = "calc";
-        [Description("Water uptake done by AgPasture (calc) or by apsim?")]
-        public string WaterUptakeSource { get { return _WaterUptakeSource; } set { _WaterUptakeSource = value; } }
-        public string NUptakeSource = "calc";
-
-        public string alt_N_uptake = "no";
-
-//        public double[] dlayer;   //Soil Layer Thickness (mm)
-//        private double[] sw_dep;  //soil water by layer    
-//        private double[] SAT;     //saturation point
-//        private double[] DUL;     //draina upper limit (fioeld capacity);
-//        private double[] no3;     //SNO3dep = new double[dlayer.Length];
-//        private double[] nh4;     //SNH4dep = new double[dlayer.Length];
-
-        private double day_length = 12;
-//        private double latitude;
-        private int day_of_month;
-        private int month;
-        private int year;
-
-        public int UseRootProportion = 0;
-        public bool HaveInitialised = false;
-
-        //** Aggregated pasture parameters of all species (wiht a prefix 'p_')    
-        //p_d... variables are daily changes (delta) 
-        private double p_dGrowthPot;      //daily growth potential    
-        private double p_dGrowthW;        //daily growth with water-deficit incoprporated  
-        private double p_dGrowth;         //daily growth  
-        private double p_dHerbage;        //daily herbage (total standing DM) increae  
-        private double p_dLitter;         //daily litter formation  
-        private double p_dRootSen;        //daily root senescence
-        private double p_dNLitter;        //daily litter formation
-        private double p_dNRootSen;       //daily root senescence
-
-        //p_... variables are pasture states at a given time (day)
-        private double p_fShoot;	      //actual fraction of dGrowth to shoot
-        private double p_height;          // Canopy height (mm)
-        private double p_greenLAI;
-        private double p_deadLAI;
-        private double p_totalLAI;
-        private double p_lightExtCoeff;
-        private double p_greenDM;         //green is the live aboveground herbage mass, kgDM/ha
-        private double p_deadDM;
-        private double p_totalDM;
-
-        private double p_rootMass;        //total root mass
-        private double p_rootFrontier;    //depth of root frontier
-
-        //soil        
-        private double p_bottomRootLayer;   //the soil layer just below root zone
-        private double p_soilNdemand;       //plant N demand (shoot + root) for daily growth from soil (excludingfixation and remob)
-        // private double p_soilNdemandMax;    //plant N demand with luxury uptake    
-        private double p_soilNavailable;    //Plant available N in soil kgN/ha, at the present day
-        private double p_soilNuptake;       //Plant N uptake, daily  
-        private double[] SNSupply;
-        private double[] SNUptake;
-        private double p_Nfix = 0;
-        private double p_gfn;               // = effect of p_Nstress on growth 
-
-        private double p_waterDemand;   // Daily Soil Water Demand (mm)
-        private double p_waterUptake;   // Daily Soil Water uptake (mm)
-        private double p_waterSupply;   // plant extractable soil moisture (mm)
-        private double[] SWSupply;
-        private double[] SWUptake;
-        private double p_gfwater;       // = effects of water stress on growth
-        private double p_gftemp;
-
-        private double p_harvestDM;              //daily harvested dm
-        private double p_harvestN;               //daily harvested n
-        private double p_harvestDigest;
-        //private double p_herbageDigest;
-        private bool p_Live = true;              //flag signialling crop is live (not killed)
 
         //Events
         public delegate void NewCropDelegate(PMF.NewCropType Data);
@@ -417,41 +54,2576 @@ namespace Models
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        #endregion
+
+        #region Parameters needed from user interface
+
+        private int numSpecies = 1;
+        [Description("Number of species")]
+        public int NumSpecies
+        {
+            get { return numSpecies; }
+            set { numSpecies = value; }
+        }
+
+        private string swardName = "AgPasture";
+        [Description("Sward name (as shown on the simulation tree)")]
+        public string SwardName
+        {
+            get { return swardName; }
+            set { swardName = value; }
+        }
+
+        private string[] speciesName = new string[] { "Ryegrass" };
+        [Description("Name of pasture species")]
+        public string[] SpeciesName
+        {
+            get { return speciesName; }
+            set
+            {
+                int NSp = value.Length;
+                speciesName = new string[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    speciesName[sp] = value[sp];
+            }
+        }
+
+        private string[] speciesNType = new string[] { "grass" };
+        [Description("Type of plant with respect to N fixation (legume/grass)")]
+        public string[] SpeciesNType
+        {
+            get { return speciesNType; }
+            set
+            {
+                int NSp = value.Length;
+                speciesNType = new string[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    speciesNType[sp] = value[sp];
+            }
+        }
+
+        private string[] speciesCType = new string[] { "C3" };
+
+        [Description("Type of plant with respect to photosynthesis")]
+        public string[] SpeciesCType
+        {
+            get { return speciesCType; }
+            set
+            {
+                int NSp = value.Length;
+                speciesCType = new string[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    speciesCType[sp] = value[sp];
+            }
+        }
+
+        private double[] iniDMshoot = new double[] { 0.0 };
+        [Description("Initial above ground DM")]
+        public double[] InitialDMShoot
+        {
+            get { return iniDMshoot; }
+            set
+            {
+                int NSp = value.Length;
+                iniDMshoot = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    iniDMshoot[sp] = value[sp];
+            }
+        }
+
+        private double[] iniDMroot = new double[] { 0.0 };
+        [Description("Initial below ground DM")]
+        public double[] InitialDMRoot
+        {
+            get { return iniDMroot; }
+            set
+            {
+                int NSp = value.Length;
+                iniDMroot = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    iniDMroot[sp] = value[sp];
+            }
+        }
+
+        private double[] iniDMgreen = new double[] { 0.0 };
+        [Description("Initial above ground green DM")]
+        public double[] InitialDMGreen
+        {
+            get { return iniDMgreen; }
+            set
+            {
+                int NSp = value.Length;
+                iniDMgreen = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    iniDMgreen[sp] = value[sp];
+            }
+        }
+
+        private double[] iniRootDepth = new double[] { 0 };
+        [Description("Initial depth for roots")]
+        public double[] InitialRootDepth
+        {
+            get { return iniRootDepth; }
+            set
+            {
+                int NSp = value.Length;
+                iniRootDepth = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    iniRootDepth[sp] = value[sp];
+            }
+        }
+
+        // ---------------------------------------------------------------
+
+        private double[] maxPhotosynthesisRate = new double[] { 1.0 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MaxPhotosynthesisRate
+        {
+            get { return maxPhotosynthesisRate; }
+            set
+            {
+                int NSp = value.Length;
+                maxPhotosynthesisRate = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    maxPhotosynthesisRate[sp] = value[sp];
+            }
+        }
+
+
+        //==========================================================
+
+        private string waterUptakeSource = "calc";
+        [Description("Water uptake done by AgPasture (calc) or by apsim?")]
+        public string WaterUptakeSource
+        {
+            get { return waterUptakeSource; }
+            set { waterUptakeSource = value; }
+        }
+
+        [XmlIgnore]
+        public string NUptakeSource = "calc";
+
+        [XmlIgnore]
+        public string alt_N_uptake = "no";
+
+
+
+        //Senescence rate is affected by min(gf-N, gf_water)
+        [XmlIgnore]
+        public LinearInterpolation FVPDFunction = new LinearInterpolation
+        {
+            X = new double[3] { 0.0, 10.0, 50.0 },
+            Y = new double[3] { 1.0, 1.0, 1.0 }
+        };
+        [XmlIgnore]
+        public LinearInterpolation HeightMassFN = new LinearInterpolation
+        {
+            X = new double[5] { 0, 1000, 2000, 3000, 4000 },
+            Y = new double[5] { 0, 25, 75, 150, 250 }
+        };
+
+        [XmlIgnore]
+        public double[] rlvp;
+
+        //[Description("Root distribution method")]
+        [XmlIgnore]
+        public string RootDistributionMethod
+        {
+            get
+            {
+                switch (p_RootDistributionMethod)
+                {
+                    case 1:
+                        return "UserDefined";
+                    case 2:
+                        return "ExpoLinear";
+                    default:
+                        // case = 0
+                        return "Homogenous";
+                }
+            }
+            set
+            {
+                if (value.ToLower() == "userdefined")
+                    p_RootDistributionMethod = 1;
+                else if (value.ToLower() == "expolinear")
+                    p_RootDistributionMethod = 2;
+                else      // default = homogeneous
+                    p_RootDistributionMethod = 0;
+            }
+        }
+
+        //[Description("Fraction of root depth where its proportion starts to decrease")]
+        [XmlIgnore]
+        public double ExpoLinearDepthParam
+        {
+            get { return p_ExpoLinearDepthParam; }
+            set
+            {
+                p_ExpoLinearDepthParam = value;
+                if (p_ExpoLinearDepthParam == 1.0)
+                    p_RootDistributionMethod = 0;	// effectivelly it defines a homogeneous distribution
+            }
+        }
+
+        //[Description("Exponent to determine mass distribution in the soil profile")]
+        [XmlIgnore]
+        public double ExpoLinearCurveParam
+        {
+            get { return p_ExpoLinearCurveParam; }
+            set
+            {
+                p_ExpoLinearCurveParam = value;
+                if (p_ExpoLinearCurveParam == 0.0)
+                    p_RootDistributionMethod = 0;	// It is impossible to solve, but its limit is a homogeneous distribution
+            }
+        }
+
+        [XmlIgnore]
+        public double[] initialDMFractions_grass = new double[] { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
+        [XmlIgnore]
+        public double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
+
+        [XmlIgnore]
+        public double[] PreferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
+        [XmlIgnore]
+        public double[] PreferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
+
+        #endregion
+
+        #region Output properties
+
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        [Description("Generic type of crop")]         //  useful for SWIM
+        [Units("")]
+        public string CropType
+        {
+            get { return SwardName; }
+        }
+
+        [Description("Plant status (dead, alive, etc)")]
+        [Units("")]
+        public string PlantStatus
+        {
+            get
+            {
+                if (p_Live) return "alive";
+                else return "out";
+            }
+        }
+        [Description("Plant development stage number")]
+        [Units("")]
+        public int Stage
+        {
+            //An approximate of teh stages corresponding to that of other arable crops for management application settings.
+            //Phenostage of the first species (ryegrass) is used for this approximation
+            get
+            {
+                int cropStage = 0; //default as "phase out"
+                if (p_Live)
+                {
+                    if (SP[0].phenoStage == 0)
+                        cropStage = 1;    //"sowing & germination";
+                    if (SP[0].phenoStage == 1)
+                        cropStage = 3;    //"emergence";
+                }
+                return cropStage;
+            }
+        }
+        [Description("Plant development stage name")]
+        [Units("")]
+        public string StageName
+        {
+            get
+            {
+                string name = "out";
+                if (p_Live)
+                {
+                    if (SP[0].phenoStage == 0)
+                        name = "sowing";    //cropStage = 1 & 2
+                    if (SP[0].phenoStage == 1)
+                        name = "emergence"; // cropStage = 3
+                }
+                return name;
+            }
+        }
+
+        [Description("Total amount of C in plants")]
+        [Units("kgDM/ha")]
+        public double TotalPlantC
+        {
+            get { return 0.4 * (p_totalDM + p_rootMass); }
+        }
+
+        [Description("Total dry matter weight of plants")]
+        [Units("kgDM/ha")]
+        public double TotalPlantWt
+        {
+            get { return (AboveGroundWt + BelowGroundWt); }
+        }
+
+        [Description("Total dry matter weight of plants above ground")]
+        [Units("kgDM/ha")]
+        public double AboveGroundWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmshoot;
+                return result;
+            }
+        }
+        [Description("Total dry matter weight of plants below ground")]
+        [Units("kgDM/ha")]
+        public double BelowGroundWt
+        {
+            get { return p_rootMass; }
+        }
+        [Description("Total dry matter weight of standing plants parts")]
+        [Units("kgDM/ha")]
+        public double StandingPlantWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf + SP[s].dmstem;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of plants alive above ground")]
+        [Units("kgDM/ha")]
+        public double AboveGroundLiveWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmgreen;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of dead plants above ground")]
+        [Units("kgDM/ha")]
+        public double AboveGroundDeadWt
+        {
+            get { return p_deadDM; }
+        }
+        [Description("Total dry matter weight of plant's leaves")]
+        [Units("kgDM/ha")]
+        public double LeafWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf1 + SP[s].dmleaf2 + SP[s].dmleaf3 + SP[s].dmleaf4;
+                return result;
+            }
+        }
+        [Description("Total dry matter weight of plant's leaves alive")]
+        [Units("kgDM/ha")]
+        public double LeafLiveWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf1 + SP[s].dmleaf2 + SP[s].dmleaf3;
+                return result;
+            }
+        }
+        [Description("Total dry matter weight of plant's leaves dead")]
+        [Units("kgDM/ha")]
+        public double LeafDeadWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf4;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of plant's stems")]
+        [Units("kgDM/ha")]
+        public double StemWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmstem1 + SP[s].dmstem2 + SP[s].dmstem3 + SP[s].dmstem4;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of plant's stems alive")]
+        [Units("kgDM/ha")]
+        public double StemLiveWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmstem1 + SP[s].dmstem2 + SP[s].dmstem3;
+                return result;
+            }
+        }
+        [Description("Total dry matter weight of plant's stems dead")]
+        [Units("kgDM/ha")]
+        public double StemDeadWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmstem4;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of plant's stolons")]
+        [Units("kgDM/ha")]
+        public double StolonWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmstol1 + SP[s].dmstol2 + SP[s].dmstol3;
+                return result;
+            }
+        }
+        [Description("Total dry matter weight of plant's roots")]
+        [Units("kgDM/ha")]
+        public double RootWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmroot;
+                return result;
+            }
+        }
+
+        [Description("Potential plant growth, correct for extreme temperatures")]
+        [Units("kgDM/ha")]
+        public double PlantPotentialGrowthWt
+        {
+            get { return p_dGrowthPot; }
+        }
+        [Description("Potential plant growth, correct for temperature and water")]
+        [Units("kgDM/ha")]
+        public double PlantGrowthNoNLimit
+        {
+            get { return p_dGrowthW; }
+        }
+        [Description("Actual plant growth (before littering)")]
+        [Units("kgDM/ha")]
+        public double PlantGrowthWt
+        {
+            //dm_daily_growth, including roots & before littering
+            get { return p_dGrowth; }
+        }
+
+        [Description("Actual herbage (shoot) growth")]
+        [Units("kgDM/ha")]
+        public double HerbageGrowthWt
+        {
+            get { return p_dHerbage; }
+        }
+
+        [Description("Dry matter amount of litter deposited onto soil surface")]
+        [Units("kgDM/ha")]
+        public double LitterDepositionWt
+        {
+            get { return p_dLitter; }
+        }
+
+        [Description("Dry matter amount of senescent roots added to soil FOM")]
+        [Units("kgDM/ha")]
+        public double RootSenescenceWt
+        {
+            get { return p_dRootSen; }
+        }
+
+        [Description("Plant C remobilisation")]
+        [Units("kgC/ha")]
+        public double PlantRemobilisedC
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Cremob;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter amount available for removal (leaf+stem)")]
+        [Units("kgDM/ha")]
+        public double HarvestableWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += Math.Max(0.0, SP[s].dmleaf_green + SP[s].dmstem_green - SP[s].dmgreenmin)
+                             + Math.Max(0.0, SP[s].dmdead - SP[s].dmdeadmin);
+                return result;
+            }
+        }
+
+        [Description("Amount of plant dry matter removed by harvest")]
+        [Units("kgDM/ha")]
+        public double HarvestWt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmdefoliated;
+                return result;
+            }
+        }
+
+        //**LAI & Cover
+        [Description("Leaf area index of green leaves")]
+        [Units("m^2/m^2")]
+        public double LAI_green
+        {
+            get { return p_greenLAI; }
+        }
+
+        [Description("Leaf area index of dead leaves")]
+        [Units("m^2/m^2")]
+        public double LAI_dead
+        {
+            get { return p_deadLAI; }
+        }
+
+        [Description("Total leaf area index")]
+        [Units("m^2/m^2")]
+        public double LAI_total
+        {
+            get { return p_totalLAI; }
+        }
+
+        [Description("Fraction of soil covered by green leaves")]
+        [Units("%")]
+        public double Cover_green
+        {
+            get
+            {
+                if (p_greenLAI == 0) return 0;
+                return (1.0 - Math.Exp(-p_lightExtCoeff * p_greenLAI));
+            }
+
+        }
+
+        [Description("Fraction of soil covered by dead leaves")]
+        [Units("%")]
+        public double Cover_dead
+        {
+            get
+            {
+                if (p_deadLAI == 0) return 0;
+                return (1.0 - Math.Exp(-p_lightExtCoeff * p_deadLAI));
+            }
+        }
+
+        [Description("Fraction of soil covered by plants")]
+        [Units("%")]
+        public double Cover_tot
+        {
+            get
+            {
+                if (p_totalLAI == 0) return 0;
+                return (1.0 - (Math.Exp(-p_lightExtCoeff * p_totalLAI)));
+            }
+        }
+
+        //** Nitrogen
+        [Description("Total amount of N in plants")]
+        [Units("kg/ha")]
+        public double TotalPlantN
+        {
+            get { return (AboveGroundN + BelowGroundN); }
+        }
+
+        [Description("Total amount of N in plants above ground")]
+        [Units("kgN/ha")]
+        public double AboveGroundN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nshoot;       //remoblised N is reported in stem
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in plants below ground")]
+        [Units("kgN/ha")]
+        public double BelowGroundN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nroot;
+                return result;
+            }
+        }
+
+        [Description("Proportion of N above ground in relation to below ground")]
+        [Units("%")]
+        public double AboveGroundNPct
+        {
+            get
+            {
+                double result = 0;
+                if (AboveGroundWt != 0)
+                    result = 100 * AboveGroundN / AboveGroundWt;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in standing plants")]
+        [Units("kgN/ha")]
+        public double StandingPlantN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf + SP[s].Nstem;
+                return result;
+            }
+        }
+        [Description("Average N concentration of standing plants")]
+        [Units("kgN/kgDM")]
+        public double StandingPlantNConc
+        {
+            get
+            {
+                double Namount = 0.0;
+                double DMamount = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    Namount += SP[s].Nleaf + SP[s].Nstem;
+                    DMamount += SP[s].dmleaf + SP[s].dmstem;
+                }
+                double result = Namount / DMamount;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in plants alive above ground")]
+        [Units("kgN/ha")]
+        public double AboveGroundLiveN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ngreen;
+                return result;
+            }
+        }
+        [Description("Total amount of N in dead plants above ground")]
+        [Units("kgN/ha")]
+        public double AboveGroundDeadN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ndead;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in the plant's leaves")]
+        [Units("kgN/ha")]
+        public double LeafN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in the plant's stems")]
+        [Units("kgN/ha")]
+        public double StemN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nstem;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in the plant's stolons")]
+        [Units("kgN/ha")]
+        public double StolonN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nstolon;
+                return result;
+            }
+        }
+
+        [Description("Total amount of N in the plant's roots")]
+        [Units("kgN/ha")]
+        public double RootN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nroot;
+                return result;
+            }
+        }
+
+        [Description("Average N concentration of leaves")]
+        [Units("kgN/kgDM")]
+        public double LeafNConc
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ncleaf1 * SP[s].dmleaf1
+                             + SP[s].Ncleaf2 * SP[s].dmleaf2
+                            + SP[s].Ncleaf3 * SP[s].dmleaf3
+                            + SP[s].Ncleaf4 * SP[s].dmleaf4;
+                result = result / LeafWt;
+                return result;
+            }
+        }
+
+        [Description("Average N concentration in stems")]
+        [Units("kgN/kgDM")]
+        public double StemNConc
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ncstem1 * SP[s].dmstem1
+                             + SP[s].Ncstem2 * SP[s].dmstem2
+                             + SP[s].Ncstem3 * SP[s].dmstem3
+                             + SP[s].Ncstem4 * SP[s].dmstem4;
+                result = result / StemWt;
+                return result;
+            }
+        }
+
+        [Description("Average N concentration in stolons")]
+        [Units("kgN/kgDM")]
+        public double StolonNConc
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ncstol1 * SP[s].dmstol1
+                             + SP[s].Ncstol2 * SP[s].dmstol2
+                             + SP[s].Ncstol3 * SP[s].dmstol3;
+                result = result / StolonWt;
+                return result;
+            }
+        }
+
+        [Description("Average N concentration in roots")]
+        [Units("kgN/kgDM")]
+        public double RootNConc
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ncroot * SP[s].dmroot;
+                result = result / RootWt;
+                return result;
+            }
+        }
+
+        [Description("Amount of N removed by harvest")]
+        [Units("kgN/ha")]
+        public double HarvestN
+        {
+            get
+            {
+                double result = 0.0;
+                if (HarvestWt > 0.0)
+                {
+                    for (int s = 0; s < numSpecies; s++)
+                        result += SP[s].Ndefoliated;
+                }
+                return result;
+            }
+        }
+        [Description("Average herbage digestibility")]
+        [Units("0-1")]
+        public double HerbageDigestibility
+        {
+            get
+            {
+                if (!p_Live || (StemWt + LeafWt) <= 0)
+                    return 0;
+
+                double digest = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    digest += SP[s].digestHerbage * (SP[s].dmstem + SP[s].dmleaf) / (StemWt + LeafWt);  //(dm_stem + dm_leaf);
+                return digest;
+            }
+        }
+        [Description("Average digestibility of harvested material")]
+        [Units("0-1")]
+        public double DefoliatedDigestibility
+        {
+            get { return p_harvestDigest; }
+        }
+        [Description("Average ME of herbage")]
+        [Units("(MJ/ha)")]
+        public double HerbageME
+        {
+            get
+            {
+                double me = 16 * HerbageDigestibility * (StemWt + LeafWt);
+                return me;
+            }
+        }
+
+        [Description("Amount of atmospheric N fixed")]
+        [Units("kgN/ha")]
+        public double PlantFixedN
+        {
+            get { return p_Nfix; }
+        }
+
+        [Description("Amount of N remobilised from senescing tissue")]
+        [Units("kgN/ha")]
+        public double PlantRemobilisedN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].remob2NewGrowth;
+                return result;
+            }
+        }
+
+        [Description("Amount of luxury N remobilised")]
+        [Units("kgN/ha")]
+        public double PlantLuxuryNRemobilised
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].NFastRemob2 + SP[s].NFastRemob3;
+                return result;
+            }
+        }
+
+        [Description("Amount of luxury N potentially remobilisable")]
+        [Units("kgN/ha")]
+        public double PlantRemobilisableLuxuryN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].NLuxury2 + SP[s].NLuxury3;
+                return result;
+            }
+        }
+        [Description("Amount of N deposited as litter onto soil surface")]
+        [Units("kgN/ha")]
+        public double LitterDepositionN
+        {
+            get { return p_dNLitter; }
+        }
+
+        [Description("Amount of N added to soil FOM by senescent roots")]
+        [Units("kgN/ha")]
+        public double RootSenescenceN
+        {
+            get { return p_dNRootSen; }
+        }
+
+        [Description("Plant nitrogen requirement with luxury uptake")]
+        [Units("kgN/ha")]
+        public double NitrogenRequiredLuxury
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += SP[s].NdemandLux;
+                }
+                return result;
+            }
+        }
+
+        [Description("Plant nitrogen requirement for optimum growth")]
+        [Units("kgN/ha")]
+        public double NitrogenRequiredOptimum
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += SP[s].NdemandOpt;
+                }
+                return result;
+            }
+        }
+
+        [Description("Nitrogen amount in new growth")]
+        [Units("kgN/ha")]
+        public double PlantGrowthN
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += SP[s].newGrowthN;
+                }
+                return result;
+            }
+        }
+
+        [Description("Nitrogen concentration in new growth")]
+        [Units("kgN/kgDM")]
+        public double PlantGrowthNconc
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += SP[s].newGrowthN;
+                }
+                if (PlantGrowthWt > 0)
+                    result = result / PlantGrowthWt;
+                else
+                    result = 0.0;
+                return result;
+            }
+        }
+
+        [Description("Plant nitrogen demand from soil")]
+        [Units("kgN/ha")]
+        public double NitrogenDemand
+        {
+            get { return p_soilNdemand; }
+        }
+
+        [Description("Plant available nitrogen in soil")]
+        [Units("kgN/ha")]
+        public double NitrogenSupply
+        {
+            get { return p_soilNavailable; }
+        }
+
+        [Description("Plant available nitrogen in soil layers")]
+        [Units("kgN/ha")]
+        public double[] NitrogenSupplyLayers
+        {
+            get { return SNSupply; }
+        }
+
+        [Description("Plant nitrogen uptake")]
+        [Units("kgN/ha")]
+        public double NitrogenUptake
+        {
+            get { return p_soilNuptake; }
+        }
+
+        [Description("Plant nitrogen uptake from soil layers")]
+        [Units("kgN/ha")]
+        public double[] NitrogenUptakeLayers
+        {
+            get { return SNUptake; }
+        }
+
+        [Description("Plant growth limiting factor due to nitrogen stress")]
+        [Units("0-1")]
+        public double GLFn
+        {
+            get { return p_gfn; }
+        }
+        [Description("Plant growth limiting factor due to plant N concentration")]
+        [Units("0-1")]
+        public double GLFnConcentration
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Ncfactor * SP[s].dmshoot;
+                return (result / AboveGroundWt);
+            }
+        }
+        [Description("Dry matter allocated to roots")]
+        [Units("kgDM/ha")]
+        public double DMToRoots
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += (1 - SP[s].fShoot) * SP[s].dGrowth;
+                }
+                return result;
+            }
+        }
+        [Description("Dry matter allocated to shoot")]
+        [Units("kgDM/ha")]
+        public double DMToShoot
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result += SP[s].fShoot * SP[s].dGrowth;
+                }
+                return result;
+            }
+        }
+        [Description("Fraction of growth allocated to roots")]
+        [Units("0-1")]
+        public double FractionGrowthToRoot
+        {
+            get
+            {
+                double result = 0.0;
+                if (p_dGrowth <= 0)
+                    result = DMToRoots / p_dGrowth;
+                return result;
+            }
+        }
+
+        //** water related
+        [Description("Root length density")]
+        [Units("mm/mm^3")]
+        public double[] rlv
+        {
+            get
+            {
+                double[] rlv = new double[Soil.Thickness.Length];
+                //double p_srl = 75000;           // specific root length (mm root/g root)
+                //Compute the root length, total over the whole profile
+                double Total_Rlength = p_rootMass * SP[0].SRL;   // m root/ha
+                Total_Rlength *= 0.0000001;  // convert into mm root/mm2 soil)
+                for (int layer = 0; layer < rlv.Length; layer++)
+                {
+                    rlv[layer] = RootFraction[layer] * Total_Rlength / Soil.Thickness[layer];    // mm root/mm3 soil
+                }
+                return rlv;
+            }
+        }
+
+        private double[] RootFraction;
+        [Description("Fraction of root dry matter for each soil layer")]
+        [Units("0-1")]
+        public double[] RootWtFraction
+        {
+            get { return RootFraction; }
+        }
+
+        [Description("Plant water demand")]
+        [Units("mm")]
+        public double WaterDemand
+        {
+            get { return p_waterDemand; }
+        }
+
+        [Description("Plant available water in soil")]
+        [Units("mm")]
+        public double WaterSupply
+        {
+            get { return p_waterSupply; }
+        }
+
+        [Description("Plant available water in soil layers")]
+        [Units("mm")]
+        public double[] WaterSupplyLayers
+        {
+            get { return SWSupply; }
+        }
+
+        [Description("Plant water uptake")]
+        [Units("mm")]
+        public double WaterUptake
+        {
+            get { return p_waterUptake; }
+        }
+
+        [Description("Plant water uptake from soil layers")]
+        [Units("mm")]
+        public double[] WaterUptakeLayers
+        {
+            get { return SWUptake; }
+        }
+
+        [Description("Plant growth limiting factor due to water deficit")]
+        [Units("0-1")]
+        public double GLFwater
+        {
+            get { return p_gfwater; }
+        }
+
+        //**Stress factors
+        [Description("Plant growth limiting factor due to temperature")]
+        [Units("0-1")]
+        public double GLFtemp
+        {
+            get { return p_gftemp; }
+        }
+
+        [Description("Generic plant growth limiting factor, used for other factors")]
+        [Units("0-1")]
+        public double GLFrgr
+        {
+            get
+            {
+                double p_Frgr = 0; //weighted value
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    double prop = 1.0 / numSpecies;
+                    if (p_greenDM != 0.0)
+                    {
+                        prop = SP[s].dmgreen / AboveGroundLiveWt;
+                    }
+                    p_Frgr += SP[s].Frgr * prop;
+                }
+                return p_Frgr;
+            }
+        }
+
+        [Description("Sward average height")]                 //needed by micromet
+        [Units("mm")]
+        public double Height
+        {
+            get { return p_height; }
+        }
+
+        //testing purpose
+        [Description("Dry matter of plant pools at stage 1 (young)")]
+        [Units("kgN/ha")]
+        public double PlantStage1Wt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf1 + SP[s].dmstem1 + SP[s].dmstol1;
+                return result;
+            }
+        }
+
+        [Description("Dry matter of plant pools at stage 2 (developing)")]
+        [Units("kgN/ha")]
+        public double PlantStage2Wt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf2 + SP[s].dmstem2 + SP[s].dmstol2;
+                return result;
+            }
+        }
+        [Description("Dry matter of plant pools at stage 3 (mature)")]
+        [Units("kgN/ha")]
+        public double PlantStage3Wt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf3 + SP[s].dmstem3 + SP[s].dmstol3;
+                return result;
+            }
+        }
+        [Description("Dry matter of plant pools at stage 4 (senescent)")]
+        [Units("kgN/ha")]
+        public double PlantStage4Wt
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].dmleaf4 + SP[s].dmstem4;
+                return result;
+            }
+        }
+
+        [Description("N content of plant pools at stage 1 (young)")]
+        [Units("kgN/ha")]
+        public double PlantStage1N
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf1 + SP[s].Nstem1 + SP[s].Nstol1;
+                return result;
+            }
+        }
+        [Description("N content of plant pools at stage 2 (developing)")]
+        [Units("kgN/ha")]
+        public double PlantStage2N
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf2 + SP[s].Nstem2 + SP[s].Nstol2;
+                return result;
+            }
+        }
+        [Description("N content of plant pools at stage 3 (mature)")]
+        [Units("kgN/ha")]
+        public double PlantStage3N
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf3 + SP[s].Nstem3 + SP[s].Nstol3;
+                return result;
+            }
+        }
+        [Description("N content of plant pools at stage 4 (senescent)")]
+        [Units("kgN/ha")]
+        public double PlantStage4N
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result += SP[s].Nleaf4 + SP[s].Nstem4;
+                return result;
+            }
+        }
+
+        private double HeightfromDM        // height calculation from DM, not output
+        {
+            get
+            {
+                double ht = (double)HeightMassFN.Value(p_greenDM + p_deadDM);
+                if (ht < 20.0) ht = 20.0F;      // minimum = 20mm
+                return ht;
+            }
+
+        }
+        [Description("Vapour pressure deficit")]
+        [Units("kPa")]
+        public double VPD_out              // VPD effect on Growth Interpolation Set
+        {
+            get { return VPD(); }
+        }
+
+        [Description("Effect of vapour pressure on growth (used by micromet)")]
+        [Units("0-1")]
+        public double FVPD              // VPD effect on Growth Interpolation Set
+        {                               // mostly = 1 for crop/grass/forage
+            get { return FVPDFunction.Value(VPD()); }
+        }
+
+        //Following are species values (arrays)
+        [Description("Leaf area index of green leaves, for each species")]
+        [Units("m^2/m^2")]
+        public double[] SpeciesGreenLAI
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].greenLAI;
+                return result;
+            }
+        }
+        [Description("Leaf area index of dead leaves, for each species")]
+        [Units("m^2/m^2")]
+        public double[] SpeciesDeadLAI
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].deadLAI;
+                return result;
+            }
+        }
+        [Description("Total leaf area index, for each species")]
+        [Units("m^2/m^2")]
+        public double[] SpeciesTotalLAI
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].totalLAI;
+                return result;
+            }
+        }
+
+        [Description("Total dry matter weight of plants for each plant species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesTotalWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmshoot + SP[s].dmroot;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of plants above ground, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesAboveGroundWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmshoot;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of plants below ground, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesBelowGroundWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmroot;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of standing herbage, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesStandingWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf + SP[s].dmstem;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of live standing plants parts for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesStandingLiveWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf_green + SP[s].dmstem_green;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of dead standing plants parts for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesStandingDeadWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf4 + SP[s].dmstem4;
+                return result;
+            }
+        }
+
+        [Description("Dry matter weight of leaves for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf1 + SP[s].dmleaf2 + SP[s].dmleaf3 + SP[s].dmleaf4;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stems for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstem1 + SP[s].dmstem2 + SP[s].dmstem3 + SP[s].dmstem4;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stolons for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstol1 + SP[s].dmstol2 + SP[s].dmstol3;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of roots for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRootWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmroot;
+                return result;
+            }
+        }
+
+        [Description("Total N amount for each plant species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesTotalN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nshoot + SP[s].Nroot;
+                return result;
+            }
+        }
+        [Description("N amount of standing herbage, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStandingN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf + SP[s].Nstem;
+                return result;
+            }
+        }
+
+        [Description("N amount in the plant's leaves, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf1 + SP[s].Nleaf2 + SP[s].Nleaf3 + SP[s].Nleaf4;
+                return result;
+            }
+        }
+        [Description("N amount in the plant's stems, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstem1 + SP[s].Nstem2 + SP[s].Nstem3 + SP[s].Nstem4;
+                return result;
+            }
+        }
+        [Description("N amount in the plant's stolons, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstol1 + SP[s].Nstol2 + SP[s].Nstol3;
+                return result;
+            }
+        }
+        [Description("N amount in the plant's roots, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRootsN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nroot;
+                return result;
+            }
+        }
+
+        [Description("Average N concentration in leaves, for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesLeafNConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Ncleaf1 * SP[s].dmleaf1
+                            + SP[s].Ncleaf2 * SP[s].dmleaf2
+                            + SP[s].Ncleaf3 * SP[s].dmleaf3
+                            + SP[s].Ncleaf4 * SP[s].dmleaf4;
+                    result[s] = result[s] / SP[s].dmleaf;
+                }
+                return result;
+            }
+        }
+        [Description("Average N concentration in stems, for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStemNConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Ncstem1 * SP[s].dmstem1
+                            + SP[s].Ncstem2 * SP[s].dmstem2
+                            + SP[s].Ncstem3 * SP[s].dmstem3
+                            + SP[s].Ncstem4 * SP[s].dmstem4;
+                    result[s] = result[s] / SP[s].dmstem;
+                }
+                return result;
+            }
+        }
+        [Description("Average N concentration in stolons, for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStolonNConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Ncstol1 * SP[s].dmstol1
+                              + SP[s].Ncstol2 * SP[s].dmstol2
+                              + SP[s].Ncstol3 * SP[s].dmstol3;
+                    result[s] = result[s] / SP[s].dmstol;
+                }
+                return result;
+            }
+        }
+        [Description("Average N concentration in roots, for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesRootNConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Ncroot * SP[s].dmroot;
+                    result[s] = result[s] / SP[s].dmroot;
+                }
+                return result;
+            }
+        }
+
+
+        [Description("Dry matter weight of leaves at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage1Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf1;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of leaves at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage2Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf2;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of leaves at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage3Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf3;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of leaves at stage 4 (dead) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage4Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmleaf4;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stems at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage1Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstem1;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stems at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage2Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstem2;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stems at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage3Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstem3;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stems at stage 4 (dead) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage4Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstem4;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stolons at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage1Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstol1;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stolons at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage2Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstol2;
+                return result;
+            }
+        }
+        [Description("Dry matter weight of stolons at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage3Wt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmstol3;
+                return result;
+            }
+        }
+
+        [Description("N amount in leaves at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage1N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf1;
+                return result;
+            }
+        }
+        [Description("N amount in leaves at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage2N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf2;
+                return result;
+            }
+        }
+        [Description("N amount in leaves at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage3N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf3;
+                return result;
+            }
+        }
+        [Description("N amount in leaves at stage 4 (dead) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLeafStage4N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nleaf4;
+                return result;
+            }
+        }
+        [Description("N amount in stems at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage1N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstem1;
+                return result;
+            }
+        }
+        [Description("N amount in stems at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage2N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstem2;
+                return result;
+            }
+        }
+        [Description("N amount in stems at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage3N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstem3;
+                return result;
+            }
+        }
+        [Description("N amount in stems at stage 4 (dead) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStemStage4N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstem4;
+                return result;
+            }
+        }
+        [Description("N amount in stolons at stage 1 (young) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage1N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstol1;
+                return result;
+            }
+        }
+        [Description("N amount in stolons at stage 2 (developing) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage2N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstol2;
+                return result;
+            }
+        }
+        [Description("N amount in stolons at stage 3 (mature) for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesStolonStage3N
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Nstol3;
+                return result;
+            }
+        }
+
+        [Description("N concentration of leaves at stage 1 (young) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesLeafStage1NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncleaf1;
+                return result;
+            }
+        }
+        [Description("N concentration of leaves at stage 2 (developing) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesLeafStage2NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncleaf2;
+                return result;
+            }
+        }
+        [Description("N concentration of leaves at stage 3 (mature) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesLeafStage3NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncleaf3;
+                return result;
+            }
+        }
+        [Description("N concentration of leaves at stage 4 (dead) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesLeafStage4NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncleaf4;
+                return result;
+            }
+        }
+        [Description("N concentration of stems at stage 1 (young) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStemStage1NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstem1;
+                return result;
+            }
+        }
+        [Description("N concentration of stems at stage 2 (developing) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStemStage2NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstem2;
+                return result;
+            }
+        }
+        [Description("N concentration of stems at stage 3 (mature) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStemStage3NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstem3;
+                return result;
+            }
+        }
+        [Description("N concentration of stems at stage 4 (dead) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStemStage4NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstem4;
+                return result;
+            }
+        }
+        [Description("N concentration of stolons at stage 1 (young) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStolonStage1NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstol1;
+                return result;
+            }
+        }
+        [Description("N concentration of stolons at stage 2 (developing) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStolonStage2NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstol2;
+                return result;
+            }
+        }
+        [Description("N concentration of stolons at stage 3 (mature) for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesStolonStage3NConc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncstol3;
+                return result;
+            }
+        }
+
+
+        [Description("Actual growth for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesGrowthWt
+        {
+            get
+            {
+                double[] result = new double[numSpecies];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowth;
+                return result;
+            }
+        }
+        [Description("Litter amount deposited onto soil surface, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesLitterWt
+        {
+            get
+            {
+                double[] result = new double[numSpecies];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dLitter;
+                return result;
+            }
+        }
+        [Description("Amount of senesced roots added to soil FOM, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesRootSenescedWt
+        {
+            get
+            {
+                double[] result = new double[numSpecies];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dRootSen;
+                return result;
+            }
+        }
+
+        [Description("Amount of dry matter harvestable for each species (leaf+stem)")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesHarvestableWt
+        {
+            get
+            {
+                double[] result = new double[numSpecies];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = Math.Max(0.0, SP[s].dmleaf_green + SP[s].dmstem_green - SP[s].dmgreenmin)
+                              + Math.Max(0.0, SP[s].dmdead - SP[s].dmdeadmin);
+                return result;
+            }
+        }
+        [Description("Amount of plant dry matter removed by harvest, for each species")]
+        [Units("kgDM/ha")]
+        public double[] SpeciesHarvestWt
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dmdefoliated;
+                return result;
+            }
+        }
+
+        [Description("Proportion in the dry matter harvested of each species")]
+        [Units("%")]
+        public double[] SpeciesHarvestPct
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                double myTotal = StandingPlantWt;
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    if (myTotal > 0.0)
+                        result[s] = (SP[s].dmstem + SP[s].dmleaf) * 100 / myTotal;
+                }
+                return result;
+            }
+        }
+
+        private double[] FractionToHarvest;
+        [Description("Fraction to harvest for each species")]
+        [Units("0-1")]
+        public double[] SpeciesHarvestFraction
+        {
+            get { return FractionToHarvest; }
+        }
+
+        [Description("Rate of turnover for live DM, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesLiveDMTurnoverRate
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].gama;
+                }
+                return result;
+            }
+        }
+        [Description("Rate of turnover for dead DM, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesDeadDMTurnoverRate
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].gamad;
+                }
+                return result;
+            }
+        }
+        [Description("Rate of DM turnover for stolons, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesStolonDMTurnoverRate
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].gamas;
+                }
+                return result;
+            }
+        }
+        [Description("Rate of DM turnover for roots, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesRootDMTurnoverRate
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].gamar;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N remobilised from senesced material, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRemobilisedN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].remob2NewGrowth;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of luxury N remobilised, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLuxuryNRemobilised
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].NFastRemob2 + SP[s].NFastRemob3;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of luxury N potentially remobilisable, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRemobilisableLuxuryN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].NLuxury2 + SP[s].NLuxury3;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of atmospheric N fixed, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesFixedN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Nfix;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N required with luxury uptake, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRequiredNLuxury
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].NdemandLux;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N required for optimum growth, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRequiredNOptimum
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].NdemandOpt;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N demaned from soil, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesDemandN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].soilNdemand;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N in new growth, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesGrowthN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] += SP[s].newGrowthN;
+                }
+                return result;
+            }
+        }
+
+        [Description("Nitrogen concentration in new growth, for each species")]
+        [Units("kgN/kgDM")]
+        public double[] SpeciesGrowthNconc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    if (SP[s].dGrowth > 0)
+                        result[s] += SP[s].newGrowthN / SP[s].dGrowth;
+                    else
+                        result[s] = 0.0;
+                }
+                return result;
+            }
+        }
+        [Description("Amount of N uptake, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesUptakeN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].soilNuptake;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of N deposited as litter onto soil surface, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesLitterN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].dNLitter;
+                }
+                return result;
+            }
+        }
+        [Description("Amount of N from senesced roots added to soil FOM, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesSenescedN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].dNrootSen;
+                }
+                return result;
+            }
+        }
+
+        [Description("Amount of plant nitrogen removed by harvest, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesHarvestN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ndefoliated;
+                return result;
+            }
+        }
+
+        [Description("Growth limiting factor due to nitrogen, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesGLFN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].gfn;
+                return result;
+            }
+        }
+        [Description("Growth limiting factor due to temperature, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesGLFT
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].gftemp;
+                return result;
+            }
+        }
+        [Description("Growth limiting factor due to water deficit, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesGLFW
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].gfwater;
+                return result;
+            }
+        }
+
+        [Description("Irridance on the top of canopy")]
+        [Units("W.m^2/m^2")]
+        public double[] SpeciesIrradianceTopCanopy
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].IL1;
+                return result;
+            }
+        }
+        [Description("Potential C assimilation, corrected for extreme temperatures")]
+        [Units("kgC/ha")]
+        public double[] SpeciesPotCarbonAssimilation
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Pgross;
+                return result;
+            }
+        }
+        [Description("Loss of C via respiration")]
+        [Units("kgC/ha")]
+        public double[] SpeciesCarbonLossRespiration
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = (double)SP[s].Resp_m;
+                return result;
+            }
+        }
+
+        [Description("Gross primary productivity")]
+        [Units("kgDM/ha")]
+        public double GPP
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result = SP[s].Pgross * 2.5;   // assume 40% C in DM
+                return result;
+            }
+        }
+        [Description("Net primary productivity")]
+        [Units("kgDM/ha")]
+        public double NPP
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result = SP[s].Pgross * 0.75 + SP[s].Resp_m;
+                result *= 2.5;   // assume 40% C in DM
+                return result;
+            }
+        }
+        [Description("Net above-ground primary productivity")]
+        [Units("kgDM/ha")]
+        public double NAPP
+        {
+            get
+            {
+                double result = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    result = SP[s].Pgross * SP[s].fShoot * 0.75 + SP[s].Resp_m;
+                result /= 2.5;   // assume 40% C in DM
+                return result;
+            }
+        }
+
+        #endregion
+
+        #region Internal variables
+
+        /// <summary>
+        /// Species in the simulated sward
+        /// </summary>
+        [XmlIgnore]
+        public Species[] SP;
+        private Species[] pSP;
+
+        /// <summary>
+        /// Constant needed for vapour pressure
+        /// </summary>
+        private const double SVPfrac = 0.66;
+
+        private double _IntRadn;	// Intercepted Radn
+        private CanopyEnergyBalanceInterceptionlayerType[] _LightProfile;
+
+        private double[] myRootDepth;		  //int:current root depth (mm)
+        private double[] rootDist;		 //Broken stick parameter [0-1]
+
+        //	private double CO2ambient = 380; //ambient [CO2]
+        private double CO2ambient = 380; //expected to be updated from MET
+        private double co2 = 380; //expected to be updated from MAE and ClimateControl
+
+        private double day_length = 12;
+        private int day_of_month;
+        private int month;
+        private int year;
+
+        private int p_RootDistributionMethod = 0;
+        private double p_ExpoLinearDepthParam;
+        private double p_ExpoLinearCurveParam;
+
+        public bool HaveInitialised = false;
+
+        //** Aggregated pasture parameters of all species (wiht a prefix 'p_')
+        //p_d... variables are daily changes (delta)
+        private double p_dGrowthPot;	  //daily growth potential
+        private double p_dGrowthW;		//daily growth with water-deficit incoprporated
+        private double p_dGrowth;		 //daily growth
+        private double p_dHerbage;		//daily herbage (total standing DM) increae
+        private double p_dLitter;		 //daily litter formation
+        private double p_dRootSen;		//daily root senescence
+        private double p_dNLitter;		//daily litter formation
+        private double p_dNRootSen;	   //daily root senescence
+
+        //p_... variables are pasture states at a given time (day)
+        private double p_fShoot;		  //actual fraction of dGrowth to shoot
+        private double p_height;		  // Canopy height (mm)
+        private double p_greenLAI;
+        private double p_deadLAI;
+        private double p_totalLAI;
+        private double p_lightExtCoeff;
+        private double p_greenDM;		 //green is the live aboveground herbage mass, kgDM/ha
+        private double p_deadDM;
+        private double p_totalDM;
+
+        private double p_rootMass;		//total root mass
+        private double p_rootFrontier;	//depth of root frontier
+
+        //soil
+        private double p_bottomRootLayer;   //the soil layer just below root zone
+        private double p_soilNdemand;	   //plant N demand (shoot + root) for daily growth from soil (excludingfixation and remob)
+        // private double p_soilNdemandMax;	//plant N demand with luxury uptake
+        private double p_soilNavailable;	//Plant available N in soil kgN/ha, at the present day
+        private double p_soilNuptake;	   //Plant N uptake, daily
+        private double[] SNSupply;
+        private double[] SNUptake;
+        private double p_Nfix = 0;
+        private double p_gfn;			   // = effect of p_Nstress on growth
+
+        private double p_waterDemand;   // Daily Soil Water Demand (mm)
+        private double p_waterUptake;   // Daily Soil Water uptake (mm)
+        private double p_waterSupply;   // plant extractable soil moisture (mm)
+        private double[] SWSupply;
+        private double[] SWUptake;
+        private double p_gfwater;	   // = effects of water stress on growth
+        private double p_gftemp;
+
+        private double p_harvestDM;			  //daily harvested dm
+        private double p_harvestN;			   //daily harvested n
+        private double p_harvestDigest;
+        //private double p_herbageDigest;
+        private bool p_Live = true;			  //flag signialling crop is live (not killed)
+
+
         //temporary testing, will be removed later when IL1 can be get from micromet
-        private int canopiesNum = 1;            //number of canpy including this one
+        private int canopiesNum = 1;			//number of canpy including this one
         private double[] canopiesRadn = null;   //Radn intercepted by canopies
 
-        //following was for testing 
-        [Units("")]
-        public double[] spIL1  //for testing only
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].IL1;
-                return ftArray;
-            }
-        }
-        [Units("")]
-        public double[] spPgross
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].Pgross;
-                return ftArray;
-            }
-        }
-        [Units("")]
-        private double[] spResp_m
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].Resp_m;
-                return ftArray;
-            }
-        }
+        #endregion
+
+        #region Initial and other settings
 
         //----------------------------------------------------------------
         /// <summary>
@@ -459,37 +2631,13 @@ namespace Models
         /// </summary>
         private void InitParameters()
         {
-            //Rainss 20110711 - Introduced broken stick root distribution 
-            // This hack uses rlvp as interface to pass distribution parameters and then recalc rlvp
-            // This is not what I would call good pratice due to the parameters technically changing meaning during
-            // initilisation, but it will do in the interim.
-            Nsp = SP.Length;
-            if (rlvp.Length == Nsp)
-            {
-                //Console.Out.WriteLine("Using two parameter root distribution model (root depth + distribution parameter)");
-                UseRootProportion = 2;
-                rootDist = new double[rlvp.Length];
-                rlvp.CopyTo(rootDist, 0); //Store distribution parameter values
-                // Calculate actual rlvp values
-                rlvp = new double[Soil.SoilWater.dlayer.Length];
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
-                {
-                    rlvp[layer] = RootProportion(layer, p_rootFrontier);
-                }
-            }
-            else if (rlvp.Length == Soil.SoilWater.dlayer.Length)
-            {
-                //Console.Out.WriteLine("Using real rlvp data values - original method");
-                UseRootProportion = 1; //using corrected depth calculation method
-            }
-            else
-            {
-                Array.Resize(ref rlvp, Soil.SoilWater.dlayer.Length);
-                Array.Resize(ref ll, Soil.SoilWater.dlayer.Length);
-                Array.Resize(ref kl, Soil.SoilWater.dlayer.Length);
-                Array.Resize(ref xf, Soil.SoilWater.dlayer.Length);
-                //throw new Exception("AgPasture: Incorrect number of values passed to RLVP exception");
-            }
+            // check that initialisation fractions have been supplied accordingly
+            Array.Resize(ref initialDMFractions_grass, 11);
+            Array.Resize(ref initialDMFractions_legume, 11);
+
+            month = clock.Today.Month;
+            year = clock.Today.Year;
+            day_of_month = clock.Today.Day;
 
             //init
             p_dGrowthPot = 0.0;
@@ -498,13 +2646,13 @@ namespace Models
             p_dHerbage = 0.0;
             p_height = 0.0;
 
-            p_dLitter = 0.0;         //daily litter formation  
-            p_dRootSen = 0.0;        //daily root senescence
-            p_dNLitter = 0.0;        //daily litter formation N
-            p_dNRootSen = 0.0;       //daily root senescence N
+            p_dLitter = 0.0;		 //daily litter formation
+            p_dRootSen = 0.0;		//daily root senescence
+            p_dNLitter = 0.0;		//daily litter formation N
+            p_dNRootSen = 0.0;	   //daily root senescence N
             p_bottomRootLayer = 0;
 
-            //Parameters for environmental factors 
+            //Parameters for environmental factors
             p_soilNdemand = 0;
             p_soilNavailable = 0;
             p_soilNuptake = 0;
@@ -519,26 +2667,15 @@ namespace Models
             p_waterUptake = 0;
             p_gfwater = 0;
             _IntRadn = 0.0;
-            actualUptake = 0.0;
 
-            month = clock.Today.Month;
-            year = clock.Today.Year;
-            day_of_month = clock.Today.Day;
-
-            //Create and initialise each species  
-            //Nsp = (int)Nspecies;
-            ftArray = new double[Nsp];
-
-            //SP = new Species[Nsp];         //species of the pasture
-            pSP = new Species[Nsp];        //For storing species status at previous day     
-            for (int s = 0; s < Nsp; s++)
+            SP = new Species[numSpecies];
+            pSP = new Species[numSpecies];
+            for (int s = 0; s < numSpecies; s++)
             {
-                //SP[s] = new Species();
-                //pSP[s] = new Species();
                 InitSpeciesValues(s);
             }
 
-            //Initialising the aggregated pasture parameters from initial valuses of each species  
+            //Initialising the aggregated pasture parameters from initial valuses of each species
             p_rootFrontier = 0.0;
             p_rootMass = 0.0;
             p_greenLAI = 0.0;
@@ -548,7 +2685,7 @@ namespace Models
             double sum_fShoot = 0.0;
             double sum_lightExtCoeff = 0.0;
 
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 //accumulate LAI of all species
                 p_greenLAI += SP[s].greenLAI;
@@ -577,14 +2714,22 @@ namespace Models
             if (p_totalLAI == 0) { p_lightExtCoeff = 0.5; }
             else { p_lightExtCoeff = sum_lightExtCoeff / p_totalLAI; }
 
-            //if (rlvp.Length != dlayer.Length)
-            //{
-            //    String msg = "Warning: Number of layers specified for root length density (rlvp) is different ";
-            //    msg += "\nfrom the number of soil layers.The simulation will run using the minimum of the two.";
-            //    Console.WriteLine(msg);
-            //}
+            //Rainss 20110711 - Introduced broken stick root distribution
+            // This hack uses rlvp as interface to pass distribution parameters and then recalc rlvp
+            // This is not what I would call good pratice due to the parameters technically changing meaning during
+            // initilisation, but it will do in the interim.
+            if (rlvp != null && rlvp.Length == numSpecies)
+            {
+                p_RootDistributionMethod = 2;
+                p_ExpoLinearDepthParam = rlvp[0];
+                // This has been maintained for backwards compatibility, use should be avoided
+            }
+
+            // rlvp is used as input only, in the calculations it has been usper-seeded by RootFraction (the proportion of roots mass in each layer)
+            // The RootFraction should add up to 1.0 over the soil profile
+            RootFraction = RootProfileDistribution();
         }
-        //----------------------------------------------------------
+
         /// <summary>
         /// Set parameter valuse that each species need to know
         /// - from pasture to species
@@ -592,8 +2737,18 @@ namespace Models
         /// <param name="s"></param>
         private void InitSpeciesValues(int s)
         {
+            SP[s] = new Species(speciesName[s]);
+            pSP[s] = new Species(speciesName[s]);
+
+            SP[s].isLegume = (speciesNType[s].ToLower() == "legume" ? true : false);
+            SP[s].photoPath = speciesCType[s].ToUpper();
+            SP[s].dmshootInit = iniDMshoot[s];
+            SP[s].dmrootInit = iniDMroot[s];
+            SP[s].dmGreenInit = iniDMgreen[s];
+            SP[s].rootDepthInit = iniRootDepth[s];
+
             Species.CO2ambient = CO2ambient;
-            Species.thisCropName = thisCropName;
+            Species.thisCropName = SwardName;
 
             SP[s].InitValues();
 
@@ -624,15 +2779,15 @@ namespace Models
             Species.Pdmshoot = AboveGroundWt;   //dm_shoot;
             Species.coverRF = coverRF();
 
-            //partition the MetData to species 
-            double sumRadnIntercept = 0.0;   //Intercepted Fraction of the solar Radn available to a species  
-            for (int s = 0; s < Nsp; s++)
+            //partition the MetData to species
+            double sumRadnIntercept = 0.0;   //Intercepted Fraction of the solar Radn available to a species
+            for (int s = 0; s < NumSpecies; s++)
             {
                 sumRadnIntercept += SP[s].coverGreen;
             }
             //update available Radn for each species at current day
             //IntRadn - the total intecepted radn by whole canopy of mixed species
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 if (sumRadnIntercept == 0)
                 {
@@ -646,26 +2801,24 @@ namespace Models
                 }
             }
 
-            //testing SNF decline by factor df 
+            //testing SNF decline by factor df
             // double dFrac = 1.0;
             if (co2 == 475)
             {
-                for (int s = 0; s < Nsp; s++)
+                for (int s = 0; s < NumSpecies; s++)
                 {
                     SP[s].MaxFix = 0.5;// dFrac;
                     SP[s].MinFix = 0.2;// dFrac;
                 }
             }
 
-
             return true;
         }
-
 
         //--------------------------------------------------------------------------
         /// <summary>
         /// Set drought stress factor to each species
-        /// Worth more efforts in this area 
+        /// Worth more efforts in this area
         /// </summary>
         private void SetSpeciesLimitingFactors()
         {
@@ -673,26 +2826,26 @@ namespace Models
             if (p_waterDemand == 0)
             {
                 p_gfwater = 1.0;
-                for (int s = 0; s < Nsp; s++)
+                for (int s = 0; s < NumSpecies; s++)
                     SP[s].gfwater = p_gfwater;
-                return;                                 //case (1) return
+                return;								 //case (1) return
             }
             if (p_waterDemand > 0 && p_waterUptake == 0)
             {
                 p_gfwater = 0.0;
-                for (int s = 0; s < Nsp; s++)
+                for (int s = 0; s < NumSpecies; s++)
                     SP[s].gfwater = p_gfwater;
-                return;                                 //case (2) return
+                return;								 //case (2) return
             }
 
             p_gfwater = p_waterUptake / p_waterDemand;
-            double spDepth = 0;              // soil profile depth
+            double spDepth = 0;			  // soil profile depth
             if (p_gfwater > 0.999)  //possible saturation
             {
                 // calculate soil moisture content in root zone
-                double SW = 0;      //soil water content        
-                double Sat = 0;     //water content at saturation
-                double FC = 0;      //water contenct at field capacity      
+                double SW = 0;	  //soil water content
+                double Sat = 0;	 //water content at saturation
+                double FC = 0;	  //water contenct at field capacity
 
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
@@ -704,97 +2857,38 @@ namespace Models
                         FC += Soil.SoilWater.dul_dep[layer];
                     }
                 }
-                if (SW > FC) //if saturated 
+                if (SW > FC) //if saturated
                 {
-                    //    double soilSatFactor = 0.2;         //gfwater = 1-0.2 (when SW == Sat)    
-                    //    p_gfwater = 1 - soilSatFactor * (SW - FC) / (Sat - FC);
-                    //    if (p_gfwater > 1.0) p_gfwater = 1.0;
-                    //}
-                    //    for (int s=0; s<Nsp; s++)
-                    //        SP[s].gfwater = p_gfwater;
-
                     double accum_gfwater = 0;
-                    p_greenLAI = 0;     //update p_greenLAI before using it.
-                    for (int s = 0; s < Nsp; s++)
+                    p_greenLAI = 0;	 //update p_greenLAI before using it.
+                    for (int s = 0; s < NumSpecies; s++)
                     {
                         SP[s].gfwater = 1 - SP[s].soilSatFactor * (SW - FC) / (Sat - FC);
-                        accum_gfwater += SP[s].gfwater * SP[s].greenLAI;   //weighted by greenLAI 
-                        p_greenLAI += SP[s].greenLAI;                      //FLi 19 Sept 2011 for avoiding error of an unupdated  
-                    }                                                      //p_greenLAI when using SWIM for waterUptake    
+                        accum_gfwater += SP[s].gfwater * SP[s].greenLAI;   //weighted by greenLAI
+                        p_greenLAI += SP[s].greenLAI;					  //FLi 19 Sept 2011 for avoiding error of an unupdated
+                    }													  //p_greenLAI when using SWIM for waterUptake
                     if (p_greenLAI > 0)
                         p_gfwater = accum_gfwater / p_greenLAI;
                     else
                         p_gfwater = 1.0;
-                    return;                         //case (3) return
+                    return;						 //case (3) return
                 }
-                //Reaching here is possible (SW < FC) even with a p_gfwater ==1     //FLi 20 Oct 2012
-                //not return, but go though to the case (4) below                                               
+                //Reaching here is possible (SW < FC) even with a p_gfwater ==1	 //FLi 20 Oct 2012
+                //not return, but go though to the case (4) below
             }
 
-            //Original block Set specieS.gfwater = p_gfwater, to distinguish them later    
-            for (int s = 0; s < Nsp; s++)
+            //Original block Set specieS.gfwater = p_gfwater, to distinguish them later
+            for (int s = 0; s < NumSpecies; s++)
             {
                 SP[s].gfwater = p_gfwater;
             }
             //Console.Out.WriteLine("gfwater4: " + p_gfwater);
-            return;                                     //case (4) return
-
-
-            /*/////
-              int  dep = SWUptake.Length;
-              double[] transpLAI = new double[dep];       //partitioning soil water in each layer according to species demand (LAI)
-                                                          //This process sounds more reasonable, but not giving better results, possible 
-                                                          //due to that compensation of moisture among layers are important between species
-              spDepth = 0;                         //Soil profile depth                                            
-              for (int layer = 0; layer < dep; layer++)
-              {
-                  spDepth += dlayer[layer];                      
-                  for (int s = 0; s < Nsp; s++)
-                  {                        
-                      if (spDepth <= SP[s].rootDepth)  
-                          transpLAI[layer] += SP[s].greenLAI;     //totalLAI which has root ToString this layer
-                  }                                
-              }
-
-              //species soil water demand
-              for (int s = 0; s < Nsp; s++)
-              {
-                  SP[s].swuptake = 0; //init
-                  SP[s].swdemandFrac = 0;             
-                  if (p_greenLAI > 0)
-                      SP[s].swdemandFrac =  SP[s].greenLAI / p_greenLAI;
-              }
-
-              //soil water uptake (assumed)
-              spDepth = 0;
-              for (int layer = 0; layer < dep; layer++)
-              {
-                  spDepth += dlayer[layer];
-                  for (int s = 0; s < Nsp; s++)
-                  {
-                      if (SP[s].rootDepth >= spDepth && SP[s].greenLAI > 0 && transpLAI[layer] > 0)
-                          SP[s].swuptake += SWUptake[layer] * SP[s].greenLAI /transpLAI[layer];
-                  }  
-              }
-
-              for (int s = 0; s < Nsp; s++)
-              {
-                  if (SP[s].swdemandFrac > 0 && p_waterUptake > 0)
-                      SP[s].gfwater = SP[s].swuptake / (SP[s].swdemandFrac * p_waterUptake);    
-                  
-                  if (SP[s].gfwater > 1.0) 
-                      SP[s].gfwater = 1.0;                
-              }         
-        
-              return;                                         //case (4) return
-             */
-
+            return;									 //case (4) return
         }
-
 
         //--------------------------------------------------------------------------
         /// <summary>
-        /// plant growth and partitioning and tissue turnover 
+        /// plant growth and partitioning and tissue turnover
         /// </summary>
         private void GrowthAndPartition()
         {
@@ -813,7 +2907,7 @@ namespace Models
             p_dRootSen = 0;
             p_dNRootSen = 0;
 
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 SP[s].PartitionTurnover();
 
@@ -825,7 +2919,7 @@ namespace Models
                 p_rootMass += SP[s].dmroot;
 
                 p_dHerbage += (SP[s].dmtotal - SP[s].pS.dmtotal);
-                //p_dHerbage += SP[s].dGrowth - SP[s].dLitter;  
+                //p_dHerbage += SP[s].dGrowth - SP[s].dLitter;
 
                 p_dLitter += SP[s].dLitter;
                 p_dNLitter += SP[s].dNLitter;
@@ -842,15 +2936,14 @@ namespace Models
             //litter return to surface OM completely (frac = 1.0)
             DoSurfaceOMReturn(p_dLitter, p_dNLitter, 1.0);
 
-            //Root FOM return 
+            //Root FOM return
             DoIncorpFomEvent(p_dRootSen, p_dNRootSen);
 
         }
 
+        #endregion
 
-        //==============================
-
-        # region "EventSenders"
+        # region EventSenders
 
         //--------------------------------------------------------------------------------------------
         /// <summary>
@@ -862,8 +2955,8 @@ namespace Models
             {
                 // Send out New Crop Event to tell other modules who I am and what I am
                 PMF.NewCropType EventData = new PMF.NewCropType();
-                EventData.crop_type = SP[0].micrometType;  // need to separate crop type for micromet & canopy name !!  
-                EventData.sender = Name;        // 
+                EventData.crop_type = SP[0].micrometType;  // need to separate crop type for micromet & canopy name !!
+                EventData.sender = Name;		//
                 NewCrop.Invoke(EventData);
             }
 
@@ -871,12 +2964,12 @@ namespace Models
 
         //----------------------------------------------------------------
         /// <summary>
-        /// Event publication - new canopy 
+        /// Event publication - new canopy
         /// </summary>
 
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         NewCanopyType LocalCanopyData = new NewCanopyType();
-                
+
         private void DoNewCanopyEvent()
         {
             if (NewCanopy != null)
@@ -885,8 +2978,8 @@ namespace Models
                 LocalCanopyData.lai = p_greenLAI;
                 LocalCanopyData.lai_tot = p_totalLAI;
                 p_height = HeightfromDM;
-                LocalCanopyData.height = (int)p_height;             // height effect, mm 
-                LocalCanopyData.depth = (int)p_height;              // canopy depth 
+                LocalCanopyData.height = (int)p_height;			 // height effect, mm
+                LocalCanopyData.depth = (int)p_height;			  // canopy depth
                 LocalCanopyData.cover = Cover_green;
                 LocalCanopyData.cover_tot = Cover_tot;
                 NewCanopy.Invoke(LocalCanopyData);
@@ -901,15 +2994,15 @@ namespace Models
         {
             get
             {
-                p_gftemp = 0;     //weighted average   
+                p_gftemp = 0;	 //weighted average
 
                 double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT; //Tday
-                for (int s = 0; s < Nsp; s++)
+                for (int s = 0; s < NumSpecies; s++)
                 {
-                    double prop = 1.0 / Nsp;
+                    double prop = 1.0 / NumSpecies;
                     if (p_greenDM != 0.0)
                     {
-                        prop = SP[s].dmgreen / AboveGroundLiveWt;   // dm_green;       
+                        prop = SP[s].dmgreen / AboveGroundLiveWt;   // dm_green;
                     }
                     p_gftemp += SP[s].GFTemperature(Tday) * prop;
                 }
@@ -918,13 +3011,13 @@ namespace Models
                 if (Tday < 20) gft = Math.Sqrt(p_gftemp);
                 else gft = p_gftemp;
                 // Note: p_gftemp is for gross photosysthsis.
-                // This is different from that for net production as used in other APSIM crop models, and is 
-                // assumesd in calculation of temperature effect on transpiration (in micromet). 
+                // This is different from that for net production as used in other APSIM crop models, and is
+                // assumesd in calculation of temperature effect on transpiration (in micromet).
                 // Here we passed it as sqrt - (Doing so by a comparison of p_gftemp and that
-                // used in wheat). Temperature effects on NET produciton of forage species in other models 
-                // (e.g., grassgro) are not so significant for T = 10-20 degrees(C)     
+                // used in wheat). Temperature effects on NET produciton of forage species in other models
+                // (e.g., grassgro) are not so significant for T = 10-20 degrees(C)
 
-                //Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater), 
+                //Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater),
                 //coulnd't see any differnece for results
                 return Math.Min(FVPD, gft);
                 // RCichota, Jan/2014: removed AgPasture's Frgr from here, it is considered at the same level as nitrogen etc...
@@ -972,30 +3065,28 @@ namespace Models
             }
         }
 
-
         public string CropType { get { return "AgPasture"; } }
 
         #endregion //EventSender
-        //======================================================================
 
-        #region "EventHandlers"
+        #region EventHandlers
         /// <summary>
         /// Eventhandeler - initialisation
         /// </summary>
         [EventSubscribe("Initialised")]
         private void Initialise() //overrides Sub init2()
         {
-            InitParameters();            // Init parameters after reading the data           
+            InitParameters();			// Init parameters after reading the data
 
             if (MetData.StartDate != new DateTime(0))
-              SetSpeciesMetData();         // This is needed for the first day after knowing the number of species 
+                SetSpeciesMetData();		 // This is needed for the first day after knowing the number of species
 
-            DoNewCropEvent();            // Tell other modules that I exist
-            DoNewCanopyEvent();          // Tell other modules about my canopy
+            DoNewCropEvent();			// Tell other modules that I exist
+            DoNewCanopyEvent();		  // Tell other modules about my canopy
 
             alt_N_uptake = alt_N_uptake.ToLower();
             if (alt_N_uptake == "yes")
-                if (Nsp > 1)
+                if (NumSpecies > 1)
                     throw new Exception("When working with multiple species, 'ValsMode' must ALWAYS be 'none'");
         }
 
@@ -1006,7 +3097,7 @@ namespace Models
 
         //---------------------------------------------------------------------
         /// <summary>
-        /// EventHandeler - preparation befor the main process 
+        /// EventHandeler - preparation befor the main process
         /// </summary>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
@@ -1017,8 +3108,8 @@ namespace Models
                 HaveInitialised = true;
             }
 
-            //  p_harvestDM = 0.0;      // impartant to have this reset because  
-            //  p_harvestN = 0.0;       // they are used to DM & N returns
+            //  p_harvestDM = 0.0;	  // impartant to have this reset because
+            //  p_harvestN = 0.0;	   // they are used to DM & N returns
             //  p_harvestDigest = 0.0;
 
             month = clock.Today.Month;
@@ -1028,18 +3119,6 @@ namespace Models
             DoNewCanopyEvent();
         }
 
-        /*        //---------------------------------------------------------------------
-                /// <summary>
-                /// Get new meteo- data
-                /// </summary>
-                /// <param name="NewMetData"></param>
-                [EventSubscribe("NewWeatherDataAvailable")]
-                private void OnNewWeatherDataAvailable(WeatherFile.NewMetType NewMetData)
-                {
-                    MetData = NewMetData;
-                }
-         */
-
         //---------------------------------------------------------------------
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
@@ -1047,14 +3126,14 @@ namespace Models
             if (!p_Live)
                 return;
 
-            //**Remember last status, and update root depth frontier (root depth mainly for annuals)            
-            for (int s = 0; s < Nsp; s++)
+            //**Remember last status, and update root depth frontier (root depth mainly for annuals)
+            for (int s = 0; s < NumSpecies; s++)
             {
-                pSP[s] = SP[s];       //Species state yesterday is rememberd                  
-                SP[s].SetPrevPools(); //pool values yesterday is also retained in current state 
+                pSP[s] = SP[s];	   //Species state yesterday is rememberd
+                SP[s].SetPrevPools(); //pool values yesterday is also retained in current state
                 SP[s].DailyRefresh();
 
-                double spRootDepth = SP[s].rootGrowth();    //update root depth 
+                double spRootDepth = SP[s].rootGrowth();	//update root depth
                 if (p_rootFrontier < spRootDepth)
                     p_rootFrontier = spRootDepth;
             }
@@ -1062,42 +3141,42 @@ namespace Models
             //Console.WriteLine("Warning message");
             //throw new Exception("throw ...");
 
-            //**To partition Radn to different species 
+            //**To partition Radn to different species
             SetSpeciesMetData();
 
             //** advance phenology
             int anyEmerged = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 anyEmerged += SP[s].Phenology();
             }
 
             //**Potential growth
             p_dGrowthPot = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 //p_dGrowthPot += SP[s].DailyGrowthPot();   // alternative way for calclating potential growth
-                p_dGrowthPot += SP[s].DailyEMGrowthPot();   //pot here incorporated [N] effects 
+                p_dGrowthPot += SP[s].DailyEMGrowthPot();   //pot here incorporated [N] effects
             }
 
 
-            //**Calculate soil N available in root zone                          
+            //**Calculate soil N available in root zone
             p_soilNavailable = calcPlantAvailableN();
             //p_soilNavailable = calcPlantExtractableN();   //need to do more validation/calibration for activating this
-            //**Water supply & uptake        
+            //**Water supply & uptake
             if (WaterUptakeSource == "calc")
             {
-                p_waterUptake = SWUptakeProcess();      //actual uptake by all species
+                p_waterUptake = SWUptakeProcess();	  //actual uptake by all species
             }
             else
             {
                 //Water uptake be calculated by other modules (e.g., SWIM) and got by [EventHandler]
             }
-            SetSpeciesLimitingFactors();  // * root competition for water when SM is deficit: species-specific ?   
+            SetSpeciesLimitingFactors();  // * root competition for water when SM is deficit: species-specific ?
 
             //**add drought effects (before considering other nutrient limitation)
             p_dGrowthW = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 p_dGrowthW += SP[s].DailyGrowthW();
             }
@@ -1105,12 +3184,12 @@ namespace Models
 
             //**actual daily growth
             p_dGrowth = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 p_dGrowth += SP[s].DailyGrowthAct();
             }
 
-            /*trick species for specified clover% 
+            /*trick species for specified clover%
             DateTime d97J1 = new DateTime(1997, 7, 1, 0, 0, 0);
             DateTime d98J1 = new DateTime(1998, 7, 1, 0, 0, 0);
             DateTime d99J1 = new DateTime(1999, 7, 1, 0, 0, 0);
@@ -1123,39 +3202,38 @@ namespace Models
             DateTime d06J1 = new DateTime(2006, 7, 1, 0, 0, 0);
             DateTime d07J1 = new DateTime(2007, 7, 1, 0, 0, 0);
             DateTime d08J1 = new DateTime(2008, 7, 1, 0, 0, 0);
-            double legumeF = 0.10;                                                                      //ElevObs  //AmbObs     
-            if (DateTime.Compare(Today, d97J1) >= 0 && DateTime.Compare(Today, d98J1) < 0) legumeF = 0.03;//0.05;//0.03; 
-            else if (DateTime.Compare(Today, d98J1) >= 0 && DateTime.Compare(Today, d99J1) < 0) legumeF = 0.06;//0.19;//0.06; 
+            double legumeF = 0.10;																	  //ElevObs  //AmbObs
+            if (DateTime.Compare(Today, d97J1) >= 0 && DateTime.Compare(Today, d98J1) < 0) legumeF = 0.03;//0.05;//0.03;
+            else if (DateTime.Compare(Today, d98J1) >= 0 && DateTime.Compare(Today, d99J1) < 0) legumeF = 0.06;//0.19;//0.06;
             else if (DateTime.Compare(Today, d99J1) >= 0 && DateTime.Compare(Today, d00J1) < 0) legumeF = 0.17;//0.31;//0.17;
             else if (DateTime.Compare(Today, d00J1) >= 0 && DateTime.Compare(Today, d01J1) < 0) legumeF = 0.21;//0.34;//0.21;
-            else if (DateTime.Compare(Today, d01J1) >= 0 && DateTime.Compare(Today, d02J1) < 0) legumeF = 0.03;//0.04;//0.03; 
-            else if (DateTime.Compare(Today, d02J1) >= 0 && DateTime.Compare(Today, d03J1) < 0) legumeF = 0.03;//0.07;//0.03; 
+            else if (DateTime.Compare(Today, d01J1) >= 0 && DateTime.Compare(Today, d02J1) < 0) legumeF = 0.03;//0.04;//0.03;
+            else if (DateTime.Compare(Today, d02J1) >= 0 && DateTime.Compare(Today, d03J1) < 0) legumeF = 0.03;//0.07;//0.03;
             else if (DateTime.Compare(Today, d03J1) >= 0 && DateTime.Compare(Today, d04J1) < 0) legumeF = 0.09;//0.06;//0.09;
             else if (DateTime.Compare(Today, d04J1) >= 0 && DateTime.Compare(Today, d05J1) < 0) legumeF = 0.10;//0.22;//0.10;
             else if (DateTime.Compare(Today, d05J1) >= 0 && DateTime.Compare(Today, d06J1) < 0) legumeF = 0.11;//0.07;//0.11;
             else if (DateTime.Compare(Today, d06J1) >= 0 && DateTime.Compare(Today, d07J1) < 0) legumeF = 0.02;//0.05;//0.02;
-            else if (DateTime.Compare(Today, d07J1) >= 0 && DateTime.Compare(Today, d08J1) < 0) legumeF = 0.05;//0.06;//0.05; 
-        
+            else if (DateTime.Compare(Today, d07J1) >= 0 && DateTime.Compare(Today, d08J1) < 0) legumeF = 0.05;//0.06;//0.05;
+
             SP[0].dGrowth = p_dGrowth * (1 - legumeF);
             SP[1].dGrowth = p_dGrowth * legumeF;
-            Console.WriteLine(" legumeF = " + legumeF); 
+            Console.WriteLine(" legumeF = " + legumeF);
             //end of trick#
             */
 
 
-            //**partitioning & turnover   
-            GrowthAndPartition();       // litter returns to surfaceOM; Root returns to soil FOM dead in this turnover routines                                                                  
+            //**partitioning & turnover
+            GrowthAndPartition();	   // litter returns to surfaceOM; Root returns to soil FOM dead in this turnover routines
 
             /* if (!p_HarvestDay)
              {
-                 p_harvestDM = 0.0;      // impartant to have this reset because  
-                 p_harvestN = 0.0;       // they are used to DM & N returns
+                 p_harvestDM = 0.0;	  // impartant to have this reset because
+                 p_harvestN = 0.0;	   // they are used to DM & N returns
                  p_harvestDigest = 0.0;
-             }            
-             p_HarvestDay = false;    //reset the  
+             }
+             p_HarvestDay = false;	//reset the
           */
         }
-
 
         //----------------------------------------------------------------------
         [EventSubscribe("RemoveCropBiomass")]
@@ -1163,10 +3241,10 @@ namespace Models
         {
             //Note: It is resposibility of the calling module to check the
             // amount of herbage in each pools of AbovegroundBiomassWt and set the
-            // the correct amount in 'rm'. 
+            // the correct amount in 'rm'.
             // No checking if the removing amount passed in are too much here
 
-            const double gm2ha = 10;   // constant for conversion of g/m^2 to kg/ha, 
+            const double gm2ha = 10;   // constant for conversion of g/m^2 to kg/ha,
             // rm.dm.dlt should be in g/m^2
 
             double dm_leaf_green = LeafLiveWt;
@@ -1174,21 +3252,21 @@ namespace Models
             double dm_leaf_dead = LeafDeadWt;
             double dm_stem_dead = StemDeadWt;
 
-            for (int s = 0; s < Nsp; s++)     // for accumulating the total DM & N removal of species from verious pools
+            for (int s = 0; s < NumSpecies; s++)	 // for accumulating the total DM & N removal of species from verious pools
             {
                 SP[s].dmdefoliated = 0.0;
                 SP[s].Ndefoliated = 0.0;
             }
 
-            for (int i = 0; i < rm.dm.Length; i++)              //for each pool
+            for (int i = 0; i < rm.dm.Length; i++)			  //for each pool
             {
                 for (int j = 0; j < rm.dm[i].dlt.Length; j++)   //for each part
                 {
                     if (rm.dm[i].pool == "green" && rm.dm[i].part[j] == "leaf")
                     {
-                        for (int s = 0; s < Nsp; s++)           //for each species
+                        for (int s = 0; s < NumSpecies; s++)		   //for each species
                         {
-                            if (dm_leaf_green != 0)             //resposibility of other modules to check the amount
+                            if (dm_leaf_green != 0)			 //resposibility of other modules to check the amount
                             {
                                 double rm_leaf = gm2ha * rm.dm[i].dlt[j] * SP[s].dmleaf_green / dm_leaf_green;
                                 double rm_leaf1 = rm_leaf * SP[s].dmleaf1 / SP[s].dmleaf_green;
@@ -1208,7 +3286,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "green" && rm.dm[i].part[j] == "stem")
                     {
-                        for (int s = 0; s < Nsp; s++)
+                        for (int s = 0; s < NumSpecies; s++)
                         {
                             if (dm_stem_green != 0)  //resposibility of other modules to check the amount
                             {
@@ -1230,7 +3308,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "dead" && rm.dm[i].part[j] == "leaf")
                     {
-                        for (int s = 0; s < Nsp; s++)
+                        for (int s = 0; s < NumSpecies; s++)
                         {
                             if (dm_leaf_dead != 0)  //resposibility of other modules to check the amount
                             {
@@ -1245,7 +3323,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "dead" && rm.dm[i].part[j] == "stem")
                     {
-                        for (int s = 0; s < Nsp; s++)
+                        for (int s = 0; s < NumSpecies; s++)
                         {
                             if (dm_stem_dead != 0)  //resposibility of other modules to check the amount
                             {
@@ -1263,17 +3341,17 @@ namespace Models
 
             p_harvestDM = 0;
             p_harvestN = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 p_harvestDM += SP[s].dmdefoliated;
                 p_harvestN += SP[s].Ndefoliated;
                 SP[s].updateAggregated();
             }
 
-            //In this routine of no selection among species, the removed tissue from different species 
+            //In this routine of no selection among species, the removed tissue from different species
             //will be in proportion with exisisting mass of each species.
-            //The digetibility below is an approximation (= that of pasture swards). 
-            //It is more reasonable to calculate it organ-by-organ for each species, then put them together.            
+            //The digetibility below is an approximation (= that of pasture swards).
+            //It is more reasonable to calculate it organ-by-organ for each species, then put them together.
             p_harvestDigest = HerbageDigestibility;
 
         }
@@ -1289,11 +3367,82 @@ namespace Models
 
         public void Graze(string type, double amount)
         {
+            Console.WriteLine("Agpasture.ongraze");
+            if ((!p_Live) || p_totalDM == 0)
+                return;
+
+            // get the amount that can potentially be removed
+            double AmountRemovable = 0.0;
+            for (int s = 0; s < numSpecies; s++)
+                AmountRemovable += Math.Max(0.0, SP[s].dmleaf_green + SP[s].dmstem_green - SP[s].dmgreenmin) + Math.Max(0.0, SP[s].dmdead - SP[s].dmdeadmin);
+            AmountRemovable = Math.Max(0.0, AmountRemovable);
+
+            // get the amount required to remove
+            double AmountRequired = 0.0;
+            if (type.ToLower() == "SetResidueAmount".ToLower())
+            {
+                // Remove all DM above given residual amount
+                AmountRequired = Math.Max(0.0, StandingPlantWt - amount);
+            }
+            else if (type.ToLower() == "SetRemoveAmount".ToLower())
+            {
+                // Attempt to remove a given amount
+                AmountRequired = Math.Max(0.0, amount);
+            }
+            else
+            {
+                Console.WriteLine("  AgPasture - Method to set amount to remove not recognized, command will be ignored");
+            }
+            // get the actual amount to remove
+            double AmountToRemove = Math.Min(AmountRequired, AmountRemovable);
+
+            p_harvestDM = AmountToRemove;
+            p_harvestN = 0.0;
+            p_harvestDigest = 0.0;
+
+            // get the amounts to remove by species:
+            double FractionNotRemoved = 0.0;
+            if (AmountRemovable > 0.0)
+                FractionNotRemoved = Math.Max(0.0, (AmountRemovable - AmountToRemove) / AmountRemovable);
+            double[] TempWeights = new double[numSpecies];
+            double[] TempAmounts = new double[numSpecies];
+            double TempTotal = 0.0;
+            if (AmountRequired > 0.0)
+            {
+                // get the weights for each species, consider preference and available DM
+                double TotalPreference = 0.0;
+                for (int s = 0; s < numSpecies; s++)
+                    TotalPreference += PreferenceForGreenDM[s] + PreferenceForDeadDM[s];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    TempWeights[s] = PreferenceForGreenDM[s] + PreferenceForDeadDM[s];
+                    TempWeights[s] += (TotalPreference - TempWeights[s]) * (1 - FractionNotRemoved);
+                    TempAmounts[s] = Math.Max(0.0, SP[s].dmleaf_green + SP[s].dmstem_green - SP[s].dmgreenmin) + Math.Max(0.0, SP[s].dmdead - SP[s].dmdeadmin);
+                    TempTotal += TempAmounts[s] * TempWeights[s];
+                }
+
+                // get the actual amounts to remove for each species
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    if (TempTotal > 0.0)
+                        FractionToHarvest[s] = Math.Max(0.0, Math.Min(1.0, TempWeights[s] * TempAmounts[s] / TempTotal));
+                    else
+                        FractionToHarvest[s] = 0.0;
+                    p_harvestN += SP[s].RemoveDM(AmountToRemove * FractionToHarvest[s], PreferenceForGreenDM[s], PreferenceForDeadDM[s]);
+
+                    // get digestibility of harvested material
+                    p_harvestDigest += SP[s].digestDefoliated * SP[s].dmdefoliated / AmountToRemove;
+                }
+            }
+        }
+
+        public void Graze_original(string type, double amount)
+        {
             if ((!p_Live) || p_totalDM == 0)
                 return;
 
             double herbage_mass = StemWt + LeafWt;  // dm_stem + dm_leaf;
-            double min_residue = 200;               // kg/ha assumed
+            double min_residue = 200;			   // kg/ha assumed
             double residue_amt = min_residue;
             double remove_amt = 0;
 
@@ -1337,7 +3486,7 @@ namespace Models
 
             //remove DM & N species by species
             p_harvestDigest = 0;
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
                 double amt = 0;
                 if (herbage_mass != 0)
@@ -1371,7 +3520,7 @@ namespace Models
             for (int i_Crop = 0; i_Crop != SoilWater.Uptakes.Length; i_Crop++)
             {
                 string MyName = SoilWater.Uptakes[i_Crop].Name;
-                if (MyName == thisCropName)
+                if (MyName == SwardName)
                 {
                     int length = SoilWater.Uptakes[i_Crop].Amount.Length;
                     for (int layer = 0; layer < length; layer++)
@@ -1399,7 +3548,7 @@ namespace Models
 
             p_Live = true;
             ResetZero();
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
                 SP[s].SetInGermination();
 
         }
@@ -1412,10 +3561,10 @@ namespace Models
             //always complete kill for pasture, ignore fraction
 
             //Above_ground part returns to surface OM comletey (frac = 1.0)
-            DoSurfaceOMReturn(p_totalDM, AboveGroundN, 1.0);    //n_shoot
+            DoSurfaceOMReturn(p_totalDM, AboveGroundN, 1.0);	//n_shoot
 
             //Incorporate root mass in soil fresh organic matter
-            DoIncorpFomEvent(p_rootMass, BelowGroundN);         //n_root);
+            DoIncorpFomEvent(p_rootMass, BelowGroundN);		 //n_root);
 
             ResetZero();
 
@@ -1439,7 +3588,7 @@ namespace Models
             p_rootFrontier = 0;
 
             //daily changes
-            p_dGrowthPot = p_dGrowthW = p_dGrowth = p_dHerbage = 0;   //daily DM increase  
+            p_dGrowthPot = p_dGrowthW = p_dGrowth = p_dHerbage = 0;   //daily DM increase
             p_dLitter = p_dNLitter = 0;
             p_dRootSen = p_dNRootSen = 0;
 
@@ -1447,7 +3596,7 @@ namespace Models
             p_soilNdemand = p_soilNuptake = 0;
 
             //species (ignore fraction)
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
                 SP[s].ResetZero();
 
         }
@@ -1455,48 +3604,48 @@ namespace Models
         private double calcPlantAvailableN()
         {
             p_soilNavailable = 0;
-            double spDepth = 0;         // depth before next soil layer
-            int sLayer = 0;
-            for (sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
+            double spDepth = 0;		 // depth before next soil layer
+            int layer = 0;
+            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
                     /* an approach for controlling N uptake
-                    const float KNO3 = 0.1F;
-                    const float KNH4 = 0.1F;
+                    const double KNO3 = 0.1F;
+                    const double KNH4 = 0.1F;
                     double swaf = 1.0;
-                    swaf = (sw_dep[sLayer] - ll[sLayer]) / (DUL[sLayer] - ll[sLayer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));                                
-                    p_soilNavailable += (no3[sLayer] * KNO3 + nh4[sLayer] * KNH4 ) * swaf;
-                    SNSupply[sLayer] = (no3[sLayer] * KNO3 + nh4[sLayer] * KNH4 ) * (float)swaf;
+                    swaf = (sw_dep[layer] - ll[layer]) / (DUL[layer] - ll[layer]);
+                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    p_soilNavailable += (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * swaf;
+                    SNSupply[layer] = (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * (double)swaf;
                     */
                     //original below
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[sLayer] + Soil.SoilNitrogen.nh4[sLayer]);
-                    SNSupply[sLayer] = (Soil.SoilNitrogen.no3[sLayer] + Soil.SoilNitrogen.nh4[sLayer]);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
+                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
                 }
                 else
                 {
-                    p_bottomRootLayer = sLayer;
+                    p_bottomRootLayer = layer;
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[sLayer];
+                spDepth += Soil.SoilWater.dlayer[layer];
 
             }
 
-            if (p_bottomRootLayer == 0 && sLayer > 0)
-                p_bottomRootLayer = sLayer - 1;
+            if (p_bottomRootLayer == 0 && layer > 0)
+                p_bottomRootLayer = layer - 1;
 
             return p_soilNavailable;
         }
 
         //-----------------------------------------------------------------------
-        private double calcPlantExtractableN()    // not all minN is extractable
+        private double calcPlantExtractableN()	// not all minN is extractable
         {
             p_soilNavailable = 0;
-            double spDepth = 0;         // depth before next soil layer
-            int sLayer = 0;
-            for (sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
+            double spDepth = 0;		 // depth before next soil layer
+            int layer = 0;
+            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -1504,53 +3653,210 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[sLayer] - ll[sLayer]) / (Soil.SoilWater.dul[sLayer] - ll[sLayer]);
+                    swaf = (Soil.SoilWater.sw_dep[layer] - Soil.LL(Name)[layer]) / (Soil.SoilWater.dul[layer] - Soil.LL(Name)[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[sLayer] * KNO3 + Soil.SoilNitrogen.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[sLayer] = (Soil.SoilNitrogen.no3[sLayer] * KNO3 + Soil.SoilNitrogen.nh4[sLayer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
-                    //p_soilNavailable += (no3[sLayer] + nh4[sLayer]);
-                    //SNSupply[sLayer] = (no3[sLayer] + nh4[sLayer]);
+                    //p_soilNavailable += (no3[layer] + nh4[layer]);
+                    //SNSupply[layer] = (no3[layer] + nh4[layer]);
                 }
                 else
                 {
-                    p_bottomRootLayer = sLayer;
+                    p_bottomRootLayer = layer;
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[sLayer];
+                spDepth += Soil.SoilWater.dlayer[layer];
 
             }
 
-            if (p_bottomRootLayer == 0 && sLayer > 0)
-                p_bottomRootLayer = sLayer - 1;
+            if (p_bottomRootLayer == 0 && layer > 0)
+                p_bottomRootLayer = layer - 1;
 
             return p_soilNavailable;
         }
-        //-------------------------------------------------------
+
+        // RCichota, Jun 2014: cleaned up and add consideration for remobilisation of luxury N
         private double NBudgetAndUptake()
         {
-            //1)Calculate soil N demand (species by species)        
+            //1) Get the total N demand (species by species)
+            p_Nfix = 0.0;
+            double p_Ndemand = 0.0;
+            double p_NdemandOpt = 0.0;
+            for (int s = 0; s < numSpecies; s++)
+            {
+                p_Nfix += SP[s].CalcNdemand();       //minimum N fixation
+                p_NdemandOpt += SP[s].NdemandOpt;    //demand for optimum [N]
+                p_Ndemand += SP[s].NdemandLux;       //demand for luxury [N]
+            }
+
+            //2) Update Nfix of legume species under N stress
+            double Nstress = 1.0;
+            if (p_Ndemand > 0.0 && (p_Ndemand > p_soilNavailable + p_Nfix))
+                Nstress = p_soilNavailable / (p_Ndemand - p_Nfix);
+
+            for (int s = 0; s < numSpecies; s++)
+            {
+                if ((SP[s].isLegume) && (Nstress < 0.99))  //more fixation under Nstress
+                {
+                    double newNfix = (SP[s].MaxFix - (SP[s].MaxFix - SP[s].MinFix) * Nstress) * SP[s].NdemandLux;
+                    double moreNfix = Math.Max(0.0, (newNfix - SP[s].Nfix));
+                    SP[s].Nfix = newNfix;
+                    p_Nfix += moreNfix;
+                }
+            }
+
+            //3) Get N remobilised and calculate N demand from soil
+            p_soilNdemand = 0.0;
+            for (int s = 0; s < numSpecies; s++)
+            {
+                if (SP[s].NdemandLux <= SP[s].Nremob + SP[s].Nfix)
+                {
+                    // Nremob and Nfix are able to supply all N - note: Nfix = 0 for non-legumes
+                    SP[s].remob2NewGrowth = Math.Max(0.0, SP[s].NdemandLux - SP[s].Nfix);
+                    SP[s].Nremob -= SP[s].remob2NewGrowth;
+                    SP[s].soilNdemand = 0.0;
+                }
+                else
+                {
+                    // not enough N within the plant, uptake is needed
+                    SP[s].remob2NewGrowth = SP[s].Nremob;
+                    SP[s].Nremob = 0.0;
+                    SP[s].soilNdemand = SP[s].NdemandLux - (SP[s].Nfix + SP[s].remob2NewGrowth);
+                }
+                SP[s].newGrowthN = SP[s].remob2NewGrowth + SP[s].Nfix;
+                p_soilNdemand += SP[s].soilNdemand;
+            }
+
+            //4) Compute soil N uptake, newGrowthN and N limitation factor
+            p_soilNuptake = 0.0;
+            p_gfn = 0.0;
+            for (int s = 0; s < numSpecies; s++)
+            {
+                if (SP[s].soilNdemand == 0.0)
+                {
+                    SP[s].soilNuptake = 0.0;
+                    SP[s].NFastRemob3 = 0.0;
+                    SP[s].NFastRemob2 = 0.0;
+                    SP[s].gfn = 1.0;
+                }
+                else
+                {
+                    if (p_soilNavailable >= p_soilNdemand)
+                    {
+                        // soil can supply all remaining N needed
+                        SP[s].soilNuptake = SP[s].soilNdemand;
+                        SP[s].NFastRemob3 = 0.0;
+                        SP[s].NFastRemob2 = 0.0;
+                        SP[s].newGrowthN += SP[s].soilNuptake;
+                        SP[s].gfn = 1.0;
+                    }
+                    else
+                    {
+                        // soil cannot supply all N needed. Get the available N and partition between species
+                        SP[s].soilNuptake = p_soilNavailable * SP[s].soilNdemand / p_soilNdemand;
+                        SP[s].newGrowthN += SP[s].soilNuptake;
+
+                        // check whether demand for optimum growth is satisfied
+                        if (SP[s].NdemandOpt > SP[s].newGrowthN)
+                        {
+                            // plant still needs more N for optimum growth (luxury uptake is ignored), check whether luxury N in plants can be used
+                            double Nmissing = SP[s].NdemandOpt - SP[s].newGrowthN;
+                            if (Nmissing <= SP[s].NLuxury2 + SP[s].NLuxury3)
+                            {
+                                // There is luxury N that can be used for optimum growth, first from tissue 3
+                                if (Nmissing <= SP[s].NLuxury3)
+                                {
+                                    SP[s].NFastRemob3 = Nmissing;
+                                    SP[s].NFastRemob2 = 0.0;
+                                    Nmissing = 0.0;
+                                }
+                                else
+                                {
+                                    SP[s].NFastRemob3 = SP[s].NLuxury3;
+                                    Nmissing -= SP[s].NLuxury3;
+
+                                    // remaining from tissue 2
+                                    SP[s].NFastRemob2 = Nmissing;
+                                    Nmissing = 0.0;
+                                }
+                            }
+                            else
+                            {
+                                // N luxury is not enough for optimum growth, use up all there is
+                                if (SP[s].NLuxury2 + SP[s].NLuxury3 > 0)
+                                {
+                                    SP[s].NFastRemob3 = SP[s].NLuxury3;
+                                    SP[s].NFastRemob2 = SP[s].NLuxury2;
+                                    Nmissing -= (SP[s].NLuxury3 + SP[s].NLuxury2);
+                                }
+                            }
+                            SP[s].newGrowthN += SP[s].NFastRemob3 + SP[s].NFastRemob2;
+                        }
+                        else
+                        {
+                            // N supply is enough for optimum growth, although luxury uptake is not fully accomplished
+                            SP[s].NFastRemob3 = 0.0;
+                            SP[s].NFastRemob2 = 0.0;
+                        }
+                        SP[s].gfn = Math.Min(1.0, Math.Max(0.0, SP[s].newGrowthN / SP[s].NdemandOpt));
+                    }
+                }
+                p_soilNuptake += SP[s].soilNuptake;
+
+                //weighted average of species gfn
+                if (p_dGrowthW == 0)
+                {
+                    p_gfn = 1;
+                }
+                else
+                {
+                    p_gfn += SP[s].gfn * SP[s].dGrowthW / p_dGrowthW;
+                }
+            }
+
+            //5) Actual uptake, remove N from soil
+            double soilNremoved = 0;
+            if (NUptakeSource == "calc")
+            {
+                soilNremoved = SNUptakeProcess();               //N remove from soil
+            }
+            else
+            {
+                // N uptake calculated by other modules (e.g., SWIM)
+                string msg = "Only one option for N uptake is implemented in AgPasture. Please specify N uptake source as default \"calc\".";
+                throw new Exception(msg);
+            }
+
+            return soilNremoved;
+
+        }
+
+        //-------------------------------------------------------
+        private double NBudgetAndUptake_original()
+        {
+            //1)Calculate soil N demand (species by species)
             p_Nfix = 0;
             p_soilNdemand = 0;
 
             double p_Ndemand = 0;
             double p_NdemandOpt = 0;
 
-            for (int s = 0; s < Nsp; s++)
+            for (int s = 0; s < NumSpecies; s++)
             {
-                p_Nfix += SP[s].CalcNdemand();      //Also, default SP[s].Nfix is set assuming soil N supply is sufficient                    
+                p_Nfix += SP[s].CalcNdemand();	  //Also, default SP[s].Nfix is set assuming soil N supply is sufficient
                 p_NdemandOpt += SP[s].NdemandOpt;   //demand to optimum [N]
-                p_Ndemand += SP[s].NdemandLux;         //for luxury uptake
+                p_Ndemand += SP[s].NdemandLux;		 //for luxury uptake
             }
 
-            //2)Update Nfix of legume species under N stress            
+            //2)Update Nfix of legume species under N stress
             double Nstress = 1.0;
             if (p_Ndemand > 0.0 && (p_Ndemand > p_soilNavailable + p_Nfix))
                 Nstress = p_soilNavailable / (p_Ndemand - p_Nfix);
 
-            for (int s = 0; s < Nsp; s++)          //Pasture N demand 
+            for (int s = 0; s < NumSpecies; s++)		  //Pasture N demand
             {
                 if (!SP[s].isLegume)
                 {
@@ -1596,11 +3902,11 @@ namespace Models
             //3) soil N uptake & N limiation factor
             p_soilNuptake = 0;
             p_gfn = 0;
-            for (int s = 0; s < Nsp; s++)          //Pasture N demand and uptake
+            for (int s = 0; s < NumSpecies; s++)		  //Pasture N demand and uptake
             {
                 if (Nstress < 0.99)
                 {
-                    //partitioning available N among species according to their N demand%               
+                    //partitioning available N among species according to their N demand%
                     if (p_soilNdemand == 0)
                     {
                         SP[s].soilNuptake = 0;
@@ -1652,13 +3958,13 @@ namespace Models
             double soilNremoved = 0;
             if (NUptakeSource == "calc")
             {
-                soilNremoved = SNUptakeProcess();               //N remove from soil                 
+                soilNremoved = SNUptakeProcess();			   //N remove from soil
             }
             else
             {
-                // N uptake calculated by other modules (e.g., SWIM)  
+                // N uptake calculated by other modules (e.g., SWIM)
                 String msg = "\nInforamtion: AgPasture calculates N uptake. No other approach is available now.";
-                msg += "\n             Please specify N uptake source as default \"calc\".";
+                msg += "\n			 Please specify N uptake source as default \"calc\".";
                 Console.WriteLine(msg);
 
             }
@@ -1668,848 +3974,17 @@ namespace Models
 
         }
 
-
         #endregion //Eventhandlers
-        //--------------------------------------------------------------------------------------
 
-        //==================================================================
+        #region Functions
 
-        #region "Properties"
-        [Units("")]
-        public String Crop_type         //  useful for SWIM 
-        {
-            get { return thisCropName; }
-        }
-
-        [Units("")]
-        public String plant_status
-        {
-            get
-            {
-                if (p_Live) return "alive";
-                else return "out";
-            }
-        }
-        [Units("")]
-        public int Stage
-        {
-            //An approximate of teh stages corresponding to that of other arable crops for management application settings. 
-            //Phenostage of the first species (ryegrass) is used for this approximation
-            get
-            {
-                int cropStage = 0; //default as "phase out"
-                if (p_Live)
-                {
-                    if (SP[0].phenoStage == 0)
-                        cropStage = 1;    //"sowing & germination"; 
-                    if (SP[0].phenoStage == 1)
-                        cropStage = 3;    //"emergence";                                   
-                }
-                return cropStage;
-            }
-        }
-        [Units("")]
-        public String StageName
-        {
-            get
-            {
-                String name = "out";
-                if (p_Live)
-                {
-                    if (SP[0].phenoStage == 0)
-                        name = "sowing";    //cropStage = 1 & 2
-                    if (SP[0].phenoStage == 1)
-                        name = "emergence"; // cropStage = 3    
-                }
-                return name;
-            }
-        }
-
-
-        [Units("kg/ha")]
-        public double TotalC            // total C in plant, kg/ha
-        {
-            get { return 0.4 * (p_totalDM + p_rootMass); }
-        }
-
-        [Units("kg/ha")]
-        public double TotalPlantWt      //dm_plant          // total dm in plant
-        {
-            get { return (AboveGroundWt + BelowGroundWt); }    //dm_shoot+dm_root);}
-        }
-
-        [Units("kg/ha")]
-        public double Biomass
-        {
-            get { return AboveGroundWt; }
-        }
-
-        [Units("kg/ha")]
-        public double AboveGroundWt     //dm_shoot          // total dm in shoot (above ground)
-        {
-            get
-            {  // return p_totalDM; } 
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmshoot;
-                return dm;
-            }
-        }
-        [Units("kg/ha")]
-        public double BelowGroundWt      //dm_root          // total dm in root
-        {
-            get { return p_rootMass; }
-        }
-
-        [Units("kg/ha")]
-        public double AboveGroundLiveWt //dm_green          // total dm in green shoot
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmgreen;
-                return dm;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double AboveGroundDeadWt //dm_dead          // total dm in standing dead
-        {
-            get { return p_deadDM; }
-        }
-        [Units("kg/ha")]
-        public double LeafWt            //dm_leaf         
-        {
-            get
-            {
-                double dmleaf = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dmleaf += SP[s].dmleaf;
-                return dmleaf;
-            }
-        }
-        [Units("kg/ha")]
-        public double LeafLiveWt        //dm_leaf_green          // total dm in root
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmleaf_green;
-                return dm;
-            }
-        }
-        [Units("kg/ha")]
-        public double LeafDeadWt        //dm_leaf_dead          // total dm in root
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmleaf4;
-                return dm;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double StemDeadWt        //dm_stem_dead          // total dm in root
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmstem4;
-                return dm;
-            }
-        }
-        [Units("kg/ha")]
-        public double StemLiveWt        //dm_stem_green          // total dm in root
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmstem_green;
-                return dm;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double StemWt            //dm_stem          // total dm in root
-        {
-            get
-            {
-                double dmstem = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dmstem += SP[s].dmstem;
-                return dmstem;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double StolonWt          //dm_stolon          // total dm in root
-        {
-            get
-            {
-                double dmstol = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dmstol += SP[s].dmstol;
-                return dmstol;
-            }
-        }
-        //for consistantly passing varibles in Onremove_crop_biomass()with other plant modules 
-        [Units("g/m^2")]
-        public double leafgreenwt { get { return LeafLiveWt / 10; } }
-        [Units("g/m^2")]
-        public double stemgreenwt { get { return StemLiveWt / 10; } }
-        [Units("g/m^2")]
-        public double leafsenescedwt { get { return LeafDeadWt / 10; } }
-        [Units("g/m^2")]
-        public double stemsenescedwt { get { return StemDeadWt / 10; } }
-
-        [Units("kg/ha")]
-        public double PlantPotentialGrowthWt //dm_daily_pot_growth
-        {
-            get { return p_dGrowthPot; }
-        }
-        [Units("kg/ha")]
-        public double PlantGrowthNoNLimit
-        {
-            get { return p_dGrowthW; }
-        }
-        [Units("kg/ha")]
-        public double GrossGrowthWt        //dm_daily_growth
-        {                                 //including roots & before littering   
-            get { return p_dGrowth; }
-        }
-
-        [Units("kg/ha")]
-        public double HerbageGrowthWt     //dm_daily_herbage
-        {
-            get { return p_dHerbage; }
-        }
-
-        [Units("kg/ha")]
-        public double LitterDepositionWt     //dm_daily_litter
-        {
-            get { return p_dLitter; }
-        }
-
-        [Units("kg/ha")]
-        public double RootSenescenceWt       //dm_daily_rootSen
-        {
-            get { return p_dRootSen; }
-        }
-
-        [Units("kg/ha")]
-        public double HarvestWt      //dm_daily_harvest
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmdefoliated;
-                return dm;
-            }
-        }
-
-        //**LAI & Cover
-        [Units("")]
-        public double LAI_green
-        {
-            get { return p_greenLAI; }
-        }
-
-        [Units("")]
-        public double LAI_dead
-        {
-            get { return p_deadLAI; }
-        }
-
-        [Units("")]
-        public double LAI_total
-        {
-            get { return p_totalLAI; }
-        }
-
-        [Units("%")]
-        public double Cover_green
-        {
-            get
-            {
-                if (p_greenLAI == 0) return 0;
-                return (1.0 - Math.Exp(-p_lightExtCoeff * p_greenLAI));
-            }
-
-        }
-
-        [Units("%")]
-        public double Cover_dead
-        {
-            get
-            {
-                if (p_deadLAI == 0) return 0;
-                return (1.0 - Math.Exp(-p_lightExtCoeff * p_deadLAI));
-            }
-        }
-
-        [Units("%")]
-        public double Cover_tot
-        {
-            get
-            {
-                if (p_totalLAI == 0) return 0;
-                return (1.0 - (Math.Exp(-p_lightExtCoeff * p_totalLAI)));
-            }
-        }
-
-        //** Nitrogen
-        [Units("kg/ha")]
-        public double TotalPlantN          // total N in plant
-        {
-            get { return (AboveGroundN + BelowGroundN); }   //n_shoot + n_root); }
-        }
-
-        [Units("kg/ha")]
-        public double AboveGroundN      //n_shoot          // total N above ground
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nshoot;       //remoblised N is reported in stem
-                return N;
-            }
-        }
-        [Units("%")]
-        public double AboveGroundNPct   //n_shoot_pct          // total [N] above ground   
-        {
-            get
-            {
-                double pct = 0;
-                if (AboveGroundWt != 0)                      //dm_shoot != 0)
-                    pct = 100 * AboveGroundN / AboveGroundWt;    // n_shoot/dm_shoot; 
-                return pct;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double BelowGroundN      //n_root          // total N below ground
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nroot;
-                return N;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double AboveGroundLiveN  //n_green          // total N above ground green
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Ngreen;
-                return N;
-            }
-        }
-        [Units("kg/ha")]
-        public double AboveGroundDeadN  //n_dead          // total N above ground dead
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Ndead;
-                return N;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double LeafN             //n_leaf          // leaf total N
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nleaf;
-                return N;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double StemN             //n_stem          // stem total N 
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nstem;
-                return N;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double StolonN           //n_stolon          // stolon total N 
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nstolon;
-                return N;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double PlantFixedN       //n_daily_fix     
-        {
-            get { return p_Nfix; }
-        }
-
-        [Units("kg/ha")]
-        public double HarvestN          //n_daily_harvest
-        {
-            get
-            {
-                //return (float)p_harvestN; }
-                double n = 0.0;
-                if (HarvestWt > 0.0)
-                {
-                    for (int s = 0; s < Nsp; s++)
-                        n += SP[s].Ndefoliated;
-                }
-                return n;
-            }
-        }
-        [Units("0-1")]
-        public double HerbageDigestibility
-        {
-            get
-            {
-                if (!p_Live || (StemWt + LeafWt) <= 0)    // (dm_stem + dm_leaf) <= 0)
-                    return 0;
-
-                double digest = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    digest += SP[s].digestHerbage * (SP[s].dmstem + SP[s].dmleaf) / (StemWt + LeafWt);  //(dm_stem + dm_leaf);
-                return digest;
-            }
-        }
-        [Units("0-1")]
-        public double DefoliatedDigestibility
-        {
-            get { return p_harvestDigest; }
-        }
-        [Units("(MJ/ha)")]
-        public double HerbageME
-        {
-            get
-            {
-                double me = 16 * HerbageDigestibility * (StemWt + LeafWt); //(dm_stem + dm_leaf);
-                return me;
-            }
-        }
-        [Units("kg/ha")]
-        public double LitterDepositionN  //n_daily_litter
-        {
-            get { return p_dNLitter; }
-        }
-
-        [Units("kg/ha")]
-        public double RootSenescenceN    //n_daily_rootSen
-        {
-            get { return p_dNRootSen; }
-        }
-
-        [Units("kg/ha")]
-        public double NitrogenDemand    //n_demand          //demand from soil
-        {
-            get { return p_soilNdemand; }
-        }
-
-        [Units("kg/ha")]
-        public double NitrogenSupply    //n_supply
-        {
-            get { return p_soilNavailable; }
-        }
-
-        [Units("kg/ha")]
-        public double[] NitrogenSupplyLayers //n_supply_layer
-        {
-            get { return SNSupply; }
-        }
-
-        [Units("kg/ha")]
-        public double NitrogenUptake        //n_uptake
-        {
-            get { return p_soilNuptake; }
-        }
-
-        [Units("kg/ha")]
-        public double[] NitrogenUptakeLayers //n_uptake_layer
-        {
-            get { return SNUptake; }
-        }
-
-        [Units("0-1")]      //Calculate growth factor of nitrogen deficit
-        public double GLFn                      //gf_n
-        {
-            get { return p_gfn; }
-        }
-        [Units("0-1")]      //Calculate growth factor of nitrogen deficit
-        public double GLFnConcentration         //Ncfactor
-        {
-            get
-            {
-                double f = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    f += SP[s].Ncfactor * SP[s].dmshoot;
-                return (f / AboveGroundWt);     //dm_shoot);
-            }
-        }
-        [Units("kg/ha")]
-        public double ToRootDM
-        {
-            get
-            {
-                double drDM = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                {
-                    drDM += (1 - SP[s].fShoot) * SP[s].dGrowth;
-                }
-                return drDM;
-            }
-        }
-
-        [Units("0-1")]      //Calculate growth factor of nitrogen deficit
-        public double ToRoot
-        {
-            get
-            {
-                double f = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                {
-                    f += SP[s].fShoot * SP[s].dGrowth;
-                }
-                if (p_dGrowth <= 0) return 0;       //p_dGrowth = dm_daily_growth
-                else return (1 - f / p_dGrowth);    //dm_daily_growth);
-            }
-        }
-
-        //** water related
-        [Units("mm/mm^3")]
-        public double[] rlv         //Root Length Density (mm/mm3)  
-        {
-            get
-            {
-                double[] rlv = new Double[rlvp.Length];
-                double sum_rlvp = 0;            // note: rlvp is the root length proportion over the soil profile
-                double p_srl = 75000;           // specific root length (mm root/g root)
-                //Compute the root length, total over the whole profile
-                double Total_Rlength = p_rootMass * p_srl * 0.0000001;  //(mm root/mm2 soil)
-                for (int layer = 0; layer < rlvp.Length; layer++)
-                {
-                    //Sum the rlvp values up to the deepest layer with roots           
-                    sum_rlvp += rlvp[layer];
-                }
-                for (int layer = 0; layer < rlv.Length; layer++)
-                {
-                    //Recalculate the rlv values           
-                    rlv[layer] = rlvp[layer] * Total_Rlength / (sum_rlvp * Soil.SoilWater.dlayer[layer]);
-                }
-                return rlv;
-            }
-        }
-
-        [Units("mm")]
-        public double WaterDemand   //sw_demand          // Daily Soil Water Demand (mm)
-        {
-            get { return p_waterDemand; }
-        }
-
-        private double actualUptake;
-
-        [Units("mm")]
-        public double ep   //sw_demand          // Daily Soil Water Demand (mm)
-        {
-            get { return actualUptake; }
-        }
-
-        [Units("mm")]
-        public double WaterSupply   //sw_supply          // Daily Soil Water Demand (mm)
-        {
-            get { return p_waterSupply; }
-        }
-
-        [Units("mm")]
-        public double[] WaterSupplyLayers    //sw_supply_layer
-        {
-            get { return SWSupply; }
-        }
-
-        [Units("mm")]
-        public double WaterUptake     //sw_uptake          // Daily Soil Water Demand (mm)
-        {
-            get { return p_waterUptake; }
-        }
-
-        [Units("mm")]
-        public double[] WaterUptakeLayers     //sw_uptake_layer
-        {
-            get { return SWUptake; }
-        }
-
-        [Units("0-1")]
-        public double GLFwater              //gf_water
-        {
-            get { return p_gfwater; }
-        }
-
-        //**Stress factors
-        [Units("0-1")]
-        public double GLFtemp               //gf_temp
-        {
-            get { return p_gftemp; }
-        }
-
-        [Units("0-1")]
-        public double GLFrgr                 //gf_rgr
-        {
-            get
-            {
-                double p_Frgr = 0; //weighted value
-                for (int s = 0; s < Nsp; s++)
-                {
-                    double prop = 1.0 / Nsp;
-                    if (p_greenDM != 0.0)
-                    {
-                        prop = SP[s].dmgreen / AboveGroundLiveWt;
-                    }
-                    p_Frgr += SP[s].Frgr * prop;
-                }
-                return p_Frgr;
-            }
-        }
-
-        [Units("mm")]
-        public double Height                 //needed by micromet
-        {
-            get { return p_height; }
-        }
-
-        //testing purpose
-        [Units("kg/ha")]
-        public double dm1          // just for testing, kg/ha   
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmleaf1 + SP[s].dmstem1 + SP[s].dmstol1;
-                return dm;
-            }
-        }
-
-        [Units("kg/ha")]
-        public double dm2          // just for testing, kg/ha 
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmleaf2 + SP[s].dmstem2 + SP[s].dmstol2;
-                return dm;
-            }
-        }
-        [Units("kg/ha")]
-        public double dm3          // just for testing, kg/ha  
-        {
-            get
-            {
-                double dm = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    dm += SP[s].dmleaf3 + SP[s].dmstem3 + SP[s].dmstol3;
-                return dm;
-            }
-        }
-        [Units("kg/ha")]
-        public double N1          // just for testing, kg/ha   
-        {
-            get
-            {
-                double n = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    n += SP[s].Nleaf1 + SP[s].Nstem1 + SP[s].Nstol1;
-                return n;
-            }
-        }
-        [Units("kg/ha")]
-        public double N2          // just for testing, kg/ha    
-        {
-            get
-            {
-                double n = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    n += SP[s].Nleaf2 + SP[s].Nstem2 + SP[s].Nstol2;
-                return n;
-            }
-        }
-        [Units("kg/ha")]
-        public double N3          // just for testing, kg/ha    
-        {
-            get
-            {
-                double n = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    n += SP[s].Nleaf3 + SP[s].Nstem3 + SP[s].Nstol3;
-                return n;
-            }
-        }
-        [Units("kg/ha")]
-        public double PlantRemobilisedN     //n_remob          // just for testing, kg/ha
-        {
-            get
-            {
-                double N = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    N += SP[s].Nremob;
-                return N;
-            }
-        }
-        [Units("kg/ha")]
-        public double C_remob          // just for testing, kg/ha
-        {
-            get
-            {
-                double C = 0.0;
-                for (int s = 0; s < Nsp; s++)
-                    C += SP[s].Cremob;
-                return C;
-            }
-        }
-
-        private double HeightfromDM        // height calculation from DM, not output
-        {
-            get
-            {
-                double ht = HeightMassFN.Value(p_greenDM + p_deadDM);
-                if (ht < 20.0) ht = 20.0F;      // minimum = 20mm
-                return ht;
-            }
-
-        }
-        [Units("")]
-        public double VPD_out              // VPD effect on Growth Interpolation Set
-        {
-            get { return VPD(); }
-        }
-
-        [Units("")]
-        public double FVPD              // VPD effect on Growth Interpolation Set 
-        {                               // mostly = 1 for crop/grass/forage
-            get { return FVPDFunction.Value(VPD()); }
-        }
-
-        //Following are species values (arrays) 
-        [Units("m^2/m^2")]
-        public double[] SpeciesGreenLAI  //spGreenLAI
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].greenLAI;
-                return ftArray;
-            }
-        }
-        [Units("kg/ha")]
-        public double[] SpeciesLiveWt  //spGreenDM
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].dmgreen;
-                return ftArray;
-            }
-        }
-        [Units("kg/ha")]
-        public double[] SpeciesTotalWt
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].dmtotal;
-                return ftArray;
-            }
-        }
-
-        [Units("%")]
-        public double[] SpeciesHarvestPct  //proportion in harvested biomass, not on teh land 
-        {
-            get
-            {
-                double totalHarvestable = 0;  //for excluding stolon
-                for (int s = 0; s < Nsp; s++)
-                    totalHarvestable += SP[s].dmstem + SP[s].dmleaf;
-                for (int s = 0; s < Nsp; s++)
-                {
-                    if (totalHarvestable == 0.0) ftArray[s] = 0.0F;
-                    else ftArray[s] = (SP[s].dmstem + SP[s].dmleaf) * 100 / totalHarvestable;
-                }
-                return ftArray;
-            }
-        }
-        [Units("kgDM/ha")]
-        public double[] SpeciesHarvestWt  //species N 
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].dmdefoliated;
-                return ftArray;
-            }
-        }
-
-        [Units("kgN/ha")]
-        public double[] SpeciesHarvestN  //species N 
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].Ndefoliated;
-                return ftArray;
-            }
-        }
-
-        [Units("0-1")]      //Calculate growth factor of nitrogen deficit
-        public double[] spGFN
-        {
-            get
-            {
-                for (int s = 0; s < Nsp; s++)
-                    ftArray[s] = SP[s].gfn;
-                return ftArray;
-            }
-        }
-
-        #endregion
-        //=================================================================
-
-
-        //=================================================================
-        #region "Functions"
-
-        //===============================================    
+        //===============================================
         /// <summary>
         /// water uptake processes ...
         /// Rainss Notes 20010707
         ///  - Should this be done per species? Is using the root frontier an acceptable solution?
         ///  - Plant2 breaks this into two parts: WaterSupply and DoWaterUptake
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         private double SWUptakeProcess()
@@ -2519,9 +3994,8 @@ namespace Models
             p_waterSupply = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0,
-                                  kl[layer] * (Soil.SoilWater.sw_dep[layer] - ll[layer] * (Soil.SoilWater.dlayer[layer]))) * RootProportion(layer, p_rootFrontier);
-
+                SWSupply[layer] = Math.Max(0.0, Soil.KL(Name)[layer] * (Soil.SoilWater.sw_dep[layer] - Soil.LL(Name)[layer] * (Soil.SoilWater.dlayer[layer])))
+                                * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];
             }
@@ -2529,11 +4003,11 @@ namespace Models
             //uptake in proportion
             PMF.WaterChangedType WaterUptake = new PMF.WaterChangedType();
             WaterUptake.DeltaWater = new double[Soil.SoilWater.dlayer.Length];
-            //float[] SWUptake = new float[dlayer.Length];
+            //double[] SWUptake = new double[dlayer.Length];
             double Fraction = Math.Min(1.0, p_waterDemand / p_waterSupply);
-            actualUptake = 0.0;
+            double actualUptake = 0.0;
             for (int layer = 0; layer < p_bottomRootLayer; layer++)
-            {   //water are taken up only in top layers that root can reach.               
+            {   //water are taken up only in top layers that root can reach.
                 SWUptake[layer] = SWSupply[layer] * Fraction;
                 actualUptake += SWUptake[layer];
                 WaterUptake.DeltaWater[layer] = -SWUptake[layer];
@@ -2545,86 +4019,111 @@ namespace Models
             return actualUptake;
         }
 
-        private double RootProportion(int layer, double root_depth)
+        /// <summary>
+        /// Compute the distribution of roots in the soil profile (sum is equal to one)
+        /// </summary>
+        /// <returns>The proportion of root mass in each soil layer</returns>
+        private double[] RootProfileDistribution()
         {
-            switch (UseRootProportion)
-            {
-                case 1:
-                    { // "Linear" code taken directly from Plant2
-                        double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-                        double depth_to_layer_top = 0;      // depth to top of layer (mm)
-                        double depth_to_root = 0;           // depth to root in layer (mm)
-                        double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
-                        // Implementation Section ----------------------------------
-                        for (int i = 0; i <= layer; i++)
-                            depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
-                        depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
-                        depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
-                        depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
+            int nLayers = Soil.Thickness.Length;
+            double[] result = new double[nLayers];
+            double sumProportion = 0;
 
-                        return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
+            switch (p_RootDistributionMethod)
+            {
+                case 0:
+                    {
+                        // homogenous distribution over soil profile (same root density throughout the profile)
+                        double DepthTop = 0;
+                        for (int layer = 0; layer < nLayers; layer++)
+                        {
+                            if (DepthTop >= p_rootFrontier)
+                                result[layer] = 0.0;
+                            else if (DepthTop + Soil.Thickness[layer] <= p_rootFrontier)
+                                result[layer] = 1.0;
+                            else
+                                result[layer] = (p_rootFrontier - DepthTop) / Soil.Thickness[layer];
+                            sumProportion += result[layer] * Soil.Thickness[layer];
+                            DepthTop += Soil.Thickness[layer];
+                        }
+                        break;
+                    }
+                case 1:
+                    {
+                        // distribution given by the user
+                        Array.Resize(ref rlvp, nLayers);	// This will remove values in excess (non-existing layers) or add zeroes if layers are missing
+                        for (int layer = 0; layer < nLayers; layer++)
+                        {
+                            result[layer] = rlvp[layer];
+                            sumProportion += result[layer];
+                        }
+                        break;
                     }
                 case 2:
-                    { // "broken stick"
-                        double depth_to_layer_bottom = 0;
-                        for (int i = 0; i <= layer; i++)
+                    {
+                        // distribution calculated using ExpoLinear method
+                        //  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
+                        //   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
+                        //   if exponent is one than the proportion decreases linearly.
+                        double DepthTop = 0;
+                        double DepthFirstStage = p_rootFrontier * p_ExpoLinearDepthParam;
+                        double DepthSecondStage = p_rootFrontier - DepthFirstStage;
+                        for (int layer = 0; layer < nLayers; layer++)
                         {
-                            depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
+                            if (DepthTop >= p_rootFrontier)
+                                result[layer] = 0.0;
+                            else if (DepthTop + Soil.Thickness[layer] <= DepthFirstStage)
+                                result[layer] = 1.0;
+                            else
+                            {
+                                if (DepthTop < DepthFirstStage)
+                                    result[layer] = (DepthFirstStage - DepthTop) / Soil.Thickness[layer];
+                                if ((p_ExpoLinearDepthParam < 1.0) && (p_ExpoLinearCurveParam > 0.0))
+                                {
+                                    double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
+                                    double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, p_ExpoLinearCurveParam) / (p_ExpoLinearCurveParam + 1);
+                                    thisDepth = Math.Min(DepthTop + Soil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
+                                    double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, p_ExpoLinearCurveParam) / (p_ExpoLinearCurveParam + 1);
+                                    result[layer] += Math.Max(0.0, Fbottom - Ftop) / Soil.Thickness[layer];
+                                }
+                                else if (DepthTop + Soil.Thickness[layer] <= p_rootFrontier)
+                                    result[layer] += Math.Min(DepthTop + Soil.Thickness[layer], p_rootFrontier) - Math.Max(DepthTop, DepthFirstStage) / Soil.Thickness[layer];
+                            }
+                            sumProportion += result[layer];
+                            DepthTop += Soil.Thickness[layer];
                         }
-                        double depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
-
-                        double dX0 = rootDist[0] * root_depth; //TODO allow this to be set via Root Distribution Parameter
-                        double dX1 = root_depth;
-
-                        if (Debug_Level > 1)
-                        {
-                            Console.Out.WriteLine();
-                            Console.Out.WriteLine("Root Depth 0 = " + dX0);
-                            Console.Out.WriteLine("Root Depth 1 = " + dX1);
-                            Console.Out.WriteLine("Layer = " + (layer + 1));
-                            Console.Out.WriteLine("   depth_to_layer_top = " + depth_to_layer_top);
-                            Console.Out.WriteLine("   depth_to_layer_bottom = " + depth_to_layer_bottom);
-                        }
-                        if (depth_to_layer_bottom <= dX0)
-                        {
-                            if (Debug_Level > 1)
-                                Console.Out.WriteLine("   1.0 =        fully in the Square Zone");
-                            return 1.0; // fully in the "Square Zone"
-                        }
-                        if (depth_to_layer_top >= dX1)
-                        {
-                            if (Debug_Level > 1)
-                                Console.Out.WriteLine("   0.0 =        fully below the root zone");
-                            return 0.0; // fully below the root zone
-                        }
-
-                        //Includes special cases of includes poviot point and/or layer partially below the root zone
-                        double rootUpper = (dX0 > depth_to_layer_top) ? dX0 - depth_to_layer_top : 0;
-                        double rootLower = 0;
-                        if (dX0 < dX1)
-                        {
-                            double A = dX1 - dX0; // depth of "triangle"
-                            double B = 1;
-                            double a0 = A - (Math.Max(depth_to_layer_top, dX0) - dX0);
-                            double b0 = B * (a0 / A);
-                            double a1 = A - (Math.Min(depth_to_layer_bottom, dX1) - dX0);
-                            double b1 = B * (a1 / A);
-                            double prop = (b0 + b1) / 2;
-                            double depth = Math.Min(depth_to_layer_bottom, dX1) - Math.Max(depth_to_layer_top, dX0);
-                            rootLower = prop * depth;
-                        }
-                        double result = (rootUpper + rootLower) / (depth_to_layer_bottom - depth_to_layer_top);
-                        if (Debug_Level > 1)
-                        {
-                            Console.Out.WriteLine("   " + rootUpper + "        rootUpper");
-                            Console.Out.WriteLine("   " + rootLower + "        rootLower");
-                            Console.Out.WriteLine("   " + result + "        result");
-                        }
-                        return result;
+                        break;
                     }
-
-                default: return 1; //this is equivilant to the original implementation (depreciated)
+                default:
+                    {
+                        throw new Exception("No valid method for computing root distribution was selected");
+                    }
             }
+            if (sumProportion > 0)
+                for (int layer = 0; layer < nLayers; layer++)
+                    result[layer] = result[layer] / sumProportion;
+            else
+                throw new Exception("Could not calculate root distribution");
+            return result;
+        }
+
+        /// <summary>
+        /// Compute how much of the layer is actually explored by roots
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="root_depth"></param>
+        /// <returns>Fraction of layer explored by roots</returns>
+        private double LayerFractionForRoots(int layer, double root_depth)
+        {
+            double depth_to_layer_top = 0;      // depth to top of layer (mm)
+            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+            double fraction_in_layer = 0;
+            for (int i = 0; i <= layer; i++)
+                depth_to_layer_bottom += Soil.Thickness[i];
+            depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
+            fraction_in_layer = (root_depth - depth_to_layer_top) / (depth_to_layer_bottom - depth_to_layer_top);
+
+            return Math.Min(1.0, Math.Max(0.0, fraction_in_layer));
         }
 
         //================================================
@@ -2661,27 +4160,27 @@ namespace Models
                     diffNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
                     diffNO3_bylayer = new double[Soil.SoilWater.dlayer.Length];
 
-                for (int sLayer = 0; sLayer < Soil.SoilWater.dlayer.Length; sLayer++)
+                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
                     double
-                        totN = Soil.SoilNitrogen.nh4[sLayer] + Soil.SoilNitrogen.no3[sLayer],
-                        fracH2O = SWUptake[sLayer] / totSWUptake;
+                        totN = Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer],
+                        fracH2O = SWUptake[layer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[sLayer] = fracH2O * Soil.SoilNitrogen.nh4[sLayer] / totN;
-                        availableNO3_bylayer[sLayer] = fracH2O * Soil.SoilNitrogen.no3[sLayer] / totN;
+                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.nh4[layer] / totN;
+                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.no3[layer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = Soil.SoilNitrogen.nh4[sLayer] * Soil.SoilNitrogen.no3[sLayer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[sLayer] / availableNH4_bylayer[sLayer]) : 0;
+                        uptake_multiplier = Soil.SoilNitrogen.nh4[layer] * Soil.SoilNitrogen.no3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[layer] / availableNH4_bylayer[layer]) : 0;
                     }
                     else
                     {
-                        availableNH4_bylayer[sLayer] = 0;
-                        availableNO3_bylayer[sLayer] = 0;
+                        availableNH4_bylayer[layer] = 0;
+                        availableNO3_bylayer[layer] = 0;
                     }
                 }
 
@@ -2690,8 +4189,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, sLayer) => Math.Max(0, x - availableNH4_bylayer[sLayer])).ToArray();
-                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, sLayer) => Math.Max(0, x - availableNO3_bylayer[sLayer])).ToArray();
+                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
+                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -2709,8 +4208,8 @@ namespace Models
                     //this cap should not be needed because shortfall is already capped via the math.min in the scaled_demand calcs (leave it here though)
                     double scaled_diff = Math.Min(shortfall_withwater / avail_withwater, 1);
 
-                    availableNH4_bylayer = availableNH4_bylayer.Select((x, sLayer) => x + shortfall_withwater * diffNH4_bylayer[sLayer]).ToArray();
-                    availableNO3_bylayer = availableNO3_bylayer.Select((x, sLayer) => x + shortfall_withwater * diffNO3_bylayer[sLayer]).ToArray();
+                    availableNH4_bylayer = availableNH4_bylayer.Select((x, layer) => x + shortfall_withwater * diffNH4_bylayer[layer]).ToArray();
+                    availableNO3_bylayer = availableNO3_bylayer.Select((x, layer) => x + shortfall_withwater * diffNO3_bylayer[layer]).ToArray();
                 }
 
                 NUptake.DeltaNH4 = availableNH4_bylayer.Select(x => x * -1).ToArray();
@@ -2737,7 +4236,7 @@ namespace Models
             else
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
-                {   //N are taken up only in top layers that root can reach (including buffer Zone).                               
+                {   //N are taken up only in top layers that root can reach (including buffer Zone).
                     n_uptake += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
                     SNUptake[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
 
@@ -2773,9 +4272,9 @@ namespace Models
                 Single[] fraction = new Single[1];
 
                 type[0] = "grass";
-                dltdm[0] = dDM;                 // kg/ha 
-                dltn[0] = (Single)amtN;         // dDM * (Single)dead_nconc;
-                dltp[0] = dltn[0] * 0.3F;       //just a stub here, no P budgeting process in this module
+                dltdm[0] = dDM;				 // kg/ha
+                dltn[0] = (Single)amtN;		 // dDM * (Single)dead_nconc;
+                dltp[0] = dltn[0] * 0.3F;	   //just a stub here, no P budgeting process in this module
                 fraction[0] = (Single)frac;
 
                 BR.crop_type = "grass";
@@ -2801,49 +4300,28 @@ namespace Models
         {
             Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
 
-            //considering root_zone only or minimum root
-            int minLayer = rlvp.Length;
-            if (minLayer > Soil.SoilWater.dlayer.Length)
-                minLayer = Soil.SoilWater.dlayer.Length;
-
-            //Console.WriteLine("rlvp layers should match the number of soil layers.");
-            //throw new Exception("..");
-
-            //the amount could be according to the root length density            
-            double sum_rlvp = 0.0;     //weighted sum of root length density, as defined by following formula
-            for (int i = 0; i < minLayer; i++)
-            {
-                if (i >= p_bottomRootLayer)
-                    break;
-
-                sum_rlvp += rlvp[i] * Soil.SoilWater.dlayer[i];
-            }
+            // ****  RCichota, Jun, 2014 change how RootFraction (rlvp) is used in here ****************************************
+            // root senesced are returned to soil (as FOM) considering return is proportional to root mass
 
             double dAmtLayer = 0.0; //amount of root litter in a layer
             double dNLayer = 0.0;
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            for (int i = 0; i < Soil.Thickness.Length; i++)
             {
-                if (sum_rlvp == 0.0 || (i >= minLayer)) //no root distribution if (i > minLayer)
-                {
-                    dAmtLayer = dNLayer = 0.0;
-                }
-                else
-                {
-                    dAmtLayer = rootSen * rlvp[i] * Soil.SoilWater.dlayer[i] / sum_rlvp;
-                    dNLayer = NinRootSen * rlvp[i] * Soil.SoilWater.dlayer[i] / sum_rlvp;
-                }
-                double amt = dAmtLayer;
+                dAmtLayer = rootSen * RootFraction[i];
+                dNLayer = NinRootSen * RootFraction[i];
+
+                float amt = (float)dAmtLayer;
 
                 Soils.FOMType fom = new Soils.FOMType();
                 fom.amount = amt;
-                fom.N = dNLayer;// 0.03F * amt;    // N in dead root                
-                fom.C = 0.40F * amt;    //40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
-                fom.P = 0;              //to consider later
-                fom.AshAlk = 0;         //to consider later
+                fom.N = dNLayer;// 0.03F * amt;	// N in dead root
+                fom.C = 0.40F * amt;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
+                fom.P = 0;			  //to consider later
+                fom.AshAlk = 0;		 //to consider later
 
                 Soils.FOMLayerLayerType Layer = new Soils.FOMLayerLayerType();
                 Layer.FOM = fom;
-                Layer.CNR = 0;       //not used
+                Layer.CNR = 0;	   //not used
                 Layer.LabileP = 0;   //not used
 
                 fomLL[i] = Layer;
@@ -2866,11 +4344,11 @@ namespace Models
         }
 
         /// <summary>
-        ///  Temporary for estimating IL reduction factor when considering other possible canopies. 
+        ///  Temporary for estimating IL reduction factor when considering other possible canopies.
         ///  Only useful for species reporting to micromet as separate pasture canopies and having
-        ///  similar growth forms (height). 
-        ///  Need to be cautious when using it, and this be removed we may get IL of a species  
-        ///  from multiple canopies (of separate species) in other module    
+        ///  similar growth forms (height).
+        ///  Need to be cautious when using it, and this be removed we may get IL of a species
+        ///  from multiple canopies (of separate species) in other module
         /// </summary>
         /// <returns></returns>
         public double coverRF()
@@ -2896,8 +4374,7 @@ namespace Models
         }
         #endregion //Funcitons
 
-
-        #region "Utilities"
+        #region Utilities
         //-----------------------------------------------------------------
         /// <summary>
         /// The following helper functions [VDP and svp] are for calculating Fvdp
