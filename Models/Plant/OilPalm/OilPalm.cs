@@ -295,7 +295,7 @@ namespace Models.PMF.OilPalm
         private List<RootType> Roots = new List<RootType>();
 
         [Link]
-        Function FrondAppRate = null;
+        Function FrondAppearanceRate = null;
         [Link]
         Function RelativeDevelopmentalRate = null;
         [Link]
@@ -336,6 +336,7 @@ namespace Models.PMF.OilPalm
         private double InitialRootDepth = 300;
 
         [Link]
+        [Description("NO3 Uptake coefficient - Fraction of NO3 available at a soil concentration of 1ppm ")]
         Function KNO3 = null;
         [Link]
         Function StemNConcentration = null;
@@ -514,7 +515,7 @@ namespace Models.PMF.OilPalm
             for (int i = 0; i < (int)InitialFrondNumber.Value; i++)
             {
                 FrondType F = new FrondType();
-                F.Age = ((int)InitialFrondNumber.Value - i) * FrondAppRate.Value;
+                F.Age = ((int)InitialFrondNumber.Value - i) * FrondAppearanceRate.Value;
                 F.Area = SizeFunction(F.Age);
                 F.Mass = F.Area / SpecificLeafArea.Value;
                 F.N = F.Mass * FrondCriticalNConcentration.Value / 100.0;
@@ -773,7 +774,7 @@ namespace Models.PMF.OilPalm
 
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
-                BunchDMD[i] = BunchSizeMax.Value / (6 * FrondAppRate.Value / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
+                BunchDMD[i] = BunchSizeMax.Value / (6 * FrondAppearanceRate.Value / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
             double TotBunchDMD = Utility.Math.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
@@ -835,7 +836,7 @@ namespace Models.PMF.OilPalm
                 F.Age += DeltaT;
                 //F.Area = SizeFunction(F.Age);
             }
-            if (Fronds[Fronds.Count - 1].Age >= FrondAppRate.Value)
+            if (Fronds[Fronds.Count - 1].Age >= FrondAppearanceRate.Value)
             {
                 FrondType F = new FrondType();
                 Fronds.Add(F);
@@ -1204,7 +1205,7 @@ namespace Models.PMF.OilPalm
         protected double SizeFunction(double Age)
         {
             double FMA = FrondMaxArea.Value;
-            double GrowthDuration = ExpandingFronds.Value * FrondAppRate.Value;
+            double GrowthDuration = ExpandingFronds.Value * FrondAppearanceRate.Value;
             double alpha = -Math.Log((1 / 0.99 - 1) / (FMA / (FMA * 0.01) - 1)) / GrowthDuration;
             double leafsize = FMA / (1 + (FMA / (FMA * 0.01) - 1) * Math.Exp(-alpha * Age));
             return leafsize;
