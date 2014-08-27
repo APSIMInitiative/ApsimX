@@ -344,21 +344,52 @@ namespace Models.PMF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        
+        
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (InGround)
             {
                 DoPhenology();
-                DoDMSetUp();
-                DoWater();  //Fixme Do water should go before do DMsetup
-                if (Arbitrator != null)
-                    Arbitrator.DoDMArbitration(Organs);
-                DoNutrientSetUp();
-                if (Arbitrator != null)
-                    Arbitrator.DoNutrientArbitration(Organs);
+                DoDMSetUp();//Sets organs water limited DM supplys and demands
+            }
+        }
+
+        [EventSubscribe("DoCanopy")]
+        private void OnDocanopy(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
+        {
+            if (InGround)
+            {
+                DoWater();
+            }
+        }
+        
+        [EventSubscribe("DoNutrientArbitration")]
+        private void OnDoNutrientArbitration(object sender, EventArgs e)
+        {
+                 if ((InGround)   && (Arbitrator != null))
+                {
+                    Arbitrator.DoWaterLimitedDMAllocations(Organs);
+                    Arbitrator.DoNutrientDemandSetUp(Organs);
+                    Arbitrator.SetNutrientUptake(Organs);
+                    Arbitrator.DoNutrientAllocations(Organs);
+                    Arbitrator.DoNutrientLimitedGrowth(Organs);
+                }
+        }
+        
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (InGround)
+            {
                 DoActualGrowth();
             }
+        }
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
+        {
+           //This is an old event handler that needs to be deleted once testing is complete
         }
         #endregion
 
