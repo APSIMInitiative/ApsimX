@@ -94,7 +94,7 @@ namespace UserInterface.Presenters
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    Presenter.config = config;  // give it access to the configuration settings for MRU's
+                    Presenter.Config = config;  // give it access to the configuration settings for MRU's
                     Simulations simulations = Simulations.Read(fileName);
                     Presenter.Attach(simulations, ExplorerView, null);
                     View.AddTab(fileName, Properties.Resources.apsim_logo32, ExplorerView, true);

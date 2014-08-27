@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Globalization;
-using UserInterface.Commands;
-using System.Runtime.Serialization;
-using UserInterface.Views;
-using UserInterface.Interfaces;
-using UserInterface.EventArguments;
-using System.IO;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ExplorerView.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Windows.Forms;
+    using Commands;
+    using EventArguments;
+    using Interfaces;
+    using Views;
 
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
@@ -25,11 +29,11 @@ namespace UserInterface.Views
     /// This "view" class follows the Humble Dialog approach were
     /// no business logic is embedded in this class. This object is told what to do by a 
     /// presenter object which is responsible for populating all controls. The theory is that this
-    /// class can be reused for differents types of data.
-    /// 
+    /// class can be reused for different types of data.
+    /// <para/>
     /// When populating nodes, it is given a list of NodeDescription objects that describes what the
     /// nodes look like.
-    /// 
+    /// <para/>
     /// NB: All node paths are compatible with Model node paths and includes the root node name:
     ///     If tree is:
     ///     Simulations
@@ -41,9 +45,29 @@ namespace UserInterface.Views
     /// </remarks>
     public partial class ExplorerView : UserControl, IExplorerView
     {
-        private string PreviouslySelectedNodePath;
-        private string SourcePathOfItemBeingDragged;
-        private string NodePathBeforeRename;
+        /// <summary>
+        /// The previously selected node path.
+        /// </summary>
+        private string previouslySelectedNodePath;
+
+        /// <summary>
+        /// The source path of item being dragged.
+        /// </summary>
+        private string sourcePathOfItemBeingDragged;
+
+        /// <summary>
+        /// The node path before rename.
+        /// </summary>
+        private string nodePathBeforeRename;
+
+        /// <summary>
+        /// Default constructor for ExplorerView
+        /// </summary>
+        public ExplorerView()
+        {
+            this.InitializeComponent();
+            StatusWindow.Visible = false;
+        }
 
         /// <summary>
         /// ExplorerView will invoke this event when it wants the presenter to populate 
@@ -110,64 +134,65 @@ namespace UserInterface.Views
         public event EventHandler<KeysArgs> OnShortcutKeyPress;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ExplorerView()
-        {
-            InitializeComponent();
-            StatusWindow.Visible = false;
-        }
-
-
-        /// <summary>
         /// Gets or sets the shortcut keys.
         /// </summary>
         public Keys[] ShortcutKeys { get; set; }
 
         /// <summary>
-        /// Form has loaded.
+        /// Raises the load event. Form has loaded.
         /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Argument E.</param>
         private void OnLoad(object sender, EventArgs e)
         {
-            PopulateMainToolStrip();
-            PopulateNodes(null);
-            TreeView.Nodes[0].Expand(); //expand the root tree node
+            this.PopulateMainToolStrip();
+            this.PopulateNodes(null);
+            TreeView.Nodes[0].Expand(); // expand the root tree node
         }
-
 
         #region Tree node
 
         /// <summary>
-        /// A property providing access to the currently selected node.
+        /// Gets or sets the property providing access to the currently selected node.
         /// </summary>
+        /// <value>The current node path.</value>
         public string CurrentNodePath
         {
             get
             {
-                if (TreeView.SelectedNode != null)
-                    return FullPath(TreeView.SelectedNode);
-                else
-                    return "";
+                if (TreeView.SelectedNode != null) 
+                {
+                    return this.FullPath (TreeView.SelectedNode);
+                } 
+                else 
+                {
+                    return string.Empty;
+                }
             }
+
             set
             {
                 // We want the BeforeSelect event to only fire when user clicks on a node
                 // in the tree.
-                TreeView.AfterSelect -= TreeView_AfterSelect;
+                TreeView.AfterSelect -= this.TreeView_AfterSelect;
 
-                TreeNode NodeToSelect;
-                if (value == "")
-                    NodeToSelect = null;
-                else
-                    NodeToSelect = FindNode(value);
-
-                if (NodeToSelect != null && TreeView.SelectedNode != NodeToSelect)
+                TreeNode nodeToSelect;
+                if (value == string.Empty) 
                 {
-                    TreeView.SelectedNode = NodeToSelect;
+                    nodeToSelect = null;
+                } 
+                else
+                {
+                    nodeToSelect = FindNode (value);
+                }
+
+                if (nodeToSelect != null && TreeView.SelectedNode != nodeToSelect)
+                {
+                    TreeView.SelectedNode = nodeToSelect;
                     if (NodeSelected != null)
                         NodeSelected.Invoke(this, new NodeSelectedArgs()
                         {
-                            OldNodePath = PreviouslySelectedNodePath,
+                            OldNodePath = previouslySelectedNodePath,
                             NewNodePath = value
                         });
                 }
@@ -346,12 +371,17 @@ namespace UserInterface.Views
             StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
+            {
                 StatusWindow.SelectionColor = Color.Red;
+            }
             else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+            {
                 StatusWindow.SelectionColor = Color.Brown;
+            }
             else
+            {
                 StatusWindow.SelectionColor = Color.Blue;
-
+            }
             Message = "\n" + Message.TrimEnd("\n".ToCharArray());
             Message = Message.Replace("\n", "\n                      ");
             Message += "\n";
@@ -434,15 +464,20 @@ namespace UserInterface.Views
         {
             NodeDescriptionArgs Args = new NodeDescriptionArgs();
             if (ParentNode != null)
+            {
                 Args.NodePath = FullPath(ParentNode);
+            }
             PopulateChildNodes.Invoke(this, Args);
 
             TreeNodeCollection Nodes;
             if (ParentNode == null)
+            {
                 Nodes = TreeView.Nodes;
+            }
             else
+            {
                 Nodes = ParentNode.Nodes;
-
+            }
             // Make sure we have the right number of child nodes.
             // Add extra nodes if necessary
             while (Args.Descriptions.Count > Nodes.Count)
@@ -465,7 +500,7 @@ namespace UserInterface.Views
         /// </summary>
         private void OnTreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
-            PreviouslySelectedNodePath = CurrentNodePath;
+            previouslySelectedNodePath = CurrentNodePath;
         }
 
         /// <summary>
@@ -477,7 +512,7 @@ namespace UserInterface.Views
             {
                 NodeSelectedByUser.Invoke(this, new NodeSelectedArgs()
                 {
-                    OldNodePath = PreviouslySelectedNodePath,
+                    OldNodePath = previouslySelectedNodePath,
                     NewNodePath = FullPath(e.Node)
                 });
             }
@@ -542,7 +577,7 @@ namespace UserInterface.Views
                 DragStart(this, Args);
                 if (Args.DragObject != null)
                 {
-                    SourcePathOfItemBeingDragged = Args.NodePath;
+                    sourcePathOfItemBeingDragged = Args.NodePath;
                     DoDragDrop(Args.DragObject, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
                 }
             }
@@ -572,12 +607,12 @@ namespace UserInterface.Views
                         if (Args.Allow)
                         {
                             string SourceParent = null;
-                            if (SourcePathOfItemBeingDragged != null)
-                                SourceParent = Utility.String.ParentName(SourcePathOfItemBeingDragged);
+                            if (sourcePathOfItemBeingDragged != null)
+                                SourceParent = Utility.String.ParentName(sourcePathOfItemBeingDragged);
 
                             // Now determine the effect. If the drag originated from a different view 
                             // (e.g. a toolbox or another file) then only copy is supported.
-                            if (SourcePathOfItemBeingDragged == null)
+                            if (sourcePathOfItemBeingDragged == null)
                                 e.Effect = DragDropEffects.Copy;  // Dragging from a foreign view.
                             else if (SourceParent == Args.NodePath)
                                 e.Effect = DragDropEffects.Copy;  // Dragged node's parent is the node we're currently over
@@ -622,17 +657,17 @@ namespace UserInterface.Views
                     TreeView.SelectedNode = DestinationNode;
                 }
             }
-            SourcePathOfItemBeingDragged = null;
+
+            sourcePathOfItemBeingDragged = null;
         }
         #endregion
-
 
         /// <summary>
         /// User is about to start renaming a node.
         /// </summary>
         private void OnBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            NodePathBeforeRename = CurrentNodePath;
+            nodePathBeforeRename = CurrentNodePath;
             e.CancelEdit = false;
         }
 
@@ -645,7 +680,7 @@ namespace UserInterface.Views
             {
                 NodeRenameArgs args = new NodeRenameArgs()
                 {
-                    NodePath = NodePathBeforeRename,
+                    NodePath = this.nodePathBeforeRename,
                     NewName = e.Label
                 };
                 Rename(this, args);
