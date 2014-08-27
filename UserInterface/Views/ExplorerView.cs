@@ -179,16 +179,16 @@ namespace UserInterface.Views
                 TreeNode nodeToSelect;
                 if (value == string.Empty) 
                 {
-                    this.NodeToSelect = null;
+                    nodeToSelect = null;
                 } 
                 else
                 {
-                    NodeToSelect = FindNode (value);
+                    nodeToSelect = FindNode (value);
                 }
 
-                if (NodeToSelect != null && TreeView.SelectedNode != NodeToSelect)
+                if (nodeToSelect != null && TreeView.SelectedNode != nodeToSelect)
                 {
-                    TreeView.SelectedNode = NodeToSelect;
+                    TreeView.SelectedNode = nodeToSelect;
                     if (NodeSelected != null)
                         NodeSelected.Invoke(this, new NodeSelectedArgs()
                         {
@@ -371,12 +371,17 @@ namespace UserInterface.Views
             StatusWindow.Select(StatusWindow.TextLength, 0);
 
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
+            {
                 StatusWindow.SelectionColor = Color.Red;
+            }
             else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+            {
                 StatusWindow.SelectionColor = Color.Brown;
+            }
             else
+            {
                 StatusWindow.SelectionColor = Color.Blue;
-
+            }
             Message = "\n" + Message.TrimEnd("\n".ToCharArray());
             Message = Message.Replace("\n", "\n                      ");
             Message += "\n";
@@ -459,15 +464,20 @@ namespace UserInterface.Views
         {
             NodeDescriptionArgs Args = new NodeDescriptionArgs();
             if (ParentNode != null)
+            {
                 Args.NodePath = FullPath(ParentNode);
+            }
             PopulateChildNodes.Invoke(this, Args);
 
             TreeNodeCollection Nodes;
             if (ParentNode == null)
+            {
                 Nodes = TreeView.Nodes;
+            }
             else
+            {
                 Nodes = ParentNode.Nodes;
-
+            }
             // Make sure we have the right number of child nodes.
             // Add extra nodes if necessary
             while (Args.Descriptions.Count > Nodes.Count)
@@ -670,7 +680,7 @@ namespace UserInterface.Views
             {
                 NodeRenameArgs args = new NodeRenameArgs()
                 {
-                    NodePath = NodePathBeforeRename,
+                    NodePath = this.nodePathBeforeRename,
                     NewName = e.Label
                 };
                 Rename(this, args);
