@@ -10,7 +10,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Serializable]
-    [Description("returns a y value that is interpolated between given XY pairs using Akima splines")]
+    [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     public class SplineInterpolationFunction : Function
     {
         public XYPairs XYPairs { get; set; }

@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Serializable]
-    [Description("Uses a sinusoidal function with Max and Min Temp to calculate 3 hourly temperature, useses these with temperatue profile specified in xy pairs to calculate 3 hourly thermal time and returns the mean of these 8 values")]
+    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
     public class AirTemperatureFunction : Function
     {
         #region Class Data Members
