@@ -15,6 +15,7 @@ namespace UserInterface.Classes
     using System.Reflection;
     using System.Drawing;
     using Views;
+    using Models.Core;
 
     /// <summary>
     /// TODO: Update summary.
@@ -53,7 +54,7 @@ namespace UserInterface.Classes
                 OutputFile.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"Plant2.css\" >");
                 OutputFile.WriteLine("</head>");
                 OutputFile.WriteLine("<body>");
-                string TitleText = "The APSIM " + Utility.Xml.NameAttr(XML.DocumentElement) + " Module";
+                string TitleText = "The APSIM " + Utility.Xml.Value(XML.DocumentElement, "Name") + " Module";
                 OutputFile.WriteLine(Title(TitleText));
                 OutputFile.WriteLine(Center(Header(TitleText, 1)));
                 XmlNode image = Utility.Xml.FindByType(XML.DocumentElement, "MetaData");
@@ -112,7 +113,10 @@ namespace UserInterface.Classes
             string Indent = new string(' ', Level * 3);
             if (N.Name.Contains("Leaf") || N.Name.Contains("Root")) //Nodes to add parameter doc to
                 paramTable = DocumentParams(OutputFile, N);
-            OutputFile.WriteLine(Header(Utility.Xml.NameAttr(N), Level, Utility.Xml.NameAttr(N.ParentNode)));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            
+            WriteDescriptionForTypeName(OutputFile, N.Name);
+
             OutputFile.WriteLine(ClassDescription(N));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(paramTable);
@@ -125,12 +129,17 @@ namespace UserInterface.Classes
 
         private static void DocumentNode(StreamWriter OutputFile, XmlNode N, int NextLevel)
         {
-            if (N.Name.Contains("Leaf")) //debug break; remove for release
-                Console.Out.WriteLine();
+            
 
             if (Utility.Xml.Attribute(N, "shortcut") != "")
             {
-                OutputFile.WriteLine("<p>" + Utility.Xml.NameAttr(N) + " uses the same value as " + Utility.Xml.Attribute(N, "shortcut"));
+                OutputFile.WriteLine("<p>" + Utility.Xml.Value(N, "Name") + " uses the same value as " + Utility.Xml.Attribute(N, "shortcut"));
+            }
+            else if (N.Name == "Constant")
+            {
+                OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+
+                OutputFile.WriteLine("<p>Value = " + Utility.Xml.Value(N, "Value") + "</p>");
             }
             else if (Utility.Xml.ChildNodes(N, "").Count == 0)
                 DocumentProperty(OutputFile, N, NextLevel);
@@ -148,6 +157,19 @@ namespace UserInterface.Classes
                 ChillingPhaseFunction(OutputFile, N, NextLevel);
             else
                 DocumentNodeAndChildren(OutputFile, N, NextLevel);
+        }
+
+        private static void WriteDescriptionForTypeName(StreamWriter OutputFile, string typeName)
+        {
+            Type[] t = Utility.Reflection.GetTypeWithoutNameSpace(typeName);
+            if (t.Length == 1)
+            {
+                DescriptionAttribute description = Utility.Reflection.GetAttribute(t[0], typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null)
+                {
+                    OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                }
+            }
         }
 
         private static string DocumentParams(StreamWriter OutputFile, XmlNode N)
@@ -223,14 +245,14 @@ namespace UserInterface.Classes
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.NameAttr(N), Level, Utility.Xml.NameAttr(N.ParentNode)));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
             string start = Utility.Xml.FindByType(N, "Start").InnerText;
             string end = Utility.Xml.FindByType(N, "End").InnerText;
             string CDTarget = Utility.Xml.FindByType(N, "CDTarget").InnerText;
             string text = "";
-            text = Utility.Xml.NameAttr(N) + " extends from " + start + " to " + end + " with a Chilling Days Target of " + CDTarget + " days.";
+            text = Utility.Xml.Value(N, "Name") + " extends from " + start + " to " + end + " with a Chilling Days Target of " + CDTarget + " days.";
             OutputFile.WriteLine(text);
             OutputFile.WriteLine("</blockquote>");
         }
@@ -241,19 +263,21 @@ namespace UserInterface.Classes
             string[] values = null;
             if (N.Name != "XProperty")
             {
-                if (Utility.Xml.NameAttr(N).Contains("Stages"))
+                if (Utility.Xml.Value(N, "Name").Contains("Stages"))
                 {
                     stages = N.InnerText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     values = N.NextSibling.InnerText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-                else if (Utility.Xml.NameAttr(N).Contains("Values"))
+                else if (Utility.Xml.Value(N, "Name").Contains("Values"))
                 {
                     //processed above so skip it
                 }
-                else if (Utility.Xml.NameAttr(N).Contains("Memo"))
+                else if (Utility.Xml.Value(N, "Name").Contains("Memo"))
                     OutputFile.WriteLine("<i>Note: " + N.InnerText + "</i>");
                 else if (!N.ParentNode.Name.Contains("Leaf") && !N.ParentNode.Name.Contains("Root"))
-                    OutputFile.WriteLine("<p>" + Utility.Xml.NameAttr(N) + " = " + N.InnerText);
+                {
+                    OutputFile.WriteLine("<p>" + N.Name + " = " + N.InnerText);
+                }
             }
 
             if (stages != null)
@@ -270,21 +294,21 @@ namespace UserInterface.Classes
 
         private static void DocumentFixedPhase(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.NameAttr(N), Level, Utility.Xml.NameAttr(N.ParentNode)));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
             string start = Utility.Xml.FindByType(N, "Start").InnerText;
             string end = Utility.Xml.FindByType(N, "End").InnerText;
             string TTT = Utility.Xml.FindByType(N, "Target").InnerText;
             string text = "";
-            text = Utility.Xml.NameAttr(N) + " extends from " + start + " to " + end + " with a fixed thermal time duration of " + TTT + " degree.days.";
+            text = Utility.Xml.Value(N, "Name") + " extends from " + start + " to " + end + " with a fixed thermal time duration of " + TTT + " degree.days.";
             OutputFile.WriteLine(text);
             OutputFile.WriteLine("</blockquote>");
         }
 
         private static void DocumentTemperatureFunction(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.NameAttr(N), Level, Utility.Xml.NameAttr(N.ParentNode)));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
             CreateGraph(OutputFile, Utility.Xml.FindByType(N, "XYPairs"), Level);
@@ -293,13 +317,13 @@ namespace UserInterface.Classes
 
         private static void DocumentPhaseLookupValue(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.NameAttr(N), Level, Utility.Xml.NameAttr(N.ParentNode)));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
             string start = Utility.Xml.FindByType(N, "Start").InnerText;
             string end = Utility.Xml.FindByType(N, "End").InnerText;
 
-            string text = "The value of " + Utility.Xml.NameAttr(N) + " during the period from " + start + " to " + end + " is calculated as follows:";
+            string text = "The value of " + Utility.Xml.Value(N, "Name") + " during the period from " + start + " to " + end + " is calculated as follows:";
             OutputFile.WriteLine(text);
             DocumentNode(OutputFile, Utility.Xml.Find(N, "Function"), Level);
             OutputFile.WriteLine("</blockquote>");
@@ -394,12 +418,19 @@ namespace UserInterface.Classes
 
         static string Header(string text, int Level)
         {
-            return (Level == 3 ? "\n<br><small><small><A NAME=\"" + text + "\"></A>\n<A HREF=\"#toc\">return</A></small></small><br>\n" : "") + "<H" + Level.ToString() + ">" + text + "</H" + Level.ToString() + ">";
+            if (Level == 3)
+            {
+                return "";
+            }
+            else
+            {
+                return "<H" + Level.ToString() + ">" + text + "</H" + Level.ToString() + ">";
+            }
         }
 
         static string Header(string text, int Level, string parent)
         {
-            string blah = (Level == 3 ? "\n<br><small><small><A NAME=\"" + text + "\"></A>\n<A HREF=\"#toc\">return</A></small></small><br>\n" :
+            string blah = (Level == 3 ? "\n<br>\n" :
                   Level == 4 ? "\n<A NAME=\"" + parent + "_" + text + "\"></A>\n<br>\n" : "")
                   + "<H" + Level.ToString() + ">" + text + "</H" + Level.ToString() + ">";
             return blah;
@@ -415,12 +446,17 @@ namespace UserInterface.Classes
         private static void CreateGraph(StreamWriter OutputFile, XmlNode N, int NextLevel)
         {
 
-            string InstanceName = Utility.Xml.NameAttr(N.OwnerDocument.DocumentElement);
+            string InstanceName = Utility.Xml.Value(N.OwnerDocument.DocumentElement, "Name");
             string GraphName;
             if (N.Name == "XYPairs")
-                GraphName = Utility.Xml.NameAttr(N.ParentNode.ParentNode) + Utility.Xml.NameAttr(N.ParentNode) + "Graph";
+                GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N.ParentNode, "Name") + "Graph";
             else
-                GraphName = Utility.Xml.NameAttr(N.ParentNode) + Utility.Xml.NameAttr(N) + "Graph";
+                GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N, "Name") + "Graph";
+
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+
+            WriteDescriptionForTypeName(OutputFile, N.ParentNode.Name);
+
 
             Directory.CreateDirectory(InstanceName + "Graphs");
             string GifFileName = InstanceName + "Graphs\\" + GraphName + ".gif";
@@ -432,11 +468,11 @@ namespace UserInterface.Classes
 
             string YName;
             if (N.Name == "XYPairs")
-                YName = Utility.Xml.NameAttr(N.ParentNode);
+                YName = Utility.Xml.Value(N.ParentNode, "Name");
             else
-                YName = Utility.Xml.NameAttr(N);
+                YName = Utility.Xml.Value(N, "Name");
             if (YName == "Function")
-                YName = Utility.Xml.NameAttr(N.ParentNode.ParentNode);
+                YName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name");
 
             // Set up to write a table.
             OutputFile.WriteLine("<table border=\"0\">");
@@ -466,17 +502,25 @@ namespace UserInterface.Classes
 
             // Setup cleanish graph.
             GraphView graph = new GraphView();
+            graph.Clear();
 
             // Create a line series.
             graph.DrawLineAndMarkers("", x, y, Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
                                      Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.FilledCircle);
 
-            //graph.Refresh();
+            // Format the axes.
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, XName, false);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, YName, false);
+
+            // Format the title
+            graph.BackColor = Color.White;
+
+            graph.Refresh();
 
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 400);
             graph.Export(image);
-
+            
             image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
         }
 
