@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 using Models.PMF;
 using Models.Soils;
 
@@ -33,16 +34,19 @@ namespace Models.Arbitrator
         /// This will hold a range of arbitration methods for testing - will eventually settle on one standard method
         /// </summary>
         [Description("Arbitration method: PropDemand/RotatingCall/Others to come")]        public string ArbitrationMethod { get; set; }
+        [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPlan amount based")]         public int NutrientUptakeMethod { get; set; }
+
 
         // Plant variables
         double[] demandWater;
         double[,] potentialSupplyWaterPlantLayer;
-        double[,] supplyWaterPlantLayer;
+        double[,] uptakeWaterPlantLayer;
 
         double[] demandNitrogen;
         double[,] potentialSupplyNitrogenPlantLayer;
-        double[,] supplyNitrogenPlantLayer;
-        double[,] supplyNitrogenPropNO3PlantLayer;
+        double[,] potentialSupplyPropNO3PlantLayer; 
+        double[,] uptakeNitrogenPlantLayer;
+        double[,] uptakeNitrogenPropNO3PlantLayer;
 
         // soil water evaporation stuff
         //public double ArbitEOS { get; set; }  //
@@ -78,6 +82,7 @@ namespace Models.Arbitrator
             // Check that ArbitrationMethod is valid
             if (ArbitrationMethod.ToLower() == "PropDemand".ToLower()) ;
             // nothing, all good
+
             else if (ArbitrationMethod.ToLower() == "RotatingCall".ToLower())
                 // this will be implemented for testing but not yet so end the simulation
                 throw new Exception("The RotatingCall option has not been implemented yet");
@@ -96,12 +101,13 @@ namespace Models.Arbitrator
             // size the arrays
             demandWater = new double[plants.Length];
             potentialSupplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            supplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            uptakeWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             
             demandNitrogen = new double[plants.Length];
             potentialSupplyNitrogenPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            supplyNitrogenPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-            supplyNitrogenPropNO3PlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            potentialSupplyPropNO3PlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            uptakeNitrogenPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
+            uptakeNitrogenPropNO3PlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
         }
 
 
@@ -110,12 +116,12 @@ namespace Models.Arbitrator
         {
             Utility.Math.Zero(demandWater);
             Utility.Math.Zero(potentialSupplyWaterPlantLayer);
-            Utility.Math.Zero(supplyWaterPlantLayer);
+            Utility.Math.Zero(uptakeWaterPlantLayer);
 
             Utility.Math.Zero(demandNitrogen);
             Utility.Math.Zero(potentialSupplyNitrogenPlantLayer);
-            Utility.Math.Zero(supplyNitrogenPlantLayer);
-            Utility.Math.Zero(supplyNitrogenPropNO3PlantLayer);
+            Utility.Math.Zero(uptakeNitrogenPlantLayer);
+            Utility.Math.Zero(uptakeNitrogenPropNO3PlantLayer);
 
         }
 
@@ -181,7 +187,7 @@ namespace Models.Arbitrator
             totalAvailableWater = new double[Soil.SoilWater.dlayer.Length];
             for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    totalAvailableWater[j] = Math.Max(0.0,Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]);
+                totalAvailableWater[j] = Math.Max(0.0,Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]);
                 }
 
             // compare the potential water supply against the total available water
@@ -191,8 +197,8 @@ namespace Models.Arbitrator
             {
                 for (int i = 0; i < plants.Length; i++)
                 {
-                    supplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(totalAvailableWater[j], Utility.Math.Sum(demandWater), 0.0));
-                    dltSWdep[j] += -1.0 * supplyWaterPlantLayer[i, j];  // -ve to reduce water content in the soil
+                    uptakeWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(totalAvailableWater[j], Utility.Math.Sum(demandWater), 0.0));
+                    dltSWdep[j] += -1.0 * uptakeWaterPlantLayer[i, j];  // -ve to reduce water content in the soil
                 }
             }  // close the layer loop
 
@@ -203,12 +209,12 @@ namespace Models.Arbitrator
                 double[] dummyArray = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)           // cannot set a particular dimension from a 2D arrary into a 1D array directly so need a temporary variable
                 {
-                    dummyArray[j] = supplyWaterPlantLayer[i, j];
+                    dummyArray[j] = uptakeWaterPlantLayer[i, j];
                 }
-                //tempDepthArray.CopyTo(plants[i].supplyWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
-                plants[i].supplyWater = dummyArray;
+                //tempDepthArray.CopyTo(plants[i].uptakeWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
+                plants[i].uptakeWater = dummyArray;
                 // debugging into SummaryFile
-                //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].supplyWater(3) to  " + plants[i].supplyWater[3].ToString());
+                //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].uptakeWater(3) to  " + plants[i].uptakeWater[3].ToString());
             }
 
             // send the change in soil water to the soil water module
@@ -231,26 +237,50 @@ namespace Models.Arbitrator
             // calculate the potentially available water and sum the demand
             for (int i = 0; i < plants.Length; i++)
             {
-                demandNitrogen[i] = plants[i].demandNitrogen; // note that eventually demandWater will be calculated above in the EnergyArbitration 
-                tempSupply = 0.0;
-                int method = 2;  // method 1 is KL, method 2 is KNO3
+                demandNitrogen[i] = plants[i].demandNitrogen;
+                tempSupply = 0.0;  // this is the sum of potentialSupplyNitrogenPlantLayer[i, j] across j for each plant - used in the limitation to demand
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
                 {
-                    // this step gives the proportion of the layer that is rooted
-                    if (method == 1)
+                    if (NutrientUptakeMethod == 1) // use the soil KL with no water effect
                     {
-                        potentialSupplyNitrogenPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]);
+                        potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.KL[j], plants.Length, 0.0)
+                                                                * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j])
+                                                                * plants[i].RootProperties.RootExplorationByLayer[j];
                         tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+
+                        double tempNO3OnlySupply = Utility.Math.Divide(plants[i].RootProperties.KL[j], plants.Length, 0.0)
+                                                 * Soil.SoilNitrogen.no3[j]
+                                                 * plants[i].RootProperties.RootExplorationByLayer[j];
+                        potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(tempNO3OnlySupply, potentialSupplyNitrogenPlantLayer[i, j], 0.0);
+                    }
+                    else if (NutrientUptakeMethod == 2)
+                    {
+                        //method from PMF - based on concentration  Utility.Math.Divide(plants[i].RootProperties.KNO3[j], plants.Length, 0.0)
+                        double relativeSoilWaterContent = 0;
+                        relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]), (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]), 0.0), 0.0, 1.0);
+                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Length, 0.0) * Soil.SoilNitrogen.no3ppm[j] + Utility.Math.Divide(plants[i].RootProperties.KNH4, plants.Length, 0.0) * Soil.SoilNitrogen.nh4ppm[j]) * relativeSoilWaterContent);
+                        tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+
+                        double tempNO3OnlySupply = 0;
+                        tempNO3OnlySupply = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (plants[i].RootProperties.KNO3 * Soil.SoilNitrogen.no3ppm[j]) * relativeSoilWaterContent);
+                        potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(tempNO3OnlySupply, potentialSupplyNitrogenPlantLayer[i, j], 0.0);
+                    }
+                    else if (NutrientUptakeMethod == 3)
+                    {
+                        //method from OilPlam - based on amount
+                        double relativeSoilWaterContent = 0;
+                        relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]), (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]), 0.0), 0.0, 1.0);
+
+                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Length, 0.0) * Soil.SoilNitrogen.no3[j] + Utility.Math.Divide(plants[i].RootProperties.KNH4, plants.Length, 0.0) * Soil.SoilNitrogen.nh4[j]) * relativeSoilWaterContent);
+                        tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+
+                        double tempNO3OnlySupply = 0;
+                        tempNO3OnlySupply = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Length, 0.0) * Soil.SoilNitrogen.no3[j]) * relativeSoilWaterContent);
+                        potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(tempNO3OnlySupply, potentialSupplyNitrogenPlantLayer[i, j], 0.0);
                     }
                     else
                     {
-                        double swaf = 0.0;
-                        swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
-                        swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                        double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
-                        double noh4ppm = Soil.SoilNitrogen.nh4[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
-                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (plants[i].RootProperties.KNO3 * Soil.SoilNitrogen.no3[j] + plants[i].RootProperties.KNH4 * Soil.SoilNitrogen.nh4[j]) * swaf);
-                        tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                        throw new Exception("Invalid potential uptake method selected");
                     }
                 }
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
@@ -258,14 +288,14 @@ namespace Models.Arbitrator
                     // if the potential supply calculated above is greater than demand then scale it back - note that this is still a potential supply as a solo crop
                     potentialSupplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandNitrogen[i], tempSupply, 0.0));
                 }
-            }
+            }  // close the plants loop - by here have the potentialSupply by plant and layer.  This is the sole plant demand - no competition yet
 
             // calculate the maximum amount of nitrogen available in each layer
             double[] totalAvailableNitrogen;
             totalAvailableNitrogen = new double[Soil.SoilWater.dlayer.Length];
             for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
             {
-                totalAvailableNitrogen[j] = Soil.SoilNitrogen.no3[j]+Soil.SoilNitrogen.nh4[j];
+                totalAvailableNitrogen[j] = Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j];
             }
 
             // compare the potential nitrogen supply against the total available nitrogen
@@ -274,14 +304,16 @@ namespace Models.Arbitrator
             {
                 for (int i = 0; i < plants.Length; i++)
                 {
-                    supplyNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(totalAvailableNitrogen[j], Utility.Math.Sum(demandNitrogen), 0.0));
-                    supplyNitrogenPropNO3PlantLayer[i, j] = 0.0;
-                    if (supplyNitrogenPlantLayer[i, j] > 0.0)
+                    uptakeNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j] 
+                                                   * Utility.Math.Constrain(Utility.Math.Divide(Utility.Math.Sum(totalAvailableNitrogen), Utility.Math.Sum(demandNitrogen), 0.0),0.0,1.0) ;
+                    uptakeNitrogenPropNO3PlantLayer[i, j] = 0.0;
+                    NUptakeType.DeltaNO3[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * potentialSupplyPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
+                    NUptakeType.DeltaNH4[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * (1.0 - potentialSupplyPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
+
+                    if ((i == plants.Length-1) && (j == 0))
                     {
-                        supplyNitrogenPropNO3PlantLayer[i, j] = Utility.Math.Divide(Soil.SoilNitrogen.no3[j], (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j]), 0.0);
+                        Summary.WriteMessage(FullPath, potentialSupplyNitrogenPlantLayer[0, j] + " " + potentialSupplyNitrogenPlantLayer[i, j] + " " + NUptakeType.DeltaNO3[j]);
                     }
-                    NUptakeType.DeltaNO3[j] += -1.0 * supplyNitrogenPlantLayer[i, j] * supplyNitrogenPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
-                    NUptakeType.DeltaNH4[j] += -1.0 * supplyNitrogenPlantLayer[i, j] * (1.0 - supplyNitrogenPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
                 }
             }  // close the layer loop
 
@@ -291,11 +323,11 @@ namespace Models.Arbitrator
                 double[] dummyArray2 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing
                 for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)           // cannot set a particular dimension from a 2D arrary into a 1D array directly so need a temporary variable
                 {
-                    dummyArray1[j] = supplyNitrogenPlantLayer[i, j];
-                    dummyArray2[j] = supplyNitrogenPropNO3PlantLayer[i, j];
+                    dummyArray1[j] = uptakeNitrogenPlantLayer[i, j];
+                    dummyArray2[j] = uptakeNitrogenPropNO3PlantLayer[i, j];
                 }
-                plants[i].supplyNitrogen = dummyArray1;
-                plants[i].supplyNitrogenPropNO3 = dummyArray2;
+                plants[i].uptakeNitrogen = dummyArray1;
+                plants[i].uptakeNitrogenPropNO3 = dummyArray2;
                 // debugging into SummaryFile
                 //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].supplyWater(3) to  " + plants[i].supplyWater[3].ToString());
             }
