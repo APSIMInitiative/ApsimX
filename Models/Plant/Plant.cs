@@ -74,16 +74,19 @@ namespace Models.PMF
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
-        private Organ[] _Organs = null;
-        public string CropType { get; set; }
+        #region Class links and lists
+        [Link] ISummary Summary = null;
         [Link(IsOptional = true)] public Phenology Phenology = null;
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
         [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
+        #endregion
 
+        #region Class properties and fields
+        public string CropType { get; set; }
         [XmlIgnore]
         public SowPlant2Type SowingData;
-
+        private Organ[] _Organs = null;
         [XmlIgnore]
         public Organ[] Organs 
         { 
@@ -100,12 +103,10 @@ namespace Models.PMF
                 return _Organs;
             } 
         }
-
         [XmlIgnore]
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
-
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
@@ -127,7 +128,6 @@ namespace Models.PMF
                 return new List<string>(cultivarNames).ToArray();
             }
         }
-
         /// <summary>
         /// A property to return all cultivar definitions.
         /// </summary>
@@ -144,12 +144,10 @@ namespace Models.PMF
                 return cultivars;
             }
         }
-
         /// <summary>
         /// The current cultivar definition.
         /// </summary>
         private Cultivar cultivarDefinition;
-
         /// <summary>
         /// MicroClimate needs FRGR.
         /// </summary>
@@ -166,25 +164,16 @@ namespace Models.PMF
                 return frgr; 
             } 
         }
-            
         /// <summary>
         /// MicroClimate supplies light profile.
         /// </summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-
         /// <summary>
         /// MicroClimate supplies Potential EP
         /// </summary>
         [XmlIgnore]
         public double PotentialEP {get; set;}
-
-        #region Links
-        [Link]
-        ISummary Summary = null;
-        #endregion
-
-        #region Outputs
         /// <summary>
         /// Is the plant in the ground?
         /// </summary>
@@ -195,18 +184,23 @@ namespace Models.PMF
                 return SowingData != null;
             }
         }
-
         [XmlIgnore]
         public double WaterSupplyDemandRatio { get; private set; }
-
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
-        
         #endregion
 
-        #region Public functions
+        #region Class Events
+        public event EventHandler Sowing;
+        public event EventHandler Harvesting;
+        public event EventHandler Cutting;
+        public event EventHandler PlantEnding;
+        public event BiomassRemovedDelegate BiomassRemoved;
+        #endregion
+
+        #region External Communications.  Method calls and EventHandlers
         /// <summary>
         /// Sow the crop with the specified parameters.
         /// </summary>
@@ -246,7 +240,6 @@ namespace Models.PMF
        
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
-
         /// <summary>
         /// Harvest the crop.
         /// </summary>
@@ -264,7 +257,6 @@ namespace Models.PMF
 
             Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
-
         /// <summary>
         /// End the crop.
         /// </summary>
@@ -312,7 +304,6 @@ namespace Models.PMF
 
             cultivarDefinition.Unapply();
         }
-
         private void Clear()
         {
             SowingData = null;
@@ -325,7 +316,6 @@ namespace Models.PMF
             if (Arbitrator != null)
                Arbitrator.Clear();
         }
-
         /// <summary>
         /// Cut the crop.
         /// </summary>
@@ -338,9 +328,41 @@ namespace Models.PMF
             foreach (Organ Child in Organs)
                 Child.OnCut();
         }
+        /// <summary>
+        /// Things the plant model does when the simulation starts
+        /// </summary>
+        public override void OnSimulationCommencing()
+        {
+            Clear();
+            foreach (Organ o in Organs)
+            {
+                o.Clear();
+            }
+        }
+        /// <summary>
+        /// Things that happen when the clock broadcasts DoPlantGrowth Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
+        {
+            if (InGround)
+            {
+                DoPhenology();
+                DoDMSetUp();
+                DoWater();  //Fixme Do water should go before do DMsetup
+                if (Arbitrator != null)
+                    Arbitrator.DoDMArbitration(Organs);
+                DoNutrientSetUp();
+                if (Arbitrator != null)
+                    Arbitrator.DoNutrientArbitration(Organs);
+                DoActualGrowth();
+            }
+        }
         #endregion
 
-        #region Private functions
+        #region Internal Communications.  Method calls
         private void DoPhenology()
         {
             if (Phenology != null)
@@ -396,43 +418,5 @@ namespace Models.PMF
                 o.DoActualGrowth();
         }
         #endregion
-
-        #region Event handlers and publishers
-
-        public event EventHandler Sowing;
-        public event EventHandler Harvesting;
-        public event EventHandler Cutting;
-        public event EventHandler PlantEnding;
-        public event BiomassRemovedDelegate BiomassRemoved;
-
-        public override void OnSimulationCommencing()
-        {
-            Clear();
-            foreach (Organ o in Organs)
-            {
-                o.Clear();
-            }
-        }
-
-
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
-        {
-            if (InGround)
-            {
-                DoPhenology();
-                DoDMSetUp();
-                DoWater();  //Fixme Do water should go before do DMsetup
-                if (Arbitrator != null)
-                    Arbitrator.DoDMArbitration(Organs);
-                DoNutrientSetUp();
-                if (Arbitrator != null)
-                    Arbitrator.DoNutrientArbitration(Organs);
-                DoActualGrowth();
-            }
-        }
-       
-        #endregion
-
-    }
+     }
 }
