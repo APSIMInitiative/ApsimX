@@ -31,7 +31,7 @@ namespace UserInterface.Classes
             public string Value = "";
         }
 
-        public static int Go(XmlDocument XML, string DocFileName)
+        public static int Go(XmlDocument XML, string DocFileName, Model parentModel)
         {
             int Code;
             string SavedDirectory = Directory.GetCurrentDirectory();
@@ -76,7 +76,7 @@ namespace UserInterface.Classes
                 OutputFile.WriteLine("</td></tbody></table>");
 
                 //XmlNode PlantNode = Utility.Xml.FindByType(XML.DocumentElement, "Model/Plant");
-                DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 2);
+                DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 2, parentModel);
 
                 OutputFile.WriteLine("</body>");
                 OutputFile.WriteLine("</html>");
@@ -107,7 +107,7 @@ namespace UserInterface.Classes
             return Code;
         }
 
-        static void DocumentNodeAndChildren(StreamWriter OutputFile, XmlNode N, int Level)
+        static void DocumentNodeAndChildren(StreamWriter OutputFile, XmlNode N, int Level, Model parentModel)
         {
             string paramTable = "";
             string Indent = new string(' ', Level * 3);
@@ -115,21 +115,23 @@ namespace UserInterface.Classes
                 paramTable = DocumentParams(OutputFile, N);
             OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             
-            WriteDescriptionForTypeName(OutputFile, N.Name);
+            WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
             OutputFile.WriteLine(ClassDescription(N));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(paramTable);
 
             foreach (XmlNode CN in Utility.Xml.ChildNodes(N, ""))
-                DocumentNode(OutputFile, CN, Level + 1);
+                DocumentNode(OutputFile, CN, Level + 1, parentModel);
 
             OutputFile.WriteLine("</blockquote>");
         }
 
-        private static void DocumentNode(StreamWriter OutputFile, XmlNode N, int NextLevel)
+        private static void DocumentNode(StreamWriter OutputFile, XmlNode N, int NextLevel, Model parentModel)
         {
             
+            if (N.Name == "Name")
+                return;
 
             if (Utility.Xml.Attribute(N, "shortcut") != "")
             {
@@ -138,11 +140,16 @@ namespace UserInterface.Classes
             else if (N.Name == "Constant")
             {
                 OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+                WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
                 OutputFile.WriteLine("<p>Value = " + Utility.Xml.Value(N, "Value") + "</p>");
             }
             else if (Utility.Xml.ChildNodes(N, "").Count == 0)
+            {
+                WriteDescriptionForTypeName(OutputFile, N, parentModel);
+
                 DocumentProperty(OutputFile, N, NextLevel);
+            }
             else if (Utility.Xml.ChildNodes(N, "XYPairs").Count > 0)
             {
                 CreateGraph(OutputFile, Utility.Xml.ChildNodes(N, "XYPairs")[0], NextLevel);
@@ -156,12 +163,31 @@ namespace UserInterface.Classes
             else if (Utility.Xml.Type(N) == "ChillingPhase")
                 ChillingPhaseFunction(OutputFile, N, NextLevel);
             else
-                DocumentNodeAndChildren(OutputFile, N, NextLevel);
+            {
+                string childName = Utility.Xml.Value(N, "Name");
+                Model childModel = null;
+                if (parentModel != null)
+                    childModel = parentModel.Children.Matching(childName);
+                DocumentNodeAndChildren(OutputFile, N, NextLevel, childModel);
+            }
         }
 
-        private static void WriteDescriptionForTypeName(StreamWriter OutputFile, string typeName)
+        private static void WriteDescriptionForTypeName(StreamWriter OutputFile, XmlNode node, Model parentModel)
         {
-            Type[] t = Utility.Reflection.GetTypeWithoutNameSpace(typeName);
+            if (parentModel != null)
+            {
+                PropertyInfo property = parentModel.GetType().GetProperty(Utility.Xml.Value(node, "Name"));
+                if (property != null)
+                {
+                    DescriptionAttribute description = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                    if (description != null)
+                    {
+                        OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                    }
+                }
+            }
+
+            Type[] t = Utility.Reflection.GetTypeWithoutNameSpace(node.Name);
             if (t.Length == 1)
             {
                 DescriptionAttribute description = Utility.Reflection.GetAttribute(t[0], typeof(DescriptionAttribute), false) as DescriptionAttribute;
@@ -315,7 +341,7 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("</blockquote>");
         }
 
-        private static void DocumentPhaseLookupValue(StreamWriter OutputFile, XmlNode N, int Level)
+        private static void DocumentPhaseLookupValue(StreamWriter OutputFile, XmlNode N, int Level, Model parentModel)
         {
             OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
@@ -325,7 +351,7 @@ namespace UserInterface.Classes
 
             string text = "The value of " + Utility.Xml.Value(N, "Name") + " during the period from " + start + " to " + end + " is calculated as follows:";
             OutputFile.WriteLine(text);
-            DocumentNode(OutputFile, Utility.Xml.Find(N, "Function"), Level);
+            DocumentNode(OutputFile, Utility.Xml.Find(N, "Function"), Level, parentModel);
             OutputFile.WriteLine("</blockquote>");
         }
 
@@ -455,7 +481,7 @@ namespace UserInterface.Classes
 
             OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
 
-            WriteDescriptionForTypeName(OutputFile, N.ParentNode.Name);
+            WriteDescriptionForTypeName(OutputFile, N.ParentNode, null);
 
 
             Directory.CreateDirectory(InstanceName + "Graphs");
