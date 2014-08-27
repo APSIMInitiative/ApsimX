@@ -349,20 +349,26 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            DoPhenology();
-            DoDMSetUp();//Sets organs water limited DM supplys and demands
+            if (InGround)
+            {
+                DoPhenology();
+                DoDMSetUp();//Sets organs water limited DM supplys and demands
+            }
         }
 
         [EventSubscribe("DoCanopy")]
         private void OnDocanopy(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
         {
-        DoWater(); 
+            if (InGround)
+            {
+                DoWater();
+            }
         }
         
         [EventSubscribe("DoNutrientArbitration")]
         private void OnDoNutrientArbitration(object sender, EventArgs e)
         {
-                     if (Arbitrator != null)
+                 if ((InGround)   && (Arbitrator != null))
                 {
                     Arbitrator.DoWaterLimitedDMAllocations(Organs);
                     Arbitrator.DoNutrientDemandSetUp(Organs);
@@ -375,7 +381,10 @@ namespace Models.PMF
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-         DoActualGrowth();
+            if (InGround)
+            {
+                DoActualGrowth();
+            }
         }
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)

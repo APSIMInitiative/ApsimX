@@ -6462,7 +6462,12 @@ namespace Models
         </Report>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
+          <_standing_fraction>
+            <double>0</double>
+          </_standing_fraction>
           <c_fract>0.4</c_fract>
+          <report_additions>no</report_additions>
+          <report_removals>no</report_removals>
           <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
