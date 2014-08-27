@@ -11,6 +11,11 @@ using Models.Soils;
 
 namespace Models.SurfaceOM
 {
+    /// <summary>
+    /// The surface organic matter model, ported by Ben Jolley from the
+    /// Fortran version.
+    /// Tidied up (somewhat) for ApsimX by Eric Zurcher, August 2014
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -117,8 +122,10 @@ namespace Models.SurfaceOM
         private double DailyInitialC;
         private double DailyInitialN;
 
-
-        public double[] _standing_fraction;	                //standing fraction array;
+        /// <summary>
+        /// standing fraction array
+        /// </summary>
+        public double[] _standing_fraction;
         public string report_additions { get; set; }
         public string report_removals { get; set; }
 
@@ -163,6 +170,18 @@ namespace Models.SurfaceOM
         public SurfaceOrganicMatter()
             : base()
         {
+            // Set default values for some properties
+            crit_residue_wt = 2000;
+            opt_temp = 20;
+            cum_eos_max = 20;
+            cnrf_coeff = 0.277;
+            cnrf_optcn = 25;
+            leach_rain_tot = 25;
+            min_rain_to_leach = 10;
+            crit_min_surfom_orgC = 0.004;
+            default_cpr = 0.0;
+            standing_extinct_coeff = 0.5;
+            fractionFaecesAdded = 0.5;
         }
 
         #region exposed properties
@@ -205,201 +224,78 @@ namespace Models.SurfaceOM
 
         #region Params
 
-        private double _crit_residue_wt = 2000;
         /// <summary>
         /// critical residue weight below which Thorburn"s cover factor equals one
         /// </summary>
         [Units("")]
-        public double crit_residue_wt
-        {
-            get
-            {
-                return _crit_residue_wt;
-            }
-            set
-            {
-                _crit_residue_wt = value;
-            }
-        }
+        public double crit_residue_wt { get; set; }
 
-        private double _opt_temp = 20;
         /// <summary>
         /// temperature at which decomp reaches optimum (oC)
         /// </summary>
         [Units("")]
-        public double opt_temp
-        {
-            get
-            {
-                return _opt_temp;
-            }
-            set
-            {
-                value = _opt_temp;
-            }
-        }
+        public double opt_temp { get; set; }
 
-        private double _cum_eos_max = 20;
         /// <summary>
         /// cumeos at which decomp rate becomes zero. (mm H2O)
         /// </summary>
         [Units("")]
-        public double cum_eos_max
-        {
-            get
-            {
-                return _cum_eos_max;
-            }
-            set
-            {
-                _cum_eos_max = value;
-            }
-        }
+        public double cum_eos_max { get; set; }
 
-        private double _cnrf_coeff = 0.277;
         /// <summary>
         /// coeff for rate of change in decomp with C:N
         /// </summary>
         [Units("")]
-        public double cnrf_coeff
-        {
-            get
-            {
-                return _cnrf_coeff;
-            }
-            set
-            {
-                _cnrf_coeff = value;
-            }
-        }
+        public double cnrf_coeff { get; set; }
 
-        private double _cnrf_optcn = 25;
         /// <summary>
         /// C:N above which decomp is slowed
         /// </summary>
         [Units("")]
-        public double cnrf_optcn
-        {
-            get
-            {
-                return _cnrf_optcn;
-            }
-            set
-            {
-                _cnrf_optcn = value;
-            }
-        }
+        public double cnrf_optcn { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-
         [Units("")]
         public double c_fract = 0.4;
 
-        private double _leach_rain_tot = 25;
         /// <summary>
         /// total amount of "leaching" rain to remove all soluble N from surfom
         /// </summary>
         [Units("")]
-        public double leach_rain_tot
-        {
-            get
-            {
-                return _leach_rain_tot;
-            }
-            set
-            {
-                _leach_rain_tot = value;
-            }
-        }
+        public double leach_rain_tot { get; set; }
 
-        private double _min_rain_to_leach = 10;
         /// <summary>
         /// threshold rainfall amount for leaching to occur
         /// </summary>
         [Units("")]
-        public double min_rain_to_leach
-        {
-            get
-            {
-                return _min_rain_to_leach;
-            }
-            set
-            {
-                _min_rain_to_leach = value;
-            }
-        }
+        public double min_rain_to_leach { get; set; }
 
-        private double _crit_min_surfom_orgC = 0.004;
         /// <summary>
         /// critical minimum org C below which potential decomposition rate is 100% (to avoid numerical imprecision)
         /// </summary>
         [Units("")]
-        public double crit_min_surfom_orgC
-        {
-            get
-            {
-                return _crit_min_surfom_orgC;
-            }
-            set
-            {
-                _crit_min_surfom_orgC = value;
-            }
-        }
+        public double crit_min_surfom_orgC { get; set; }
 
-        private double _default_cpr = 0.0;
         /// <summary>
         /// Default C:P ratio
         /// </summary>
         [Units("")]
-        public double default_cpr
-        {
-            get
-            {
-                return _default_cpr;
-            }
-            set
-            {
-                _default_cpr = value;
-            }
-        }
+        public double default_cpr { get; set; }
 
-        private double _standing_extinct_coeff = 0.5;
         /// <summary>
         /// extinction coefficient for standing residues
         /// </summary>
         [Units("")]
-        public double standing_extinct_coeff
-        {
-            get
-            {
-                return _standing_extinct_coeff;
-            }
-            set
-            {
-                _standing_extinct_coeff = value;
-            }
-        }
+        public double standing_extinct_coeff { get; set; }
 
-        private double _fractionFaecesAdded = 0.5;
         /// <summary>
         /// fraction of incoming faeces to add
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 0.0)]
         [Units("0-1")]
-        public double fractionFaecesAdded
-        {
-            get
-            {
-                return _fractionFaecesAdded;
-            }
-            set
-            {
-                _fractionFaecesAdded = value;
-
-            }
-        }
+        public double fractionFaecesAdded { get; set; }
 
         private int[] cf_contrib = new int[max_residues];            //determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)
 
@@ -989,8 +885,8 @@ namespace Models.SurfaceOM
                 throw new ApsimXException("SurfaceOrganicMatter", "Could not find residue name " + name);
             }
         }
-        [Serializable]
 
+        [Serializable]
         public class ResidueType : Model
         {
             public string fom_type { get; set; }
@@ -1517,7 +1413,6 @@ namespace Models.SurfaceOM
             public double SO4S;
         }
 
-
         [EventSubscribe("AddFaeces")]
         private void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
@@ -1624,7 +1519,7 @@ namespace Models.SurfaceOM
                 double[] temp = new double[temp_residue_cnr.Length];
                 temp_residue_cpr.CopyTo(temp, 0);
                 for (int i = temp_residue_cpr.Length; i < temp_residue_cnr.Length; i++)
-                    temp[i] = _default_cpr;
+                    temp[i] = default_cpr;
                 temp_residue_cpr = temp;
             }
 
@@ -1746,7 +1641,7 @@ namespace Models.SurfaceOM
                     Fdecomp = -1,       //decomposition fraction for the given surfom
                     sumC = SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C);
 
-                if (sumC < _crit_min_surfom_orgC)
+                if (sumC < crit_min_surfom_orgC)
                 {
                     //Residue wt is sufficiently low to suggest decomposing all;
                     //material to avoid low numbers which can cause problems;
@@ -1784,7 +1679,7 @@ namespace Models.SurfaceOM
 
             if (ave_temp > 0.0)
                 return Utility.Math.Bound(
-                    (double)Math.Pow(Utility.Math.Divide(ave_temp, _opt_temp, 0.0), 2.0),
+                    (double)Math.Pow(Utility.Math.Divide(ave_temp, opt_temp, 0.0), 2.0),
                     0.0,
                     1.0
                     );
@@ -1807,10 +1702,10 @@ namespace Models.SurfaceOM
             for (int residue = 0; residue < num_surfom; residue++)
                 eff_surfom_wt += SurfOM[residue].Lying.Sum<OMFractionType>(x => x.amount) * c.cf_contrib[residue];
 
-            if (eff_surfom_wt <= _crit_residue_wt)
+            if (eff_surfom_wt <= crit_residue_wt)
                 return 1.0;
             else
-                return Utility.Math.Bound(Utility.Math.Divide(_crit_residue_wt, eff_surfom_wt, 0.0), 0, 1);
+                return Utility.Math.Bound(Utility.Math.Divide(crit_residue_wt, eff_surfom_wt, 0.0), 0, 1);
         }
 
         /// <summary>
@@ -1834,14 +1729,14 @@ namespace Models.SurfaceOM
                 //As C:N increases above optcn cnrf decreases exponentially toward zero;
                 //As C:N decreases below optcn cnrf is constrained to one;
 
-                if (_cnrf_optcn == 0)
+                if (cnrf_optcn == 0)
                 {
                     return 1;
                 }
                 else
                 {
                     return Utility.Math.Bound(
-                        (double)Math.Exp(-_cnrf_coeff * ((cnr - _cnrf_optcn) / _cnrf_optcn)),
+                        (double)Math.Exp(-cnrf_coeff * ((cnr - cnrf_optcn) / cnrf_optcn)),
                         0.0,
                         1.0
                     );
@@ -1884,7 +1779,7 @@ namespace Models.SurfaceOM
             }
             else
             {
-                return Utility.Math.Bound(1.0 - Utility.Math.Divide(cumeos, _cum_eos_max, 0.0), 0.0, 1.0);
+                return Utility.Math.Bound(1.0 - Utility.Math.Divide(cumeos, cum_eos_max, 0.0), 0.0, 1.0);
             }
         }
 
@@ -1963,7 +1858,7 @@ namespace Models.SurfaceOM
             }
             cumeos = Math.Max(cumeos, 0.0);
 
-            if (precip >= _min_rain_to_leach)
+            if (precip >= min_rain_to_leach)
             {
                 leach_rain = precip;
             }
@@ -1990,7 +1885,7 @@ namespace Models.SurfaceOM
             double po4_incorp;
 
             // Calculate Leaching Fraction;
-            _leaching_fr = Utility.Math.Bound(Utility.Math.Divide(leach_rain, _leach_rain_tot, 0.0), 0.0, 1.0);
+            _leaching_fr = Utility.Math.Bound(Utility.Math.Divide(leach_rain, leach_rain_tot, 0.0), 0.0, 1.0);
 
 
             //Apply leaching fraction to all mineral pools;
@@ -2597,7 +2492,7 @@ namespace Models.SurfaceOM
                     //use default cpr and throw warning error to notify user;
                     if (surfom_cpr_added == 0)
                     {
-                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), _default_cpr, 0.0);
+                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), default_cpr, 0.0);
                         summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
@@ -2685,9 +2580,9 @@ namespace Models.SurfaceOM
         private void AddFaeces(AddFaecesType data)
         {
             string Manure = "manure";
-            AddSurfaceOM((double)(data.OMWeight * _fractionFaecesAdded),
-                         (double)(data.OMN * _fractionFaecesAdded),
-                         (double)(data.OMP * _fractionFaecesAdded),
+            AddSurfaceOM((double)(data.OMWeight * fractionFaecesAdded),
+                         (double)(data.OMN * fractionFaecesAdded),
+                         (double)(data.OMP * fractionFaecesAdded),
                          Manure);
 
             // We should also have added ash alkalinity, but AddSurfaceOM_
@@ -2701,7 +2596,7 @@ namespace Models.SurfaceOM
             {
                 for (int i = 0; i < MaxFr; i++)
                 {
-                    SurfOM[SOMNo].Lying[i].AshAlk += (double)(data.OMAshAlk * _fractionFaecesAdded * c.fr_pool_P[i, SOMNo]);
+                    SurfOM[SOMNo].Lying[i].AshAlk += (double)(data.OMAshAlk * fractionFaecesAdded * c.fr_pool_P[i, SOMNo]);
                 }
             }
 
@@ -2773,7 +2668,7 @@ namespace Models.SurfaceOM
             Area_lying = c.specific_area[SOMindex] * sum_lying_amount;
             Area_standing = c.specific_area[SOMindex] * sum_stand_amount;
 
-            F_Cover = AddCover(1.0 - (double)Math.Exp(-Area_lying), 1.0 - (double)Math.Exp(-(_standing_extinct_coeff) * Area_standing));
+            F_Cover = AddCover(1.0 - (double)Math.Exp(-Area_lying), 1.0 - (double)Math.Exp(-(standing_extinct_coeff) * Area_standing));
             F_Cover = Utility.Math.Bound(F_Cover, 0.0, 1.0);
 
             return F_Cover;
