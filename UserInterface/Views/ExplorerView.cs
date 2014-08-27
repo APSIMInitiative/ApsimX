@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using UserInterface.Views;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
+using System.IO;
 
 namespace UserInterface.Views
 {
@@ -368,7 +369,7 @@ namespace UserInterface.Views
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string SaveAs(string OldFilename)
         {
-            SaveFileDialog.FileName = OldFilename;
+            SaveFileDialog.FileName = Path.GetFileName(OldFilename);
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
                 return SaveFileDialog.FileName;
             else

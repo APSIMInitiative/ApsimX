@@ -211,29 +211,29 @@ namespace UserInterface.Presenters
         /// <param name="splitOn">The axis to format</param>
         private string[] FindSimulationNamesInScope()
         {
-            Type[] parentTypes = new Type[] { typeof(Simulation), typeof(Folder), typeof(Experiment), typeof(Simulations) };
+            Type[] parentTypes = new Type[] { typeof(Simulation), /*typeof(Folder),*/ typeof(Experiment), typeof(Simulations) };
 
             Model parent = FindParent(parentTypes);
             if (parent is Experiment)
                 return (parent as Experiment).Names();
             else if (parent is Simulation)
                 return new string[1] { parent.Name };
-            else if (parent is Folder)
-            {
-                List<string> names = new List<string>();
-                foreach (Model model in parent.Children.AllRecursively)
-                {
-                    if (model is Simulation)
-                    {
-                        names.Add(model.Name);
-                    }
-                    else if (model is Experiment)
-                    {
-                        names.AddRange((model as Experiment).Names());
-                    }
-                }
-                return names.ToArray();
-            }
+            //else if (parent is Folder)
+            //{
+            //    List<string> names = new List<string>();
+            //    foreach (Model model in parent.Children.AllRecursively)
+            //    {
+            //        if (model is Simulation)
+            //        {
+            //            names.Add(model.Name);
+            //        }
+            //        else if (model is Experiment)
+            //        {
+            //            names.AddRange((model as Experiment).Names());
+            //        }
+            //    }
+            //    return names.ToArray();
+            //}
             else
                 return Graph.DataStore.SimulationNames;
         }
@@ -244,7 +244,7 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         private Experiment[] FindExperimentsInScope()
         {
-            Type[] parentTypes = new Type[] { typeof(Folder), typeof(Experiment), typeof(Simulations) };
+            Type[] parentTypes = new Type[] { typeof(Experiment), typeof(Simulations) };
             Model parent = FindParent(parentTypes);
             if (parent is Experiment)
             {

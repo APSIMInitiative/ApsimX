@@ -38,7 +38,7 @@ namespace UserInterface.Presenters
         {
             this.View = view as ITabbedExplorerView;
             this.View.PopulateStartPage += OnPopulateStartPage;
-            this.View.MruClick += OnMruApsimXFile;
+            this.View.MruFileClick += OnMruApsimOpenFile;
             this.View.TabClosing += OnTabClosing;
             Presenters = new List<ExplorerPresenter>();
         }
@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
         public void Detach(object view)
         {
             this.View.PopulateStartPage -= OnPopulateStartPage;
-            this.View.MruClick -= OnMruApsimXFile;
+            this.View.MruFileClick -= OnMruApsimOpenFile;
             this.View.TabClosing -= OnTabClosing;
         }
 
@@ -169,9 +169,10 @@ namespace UserInterface.Presenters
             OpenApsimXFileInTab(FileName);
         }
 
-        private void OnMruApsimXFile(object sender, StringArgs s)
+        private void OnMruApsimOpenFile(object sender, EventArgs e)
         {
-            OpenApsimXFileInTab(s.Name);
+            string FileName = View.SelectedMruFileName();
+            OpenApsimXFileInTab(FileName);
         }
 
         /// <summary>
