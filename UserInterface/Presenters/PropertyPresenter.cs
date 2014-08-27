@@ -191,6 +191,16 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = dataStore.TableNames;
                     }
                 }
+                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    ICrop crop = GetCrop(properties);
+                    if (crop != null)
+                    {
+                        cell.DropDownStrings = crop.CultivarNames;
+                    }
+                    
+                }
                 else
                 {
                     object cellValue = this.properties[i].ValueWithArrayHandling;
@@ -207,6 +217,16 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = Utility.String.EnumToStrings(cellValue);
                     }
+                    else if (cellValue.GetType() == typeof(ICrop))
+                    {
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        List<string> cropNames = new List<string>();
+                        foreach (Model crop in this.model.FindAll(typeof(ICrop)))
+                        {
+                            cropNames.Add(crop.Name);
+                        }
+                        cell.DropDownStrings = cropNames.ToArray();
+                    }
                     else
                     {
                         cell.EditorType = EditorTypeEnum.TextBox;
@@ -220,6 +240,26 @@ namespace UserInterface.Presenters
 
             IGridColumn valueColumn = this.grid.GetColumn(1);
             valueColumn.Width = -1;
+        }
+
+        /// <summary>
+        /// Go find a crop property in the specified list of properties or if not
+        /// found, find the first crop in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found crop or null if none found.</returns>
+        private ICrop GetCrop(List<VariableProperty> properties)
+        {
+            foreach (VariableProperty property in properties)
+            {
+                if (property.DataType == typeof(ICrop))
+                {
+                    return this.model.Get(property.Value.ToString()) as ICrop;
+                }
+            }
+
+            // Not found so look for one in scope.
+            return this.model.Find(typeof(ICrop)) as ICrop;
         }
 
         /// <summary>

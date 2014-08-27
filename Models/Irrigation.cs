@@ -21,7 +21,7 @@ namespace Models
         public double IrrigationApplied { get; set; }
 
         // Events we're going to send.
-        public event EventHandler<Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType> Irrigated;
+        public event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
 
         /// <summary>
         /// Apply irrigatopm.
@@ -33,7 +33,7 @@ namespace Models
                 if(efficiency > 1.0 || efficiency < 0)
                     throw new ApsimXException(FullPath, "Efficiency value for irrigation event must bet between 0 and 1 ");
 
-                Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType water = new Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType();
+                Models.Soils.IrrigationApplicationType water = new Models.Soils.IrrigationApplicationType();
                 water.Amount = amount * efficiency;
                 water.Depth = depth;
                 water.will_runoff = willRunoff;

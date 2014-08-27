@@ -25,6 +25,7 @@
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -175,13 +176,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>12.899999618530273</MaxT>
-        <MinT>-2.7000000476837158</MinT>
-        <Rain>0</Rain>
-        <Radn>11</Radn>
-        <vp>0</vp>
-        <wind>0</wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -190,9 +184,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <html>true</html>
-        <AutoCreate>false</AutoCreate>
-        <StateVariables>false</StateVariables>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -506,6 +497,23 @@
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <Depth>
+              <string>0-20</string>
+              <string>20-40</string>
+              <string>40-60</string>
+              <string>60-80</string>
+              <string>80-100</string>
+              <string>100-120</string>
+              <string>120-140</string>
+              <string>140-160</string>
+              <string>160-180</string>
+              <string>180-200</string>
+              <string>200-220</string>
+              <string>220-240</string>
+              <string>240-260</string>
+              <string>260-280</string>
+              <string>280-300</string>
+            </Depth>
             <OC>
               <double>2.63</double>
               <double>1.25</double>
@@ -801,7 +809,6 @@
             <string />
             <string />
           </EventNames>
-          <AutoCreateCSV>true</AutoCreateCSV>
         </Report>
         <Graph>
           <Name>Graph</Name>
@@ -823,16 +830,16 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>Test</SimulationName>
               <TableName>Report</TableName>
               <FieldName>SoilWater.sw_dep(1)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <SplitOn>Simulation</SplitOn>
           </Series>
           <Series>
             <Title>Obs SWC 20cm</Title>
@@ -843,16 +850,16 @@
             <Marker>None</Marker>
             <Line>Solid</Line>
             <X>
-              <SimulationName>Test</SimulationName>
               <TableName>Input</TableName>
               <FieldName>Clock.Today</FieldName>
             </X>
             <Y>
-              <SimulationName>Test</SimulationName>
               <TableName>Input</TableName>
               <FieldName>sw_dep(1)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <SplitOn>Simulation</SplitOn>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
         </Graph>
@@ -877,9 +884,7 @@
         </Operations>
         <Manager>
           <Name>ResiduePrecipitationInterception</Name>
-          <Script>
-            <Name>Script</Name>
-          </Script>
+          <Script />
           <Code><![CDATA[
         using System;
         using Models.Core;
@@ -968,9 +973,7 @@ Soil.SoilWater.residueinterception = Interception_today;
         </Manager>
         <Manager>
           <Name>ExtraVariables</Name>
-          <Script>
-            <Name>Script</Name>
-          </Script>
+          <Script />
           <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
@@ -1104,8 +1107,8 @@ namespace Models
 	   ]]></Code>
         </Manager>
         <Area>0</Area>
+        <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
     </Simulation>
     <Graph>
       <Name>Residue mass</Name>
@@ -1127,16 +1130,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>surfaceom_wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -1146,16 +1149,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>surfaceom_wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -1179,16 +1182,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>SurfaceOrganicMatter.surfaceom_cover</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Type>Line</Type>
@@ -1198,16 +1201,16 @@ namespace Models
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedResidues</TableName>
           <FieldName>surfaceom_cover</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
     </Graph>
@@ -1231,16 +1234,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -1251,16 +1254,16 @@ namespace Models
         <Marker>Circle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -1284,16 +1287,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -1304,16 +1307,16 @@ namespace Models
         <Marker>Circle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -1337,16 +1340,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -1357,16 +1360,16 @@ namespace Models
         <Marker>Circle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
@@ -1390,16 +1393,16 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>Report</TableName>
           <FieldName>ExtraVariables.Script.SWDep60</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -1410,20 +1413,19 @@ namespace Models
         <Marker>Circle</Marker>
         <Line>None</Line>
         <X>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <SimulationName>*</SimulationName>
           <TableName>ObservedSoilWater</TableName>
           <FieldName>ExtraVariables.Script.SWDep60</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
   </Experiment>
-  <Area>0</Area>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

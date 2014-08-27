@@ -8,13 +8,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>12.300000190734863</MaxT>
-        <MinT>7.9000000953674316</MinT>
-        <Rain>9.6999998092651367</Rain>
-        <Radn>4.630000114440918</Radn>
-        <vp>11.199999809265137</vp>
-        <wind>2.380000114440918</wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -23,8 +16,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <Html>false</Html>
-        <AutoCreate>false</AutoCreate>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -55,7 +46,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -555,7 +545,6 @@
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -659,9 +648,8 @@
         <Manager>
           <Name>IrrigationRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>100</ApplicationAmount>
-            <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
+            <ApplicationDate>2003-12-20</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -701,10 +689,9 @@
         <Manager>
           <Name>FertiliserRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+            <ApplicationDate>2003-12-30</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -750,16 +737,10 @@
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
-    </Test>
   </Tests>
   <Graph>
     <Name>Graph</Name>
@@ -791,7 +772,7 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>sw(1)</Title>
@@ -811,7 +792,7 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>

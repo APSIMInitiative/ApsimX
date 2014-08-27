@@ -32,13 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabbedExplorerView));
             this.TabControl = new System.Windows.Forms.TabControl();
             this.StartPage = new System.Windows.Forms.TabPage();
+            this.listViewMain = new System.Windows.Forms.ListView();
             this.ListViewImages = new System.Windows.Forms.ImageList(this.components);
             this.TabPopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CloseTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabImageList = new System.Windows.Forms.ImageList(this.components);
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.listViewMain = new System.Windows.Forms.ListView();
             this.TabControl.SuspendLayout();
             this.StartPage.SuspendLayout();
             this.TabPopupMenu.SuspendLayout();
@@ -53,6 +53,7 @@
             this.TabControl.SelectedIndex = 0;
             this.TabControl.Size = new System.Drawing.Size(610, 523);
             this.TabControl.TabIndex = 0;
+            this.TabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
             this.TabControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseUp);
             // 
             // StartPage
@@ -65,6 +66,23 @@
             this.StartPage.TabIndex = 0;
             this.StartPage.Text = " ";
             this.StartPage.UseVisualStyleBackColor = true;
+            // 
+            // listViewMain
+            // 
+            this.listViewMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewMain.LargeImageList = this.ListViewImages;
+            this.listViewMain.Location = new System.Drawing.Point(3, 3);
+            this.listViewMain.MultiSelect = false;
+            this.listViewMain.Name = "listViewMain";
+            this.listViewMain.ShowItemToolTips = true;
+            this.listViewMain.Size = new System.Drawing.Size(596, 491);
+            this.listViewMain.TabIndex = 4;
+            this.listViewMain.TileSize = new System.Drawing.Size(400, 100);
+            this.listViewMain.UseCompatibleStateImageBehavior = false;
+            this.listViewMain.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
+            this.listViewMain.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyUp);
             // 
             // ListViewImages
             // 
@@ -100,23 +118,6 @@
             // 
             this.OpenFileDialog.DefaultExt = "apsimx";
             this.OpenFileDialog.Filter = "ApsimX files|*.apsimx";
-            // 
-            // listViewMain
-            // 
-            this.listViewMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listViewMain.LargeImageList = this.ListViewImages;
-            this.listViewMain.Location = new System.Drawing.Point(3, 3);
-            this.listViewMain.MultiSelect = false;
-            this.listViewMain.Name = "listViewMain";
-            this.listViewMain.ShowItemToolTips = true;
-            this.listViewMain.Size = new System.Drawing.Size(596, 491);
-            this.listViewMain.TabIndex = 4;
-            this.listViewMain.TileSize = new System.Drawing.Size(400, 100);
-            this.listViewMain.UseCompatibleStateImageBehavior = false;
-            this.listViewMain.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
-            this.listViewMain.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyUp);
             // 
             // TabbedExplorerView
             // 

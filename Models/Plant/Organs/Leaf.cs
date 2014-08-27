@@ -1290,6 +1290,11 @@ namespace Models.PMF.Organs
             //Structure.ResetStemPopn();
         }
 
+        public override void OnHarvest()
+        {
+            OnCut();
+        }
+
         protected virtual void PublishNewCanopyEvent()
         {
             if (NewCanopy != null)

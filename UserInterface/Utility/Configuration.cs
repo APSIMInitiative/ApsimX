@@ -53,6 +53,24 @@ namespace Utility
                     MruList.Add(filename);
             }
         }
+
+        /// <summary>
+        /// Remove a specified file from the list
+        /// </summary>
+        /// <param name="filename"></param>
+        public void DelMruFile(string filename)
+        {
+            if (filename.Length > 0)
+            {
+                if (MruList.Count > 0)
+                {
+                    if (MruList.IndexOf(filename) >= 0)
+                    {
+                        MruList.RemoveAt(MruList.IndexOf(filename));
+                    }
+                }
+            }
+        }
     }
 
     //=========================================================================

@@ -26,7 +26,12 @@ namespace Models.Core
             /// <summary>
             /// Use the table name editor.
             /// </summary>
-            TableName 
+            TableName,
+
+            /// <summary>
+            /// A cultivar name editor.
+            /// </summary>
+            CultivarName
         }
 
         /// <summary>

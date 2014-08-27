@@ -78,6 +78,28 @@ namespace Models.PMF.OldPlant
 
         private Cultivar cultivarDefinition;
 
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                SortedSet<string> cultivarNames = new SortedSet<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    cultivarNames.Add(cultivar.Name);
+                    if (cultivar.Aliases != null)
+                    {
+                        foreach (string alias in cultivar.Aliases)
+                            cultivarNames.Add(alias);
+                    }
+                }
+
+                return new List<string>(cultivarNames).ToArray();
+            }
+        }
+
         #region Event handlers and publishers
         
         public event NewCropDelegate NewCrop;
