@@ -4455,7 +4455,7 @@ namespace Models.Soils
         }
 
         [EventSubscribe("Irrigated")]
-        private void OnIrrigated(object sender, Models.SurfaceOM.SurfaceOrganicMatter.IrrigationApplicationType Irrigated)
+        private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType Irrigated)
         {
             int solnum;           //! solute no. counter variable               
             double solute_amount = 0.0;
