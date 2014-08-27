@@ -45,6 +45,10 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
+        /// <summary>
+        /// Type of crop
+        /// </summary>
+        [Units("")]
         public string CropType { get { return "OilPalm"; } }
 
         private Cultivar cultivarDefinition;
@@ -89,14 +93,15 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>
-        /// 
+        /// Factor for Relative Growth Rate
         /// </summary>
         public double FRGR { get { return 1; } }
 
         /// <summary>
-        /// MicroClimate supplies PotentialEP
+        /// Potential evapotranspiration
         /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double PotentialEP { get; set; }
 
         /// <summary>
@@ -105,82 +110,157 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        /// <summary>
+        /// Height to top of plant canopy
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double height = 10000.0;
 
+        /// <summary>
+        /// Total cover provided by plant canopies
+        /// </summary>
+        [Units("0-1")]
         public double cover_tot {
             get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
                 }
 
-        double interception = 0.0;
+        /// <summary>
+        /// Amount of rainfall intercepted by the plant canopy
+        /// </summary>
+        [Units("mm")]
+        public double interception = 0.0;
 
+
+        [Description("Maximum understory cover")]
+        [Units("0-1")]
         public double UnderstoryCoverMax { get; set; }
+        [Description("Fraction of understory that is legume")]
+        [Units("0-1")]
         public double UnderstoryLegumeFraction { get; set; }
+        [Description("Fraction of rainfall intercepted by canopy")]
+        [Units("0-1")]
+        public double InterceptionFraction { get; set; }
+        [Description("Maximum palm root depth")]
+        [Units("mm")]
+        public double MaximumRootDepth { get; set; }
 
         double Ndemand = 0.0;
 
-        double RootDepth = 0.0;
-        [XmlIgnore]
-        public double[] kl;
-        [XmlIgnore]
-        public double[] ll;
-        [XmlIgnore]
-        public double[] xf;
-        public double InterceptionFraction { get; set; }
-        [XmlIgnore]
-        public double[] bd = null;
-
+        /// <summary>
+        /// Palm Rooting Depth
+        /// </summary>
+        [Units("mm")]
+        public double RootDepth {get; set;}
+        
         double[] PotSWUptake;
 
         double[] SWUptake;
 
+        /// <summary>
+        /// Potential daily evapotranspiration for the palm canopy
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double PEP { get; set; }
 
+        /// <summary>
+        /// Daily evapotranspiration from the palm canopy
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double EP { get; set; }
 
-        double DltDM = 0.0;
+        /// <summary>
+        /// Daily total plant dry matter growth
+        /// </summary>
+        [Units("g/m2")]
+        public double DltDM { get; set; }
         double Excess = 0.0;
 
+        /// <summary>
+        /// Factor for daily water stress effect on photosynthesis
+        /// </summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double FW { get; set; }
 
+        /// <summary>
+        /// Factor for daily water stress effect on canopy expansion
+        /// </summary>
+        [Units("0-1")]
         double FWexpan = 0.0;
 
+        /// <summary>
+        /// Factor for daily nitrogen stress effect on photosynthesis
+        /// </summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double Fn { get; set; }
 
+        /// <summary>
+        /// Cumulative frond production since planting
+        /// </summary>
         [XmlIgnore]
+        [Units("/palm")]
         public double CumulativeFrondNumber { get; set; }
 
+        /// <summary>
+        /// Cumulative bunch production since planting
+        /// </summary>
         [XmlIgnore]
+        [Units("/palm")]
         public double CumulativeBunchNumber { get; set; }
 
         [XmlIgnore]
         public double CumulativeYield { get; set; }
 
-        double ReproductiveGrowthFraction = 0.0;
+        /// <summary>
+        /// Proportion of daily growth partitioned into reproductive parts
+        /// </summary>
+        [Units("0-1")]
+        public double ReproductiveGrowthFraction {get; set;}
 
+        /// <summary>
+        /// Amount of carbon limitation for todays potential growth (ie supply/demand)
+        /// </summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double CarbonStress { get; set; }
 
+        /// <summary>
+        /// Number of bunches harvested on a harvesting event
+        /// </summary>
         [XmlIgnore]
+        [Units("/palm")]
         public double HarvestBunches { get; set; }
 
+        /// <summary>
+        /// Mass of harvested FFB on a harvesting event
+        /// </summary>
         [XmlIgnore]
-        public double HarvestYield { get; set; }
-
-        [XmlIgnore]
+        [Units("t/ha")]
         public double HarvestFFB { get; set; }
 
+        /// <summary>
+        /// Nitrogen removed at a harvesting event
+        /// </summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double HarvestNRemoved { get; set; }
 
+        /// <summary>
+        /// Mean size of bunches at a harvesting event
+        /// </summary>
         [XmlIgnore]
+        [Units("kg")]
         public double HarvestBunchSize { get; set; }
 
+        /// <summary>
+        /// Time since planting
+        /// </summary>
         [XmlIgnore]
+        [Units("y")]
         public double Age { get; set; }
 
         [XmlIgnore]
@@ -190,8 +270,14 @@ namespace Models.PMF.OilPalm
         public SowPlant2Type SowingData = new SowPlant2Type();
 
         double[] PotNUptake;
+
+        /// <summary>
+        /// Daily nitrogen uptake by palms
+        /// </summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double[] NUptake { get; set; }
+
         [XmlIgnore]
         public double StemGrowth { get; set; }
         [XmlIgnore]
@@ -202,11 +288,11 @@ namespace Models.PMF.OilPalm
         public double BunchGrowth { get; set; }
 
         [XmlIgnore]
-        public List<FrondType> Fronds = new List<FrondType>();
+        private List<FrondType> Fronds = new List<FrondType>();
         [XmlIgnore]
-        public List<BunchType> Bunches = new List<BunchType>();
+        private List<BunchType> Bunches = new List<BunchType>();
         [XmlIgnore]
-        public List<RootType> Roots = new List<RootType>();
+        private List<RootType> Roots = new List<RootType>();
 
         [Link]
         Function FrondAppRate = null;
@@ -246,8 +332,9 @@ namespace Models.PMF.OilPalm
         Function FlowerAbortionFraction = null;
         [Link]
         Function BunchFailureFraction = null;
-        double InitialRootDepth = 300;
-        public double MaximumRootDepth { get; set; }
+        
+        private double InitialRootDepth = 300;
+
         [Link]
         Function KNO3 = null;
         [Link]
@@ -269,6 +356,10 @@ namespace Models.PMF.OilPalm
         [Link]
         Function FrondMinimumNConcentration = null;
         
+        /// <summary>
+        /// Proportion of green cover provided by the understory canopy
+        /// </summary>
+        [Units("0-1")]
         public double UnderstoryCoverGreen { get; set; }
         private double UnderstoryKLmax = 0.12;
 
@@ -282,12 +373,20 @@ namespace Models.PMF.OilPalm
         public double[] UnderstoryNUptake { get; set; }
 
         [XmlIgnore]
-        public double UnderstoryRootDepth = 0;
+        public double UnderstoryRootDepth = 500;
 
+        /// <summary>
+        /// Potential daily evapotranspiration for the understory
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double UnderstoryPEP = 0;
 
+        /// <summary>
+        /// Daily evapotranspiration for the understory
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double UnderstoryEP = 0;
 
         [XmlIgnore]
@@ -364,7 +463,6 @@ namespace Models.PMF.OilPalm
             CumulativeYield = 0;
             CarbonStress = 0;
             HarvestBunches = 0;
-            HarvestYield = 0;
             HarvestFFB = 0;
             HarvestNRemoved = 0;
             HarvestBunchSize = 0;
@@ -385,6 +483,9 @@ namespace Models.PMF.OilPalm
             FW = 1;
             PEP = 0;
             EP = 0;
+            RootDepth = 0;
+            DltDM = 0;
+            ReproductiveGrowthFraction = 0;
 
             Fronds = new List<FrondType>();
             Bunches = new List<BunchType>();
@@ -749,7 +850,7 @@ namespace Models.PMF.OilPalm
             if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
             {
                 HarvestBunches = Bunches[0].FemaleFraction;
-                HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
+                double HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
                 HarvestFFB = HarvestYield / 100;
                 HarvestNRemoved = Bunches[0].N * Population * 10;
                 HarvestBunchSize = Bunches[0].Mass / (1.0 - RipeBunchWaterContent.Value) / Bunches[0].FemaleFraction;
@@ -900,13 +1001,15 @@ namespace Models.PMF.OilPalm
         {
             get
             {
-                double FrondArea = 0.0;
-
-                //for (int i = 0; i < Frond.Length; i++)
-                //   FrondArea = FrondArea + Frond[i].Area;
-                foreach (FrondType F in Fronds)
-                    FrondArea += F.Area;
-                return FrondArea * SowingData.Population;
+                if (CropInGround)
+                {
+                    double FrondArea = 0.0;
+                    foreach (FrondType F in Fronds)
+                        FrondArea += F.Area;
+                    return FrondArea * SowingData.Population;
+                }
+                else
+                    return 0;
             }
 
         }
