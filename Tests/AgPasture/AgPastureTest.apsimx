@@ -1183,6 +1183,100 @@
         <LegendPosition>TopRight</LegendPosition>
       </Graph>
       <Graph>
+        <Name>GrowthRate</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Depth (mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>Potential</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.PlantPotentialGrowthWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <Series>
+          <Title>PotentialW</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.PlantGrowthNoNLimit</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <Series>
+          <Title>Actual</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.PlantGrowthWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <Series>
+          <Title>Herbage</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.HerbageGrowthWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+      </Graph>
+      <Graph>
         <Name>LAI</Name>
         <Axis>
           <Type>Left</Type>
@@ -1293,7 +1387,7 @@
           <Type>Line</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
           <Line>Dash</Line>
           <X>
