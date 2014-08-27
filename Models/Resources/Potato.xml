@@ -977,7 +977,7 @@
 			<Name>Photosynthesis</Name>
 			<Constant>
 				<Name>RUE</Name>
-				<Value>0.2</Value>
+				<Value>1.2</Value>
 			</Constant>
 			<RUECO2Function>
 				<Name>FCO2</Name>
