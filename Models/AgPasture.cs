@@ -12,59 +12,6 @@ using Models.Core;
 
 namespace Models
 {
-    //------ RemoveCropBiomassdm ------
-    [Serializable]
-    public class RemoveCropBiomassdmType
-    {
-        public string pool = "";
-        public string[] part;
-        public double[] dlt;
-    }
-
-    //------ RemoveCropBiomass ------
-    [Serializable]
-    public class RemoveCropBiomassType
-    {
-        public RemoveCropBiomassdmType[] dm;
-    }
-
-    //------ Sow ------
-    public class SowType
-    {
-        public string Cultivar = "";
-        public double plants;
-        public double sowing_depth;
-        public double row_spacing;
-        public double SkipRow;
-        public double SkipPlant;
-        public string Establishment = "";
-        public string crop_class = "";
-        public string tiller_no_fertile = "";
-        public string Skip = "";
-        public double plants_pm;
-        public int Ratoon;
-        public int sbdur;
-        public double nplh;
-        public double nh;
-        public double nplsb;
-        public double nplds;
-    }
-
-    //------ Graze ------
-    [Serializable]
-    public class GrazeType
-    {
-        public string sender = "";
-        public double amount;
-        public string type = "";
-    }
-
-    //------ KillCrop ------
-    [Serializable]
-    public class KillCropType
-    {
-        public double KillFraction;
-    }
 
     /// <summary>
     /// A multi-species pasture model 
@@ -86,212 +33,215 @@ namespace Models
         [Link]
         private ISummary Summary = null;
         private int Debug_Level = 0;
-        public Species[] SP = new Species[3] { 
-            new Species { 
-                speciesName = "ryegrass", 
-                micrometType = "grass",
-                isAnnual         = false,
-                isLegume         = false,
-                photoPath        = 3,
-                dayEmerg         = 0,
-                monEmerg         = 0,
-                dayAnth          = 0,
-                monAnth          = 0,
-                daysToMature     = 0,
-                dRootDepth       = 50,
-                maxRootDepth     = 900,
-                rootDepth        = 900,
-                growthTmin       = 2,
-                growthTmax       = 32,
-                growthTopt       = 20,
-                growthTq         = 2,
-                massFluxTmin     = 2,
-                massFluxTopt     = 20,
-                massFluxW0       = 2,
-                massFluxWopt     = 0.5,
-                heatOnsetT       = 60,
-                heatFullT        = 70,
-                heatSumT         = 50,
-                coldOnsetT       = -20,
-                coldFullT        = -30,
-                coldSumT         = 20,
-                Pm               = 1,
-                maintRespiration = 3,
-                growthEfficiency = 0.75,
-                SLA              = 20,
-                lightExtCoeff    = 0.5,
-                rue              = 1.65,
-                maxAssimiRate    = 330,
-                rateLive2Dead    = 0.05,
-                rateDead2Litter  = 0.11,
-                rateRootSen      = 0.02,
-                stockParameter   = 0.05,
-                maxSRratio       = (1.0 - 0.25)/0.25,
-                allocationSeasonF= 0.8,
-                leafRate         = 3,
-                fLeaf            = 0.7,
-                fStolon          = 0.0,
-                digestLive       = 0.6,
-                digestDead       = 0.2,
-                dmtotal          = 1500,
-                dmroot           = 450,
-                dmlitter         = 200,
-                dmgreenmin       = 500,
-                CO2PmaxScale     = 700,
-                CO2NScale        = 600,
-                CO2NMin          = 0.7,
-                CO2NCurvature    = 2,
-                NcleafOpt        = 4 * 0.01,
-                NcleafMax        = 5 * 0.01,
-                NcleafMin        = 1.2 * 0.01,
-                NcstemFr         = 0.5,
-                NcstolFr         = 0.5,
-                NcrootFr         = 0.5,
-                MinFix           = 0,
-                MaxFix           = 0,
-                NdilutCoeff      = 0.5,
-                Frgr             = 1,
-                waterStressFactor= 1,
-                soilSatFactor    = 0.1
-            },
 
-            new Species { 
-                speciesName      = "whiteclover", 
-                micrometType     = "grass",
-                isAnnual         = false,
-                isLegume         = true,
-                photoPath        = 3,
-                dayEmerg         = 1,
-                monEmerg         = 3,
-                dayAnth          = 1,
-                monAnth          = 11,
-                daysToMature     = 0,
-                dRootDepth       = 50,
-                maxRootDepth     = 300,
-                rootDepth        = 300,
-                growthTmin       = 4,
-                growthTmax       = 32,
-                growthTopt       = 20,
-                growthTq         = 2,
-                massFluxTmin     = 2,
-                massFluxTopt     = 20,
-                massFluxW0       = 2,
-                massFluxWopt     = 0.5,
-                heatOnsetT       = 60,
-                heatFullT        = 70,
-                heatSumT         = 50,
-                coldOnsetT       = -20,
-                coldFullT        = -30,
-                coldSumT         = 20,
-                Pm               = 1,
-                maintRespiration = 3,
-                growthEfficiency = 0.75,
-                SLA              = 20,
-                lightExtCoeff    = 0.8,
-                rue              = 1.65,
-                maxAssimiRate    = 330,
-                rateLive2Dead    = 0.05,
-                rateDead2Litter  = 0.11,
-                rateRootSen      = 0.02,
-                stockParameter   = 0.05,
-                maxSRratio       = (1.0 - 0.25)/0.25,
-                allocationSeasonF= 0.8,
-                leafRate         = 3,
-                fLeaf            = 0.7,
-                fStolon          = 0.2,
-                digestLive       = 0.6,
-                digestDead       = 0.2,
-                dmtotal          = 350,
-                dmroot           = 120,
-                dmlitter         = 50,
-                dmgreenmin       = 50,
-                CO2PmaxScale     = 700,
-                CO2NScale        = 600,
-                CO2NMin          = 0.7,
-                CO2NCurvature    = 2,
-                NcleafOpt        = 4.5 * 0.01,
-                NcleafMax        = 5.5 * 0.01,
-                NcleafMin        = 1.2 * 0.01,
-                NcstemFr         = 0.5,
-                NcstolFr         = 0.5,
-                NcrootFr         = 0.5,
-                MinFix           = 0.2,
-                MaxFix           = 0.6,
-                NdilutCoeff      = 1.0,
-                Frgr             = 1,
-                waterStressFactor= 1,
-                soilSatFactor    = 0.1
-            },
+        [XmlIgnore]
+        public Species[] SP;
+        //public Species[] SP = new Species[3] { 
+        //    new Species { 
+        //        speciesName = "ryegrass", 
+        //        micrometType = "grass",
+        //        isAnnual         = false,
+        //        isLegume         = false,
+        //        photoPath        = 3,
+        //        dayEmerg         = 0,
+        //        monEmerg         = 0,
+        //        dayAnth          = 0,
+        //        monAnth          = 0,
+        //        daysToMature     = 0,
+        //        dRootDepth       = 50,
+        //        maxRootDepth     = 900,
+        //        rootDepth        = 900,
+        //        growthTmin       = 2,
+        //        growthTmax       = 32,
+        //        growthTopt       = 20,
+        //        growthTq         = 2,
+        //        massFluxTmin     = 2,
+        //        massFluxTopt     = 20,
+        //        massFluxW0       = 2,
+        //        massFluxWopt     = 0.5,
+        //        heatOnsetT       = 60,
+        //        heatFullT        = 70,
+        //        heatSumT         = 50,
+        //        coldOnsetT       = -20,
+        //        coldFullT        = -30,
+        //        coldSumT         = 20,
+        //        Pm               = 1,
+        //        maintRespiration = 3,
+        //        growthEfficiency = 0.75,
+        //        SLA              = 20,
+        //        lightExtCoeff    = 0.5,
+        //        rue              = 1.65,
+        //        maxAssimiRate    = 330,
+        //        rateLive2Dead    = 0.05,
+        //        rateDead2Litter  = 0.11,
+        //        rateRootSen      = 0.02,
+        //        stockParameter   = 0.05,
+        //        maxSRratio       = (1.0 - 0.25)/0.25,
+        //        allocationSeasonF= 0.8,
+        //        leafRate         = 3,
+        //        fLeaf            = 0.7,
+        //        fStolon          = 0.0,
+        //        digestLive       = 0.6,
+        //        digestDead       = 0.2,
+        //        dmtotal          = 1500,
+        //        dmroot           = 450,
+        //        dmlitter         = 200,
+        //        dmgreenmin       = 500,
+        //        CO2PmaxScale     = 700,
+        //        CO2NScale        = 600,
+        //        CO2NMin          = 0.7,
+        //        CO2NCurvature    = 2,
+        //        NcleafOpt        = 4 * 0.01,
+        //        NcleafMax        = 5 * 0.01,
+        //        NcleafMin        = 1.2 * 0.01,
+        //        NcstemFr         = 0.5,
+        //        NcstolFr         = 0.5,
+        //        NcrootFr         = 0.5,
+        //        MinFix           = 0,
+        //        MaxFix           = 0,
+        //        NdilutCoeff      = 0.5,
+        //        Frgr             = 1,
+        //        waterStressFactor= 1,
+        //        soilSatFactor    = 0.1
+        //    },
 
-            new Species { 
-                speciesName      = "paspalum", 
-                micrometType     = "grass",
-                isAnnual         = false,
-                isLegume         = false,
-                photoPath        = 4,
-                dayEmerg         = 1,
-                monEmerg         = 3,
-                dayAnth          = 1,
-                monAnth          = 1,
-                daysToMature     = 0,
-                dRootDepth       = 50,
-                maxRootDepth     = 900,
-                rootDepth        = 900,
-                growthTmin       = 10,
-                growthTmax       = 40,
-                growthTopt       = 20,
-                growthTq         = 1.2,
-                massFluxTmin     = 5,
-                massFluxTopt     = 20,
-                massFluxW0       = 2,
-                massFluxWopt     = 0.5,
-                heatOnsetT       = 60,
-                heatFullT        = 70,
-                heatSumT         = 50,
-                coldOnsetT       = -20,
-                coldFullT        = -30,
-                coldSumT         = 50,
-                Pm               = 1.2,
-                maintRespiration = 3,
-                growthEfficiency = 0.75,
-                SLA              = 20,
-                lightExtCoeff    = 0.6,
-                rue              = 1.65,
-                maxAssimiRate    = 330,
-                rateLive2Dead    = 0.05,
-                rateDead2Litter  = 0.11,
-                rateRootSen      = 0.02,
-                stockParameter   = 0.05,
-                maxSRratio       = (1.0 - 0.25)/0.25,
-                allocationSeasonF= 0.8,
-                leafRate         = 3.5,
-                fLeaf            = 0.7,
-                fStolon          = 0.0,
-                digestLive       = 0.6,
-                digestDead       = 0.2,
-                dmtotal          = 100,
-                dmroot           = 30,
-                dmlitter         = 10,
-                dmgreenmin       = 20,
-                CO2PmaxScale     = 150,
-                CO2NScale        = 600,
-                CO2NMin          = 0.7,
-                CO2NCurvature    = 2,
-                NcleafOpt        = 3 * 0.01,
-                NcleafMax        = 3.5 * 0.01,
-                NcleafMin        = 0.8 * 0.01,
-                NcstemFr         = 0.5,
-                NcstolFr         = 0,
-                NcrootFr         = 0.5,
-                MaxFix           = 0,
-                MinFix           = 0,
-                NdilutCoeff      = 0.5,
-                Frgr             = 1,
-                waterStressFactor= 1,
-                soilSatFactor    = 0.1
-            }
+        //    new Species { 
+        //        speciesName      = "whiteclover", 
+        //        micrometType     = "grass",
+        //        isAnnual         = false,
+        //        isLegume         = true,
+        //        photoPath        = 3,
+        //        dayEmerg         = 1,
+        //        monEmerg         = 3,
+        //        dayAnth          = 1,
+        //        monAnth          = 11,
+        //        daysToMature     = 0,
+        //        dRootDepth       = 50,
+        //        maxRootDepth     = 300,
+        //        rootDepth        = 300,
+        //        growthTmin       = 4,
+        //        growthTmax       = 32,
+        //        growthTopt       = 20,
+        //        growthTq         = 2,
+        //        massFluxTmin     = 2,
+        //        massFluxTopt     = 20,
+        //        massFluxW0       = 2,
+        //        massFluxWopt     = 0.5,
+        //        heatOnsetT       = 60,
+        //        heatFullT        = 70,
+        //        heatSumT         = 50,
+        //        coldOnsetT       = -20,
+        //        coldFullT        = -30,
+        //        coldSumT         = 20,
+        //        Pm               = 1,
+        //        maintRespiration = 3,
+        //        growthEfficiency = 0.75,
+        //        SLA              = 20,
+        //        lightExtCoeff    = 0.8,
+        //        rue              = 1.65,
+        //        maxAssimiRate    = 330,
+        //        rateLive2Dead    = 0.05,
+        //        rateDead2Litter  = 0.11,
+        //        rateRootSen      = 0.02,
+        //        stockParameter   = 0.05,
+        //        maxSRratio       = (1.0 - 0.25)/0.25,
+        //        allocationSeasonF= 0.8,
+        //        leafRate         = 3,
+        //        fLeaf            = 0.7,
+        //        fStolon          = 0.2,
+        //        digestLive       = 0.6,
+        //        digestDead       = 0.2,
+        //        dmtotal          = 350,
+        //        dmroot           = 120,
+        //        dmlitter         = 50,
+        //        dmgreenmin       = 50,
+        //        CO2PmaxScale     = 700,
+        //        CO2NScale        = 600,
+        //        CO2NMin          = 0.7,
+        //        CO2NCurvature    = 2,
+        //        NcleafOpt        = 4.5 * 0.01,
+        //        NcleafMax        = 5.5 * 0.01,
+        //        NcleafMin        = 1.2 * 0.01,
+        //        NcstemFr         = 0.5,
+        //        NcstolFr         = 0.5,
+        //        NcrootFr         = 0.5,
+        //        MinFix           = 0.2,
+        //        MaxFix           = 0.6,
+        //        NdilutCoeff      = 1.0,
+        //        Frgr             = 1,
+        //        waterStressFactor= 1,
+        //        soilSatFactor    = 0.1
+        //    },
+
+        //    new Species { 
+        //        speciesName      = "paspalum", 
+        //        micrometType     = "grass",
+        //        isAnnual         = false,
+        //        isLegume         = false,
+        //        photoPath        = 4,
+        //        dayEmerg         = 1,
+        //        monEmerg         = 3,
+        //        dayAnth          = 1,
+        //        monAnth          = 1,
+        //        daysToMature     = 0,
+        //        dRootDepth       = 50,
+        //        maxRootDepth     = 900,
+        //        rootDepth        = 900,
+        //        growthTmin       = 10,
+        //        growthTmax       = 40,
+        //        growthTopt       = 20,
+        //        growthTq         = 1.2,
+        //        massFluxTmin     = 5,
+        //        massFluxTopt     = 20,
+        //        massFluxW0       = 2,
+        //        massFluxWopt     = 0.5,
+        //        heatOnsetT       = 60,
+        //        heatFullT        = 70,
+        //        heatSumT         = 50,
+        //        coldOnsetT       = -20,
+        //        coldFullT        = -30,
+        //        coldSumT         = 50,
+        //        Pm               = 1.2,
+        //        maintRespiration = 3,
+        //        growthEfficiency = 0.75,
+        //        SLA              = 20,
+        //        lightExtCoeff    = 0.6,
+        //        rue              = 1.65,
+        //        maxAssimiRate    = 330,
+        //        rateLive2Dead    = 0.05,
+        //        rateDead2Litter  = 0.11,
+        //        rateRootSen      = 0.02,
+        //        stockParameter   = 0.05,
+        //        maxSRratio       = (1.0 - 0.25)/0.25,
+        //        allocationSeasonF= 0.8,
+        //        leafRate         = 3.5,
+        //        fLeaf            = 0.7,
+        //        fStolon          = 0.0,
+        //        digestLive       = 0.6,
+        //        digestDead       = 0.2,
+        //        dmtotal          = 100,
+        //        dmroot           = 30,
+        //        dmlitter         = 10,
+        //        dmgreenmin       = 20,
+        //        CO2PmaxScale     = 150,
+        //        CO2NScale        = 600,
+        //        CO2NMin          = 0.7,
+        //        CO2NCurvature    = 2,
+        //        NcleafOpt        = 3 * 0.01,
+        //        NcleafMax        = 3.5 * 0.01,
+        //        NcleafMin        = 0.8 * 0.01,
+        //        NcstemFr         = 0.5,
+        //        NcstolFr         = 0,
+        //        NcrootFr         = 0.5,
+        //        MaxFix           = 0,
+        //        MinFix           = 0,
+        //        NdilutCoeff      = 0.5,
+        //        Frgr             = 1,
+        //        waterStressFactor= 1,
+        //        soilSatFactor    = 0.1
+        //    }
                                                              
-        };
+        //};
         private Species[] pSP = new Species[3];
 
         /// <summary>
@@ -2972,43 +2922,8 @@ namespace Models
         #endregion //Utility
     }
 
-
-    //------------------------------------------------------------------------------
-
-    [Serializable]
-    public class LinearInterpolation
-    {
-        //public string[] XYs;
-
-        public double[] X;
-        public double[] Y;
-
-        /*
-        [EventSubscribe("Initialised")]
-        public void OnInitialised()
-        {
-
-            X = new double[XYs.Length];
-            Y = new double[XYs.Length];
-            for (int i = 0; i < XYs.Length; i++)
-            {
-                string[] XYBits = XYs[i].Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (XYBits.Length != 2)
-                    throw new Exception("Invalid XY coordinate for function. Value: " + XYs[i]);
-                X[i] = Convert.ToDouble(XYBits[0]);
-                Y[i] = Convert.ToDouble(XYBits[1]);
-            }
-        } */
-        public double Value(double dX)
-        {
-            bool DidInterpolate = false;
-            return Utility.Math.LinearInterpReal(dX, X, Y, out DidInterpolate);
-        }
-    }
-
     //================================================================================
     // One species
-    //
     //================================================================================
     [Serializable]
     public class Species
@@ -4938,6 +4853,59 @@ namespace Models
 
     } //class Species
 
+    //------ RemoveCropBiomassdm ------
+    [Serializable]
+    public class RemoveCropBiomassdmType
+    {
+        public string pool = "";
+        public string[] part;
+        public double[] dlt;
+    }
+
+    //------ RemoveCropBiomass ------
+    [Serializable]
+    public class RemoveCropBiomassType
+    {
+        public RemoveCropBiomassdmType[] dm;
+    }
+
+    //------ Sow ------
+    public class SowType
+    {
+        public string Cultivar = "";
+        public double plants;
+        public double sowing_depth;
+        public double row_spacing;
+        public double SkipRow;
+        public double SkipPlant;
+        public string Establishment = "";
+        public string crop_class = "";
+        public string tiller_no_fertile = "";
+        public string Skip = "";
+        public double plants_pm;
+        public int Ratoon;
+        public int sbdur;
+        public double nplh;
+        public double nh;
+        public double nplsb;
+        public double nplds;
+    }
+
+    //------ Graze ------
+    [Serializable]
+    public class GrazeType
+    {
+        public string sender = "";
+        public double amount;
+        public string type = "";
+    }
+
+    //------ KillCrop ------
+    [Serializable]
+    public class KillCropType
+    {
+        public double KillFraction;
+    }
 
     //DMPools =================================================
     //for remember the pool status of previous day
@@ -4975,4 +4943,35 @@ namespace Models
 
 
     } //class DMPools
+
+    [Serializable]
+    public class LinearInterpolation
+    {
+        //public string[] XYs;
+
+        public double[] X;
+        public double[] Y;
+
+        /*
+        [EventSubscribe("Initialised")]
+        public void OnInitialised()
+        {
+
+            X = new double[XYs.Length];
+            Y = new double[XYs.Length];
+            for (int i = 0; i < XYs.Length; i++)
+            {
+                string[] XYBits = XYs[i].Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (XYBits.Length != 2)
+                    throw new Exception("Invalid XY coordinate for function. Value: " + XYs[i]);
+                X[i] = Convert.ToDouble(XYBits[0]);
+                Y[i] = Convert.ToDouble(XYBits[1]);
+            }
+        } */
+        public double Value(double dX)
+        {
+            bool DidInterpolate = false;
+            return Utility.Math.LinearInterpReal(dX, X, Y, out DidInterpolate);
+        }
+    }
 }
