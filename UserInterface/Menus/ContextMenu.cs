@@ -288,7 +288,7 @@ namespace UserInterface.Presenters
                     {
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(xml);
-                        Classes.PMFDocumentation.Go(doc, fileName);
+                        Classes.PMFDocumentation.Go(doc, fileName, modelClicked);
                     }
                 }
                 else
