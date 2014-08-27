@@ -289,7 +289,7 @@ namespace UserInterface.Presenters
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            return "<img src=\"" + Graph.Name + ".png" + "\"/>";
+            return "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
         }
 
         /// <summary>
