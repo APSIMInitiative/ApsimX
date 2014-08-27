@@ -179,28 +179,15 @@ namespace Models.PMF
         {
             if (NAware) //Note, currently all models N Aware, I have to write some code to take this out
             {
-                DoSetup(Organs, ref N);
+                DoNutrientDemands(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
+
+                DoNutrientUptakeSetUp(Organs, ref N);
                 DoUptake(Organs, N, NArbitrationOption);
                 DoRetranslocation(Organs, N, NArbitrationOption);
                 DoFixation(Organs, N, NArbitrationOption);
             }
-            /* if (PAware) //Note, currently all models on NOT P Aware
-             {
-                 DoNutrientSetup(Organs, ref P);
-                 DoNutrientReAllocation(Organs, P);
-                 DoNutrientUptake(Organs, P);
-                 DoNutrientRetranslocation(Organs, P);
-                 DoNutrientFixation(Organs, P);
-             }
-             if (KAware) //Note, currently all models on NOT K Aware
-             {
-                 DoNutrientSetup(Organs, ref K);
-                 DoNutrientReAllocation(Organs, K);
-                 DoNutrientUptake(Organs, K);
-                 DoNutrientRetranslocation(Organs, K);
-                 DoNutrientFixation(Organs, K);
-             }*/
+
             //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
             DoActualDMAllocation(Organs);
             //Tell each organ how much nutrient they are getting following allocaition
@@ -293,7 +280,7 @@ namespace Models.PMF
                 };
             }
         }
-        virtual public void DoSetup(Organ[] Organs, ref BiomassArbitrationType BAT)
+        virtual public void DoNutrientDemands(Organ[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
             BAT = new BiomassArbitrationType(Organs.Length);
@@ -306,14 +293,14 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                BAT.UptakeSupply[i] = Supply.Uptake;
+                //BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].Live.N + Organs[i].Dead.N;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
 
@@ -354,6 +341,21 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
+
+        virtual public void DoNutrientUptakeSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
+        {
+            //Creat Biomass variable class
+            //BAT = new BiomassArbitrationType(Organs.Length);
+
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                BiomassSupplyType Supply = Organs[i].NSupply;
+                BAT.UptakeSupply[i] = Supply.Uptake;
+            }
+        
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+        }
+
         virtual public void DoReAllocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassReallocated = 0;
