@@ -157,6 +157,19 @@ namespace Models.PMF.Phen
             Clear();
         }
 
+        public void OnHarvest()
+        {
+            //Jump phenology to the end
+            
+            string OldPhaseName = CurrentPhase.Name;
+            int EndPhase = Phases.Count;
+            PhaseChangedType PhaseChangedData = new PhaseChangedType();
+            PhaseChangedData.OldPhaseName = OldPhaseName;
+            PhaseChangedData.NewPhaseName = Phases[EndPhase - 1].Name;
+            PhaseChanged.Invoke(PhaseChangedData);
+            CurrentPhaseName = Phases[EndPhase - 1].Name;
+        }
+
         /// <summary>
         /// Look for a particular phase and return it's index or -1 if not found.
         /// </summary>

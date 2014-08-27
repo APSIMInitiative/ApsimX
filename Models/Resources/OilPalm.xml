@@ -1,32 +1,22 @@
 <OilPalm>
   <Name>OilPalm</Name>
+  <Cultivar>
+    <Name>Dami</Name>
+    <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
+    <Command>[FrondMaxArea].XYPairs.Y = 0.1,1,7,12,14</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>SuperFamily</Name>
+    <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
+    <Command>[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6</Command>
+  </Cultivar>
   <Constant>
     <Name>cover_tot</Name>
     <Value>0.9</Value>
   </Constant>
   <Constant>
-    <Name>height</Name>
-    <Value>10000</Value>
-  </Constant>
-  <VariableReference>
-    <Name>UnderstoryCoverMax</Name>
-    <VariableName />
-  </VariableReference>
-  <VariableReference>
-    <Name>UnderstoryLegumeFraction</Name>
-    <VariableName />
-  </VariableReference>
-  <Constant>
     <Name>InterceptionFraction</Name>
     <Value>0</Value>
-  </Constant>
-  <Constant>
-    <Name>InitialRootDepth</Name>
-    <Value>300</Value>
-  </Constant>
-  <Constant>
-    <Name>MaximumRootDepth</Name>
-    <Value>5000</Value>
   </Constant>
   <Constant>
     <Name>KNO3</Name>
@@ -88,7 +78,7 @@
         <double>7.725</double>
         <double>10.1</double>
         <double>10.1</double>
-      </Y>   
+      </Y>
     </XYPairs>
   </LinearInterpolationFunction>
   <Constant>
@@ -409,7 +399,6 @@
   <plant_status>out</plant_status>
   <height>0</height>
   <cover_tot>0.8</cover_tot>
-  <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
   <kl />
   <ll />
   <xf />
@@ -429,8 +418,6 @@
   <UnderstoryEP>0.087072504390177774</UnderstoryEP>
   <UnderstoryFW>1.0000000000000002</UnderstoryFW>
   <UnderstoryDltDM>0.45331893789376942</UnderstoryDltDM>
-  <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-  <InterceptionFraction>0</InterceptionFraction>
   <PEP>3.1257447452909868</PEP>
   <EP>3.1257447452909863</EP>
   <FW>0.99999999999999989</FW>

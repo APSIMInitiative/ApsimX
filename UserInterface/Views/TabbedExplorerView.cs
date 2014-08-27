@@ -16,6 +16,7 @@ namespace UserInterface.Views
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
         event EventHandler MruFileClick;
+        event EventHandler ReloadMruView;
        
         event EventHandler TabClosing;
 
@@ -27,7 +28,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        string AskUserForFileName(string fileSpec);
+        string AskUserForFileName(string initialDir, string fileSpec);
 
         /// <summary>
         /// Show an error message to caller.
@@ -65,6 +66,7 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
+        public event EventHandler ReloadMruView;
         public event EventHandler TabClosing;
         
         /// <summary>
@@ -293,9 +295,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Ask user for a filename.
         /// </summary>
-        public string AskUserForFileName(string fileSpec)
+        public string AskUserForFileName(string initialDir, string fileSpec)
         {
             OpenFileDialog.Filter = fileSpec;
+            if (initialDir.Length > 0)
+                OpenFileDialog.InitialDirectory = initialDir;
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
                 return OpenFileDialog.FileName;
             return null;
@@ -328,6 +332,19 @@ namespace UserInterface.Views
             }
             else
                 return "";  //invalid item
+        }
+
+        /// <summary>
+        /// When changing back to the main tab reload the mru list into the listview
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPage.Text == " ")
+            {
+                ReloadMruView(sender, e);
+            }
         }
     }
 

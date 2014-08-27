@@ -107,6 +107,28 @@ namespace Models.PMF
         public NewCanopyType LocalCanopyData;
 
         /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get
+            {
+                SortedSet<string> cultivarNames = new SortedSet<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    cultivarNames.Add(cultivar.Name);
+                    if (cultivar.Aliases != null)
+                    {
+                        foreach (string alias in cultivar.Aliases)
+                            cultivarNames.Add(alias);
+                    }
+                }
+
+                return new List<string>(cultivarNames).ToArray();
+            }
+        }
+
+        /// <summary>
         /// A property to return all cultivar definitions.
         /// </summary>
         private List<Cultivar> Cultivars
@@ -234,9 +256,13 @@ namespace Models.PMF
             if (Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
 
-            // tell all our children about sow
+            // tell all our children about harvest
             foreach (Organ Child in Organs)
                 Child.OnHarvest();
+
+            Phenology.OnHarvest();
+
+            Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
 
         /// <summary>

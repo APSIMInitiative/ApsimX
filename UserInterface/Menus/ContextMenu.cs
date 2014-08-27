@@ -271,14 +271,31 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Folder),
                                               typeof(Experiment),
-                                              typeof(Simulations) })]
+                                              typeof(Simulations),
+                                              typeof(ICrop) })]
         public void ExportToHTML(object sender, EventArgs e)
         {
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
-                ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                this.explorerPresenter.CommandHistory.Add(command, true);
+                Model modelClicked = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+                if (modelClicked != null && modelClicked is ICrop)
+                {
+                    string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+
+                    string xml = Utility.Xml.Serialise(modelClicked, true);
+                    if (xml != null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(xml);
+                        Classes.PMFDocumentation.Go(doc, fileName);
+                    }
+                }
+                else
+                {
+                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                    this.explorerPresenter.CommandHistory.Add(command, true);
+                }
             }
         }
 

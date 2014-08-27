@@ -318,5 +318,12 @@ namespace Models.PMF.Organs
         }
         #endregion
 
+        #region Events and Event Handlers
+          public override void OnHarvest() 
+          { 
+            Live.Clear();
+            Dead.Clear();
+          }
+        #endregion
     }
 }

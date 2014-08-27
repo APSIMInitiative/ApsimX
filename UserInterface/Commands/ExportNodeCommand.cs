@@ -2,7 +2,6 @@
 using Models.Core;
 using UserInterface.Presenters;
 using System.IO;
-using System.Reflection;
 using System;
 using Models.Factorial;
 
@@ -62,18 +61,13 @@ namespace UserInterface.Commands
             // write to it.
             Directory.CreateDirectory(folderPath);
 
-            //Load CSS resource
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
-            string css = reader.ReadToEnd();
-
             if (modelToExport is Simulation)
                 DoExportSimulation(modelToExport, folderPath);
             else
             {
                 // Create index.html
                 StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
+                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head/>");
                 index.WriteLine("<body>");
                 index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
 
@@ -108,20 +102,13 @@ namespace UserInterface.Commands
         /// </summary>
         public void DoExportSimulation(Model modelToExport, string folderPath)
         {
-            //Load CSS resource
-            
             // Make sure the specified folderPath exists because we're going to 
             // write to it.
             Directory.CreateDirectory(folderPath);
 
-            //Load CSS resource
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
-            string css = reader.ReadToEnd();
-
             // Create index.html
             StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
+            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head/>");
             index.WriteLine("<body>");
 
             DoExportZone(modelToExport, folderPath, index);
