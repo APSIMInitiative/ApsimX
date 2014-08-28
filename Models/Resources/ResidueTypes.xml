@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResidueTypesList>
+  <Name>ResidueTypes</Name>
+  <ResidueType>
+    <fom_type>base_type</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.4</fraction_C>
+    <po4ppm description="labile P concentration(ppm)">0.0</po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">0.0</nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">0.0</no3ppm>
+    <specific_area description="specific area of residue (ha/kg">0.0005</specific_area>
+    <cf_contrib>1</cf_contrib>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>
+      <double>0.2</double>
+      <double>0.7</double>
+      <double>0.1</double>
+    </fr_c>
+    <fr_n>
+      <double>0.2</double>
+      <double>0.7</double>
+      <double>0.1</double>
+    </fr_n>
+    <fr_p>
+      <double>0.2</double>
+      <double>0.7</double>
+      <double>0.1</double>
+    </fr_p>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>inert</fom_type>
+    <pot_decomp_rate>0.0</pot_decomp_rate>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>manure</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.3 0.3 0.4</fr_c>
+    <fr_n>0.3 0.3 0.4</fr_n>
+    <fr_p>0.3 0.3 0.4</fr_p>
+    <po4ppm description="labile P concentration(ppm)">10.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">10.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">10.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>RuminantDung_PastureFed</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.4     </fraction_C>
+    <po4ppm description="labile P concentration(ppm)">5.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">1250.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">0.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.3 0.5 0.2</fr_c>
+    <fr_n>0.3 0.5 0.2</fr_n>
+    <fr_p>0.3 0.5 0.2</fr_p>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>algae</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.4    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <specific_area description="specific area of residue (ha/kg)">0.0005  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>fym</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.3 0.3 0.4</fr_c>
+    <fr_n>0.3 0.3 0.4</fr_n>
+    <fr_p>0.3 0.3 0.4</fr_p>
+    <po4ppm description="labile P concentration(ppm)">40.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">10.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">10.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>goatmanure</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.3 0.6 0.3</fr_c>
+    <fr_n>0.3 0.6 0.3</fr_n>
+    <fr_p>0.3 0.6 0.34</fr_p>
+    <po4ppm description="labile P concentration(ppm)">5.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">1307.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">481.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>chickenmanure_base</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.374    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.0 0.50 0.50</fr_c>
+    <fr_n>0.0 0.50 0.50</fr_n>
+    <fr_p>0.0 0.50 0.50</fr_p>
+    <po4ppm description="labile P concentration(ppm)">5.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">1307.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">481.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>cm</fom_type>
+    <derived_from>chickenmanure_base</derived_from>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.277    </fraction_C>
+    <nh4ppm description="ammonium N concentration (ppm)">2558.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">873.0     </no3ppm>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>cmA</fom_type>
+    <derived_from>chickenmanure_base</derived_from>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.374    </fraction_C>
+    <nh4ppm description="ammonium N concentration (ppm)">1307.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">481.0     </no3ppm>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>cmB</fom_type>
+    <derived_from>chickenmanure_base</derived_from>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.240    </fraction_C>
+    <nh4ppm description="ammonium N concentration (ppm)">3009.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">36.0     </no3ppm>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>manB</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>0.1 0.01 0.89</fr_c>
+    <fr_n>0.1 0.01 0.89</fr_n>
+    <fr_p>0.1 0.01 0.89</fr_p>
+    <po4ppm description="labile P concentration(ppm)">5.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">1307.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">481.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>tithonia</fom_type>
+    <specific_area description="specific area of residue (ha/kg)">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>bambatsi</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>barley</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>broccoli</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>butterflypea</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>camaldulensis</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>canola</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>centro</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>chickpea</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>cowpea</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>danthonia</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>nativepasture</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>globulus</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>grandis</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>fababean</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>fieldpea</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>grass</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>lablab</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>lentil</fom_type>
+    <derived_from>chickpea</derived_from>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>lucerne</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>lucerne2</fom_type>
+    <derived_from>lucerne</derived_from>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>lupin</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>maize</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>medic</fom_type>
+    <derived_from>lucerne</derived_from>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>millet</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>mucuna</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>mungbean</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>horsegram</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>navybean</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>cotton</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>oats</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>orobanche</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>peanut</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>pigeonpea</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>poppies</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>potato</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>rice</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>soybean</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>sorghum</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>stylo</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>sugar</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0007  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>sunflower</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>sweetcorn</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>sweetsorghum</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>vetch</fom_type>
+    <derived_from>fieldpea</derived_from>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>weed</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>WF_Millet</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0004  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>wheat</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+</ResidueTypesList>

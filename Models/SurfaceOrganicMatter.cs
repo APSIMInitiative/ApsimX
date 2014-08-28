@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using Models.Core;
 using Models.PMF;
@@ -187,8 +188,8 @@ namespace Models.SurfaceOM
         #region exposed properties
         #region BensParams
 
-        public ResidueTypes residueTypes { get; set; }
-        public TillageTypes tillageTypes { get; set; }
+        public ResidueTypesList ResidueTypes { get; set; }
+        public TillageTypesList TillageTypes { get; set; }
 
         [Summary]
         [Description("Pool name")]
@@ -676,201 +677,146 @@ namespace Models.SurfaceOM
 
         #endregion
 
+        public override void OnDeserialised(bool xmlSerialisation)
+        {
+            if (ResidueTypes == null)
+                ResidueTypes = new ResidueTypesList();
+            if (!String.IsNullOrEmpty(ResidueTypes.LoadFromResource))
+            {
+                string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
+                if (xml != null)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xml);
+                    ResidueTypesList ValuesFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ResidueTypesList;
+                    if (ValuesFromResource != null)
+                    {
+                        foreach (ResidueType residueType in ValuesFromResource.residues)
+                        {
+                            residueType.IsHidden = true;
+                            ResidueTypes.residues.Add(residueType);
+                        }
+                    }
+                }
+            }
+            ResidueTypes.FillAllDerived();
+        }
+
+        private ResidueType[] savedResidues;
+
+        /// <summary>
+        /// We're about to be serialised. Remove residue types from out list
+        /// that were obtained from the XML resource so they are not included
+        /// </summary>
+        public override void OnSerialising(bool xmlSerialisation)
+        {
+            savedResidues = ResidueTypes.residues.ToArray();
+            for (int i = ResidueTypes.residues.Count - 1; i >= 0; i--)
+            {
+                if (ResidueTypes.residues[i].IsHidden)
+                    ResidueTypes.residues.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// Serialisation has completed. Reinstate the full list of 
+        /// residue types
+        /// </summary>
+        public override void OnSerialised(bool xmlSerialisation)
+        {
+            if (savedResidues != null)
+            {
+                ResidueTypes.residues = savedResidues.ToList();
+                savedResidues = null;
+            }
+        }
+
         #region supporting classes
         [Serializable]
-        public class ResidueTypes
+        public class ResidueTypesList : Model
         {
             [XmlElement("ResidueType")]
-            [XmlIgnore]
             public List<ResidueType> residues { get; set; }
 
-            public ResidueTypes()
+            public string LoadFromResource { get; set; }
+
+            public void FillAllDerived()
+            {
+                for (int i = 0; i < residues.Count; i++)
+                {
+                    FillDerived(i);
+                }
+            }
+
+            /// <summary>
+            /// Fills in field values for a residue type from a base type
+            /// </summary>
+            /// <param name="i">List index of the residue type to be filled in</param>
+            /// </param>
+            public void FillDerived(int i)
+            {
+                ResidueType residue = residues[i];
+                ResidueType refResidue = null;
+                if (!String.IsNullOrEmpty(residue.derived_from))
+                {
+                    for (int j = 0; j < residues.Count; j++)
+                    {
+                        if (residues[j].fom_type.Equals(residue.derived_from, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            FillDerived(j); // Make sure the template has itself been filled
+                            refResidue = residues[j];
+                            break;
+                        }
+                    }
+                }
+                if (Double.IsNaN(residue.fraction_C))
+                {
+                    residue.fraction_C = refResidue != null ? refResidue.fraction_C : 0.4;
+                }
+                if (Double.IsNaN(residue.po4ppm))
+                {
+                    residue.po4ppm = refResidue != null ? refResidue.po4ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.nh4ppm))
+                {
+                    residue.nh4ppm = refResidue != null ? refResidue.nh4ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.no3ppm))
+                {
+                    residue.no3ppm = refResidue != null ? refResidue.no3ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.specific_area))
+                {
+                    residue.specific_area = refResidue != null ? refResidue.specific_area : 0.0005;
+                }
+                if (Double.IsNaN(residue.pot_decomp_rate))
+                {
+                    residue.pot_decomp_rate = refResidue != null ? refResidue.pot_decomp_rate : 0.1;
+                }
+                if (residue.cf_contrib < 0)
+                {
+                    residue.cf_contrib = refResidue != null ? refResidue.cf_contrib : 1;
+                }
+                if (residue.fr_c == null)
+                {
+                    residue.fr_c = refResidue != null ? (double[])refResidue.fr_c.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+                if (residue.fr_n == null)
+                {
+                    residue.fr_n = refResidue != null ? (double[])refResidue.fr_n.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+                if (residue.fr_p == null)
+                {
+                    residue.fr_p = refResidue != null ? (double[])refResidue.fr_p.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+            }
+
+            public ResidueTypesList()
             {
                 if (residues == null)
                     residues = new List<ResidueType>();
 
                 residues.Clear();
-                residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("tithonia") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("bambatsi") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("broccoli") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("butterflypea") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("camaldulensis") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("canola") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("centro") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("chickpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("cowpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("danthonia") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("nativepasture") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("pasture") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("globulus") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("grandis") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("oilmallee") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("fababean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("fieldpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("grass") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("lablab") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lentil") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lolium_rigidum") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lupin") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("maize") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("medic") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("millet") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("mucuna") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("mungbean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("horsegram") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("navybean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("frenchbean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("cotton") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("oats") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("oilpalmunderstory") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("orobanche") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("peanut") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("pigeonpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("poppies") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("potato") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("raphanus_raphanistrum") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("rice") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("soybean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sorghum") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("stylo") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sugar") { specific_area = 0.0007 });
-                residues.Add(new ResidueType("sunflower") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sweetcorn") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("sweetsorghum") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("vetch") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("weed") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("WF_Millet") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("inert") { pot_decomp_rate = 0.0 });
-                residues.Add(new ResidueType("slurp") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("manure")
-                {
-                    fraction_C = 0.08,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.3, 0.4 },
-                    fr_n = new double[] { 0.3, 0.3, 0.4 },
-                    fr_p = new double[] { 0.3, 0.3, 0.4 },
-                    po4ppm = 10,
-                    nh4ppm = 10,
-                    no3ppm = 10,
-                    specific_area = 0.0001
-                });
-                residues.Add(new ResidueType("RuminantDung_PastureFed")
-                {
-                    fraction_C = 0.4,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.5, 0.2 },
-                    fr_n = new double[] { 0.3, 0.5, 0.2 },
-                    fr_p = new double[] { 0.3, 0.5, 0.2 },
-                    po4ppm = 5,
-                    nh4ppm = 1250,
-                    no3ppm = 0,
-                    specific_area = 0.0001
-                });
-                residues.Add(new ResidueType("algae")
-                {
-                    fraction_C = 0.4,
-                    pot_decomp_rate = 0.1,
-                    specific_area = 0.0005,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("fym")
-                {
-                    fraction_C = 0.8,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.3, 0.4 },
-                    fr_n = new double[] { 0.3, 0.3, 0.4 },
-                    fr_p = new double[] { 0.3, 0.3, 0.4 },
-                    po4ppm = 40,
-                    nh4ppm = 10,
-                    no3ppm = 10,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("goatmanure")
-                {
-                    fraction_C = 0.8,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.6, 0.3 },
-                    fr_n = new double[] { 0.3, 0.6, 0.3 },
-                    fr_p = new double[] { 0.3, 0.6, 0.34 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cm")
-                {
-                    fraction_C = 0.277,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 2558,
-                    no3ppm = 873,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cmA")
-                {
-                    fraction_C = 0.374,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cmB")
-                {
-                    fraction_C = 0.24,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 3009,
-                    no3ppm = 36,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("manB")
-                {
-                    fraction_C = 0.08,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.1, 0.01, 0.89 },
-                    fr_n = new double[] { 0.1, 0.01, 0.89 },
-                    fr_p = new double[] { 0.1, 0.01, 0.89 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("oilpalm")
-                {
-                    fraction_C = 0.44,
-                    pot_decomp_rate = 0.05,
-                    specific_area = 0.0002,
-                });
-                residues.Add(new ResidueType("oilpalmstem")
-                {
-                    fraction_C = 0.44,
-                    fr_c = new double[] { 0.2, 0.7, 0.1 },
-                    fr_n = new double[] { 0.2, 0.7, 0.1 },
-                    fr_p = new double[] { 0.2, 0.7, 0.1 },
-                    specific_area = 0.000005,
-                });
             }
 
             public ResidueType getResidue(string name)
@@ -881,7 +827,6 @@ namespace Models.SurfaceOM
                         if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                             return residueType;
                     }
-
                 throw new ApsimXException("SurfaceOrganicMatter", "Could not find residue name " + name);
             }
         }
@@ -890,6 +835,7 @@ namespace Models.SurfaceOM
         public class ResidueType : Model
         {
             public string fom_type { get; set; }
+            public string derived_from { get; set; } // No logic for this implemented currently
             public double fraction_C { get; set; }
             public double po4ppm { get; set; }
             public double nh4ppm { get; set; }
@@ -904,17 +850,29 @@ namespace Models.SurfaceOM
             public ResidueType()
             {
                 fom_type = "inert";
-                InitialiseWithDefaults();
+                InitialiseWithNulls();
             }
 
             public ResidueType(string fomType)
             {
                 fom_type = fomType;
-                InitialiseWithDefaults();
+                InitialiseWithNulls();
             }
 
-            private void InitialiseWithDefaults()
+            private void InitialiseWithNulls()
             {
+              fraction_C = Double.NaN;
+              po4ppm = Double.NaN;
+              nh4ppm = Double.NaN;
+              no3ppm = Double.NaN;
+              specific_area = Double.NaN;
+              cf_contrib = -1;
+              pot_decomp_rate = Double.NaN;
+              fr_c = null;
+              fr_n = null;
+              fr_p = null;
+
+/*
                 fraction_C = 0.4;
                 specific_area = 0.0005;
                 cf_contrib = 1;
@@ -922,11 +880,12 @@ namespace Models.SurfaceOM
                 fr_c = new double[3] { 0.2, 0.7, 0.1 };
                 fr_n = new double[3] { 0.2, 0.7, 0.1 };
                 fr_p = new double[3] { 0.2, 0.7, 0.1 };
+ */
             }
         }
 
         [Serializable]
-        public class TillageTypes : Model
+        public class TillageTypesList : Model
         {
             public List<TillageType> TillageType { get; set; }
 
@@ -1269,8 +1228,10 @@ namespace Models.SurfaceOM
 
         public override void OnSimulationCommencing()
         {
-            if (residueTypes == null)
-                residueTypes = new ResidueTypes();
+            if (ResidueTypes == null)
+                ResidueTypes = new ResidueTypesList();
+            if (TillageTypes == null)
+                TillageTypes = new TillageTypesList();
             c = new SurfaceOMConstants();
             SurfOM = null;
             MetData = new Models.WeatherFile.NewMetType();
@@ -2112,8 +2073,8 @@ namespace Models.SurfaceOM
             P      = {7:0.0##}", SOM.Pool[SOMNo].Name, SOM.Pool[SOMNo].OrganicMatterType, lamount, lN, lP, samount, sN, sP
                     ));
                 // else the user has asked for no reports for removals of surfom;
-                    //in the summary file.
-                
+                //in the summary file.
+
                 surfom_Send_SOM_removed_Event(
                     SOM.Pool[SOMNo].OrganicMatterType,
                     SOM.Pool[SOMNo].OrganicMatterType,
@@ -2247,7 +2208,7 @@ namespace Models.SurfaceOM
             {
                 summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
 
-                data = tillageTypes.GetTillageData(data.Name);
+                data = TillageTypes.GetTillageData(data.Name);
 
                 //If we still have no values then stop
                 if (data == null)
@@ -2610,7 +2571,7 @@ namespace Models.SurfaceOM
         /// <param name="i"></param>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
-            ResidueType thistype = residueTypes.getResidue(surfom_type);
+            ResidueType thistype = ResidueTypes.getResidue(surfom_type);
             if (thistype == null)
                 throw new ApsimXException(FullPath, "Cannot find residue type description for '" + surfom_type + "'");
 

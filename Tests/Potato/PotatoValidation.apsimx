@@ -2863,7 +2863,10 @@ namespace Models
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
           <c_fract>0.4</c_fract>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -6468,7 +6471,10 @@ namespace Models
           <c_fract>0.4</c_fract>
           <report_additions>no</report_additions>
           <report_removals>no</report_removals>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -10209,7 +10215,10 @@ namespace Models
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <c_fract>0.4</c_fract>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -11684,7 +11693,10 @@ namespace Models
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <c_fract>0.4</c_fract>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>2000</mass>
@@ -15418,7 +15430,10 @@ namespace Models
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <c_fract>0.4</c_fract>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>0</mass>
@@ -19272,7 +19287,10 @@ namespace Models
           <c_fract>0.4</c_fract>
           <report_additions>no</report_additions>
           <report_removals>no</report_removals>
-          <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
           <PoolName>wheat</PoolName>
           <type>wheat</type>
           <mass>0</mass>

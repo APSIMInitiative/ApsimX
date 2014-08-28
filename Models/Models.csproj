@@ -371,6 +371,9 @@
     <None Include="Resources\OilPalm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ResidueTypes.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\Slurp.xml">
       <SubType>Designer</SubType>
     </Content>

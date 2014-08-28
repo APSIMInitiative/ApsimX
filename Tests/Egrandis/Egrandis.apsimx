@@ -445,7 +445,10 @@
         <default_standing_fraction>0</default_standing_fraction>
         <standing_extinct_coeff>0.5</standing_extinct_coeff>
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
           <TillageType />
