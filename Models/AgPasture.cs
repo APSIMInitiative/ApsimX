@@ -3788,7 +3788,7 @@ namespace Models
             SP[s].coldSumT = ColdSumT[s];
             SP[s].SLA = SpecificLeafArea[s];
             SP[s].SRL = SpecificRootLength[s];
-            SP[s].maxSRratio = MaxRootFraction[s];
+            SP[s].maxSRratio = (1 - MaxRootFraction[s]) / MaxRootFraction[s];
             SP[s].allocationSeasonF = AllocationSeasonF[s];
             SP[s].fLeaf = FracToLeaf[s];
             SP[s].fStolon = FracToStolon[s];
@@ -3800,9 +3800,9 @@ namespace Models
             SP[s].digestDead = DigestibilityDead[s];
             SP[s].dmgreenmin = MinimumGreenWt[s];
             SP[s].dmdeadmin = MinimumDeadWt[s];
-            SP[s].NcleafOpt = LeafNopt[s];
-            SP[s].NcleafMax = LeafNmax[s];
-            SP[s].NcleafMin = LeafNmin[s];
+            SP[s].NcleafOpt = LeafNopt[s] * 0.01;   // convert % to fraction
+            SP[s].NcleafMax = LeafNmax[s] * 0.01;
+            SP[s].NcleafMin = LeafNmin[s] * 0.01;
             SP[s].NcstemFr = RelativeNStems[s];
             SP[s].NcstolFr = RelativeNStolons[s];
             SP[s].NcrootFr = RelativeNRoots[s];
@@ -3968,8 +3968,7 @@ namespace Models
                 p_deadDM += SP[s].dmdead;
                 p_rootMass += SP[s].dmroot;
 
-                p_dHerbage += (SP[s].dmtotal - SP[s].pS.dmtotal);
-                //p_dHerbage += SP[s].dGrowth - SP[s].dLitter;
+                p_dHerbage += (SP[s].dmshoot - SP[s].pS.dmshoot);
 
                 p_dLitter += SP[s].dLitter;
                 p_dNLitter += SP[s].dNLitter;
@@ -5249,20 +5248,6 @@ namespace Models
         public double digestLive;   //Digestibility of live plant material (0-1)
         public double digestDead;   //Digestibility of dead plant material (0-1)
 
-        internal double dmleaf1;	//leaf 1 (kg/ha)
-        internal double dmleaf2;	//leaf 2 (kg/ha)
-        internal double dmleaf3;	//leaf 3 (kg/ha)
-        internal double dmleaf4;	//leaf dead (kg/ha)
-        internal double dmstem1;	//sheath and stem 1 (kg/ha)
-        internal double dmstem2;	//sheath and stem 2 (kg/ha)
-        internal double dmstem3;	//sheath and stem 3 (kg/ha)
-        internal double dmstem4;	//sheath and stem dead (kg/ha)
-        internal double dmstol1;	//stolon 1 (kg/ha)
-        internal double dmstol2;	//stolon 2 (kg/ha)
-        internal double dmstol3;	//stolon 3 (kg/ha)
-        internal double dmroot;		//root (kg/ha)
-        internal double dmlitter;	//Litter pool (kg/ha)
-
         //CO2
         public double referenceCO2;
         public double CO2PmaxScale;
@@ -5337,13 +5322,27 @@ namespace Models
         internal double dmgreenmin;
         internal double dmdead;
         internal double dmdeadmin;
+        internal double dmshoot;
         internal double dmleaf;
         internal double dmstem;
         internal double dmleaf_green;
         internal double dmstem_green;
         internal double dmstol_green;
         internal double dmstol;
-        internal double dmshoot;
+        internal double dmroot;
+
+        internal double dmleaf1;	//leaf 1 (kg/ha)
+        internal double dmleaf2;	//leaf 2 (kg/ha)
+        internal double dmleaf3;	//leaf 3 (kg/ha)
+        internal double dmleaf4;	//leaf dead (kg/ha)
+        internal double dmstem1;	//sheath and stem 1 (kg/ha)
+        internal double dmstem2;	//sheath and stem 2 (kg/ha)
+        internal double dmstem3;	//sheath and stem 3 (kg/ha)
+        internal double dmstem4;	//sheath and stem dead (kg/ha)
+        internal double dmstol1;	//stolon 1 (kg/ha)
+        internal double dmstol2;	//stolon 2 (kg/ha)
+        internal double dmstol3;	//stolon 3 (kg/ha)
+        internal double dmlitter;	//Litter pool (kg/ha)
 
         internal double dmdefoliated;
         internal double Ndefoliated;
@@ -5476,31 +5475,31 @@ namespace Models
 
             if (isLegume)
             {
-                dmleaf1 = iniDMFrac_legume[0] * dmtotal;
-                dmleaf2 = iniDMFrac_legume[1] * dmtotal;
-                dmleaf3 = iniDMFrac_legume[2] * dmtotal;
-                dmleaf4 = iniDMFrac_legume[3] * dmtotal;
-                dmstem1 = iniDMFrac_legume[4] * dmtotal;
-                dmstem2 = iniDMFrac_legume[5] * dmtotal;
-                dmstem3 = iniDMFrac_legume[6] * dmtotal;
-                dmstem4 = iniDMFrac_legume[7] * dmtotal;
-                dmstol1 = iniDMFrac_legume[8] * dmtotal;
-                dmstol2 = iniDMFrac_legume[9] * dmtotal;
-                dmstol3 = iniDMFrac_legume[10] * dmtotal;
+                dmleaf1 = iniDMFrac_legume[0] * dmshoot;
+                dmleaf2 = iniDMFrac_legume[1] * dmshoot;
+                dmleaf3 = iniDMFrac_legume[2] * dmshoot;
+                dmleaf4 = iniDMFrac_legume[3] * dmshoot;
+                dmstem1 = iniDMFrac_legume[4] * dmshoot;
+                dmstem2 = iniDMFrac_legume[5] * dmshoot;
+                dmstem3 = iniDMFrac_legume[6] * dmshoot;
+                dmstem4 = iniDMFrac_legume[7] * dmshoot;
+                dmstol1 = iniDMFrac_legume[8] * dmshoot;
+                dmstol2 = iniDMFrac_legume[9] * dmshoot;
+                dmstol3 = iniDMFrac_legume[10] * dmshoot;
             }
             else
             {
-                dmleaf1 = iniDMFrac_grass[0] * dmtotal;
-                dmleaf2 = iniDMFrac_grass[1] * dmtotal;
-                dmleaf3 = iniDMFrac_grass[2] * dmtotal;
-                dmleaf4 = iniDMFrac_grass[3] * dmtotal;
-                dmstem1 = iniDMFrac_grass[4] * dmtotal;
-                dmstem2 = iniDMFrac_grass[5] * dmtotal;
-                dmstem3 = iniDMFrac_grass[6] * dmtotal;
-                dmstem4 = iniDMFrac_grass[7] * dmtotal;
-                dmstol1 = iniDMFrac_grass[8]* dmtotal;
-                dmstol2 = iniDMFrac_grass[9] * dmtotal;
-                dmstol3 = iniDMFrac_grass[10] * dmtotal;
+                dmleaf1 = iniDMFrac_grass[0] * dmshoot;
+                dmleaf2 = iniDMFrac_grass[1] * dmshoot;
+                dmleaf3 = iniDMFrac_grass[2] * dmshoot;
+                dmleaf4 = iniDMFrac_grass[3] * dmshoot;
+                dmstem1 = iniDMFrac_grass[4] * dmshoot;
+                dmstem2 = iniDMFrac_grass[5] * dmshoot;
+                dmstem3 = iniDMFrac_grass[6] * dmshoot;
+                dmstem4 = iniDMFrac_grass[7] * dmshoot;
+                dmstol1 = iniDMFrac_grass[8] * dmshoot;
+                dmstol2 = iniDMFrac_grass[9] * dmshoot;
+                dmstol3 = iniDMFrac_grass[10] * dmshoot;
             }
 
             //init N
@@ -5776,7 +5775,11 @@ namespace Models
                     + dmstol1 + dmstol2 + dmstol3;
 
             dmdead = dmleaf4 + dmstem4;
-            dmtotal = dmgreen + dmdead;
+
+            if (Math.Abs((dmgreen + dmdead) - dmshoot) > 0.001)
+                throw new Exception("Loss of mass balance of shoot plant dry matter");
+  
+            dmtotal = dmshoot + dmroot;
 
             //N
             Nleaf = Nleaf1 + Nleaf2 + Nleaf3 + Nleaf4;
@@ -5962,7 +5965,8 @@ namespace Models
             Pgross = 10000 * carbon_m2;				 //10000: 'kg/m^2' =>'kg/ha'
 
             //Add extreme temperature effects;
-            Pgross *= HeatEffect() * ColdEffect();	  // in practice only one temp stress factor is < 1
+            double ExtremeFactor = HeatEffect() * ColdEffect();
+            Pgross *= ExtremeFactor;	  // in practice only one temp stress factor is < 1
 
             //Maintenance respiration
             double Teffect = 0;						 //Add temperature effects on respi
@@ -6175,14 +6179,6 @@ namespace Models
             //  dGrowthW = dGrowthPot * Math.Min(gfwater, Ncfactor);
             dGrowthW = dGrowthPot * Math.Pow(gfwater, waterStressFactor);
 
-            /*if (dGrowthPot > 0)
-            {
-                Console.Out.WriteLine(" growthPot: " + dGrowthPot);
-                Console.Out.WriteLine(" gfwater: " + gfwater);
-                Console.Out.WriteLine(" WstressW: " + waterStressFactor);
-                Console.Out.WriteLine(" growthW: " + dGrowthW);
-
-            }*/
             return dGrowthW;
         }
 
@@ -6495,27 +6491,6 @@ namespace Models
 
                 //Sugar remobilisation and C balance:
                 Cremob = 0;// not explicitely considered
-
-                /*Cremob = (Nremob - leftoverNremob) * C2N_protein;	//Cremob is calculated one day later so as to know if it is really
-                                                                     //remobilised with N
-                if (Cremob > 0)
-                {
-                    if (dLitter > Cremob * C2DM)
-                    {
-                        dLitter -= Cremob * C2DM;  //remove from litter (most likely in this case)
-                    }
-                    else
-                    {
-                        Cremob = dLitter / C2DM;
-                        dLitter = 0;
-                    }
-                }
-                else
-                {
-                    dLitter += Cremob * C2DM;
-                    Cremob = 0;
-                }*/
-
 
             }  //end of "turnover" block
 
@@ -6899,7 +6874,6 @@ namespace Models
             pS.dmdefoliated = dmdefoliated;
 
             pS.Nremob = Nremob;
-
 
             return true;
         }

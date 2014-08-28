@@ -63,11 +63,21 @@ namespace Models
         }
 
         // ----------------- Outputs
+        /// <summary>
+        /// The script Model that has been compiled
+        /// </summary>
         [XmlIgnore]
-        public Model Script { get { return _Script; } set { _Script = value; } }
+        public Model Script 
+        { 
+            get { return _Script; } 
+            set { _Script = value; } 
+        }
 
+        /// <summary>
+        /// The code for the Manager script
+        /// </summary>
         [Summary]
-        [Description("Script")]
+        [Description("Script code")]
         [XmlIgnore]
         public string Code
         {

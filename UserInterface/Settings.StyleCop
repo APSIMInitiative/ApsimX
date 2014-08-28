@@ -3,6 +3,7 @@
     <CollectionProperty Name="RecognizedWords">
       <Value>alphanumerics</Value>
       <Value>apsimx</Value>
+      <Value>intellisense</Value>
     </CollectionProperty>
   </GlobalSettings>
   <Analyzers>
