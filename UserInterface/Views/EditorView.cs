@@ -79,6 +79,12 @@
         private ListBox CompletionList;
 
         /// <summary>
+        /// The search string for the listbox. 
+        /// Reset by the timer or backspace
+        /// </summary>
+        private string searchValue;
+
+        /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
         public event EventHandler<NeedContextItems> ContextItemsNeeded;
@@ -107,12 +113,15 @@
             CompletionList.Dock = DockStyle.Fill;
             CompletionForm.Controls.Add(this.CompletionList);
             CompletionList.KeyDown += new KeyEventHandler(this.OnContextListKeyDown);
+            CompletionList.KeyUp += new KeyEventHandler(this.OnContextListKeyUp);
             CompletionList.MouseDoubleClick += new MouseEventHandler(this.OnComtextListMouseDoubleClick);
             CompletionForm.StartPosition = FormStartPosition.Manual;
             CompletionList.Leave += new EventHandler(this.OnLeaveCompletion);
 
             TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyDown;
             IntelliSenseChars = ".";
+            searchValue = string.Empty;
+            timer1.Interval = 3000;
         }
 
         /// <summary>
@@ -252,6 +261,7 @@
 
                 if (CompletionList.Items.Count > 0)
                     CompletionList.SelectedIndex = 0;
+
                 return true;
 
             }
@@ -276,6 +286,48 @@
             CompletionForm.Visible = false;
             TextBox.Document.ReadOnly = false;
             this.Focus();
+            searchValue = string.Empty;
+            timer1.Enabled = false;
+        }
+
+        /// <summary>
+        /// When the key is entered build a search string before the timer times out.
+        /// The item found will become the top most item in the list and will 
+        /// be selected.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        private void OnContextListKeyUp(object sender, KeyEventArgs e)
+        {
+            // search the list
+            char key = (char)e.KeyValue;
+            if (Char.IsLetter(key) || e.KeyCode == Keys.OemMinus)
+            {
+                timer1.Enabled = false;
+                // handle _ (not sure if this is correct)
+                if (e.KeyCode == Keys.OemMinus)
+                {
+                    searchValue = searchValue + '_';
+                }
+                else
+                {
+                    searchValue = searchValue + key.ToString().ToLower();
+                }
+
+                int i = CompletionList.FindString(searchValue);
+                if (i >= 0)
+                {
+                    CompletionList.SelectedIndex = i;
+                    CompletionList.TopIndex = i;
+                }
+                timer1.Enabled = true;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Back)
+            {   // backspace resets the search string
+                searchValue = string.Empty;
+                timer1.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -299,6 +351,7 @@
                 HideCompletionWindow();
                 e.Handled = true;
             }
+            e.SuppressKeyPress = true;  // don't want the list handling selection itself
         }
 
         /// <summary>
@@ -391,6 +444,11 @@
             {
                 // resources don't change during runtime  
             }           
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            searchValue = string.Empty;
         }
     }
 }

@@ -108,10 +108,7 @@ namespace Utility
                 {
                     DelMruFile(filename);
                 }
-                else
-                {
-                    i--;
-                }
+                i--;
             }
         }
     }
