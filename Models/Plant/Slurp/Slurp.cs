@@ -99,7 +99,7 @@ namespace Models.PMF.Slurp
         /// <summary>
         /// The initial value for ammonium uptake coefficient
         /// </summary>
-        [Description("Nitrate uptake coefficient")]
+        [Description("Ammonium uptake coefficient")]
         public double localKNH4 { get; set; }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Models.PMF.Slurp
         /// The is the actual supply of water to the plant as an array (mm) of values for each soil layer - calculated  by the Arbitrator 
         /// Note that Arbitrator does the uptake so the plant does not do the removal from the soil
         /// </summary>
-        [XmlIgnore]        public double[] supplyWater { get; set; }
+        [XmlIgnore]        public double[] uptakeWater { get; set; }
 
         /// <summary>
         /// Nitrogen demand (kg N /ha /day) - directly set from the UI
@@ -165,12 +165,12 @@ namespace Models.PMF.Slurp
         /// The is the actual supply of nitrogen (nitrate plus ammonium) to the plant as an array (kgN/ha/day) of values for each soil layer - calculated  by the Arbitrator 
         /// Note that Arbitrator does the uptake so the plant does not do the removal from the soil
         /// </summary>
-        [XmlIgnore]        public double[] supplyNitrogen { get; set; }
+        [XmlIgnore]        public double[] uptakeNitrogen { get; set; }
 
         /// <summary>
         /// This is the proportion of the nitrogen uptake from any layer that is nitrate (-)
         /// </summary>
-        [XmlIgnore]        public double[] supplyNitrogenPropNO3 { get; set; } 
+        [XmlIgnore]        public double[] uptakeNitrogenPropNO3 { get; set; } 
 
         /// <summary>
         /// MicroClimate supplies LightProfile
@@ -181,9 +181,9 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
-            supplyWater = new double[Soil.SoilWater.dlayer.Length];
-            supplyNitrogen = new double[Soil.SoilWater.dlayer.Length];
-            supplyNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
+            uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
+            uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
             
             // set the canopy and root properties here - no need to capture the sets from any Managers as they directly set the properties
             CanopyProperties.Name = "Slurp";
@@ -207,7 +207,7 @@ namespace Models.PMF.Slurp
             localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
             localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
 
-            supplyWater = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
 
             tempDepthUpper = 0.0;
             tempDepthMiddle = 0.0;
@@ -250,7 +250,7 @@ namespace Models.PMF.Slurp
 
             demandNitrogen = localDemandNitrogen;
 
-            //Summary.WriteMessage(FullPath, "Slurp " + CanopyProperties.Name + " has a value of " + supplyWater[3].ToString() + " for the last element in the soil water supply");
+            //Summary.WriteMessage(FullPath, "Slurp " + CanopyProperties.Name + " has a value of " + uptakeWater[3].ToString() + " for the last element in the soil water supply");
 
 
         }

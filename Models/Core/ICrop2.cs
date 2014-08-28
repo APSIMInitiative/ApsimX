@@ -14,7 +14,7 @@ namespace Models.Core
         CanopyProperties CanopyProperties { get;  }
 
         /// <summary>
-        /// Provides canopy data to Arbitrator.
+        /// Provides root data to Arbitrator.
         /// </summary>
         RootProperties RootProperties { get;  }
 
@@ -26,7 +26,7 @@ namespace Models.Core
         /// <summary>
         /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
         /// </summary>
-        double[] supplyWater { get; set; }
+        double[] uptakeWater { get; set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
@@ -36,19 +36,19 @@ namespace Models.Core
 
 
         /// <summary>
-        /// Crop calculates potentialNitrogenDemand after getting its water allocation
+        /// Crop calculates demandNitrogen after getting its water allocation
         /// </summary>
         double demandNitrogen { get; set; }
 
         /// <summary>
         /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
         /// </summary>
-        double[] supplyNitrogen { set; }
+        double[] uptakeNitrogen { set; }
 
         /// <summary>
         /// The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4
         /// </summary>
-        double[] supplyNitrogenPropNO3 { set; }
+        double[] uptakeNitrogenPropNO3 { set; }
 
 
         // need to add in the uptake/supply in layers - crop needs this for root growth
