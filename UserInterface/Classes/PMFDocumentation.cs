@@ -68,7 +68,7 @@ namespace UserInterface.Classes
 
                 OutputFile.WriteLine("<table style=\"text-align: left; width: 100%;\" border=\"1\" cellpadding=\"2\"\ncellspacing=\"2\">\n<tbody>\n<tr>\n<td id=\"toc\"style=\"vertical-align: top;\">");
                 OutputFile.WriteLine("<A NAME=\"toc\"></A>");
-                OutputFile.WriteLine("Table of Contents<br>"); //ToC added after the rest of the file is created. See CreateTOC()
+                OutputFile.WriteLine("<h2>Table of Contents</h2><br>"); //ToC added after the rest of the file is created. See CreateTOC()
                 OutputFile.WriteLine("</td>\n<td>");
                 foreach (XmlNode n in children)
                 {
@@ -323,7 +323,7 @@ namespace UserInterface.Classes
             {
                 inject += s + "\n";
             }
-            return fullText.Insert(21 + fullText.IndexOf("Table of Contents<br>"), inject); //21 length of index string
+            return fullText.Insert(30 + fullText.IndexOf("<h2>Table of Contents</h2><br>"), inject); //21 length of index string
         }
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)
@@ -511,7 +511,7 @@ namespace UserInterface.Classes
 
         static string Header(string text, int Level, string parent)
         {
-            string blah = (Level == 3 ? "\n<br>\n" :
+            string blah = (Level == 3 ? "\n<br><A NAME=\"" + text + "\"></A>\n" :
                   Level == 4 ? "\n<A NAME=\"" + parent + "_" + text + "\"></A>\n<br>\n" : "")
                   + "<H" + Level.ToString() + ">" + text + "</H" + Level.ToString() + ">";
             return blah;

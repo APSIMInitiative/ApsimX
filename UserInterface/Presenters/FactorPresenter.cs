@@ -44,13 +44,24 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Factor.Get(e.ObjectName);
-
-            if (o != null)
+            try
             {
-                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Property.Name);
-                e.Items.Sort();
+                Experiment experiment = Factor.Parent.Parent as Experiment;
+                if (experiment != null && experiment.BaseSimulation != null)
+                {
+                    object o = experiment.BaseSimulation.Get(e.ObjectName);
+
+                    if (o != null)
+                    {
+                        foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                            e.Items.Add(Property.Name);
+                        e.Items.Sort();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
 

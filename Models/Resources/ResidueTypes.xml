@@ -200,6 +200,11 @@
   </ResidueType>
   <ResidueType>
     <derived_from>base_type</derived_from>
+    <fom_type>pasture</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>globulus</fom_type>
     <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
   </ResidueType>
@@ -374,4 +379,48 @@
     <fom_type>wheat</fom_type>
     <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
   </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>oilmallee</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>lolium_rigidum</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>frenchbean</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>oilpalmunderstory</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>raphanus_raphanistrum</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>slurp</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>oilpalm</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.44    </fraction_C>
+    <pot_decomp_rate>0.05</pot_decomp_rate>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>oilpalmstem</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.000005  </specific_area>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.44    </fraction_C>
+  </ResidueType>
 </ResidueTypesList>
+

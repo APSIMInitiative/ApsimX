@@ -679,27 +679,30 @@ namespace Models.SurfaceOM
 
         public override void OnDeserialised(bool xmlSerialisation)
         {
-            if (ResidueTypes == null)
-                ResidueTypes = new ResidueTypesList();
-            if (!String.IsNullOrEmpty(ResidueTypes.LoadFromResource))
+            if (xmlSerialisation)
             {
-                string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
-                if (xml != null)
+                if (ResidueTypes == null)
+                    ResidueTypes = new ResidueTypesList();
+                if (!String.IsNullOrEmpty(ResidueTypes.LoadFromResource))
                 {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(xml);
-                    ResidueTypesList ValuesFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ResidueTypesList;
-                    if (ValuesFromResource != null)
+                    string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
+                    if (xml != null)
                     {
-                        foreach (ResidueType residueType in ValuesFromResource.residues)
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(xml);
+                        ResidueTypesList ValuesFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ResidueTypesList;
+                        if (ValuesFromResource != null)
                         {
-                            residueType.IsHidden = true;
-                            ResidueTypes.residues.Add(residueType);
+                            foreach (ResidueType residueType in ValuesFromResource.residues)
+                            {
+                                residueType.IsHidden = true;
+                                ResidueTypes.residues.Add(residueType);
+                            }
                         }
                     }
                 }
+                ResidueTypes.FillAllDerived();
             }
-            ResidueTypes.FillAllDerived();
         }
 
         private ResidueType[] savedResidues;
@@ -710,11 +713,14 @@ namespace Models.SurfaceOM
         /// </summary>
         public override void OnSerialising(bool xmlSerialisation)
         {
-            savedResidues = ResidueTypes.residues.ToArray();
-            for (int i = ResidueTypes.residues.Count - 1; i >= 0; i--)
+            if (xmlSerialisation)
             {
-                if (ResidueTypes.residues[i].IsHidden)
-                    ResidueTypes.residues.RemoveAt(i);
+                savedResidues = ResidueTypes.residues.ToArray();
+                for (int i = ResidueTypes.residues.Count - 1; i >= 0; i--)
+                {
+                    if (ResidueTypes.residues[i].IsHidden)
+                        ResidueTypes.residues.RemoveAt(i);
+                }
             }
         }
 
@@ -724,7 +730,7 @@ namespace Models.SurfaceOM
         /// </summary>
         public override void OnSerialised(bool xmlSerialisation)
         {
-            if (savedResidues != null)
+            if (xmlSerialisation && savedResidues != null)
             {
                 ResidueTypes.residues = savedResidues.ToList();
                 savedResidues = null;

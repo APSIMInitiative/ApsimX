@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 namespace Models.PMF.Functions
 {
     [Serializable]
-    [Description("returns the specified value")]
     public class Constant : Function
     {
         [XmlElement("Value")]

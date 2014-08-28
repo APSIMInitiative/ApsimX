@@ -44,6 +44,14 @@ namespace Models.Factorial
             return simulations.ToArray();
         }
 
+        public Simulation BaseSimulation
+        {
+            get
+            {
+                return Children.Matching(typeof(Simulation)) as Simulation;
+            }
+        }
+
         /// <summary>
         /// Create a specific simulation.
         /// </summary>
