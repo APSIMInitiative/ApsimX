@@ -16,6 +16,34 @@
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\Ruakura.met</FileName>
     </WeatherFile>
+    <Manager>
+      <Name>SetCO2</Name>
+      <Script>
+        <ambientCO2>380</ambientCO2>
+      </Script>
+      <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{      
+	[Link] WeatherFile MetData;
+	[Link] Clock Clock;
+	
+	[Description("Ambient CO2 concentration (ppm):")]
+	public double ambientCO2 {get; set;} //= 350;
+	
+	public override void OnSimulationCommencing()
+	{
+		MetData.CO2 = ambientCO2;
+	}
+	}
+}
+				]]></Code>
+    </Manager>
     <Summary>
       <Name>Summary</Name>
     </Summary>
@@ -776,13 +804,13 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.7983868440912678</double>
-            <double>2.4854457029655785</double>
-            <double>1.2449153287801489</double>
-            <double>0.50053352413414953</double>
-            <double>0.25096136198898278</double>
-            <double>0.1503898205146374</double>
-            <double>0.10021466270254678</double>
+            <double>3.7592224583674914</double>
+            <double>2.4849932218662145</double>
+            <double>1.2445705479914853</double>
+            <double>0.49960864343146777</double>
+            <double>0.25031080936048516</double>
+            <double>0.15029444520292573</double>
+            <double>0.10018817374791127</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -977,6 +1005,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
+          <string>[WeatherFile].CO2</string>
           <string>[AgPasture].SwardName</string>
           <string>[AgPasture].SpeciesName</string>
           <string>[AgPasture].TotalPlantWt</string>
@@ -1001,14 +1030,15 @@
           <string>[AgPasture].WaterSupply</string>
           <string>[AgPasture].WaterUptake</string>
           <string>[AgPasture].TotalPlantN</string>
+          <string>[AgPasture].NitrogenDemand</string>
           <string>[AgPasture].PlantFixedN</string>
           <string>[AgPasture].NitrogenUptake</string>
           <string>[AgPasture].LitterDepositionN</string>
           <string>[AgPasture].RootSenescenceN</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.es</string>
-          <string>[Soil].SoilNitrogen.no3</string>
+          <string>[Soil].SoilWater.es as evaporation</string>
+          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1018,7 +1048,7 @@
         <Name>PlantWt</Name>
         <Axis>
           <Type>Left</Type>
-          <Title>Depth (mm)</Title>
+          <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
         </Axis>
         <Axis>
@@ -1397,6 +1427,80 @@
           <Y>
             <TableName>Report</TableName>
             <FieldName>AgPasture.WaterUptake</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+      </Graph>
+      <Graph>
+        <Name>PlantNuptake</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>N demand (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>Demand</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.NitrogenDemand</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <Series>
+          <Title>Uptake</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Dash</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.NitrogenUptake</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <Series>
+          <Title>Fixed</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.PlantFixedN</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
