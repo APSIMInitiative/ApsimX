@@ -1061,7 +1061,7 @@ namespace Models
           <string>[AgPasture].GLFrgr</string>
           <string>[Agpasture].GPP</string>
           <string>[Agpasture].NitrogenSupply</string>
-          <string />
+          <string>[Soil].SoilWater.sw_dep</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

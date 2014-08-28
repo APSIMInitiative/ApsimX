@@ -4177,7 +4177,7 @@ namespace Models
             for (int s = 0; s < NumSpecies; s++)
             {
                 double teste = 0;
-                if (clock.Today.DayOfYear == 210)
+                if (clock.Today.DayOfYear == 213)
                     teste = 1;
                 p_dGrowth += SP[s].DailyGrowthAct();
             }
