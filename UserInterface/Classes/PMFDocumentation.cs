@@ -31,8 +31,13 @@ namespace UserInterface.Classes
             public string Value = "";
         }
 
-        public static int Go(XmlDocument XML, string DocFileName, Model parentModel)
+        public static int Go(string DocFileName, Model parentModel)
         {
+            string xml = Utility.Xml.Serialise(parentModel, true);
+
+            XmlDocument XML = new XmlDocument();
+            XML.LoadXml(xml);
+
             int Code;
             string SavedDirectory = Directory.GetCurrentDirectory();
 
@@ -58,6 +63,7 @@ namespace UserInterface.Classes
                 OutputFile.WriteLine(Title(TitleText));
                 OutputFile.WriteLine(Center(Header(TitleText, 1)));
                 XmlNode image = Utility.Xml.FindByType(XML.DocumentElement, "MetaData");
+
                 List<XmlNode> children = Utility.Xml.ChildNodes(image, "");
 
                 OutputFile.WriteLine("<table style=\"text-align: left; width: 100%;\" border=\"1\" cellpadding=\"2\"\ncellspacing=\"2\">\n<tbody>\n<tr>\n<td id=\"toc\"style=\"vertical-align: top;\">");
@@ -140,7 +146,9 @@ namespace UserInterface.Classes
             else if (N.Name == "Constant")
             {
                 OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+
                 WriteDescriptionForTypeName(OutputFile, N, parentModel);
+                TryDocumentMemo(OutputFile, N, NextLevel);
 
                 OutputFile.WriteLine("<p>Value = " + Utility.Xml.Value(N, "Value") + "</p>");
             }
@@ -152,16 +160,20 @@ namespace UserInterface.Classes
             }
             else if (Utility.Xml.ChildNodes(N, "XYPairs").Count > 0)
             {
-                CreateGraph(OutputFile, Utility.Xml.ChildNodes(N, "XYPairs")[0], NextLevel);
+                CreateGraph(OutputFile, Utility.Xml.ChildNodes(N, "XYPairs")[0], NextLevel, parentModel);
             }
             else if (Utility.Xml.Type(N) == "TemperatureFunction")
-                DocumentTemperatureFunction(OutputFile, N, NextLevel);
+                DocumentTemperatureFunction(OutputFile, N, NextLevel, parentModel);
             //else if (Utility.Xml.Type(N) == "GenericPhase")
             //   DocumentFixedPhase(OutputFile, N, NextLevel);
             // else if (Utility.Xml.Type(N) == "PhaseLookupValue")
             //   DocumentPhaseLookupValue(OutputFile, N, NextLevel);
             else if (Utility.Xml.Type(N) == "ChillingPhase")
                 ChillingPhaseFunction(OutputFile, N, NextLevel);
+            else if (N.Name == "Memo")
+            {
+                DocumentMemo(OutputFile, N, NextLevel);
+            }
             else
             {
                 string childName = Utility.Xml.Value(N, "Name");
@@ -172,6 +184,27 @@ namespace UserInterface.Classes
             }
         }
 
+        private static void TryDocumentMemo(StreamWriter OutputFile, XmlNode N, int NextLevel)
+        {
+            XmlNode memo = Utility.Xml.Find(N, "Memo");
+            if (memo != null)
+                DocumentMemo(OutputFile, memo, NextLevel);
+        }
+
+        private static void DocumentMemo(StreamWriter OutputFile, XmlNode N, int NextLevel)
+        {
+            if (Utility.Xml.Value(N, "Name") != "Memo")
+            {
+                OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+            }
+            XmlDocument doc = new XmlDocument();
+            string contents = Utility.Xml.Value(N, "MemoText");
+            doc.LoadXml(contents);
+            string line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+            line = line.Replace("\r\n", "<br/><br/>");
+            OutputFile.WriteLine(line);
+        }
+
         private static void WriteDescriptionForTypeName(StreamWriter OutputFile, XmlNode node, Model parentModel)
         {
             if (parentModel != null)
@@ -179,10 +212,34 @@ namespace UserInterface.Classes
                 PropertyInfo property = parentModel.GetType().GetProperty(Utility.Xml.Value(node, "Name"));
                 if (property != null)
                 {
+                    UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                    if (units != null)
+                    {
+                        OutputFile.WriteLine("<p>Units: " + units.ToString() + "</p>");
+                    }
+
                     DescriptionAttribute description = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                     if (description != null)
                     {
                         OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                    }
+                }
+                else
+                {
+                    FieldInfo field = parentModel.GetType().GetField(Utility.Xml.Value(node, "Name"), BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (field != null)
+                    {
+                        UnitsAttribute units = Utility.Reflection.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
+                        if (units != null)
+                        {
+                            OutputFile.WriteLine("<p>Units: " + units.ToString() + "</p>");
+                        }
+
+                        DescriptionAttribute description = Utility.Reflection.GetAttribute(field, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                        if (description != null)
+                        {
+                            OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                        }
                     }
                 }
             }
@@ -298,8 +355,6 @@ namespace UserInterface.Classes
                 {
                     //processed above so skip it
                 }
-                else if (Utility.Xml.Value(N, "Name").Contains("Memo"))
-                    OutputFile.WriteLine("<i>Note: " + N.InnerText + "</i>");
                 else if (!N.ParentNode.Name.Contains("Leaf") && !N.ParentNode.Name.Contains("Root"))
                 {
                     OutputFile.WriteLine("<p>" + N.Name + " = " + N.InnerText);
@@ -332,12 +387,12 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("</blockquote>");
         }
 
-        private static void DocumentTemperatureFunction(StreamWriter OutputFile, XmlNode N, int Level)
+        private static void DocumentTemperatureFunction(StreamWriter OutputFile, XmlNode N, int Level, Model parentModel)
         {
             OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
-            CreateGraph(OutputFile, Utility.Xml.FindByType(N, "XYPairs"), Level);
+            CreateGraph(OutputFile, Utility.Xml.FindByType(N, "XYPairs"), Level, parentModel);
             OutputFile.WriteLine("</blockquote>");
         }
 
@@ -469,7 +524,7 @@ namespace UserInterface.Classes
         {
             return "<CENTER>" + text + "</CENTER>";
         }
-        private static void CreateGraph(StreamWriter OutputFile, XmlNode N, int NextLevel)
+        private static void CreateGraph(StreamWriter OutputFile, XmlNode N, int NextLevel, Model parentModel)
         {
 
             string InstanceName = Utility.Xml.Value(N.OwnerDocument.DocumentElement, "Name");
@@ -481,7 +536,8 @@ namespace UserInterface.Classes
 
             OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
 
-            WriteDescriptionForTypeName(OutputFile, N.ParentNode, null);
+            WriteDescriptionForTypeName(OutputFile, N.ParentNode, parentModel);
+            TryDocumentMemo(OutputFile, N.ParentNode, NextLevel);
 
 
             Directory.CreateDirectory(InstanceName + "Graphs");

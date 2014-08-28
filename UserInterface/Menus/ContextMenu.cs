@@ -283,13 +283,7 @@ namespace UserInterface.Presenters
                 {
                     string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
 
-                    string xml = Utility.Xml.Serialise(modelClicked, true);
-                    if (xml != null)
-                    {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(xml);
-                        Classes.PMFDocumentation.Go(doc, fileName, modelClicked);
-                    }
+                    Classes.PMFDocumentation.Go(fileName, modelClicked);
                 }
                 else
                 {

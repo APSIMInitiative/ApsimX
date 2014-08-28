@@ -322,29 +322,29 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
-        <TillageTypes>
-          <Name>TillageTypes</Name>
-          <TillageType />
-        </TillageTypes>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
+        <residueTypes />
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Manager>
         <Name>SlurpUpdates</Name>
@@ -461,7 +461,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp</Name>
-        <localLAI>5</localLAI>
+        <localLAIGreen>0</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
@@ -469,43 +469,25 @@ namespace Models
         <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
         <localDemandWater>2</localDemandWater>
-        <localPotentialNitrogenDemand>10</localPotentialNitrogenDemand>
-        <localCoverGreen>1</localCoverGreen>
-        <localCoverTot>1</localCoverTot>
+        <localDemandNitrogen>0</localDemandNitrogen>
+        <localKNO3>0</localKNO3>
+        <localKNH4>0</localKNH4>
         <localRootDepth>500</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-        <localRootExplorationByLayer>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>0</double>
-        </localRootExplorationByLayer>
-        <localRootLengthDensityByVolume>
-          <double>0.0425</double>
-          <double>0.027500000000000004</double>
-          <double>0.0049999999999999992</double>
-          <double>0</double>
-        </localRootLengthDensityByVolume>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
-        <dltSWdep>
-          <double>-0.41809771778772969</double>
-          <double>-0.49987416021527487</double>
-          <double>-1.0820281219969952</double>
-          <double>0</double>
-        </dltSWdep>
-        <ArbitEOS>0</ArbitEOS>
+        <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Slurp].demandWater</string>
-          <string>Evaluate sum([Slurp].supplyWater[1:4]) as UptakeWater</string>
+          <string>Evaluate sum([Slurp].uptakeWater[1:4]) as UptakeWater</string>
           <string>[Slurp].potentialNitrogenDemand</string>
-          <string>[Slurp].actualNitrogenSupply</string>
+          <string>[Slurp].uptakeNitrogen</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
@@ -637,7 +619,7 @@ namespace Models
     </Manager>
     <Slurp>
       <Name>Slurp</Name>
-      <localLAI>5</localLAI>
+      <localLAIGreen>0</localLAIGreen>
       <localLAItot>5</localLAItot>
       <localLightExtinction>0</localLightExtinction>
       <localCanopyHeight>500</localCanopyHeight>
@@ -645,23 +627,11 @@ namespace Models
       <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
       <localFrgr>1</localFrgr>
       <localDemandWater>0</localDemandWater>
-      <localPotentialNitrogenDemand>0</localPotentialNitrogenDemand>
-      <localCoverGreen>1</localCoverGreen>
-      <localCoverTot>1</localCoverTot>
+      <localDemandNitrogen>0</localDemandNitrogen>
+      <localKNO3>0</localKNO3>
+      <localKNH4>0</localKNH4>
       <localRootDepth>600</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-      <localRootExplorationByLayer>
-        <double>1</double>
-        <double>1</double>
-        <double>1</double>
-        <double>0</double>
-      </localRootExplorationByLayer>
-      <localRootLengthDensityByVolume>
-        <double>0.043750000000000004</double>
-        <double>0.03125</double>
-        <double>0.0125</double>
-        <double>0</double>
-      </localRootLengthDensityByVolume>
     </Slurp>
     <Memo>
       <Name>Memo</Name>
