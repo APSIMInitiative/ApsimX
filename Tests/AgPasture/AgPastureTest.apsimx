@@ -145,7 +145,7 @@ namespace Models
         <gsmax>0.01</gsmax>
         <r50>200</r50>
         <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
+        <b_interception>0</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
@@ -804,13 +804,13 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.7592224583674914</double>
-            <double>2.4849932218662145</double>
-            <double>1.2445705479914853</double>
-            <double>0.49960864343146777</double>
-            <double>0.25031080936048516</double>
-            <double>0.15029444520292573</double>
-            <double>0.10018817374791127</double>
+            <double>3.7598307761858183</double>
+            <double>2.4849894254442657</double>
+            <double>1.2445762407112955</double>
+            <double>0.49961925487751951</double>
+            <double>0.25031241864121689</double>
+            <double>0.15029402415554846</double>
+            <double>0.10018768128050458</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -869,7 +869,7 @@ namespace Models
         </SoilOrganicMatter>
         <InitialWater>
           <Name>Initial water</Name>
-          <PercentMethod>FilledFromTop</PercentMethod>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>0.99</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
@@ -883,6 +883,7 @@ namespace Models
             <double>250</double>
             <double>300</double>
             <double>300</double>
+            <double>999999</double>
           </Thickness>
           <NO3>
             <double>7.61904761904762</double>
@@ -892,17 +893,20 @@ namespace Models
             <double>2.1</double>
             <double>1.2</double>
             <double>1.2</double>
+            <double>NaN</double>
           </NO3>
           <NH4>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
-            <double>0.132451499118166</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>NaN</double>
           </NH4>
           <SW>
+            <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
@@ -919,8 +923,10 @@ namespace Models
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
+            <double>NaN</double>
           </OC>
           <EC>
+            <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
@@ -937,6 +943,7 @@ namespace Models
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
+            <double>NaN</double>
           </CL>
           <ESP>
             <double>NaN</double>
@@ -946,8 +953,10 @@ namespace Models
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
+            <double>NaN</double>
           </ESP>
           <PH>
+            <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
             <double>NaN</double>
@@ -1005,7 +1014,6 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].CO2</string>
           <string>[AgPasture].SwardName</string>
           <string>[AgPasture].SpeciesName</string>
           <string>[AgPasture].TotalPlantWt</string>
@@ -1039,6 +1047,12 @@ namespace Models
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>[AgPasture].GLFtemp</string>
+          <string>[AgPasture].GLFwater</string>
+          <string>[AgPasture].GLFn</string>
+          <string>[AgPasture].GLFnConcentration</string>
+          <string>[AgPasture].GLFrgr</string>
+          <string>[Agpasture].GPP</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

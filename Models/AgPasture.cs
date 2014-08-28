@@ -88,7 +88,7 @@ namespace Models
             {
                 myLightProfile = value;
                 canopiesNum = myLightProfile.Length;
-                canopiesRadn = new double[1];
+                canopiesRadn = new double[canopiesNum];
 
                 interceptedRadn = 0;
                 for (int j = 0; j < canopiesNum; j++)
@@ -1261,7 +1261,8 @@ namespace Models
         public LinearInterpolation HeightMassFN = new LinearInterpolation
         {
             X = new double[5] { 0, 1000, 2000, 3000, 4000 },
-            Y = new double[5] { 0, 25, 75, 150, 250 }
+            Y = new double[5] { 75, 75, 75, 75, 75 }
+            //Y = new double[5] { 0, 25, 75, 150, 250 }
         };
 
         #endregion
@@ -3833,16 +3834,16 @@ namespace Models
         /// <returns></returns>
         private bool SetPastureToSpeciesData()
         {
+            // Pass some data from Clock
+            Species.simToday = clock.Today;
+
             //pass some metData to species
+            Species.DayLength = MetData.DayLength;
+            Species.localLatitude = MetData.Latitude;
             Species.Tmax = MetData.MaxT;
             Species.Tmin = MetData.MinT;
             Species.Tmean = 0.5 * (MetData.MaxT + MetData.MinT);
             Species.ambientCO2 = MetData.CO2;
-
-            // From Clock
-            Species.simToday = clock.Today;
-            Species.DayLength = MetData.DayLength;
-            Species.localLatitude = MetData.Latitude;
 
             Species.PlantInterceptedRadn = interceptedRadn;
             Species.PlantCoverGreen = Cover_green;
@@ -4022,13 +4023,13 @@ namespace Models
             if (NewCanopy != null)
             {
                 LocalCanopyData.sender = Name;
-                LocalCanopyData.lai = p_greenLAI;
-                LocalCanopyData.lai_tot = p_totalLAI;
+                LocalCanopyData.lai = 2.6; // p_greenLAI;
+                LocalCanopyData.lai_tot = 2.8;// p_totalLAI;
                 p_height = HeightfromDM;
-                LocalCanopyData.height = (int)p_height;			 // height effect, mm
-                LocalCanopyData.depth = (int)p_height;			  // canopy depth
-                LocalCanopyData.cover = Cover_green;
-                LocalCanopyData.cover_tot = Cover_tot;
+                LocalCanopyData.height = p_height;			 // height effect, mm
+                LocalCanopyData.depth = p_height;			  // canopy depth
+                LocalCanopyData.cover = 0.7; // Cover_green;
+                LocalCanopyData.cover_tot = 0.75; // Cover_tot;
                 NewCanopy.Invoke(LocalCanopyData);
             }
         }
@@ -5853,7 +5854,6 @@ namespace Models
 
                 }
             }
-
 
             return phenoStage;
         }
