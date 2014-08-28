@@ -31,8 +31,13 @@ namespace UserInterface.Classes
             public string Value = "";
         }
 
-        public static int Go(XmlDocument XML, string DocFileName, Model parentModel)
+        public static int Go(string DocFileName, Model parentModel)
         {
+            string xml = Utility.Xml.Serialise(parentModel, true);
+
+            XmlDocument XML = new XmlDocument();
+            XML.LoadXml(xml);
+
             int Code;
             string SavedDirectory = Directory.GetCurrentDirectory();
 
@@ -162,6 +167,19 @@ namespace UserInterface.Classes
             //   DocumentPhaseLookupValue(OutputFile, N, NextLevel);
             else if (Utility.Xml.Type(N) == "ChillingPhase")
                 ChillingPhaseFunction(OutputFile, N, NextLevel);
+            else if (N.Name == "Memo")
+            {
+                if (Utility.Xml.Value(N, "Name") != "Memo")
+                {
+                    OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+                }
+                XmlDocument doc = new XmlDocument();
+                string contents = Utility.Xml.Value(N, "MemoText");
+                doc.LoadXml(contents);
+                string line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+                line = line.Replace("\r\n", "<br/><br/>");
+                OutputFile.WriteLine(line);
+            }
             else
             {
                 string childName = Utility.Xml.Value(N, "Name");
@@ -183,6 +201,18 @@ namespace UserInterface.Classes
                     if (description != null)
                     {
                         OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                    }
+                }
+                else
+                {
+                    FieldInfo field = parentModel.GetType().GetField(Utility.Xml.Value(node, "Name"), BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (field != null)
+                    {
+                        DescriptionAttribute description = Utility.Reflection.GetAttribute(field, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                        if (description != null)
+                        {
+                            OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
+                        }
                     }
                 }
             }
@@ -298,8 +328,6 @@ namespace UserInterface.Classes
                 {
                     //processed above so skip it
                 }
-                else if (Utility.Xml.Value(N, "Name").Contains("Memo"))
-                    OutputFile.WriteLine("<i>Note: " + N.InnerText + "</i>");
                 else if (!N.ParentNode.Name.Contains("Leaf") && !N.ParentNode.Name.Contains("Root"))
                 {
                     OutputFile.WriteLine("<p>" + N.Name + " = " + N.InnerText);

@@ -338,29 +338,29 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
-        <TillageTypes>
-          <Name>TillageTypes</Name>
-          <TillageType />
-        </TillageTypes>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
+        <residueTypes />
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Manager>
         <Name>SlurpUpdates</Name>
@@ -477,7 +477,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp</Name>
-        <localLAIGreen>0</localLAIGreen>
+        <localLAIGreen>5</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
         <localCanopyHeight>500</localCanopyHeight>
@@ -494,18 +494,19 @@ namespace Models
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
+        <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
         <Name>ReportOne</Name>
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Slurp].demandWater as demandWater</string>
-          <string>Evaluate sum([Slurp].supplyWater[1:4]) as UptakeWater</string>
+          <string>Evaluate sum([Slurp].uptakeWater[1:4]) as UptakeWater</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
           <string>[Slurp].demandNitrogen as demandNitrogen</string>
-          <string>Evaluate sum([Slurp].supplyNitrogen[1:4]) as UptakeNitrogen</string>
-          <string>Evaluate sum([Slurp].supplyNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
+          <string>Evaluate sum([Slurp].uptakeNitrogen[1:4]) as UptakeNitrogen</string>
+          <string>Evaluate sum([Slurp].uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
         </VariableNames>
@@ -993,29 +994,29 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
-        <TillageTypes>
-          <Name>TillageTypes</Name>
-          <TillageType />
-        </TillageTypes>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
+        <residueTypes />
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Manager>
         <Name>Diffs</Name>
@@ -1118,6 +1119,7 @@ namespace Models
       <Arbitrator>
         <Name>Arbitrator</Name>
         <ArbitrationMethod>PropDemand</ArbitrationMethod>
+        <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
         <Name>ReportWater</Name>
@@ -1127,10 +1129,10 @@ namespace Models
           <string>[Diffs].Script.diffSWDepUptake</string>
           <string>[Slurp1].demandWater</string>
           <string>[Slurp2].demandWater</string>
-          <string>Evaluate sum([Slurp1].supplyWater[1:4]) as Slurp1Uptake</string>
-          <string>Evaluate sum([Slurp2].supplyWater[1:4]) as Slurp2Uptake</string>
-          <string>[Slurp1].supplyWater[4]</string>
-          <string>[Slurp2].supplyWater[4]</string>
+          <string>Evaluate sum([Slurp1].uptakeWater[1:4]) as Slurp1Uptake</string>
+          <string>Evaluate sum([Slurp2].uptakeWater[1:4]) as Slurp2Uptake</string>
+          <string>[Slurp1].uptakeWater[4]</string>
+          <string>[Slurp2].uptakeWater[4]</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1142,8 +1144,8 @@ namespace Models
           <string>[Clock].Today</string>
           <string>[Slurp1].demandNitrogen as demandNitrogen1</string>
           <string>[Slurp2].demandNitrogen as demandNitrogen2</string>
-          <string>Evaluate sum([Slurp1].supplyNitrogen[1:4]) as Slurp1UptakeN</string>
-          <string>Evaluate sum([Slurp2].supplyNitrogen[1:4]) as Slurp2UptakeN</string>
+          <string>Evaluate sum([Slurp1].uptakeNitrogen[1:4]) as Slurp1UptakeN</string>
+          <string>Evaluate sum([Slurp2].uptakeNitrogen[1:4]) as Slurp2UptakeN</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake</string>
         </VariableNames>

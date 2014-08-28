@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>Memo</Name>
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+ <head>
+  <title></title>
+ </head>
+ <body>
+  <p>This is the potato validation</p>
+ </body>
+</html>]]></MemoText>
+  </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
@@ -100,6 +113,19 @@
   </Tests>
   <Experiment>
     <Name>Potato</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+ <head>
+  <title></title>
+ </head>
+ <body>
+  <p>Description of Cultivar trial</p>
+ </body>
+</html>]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -6436,7 +6462,12 @@ namespace Models
         </Report>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
+          <_standing_fraction>
+            <double>0</double>
+          </_standing_fraction>
           <c_fract>0.4</c_fract>
+          <report_additions>no</report_additions>
+          <report_removals>no</report_removals>
           <residueTypes />
           <PoolName>wheat</PoolName>
           <type>wheat</type>
