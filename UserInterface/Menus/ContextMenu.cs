@@ -334,5 +334,22 @@ namespace UserInterface.Presenters
             }
         }
 
+
+        /// <summary>
+        /// Export the datastore to .csv
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to .csv",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportDataStoreToCSV(object sender, EventArgs e)
+        {
+            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                dataStore.WriteToTextFiles();
+            }
+        }
+
     }
 }
