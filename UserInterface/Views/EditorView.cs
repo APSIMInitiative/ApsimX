@@ -351,7 +351,10 @@
                 HideCompletionWindow();
                 e.Handled = true;
             }
-            e.SuppressKeyPress = true;  // don't want the list handling selection itself
+            if ((e.KeyCode != Keys.Up) && (e.KeyCode != Keys.Down))
+            {
+                e.SuppressKeyPress = true;  // don't want the list handling selection itself
+            }
         }
 
         /// <summary>

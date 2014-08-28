@@ -477,8 +477,8 @@ namespace Utility
             else 
                 value = obj.ToString();
 
-            if (value.Length < width)
-                st.Append(new string(' ', width - value.Length));
+            //if (value.Length < width)
+            //    st.Append(new string(' ', width - value.Length));
             st.Append(value);
         }
 
