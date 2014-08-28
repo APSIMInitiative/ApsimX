@@ -131,6 +131,61 @@ namespace Models
         }
 				]]></Code>
       </Manager>
+      <Manager>
+        <Name>CutRotation</Name>
+        <Script>
+          <DaysAfterCut>12</DaysAfterCut>
+          <CutRotationDate>1900-01-01</CutRotationDate>
+          <CutInterval>21</CutInterval>
+          <PastureAmount>1500</PastureAmount>
+        </Script>
+        <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] AgPasture AgPasture;
+		
+		[Description("Date to begin rotation:")]
+		public DateTime CutRotationDate {get; set;}
+		[Description("Rotation interval (days):")]
+		public int CutInterval {get; set;} //= 500;
+		[Description("Residual amount of pasture (kg/ha):")]
+		public double PastureAmount {get; set;} //= 500;
+		
+		private bool RotationAllowed = false;
+		public int DaysAfterCut { get; set; }
+		
+		public override void OnSimulationCommencing()
+		{
+		DaysAfterCut = 1000;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date >= CutRotationDate)
+			{
+				if (DaysAfterCut >= CutInterval)
+				{
+					AgPasture.Graze(type:"SetResidueAmount",amount:PastureAmount);
+					DaysAfterCut = 0;
+				}
+				else
+				{
+					DaysAfterCut += 1;
+				}
+			}
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -811,13 +866,13 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.7598307761858183</double>
-            <double>2.4849894254442657</double>
-            <double>1.2445762407112955</double>
-            <double>0.49961925487751951</double>
-            <double>0.25031241864121689</double>
-            <double>0.15029402415554846</double>
-            <double>0.10018768128050458</double>
+            <double>3.7570393409392966</double>
+            <double>2.4844328782659995</double>
+            <double>1.2442849022550815</double>
+            <double>0.499544496929314</double>
+            <double>0.25032058805376878</double>
+            <double>0.15032558324308765</double>
+            <double>0.10020041999893758</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -1062,6 +1117,7 @@ namespace Models
           <string>[Agpasture].GPP</string>
           <string>[Agpasture].NitrogenSupply</string>
           <string>[Soil].SoilWater.sw_dep</string>
+          <string>[CutRotation].Script.DaysAfterCut</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

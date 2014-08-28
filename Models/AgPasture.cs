@@ -4083,6 +4083,8 @@ namespace Models
             if (MetData.StartDate != new DateTime(0))
                 SetPastureToSpeciesData();		 // This is needed for the first day after knowing the number of species
 
+            FractionToHarvest = new double[NumSpecies];
+
             DoNewCropEvent();			// Tell other modules that I exist
             DoNewCanopyEvent();		  // Tell other modules about my canopy
 
@@ -4131,6 +4133,9 @@ namespace Models
                     p_rootFrontier = spRootDepth;
             }
 
+            // clear FractionHarvest by assigning new
+            FractionToHarvest = new double[NumSpecies];
+
             // pass some global variables to each species
             SetPastureToSpeciesData();
 
@@ -4175,12 +4180,7 @@ namespace Models
             //**actual daily growth
             p_dGrowth = 0;
             for (int s = 0; s < NumSpecies; s++)
-            {
-                double teste = 0;
-                if (clock.Today.DayOfYear == 213)
-                    teste = 1;
                 p_dGrowth += SP[s].DailyGrowthAct();
-            }
 
             //**partitioning & turnover
             GrowthAndPartition();	   // litter returns to surfaceOM; Root returns to soil FOM dead in this turnover routines
