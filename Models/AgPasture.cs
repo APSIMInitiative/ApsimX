@@ -1261,8 +1261,7 @@ namespace Models
         public LinearInterpolation HeightMassFN = new LinearInterpolation
         {
             X = new double[5] { 0, 1000, 2000, 3000, 4000 },
-            Y = new double[5] { 75, 75, 75, 75, 75 }
-            //Y = new double[5] { 0, 25, 75, 150, 250 }
+            Y = new double[5] { 0, 25, 75, 150, 250 }
         };
 
         #endregion
