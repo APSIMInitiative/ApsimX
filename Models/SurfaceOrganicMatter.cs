@@ -65,6 +65,7 @@ namespace Models.SurfaceOM
                 AshAlk = 0;
             }
         }
+
         [Serializable]
         class SurfOrganicMatterType
         {
@@ -183,6 +184,7 @@ namespace Models.SurfaceOM
             default_cpr = 0.0;
             standing_extinct_coeff = 0.5;
             fractionFaecesAdded = 0.5;
+            ResidueTypes = new ResidueTypesList();
         }
 
         #region exposed properties
@@ -823,6 +825,7 @@ namespace Models.SurfaceOM
                     residues = new List<ResidueType>();
 
                 residues.Clear();
+                LoadFromResource = "ResidueTypes";
             }
 
             public ResidueType getResidue(string name)
@@ -877,16 +880,6 @@ namespace Models.SurfaceOM
               fr_c = null;
               fr_n = null;
               fr_p = null;
-
-/*
-                fraction_C = 0.4;
-                specific_area = 0.0005;
-                cf_contrib = 1;
-                pot_decomp_rate = 0.1;
-                fr_c = new double[3] { 0.2, 0.7, 0.1 };
-                fr_n = new double[3] { 0.2, 0.7, 0.1 };
-                fr_p = new double[3] { 0.2, 0.7, 0.1 };
- */
             }
         }
 
