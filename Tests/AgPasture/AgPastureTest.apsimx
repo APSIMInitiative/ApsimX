@@ -168,6 +168,10 @@ namespace Models
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
@@ -1056,6 +1060,8 @@ namespace Models
           <string>[AgPasture].GLFnConcentration</string>
           <string>[AgPasture].GLFrgr</string>
           <string>[Agpasture].GPP</string>
+          <string>[Agpasture].NitrogenSupply</string>
+          <string />
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
