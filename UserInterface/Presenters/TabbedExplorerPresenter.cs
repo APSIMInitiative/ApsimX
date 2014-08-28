@@ -137,6 +137,8 @@ namespace UserInterface.Presenters
         /// When the view wants to populate it's start page, it will invoke this
         /// event handler.
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnPopulateStartPage(object sender, PopulateStartPageArgs e)
         {
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
@@ -167,9 +169,15 @@ namespace UserInterface.Presenters
                 OnClick = OnExample
             });
 
+            config.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
             View.FillMruList(config.Settings.MruList);
         }
 
+        /// <summary>
+        /// Handler to reload the mru files list
+        /// </summary>
+        /// <param name="sender">Sender Object</param>
+        /// <param name="e">Event arguments</param>
         private void OnReloadMruView(object sender, EventArgs e)
         {
             View.FillMruList(config.Settings.MruList);

@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using ICSharpCode.TextEditor.Document;
-using UserInterface.EventArguments;
-using System.Reflection;
-using System.IO;
-using System.Xml;
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Windows.Forms;
+    using System.Xml;
+    using EventArguments;
+    using ICSharpCode.TextEditor.Document;
+    using ICSharpCode.TextEditor.Gui.InsightWindow;
 
-  
 
+    /// <summary>
+    /// This is IEditorView interface
+    /// </summary>
     public interface IEditorView
     {
         /// <summary>
@@ -35,12 +37,12 @@ namespace UserInterface.Views
         event EventHandler LeaveEditor;
 
         /// <summary>
-        /// Text property to get and set the content of the editor.
+        /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         string Text { get; set; }
 
         /// <summary>
-        /// Lines property to get and set the lines in the editor.
+        /// Gets or sets the lines property to get and set the lines in the editor.
         /// </summary>
         string[] Lines { get; set; }
 
@@ -56,10 +58,9 @@ namespace UserInterface.Views
         string IntelliSenseChars { get; set; }
 
         /// <summary>
-        /// Return the current line number
+        /// Gets the current line number
         /// </summary>
         int CurrentLineNumber { get; }
-
     }
 
     /// <summary>
@@ -67,8 +68,14 @@ namespace UserInterface.Views
     /// </summary>
     public partial class EditorView : UserControl, IEditorView
     {
+        /// <summary>
+        /// The completion form
+        /// </summary>
         private Form CompletionForm;
 
+        /// <summary>
+        /// The completion list
+        /// </summary>
         private ListBox CompletionList;
 
         /// <summary>
@@ -87,28 +94,29 @@ namespace UserInterface.Views
         public event EventHandler LeaveEditor;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor that configures the Completion form.
         /// </summary>
         public EditorView()
         {
             InitializeComponent();
-
+          
             CompletionForm = new Form();
             CompletionForm.TopLevel = false;
             CompletionForm.FormBorderStyle = FormBorderStyle.None;
             CompletionList = new ListBox();
             CompletionList.Dock = DockStyle.Fill;
-            CompletionForm.Controls.Add(CompletionList);
-            CompletionList.KeyDown += new KeyEventHandler(OnContextListKeyDown);
-            CompletionList.MouseDoubleClick += new MouseEventHandler(OnComtextListMouseDoubleClick);
+            CompletionForm.Controls.Add(this.CompletionList);
+            CompletionList.KeyDown += new KeyEventHandler(this.OnContextListKeyDown);
+            CompletionList.MouseDoubleClick += new MouseEventHandler(this.OnComtextListMouseDoubleClick);
             CompletionForm.StartPosition = FormStartPosition.Manual;
+            CompletionList.Leave += new EventHandler(this.OnLeaveCompletion);
 
-            TextBox.ActiveTextAreaControl.TextArea.KeyPress += OnKeyDown;
+            TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyDown;
             IntelliSenseChars = ".";
         }
 
         /// <summary>
-        /// Text property to get and set the content of the editor.
+        /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public new string Text
         {
@@ -126,7 +134,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Lines property to get and set the lines in the editor.
+        /// Gets or sets the lines in the editor.
         /// </summary>
         public string[] Lines
         {
@@ -136,7 +144,7 @@ namespace UserInterface.Views
             }
             set
             {
-                string St = "";
+                string St = string.Empty;
                 foreach (string Value in value)
                     St += Value + "\r\n";
                 Text = St;
@@ -149,7 +157,7 @@ namespace UserInterface.Views
         public string IntelliSenseChars { get; set; }
 
         /// <summary>
-        /// Return the current line number
+        /// Gets the current line number
         /// </summary>
         public int CurrentLineNumber
         {
@@ -158,7 +166,6 @@ namespace UserInterface.Views
                 return TextBox.ActiveTextAreaControl.TextArea.Caret.Line;
             }
         }
-
 
         /// <summary>
         /// Set the editor to use the specified resource name to syntax highlighting
@@ -171,26 +178,33 @@ namespace UserInterface.Views
             HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider); // Attach to the text editor.
             TextBox.SetHighlighting(resourceName); // Activate the highlighting, use the name from the SyntaxDefinition node.
         }
-
+                
         /// <summary>
-        /// Preprocesses key strokes so that the ContextList can be displayed when needed.
+        /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
         /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Key arguments</param>
         private void OnKeyDown(object sender, KeyPressEventArgs e)
         {
             // If user one of the IntelliSenseChars, then display contextlist.
             if (IntelliSenseChars.Contains(e.KeyChar) && ContextItemsNeeded != null)
             {
                 if (ShowCompletionWindow(e.KeyChar))
+                {
                     e.Handled = false;
+                }
             }
-
             else
+            {
                 e.Handled = false;
+            }
         }
 
         /// <summary>
-        /// Retrieve the word before the specified character position.
+        /// Retrieve the word before the specified character position. 
         /// </summary>
+        /// <param name="Pos">Position in the editor</param>
+        /// <returns>The position of the word</returns>
         private string GetWordBeforePosition(int Pos)
         {
             if (Pos == 0)
@@ -205,6 +219,8 @@ namespace UserInterface.Views
         /// <summary>
         /// Show the context list. Return true if popup box shown
         /// </summary>
+        /// <param name="characterPressed">Character pressed</param>
+        /// <returns>Completion form showing</returns>
         private bool ShowCompletionWindow(char characterPressed)
         {
             // Get a list of items to show and put into completion window.
@@ -243,6 +259,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Event handler for when the completion window loses focus
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLeaveCompletion(object sender, EventArgs e)
+        {
+            HideCompletionWindow();
+        }
+
+        /// <summary>
         /// Hide the completion window.
         /// </summary>
         private void HideCompletionWindow()
@@ -252,6 +278,11 @@ namespace UserInterface.Views
             this.Focus();
         }
 
+        /// <summary>
+        /// Key down event handler
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event arguments</param>
         private void OnContextListKeyDown(object sender, KeyEventArgs e)
         {
             // If user clicks ENTER and the context list is visible then insert the currently
@@ -294,7 +325,6 @@ namespace UserInterface.Views
             TextBox.ActiveTextAreaControl.TextArea.Caret.Column = Column + TextToInsert.Length;
         }
 
-
         /// <summary>
         /// User has changed text. Invoke our OnTextChanged event.
         /// </summary>
@@ -329,7 +359,6 @@ namespace UserInterface.Views
 
                 Assembly assembly = Assembly.GetExecutingAssembly();
 
-
                 string syntaxMode = string.Format("<?xml version=\"1.0\"?>" +
                                                   "<SyntaxModes version=\"1.0\">" +
                                                   "  <Mode extensions=\".apsimx\" file=\"{0}.xshd\" name=\"{0}\"></Mode>" +
@@ -361,9 +390,7 @@ namespace UserInterface.Views
             public void UpdateSyntaxModeList()
             {
                 // resources don't change during runtime  
-            }
-
-           
+            }           
         }
     }
 }
