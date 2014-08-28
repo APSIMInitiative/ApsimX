@@ -525,7 +525,7 @@ namespace Models
                     WriteAllTables(baselineDataStore, baselineFileName + ".csv");
 
                     // Write the SUM file.
-                    WriteSummaryFile(baselineDataStore, baselineFileName);
+                    WriteSummaryFile(baselineDataStore, baselineFileName + ".sum");
 
                     baselineDataStore.Disconnect();
                 }
@@ -775,8 +775,7 @@ namespace Models
         /// </summary>
         private static void WriteAllTables(DataStore dataStore, string fileName)
         {
-            StreamWriter report = new StreamWriter(fileName);
-
+            
             // Write out each table for this simulation.
             foreach (string tableName in dataStore.TableNames)
             {
@@ -800,18 +799,13 @@ namespace Models
                         DataTable data = dataStore.RunQuery(sql);
                         if (data != null && data.Rows.Count > 0)
                         {
-
-                            report.WriteLine("TABLE: " + tableName);
-
+                            StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
                             report.Write(Utility.DataTable.DataTableToText(data, 0, ",", true));
+                            report.Close();
                         }
                     }
-
-                    report.WriteLine();
                 }
             }
-            report.WriteLine();
-            report.Close();
         }
 
         /// <summary>

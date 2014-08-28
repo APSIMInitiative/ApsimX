@@ -390,7 +390,11 @@
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
-          <c_fract>0.4</c_fract>
+           <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+         <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -2249,6 +2253,10 @@ namespace Models
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
@@ -3900,6 +3908,10 @@ namespace Models
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
