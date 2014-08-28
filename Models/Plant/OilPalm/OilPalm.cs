@@ -95,6 +95,7 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Factor for Relative Growth Rate
         /// </summary>
+        [Units("0-1")]
         public double FRGR { get { return 1; } }
 
         /// <summary>
@@ -212,9 +213,6 @@ namespace Models.PMF.OilPalm
         [Units("/palm")]
         public double CumulativeBunchNumber { get; set; }
 
-        [XmlIgnore]
-        public double CumulativeYield { get; set; }
-
         /// <summary>
         /// Proportion of daily growth partitioned into reproductive parts
         /// </summary>
@@ -264,27 +262,48 @@ namespace Models.PMF.OilPalm
         public double Age { get; set; }
 
         [XmlIgnore]
+        [Units("/m^2")]
         public double Population { get; set; }
 
         [XmlIgnore]
         public SowPlant2Type SowingData = new SowPlant2Type();
 
+        /// <summary>
+        /// Potential daily nitrogen uptake from each soil layer by palms
+        /// </summary>
+        [Units("kg/ha")]
         double[] PotNUptake;
 
         /// <summary>
-        /// Daily nitrogen uptake by palms
+        /// Daily nitrogen uptake from each soil layer by palms
         /// </summary>
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] NUptake { get; set; }
 
+        /// <summary>
+        /// Daily stem dry matter growth
+        /// </summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double StemGrowth { get; set; }
+        /// <summary>
+        /// Daily frond dry matter growth
+        /// </summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double FrondGrowth { get; set; }
+        /// <summary>
+        /// Daily root dry matter growth
+        /// </summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double RootGrowth { get; set; }
+        /// <summary>
+        /// Daily bunch dry matter growth
+        /// </summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double BunchGrowth { get; set; }
 
         [XmlIgnore]
@@ -295,66 +314,124 @@ namespace Models.PMF.OilPalm
         private List<RootType> Roots = new List<RootType>();
 
         [Link]
+        [Description("Frond appearance rate under optimal temperature conditions.")]
+        [Units("d")]
         Function FrondAppearanceRate = null;
         [Link]
+        [Description("Relative rate of plant development (e.g. frond appearance) as affected by air temperature")]
+        [Units("0-1")]
         Function RelativeDevelopmentalRate = null;
         [Link]
+        [Description("Maximum area of an individual frond")]
+        [Units("m^2")]
         Function FrondMaxArea = null;
         [Link]
+        [Description("Beer-Lambert law extinction coefficient for direct beam radiation")]
+        [Units("unitless")]
         Function DirectExtinctionCoeff = null;
         [Link]
+        [Description("Beer-Lambert law extinction coefficient for diffuse beam radiation")]
+        [Units("unitless")]
         Function DiffuseExtinctionCoeff = null;
         [Link]
+        [Description("The number of expanding fronds at a given point in time.")]
+        [Units("/palm")]
         Function ExpandingFronds = null;
         [Link]
+        [Description("The number of fronds on the palm at planting")]
+        [Units("/palm")]
         Function InitialFrondNumber = null;
         [Link]
+        [Description("Radiation use efficiency for total short wave radiation.")]
+        [Units("g/m^2")]
         Function RUE = null;
         [Link]
+        [Description("Root front velocity")]
+        [Units("mm/d")]
         Function RootFrontVelocity = null;
         [Link]
+        [Description("Fraction of the live root system that senesces per day (ie first order decay coefficient)")]
+        [Units("/d")]
         Function RootSenescenceRate = null;
         [Link]
+        [Description("Amount of frond area per unit frond mass. Used to calculate frond dry matter demand")]
+        [Units("m^2/g")]
         Function SpecificLeafArea = null;
         [Link]
+        [Description("Maximum amount of frond area per unit frond mass. Used to limit area growth when dry matter is limiting")]
+        [Units("m^2/g")]
         Function SpecificLeafAreaMax = null;
         [Link]
+        [Description("Fraction of daily growth partitioned into the root system")]
+        [Units("0-1")]
         Function RootFraction = null;
         [Link]
+        [Description("Maximum bunch size on a dry mass basis")]
+        [Units("g")]
         Function BunchSizeMax = null;
         [Link]
+        [Description("Female fraction of a cohort's population of inflorescences as affected by age")]
+        [Units("0-1")]
         Function FemaleFlowerFraction = null;
         [Link]
+        [Description("Fraction of inflorescences that become female each day during the gender determination phase")]
+        [Units("0-1")]
         Function FFFStressImpact = null;
         [Link]
+        [Description("Ratio of stem to frond growth as affected by plant age")]
+        [Units("g/g")]
         Function StemToFrondFraction = null;
         [Link]
+        [Description("Fraction of inflorescences that become aborted each day during the flower abortion phase")]
+        [Units("0-1")]
         Function FlowerAbortionFraction = null;
         [Link]
+        [Description("Fraction of bunches that fail each day during the bunch failure phase")]
+        [Units("0-1")]
         Function BunchFailureFraction = null;
         
         private double InitialRootDepth = 300;
 
         [Link]
         [Description("NO3 Uptake coefficient - Fraction of NO3 available at a soil concentration of 1ppm ")]
+        [Units("/ppm")]
         Function KNO3 = null;
+
         [Link]
+        [Description("Stem nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function StemNConcentration = null;
         [Link]
+        [Description("Bunch nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function BunchNConcentration = null;
         [Link]
+        [Description("Root nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function RootNConcentration = null;
         [Link]
+        [Description("Conversion factor to convert carbohydrate to bunch dry mass to account for oil content")]
+        [Units("g/g")]
         Function BunchOilConversionFactor = null;
-        [Link]
+        [Link] 
+        [Description("Fractional contribution of water to fresh bunch mass")]
+        [Units("g/g")]
         Function RipeBunchWaterContent = null;
         [Link]
+        [Description("Frond number removed when bunches are ready for harvest - used to determine harvest time")]
+        [Units("/palm")]
         Function HarvestFrondNumber = null;
         [Link]
+        [Description("Maximum frond nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function FrondMaximumNConcentration = null;
         [Link]
+        [Description("Critical frond nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function FrondCriticalNConcentration = null;
         [Link]
+        [Description("Minimum frond nitrogen concentration on dry mass basis")]
+        [Units("%")]
         Function FrondMinimumNConcentration = null;
         
         /// <summary>
@@ -364,16 +441,31 @@ namespace Models.PMF.OilPalm
         public double UnderstoryCoverGreen { get; set; }
         private double UnderstoryKLmax = 0.12;
 
+        /// <summary>
+        /// Potential soil water uptake from each soil layer by understory
+        /// </summary>
         double[] UnderstoryPotSWUptake;
-
+        
+        /// <summary>
+        /// Actual Soil water uptake from each soil layer by understory
+        /// </summary>
         double[] UnderstorySWUptake;
-
+        /// <summary>
+        /// Potential nitrogen water uptake from each soil layer by understory
+        /// </summary>
         double[] UnderstoryPotNUptake;
 
+        /// <summary>
+        /// Actual soil nitrogen uptake from each soil layer by understory
+        /// </summary>
         [XmlIgnore]
         public double[] UnderstoryNUptake { get; set; }
 
+        /// <summary>
+        /// Understory rooting depth
+        /// </summary>
         [XmlIgnore]
+        [Units("mm")]
         public double UnderstoryRootDepth = 500;
 
         /// <summary>
@@ -390,16 +482,28 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double UnderstoryEP = 0;
 
+        /// <summary>
+        /// Understory plant water stress factor
+        /// </summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double UnderstoryFW = 0;
 
+        /// <summary>
+        /// Daily understory dry matter growth
+        /// </summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double UnderstoryDltDM = 0;
 
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>
+        /// Daily understory nitrogen fixation
+        /// </summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double UnderstoryNFixation { get; set; }
 
         [Serializable]
@@ -430,12 +534,18 @@ namespace Models.PMF.OilPalm
 
 
         [XmlIgnore]
+        [Description("Stem mass on a dry matter basis")]
+        [Units("g/m^2")]
         public double StemMass { get; set; }
 
         [XmlIgnore]
+        [Description("Stem nitrogen")]
+        [Units("g/m^2")]
         public double StemN { get; set; }
 
         [XmlIgnore]
+        [Description("Stem nitrogen concention on a dry mass basis")]
+        [Units("%")]
         double StemNConc
         {
             get
@@ -448,6 +558,9 @@ namespace Models.PMF.OilPalm
         }
 
         private bool CropInGround = false;
+
+        [Description("Flag to indicate whether oil palm has been planted")]
+        [Units("True/False")]
         [XmlIgnore]
         public bool IsCropInGround
         {
@@ -461,7 +574,6 @@ namespace Models.PMF.OilPalm
             //zero public properties
             CumulativeFrondNumber = 0;
             CumulativeBunchNumber = 0;
-            CumulativeYield = 0;
             CarbonStress = 0;
             HarvestBunches = 0;
             HarvestFFB = 0;
@@ -865,7 +977,6 @@ namespace Models.PMF.OilPalm
                 HarvestNRemoved = 0.0;
 
                 CumulativeBunchNumber += Bunches[0].FemaleFraction;
-                CumulativeYield += Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
                 Bunches.RemoveAt(0);
 
                 BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
@@ -997,7 +1108,8 @@ namespace Models.PMF.OilPalm
 
 
 
-
+        [Description("Leaf Area Index")]
+        [Units("m^2/m^2")]
         public double LAI
         {
             get
@@ -1015,6 +1127,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Area of an average frond")]
+        [Units("m^2")]
         public double FrondArea
         {
             get
@@ -1028,6 +1142,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Units("m^2")]
+        [Description("Area of the 17th frond")]
         public double Frond17Area
         {
             get
@@ -1042,7 +1158,8 @@ namespace Models.PMF.OilPalm
 
         }
 
-
+        [Description("Frond mass on a dry mass basis")]
+        [Units("g/m^2")]
         public double FrondMass
         {
             get
@@ -1058,6 +1175,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Frond nitrogen content")]
+        [Units("g/m^2")]
         public double FrondN
         {
             get
@@ -1073,6 +1192,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Frond nitrogen concentration on a dry mass basis")]
+        [Units("%")]
         public double FrondNConc
         {
             get
@@ -1082,6 +1203,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Bunch mass on a dry mass basis")]
+        [Units("g/m^2")]
         public double BunchMass
         {
             get
@@ -1095,6 +1218,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Bunch nitrogen content")]
+        [Units("g/m^2")]
         public double BunchN
         {
             get
@@ -1108,6 +1233,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Bunch nitrogen concentration on a dry mass basis")]
+        [Units("%")]
         public double BunchNConc
         {
             get
@@ -1120,7 +1247,8 @@ namespace Models.PMF.OilPalm
 
         }
 
-
+        [Description("Root mass on a dry mass basis")]
+        [Units("g/m^2")]
         public double RootMass
         {
             get
@@ -1134,6 +1262,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Root nitrogen content")]
+        [Units("g/m^2")]
         public double RootN
         {
             get
@@ -1147,6 +1277,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Root nitrogen concentration on a dry mass basis")]
+        [Units("%")]
         public double RootNConc
         {
             get
@@ -1156,6 +1288,8 @@ namespace Models.PMF.OilPalm
 
         }
 
+        [Description("Total palm nitrogen content")]
+        [Units("g/m^2")]
         public double PlantN
         {
             get
@@ -1164,6 +1298,8 @@ namespace Models.PMF.OilPalm
             }
         }
 
+        [Description("Total number of fronds on a palm")]
+        [Units("/palm")]
         public double TotalFrondNumber
         {
             get
@@ -1172,6 +1308,8 @@ namespace Models.PMF.OilPalm
             }
         }
 
+        [Description("Number of expanded fronds on a palm")]
+        [Units("/palm")]
         public double FrondNumber
         {
             get
@@ -1180,7 +1318,8 @@ namespace Models.PMF.OilPalm
             }
         }
 
-
+        [Description("Green canopy cover provided by the palms")]
+        [Units("0-1")]
         public double cover_green
         {
             get
@@ -1192,11 +1331,15 @@ namespace Models.PMF.OilPalm
             }
         }
 
+        [Description("Frond specific leaf area")]
+        [Units("cm^2/g")]
         public double SLA
         {
             get { return LAI * 10000.0 / FrondMass; }
         }
 
+        [Description("Female flower fraction of the oldest cohort of bunches")]
+        [Units("0-1")]
         public double FFF
         {
             get { return Bunches[0].FemaleFraction; }

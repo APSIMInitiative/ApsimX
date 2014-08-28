@@ -2,7 +2,11 @@
   <Name>OilPalm</Name>
   <Cultivar>
     <Name>Dami</Name>
-  </Cultivar>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]></MemoText>
+    </Memo>    
+    </Cultivar>
   <Cultivar>
     <Name>SuperFamily</Name>
     <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
@@ -14,6 +18,10 @@
   </Constant>
   <Constant>
     <Name>RootFraction</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[The proportion of plant growth  partitioned to roots has been set to 10% as this value lies between estimates used by Henson and Dolmat (2003) and van Kraalingen et al. (1989). ]]></MemoText>
+    </Memo>    
     <Value>0.1</Value>
   </Constant>
   <Constant>
@@ -58,7 +66,7 @@
     <Name>FrondAppearanceRate</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[This value has been fitted to frond appearance data from Papua New Guinea (see model validation documentation)]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
@@ -99,7 +107,7 @@
     <Name>FrondMaxArea</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[This value has been fitted to frond area data from Papua New Guinea (see model validation documentation)]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
@@ -122,6 +130,10 @@
   </SplineInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>BunchSizeMax</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[This value has been fitted to bunch size data from Papua New Guinea (see model validation documentation)]]></MemoText>
+    </Memo>    
     <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
@@ -143,6 +155,10 @@
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>HarvestFrondNumber</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[This function frond number data from Papua New Guinea (see model validation documentation)]]></MemoText>
+    </Memo>
     <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
@@ -158,36 +174,19 @@
       </Y>
     </XYPairs>
   </LinearInterpolationFunction>
-  <LinearInterpolationFunction>
+    <Constant>
     <Name>FemaleFlowerFraction</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. A constant value is assumed for Female Flower Fraction at the beginning of this phase.  This represents the fraction of female flowers in the absence of any further stress effect.]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
-    <XYPairs>
-      <Name>XYPairs</Name>
-      <X>
-        <double>0</double>
-        <double>4</double>
-        <double>6</double>
-        <double>8</double>
-        <double>10</double>
-      </X>
-      <Y>
-        <double>0.8</double>
-        <double>0.8</double>
-        <double>0.8</double>
-        <double>0.8</double>
-        <double>0.8</double>
-      </Y>
-    </XYPairs>
-  </LinearInterpolationFunction>
+    <Value>0.8</Value>
+  </Constant>
   <LinearInterpolationFunction>
     <Name>FFFStressImpact</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. Combres et al. (2013) showed that variation in the proportion of female inflorescences could be modelled in response to the ratio of assimilate supply to demand (RSD) within the whole plant. We use a similar approach here in which the female inflorescence fraction (FIF) for each cohort within the sex determination phase is decreased each day at a rate of 0.06 x (1 – RSD).]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
@@ -310,7 +309,7 @@
     <Name>FlowerAbortionFraction</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Inflorescence abortion is calculated during a phase 10 to 12 fronds after the spear leaf stage.   Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
@@ -329,7 +328,7 @@
     <Name>BunchFailureFraction</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Bunch failure is determined 21 fronds after spear leaf over the course of a single frond.  Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
@@ -348,7 +347,7 @@
     <Name>DirectExtinctionCoeff</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].Population</XProperty>
     <XYPairs>
@@ -367,7 +366,7 @@
     <Name>DiffuseExtinctionCoeff</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)]]></MemoText>
     </Memo>
     <XProperty>[OilPalm].Population</XProperty>
     <XYPairs>
@@ -386,7 +385,7 @@
     <Name>RUE</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[]]></MemoText>
+      <MemoText><![CDATA[Photosynthesis is calculated using a radiation use efficiency (RUE) of 1.22 g MJ-1 of intercepted direct beam total short wave radiation.  RUE for diffuse light increases from this direct beam value by up to 33%, in proportion to the fraction of daily intercepted radiation, corresponding with the observed impact of diffuse light penetration on forest growth (Alton et al., 2007).  Daily average RUE is calculated as the average of the direct and diffuse beam RUE values, weighted toward the diffuse light RUE using the square of the daily diffuse light fraction (van Kraalingen et al., 1989).  This approach yields a value of 1.35 for a clear day with approximately 30% diffuse light which matches estimates provided by Henson and Dolmat (2003) assuming a density of 140 palms ha-1.]]></MemoText>
     </Memo>
     <Value>1.22</Value>
   </Constant>
