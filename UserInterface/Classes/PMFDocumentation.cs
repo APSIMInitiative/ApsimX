@@ -84,6 +84,8 @@ namespace UserInterface.Classes
                 //XmlNode PlantNode = Utility.Xml.FindByType(XML.DocumentElement, "Model/Plant");
                 DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 2, parentModel);
 
+                DocumentVariables(OutputFile, parentModel);
+
                 OutputFile.WriteLine("</body>");
                 OutputFile.WriteLine("</html>");
                 OutputFile.Close();
@@ -604,6 +606,44 @@ namespace UserInterface.Classes
             graph.Export(image);
             
             image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
+        }
+
+
+        private static void DocumentVariables(StreamWriter OutputFile, Model parentModel)
+        {
+            OutputFile.WriteLine(Header("Public properties", 3, null));
+
+            OutputFile.WriteLine("<table style=\"text-align: left; valign: top;\"  border=\"1\"  >");
+            OutputFile.WriteLine("<th>Name</th><th>Units</th><th>Data type</th><th>Description</th>");
+            foreach (PropertyInfo property in parentModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                
+                string unitsString = string.Empty;
+                UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (units != null)
+                {
+                    unitsString = units.ToString();
+                }
+
+                string descriptionString = string.Empty;
+                DescriptionAttribute description = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null)
+                {
+                    descriptionString = description.ToString();
+                }
+
+                OutputFile.Write("<tr>");
+
+                OutputFile.Write("<td id=\"properties\" >" + property.Name + "</td>");
+                OutputFile.Write("<td id=\"properties\" >" + unitsString + "</td>");
+                OutputFile.Write("<td id=\"properties\" >" + property.PropertyType.Name + "</td>");
+                OutputFile.Write("<td id=\"properties\" >" + descriptionString + "</td>");
+
+
+                OutputFile.WriteLine("</tr>");   
+            }
+
+            OutputFile.WriteLine("</table>");
         }
 
     }

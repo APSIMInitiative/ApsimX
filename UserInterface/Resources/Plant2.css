@@ -73,3 +73,7 @@ td {
   font-family: "Courier New",Courier,monospace;
   font-size: small;
 }
+#properties {
+  border: 1px solid #cccccc;
+  font-family: Arial,Helvetica,sans-serif;
+}
