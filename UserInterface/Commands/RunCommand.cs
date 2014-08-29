@@ -69,13 +69,14 @@ namespace UserInterface.Commands
                 {
                     simulation.Run(null, null);
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
-                    foreach (Model model in Simulations.Children.AllRecursively)
-                        model.OnAllSimulationsCompleted();
                 }
                 catch (Exception err)
                 {
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
                 }
+
+                foreach (Model model in Simulations.Children.AllRecursively)
+                    model.OnAllSimulationsCompleted();
                 return;
             }
             else
