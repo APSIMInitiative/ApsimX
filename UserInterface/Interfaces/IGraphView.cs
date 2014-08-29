@@ -36,7 +36,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user clicks on a legend.
         /// </summary>
-        event EventHandler OnLegendClick;
+        event EventHandler<LegendClickArgs> OnLegendClick;
 
         /// <summary>
         /// Invoked when the user clicks on the graph title.
@@ -180,5 +180,11 @@ namespace UserInterface.Interfaces
         /// <param name="menuText">Menu item text</param>
         /// <param name="onClick">Event handler for menu item click</param>
         void AddContextAction(string menuText, System.EventHandler onClick);
+
+        /// <summary>
+        /// Toggle the enable or disable a series.
+        /// </summary>
+        /// <param name="seriesIndex">series index</param>
+        void ToggleEnableSeries(int seriesIndex);
     }
 }
