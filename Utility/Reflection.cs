@@ -397,6 +397,8 @@ namespace Utility
                 return Convert.ToDateTime(stringValue);
             else if (type == typeof(string))
                 return stringValue;
+            else if (type == typeof(bool))
+                return Boolean.Parse(stringValue);
             else if (type.IsEnum)
                 return Enum.Parse(type, stringValue, true);
 
