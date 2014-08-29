@@ -20,7 +20,8 @@ namespace UserInterface.Commands
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
                                                                     typeof(Simulations),
-                                                                    typeof(Simulation)};
+                                                                    typeof(Simulation),
+                                                                    typeof(Experiment)};
 
         /// <summary>
         /// Constructor.
