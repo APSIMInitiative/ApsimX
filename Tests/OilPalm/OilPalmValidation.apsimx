@@ -390,11 +390,11 @@
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
-           <ResidueTypes>
+          <c_fract>0.4</c_fract>
+          <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
-         <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -1141,18 +1141,18 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <SoilCtpha>NaN</SoilCtpha>
-            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
             <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
+            <SoilCtpha>NaN</SoilCtpha>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
             <OilPalmYield>0</OilPalmYield>
             <TotalNO3>NaN</TotalNO3>
+            <NitTot>NaN</NitTot>
             <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
@@ -2025,11 +2025,11 @@ namespace Models
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
+          <c_fract>0.4</c_fract>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
-          <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -2659,18 +2659,18 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <SoilCtpha>NaN</SoilCtpha>
-            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
             <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
+            <SoilCtpha>NaN</SoilCtpha>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
             <OilPalmYield>0</OilPalmYield>
             <TotalNO3>NaN</TotalNO3>
+            <NitTot>NaN</NitTot>
             <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
@@ -3680,11 +3680,11 @@ namespace Models
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOM</Name>
+          <c_fract>0.4</c_fract>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
-          <c_fract>0.4</c_fract>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -4324,18 +4324,18 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <SoilCtpha>NaN</SoilCtpha>
-            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
             <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
+            <SoilCtpha>NaN</SoilCtpha>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
             <OilPalmYield>0</OilPalmYield>
             <TotalNO3>NaN</TotalNO3>
+            <NitTot>NaN</NitTot>
             <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
