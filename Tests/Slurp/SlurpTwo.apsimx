@@ -338,10 +338,6 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
         <_standing_fraction>
           <double>0</double>
         </_standing_fraction>
@@ -352,6 +348,9 @@
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+        </TillageTypes>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
@@ -1001,10 +1000,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
         <_standing_fraction>
           <double>0</double>
         </_standing_fraction>
@@ -1015,6 +1010,9 @@ namespace Models
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+        </TillageTypes>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>

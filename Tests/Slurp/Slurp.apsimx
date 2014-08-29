@@ -322,17 +322,20 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
         <_standing_fraction>
           <double>0</double>
         </_standing_fraction>
         <c_fract>0.4</c_fract>
         <report_additions>no</report_additions>
         <report_removals>no</report_removals>
-        <residueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
@@ -473,9 +476,9 @@ namespace Models
         <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
         <localFrgr>1</localFrgr>
         <localDemandWater>2</localDemandWater>
-        <localDemandNitrogen>0</localDemandNitrogen>
-        <localKNO3>0</localKNO3>
-        <localKNH4>0</localKNH4>
+        <localDemandNitrogen>2</localDemandNitrogen>
+        <localKNO3>0.2</localKNO3>
+        <localKNH4>0.2</localKNH4>
         <localRootDepth>500</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
       </Slurp>

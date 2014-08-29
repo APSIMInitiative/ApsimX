@@ -32,7 +32,7 @@ namespace Models.Core
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
         /// </summary>
-        //CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  }
+        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
 
         /// <summary>

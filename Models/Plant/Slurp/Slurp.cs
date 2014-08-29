@@ -175,7 +175,7 @@ namespace Models.PMF.Slurp
         /// <summary>
         /// MicroClimate supplies LightProfile
         /// </summary>
-        //[XmlIgnore]       public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        [XmlIgnore]       public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
 
         // The following event handler will be called once at the beginning of the simulation
