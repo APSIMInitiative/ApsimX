@@ -1141,34 +1141,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -2659,34 +2659,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -4324,34 +4324,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -5080,5 +5080,64 @@ namespace Models
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>n</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>residual</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>R^2</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>RMSD</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>SB</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Mean</Type>
+      <ColumnNames>SDSD</ColumnNames>
+      <Parameters>1,value</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>LCS</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>%</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>
