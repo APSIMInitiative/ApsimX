@@ -11,6 +11,7 @@ using Models.Factorial;
 using UserInterface.Interfaces;
 using System.Data;
 using Models;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -367,14 +368,22 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnLegendClick(object sender, EventArgs e)
+        private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            LegendPresenter presenter = new LegendPresenter();
-            CurrentPresenter = presenter; 
-            
-            LegendView view = new LegendView();
-            GraphView.ShowEditorPanel(view);
-            presenter.Attach(Graph, view, ExplorerPresenter);
+            if (e.controlKeyPressed)
+            {
+                this.GraphView.ToggleEnableSeries(e.seriesIndex);
+
+            }
+            else
+            {
+                LegendPresenter presenter = new LegendPresenter();
+                CurrentPresenter = presenter;
+
+                LegendView view = new LegendView();
+                GraphView.ShowEditorPanel(view);
+                presenter.Attach(Graph, view, ExplorerPresenter);
+            }
         }
 
         /// <summary>
