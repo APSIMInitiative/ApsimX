@@ -1196,7 +1196,7 @@ namespace Models
 
         // * Other parameters (changed via manager) -----------------------------------------------
 
-        private string rootDistributionMethod = "Homogeneous";
+        private string rootDistributionMethod = "ExpoLinear";
         //[Description("Root distribution method")]
         [XmlIgnore]
         public string RootDistributionMethod
@@ -1218,9 +1218,8 @@ namespace Models
             }
         }
 
-        private double expoLinearDepthParam;
-        //[Description("Fraction of root depth where its proportion starts to decrease")]
-        [XmlIgnore]
+        private double expoLinearDepthParam = 0.1;
+        [Description("Fraction of root depth where its proportion starts to decrease")]
         public double ExpoLinearDepthParam
         {
             get { return expoLinearDepthParam; }
@@ -1232,9 +1231,8 @@ namespace Models
             }
         }
 
-        private double expoLinearCurveParam;
-        //[Description("Exponent to determine mass distribution in the soil profile")]
-        [XmlIgnore]
+        private double expoLinearCurveParam = 0.1;
+        [Description("Exponent to determine mass distribution in the soil profile")]
         public double ExpoLinearCurveParam
         {
             get { return expoLinearCurveParam; }
@@ -3719,7 +3717,7 @@ namespace Models
 
             //Initialising the aggregated pasture parameters from initial valuses of each species
             double sum_lightExtCoeff = 0.0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 //accumulate LAI of all species
                 p_greenLAI += SP[s].greenLAI;
@@ -3850,10 +3848,10 @@ namespace Models
 
             //partition the intercepted radiation between species
             double sumCoverGreen = 0.0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
                 sumCoverGreen += SP[s].coverGreen;
 
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 if (sumCoverGreen == 0)
                     SP[s].intRadnFrac = 0;
@@ -3875,14 +3873,14 @@ namespace Models
             if (p_waterDemand == 0)
             {
                 p_gfwater = 1.0;
-                for (int s = 0; s < NumSpecies; s++)
+                for (int s = 0; s < numSpecies; s++)
                     SP[s].gfwater = p_gfwater;
                 return;								 //case (1) return
             }
             if (p_waterDemand > 0 && p_waterUptake == 0)
             {
                 p_gfwater = 0.0;
-                for (int s = 0; s < NumSpecies; s++)
+                for (int s = 0; s < numSpecies; s++)
                     SP[s].gfwater = p_gfwater;
                 return;								 //case (2) return
             }
@@ -3910,7 +3908,7 @@ namespace Models
                 {
                     double accum_gfwater = 0;
                     p_greenLAI = 0;	 //update p_greenLAI before using it.
-                    for (int s = 0; s < NumSpecies; s++)
+                    for (int s = 0; s < numSpecies; s++)
                     {
                         SP[s].gfwater = 1 - SP[s].soilSatFactor * (SW - FC) / (Sat - FC);
                         accum_gfwater += SP[s].gfwater * SP[s].greenLAI;   //weighted by greenLAI
@@ -3927,7 +3925,7 @@ namespace Models
             }
 
             //Original block Set specieS.gfwater = p_gfwater, to distinguish them later
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 SP[s].gfwater = p_gfwater;
             }
@@ -3956,7 +3954,7 @@ namespace Models
             p_dRootSen = 0;
             p_dNRootSen = 0;
 
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 SP[s].PartitionTurnover();
 
@@ -4040,9 +4038,9 @@ namespace Models
                 p_gftemp = 0;	 //weighted average
 
                 double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT; //Tday
-                for (int s = 0; s < NumSpecies; s++)
+                for (int s = 0; s < numSpecies; s++)
                 {
-                    double prop = 1.0 / NumSpecies;
+                    double prop = 1.0 / numSpecies;
                     if (p_greenDM != 0.0)
                     {
                         prop = SP[s].dmgreen / AboveGroundLiveWt;   // dm_green;
@@ -4082,14 +4080,14 @@ namespace Models
             if (MetData.StartDate != new DateTime(0))
                 SetPastureToSpeciesData();		 // This is needed for the first day after knowing the number of species
 
-            FractionToHarvest = new double[NumSpecies];
+            FractionToHarvest = new double[numSpecies];
 
             DoNewCropEvent();			// Tell other modules that I exist
             DoNewCanopyEvent();		  // Tell other modules about my canopy
 
             alt_N_uptake = alt_N_uptake.ToLower();
             if (alt_N_uptake == "yes")
-                if (NumSpecies > 1)
+                if (numSpecies > 1)
                     throw new Exception("When working with multiple species, 'ValsMode' must ALWAYS be 'none'");
         }
 
@@ -4111,6 +4109,9 @@ namespace Models
                 HaveInitialised = true;
             }
 
+            for (int s = 0;s<numSpecies;s++)
+                SP[s].DailyRefresh();
+
             DoNewCanopyEvent();
         }
 
@@ -4122,10 +4123,9 @@ namespace Models
                 return;
 
             //**Remember last status, and update root depth frontier (root depth mainly for annuals)
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 SP[s].SetPrevPools(); //pool values yesterday is also retained in current state
-                SP[s].DailyRefresh();
 
                 double spRootDepth = SP[s].rootGrowth();	//update root depth
                 if (p_rootFrontier < spRootDepth)
@@ -4133,21 +4133,21 @@ namespace Models
             }
 
             // clear FractionHarvest by assigning new
-            FractionToHarvest = new double[NumSpecies];
+            FractionToHarvest = new double[numSpecies];
 
             // pass some global variables to each species
             SetPastureToSpeciesData();
 
             //** advance phenology
             int anyEmerged = 0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 anyEmerged += SP[s].Phenology();
             }
 
             //**Potential growth
             p_dGrowthPot = 0.0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 //p_dGrowthPot += SP[s].DailyGrowthPot();   // alternative way for calclating potential growth
                 p_dGrowthPot += SP[s].DailyEMGrowthPot();   //pot here incorporated [N] effects
@@ -4170,7 +4170,7 @@ namespace Models
 
             //**add drought effects (before considering other nutrient limitation)
             p_dGrowthW = 0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 p_dGrowthW += SP[s].DailyGrowthW();
             }
@@ -4178,7 +4178,7 @@ namespace Models
 
             //**actual daily growth
             p_dGrowth = 0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
                 p_dGrowth += SP[s].DailyGrowthAct();
 
             //**partitioning & turnover
@@ -4202,7 +4202,7 @@ namespace Models
             double dm_leaf_dead = LeafDeadWt;
             double dm_stem_dead = StemDeadWt;
 
-            for (int s = 0; s < NumSpecies; s++)	 // for accumulating the total DM & N removal of species from verious pools
+            for (int s = 0; s < numSpecies; s++)	 // for accumulating the total DM & N removal of species from verious pools
             {
                 SP[s].dmdefoliated = 0.0;
                 SP[s].Ndefoliated = 0.0;
@@ -4214,7 +4214,7 @@ namespace Models
                 {
                     if (rm.dm[i].pool == "green" && rm.dm[i].part[j] == "leaf")
                     {
-                        for (int s = 0; s < NumSpecies; s++)		   //for each species
+                        for (int s = 0; s < numSpecies; s++)		   //for each species
                         {
                             if (dm_leaf_green != 0)			 //resposibility of other modules to check the amount
                             {
@@ -4236,7 +4236,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "green" && rm.dm[i].part[j] == "stem")
                     {
-                        for (int s = 0; s < NumSpecies; s++)
+                        for (int s = 0; s < numSpecies; s++)
                         {
                             if (dm_stem_green != 0)  //resposibility of other modules to check the amount
                             {
@@ -4258,7 +4258,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "dead" && rm.dm[i].part[j] == "leaf")
                     {
-                        for (int s = 0; s < NumSpecies; s++)
+                        for (int s = 0; s < numSpecies; s++)
                         {
                             if (dm_leaf_dead != 0)  //resposibility of other modules to check the amount
                             {
@@ -4273,7 +4273,7 @@ namespace Models
                     }
                     else if (rm.dm[i].pool == "dead" && rm.dm[i].part[j] == "stem")
                     {
-                        for (int s = 0; s < NumSpecies; s++)
+                        for (int s = 0; s < numSpecies; s++)
                         {
                             if (dm_stem_dead != 0)  //resposibility of other modules to check the amount
                             {
@@ -4291,7 +4291,7 @@ namespace Models
 
             p_harvestDM = 0;
             p_harvestN = 0;
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
             {
                 p_harvestDM += SP[s].dmdefoliated;
                 p_harvestN += SP[s].Ndefoliated;
@@ -4432,7 +4432,7 @@ namespace Models
 
             p_Live = true;
             ResetZero();
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
                 SP[s].SetInGermination();
 
         }
@@ -4480,7 +4480,7 @@ namespace Models
             p_soilNdemand = p_soilNuptake = 0;
 
             //species (ignore fraction)
-            for (int s = 0; s < NumSpecies; s++)
+            for (int s = 0; s < numSpecies; s++)
                 SP[s].ResetZero();
 
         }
@@ -6827,9 +6827,6 @@ namespace Models
             pS.dmgreen = dmgreen;
             pS.dmdead = dmdead;
             pS.dmtotal = dmtotal;
-            pS.dmdefoliated = dmdefoliated;
-
-            pS.Nremob = Nremob;
 
             return true;
         }

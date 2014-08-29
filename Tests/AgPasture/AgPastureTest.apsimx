@@ -729,13 +729,13 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.75861878545643</double>
-            <double>2.4849476723980373</double>
-            <double>1.2445528003922144</double>
-            <double>0.49960205056578827</double>
-            <double>0.25031020005392263</double>
-            <double>0.15029618545371482</double>
-            <double>0.10018905195522733</double>
+            <double>3.7625407551262389</double>
+            <double>2.4866004598503344</double>
+            <double>1.2450590631942275</double>
+            <double>0.4996340100092927</double>
+            <double>0.25030911984607285</double>
+            <double>0.1502934140689916</double>
+            <double>0.10018716067623806</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -934,6 +934,8 @@ namespace Models
         <InitialRootDepth>
           <double>750</double>
         </InitialRootDepth>
+        <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
+        <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>
       <Report>
         <Name>Report</Name>
@@ -1150,6 +1152,40 @@ namespace Models
           <Y>
             <TableName>Report</TableName>
             <FieldName>AgPasture.SpeciesAboveGroundWt(1)</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+      </Graph>
+      <Graph>
+        <Name>DMYield</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>DM (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>DMcut</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.HarvestWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2389,13 +2425,13 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.7084966503332106</double>
-            <double>2.4679271578808888</double>
-            <double>1.2376902799756213</double>
-            <double>0.49833787988946</double>
-            <double>0.2502461563251952</double>
-            <double>0.15035367371893585</double>
-            <double>0.10019424265809331</double>
+            <double>3.7076933080240391</double>
+            <double>2.468584115201808</double>
+            <double>1.2378946766227119</double>
+            <double>0.49824574108696407</double>
+            <double>0.25018477292128255</double>
+            <double>0.15034734453660273</double>
+            <double>0.10019609676327829</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -2594,6 +2630,8 @@ namespace Models
         <InitialRootDepth>
           <double>750</double>
         </InitialRootDepth>
+        <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
+        <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>
       <Report>
         <Name>Report</Name>
@@ -2809,6 +2847,40 @@ namespace Models
           <Y>
             <TableName>Report</TableName>
             <FieldName>AgPasture.SpeciesAboveGroundWt(1)</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+      </Graph>
+      <Graph>
+        <Name>DMYield</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>DM (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>DMcut</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.HarvestWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -4048,13 +4120,13 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.7138783401085909</double>
-            <double>2.4686228344362209</double>
-            <double>1.2380859238808779</double>
-            <double>0.49835997611385985</double>
-            <double>0.25025471973438518</double>
-            <double>0.15035232559166967</double>
-            <double>0.10019387330829016</double>
+            <double>3.7136764881329496</double>
+            <double>2.4698281813043792</double>
+            <double>1.2383961716086014</double>
+            <double>0.49836009167083023</double>
+            <double>0.25025052330473485</double>
+            <double>0.15035274660681502</double>
+            <double>0.10019396267774858</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -4260,6 +4332,8 @@ namespace Models
           <double>750</double>
           <double>350</double>
         </InitialRootDepth>
+        <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
+        <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>
       <Report>
         <Name>Report</Name>
@@ -4516,6 +4590,40 @@ namespace Models
           <Y>
             <TableName>Report</TableName>
             <FieldName>AgPasture.SpeciesAboveGroundWt(2)</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+      </Graph>
+      <Graph>
+        <Name>DMYield</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>DM (kg/ha)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+        </Axis>
+        <Series>
+          <Title>DMcut</Title>
+          <Type>Line</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>AgPasture.HarvestWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
