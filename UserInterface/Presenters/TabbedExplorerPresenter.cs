@@ -105,7 +105,12 @@ namespace UserInterface.Presenters
                         Presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, View.TabWidth - 20); // ?
                     config.Settings.AddMruFile(fileName);
                     config.Save();
-                    View.FillMruList(config.Settings.MruList);
+                    List<string> ValidMrus = new List<string>(); //make sure recently used files still exist before displaying them
+                    foreach (string s in config.Settings.MruList)
+                        if (File.Exists(s))
+                            ValidMrus.Add(s);
+                    config.Settings.MruList = ValidMrus;
+                    View.FillMruList(ValidMrus);
 
                     Cursor.Current = Cursors.Default;
                 }
