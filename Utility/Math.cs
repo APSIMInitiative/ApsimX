@@ -517,6 +517,7 @@ namespace Utility
             double SumOfResiduals = 0;          //SUM i=1->n   (P(i) - O(i))
             double SumOfAbsResiduals = 0;       //SUM i=1->n  |(P(i) - O(i))|
             double SumOfSquaredOPResiduals = 0; //SUM i=1->n  ((O(i) - P(i)) ^ 2)
+            double SumOfSquaredSD = 0;          //SUM i=1->n  ((O(i) - Omean) ^ 2)
 
             stats.n = 0;
             stats.m = 0.0;
@@ -560,6 +561,15 @@ namespace Utility
             Xbar = SumX / Num_points;
             Ybar = SumY / Num_points;
 
+            xEnum.Reset();
+            yEnum.Reset();
+            while (xEnum.MoveNext() && yEnum.MoveNext())
+            {
+                double xValue = Convert.ToDouble(xEnum.Current);
+                double yValue = Convert.ToDouble(yEnum.Current);
+                SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
+            }
+
             CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
             CSSX = SumX2 - SumX * SumX / Num_points;      // Corrected SS for X
             stats.n = Num_points;
@@ -598,10 +608,10 @@ namespace Utility
             //      MeanAbsPerError = SumXYDiffPer / Num_points;  // very dangerous when y is low
             // could use MeanAbsError over mean
 
-            stats.NSE = 1 - SumOfSquaredResiduals / Ybar;                    // Nash-Sutcliff efficiency
+            stats.NSE = 1 - SumOfSquaredResiduals / SumOfSquaredSD;                    // Nash-Sutcliff efficiency
             stats.ME = 1 / (double)stats.n * SumOfResiduals;                         // Mean error
             stats.MAE = 1 / (double)stats.n * SumOfAbsResiduals;                     // Mean Absolute Error
-            stats.RSR = Math.Sqr(SumOfSquaredOPResiduals) / Math.Sqr(Ybar);  // Root mean square error to Standard deviation Ratio
+            stats.RSR = Math.Sqr(SumOfSquaredOPResiduals) / Math.Sqr(SumOfSquaredSD);  // Root mean square error to Standard deviation Ratio
             
             return stats;
         }
