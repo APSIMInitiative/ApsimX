@@ -276,14 +276,17 @@ namespace UserInterface.Presenters
                 Model modelClicked = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
                 if (modelClicked != null)
                 {
-                    string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+                    if (modelClicked is Simulations)
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                    }
+                    else
+                    {
+                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
 
-                    Classes.PMFDocumentation.Go(fileName, modelClicked);
-                }
-                else
-                {
-                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                    this.explorerPresenter.CommandHistory.Add(command, true);
+                        Classes.PMFDocumentation.Go(fileName, modelClicked);
+                    }
                 }
             }
         }
