@@ -88,7 +88,7 @@ namespace Models
             {
                 myLightProfile = value;
                 canopiesNum = myLightProfile.Length;
-                canopiesRadn = new double[1];
+                canopiesRadn = new double[canopiesNum];
 
                 interceptedRadn = 0;
                 for (int j = 0; j < canopiesNum; j++)
@@ -3736,7 +3736,6 @@ namespace Models
                     p_rootFrontier = SP[s].rootDepth;
 
                 p_rootMass += SP[s].dmroot;
-
             }
             p_totalLAI = p_greenLAI + p_deadLAI;
             p_totalDM = p_greenDM + p_deadDM;
@@ -3833,16 +3832,16 @@ namespace Models
         /// <returns></returns>
         private bool SetPastureToSpeciesData()
         {
+            // Pass some data from Clock
+            Species.simToday = clock.Today;
+
             //pass some metData to species
+            Species.DayLength = MetData.DayLength;
+            Species.localLatitude = MetData.Latitude;
             Species.Tmax = MetData.MaxT;
             Species.Tmin = MetData.MinT;
             Species.Tmean = 0.5 * (MetData.MaxT + MetData.MinT);
             Species.ambientCO2 = MetData.CO2;
-
-            // From Clock
-            Species.simToday = clock.Today;
-            Species.DayLength = MetData.DayLength;
-            Species.localLatitude = MetData.Latitude;
 
             Species.PlantInterceptedRadn = interceptedRadn;
             Species.PlantCoverGreen = Cover_green;
@@ -3980,8 +3979,6 @@ namespace Models
             p_totalLAI = p_greenLAI + p_deadLAI;
             p_totalDM = p_greenDM + p_deadDM;
 
-
-
             //litter return to surface OM completely (frac = 1.0)
             DoSurfaceOMReturn(p_dLitter, p_dNLitter, 1.0);
 
@@ -4008,7 +4005,6 @@ namespace Models
                 EventData.sender = Name;		//
                 NewCrop.Invoke(EventData);
             }
-
         }
 
         //----------------------------------------------------------------
@@ -4025,8 +4021,8 @@ namespace Models
                 LocalCanopyData.lai = p_greenLAI;
                 LocalCanopyData.lai_tot = p_totalLAI;
                 p_height = HeightfromDM;
-                LocalCanopyData.height = (int)p_height;			 // height effect, mm
-                LocalCanopyData.depth = (int)p_height;			  // canopy depth
+                LocalCanopyData.height = p_height;			 // height effect, mm
+                LocalCanopyData.depth = p_height;			  // canopy depth
                 LocalCanopyData.cover = Cover_green;
                 LocalCanopyData.cover_tot = Cover_tot;
                 NewCanopy.Invoke(LocalCanopyData);
@@ -4086,6 +4082,8 @@ namespace Models
             if (MetData.StartDate != new DateTime(0))
                 SetPastureToSpeciesData();		 // This is needed for the first day after knowing the number of species
 
+            FractionToHarvest = new double[NumSpecies];
+
             DoNewCropEvent();			// Tell other modules that I exist
             DoNewCanopyEvent();		  // Tell other modules about my canopy
 
@@ -4134,6 +4132,9 @@ namespace Models
                     p_rootFrontier = spRootDepth;
             }
 
+            // clear FractionHarvest by assigning new
+            FractionToHarvest = new double[NumSpecies];
+
             // pass some global variables to each species
             SetPastureToSpeciesData();
 
@@ -4178,54 +4179,10 @@ namespace Models
             //**actual daily growth
             p_dGrowth = 0;
             for (int s = 0; s < NumSpecies; s++)
-            {
                 p_dGrowth += SP[s].DailyGrowthAct();
-            }
-
-            /*trick species for specified clover%
-            DateTime d97J1 = new DateTime(1997, 7, 1, 0, 0, 0);
-            DateTime d98J1 = new DateTime(1998, 7, 1, 0, 0, 0);
-            DateTime d99J1 = new DateTime(1999, 7, 1, 0, 0, 0);
-            DateTime d00J1 = new DateTime(2000, 7, 1, 0, 0, 0);
-            DateTime d01J1 = new DateTime(2001, 7, 1, 0, 0, 0);
-            DateTime d02J1 = new DateTime(2002, 7, 1, 0, 0, 0);
-            DateTime d03J1 = new DateTime(2003, 7, 1, 0, 0, 0);
-            DateTime d04J1 = new DateTime(2004, 7, 1, 0, 0, 0);
-            DateTime d05J1 = new DateTime(2005, 7, 1, 0, 0, 0);
-            DateTime d06J1 = new DateTime(2006, 7, 1, 0, 0, 0);
-            DateTime d07J1 = new DateTime(2007, 7, 1, 0, 0, 0);
-            DateTime d08J1 = new DateTime(2008, 7, 1, 0, 0, 0);
-            double legumeF = 0.10;																	  //ElevObs  //AmbObs
-            if (DateTime.Compare(Today, d97J1) >= 0 && DateTime.Compare(Today, d98J1) < 0) legumeF = 0.03;//0.05;//0.03;
-            else if (DateTime.Compare(Today, d98J1) >= 0 && DateTime.Compare(Today, d99J1) < 0) legumeF = 0.06;//0.19;//0.06;
-            else if (DateTime.Compare(Today, d99J1) >= 0 && DateTime.Compare(Today, d00J1) < 0) legumeF = 0.17;//0.31;//0.17;
-            else if (DateTime.Compare(Today, d00J1) >= 0 && DateTime.Compare(Today, d01J1) < 0) legumeF = 0.21;//0.34;//0.21;
-            else if (DateTime.Compare(Today, d01J1) >= 0 && DateTime.Compare(Today, d02J1) < 0) legumeF = 0.03;//0.04;//0.03;
-            else if (DateTime.Compare(Today, d02J1) >= 0 && DateTime.Compare(Today, d03J1) < 0) legumeF = 0.03;//0.07;//0.03;
-            else if (DateTime.Compare(Today, d03J1) >= 0 && DateTime.Compare(Today, d04J1) < 0) legumeF = 0.09;//0.06;//0.09;
-            else if (DateTime.Compare(Today, d04J1) >= 0 && DateTime.Compare(Today, d05J1) < 0) legumeF = 0.10;//0.22;//0.10;
-            else if (DateTime.Compare(Today, d05J1) >= 0 && DateTime.Compare(Today, d06J1) < 0) legumeF = 0.11;//0.07;//0.11;
-            else if (DateTime.Compare(Today, d06J1) >= 0 && DateTime.Compare(Today, d07J1) < 0) legumeF = 0.02;//0.05;//0.02;
-            else if (DateTime.Compare(Today, d07J1) >= 0 && DateTime.Compare(Today, d08J1) < 0) legumeF = 0.05;//0.06;//0.05;
-
-            SP[0].dGrowth = p_dGrowth * (1 - legumeF);
-            SP[1].dGrowth = p_dGrowth * legumeF;
-            Console.WriteLine(" legumeF = " + legumeF);
-            //end of trick#
-            */
-
 
             //**partitioning & turnover
             GrowthAndPartition();	   // litter returns to surfaceOM; Root returns to soil FOM dead in this turnover routines
-
-            /* if (!p_HarvestDay)
-             {
-                 p_harvestDM = 0.0;	  // impartant to have this reset because
-                 p_harvestN = 0.0;	   // they are used to DM & N returns
-                 p_harvestDigest = 0.0;
-             }
-             p_HarvestDay = false;	//reset the
-          */
         }
 
         //----------------------------------------------------------------------
@@ -5853,7 +5810,6 @@ namespace Models
 
                 }
             }
-
 
             return phenoStage;
         }
