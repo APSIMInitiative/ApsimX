@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
-           // Manager.RebuildScriptModel();
+            Manager.RebuildScriptModel();
         }
 
         /// <summary>
@@ -99,10 +99,10 @@ namespace UserInterface.Presenters
             {
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
-   //             Manager.Code = ManagerView.Editor.Text;
+                Manager.Code = ManagerView.Editor.Text;
 
                 // If it gets this far then compiles ok.
-   //             ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
             }
             catch (Exception err)
             {
@@ -113,7 +113,8 @@ namespace UserInterface.Presenters
                     ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
             }
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            PropertyPresenter.PopulateGrid(Manager.Script);
+            if (Manager.Script != null)
+                PropertyPresenter.PopulateGrid(Manager.Script);
         }
 
         /// <summary>
