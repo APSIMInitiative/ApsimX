@@ -2354,11 +2354,14 @@
                 {
                     // APSIM THING
                     // collect_real_var_optional ("cnr", "()", surfomCNrAdded, numval_cnr, 0.0, 10000.0);
-                    surfomNAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCNrAdded, 0.0);
 
-                    // If no N info provided, and no cnr info provided then throw error
-                    if (surfomCNrAdded == 0)
-                        throw new ApsimXException(FullPath, "SurfaceOM CN ratio not specified.");
+                        surfomNAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCNrAdded, 0.0);
+
+                    // RCichota, disabled this error for now. WE have to see whether it is fair to add C and no N (I think so) or throw exception...
+                        // If no N info provided, and no cnr info provided then throw error
+                        //if (surfomCNrAdded == 0)
+                            //throw new ApsimXException(FullPath, "SurfaceOM CN ratio not specified.");
+
                 }
 
                 // APSIM THING
