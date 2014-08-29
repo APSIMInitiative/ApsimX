@@ -788,8 +788,15 @@ namespace UserInterface.Presenters
         {
             if (this.currentRightHandPresenter != null)
             {
-                this.currentRightHandPresenter.Detach();
-                this.currentRightHandPresenter = null;
+                try
+                {
+                    this.currentRightHandPresenter.Detach();
+                    this.currentRightHandPresenter = null;
+                }
+                catch (Exception err)
+                {
+                    this.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                }
             }
 
             this.view.AddRightHandView(null);
