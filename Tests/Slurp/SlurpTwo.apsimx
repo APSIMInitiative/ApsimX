@@ -342,6 +342,7 @@
           <double>0</double>
         </_standing_fraction>
         <c_fract>0.4</c_fract>
+        <pond_active>no</pond_active>
         <report_additions>no</report_additions>
         <report_removals>no</report_removals>
         <ResidueTypes>
@@ -350,6 +351,7 @@
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <TillageType />
         </TillageTypes>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
@@ -1004,6 +1006,7 @@ namespace Models
           <double>0</double>
         </_standing_fraction>
         <c_fract>0.4</c_fract>
+        <pond_active>no</pond_active>
         <report_additions>no</report_additions>
         <report_removals>no</report_removals>
         <ResidueTypes>
@@ -1012,6 +1015,7 @@ namespace Models
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <TillageType />
         </TillageTypes>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>

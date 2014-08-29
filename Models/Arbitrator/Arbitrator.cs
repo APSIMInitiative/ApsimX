@@ -340,7 +340,8 @@ namespace Models.Arbitrator
                     uptakeNitrogenPlantLayer[i, j] = Math.Min(plants[i].demandNitrogen, Utility.Math.Divide(potentialSupplyNitrogenPlantLayer[i, j], nkLayer[j], 0.0) * xFactor[j]);
                     potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(Soil.NO3[j], (Soil.NO3[j] + Soil.NH4[j]), 0.0);
                     NUptakeType.DeltaNO3[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * potentialSupplyPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
-                    NUptakeType.DeltaNH4[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * (1.0 - potentialSupplyPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
+                    // fix this later
+                    //NUptakeType.DeltaNH4[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * (1.0 - potentialSupplyPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
                }
             }  // close the plants loop 
 
