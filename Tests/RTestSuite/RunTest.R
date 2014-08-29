@@ -33,8 +33,8 @@ buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character()
 
 results <- -1
 
-#for (fileNumber in 9:9){
-  for (fileNumber in 1:length(files)){
+#for (fileNumber in 6:6){
+for (fileNumber in 1:length(files)){
   #skip tests in Unit Tests directory
   if (length(grep("UnitTests", files[fileNumber])) > 0){
     print(noquote("Skipping test found in UnitTests directory."))
@@ -74,8 +74,8 @@ results <- -1
       dbBase <- dbConnect(SQLite(), dbname = paste(dbName, ".baseline", sep=""))
     
     if (simsToTest == "All"){    
-      simsToTest <- dbGetQuery(db, "SELECT DISTINCT(Name) FROM Simulations, Report 
-                               WHERE Simulations.ID = Report.SimulationID")
+      simsToTest <- dbGetQuery(db, paste("SELECT DISTINCT(Name) FROM Simulations, ", currentSimGroup[2,1],
+                               " WHERE Simulations.ID = ", currentSimGroup[2,1], ".SimulationID", sep=""))
       #filter sims not in Report
       isDF <- TRUE
     } else
@@ -126,8 +126,9 @@ results <- -1
           readSimOutput <- readSimOutput[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutput)]
         if (!is.na(readSimOutputBase) & length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase))> 0)
           readSimOutputBase <- readSimOutputBase[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", readSimOutputBase)]
-        if (!is.na(inputTable) & length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable))> 0)
-          inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
+        if (length(inputTable) > 1)
+          if(length(grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable))> 0)
+            inputTable <- inputTable[, -grep("[0-9]{4}-[0-9]{2}-[0-9]{2}", inputTable)]
         
         #get tests to run
         tests <- unlist(strsplit(currentSimGroup[3, 1], ","))
