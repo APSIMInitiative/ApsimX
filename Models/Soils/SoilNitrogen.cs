@@ -831,7 +831,8 @@ namespace Models.Soils
             massBalanceChange.FlowType = dltN >= 0 ? "gain" : "loss";
             massBalanceChange.PoolClass = "soil";
             massBalanceChange.N = (float)Math.Abs(dltN);
-            ExternalMassFlow.Invoke(massBalanceChange);
+            if (ExternalMassFlow != null)
+                ExternalMassFlow.Invoke(massBalanceChange);
         }
 
         /// <summary>

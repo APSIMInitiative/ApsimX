@@ -453,7 +453,7 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Potential nitrogen water uptake from each soil layer by understory
         /// </summary>
-        double[] UnderstoryPotNUptake;
+        public double[] UnderstoryPotNUptake { get; set; }
 
         /// <summary>
         /// Actual soil nitrogen uptake from each soil layer by understory
@@ -534,12 +534,12 @@ namespace Models.PMF.OilPalm
 
 
         [XmlIgnore]
-        [Description("Stem mass on a dry matter basis")]
+        //[Description("Stem mass on a dry matter basis")]
         [Units("g/m^2")]
         public double StemMass { get; set; }
 
         [XmlIgnore]
-        [Description("Stem nitrogen")]
+        //[Description("Stem nitrogen")]
         [Units("g/m^2")]
         public double StemN { get; set; }
 
@@ -559,7 +559,7 @@ namespace Models.PMF.OilPalm
 
         private bool CropInGround = false;
 
-        [Description("Flag to indicate whether oil palm has been planted")]
+        //[Description("Flag to indicate whether oil palm has been planted")]
         [Units("True/False")]
         [XmlIgnore]
         public bool IsCropInGround
@@ -1426,13 +1426,16 @@ namespace Models.PMF.OilPalm
             double TotUnderstoryPotSWUptake = Utility.Math.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
+            double[] sw_dep = Soil.SoilWater.sw_dep;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
-                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - UnderstorySWUptake[j];
+                sw_dep[j] = sw_dep[j] - UnderstorySWUptake[j];
 
             }
+            Soil.SoilWater.sw_dep = sw_dep;
+
             if (UnderstoryPEP > 0.0)
                 UnderstoryFW = UnderstoryEP / UnderstoryPEP;
             else
@@ -1454,11 +1457,13 @@ namespace Models.PMF.OilPalm
             double TotUnderstoryPotNUptake = Utility.Math.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
+            double[] no3 = Soil.SoilNitrogen.no3;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
-                Soil.SoilNitrogen.no3[j] = Soil.SoilNitrogen.no3[j] - UnderstoryNUptake[j];
+                no3[j] = no3[j] - UnderstoryNUptake[j];
             }
+            Soil.SoilNitrogen.no3 = no3;
 
             //UnderstoryNFixation += UnderstoryNdemand - Utility.Math.Sum(UnderstoryNUptake);
 
