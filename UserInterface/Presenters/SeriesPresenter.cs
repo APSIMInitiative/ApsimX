@@ -217,8 +217,10 @@ namespace UserInterface.Presenters
             {
                 if (this.graph.Series[i].Title != seriesNames[i])
                 {
+                    this.explorerPresenter.CommandHistory.ModelChanged -= this.OnGraphModelChanged2;
                     Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph.Series[i], "Title", seriesNames[i]);
                     explorerPresenter.CommandHistory.Add(command);
+                    this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
                 }
             }
         }  

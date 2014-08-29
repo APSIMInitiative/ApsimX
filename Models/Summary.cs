@@ -136,7 +136,7 @@ namespace Models
                         WriteHeading(writer, heading, html);
 
                         // Write the manager script.
-                        if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script: ")
+                        if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
                         {
                             WriteScript(writer, tables[i].Rows[0], html);
                         }
