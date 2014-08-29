@@ -1,11 +1,4 @@
 <StyleCopSettings Version="105">
-  <GlobalSettings>
-    <CollectionProperty Name="RecognizedWords">
-      <Value>alphanumerics</Value>
-      <Value>apsimx</Value>
-      <Value>intellisense</Value>
-    </CollectionProperty>
-  </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
       <Rules>
@@ -19,12 +12,12 @@
     </Analyzer>
     <Analyzer AnalyzerId="StyleCop.CSharp.LayoutRules">
       <Rules>
-        <Rule Name="ClosingCurlyBracketMustBeFollowedByBlankLine">
+        <Rule Name="CurlyBracketsMustNotBeOmitted">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>
         </Rule>
-        <Rule Name="CurlyBracketsMustNotBeOmitted">
+        <Rule Name="ClosingCurlyBracketMustBeFollowedByBlankLine">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>

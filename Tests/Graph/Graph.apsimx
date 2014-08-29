@@ -3,25 +3,19 @@
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
-    <MemoText>This example shows some of the graphing capabilities.
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><title></title></head><body><p>This example shows some of the graphing capabilities.
 
 GRAPH SCOPING EXAMPLE:
 There is a SoilWater graph in each of the three simulations that plots sw(1) over time with observed data. The data source used was *.report which indicates that all simulations in scope will be plotted on the graph. Likewise the observed data was plotted with a data source of *.observed which means all data in scope will be plotted. This graph was then copied to all simulations and then to the top level "Simulations" node. The graphs in the simulations show only the simulation data while the top level graph shows all simulations and data.
 
 GRAPH WHERE DATA IS COMING FROM PROPERTIES OF A MODEL:
-The second example` shows a soil depth plot where all data is coming directly from the properties of the 'Soil' model e.g. [Soil].AirDry ...</MemoText>
+The second example` shows a soil depth plot where all data is coming directly from the properties of the 'Soil' model e.g. [Soil].AirDry ...</p></body></html>]]></MemoText>
   </Memo>
   <Simulation>
     <Name>LowWater</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-      <MaxT>0</MaxT>
-      <MinT>0</MinT>
-      <Rain>0</Rain>
-      <Radn>0</Radn>
-      <vp>0</vp>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -30,9 +24,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -45,7 +36,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -397,6 +387,14 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -418,6 +416,19 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -505,13 +516,12 @@ The second example` shows a soil depth plot where all data is coming directly fr
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>0</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -569,20 +579,9 @@ The second example` shows a soil depth plot where all data is coming directly fr
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
+          <Name>ResidueTypesList</Name>
           <ResidueType>
             <Name>ResidueType</Name>
             <fom_type>wheat</fom_type>
@@ -2413,6 +2412,17 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -2432,14 +2442,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <ComponentData>
-          <Name>Potato</Name>
-          <Type>Potato</Type>
-          <Albedo>0.26</Albedo>
-          <Emissivity>0.96</Emissivity>
-          <Gsmax>0.011</Gsmax>
-          <R50>200</R50>
-        </ComponentData>
       </MicroClimate>
       <Graph>
         <Name>SoilWater</Name>
@@ -2461,16 +2463,16 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilWater.sw_dep(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Observed</Title>
@@ -2481,38 +2483,31 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>Date</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>sw(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
     <Input>
       <Name>Observed</Name>
-      <FileName>TestObserved.txt</FileName>
     </Input>
-    <Area>0</Area>
   </Simulation>
   <Simulation>
     <Name>MediumWater</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-      <MaxT>0</MaxT>
-      <MinT>0</MinT>
-      <Rain>0</Rain>
-      <Radn>0</Radn>
-      <vp>0</vp>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -2521,9 +2516,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -2536,7 +2528,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -2888,6 +2879,14 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -2909,6 +2908,19 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -2996,13 +3008,12 @@ The second example` shows a soil depth plot where all data is coming directly fr
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>0.3</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -3060,20 +3071,9 @@ The second example` shows a soil depth plot where all data is coming directly fr
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
+          <Name>ResidueTypesList</Name>
           <ResidueType>
             <Name>ResidueType</Name>
             <fom_type>wheat</fom_type>
@@ -4904,6 +4904,17 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -4923,14 +4934,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <ComponentData>
-          <Name>Potato</Name>
-          <Type>Potato</Type>
-          <Albedo>0.26</Albedo>
-          <Emissivity>0.96</Emissivity>
-          <Gsmax>0.011</Gsmax>
-          <R50>200</R50>
-        </ComponentData>
       </MicroClimate>
       <Graph>
         <Name>GraphOfSoilClassProperties</Name>
@@ -4958,6 +4961,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -4973,6 +4978,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -4988,6 +4995,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -5003,6 +5012,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <FieldName>[Soil].DepthMidPoints</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Type>Line</Type>
@@ -5018,6 +5029,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <FieldName>[Soil]l.DepthMidPoints</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
@@ -5041,16 +5054,16 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilWater.sw_dep(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Observed</Title>
@@ -5061,38 +5074,31 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>Date</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>sw(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
     <Input>
       <Name>Observed</Name>
-      <FileName>TestObserved.txt</FileName>
     </Input>
-    <Area>0</Area>
   </Simulation>
   <Simulation>
     <Name>HighWater</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-      <MaxT>0</MaxT>
-      <MinT>0</MinT>
-      <Rain>0</Rain>
-      <Radn>0</Radn>
-      <vp>0</vp>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -5101,9 +5107,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
     </Clock>
     <Summary>
       <Name>Summary</Name>
-      <html>true</html>
-      <AutoCreate>false</AutoCreate>
-      <StateVariables>false</StateVariables>
     </Summary>
     <Zone>
       <Name>Field</Name>
@@ -5116,7 +5119,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <Soil>
         <Name>Soil</Name>
@@ -5468,6 +5470,14 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -5489,6 +5499,19 @@ The second example` shows a soil depth plot where all data is coming directly fr
             <double>300</double>
             <double>300</double>
           </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+            <string>180-210</string>
+            <string>210-240</string>
+            <string>240-270</string>
+            <string>270-300</string>
+          </Depth>
           <OC>
             <double>1.04</double>
             <double>0.89</double>
@@ -5576,13 +5599,12 @@ The second example` shows a soil depth plot where all data is coming directly fr
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
-          <PercentMethod>FilledFromTop</PercentMethod>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
-          <Date />
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -5640,20 +5662,9 @@ The second example` shows a soil depth plot where all data is coming directly fr
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
         <ResidueTypes>
+          <Name>ResidueTypesList</Name>
           <ResidueType>
             <Name>ResidueType</Name>
             <fom_type>wheat</fom_type>
@@ -7484,6 +7495,17 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -7503,14 +7525,6 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <ComponentData>
-          <Name>Potato</Name>
-          <Type>Potato</Type>
-          <Albedo>0.26</Albedo>
-          <Emissivity>0.96</Emissivity>
-          <Gsmax>0.011</Gsmax>
-          <R50>200</R50>
-        </ComponentData>
       </MicroClimate>
       <Graph>
         <Name>SoilWater</Name>
@@ -7532,16 +7546,16 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Report</TableName>
             <FieldName>SoilWater.sw_dep(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <Series>
           <Title>Observed</Title>
@@ -7552,29 +7566,29 @@ The second example` shows a soil depth plot where all data is coming directly fr
           <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <X>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>Date</FieldName>
           </X>
           <Y>
-            <SimulationName>*</SimulationName>
             <TableName>Observed</TableName>
             <FieldName>sw(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
       </Graph>
       <Area>0</Area>
+      <Slope>0</Slope>
     </Zone>
     <Input>
       <Name>Observed</Name>
-      <FileName>TestObserved.txt</FileName>
     </Input>
-    <Area>0</Area>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Graph>
     <Name>SoilWater</Name>
@@ -7596,16 +7610,16 @@ The second example` shows a soil depth plot where all data is coming directly fr
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>Report</TableName>
         <FieldName>SoilWater.sw_dep(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>Observed</Title>
@@ -7616,16 +7630,16 @@ The second example` shows a soil depth plot where all data is coming directly fr
       <Marker>FilledCircle</Marker>
       <Line>Solid</Line>
       <X>
-        <SimulationName>*</SimulationName>
         <TableName>Observed</TableName>
         <FieldName>Date</FieldName>
       </X>
       <Y>
-        <SimulationName>*</SimulationName>
         <TableName>Observed</TableName>
         <FieldName>sw(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
@@ -7655,6 +7669,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <FieldName>[Soil].DepthMidPoints</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -7670,6 +7686,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <FieldName>[Soil].DepthMidPoints</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -7685,6 +7703,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <FieldName>[Soil].DepthMidPoints</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -7700,6 +7720,8 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <FieldName>[Soil].DepthMidPoints</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -7715,9 +7737,10 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <FieldName>[Soil]l.DepthMidPoints</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
-  <Area>0</Area>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

@@ -469,14 +469,16 @@ namespace Utility
             {
                 DateTime D = Convert.ToDateTime(obj);
                 value = (D.ToShortDateString());
+                st.Append(value);
+                return;
             }
             else if (obj is float || obj is double)
                 value = string.Format("{0:F3}", obj);
             else 
                 value = obj.ToString();
 
-            if (value.Length < width)
-                st.Append(new string(' ', width - value.Length));
+            //if (value.Length < width)
+            //    st.Append(new string(' ', width - value.Length));
             st.Append(value);
         }
 

@@ -322,6 +322,10 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
         <_standing_fraction>
           <double>0</double>
         </_standing_fraction>

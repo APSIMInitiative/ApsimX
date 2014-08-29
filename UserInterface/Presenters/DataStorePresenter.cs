@@ -47,7 +47,6 @@ namespace UserInterface.Presenters
             this.dataStoreView.AutoExport = dataStore.AutoExport;
 
             this.dataStoreView.OnTableSelected += this.OnTableSelected;
-            this.dataStoreView.ExportNowClicked += this.OnExportNowClicked;
             this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
             this.dataStoreView.AutoExportClicked += OnAutoExportClicked;
 
@@ -64,7 +63,6 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.dataStoreView.OnTableSelected -= this.OnTableSelected;
-            this.dataStoreView.ExportNowClicked -= this.OnExportNowClicked;
             this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
             this.dataStoreView.AutoExportClicked -= OnAutoExportClicked;
         }

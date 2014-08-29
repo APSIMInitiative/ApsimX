@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using Models.Core;
 using Models.PMF;
@@ -36,7 +37,7 @@ namespace Models.SurfaceOM
         //    SurfaceOM constants;
         //====================================================================
 
-        static int max_residues = 100;                          //maximum number of residues in at once;
+        //.static int max_residues = 100;                          //maximum number of residues in at once;
         static int MaxFr = 3;
         //    ================================================================
 
@@ -64,6 +65,7 @@ namespace Models.SurfaceOM
                 AshAlk = 0;
             }
         }
+
         [Serializable]
         class SurfOrganicMatterType
         {
@@ -104,14 +106,7 @@ namespace Models.SurfaceOM
         private List<SurfOrganicMatterType> SurfOM;
         private Models.WeatherFile.NewMetType MetData;
 
-        //TODO - Tidy this god-awful mess of fixed array sizes up, preferably use dictionary for holding SOMTypes
-        private int num_surfom
-        {
-            get
-            {
-                return SurfOM == null ? 0 : SurfOM.Count;
-            }
-        }
+        private int num_surfom = 0;
 
         private double irrig;
         private double eos;
@@ -129,44 +124,6 @@ namespace Models.SurfaceOM
         public string report_additions { get; set; }
         public string report_removals { get; set; }
 
-        [Serializable]
-        private class SurfaceOMConstants
-        {
-            public int[] cf_contrib = new int[max_residues];  //determinant of whether a residue type;
-            //contributes to the calculation of contact factor (1 or 0)
-            public double[] C_fract = new double[max_residues];	//Fraction of Carbon in plant;
-            //material (0-1)
-
-            public double[,] fr_pool_C = new double[MaxFr, max_residues];	//carbohydrate fraction in fom C pool (0-1)
-            public double[,] fr_pool_N = new double[MaxFr, max_residues];	//carbohydrate fraction in fom N pool (0-1)
-            public double[,] fr_pool_P = new double[MaxFr, max_residues];	//carbohydrate fraction in fom P pool (0-1)
-
-            public double[] nh4ppm = new double[max_residues];	//ammonium component of residue (ppm)
-            public double[] no3ppm = new double[max_residues];	//nitrate component of residue (ppm)
-            public double[] po4ppm = new double[max_residues];	//ammonium component of residue (ppm)
-            public double[] specific_area = new double[max_residues];	//specific area of residue (ha/kg)
-
-
-            public SurfaceOMConstants()
-            {
-                cf_contrib = new int[max_residues];
-
-                C_fract = new double[max_residues];
-
-                fr_pool_C = new double[MaxFr, max_residues];
-                fr_pool_N = new double[MaxFr, max_residues];
-                fr_pool_P = new double[MaxFr, max_residues];
-
-                nh4ppm = new double[max_residues];
-                no3ppm = new double[max_residues];
-                po4ppm = new double[max_residues];
-                specific_area = new double[max_residues];
-            }
-        }
-
-        //instance variables.
-        SurfaceOMConstants c;
-
         public SurfaceOrganicMatter()
             : base()
         {
@@ -182,13 +139,14 @@ namespace Models.SurfaceOM
             default_cpr = 0.0;
             standing_extinct_coeff = 0.5;
             fractionFaecesAdded = 0.5;
+            ResidueTypes = new ResidueTypesList();
         }
 
         #region exposed properties
         #region BensParams
 
-        public ResidueTypes residueTypes { get; set; }
-        public TillageTypes tillageTypes { get; set; }
+        public ResidueTypesList ResidueTypes { get; set; }
+        public TillageTypesList TillageTypes { get; set; }
 
         [Summary]
         [Description("Pool name")]
@@ -297,18 +255,18 @@ namespace Models.SurfaceOM
         [Units("0-1")]
         public double fractionFaecesAdded { get; set; }
 
-        private int[] cf_contrib = new int[max_residues];            //determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)
+        private int[] cf_contrib = new int[0]; //max_residues];            //determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)
 
-        private double[] C_fract = new double[max_residues];	        //Fraction of Carbon in plant material (0-1)
+        private double[] C_fract = new double[0]; // max_residues];	        //Fraction of Carbon in plant material (0-1)
 
-        private double[,] fr_pool_C = new double[MaxFr, max_residues];	//carbohydrate fraction in fom C pool (0-1)
-        private double[,] fr_pool_N = new double[MaxFr, max_residues];	//carbohydrate fraction in fom N pool (0-1)
-        private double[,] fr_pool_P = new double[MaxFr, max_residues];	//carbohydrate fraction in fom P pool (0-1)
+        private double[,] fr_pool_C = new double[MaxFr, 0]; // max_residues];	//carbohydrate fraction in fom C pool (0-1)
+        private double[,] fr_pool_N = new double[MaxFr, 0]; // max_residues];	//carbohydrate fraction in fom N pool (0-1)
+        private double[,] fr_pool_P = new double[MaxFr, 0]; // max_residues];	//carbohydrate fraction in fom P pool (0-1)
 
-        private double[] nh4ppm = new double[max_residues];	        //ammonium component of residue (ppm)
-        private double[] no3ppm = new double[max_residues];	        //nitrate component of residue (ppm)
-        private double[] po4ppm = new double[max_residues];	        //ammonium component of residue (ppm)
-        private double[] specific_area = new double[max_residues];	    //specific area of residue (ha/kg)
+        private double[] nh4ppm = new double[0]; //max_residues];	        //ammonium component of residue (ppm)
+        private double[] no3ppm = new double[0]; //max_residues];	        //nitrate component of residue (ppm)
+        private double[] po4ppm = new double[0]; //max_residues];	        //ammonium component of residue (ppm)
+        private double[] specific_area = new double[0]; //max_residues];	    //specific area of residue (ha/kg)
 
         #endregion
 
@@ -676,201 +634,153 @@ namespace Models.SurfaceOM
 
         #endregion
 
+        public override void OnDeserialised(bool xmlSerialisation)
+        {
+            if (xmlSerialisation)
+            {
+                if (ResidueTypes == null)
+                    ResidueTypes = new ResidueTypesList();
+                if (!String.IsNullOrEmpty(ResidueTypes.LoadFromResource))
+                {
+                    string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
+                    if (xml != null)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(xml);
+                        ResidueTypesList ValuesFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ResidueTypesList;
+                        if (ValuesFromResource != null)
+                        {
+                            foreach (ResidueType residueType in ValuesFromResource.residues)
+                            {
+                                residueType.IsHidden = true;
+                                ResidueTypes.residues.Add(residueType);
+                            }
+                        }
+                    }
+                }
+                ResidueTypes.FillAllDerived();
+            }
+        }
+
+        private ResidueType[] savedResidues;
+
+        /// <summary>
+        /// We're about to be serialised. Remove residue types from out list
+        /// that were obtained from the XML resource so they are not included
+        /// </summary>
+        public override void OnSerialising(bool xmlSerialisation)
+        {
+            if (xmlSerialisation)
+            {
+                savedResidues = ResidueTypes.residues.ToArray();
+                for (int i = ResidueTypes.residues.Count - 1; i >= 0; i--)
+                {
+                    if (ResidueTypes.residues[i].IsHidden)
+                        ResidueTypes.residues.RemoveAt(i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serialisation has completed. Reinstate the full list of 
+        /// residue types
+        /// </summary>
+        public override void OnSerialised(bool xmlSerialisation)
+        {
+            if (xmlSerialisation && savedResidues != null)
+            {
+                ResidueTypes.residues = savedResidues.ToList();
+                savedResidues = null;
+            }
+        }
+
         #region supporting classes
         [Serializable]
-        public class ResidueTypes
+        public class ResidueTypesList : Model
         {
             [XmlElement("ResidueType")]
-            [XmlIgnore]
             public List<ResidueType> residues { get; set; }
 
-            public ResidueTypes()
+            public string LoadFromResource { get; set; }
+
+            public void FillAllDerived()
+            {
+                for (int i = 0; i < residues.Count; i++)
+                {
+                    FillDerived(i);
+                }
+            }
+
+            /// <summary>
+            /// Fills in field values for a residue type from a base type
+            /// </summary>
+            /// <param name="i">List index of the residue type to be filled in</param>
+            /// </param>
+            public void FillDerived(int i)
+            {
+                ResidueType residue = residues[i];
+                ResidueType refResidue = null;
+                if (!String.IsNullOrEmpty(residue.derived_from))
+                {
+                    for (int j = 0; j < residues.Count; j++)
+                    {
+                        if (residues[j].fom_type.Equals(residue.derived_from, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            FillDerived(j); // Make sure the template has itself been filled
+                            refResidue = residues[j];
+                            break;
+                        }
+                    }
+                }
+                if (Double.IsNaN(residue.fraction_C))
+                {
+                    residue.fraction_C = refResidue != null ? refResidue.fraction_C : 0.4;
+                }
+                if (Double.IsNaN(residue.po4ppm))
+                {
+                    residue.po4ppm = refResidue != null ? refResidue.po4ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.nh4ppm))
+                {
+                    residue.nh4ppm = refResidue != null ? refResidue.nh4ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.no3ppm))
+                {
+                    residue.no3ppm = refResidue != null ? refResidue.no3ppm : 0.0;
+                }
+                if (Double.IsNaN(residue.specific_area))
+                {
+                    residue.specific_area = refResidue != null ? refResidue.specific_area : 0.0005;
+                }
+                if (Double.IsNaN(residue.pot_decomp_rate))
+                {
+                    residue.pot_decomp_rate = refResidue != null ? refResidue.pot_decomp_rate : 0.1;
+                }
+                if (residue.cf_contrib < 0)
+                {
+                    residue.cf_contrib = refResidue != null ? refResidue.cf_contrib : 1;
+                }
+                if (residue.fr_c == null)
+                {
+                    residue.fr_c = refResidue != null ? (double[])refResidue.fr_c.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+                if (residue.fr_n == null)
+                {
+                    residue.fr_n = refResidue != null ? (double[])refResidue.fr_n.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+                if (residue.fr_p == null)
+                {
+                    residue.fr_p = refResidue != null ? (double[])refResidue.fr_p.Clone() : new double[3] { 0.2, 0.7, 0.1 };
+                }
+            }
+
+            public ResidueTypesList()
             {
                 if (residues == null)
                     residues = new List<ResidueType>();
 
                 residues.Clear();
-                residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("tithonia") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("bambatsi") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("barley") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("broccoli") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("butterflypea") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("camaldulensis") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("canola") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("centro") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("chickpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("cowpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("danthonia") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("nativepasture") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("pasture") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("globulus") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("grandis") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("oilmallee") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("fababean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("fieldpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("grass") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("lablab") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lentil") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lolium_rigidum") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lucerne") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("lupin") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("maize") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("medic") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("millet") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("mucuna") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("mungbean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("horsegram") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("navybean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("frenchbean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("cotton") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("oats") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("oilpalmunderstory") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("orobanche") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("peanut") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("pigeonpea") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("poppies") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("potato") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("raphanus_raphanistrum") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("rice") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("soybean") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sorghum") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("stylo") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sugar") { specific_area = 0.0007 });
-                residues.Add(new ResidueType("sunflower") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("sweetcorn") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("sweetsorghum") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("vetch") { specific_area = 0.0002 });
-                residues.Add(new ResidueType("weed") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("WF_Millet") { specific_area = 0.0004 });
-                residues.Add(new ResidueType("wheat") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("inert") { pot_decomp_rate = 0.0 });
-                residues.Add(new ResidueType("slurp") { specific_area = 0.0005 });
-                residues.Add(new ResidueType("manure")
-                {
-                    fraction_C = 0.08,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.3, 0.4 },
-                    fr_n = new double[] { 0.3, 0.3, 0.4 },
-                    fr_p = new double[] { 0.3, 0.3, 0.4 },
-                    po4ppm = 10,
-                    nh4ppm = 10,
-                    no3ppm = 10,
-                    specific_area = 0.0001
-                });
-                residues.Add(new ResidueType("RuminantDung_PastureFed")
-                {
-                    fraction_C = 0.4,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.5, 0.2 },
-                    fr_n = new double[] { 0.3, 0.5, 0.2 },
-                    fr_p = new double[] { 0.3, 0.5, 0.2 },
-                    po4ppm = 5,
-                    nh4ppm = 1250,
-                    no3ppm = 0,
-                    specific_area = 0.0001
-                });
-                residues.Add(new ResidueType("algae")
-                {
-                    fraction_C = 0.4,
-                    pot_decomp_rate = 0.1,
-                    specific_area = 0.0005,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("fym")
-                {
-                    fraction_C = 0.8,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.3, 0.4 },
-                    fr_n = new double[] { 0.3, 0.3, 0.4 },
-                    fr_p = new double[] { 0.3, 0.3, 0.4 },
-                    po4ppm = 40,
-                    nh4ppm = 10,
-                    no3ppm = 10,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("goatmanure")
-                {
-                    fraction_C = 0.8,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.3, 0.6, 0.3 },
-                    fr_n = new double[] { 0.3, 0.6, 0.3 },
-                    fr_p = new double[] { 0.3, 0.6, 0.34 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cm")
-                {
-                    fraction_C = 0.277,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 2558,
-                    no3ppm = 873,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cmA")
-                {
-                    fraction_C = 0.374,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("cmB")
-                {
-                    fraction_C = 0.24,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.0, 0.5, 0.5 },
-                    fr_n = new double[] { 0.0, 0.5, 0.5 },
-                    fr_p = new double[] { 0.0, 0.5, 0.5 },
-                    po4ppm = 5,
-                    nh4ppm = 3009,
-                    no3ppm = 36,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("manB")
-                {
-                    fraction_C = 0.08,
-                    pot_decomp_rate = 0.1,
-                    fr_c = new double[] { 0.1, 0.01, 0.89 },
-                    fr_n = new double[] { 0.1, 0.01, 0.89 },
-                    fr_p = new double[] { 0.1, 0.01, 0.89 },
-                    po4ppm = 5,
-                    nh4ppm = 1307,
-                    no3ppm = 481,
-                    specific_area = 0.0001,
-                    cf_contrib = 1
-                });
-                residues.Add(new ResidueType("oilpalm")
-                {
-                    fraction_C = 0.44,
-                    pot_decomp_rate = 0.05,
-                    specific_area = 0.0002,
-                });
-                residues.Add(new ResidueType("oilpalmstem")
-                {
-                    fraction_C = 0.44,
-                    fr_c = new double[] { 0.2, 0.7, 0.1 },
-                    fr_n = new double[] { 0.2, 0.7, 0.1 },
-                    fr_p = new double[] { 0.2, 0.7, 0.1 },
-                    specific_area = 0.000005,
-                });
+                LoadFromResource = "ResidueTypes";
             }
 
             public ResidueType getResidue(string name)
@@ -881,7 +791,6 @@ namespace Models.SurfaceOM
                         if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                             return residueType;
                     }
-
                 throw new ApsimXException("SurfaceOrganicMatter", "Could not find residue name " + name);
             }
         }
@@ -890,6 +799,7 @@ namespace Models.SurfaceOM
         public class ResidueType : Model
         {
             public string fom_type { get; set; }
+            public string derived_from { get; set; } // No logic for this implemented currently
             public double fraction_C { get; set; }
             public double po4ppm { get; set; }
             public double nh4ppm { get; set; }
@@ -904,29 +814,32 @@ namespace Models.SurfaceOM
             public ResidueType()
             {
                 fom_type = "inert";
-                InitialiseWithDefaults();
+                InitialiseWithNulls();
             }
 
             public ResidueType(string fomType)
             {
                 fom_type = fomType;
-                InitialiseWithDefaults();
+                InitialiseWithNulls();
             }
 
-            private void InitialiseWithDefaults()
+            private void InitialiseWithNulls()
             {
-                fraction_C = 0.4;
-                specific_area = 0.0005;
-                cf_contrib = 1;
-                pot_decomp_rate = 0.1;
-                fr_c = new double[3] { 0.2, 0.7, 0.1 };
-                fr_n = new double[3] { 0.2, 0.7, 0.1 };
-                fr_p = new double[3] { 0.2, 0.7, 0.1 };
+              fraction_C = Double.NaN;
+              po4ppm = Double.NaN;
+              nh4ppm = Double.NaN;
+              no3ppm = Double.NaN;
+              specific_area = Double.NaN;
+              cf_contrib = -1;
+              pot_decomp_rate = Double.NaN;
+              fr_c = null;
+              fr_n = null;
+              fr_p = null;
             }
         }
 
         [Serializable]
-        public class TillageTypes : Model
+        public class TillageTypesList : Model
         {
             public List<TillageType> TillageType { get; set; }
 
@@ -1072,7 +985,7 @@ namespace Models.SurfaceOM
 
         double surfaceom_wt_(string type, Func<OMFractionType, double> func)
         {
-            int SOMNo = GetSoluteNumber(type);
+            int SOMNo = GetResidueNumber(type);
             if (SOMNo > 0)
                 return SurfOM.Sum<SurfOrganicMatterType>(x => x.Lying.Sum<OMFractionType>(func) + x.Standing.Sum<OMFractionType>(func));
             else
@@ -1269,9 +1182,10 @@ namespace Models.SurfaceOM
 
         public override void OnSimulationCommencing()
         {
-            if (residueTypes == null)
-                residueTypes = new ResidueTypes();
-            c = new SurfaceOMConstants();
+            if (ResidueTypes == null)
+                ResidueTypes = new ResidueTypesList();
+            if (TillageTypes == null)
+                TillageTypes = new TillageTypesList();
             SurfOM = null;
             MetData = new Models.WeatherFile.NewMetType();
             irrig = 0;
@@ -1282,7 +1196,7 @@ namespace Models.SurfaceOM
             phosphorus_aware = false;
             pond_active = "no";
             oldSOMState = new OMFractionType();
-            _standing_fraction = new double[max_residues];
+            //_standing_fraction = new double[max_residues];
             ZeroVariables();
             OnReset();
         }
@@ -1390,12 +1304,6 @@ namespace Models.SurfaceOM
             DecomposeSurfom(ActualSOMDecomp);
         }
 
-        public class Prop_upType
-        {
-            public string name = "";
-            public double standing_fract;
-        }
-
         public class AddFaecesType
         {
             public double Defaecations;
@@ -1492,10 +1400,6 @@ namespace Models.SurfaceOM
             double[] temp_residue_cpr = ToArray<double>(cpr);	                    //temporary residue_cpr array;
             double[] temp_standing_fraction = ToArray<double>(standing_fraction);
 
-            double[] tot_c = new double[max_residues];	//total C in residue;
-            double[] tot_n = new double[max_residues];	//total N in residue;
-            double[] tot_p = new double[max_residues];	//total P in residue;
-
             //Read in residue type from parameter file;
             //        ------------
             if (temp_name.Length != temp_type.Length)
@@ -1507,6 +1411,10 @@ namespace Models.SurfaceOM
             {
                 throw new Exception("Number of residue names and weights do not match");
             }
+
+            double[] tot_c = new double[temp_name.Length];	//total C in residue;
+            double[] tot_n = new double[temp_name.Length];	//total N in residue;
+            double[] tot_p = new double[temp_name.Length];	//total P in residue;
 
             _standing_fraction = temp_standing_fraction;
 
@@ -1534,34 +1442,18 @@ namespace Models.SurfaceOM
 
             DailyInitialC = DailyInitialN = 0;
 
-            SurfOM = new List<SurfOrganicMatterType>();
+//            SurfOM = new List<SurfOrganicMatterType>();
 
             for (int i = 0; i < temp_name.Length; i++)
             {
-                double pot_decomp_rate;
-                //collect relevant type-specific constants from the ini-file;
-                ReadTypeSpecificConstants(temp_type[i], i, out pot_decomp_rate);
+                int SOMNo = AddNewSurfOM(temp_name[i], temp_type[i]);
 
-                SurfOM.Add(
-                    new SurfOrganicMatterType()
-                    {
-                        name = temp_name[i],
-                        OrganicMatterType = temp_type[i],
+                //convert the ppm figures into kg/ha;
+                SurfOM[SOMNo].no3 = Utility.Math.Divide(no3ppm[i], 1000000.0, 0.0) * temp_wt[i];
+                SurfOM[SOMNo].nh4 = Utility.Math.Divide(nh4ppm[i], 1000000.0, 0.0) * temp_wt[i];
+                SurfOM[SOMNo].po4 = Utility.Math.Divide(po4ppm[i], 1000000.0, 0.0) * temp_wt[i];
 
-                        //convert the ppm figures into kg/ha;
-                        no3 = Utility.Math.Divide(c.no3ppm[i], 1000000.0, 0.0) * temp_wt[i],
-                        nh4 = Utility.Math.Divide(c.nh4ppm[i], 1000000.0, 0.0) * temp_wt[i],
-                        po4 = Utility.Math.Divide(c.po4ppm[i], 1000000.0, 0.0) * temp_wt[i],
-
-                        PotDecompRate = pot_decomp_rate
-
-                        //these are set in constructor automatically, just here for reference
-                        //Standing = new OMFractionType[MaxFr],
-                        //Lying = new OMFractionType[MaxFr]
-                    }
-                );
-
-                tot_c[i] = temp_wt[i] * c.C_fract[i];
+                tot_c[i] = temp_wt[i] * C_fract[i];
                 tot_n[i] = Utility.Math.Divide(tot_c[i], temp_residue_cnr[i], 0.0);
                 tot_p[i] = Utility.Math.Divide(tot_c[i], temp_residue_cpr[i], 0.0);
 
@@ -1569,19 +1461,19 @@ namespace Models.SurfaceOM
                 {
                     SurfOM[i].Standing[j] = new OMFractionType()
                         {
-                            amount = temp_wt[i] * c.fr_pool_C[j, i] * _standing_fraction[i],
-                            C = tot_c[i] * c.fr_pool_C[j, i] * _standing_fraction[i],
-                            N = tot_n[i] * c.fr_pool_N[j, i] * _standing_fraction[i],
-                            P = tot_p[i] * c.fr_pool_P[j, i] * _standing_fraction[i],
+                            amount = temp_wt[i] * fr_pool_C[j, i] * _standing_fraction[i],
+                            C = tot_c[i] * fr_pool_C[j, i] * _standing_fraction[i],
+                            N = tot_n[i] * fr_pool_N[j, i] * _standing_fraction[i],
+                            P = tot_p[i] * fr_pool_P[j, i] * _standing_fraction[i],
                             AshAlk = 0.0
                         };
 
                     SurfOM[i].Lying[j] = new OMFractionType()
                         {
-                            amount = temp_wt[i] * c.fr_pool_C[j, i] * (1.0 - _standing_fraction[i]),
-                            C = tot_c[i] * c.fr_pool_C[j, i] * (1.0 - _standing_fraction[i]),
-                            N = tot_n[i] * c.fr_pool_N[j, i] * (1.0 - _standing_fraction[i]),
-                            P = tot_p[i] * c.fr_pool_P[j, i] * (1.0 - _standing_fraction[i]),
+                            amount = temp_wt[i] * fr_pool_C[j, i] * (1.0 - _standing_fraction[i]),
+                            C = tot_c[i] * fr_pool_C[j, i] * (1.0 - _standing_fraction[i]),
+                            N = tot_n[i] * fr_pool_N[j, i] * (1.0 - _standing_fraction[i]),
+                            P = tot_p[i] * fr_pool_P[j, i] * (1.0 - _standing_fraction[i]),
                             AshAlk = 0.0
                         };
                 }
@@ -1597,7 +1489,7 @@ namespace Models.SurfaceOM
         /// </summary>
         /// <param name="surfomname"></param>
         /// <returns></returns>
-        private int GetSoluteNumber(string surfomname)
+        private int GetResidueNumber(string surfomname)
         {
             if (SurfOM == null)
                 return -1;
@@ -1700,7 +1592,7 @@ namespace Models.SurfaceOM
             //cf_contrib factor (ini file).  ie some residue types do not contribute to the haystack effect.
 
             for (int residue = 0; residue < num_surfom; residue++)
-                eff_surfom_wt += SurfOM[residue].Lying.Sum<OMFractionType>(x => x.amount) * c.cf_contrib[residue];
+                eff_surfom_wt += SurfOM[residue].Lying.Sum<OMFractionType>(x => x.amount) * cf_contrib[residue];
 
             if (eff_surfom_wt <= crit_residue_wt)
                 return 1.0;
@@ -1789,23 +1681,6 @@ namespace Models.SurfaceOM
         /// <returns></returns>
         private double CoverTotal()
         {
-            /*
-             * Old way of doing it (:S not sure why this had to be so complicated)
-             *
-            double cover1 = 0;	//fraction of ground covered by residue (0-1)
-            double cover2;	//fraction of ground covered by residue (0-1)
-            double combined_cover = 0;	//effective combined cover from covers 1 & 2 (0-1)
-
-            for (int i = 0; i < num_surfom; i++)
-            {
-                cover2 = Cover(i);
-                combined_cover = AddCover(cover1, cover2);
-                cover1 = combined_cover;
-            }
-
-            return combined_cover;
-            */
-
             double combined_cover = 0;	//effective combined cover(0-1)
 
             for (int i = 0; i < num_surfom; i++)
@@ -1925,8 +1800,6 @@ namespace Models.SurfaceOM
 
         }
 
-
-
         /// <summary>
         /// Notify other modules of the potential to decompose.
         /// </summary>
@@ -1956,7 +1829,7 @@ namespace Models.SurfaceOM
 
                     FOM = new FOMType()
                     {
-                        amount = Utility.Math.Divide(c_pot_decomp[residue], c.C_fract[residue], 0.0),
+                        amount = Utility.Math.Divide(c_pot_decomp[residue], C_fract[residue], 0.0),
                         C = c_pot_decomp[residue],
                         N = n_pot_decomp[residue],
                         P = p_pot_decomp[residue],
@@ -2031,7 +1904,7 @@ namespace Models.SurfaceOM
             for (int som_index = 0; som_index < num_surfom; som_index++)
             {
                 //Determine which residue pool corresponds to this index in the array;
-                int SOMNo = GetSoluteNumber(SOM.Pool[som_index].Name);
+                int SOMNo = GetResidueNumber(SOM.Pool[som_index].Name);
 
                 if (SOMNo < 0)
                 {
@@ -2112,8 +1985,8 @@ namespace Models.SurfaceOM
             P      = {7:0.0##}", SOM.Pool[SOMNo].Name, SOM.Pool[SOMNo].OrganicMatterType, lamount, lN, lP, samount, sN, sP
                     ));
                 // else the user has asked for no reports for removals of surfom;
-                    //in the summary file.
-                
+                //in the summary file.
+
                 surfom_Send_SOM_removed_Event(
                     SOM.Pool[SOMNo].OrganicMatterType,
                     SOM.Pool[SOMNo].OrganicMatterType,
@@ -2148,7 +2021,7 @@ namespace Models.SurfaceOM
             {
 
                 //Determine which residue pool corresponds to this index in the array;
-                residue_no = GetSoluteNumber(SOMDecomp.Pool[counter].Name);
+                residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
 
                 //Collect actual decompostion of C and N from supplying module (soiln2)
                 tot_c_decomp = SOMDecomp.Pool[counter].FOM.C;
@@ -2247,7 +2120,7 @@ namespace Models.SurfaceOM
             {
                 summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
 
-                data = tillageTypes.GetTillageData(data.Name);
+                data = TillageTypes.GetTillageData(data.Name);
 
                 //If we still have no values then stop
                 if (data == null)
@@ -2426,7 +2299,33 @@ namespace Models.SurfaceOM
             }
         }
 
+        /// <summary
+        /// Adds a new element to the SurfOM list, resizing the relevant arrays
         /// <summary>
+        private int AddNewSurfOM(string newName, string newType)
+        {
+            if (SurfOM == null)
+                SurfOM = new List<SurfOrganicMatterType>();
+
+            SurfOM.Add(new SurfOrganicMatterType(newName, newType));
+            num_surfom = SurfOM.Count;
+            Array.Resize(ref cf_contrib, num_surfom);
+            Array.Resize(ref C_fract, num_surfom);
+            Array.Resize(ref nh4ppm, num_surfom);
+            Array.Resize(ref no3ppm, num_surfom);
+            Array.Resize(ref po4ppm, num_surfom);
+            Array.Resize(ref specific_area, num_surfom);
+            fr_pool_C = Resize2DArray<double>(fr_pool_C, MaxFr, num_surfom);
+            fr_pool_N = Resize2DArray<double>(fr_pool_N, MaxFr, num_surfom);
+            fr_pool_P = Resize2DArray<double>(fr_pool_P, MaxFr, num_surfom);
+
+            int SOMNo = num_surfom - 1;
+
+            ReadTypeSpecificConstants(SurfOM[SOMNo].OrganicMatterType, SOMNo, out SurfOM[SOMNo].PotDecompRate);
+
+            return SOMNo;
+        }
+         
         /// Calculates surfom addition as a result of add_surfom message
         /// </summary>
         private void AddSurfom(Add_surfaceomType data)
@@ -2454,15 +2353,11 @@ namespace Models.SurfaceOM
 
             ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
-            SOMNo = GetSoluteNumber(surfom_name);
+            SOMNo = GetResidueNumber(surfom_name);
 
             if (SOMNo < 0)
             {
-
-                SurfOM.Add(new SurfOrganicMatterType(surfom_name, surfom_type));
-                SOMNo = num_surfom - 1;
-
-                ReadTypeSpecificConstants(SurfOM[SOMNo].OrganicMatterType, SOMNo, out SurfOM[SOMNo].PotDecompRate);
+                SOMNo = AddNewSurfOM(surfom_name, surfom_type);
             }
             // else this type already exists;
 
@@ -2470,7 +2365,7 @@ namespace Models.SurfaceOM
 
             //APSIMT THING
             //collect_real_var ("mass", "(kg/ha)", surfom_added, numvals, -100000.0, 100000.0);
-            surfom_c_added = surfom_mass_added * c.C_fract[SOMNo];
+            surfom_c_added = surfom_mass_added * C_fract[SOMNo];
 
             if (surfom_mass_added > -10000.0)
             {
@@ -2479,7 +2374,7 @@ namespace Models.SurfaceOM
                 {
                     //APSIM THING
                     //collect_real_var_optional ("cnr", "()", surfom_cnr_added, numval_cnr, 0.0, 10000.0);
-                    surfom_n_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cnr_added, 0.0);
+                    surfom_n_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], surfom_cnr_added, 0.0);
 
                     //If no N info provided, and no cnr info provided then throw error
                     if (surfom_cnr_added == 0)
@@ -2492,16 +2387,16 @@ namespace Models.SurfaceOM
                     //use default cpr and throw warning error to notify user;
                     if (surfom_cpr_added == 0)
                     {
-                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), default_cpr, 0.0);
+                        surfom_p_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], default_cpr, 0.0);
                         summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
-                        surfom_p_added = Utility.Math.Divide((surfom_mass_added * c.C_fract[SOMNo]), surfom_cpr_added, 0.0);
+                        surfom_p_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], surfom_cpr_added, 0.0);
 
                 //convert the ppm figures into kg/ha;
-                surfom_no3_added = Utility.Math.Divide(c.no3ppm[SOMNo], 1000000, 0) * surfom_mass_added;
-                surfom_nh4_added = Utility.Math.Divide(c.nh4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
-                surfom_po4_added = Utility.Math.Divide(c.po4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
+                surfom_no3_added = Utility.Math.Divide(no3ppm[SOMNo], 1000000, 0) * surfom_mass_added;
+                surfom_nh4_added = Utility.Math.Divide(nh4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
+                surfom_po4_added = Utility.Math.Divide(po4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
 
                 SurfOM[SOMNo].no3 += surfom_no3_added;
                 SurfOM[SOMNo].nh4 += surfom_nh4_added;
@@ -2511,10 +2406,10 @@ namespace Models.SurfaceOM
                     //Assume all residue added is in the LYING pool, ie No STANDING component;
                     for (int i = 0; i < MaxFr; i++)
                     {
-                        SurfOM[SOMNo].Lying[i].amount += surfom_mass_added * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].C += surfom_mass_added * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].N += surfom_n_added * c.fr_pool_N[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].P += surfom_p_added * c.fr_pool_P[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].amount += surfom_mass_added * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].C += surfom_mass_added * C_fract[SOMNo] * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].N += surfom_n_added * fr_pool_N[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].P += surfom_p_added * fr_pool_P[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].AshAlk = 0;
                     }
                 else
@@ -2526,20 +2421,20 @@ namespace Models.SurfaceOM
 
                     tot_mass = lying + standing;
 
-                    removed_from_standing = surfom_mass_added * (Utility.Math.Divide(standing, tot_mass, 0.0));
+                    removed_from_standing = surfom_mass_added * Utility.Math.Divide(standing, tot_mass, 0.0);
                     removed_from_lying = surfom_mass_added - removed_from_standing;
 
                     for (int i = 0; i < MaxFr; i++)
                     {
-                        SurfOM[SOMNo].Lying[i].amount = SurfOM[SOMNo].Lying[i].amount + removed_from_lying * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].C = SurfOM[SOMNo].Lying[i].C + removed_from_lying * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0)) * c.fr_pool_N[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0)) * c.fr_pool_P[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].amount = SurfOM[SOMNo].Lying[i].amount + removed_from_lying * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].C = SurfOM[SOMNo].Lying[i].C + removed_from_lying * C_fract[SOMNo] * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfom_n_added * Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0) * fr_pool_N[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfom_p_added * Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0) * fr_pool_P[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
-                        SurfOM[SOMNo].Standing[i].amount = SurfOM[SOMNo].Standing[i].amount + removed_from_standing * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].C = SurfOM[SOMNo].Standing[i].C + removed_from_standing * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfom_n_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0)) * c.fr_pool_N[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfom_p_added * (Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0)) * c.fr_pool_P[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].amount = SurfOM[SOMNo].Standing[i].amount + removed_from_standing * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].C = SurfOM[SOMNo].Standing[i].C + removed_from_standing * C_fract[SOMNo] * fr_pool_C[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfom_n_added * Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0) * fr_pool_N[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfom_p_added * Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0) * fr_pool_P[i, SOMNo];
                         SurfOM[SOMNo].Standing[i].AshAlk = 0.0;
                     }
                 }
@@ -2590,13 +2485,13 @@ namespace Models.SurfaceOM
             // So let's add a bit of logic here to handle it...
             // We don't have a "fr_pool_ashalk" either, so we'll assume
             // it follows the same pattern as P.
-            int SOMNo = GetSoluteNumber(Manure);
+            int SOMNo = GetResidueNumber(Manure);
 
             if (SOMNo >= 0) // Should always be OK, following creation in AddSurfom
             {
                 for (int i = 0; i < MaxFr; i++)
                 {
-                    SurfOM[SOMNo].Lying[i].AshAlk += (double)(data.OMAshAlk * fractionFaecesAdded * c.fr_pool_P[i, SOMNo]);
+                    SurfOM[SOMNo].Lying[i].AshAlk += (double)(data.OMAshAlk * fractionFaecesAdded * fr_pool_P[i, SOMNo]);
                 }
             }
 
@@ -2610,16 +2505,16 @@ namespace Models.SurfaceOM
         /// <param name="i"></param>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
-            ResidueType thistype = residueTypes.getResidue(surfom_type);
+            ResidueType thistype = ResidueTypes.getResidue(surfom_type);
             if (thistype == null)
                 throw new ApsimXException(FullPath, "Cannot find residue type description for '" + surfom_type + "'");
 
-            c.C_fract[i] = Utility.Math.Bound(thistype.fraction_C, 0.0, 1.0);
-            c.po4ppm[i] = Utility.Math.Bound(thistype.po4ppm, 0.0, 1000.0);
-            c.nh4ppm[i] = Utility.Math.Bound(thistype.nh4ppm, 0.0, 2000.0);
-            c.no3ppm[i] = Utility.Math.Bound(thistype.no3ppm, 0.0, 1000.0);
-            c.specific_area[i] = Utility.Math.Bound(thistype.specific_area, 0.0, 0.01);
-            c.cf_contrib[i] = Bound(thistype.cf_contrib, 0, 1);
+            C_fract[i] = Utility.Math.Bound(thistype.fraction_C, 0.0, 1.0);
+            po4ppm[i] = Utility.Math.Bound(thistype.po4ppm, 0.0, 1000.0);
+            nh4ppm[i] = Utility.Math.Bound(thistype.nh4ppm, 0.0, 2000.0);
+            no3ppm[i] = Utility.Math.Bound(thistype.no3ppm, 0.0, 1000.0);
+            specific_area[i] = Utility.Math.Bound(thistype.specific_area, 0.0, 0.01);
+            cf_contrib[i] = Bound(thistype.cf_contrib, 0, 1);
             pot_decomp_rate = Utility.Math.Bound(thistype.pot_decomp_rate, 0.0, 1.0);
 
             if (thistype.fr_c.Length != thistype.fr_n.Length || thistype.fr_n.Length != thistype.fr_p.Length)
@@ -2627,9 +2522,9 @@ namespace Models.SurfaceOM
 
             for (int j = 0; j < thistype.fr_c.Length; j++)
             {
-                c.fr_pool_C[j, i] = thistype.fr_c[j];
-                c.fr_pool_N[j, i] = thistype.fr_n[j];
-                c.fr_pool_P[j, i] = thistype.fr_p[j];
+                fr_pool_C[j, i] = thistype.fr_c[j];
+                fr_pool_N[j, i] = thistype.fr_n[j];
+                fr_pool_P[j, i] = thistype.fr_p[j];
             }
         }
 
@@ -2665,8 +2560,8 @@ namespace Models.SurfaceOM
                 sum_stand_amount += SurfOM[SOMindex].Standing[i].amount;
             }
 
-            Area_lying = c.specific_area[SOMindex] * sum_lying_amount;
-            Area_standing = c.specific_area[SOMindex] * sum_stand_amount;
+            Area_lying = specific_area[SOMindex] * sum_lying_amount;
+            Area_standing = specific_area[SOMindex] * sum_stand_amount;
 
             F_Cover = AddCover(1.0 - (double)Math.Exp(-Area_lying), 1.0 - (double)Math.Exp(-(standing_extinct_coeff) * Area_standing));
             F_Cover = Utility.Math.Bound(F_Cover, 0.0, 1.0);
@@ -2728,33 +2623,26 @@ namespace Models.SurfaceOM
             }
 
             //Assume the "crop_type" is the unique name.  Now check whether this unique "name" already exists in the system.
-            SOMNo = GetSoluteNumber(crop_type);
+            SOMNo = GetResidueNumber(crop_type);
 
             if (SOMNo < 0)
             {
-                if (SurfOM == null)
-                    SurfOM = new List<SurfOrganicMatterType>();
-
-                SurfOM.Add(new SurfOrganicMatterType(crop_type, crop_type));
-                SOMNo = num_surfom - 1;
-
-                //NOW UPDATE ALL VARIABLES;
-                ReadTypeSpecificConstants(SurfOM[SOMNo].OrganicMatterType, SOMNo, out SurfOM[SOMNo].PotDecompRate);
+                SOMNo = AddNewSurfOM(crop_type, crop_type);
             }
             // else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             //convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += Utility.Math.Divide(c.no3ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
-            SurfOM[SOMNo].nh4 += Utility.Math.Divide(c.nh4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
-            SurfOM[SOMNo].po4 += Utility.Math.Divide(c.po4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
 
             //Assume all surfom added is in the LYING pool, ie No STANDING component;
             for (int i = 0; i < MaxFr; i++)
             {
-                SurfOM[SOMNo].Lying[i].amount += surfom_added * c.fr_pool_C[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].C += surfom_added * c.C_fract[SOMNo] * c.fr_pool_C[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].N += surfom_N_added * c.fr_pool_N[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].P += surfom_P_added * c.fr_pool_P[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].amount += surfom_added * fr_pool_C[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].C += surfom_added * C_fract[SOMNo] * fr_pool_C[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].N += surfom_N_added * fr_pool_N[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].P += surfom_P_added * fr_pool_P[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
             }
 
@@ -2831,6 +2719,18 @@ namespace Models.SurfaceOM
 
                 SurfaceOM_removed.Invoke(data);
             }
+        }
+
+        protected T[,] Resize2DArray<T>(T[,] original, int x, int y)
+        {
+            T[,] newArray = new T[x, y];
+            int minX = Math.Min(original.GetLength(0), newArray.GetLength(0));
+            int minY = Math.Min(original.GetLength(1), newArray.GetLength(1));
+
+            for (int i = 0; i < minY; ++i)
+                Array.Copy(original, i * original.GetLength(0), newArray, i * newArray.GetLength(0), minX);
+
+            return newArray;
         }
     }
 }

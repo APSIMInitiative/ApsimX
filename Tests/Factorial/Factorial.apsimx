@@ -615,24 +615,27 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -1310,24 +1313,27 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <Manager>
           <Name>FertiliserRule</Name>
@@ -1984,24 +1990,27 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -2462,6 +2471,19 @@
               <double>0.1</double>
               <double>1</double>
             </wfpsN2N2O_y>
+            <oc>
+              <double>1.0394689866136577</double>
+              <double>0.88634994467382933</double>
+              <double>0.88849784160151635</double>
+              <double>0.88944020107263133</double>
+              <double>0.76980497654563118</double>
+              <double>0.449904950148074</double>
+              <double>0.26995458683192625</double>
+              <double>0.21996374392550275</double>
+              <double>0.15997583826755923</double>
+              <double>0.12998054052803287</double>
+              <double>0.11998069317336697</double>
+            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -2646,24 +2668,36 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
+          <_standing_fraction>
+            <double>0</double>
+          </_standing_fraction>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <report_additions>no</report_additions>
+          <report_removals>no</report_removals>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
