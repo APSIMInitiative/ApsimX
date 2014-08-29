@@ -2314,82 +2314,82 @@
             int SOMNo = 0;                 // specific system number for this residue name;
 
             string
-                surfom_name = data.name,
-                surfom_type = data.type;
+                surfomName = data.name,
+                surfomType = data.type;
 
             double
-                surfom_mass_added = Utility.Math.Bound(data.mass, -100000, 100000), // Mass of new surfom added (kg/ha)
-                surfom_c_added = 0,                                         // C added in new material (kg/ha)
-                surfom_n_added = Utility.Math.Bound(data.n, -10000, 10000), // N added in new material (kg/ha)
-                surfom_no3_added = 0,                                       // NO3 added in new material (kg/ha)
-                surfom_nh4_added = 0,                                       // NH4 added in new material (kg/ha)
-                surfom_cnr_added = Utility.Math.Bound(data.cnr, 0, 10000),  // C:N ratio of new material;
-                surfom_p_added = Utility.Math.Bound(data.p, -10000, 10000), // P added in new material (kg/ha)
-                surfom_po4_added = 0,                                       // PO4 added in new material (kg/ha)
-                surfom_cpr_added = Utility.Math.Bound(data.cpr, 0, 10000),  // C:P ratio of new material;
-                tot_mass = 0,
-                removed_from_standing = 0,
-                removed_from_lying = 0;
+                surfomMassAdded = Utility.Math.Bound(data.mass, -100000, 100000), // Mass of new surfom added (kg/ha)
+                surfomCAdded = 0,                                         // C added in new material (kg/ha)
+                surfomNAdded = Utility.Math.Bound(data.n, -10000, 10000), // N added in new material (kg/ha)
+                surfomNO3Added = 0,                                       // NO3 added in new material (kg/ha)
+                surfomNH4Added = 0,                                       // NH4 added in new material (kg/ha)
+                surfomCNrAdded = Utility.Math.Bound(data.cnr, 0, 10000),  // C:N ratio of new material;
+                surfomPAdded = Utility.Math.Bound(data.p, -10000, 10000), // P added in new material (kg/ha)
+                surfomPO4Added = 0,                                       // PO4 added in new material (kg/ha)
+                surfomCPrAdded = Utility.Math.Bound(data.cpr, 0, 10000),  // C:P ratio of new material;
+                totMass = 0,
+                removedFromStanding = 0,
+                removedFromLying = 0;
 
             ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
-            SOMNo = GetResidueNumber(surfom_name);
+            SOMNo = GetResidueNumber(surfomName);
 
             if (SOMNo < 0)
             {
-                SOMNo = AddNewSurfOM(surfom_name, surfom_type);
+                SOMNo = AddNewSurfOM(surfomName, surfomType);
             }
             // else this type already exists;
 
             // Get Mass of material added;
 
             // APSIM THING
-            // collect_real_var ("mass", "(kg/ha)", surfom_added, numvals, -100000.0, 100000.0);
-            surfom_c_added = surfom_mass_added * C_fract[SOMNo];
+            // collect_real_var ("mass", "(kg/ha)", surfomAdded, numvals, -100000.0, 100000.0);
+            surfomCAdded = surfomMassAdded * C_fract[SOMNo];
 
-            if (surfom_mass_added > -10000.0)
+            if (surfomMassAdded > -10000.0)
             {
                 // Get N content of material added;
-                if (surfom_n_added == 0)
+                if (surfomNAdded == 0)
                 {
                     // APSIM THING
-                    // collect_real_var_optional ("cnr", "()", surfom_cnr_added, numval_cnr, 0.0, 10000.0);
-                    surfom_n_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], surfom_cnr_added, 0.0);
+                    // collect_real_var_optional ("cnr", "()", surfomCNrAdded, numval_cnr, 0.0, 10000.0);
+                    surfomNAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCNrAdded, 0.0);
 
                     // If no N info provided, and no cnr info provided then throw error
-                    if (surfom_cnr_added == 0)
+                    if (surfomCNrAdded == 0)
                         throw new ApsimXException(FullPath, "SurfaceOM CN ratio not specified.");
                 }
 
                 // APSIM THING
-                if (surfom_p_added == 0)
+                if (surfomPAdded == 0)
                     /// If no P info provided, and no cpr info provided {
                     /// use default cpr and throw warning error to notify user;
-                    if (surfom_cpr_added == 0)
+                    if (surfomCPrAdded == 0)
                     {
-                        surfom_p_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], default_cpr, 0.0);
+                        surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], default_cpr, 0.0);
                         summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
-                        surfom_p_added = Utility.Math.Divide(surfom_mass_added * C_fract[SOMNo], surfom_cpr_added, 0.0);
+                        surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCPrAdded, 0.0);
 
                 // convert the ppm figures into kg/ha;
-                surfom_no3_added = Utility.Math.Divide(no3ppm[SOMNo], 1000000, 0) * surfom_mass_added;
-                surfom_nh4_added = Utility.Math.Divide(nh4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
-                surfom_po4_added = Utility.Math.Divide(po4ppm[SOMNo], 1000000, 0) * surfom_mass_added;
+                surfomNO3Added = Utility.Math.Divide(no3ppm[SOMNo], 1000000, 0) * surfomMassAdded;
+                surfomNH4Added = Utility.Math.Divide(nh4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
+                surfomPO4Added = Utility.Math.Divide(po4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
 
-                SurfOM[SOMNo].no3 += surfom_no3_added;
-                SurfOM[SOMNo].nh4 += surfom_nh4_added;
-                SurfOM[SOMNo].po4 += surfom_po4_added;
+                SurfOM[SOMNo].no3 += surfomNO3Added;
+                SurfOM[SOMNo].nh4 += surfomNH4Added;
+                SurfOM[SOMNo].po4 += surfomPO4Added;
 
-                if (surfom_mass_added > 0.0)
+                if (surfomMassAdded > 0.0)
                     /// Assume all residue added is in the LYING pool, ie No STANDING component;
                     for (int i = 0; i < maxFr; i++)
                     {
-                        SurfOM[SOMNo].Lying[i].amount += surfom_mass_added * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].C += surfom_mass_added * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].N += surfom_n_added * frPoolN[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].P += surfom_p_added * frPoolP[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].amount += surfomMassAdded * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].C += surfomMassAdded * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].N += surfomNAdded * frPoolN[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].P += surfomPAdded * frPoolP[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].AshAlk = 0;
                     }
                 else
@@ -2399,22 +2399,22 @@
                         lying = SurfOM[SOMNo].Lying.Sum<OMFractionType>(x => x.amount),
                         standing = SurfOM[SOMNo].Standing.Sum<OMFractionType>(x => x.amount);
 
-                    tot_mass = lying + standing;
+                    totMass = lying + standing;
 
-                    removed_from_standing = surfom_mass_added * Utility.Math.Divide(standing, tot_mass, 0.0);
-                    removed_from_lying = surfom_mass_added - removed_from_standing;
+                    removedFromStanding = surfomMassAdded * Utility.Math.Divide(standing, totMass, 0.0);
+                    removedFromLying = surfomMassAdded - removedFromStanding;
 
                     for (int i = 0; i < maxFr; i++)
                     {
-                        SurfOM[SOMNo].Lying[i].amount = SurfOM[SOMNo].Lying[i].amount + removed_from_lying * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].C = SurfOM[SOMNo].Lying[i].C + removed_from_lying * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfom_n_added * Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0) * frPoolN[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfom_p_added * Utility.Math.Divide(removed_from_lying, surfom_mass_added, 0.0) * frPoolP[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].amount = SurfOM[SOMNo].Lying[i].amount + removedFromLying * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].C = SurfOM[SOMNo].Lying[i].C + removedFromLying * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfomNAdded * Utility.Math.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfomPAdded * Utility.Math.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
-                        SurfOM[SOMNo].Standing[i].amount = SurfOM[SOMNo].Standing[i].amount + removed_from_standing * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].C = SurfOM[SOMNo].Standing[i].C + removed_from_standing * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfom_n_added * Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0) * frPoolN[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfom_p_added * Utility.Math.Divide(removed_from_standing, surfom_mass_added, 0.0) * frPoolP[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].amount = SurfOM[SOMNo].Standing[i].amount + removedFromStanding * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].C = SurfOM[SOMNo].Standing[i].C + removedFromStanding * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfomNAdded * Utility.Math.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfomPAdded * Utility.Math.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
                         SurfOM[SOMNo].Standing[i].AshAlk = 0.0;
                     }
                 }
@@ -2424,9 +2424,9 @@
     @"Added SurfaceOM
     SurfaceOM name       = {0}
     SurfaceOM Type       = {1}
-    Amount Added [kg/ha] = {2:0.0##}", SurfOM[SOMNo].name.Trim(), SurfOM[SOMNo].OrganicMatterType.Trim(), surfom_mass_added));
+    Amount Added [kg/ha] = {2:0.0##}", SurfOM[SOMNo].name.Trim(), SurfOM[SOMNo].OrganicMatterType.Trim(), surfomMassAdded));
 
-                SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, surfom_mass_added, surfom_n_added, surfom_p_added);
+                SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, surfomMassAdded, surfomNAdded, surfomPAdded);
 
                 // assumption is this event comes only from the manager for applying from an external source.
                 SendExternalMassFlow(
@@ -2434,10 +2434,10 @@
                     {
                         PoolClass = "surface",
                         FlowType = "gain",
-                        DM = surfom_mass_added,
-                        C = surfom_c_added,
-                        N = surfom_n_added + surfom_no3_added + surfom_nh4_added,
-                        P = surfom_p_added + surfom_po4_added,
+                        DM = surfomMassAdded,
+                        C = surfomCAdded,
+                        N = surfomNAdded + surfomNO3Added + surfomNH4Added,
+                        P = surfomPAdded + surfomPO4Added,
                         SW = 0.0
                     });
             }
@@ -2478,7 +2478,7 @@
         /// <summary>
         /// Reads type-specific residue constants from ini-file and places them in c. constants;
         /// </summary>
-        /// <param name="surfom_type"></param>
+        /// <param name="surfomType"></param>
         /// <param name="i"></param>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
@@ -2524,23 +2524,24 @@
         private double Cover(int SOMindex)
         {
             double F_Cover;             // Fraction of soil surface covered by residue (0-1)
-            double Area_lying;          // area of lying component;
-            double Area_standing;       // effective area of standing component (the 0.5 extinction coefficient in area calculation
+            double areaLying;          // area of lying component;
+            double areaStanding;       // effective area of standing component (the 0.5 extinction coefficient in area calculation
             // provides a random distribution in degree to which standing stubble is "lying over"
 
             // calculate fraction of cover and check bounds (0-1).  Bounds checking;
             // is required only for detecting internal rounding error.
-            double sum_stand_amount = 0, sum_lying_amount = 0;
+            double sumStandAmount = 0;
+            double sumLyingAmount = 0;
             for (int i = 0; i < maxFr; i++)
             {
-                sum_lying_amount += SurfOM[SOMindex].Lying[i].amount;
-                sum_stand_amount += SurfOM[SOMindex].Standing[i].amount;
+                sumLyingAmount += SurfOM[SOMindex].Lying[i].amount;
+                sumStandAmount += SurfOM[SOMindex].Standing[i].amount;
             }
 
-            Area_lying = specific_area[SOMindex] * sum_lying_amount;
-            Area_standing = specific_area[SOMindex] * sum_stand_amount;
+            areaLying = specific_area[SOMindex] * sumLyingAmount;
+            areaStanding = specific_area[SOMindex] * sumStandAmount;
 
-            F_Cover = AddCover(1.0 - (double)Math.Exp(-Area_lying), 1.0 - (double)Math.Exp(-(standing_extinct_coeff) * Area_standing));
+            F_Cover = AddCover(1.0 - (double)Math.Exp(-areaLying), 1.0 - (double)Math.Exp(-(standing_extinct_coeff) * areaStanding));
             F_Cover = Utility.Math.Bound(F_Cover, 0.0, 1.0);
 
             return F_Cover;
@@ -2561,31 +2562,31 @@
         private void SurfOMOnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             double
-                surfom_added = 0,   // amount of residue added (kg/ha)
-                surfom_N_added = 0, // amount of residue N added (kg/ha)
-                surfom_P_added = 0; // amount of residue N added (kg/ha)
+                surfomAdded = 0,   // amount of residue added (kg/ha)
+                surfomNAdded = 0, // amount of residue N added (kg/ha)
+                surfomPAdded = 0; // amount of residue N added (kg/ha)
 
             if (BiomassRemoved.fraction_to_residue.Sum() != 0)
             {
                 // Find the amount of surfom to be added today;
                 for (int i = 0; i < BiomassRemoved.fraction_to_residue.Length; i++)
-                    surfom_added += BiomassRemoved.dlt_crop_dm[i] * BiomassRemoved.fraction_to_residue[i];
+                    surfomAdded += BiomassRemoved.dlt_crop_dm[i] * BiomassRemoved.fraction_to_residue[i];
 
-                if (surfom_added > 0.0)
+                if (surfomAdded > 0.0)
                 {
                     // Find the amount of N & added in surfom today;
                     for (int i = 0; i < BiomassRemoved.dlt_dm_p.Length; i++)
                     {
-                        surfom_P_added += BiomassRemoved.dlt_dm_p[i] * BiomassRemoved.fraction_to_residue[i];
-                        surfom_N_added += BiomassRemoved.dlt_dm_n[i] * BiomassRemoved.fraction_to_residue[i];
+                        surfomPAdded += BiomassRemoved.dlt_dm_p[i] * BiomassRemoved.fraction_to_residue[i];
+                        surfomNAdded += BiomassRemoved.dlt_dm_n[i] * BiomassRemoved.fraction_to_residue[i];
                     }
 
-                    AddSurfaceOM(surfom_added, surfom_N_added, surfom_P_added, BiomassRemoved.crop_type);
+                    AddSurfaceOM(surfomAdded, surfomNAdded, surfomPAdded, BiomassRemoved.crop_type);
                 }
             }
         }
 
-        private void AddSurfaceOM(double surfom_added, double surfom_N_added, double surfom_P_added, string crop_type)
+        private void AddSurfaceOM(double surfomAdded, double surfomNAdded, double surfomPAdded, string cropType)
         {
             int SOMNo;      // system number of the surface organic matter added;
 
@@ -2596,55 +2597,55 @@
 
     @"Added surfom
     SurfaceOM Type          = {0}
-    Amount Added [kg/ha]    = {1}", crop_type.TrimEnd(), surfom_added));
+    Amount Added [kg/ha]    = {1}", cropType.TrimEnd(), surfomAdded));
             }
 
-            // Assume the "crop_type" is the unique name.  Now check whether this unique "name" already exists in the system.
-            SOMNo = GetResidueNumber(crop_type);
+            // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
+            SOMNo = GetResidueNumber(cropType);
 
             if (SOMNo < 0)
             {
-                SOMNo = AddNewSurfOM(crop_type, crop_type);
+                SOMNo = AddNewSurfOM(cropType, cropType);
             }
             /// else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             // convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
-            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
-            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * surfom_added;
+            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * surfomAdded;
+            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * surfomAdded;
+            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * surfomAdded;
 
             // Assume all surfom added is in the LYING pool, ie No STANDING component;
             for (int i = 0; i < maxFr; i++)
             {
-                SurfOM[SOMNo].Lying[i].amount += surfom_added * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].C += surfom_added * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].N += surfom_N_added * frPoolN[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].P += surfom_P_added * frPoolP[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].amount += surfomAdded * frPoolC[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].C += surfomAdded * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].N += surfomNAdded * frPoolN[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].P += surfomPAdded * frPoolP[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
             }
 
-            SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, surfom_added, surfom_N_added, surfom_P_added);
+            SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, surfomAdded, surfomNAdded, surfomPAdded);
         }
 
         /// <summary>
         /// Notify other modules of residue added to residue pool.
         /// </summary>
-        /// <param name="residue_type"></param>
-        /// <param name="dm_type"></param>
-        /// <param name="dlt_residue_wt"></param>
-        /// <param name="dlt_residue_N_wt"></param>
-        /// <param name="dlt_residue_P_wt"></param>
-        private void SendResAddedEvent(string residue_type, string dm_type, double dlt_residue_wt, double dlt_residue_N_wt, double dlt_residue_P_wt)
+        /// <param name="residueType"></param>
+        /// <param name="dmType"></param>
+        /// <param name="dltResidueWt"></param>
+        /// <param name="dltResidueNWt"></param>
+        /// <param name="dltResiduePWt"></param>
+        private void SendResAddedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
         {
             if (Residue_added != null)
             {
                 ResidueAddedType data = new ResidueAddedType()
                 {
-                    residue_type = residue_type,
-                    dm_type = dm_type,
-                    dlt_residue_wt = dlt_residue_wt,
-                    dlt_dm_n = dlt_residue_N_wt,
-                    dlt_dm_p = dlt_residue_P_wt
+                    residue_type = residueType,
+                    dm_type = dmType,
+                    dlt_residue_wt = dltResidueWt,
+                    dlt_dm_n = dltResidueNWt,
+                    dlt_dm_p = dltResiduePWt
                 };
 
                 Residue_added.Invoke(data);
@@ -2654,19 +2655,19 @@
         /// <summary>
         /// Notify other modules of residue removed from residue pool
         /// </summary>
-        /// <param name="residue_removed_action"></param>
-        /// <param name="dlt_residue_fraction"></param>
+        /// <param name="residueRemovedAction"></param>
+        /// <param name="dltResidueFraction"></param>
         /// <param name="residueIncorpFraction"></param>
-        /// <param name="deepest_layer"></param>
-        private void SendResRemovedEvent(string residue_removed_action, double dlt_residue_fraction, double[] residue_incorp_fraction, int deepest_layer)
+        /// <param name="deepestLayer"></param>
+        private void SendResRemovedEvent(string residueRemovedAction, double dltResidueFraction, double[] residueIncorpFraction, int deepestLayer)
         {
             if (Residue_removed != null)
             {
                 ResidueRemovedType data = new ResidueRemovedType()
                 {
-                    residue_removed_action = residue_removed_action,
-                    dlt_residue_fraction = dlt_residue_fraction,
-                    residue_incorp_fraction = residue_incorp_fraction
+                    residue_removed_action = residueRemovedAction,
+                    dlt_residue_fraction = dltResidueFraction,
+                    residue_incorp_fraction = residueIncorpFraction
                 };
 
                 Residue_removed.Invoke(data);
@@ -2676,22 +2677,22 @@
         /// <summary>
         /// Notify other modules of residue added to residue pool
         /// </summary>
-        /// <param name="residue_type"></param>
-        /// <param name="dm_type"></param>
-        /// <param name="dlt_residue_wt"></param>
-        /// <param name="dlt_residue_N_wt"></param>
-        /// <param name="dlt_residue_P_wt"></param>
-        private void SendSOMRemovedEvent(string residue_type, string dm_type, double dlt_residue_wt, double dlt_residue_N_wt, double dlt_residue_P_wt)
+        /// <param name="residueType"></param>
+        /// <param name="dmType"></param>
+        /// <param name="dltResidueWt"></param>
+        /// <param name="dltResidueNWt"></param>
+        /// <param name="dltResiduePWt"></param>
+        private void SendSOMRemovedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
         {
             if (SurfaceOM_removed != null)
             {
                 SurfaceOMRemovedType data = new SurfaceOMRemovedType()
                 {
-                    SurfaceOM_type = residue_type,
-                    SurfaceOM_dm_type = dm_type,
-                    dlt_SurfaceOM_wt = dlt_residue_wt,
-                    SurfaceOM_dlt_dm_n = dlt_residue_N_wt,
-                    SurfaceOM_dlt_dm_p = dlt_residue_P_wt
+                    SurfaceOM_type = residueType,
+                    SurfaceOM_dm_type = dmType,
+                    dlt_SurfaceOM_wt = dltResidueWt,
+                    SurfaceOM_dlt_dm_n = dltResidueNWt,
+                    SurfaceOM_dlt_dm_p = dltResiduePWt
                 };
 
                 SurfaceOM_removed.Invoke(data);
