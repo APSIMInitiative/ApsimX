@@ -267,19 +267,14 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to HTML",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Folder),
-                                              typeof(Experiment),
-                                              typeof(Simulations),
-                                              typeof(ICrop) })]
+        [ContextMenu(MenuName = "Export to HTML")]
         public void ExportToHTML(object sender, EventArgs e)
         {
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
                 Model modelClicked = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
-                if (modelClicked != null && modelClicked is ICrop)
+                if (modelClicked != null)
                 {
                     string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
 
