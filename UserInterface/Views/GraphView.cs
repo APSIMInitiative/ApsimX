@@ -55,7 +55,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user clicks on a legend.
         /// </summary>
-        public event EventHandler OnLegendClick;
+        public event EventHandler<LegendClickArgs> OnLegendClick;
 
         /// <summary>
         /// Invoked when the user clicks on the graph title.
@@ -587,9 +587,16 @@ namespace UserInterface.Views
             {
                 if (this.plot1.Model.LegendArea.ToRect(true).Contains(e.Location))
                 {
+                    int margin = Convert.ToInt32(this.plot1.Model.LegendMargin);
+                    int y = Convert.ToInt32(e.Location.Y - this.plot1.Model.LegendArea.Top);
+                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
+                    int seriesIndex = y / itemHeight;
                     if (this.OnLegendClick != null)
                     {
-                        this.OnLegendClick.Invoke(sender, e);
+                        LegendClickArgs args = new LegendClickArgs();
+                        args.seriesIndex = seriesIndex;
+                        args.controlKeyPressed = ModifierKeys == Keys.Control;
+                        this.OnLegendClick.Invoke(sender, args );
                     }
                 }
                 else
@@ -686,6 +693,29 @@ namespace UserInterface.Views
             }
 
             this.plot1.Controls.Remove(label);
+        }
+
+        /// <summary>
+        /// Toggle the enable or disable a series.
+        /// </summary>
+        /// <param name="seriesIndex">series index</param>
+        public void ToggleEnableSeries(int seriesIndex)
+        {
+            LineSeries series = this.plot1.Model.Series[seriesIndex] as LineSeries;
+            if (series != null)
+            {
+                if (series.Tag == null)
+                {
+                    series.Tag = series.Color;
+                    series.Color = OxyColors.Transparent;
+                }
+                else
+                {
+                    series.Color = series.Tag as OxyColor;
+                    series.Tag = null;
+                }
+                this.plot1.Refresh();
+            }
         }
     }
 }
