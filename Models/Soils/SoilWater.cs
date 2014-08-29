@@ -4541,6 +4541,7 @@ namespace Models.Soils
 
         public void Reset()
         {
+            Summary.WriteMessage(FullPath, "Resetting Soil Water Balance");
             //nb. this is the same as OnUserInit Event
 
             //Save State
@@ -4551,6 +4552,7 @@ namespace Models.Soils
 
             //Change State
             soilwat2_delta_state();
+
         }
 
 

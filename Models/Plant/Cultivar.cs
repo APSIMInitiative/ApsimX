@@ -52,7 +52,7 @@ namespace Models.PMF
             foreach (Cultivar cultivar in cultivars)
             {
                 if (cultivar.Name.Equals(cultivarName, StringComparison.CurrentCultureIgnoreCase) ||
-                    Utility.String.Contains(cultivar.Aliases, cultivarName))
+                    (cultivar.Aliases != null && Utility.String.Contains(cultivar.Aliases, cultivarName)))
                 {
                     return cultivar;
                 }
