@@ -637,26 +637,28 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>2000</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Operations>
         <Name>operations</Name>

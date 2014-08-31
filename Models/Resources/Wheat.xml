@@ -12,10 +12,23 @@
     <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
   </Cultivar>    
   <Cultivar>
+    <Name>Rongotea</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+    <Command>[Grain].MaxGrainSize = 0.047</Command>
+    <Command>[Grain].GrainsPerGramStem = 22</Command>
+  </Cultivar>      
+  <Cultivar>
     <Name>Hartog</Name>
     <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
     <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
   </Cultivar>
+  <Cultivar>
+    <Name>Gamenya</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 630.0</Command>
+  </Cultivar>  
   <Population1>
     <Name>Population</Name>
     <PhaseBasedSwitch>

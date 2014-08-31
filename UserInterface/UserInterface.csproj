@@ -10,9 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UserInterface</RootNamespace>
     <AssemblyName>UserInterface</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -39,9 +36,17 @@
     <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ModelEditControl, Version=1.2.4049.42096, Culture=neutral, PublicKeyToken=445e193243cd750d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\ModelEditControl.dll</HintPath>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,6 +64,9 @@
     <Reference Include="OxyPlot.WindowsForms">
       <HintPath>..\Bin\OxyPlot.WindowsForms.dll</HintPath>
     </Reference>
+    <Reference Include="ModelEditControl">
+      <HintPath>..\Bin\ModelEditControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Utility\ColumnXYSeries.cs">
@@ -74,6 +82,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Classes\PMFDocumentation.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
@@ -86,6 +95,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
+    <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
@@ -293,6 +303,7 @@
     </Compile>
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
@@ -374,6 +385,7 @@
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -584,6 +596,7 @@
     <None Include="Resources\link.png" />
     <None Include="Resources\Apsim.ico" />
     <Content Include="apsim_logo32.ico" />
+    <EmbeddedResource Include="Resources\apsim_logo.png" />
     <Content Include="Resources\apsim_logo32.ico" />
     <None Include="Resources\calculator.png" />
     <None Include="Resources\export2.png" />
@@ -592,8 +605,13 @@
     <None Include="Resources\InitialWaterGraph.xml" />
     <None Include="Resources\Excel16.png" />
     <None Include="Resources\cultivar16.png" />
+    <None Include="Resources\gfolder_32.png" />
+    <EmbeddedResource Include="Resources\Export.css" />
+    <EmbeddedResource Include="Resources\hd_bg.png" />
     <Content Include="Resources\memo16.png" />
     <None Include="Resources\MicroClimate161.png" />
+    <None Include="Resources\Plant2.css" />
+    <None Include="Resources\palm16.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

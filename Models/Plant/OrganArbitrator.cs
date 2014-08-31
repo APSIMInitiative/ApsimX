@@ -165,7 +165,7 @@ namespace Models.PMF
         }
 
 
-        public void DoDMArbitration(Organ[] Organs)
+        public void DoWaterLimitedDMAllocations(Organ[] Organs)
         {
             //Work out how much each organ will grow in the absence of nutrient stress, and how much DM they can supply.
             DoDMSetup(Organs);
@@ -173,39 +173,30 @@ namespace Models.PMF
             DoReAllocation(Organs, DM, DMArbitrationOption);
             DoFixation(Organs, DM, DMArbitrationOption);
             DoRetranslocation(Organs, DM, DMArbitrationOption);
-            DoPotentialDMAllocation(Organs);
+            SendPotentialDMAllocations(Organs);
         }
-        public void DoNutrientArbitration(Organ[] Organs)
+        public void DoNutrientDemandSetUp(Organ[] Organs)
         {
-            if (NAware) //Note, currently all models N Aware, I have to write some code to take this out
-            {
-                DoSetup(Organs, ref N);
+                DoNutrientSetUp(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
+        }
+        public void SetNutrientUptake(Organ[] Organs)
+        {
+                DoNutrientUptakeSetUp(Organs, ref N);
+        }
+        public void DoNutrientAllocations(Organ[] Organs)
+        {
                 DoUptake(Organs, N, NArbitrationOption);
                 DoRetranslocation(Organs, N, NArbitrationOption);
                 DoFixation(Organs, N, NArbitrationOption);
-            }
-            /* if (PAware) //Note, currently all models on NOT P Aware
-             {
-                 DoNutrientSetup(Organs, ref P);
-                 DoNutrientReAllocation(Organs, P);
-                 DoNutrientUptake(Organs, P);
-                 DoNutrientRetranslocation(Organs, P);
-                 DoNutrientFixation(Organs, P);
-             }
-             if (KAware) //Note, currently all models on NOT K Aware
-             {
-                 DoNutrientSetup(Organs, ref K);
-                 DoNutrientReAllocation(Organs, K);
-                 DoNutrientUptake(Organs, K);
-                 DoNutrientRetranslocation(Organs, K);
-                 DoNutrientFixation(Organs, K);
-             }*/
-            //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
-            DoActualDMAllocation(Organs);
-            //Tell each organ how much nutrient they are getting following allocaition
-            DoNutrientAllocation(Organs);
         }
+        public void DoNutrientLimitedGrowth(Organ[] Organs)
+        {
+            //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
+            SendDMAllocations(Organs);
+            //Tell each organ how much nutrient they are getting following allocaition
+            SendNutrientAllocations(Organs);
+       }
 
         #region Arbitration step functions
         virtual public void DoDMSetup(Organ[] Organs)
@@ -269,7 +260,7 @@ namespace Models.PMF
                     DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
             }
         }
-        virtual public void DoPotentialDMAllocation(Organ[] Organs)
+        virtual public void SendPotentialDMAllocations(Organ[] Organs)
         {
             //  Allocate to meet Organs demands
             DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalReallocationSupply - DM.TotalAllocated);
@@ -293,7 +284,7 @@ namespace Models.PMF
                 };
             }
         }
-        virtual public void DoSetup(Organ[] Organs, ref BiomassArbitrationType BAT)
+        virtual public void DoNutrientSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
             BAT = new BiomassArbitrationType(Organs.Length);
@@ -306,14 +297,14 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                BAT.UptakeSupply[i] = Supply.Uptake;
+                //BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].Live.N + Organs[i].Dead.N;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
 
@@ -354,6 +345,21 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
+
+        virtual public void DoNutrientUptakeSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
+        {
+            //Creat Biomass variable class
+            //BAT = new BiomassArbitrationType(Organs.Length);
+
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                BiomassSupplyType Supply = Organs[i].NSupply;
+                BAT.UptakeSupply[i] = Supply.Uptake;
+            }
+        
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+        }
+
         virtual public void DoReAllocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassReallocated = 0;
@@ -514,7 +520,7 @@ namespace Models.PMF
                 }
             }
         }
-        virtual public void DoActualDMAllocation(Organ[] Organs)
+        virtual public void SendDMAllocations(Organ[] Organs)
         {
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
@@ -558,7 +564,7 @@ namespace Models.PMF
                 };
             }
         }
-        virtual public void DoNutrientAllocation(Organ[] Organs)
+        virtual public void SendNutrientAllocations(Organ[] Organs)
         {
             // Send N allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)

@@ -2,6 +2,7 @@
 using Models.Core;
 using UserInterface.Presenters;
 using System.IO;
+using System.Reflection;
 using System;
 using Models.Factorial;
 
@@ -19,12 +20,13 @@ namespace UserInterface.Commands
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
                                                                     typeof(Simulations),
-                                                                    typeof(Simulation)};
+                                                                    typeof(Simulation),
+                                                                    typeof(Experiment)};
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ExportNodeCommand(ExplorerPresenter explorerPresenter, 
+        public ExportNodeCommand(ExplorerPresenter explorerPresenter,
                                  string nodePath,
                                  string folderPath)
         {
@@ -61,14 +63,32 @@ namespace UserInterface.Commands
             // write to it.
             Directory.CreateDirectory(folderPath);
 
+            //Load CSS resource
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
+            string css = reader.ReadToEnd();
+
+            //write image files
+            using (FileStream file = new FileStream(Path.Combine(folderPath, "apsim_logo.png"), FileMode.Create, FileAccess.Write))
+            {
+                assembly.GetManifestResourceStream("UserInterface.Resources.apsim_logo.png").CopyTo(file);
+            }
+
+            using (FileStream file = new FileStream(Path.Combine(folderPath, "hd_bg.png"), FileMode.Create, FileAccess.Write))
+            {
+                assembly.GetManifestResourceStream("UserInterface.Resources.hd_bg.png").CopyTo(file);
+            }
+
             if (modelToExport is Simulation)
                 DoExportSimulation(modelToExport, folderPath);
             else
             {
                 // Create index.html
                 StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head/>");
+                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
                 index.WriteLine("<body>");
+                index.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"apsim_logo.png\" /></div>");
+                index.WriteLine("<div id=\"right\"><img src=\"hd_bg.png\" /></div>");
                 index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
 
                 // Look for child models that are a folder or simulation etc
@@ -80,7 +100,7 @@ namespace UserInterface.Commands
                         string childFolderPath = Path.Combine(folderPath, child.Name);
 
                         string childFileName = Path.Combine(childFolderPath, "Index.html");
-                        index.WriteLine("<p><a href={0}>{1}</a></p>",
+                        index.WriteLine("<p><a href=file://{0}>{1}</a></p>",
                                         new object[] {Utility.String.DQuote(childFileName),
                                                     child.Name});
 
@@ -91,6 +111,7 @@ namespace UserInterface.Commands
                 // Write out any models that are under this model.
                 DoExportZone(modelToExport, folderPath, index);
 
+                index.WriteLine("</div>");
                 index.WriteLine("</body>");
                 index.WriteLine("</html>");
                 index.Close();
@@ -102,13 +123,20 @@ namespace UserInterface.Commands
         /// </summary>
         public void DoExportSimulation(Model modelToExport, string folderPath)
         {
+            //Load CSS resource
+
             // Make sure the specified folderPath exists because we're going to 
             // write to it.
             Directory.CreateDirectory(folderPath);
 
+            //Load CSS resource
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
+            string css = reader.ReadToEnd();
+
             // Create index.html
             StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head/>");
+            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
             index.WriteLine("<body>");
 
             DoExportZone(modelToExport, folderPath, index);

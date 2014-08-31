@@ -6,6 +6,8 @@ using UserInterface.Views;
 using System.Reflection;
 using Models;
 using UserInterface.EventArguments;
+using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory;
 
 namespace UserInterface.Presenters
 {
@@ -41,7 +43,7 @@ namespace UserInterface.Presenters
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
 
-           // Manager.RebuildScriptModel();
+            Manager.RebuildScriptModel();
         }
 
         /// <summary>
@@ -49,33 +51,40 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnNeedVariableNames(object Sender, NeedContextItems e)
         {
-            object o = null;
-            if (Manager.Script != null)
-            {
-                e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
+            CSharpParser parser = new CSharpParser();
+            SyntaxTree syntaxTree = parser.Parse(ManagerView.Editor.Text); //Manager.Code);
+            syntaxTree.Freeze();
 
-                // If no dot was specified then the object name may be refering to a [Link] in the script.
-                if (!e.ObjectName.Contains("."))
+            IEnumerable<FieldDeclaration> fields = syntaxTree.Descendants.OfType<FieldDeclaration>();
+
+            e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
+            string typeName = string.Empty;
+
+            foreach (FieldDeclaration field in fields)
+            {
+                foreach (VariableInitializer var in field.Variables)
                 {
-                    o = Utility.Reflection.GetValueOfFieldOrProperty(e.ObjectName, Manager.Script);
-                    if (o == null)
+                    if (e.ObjectName == var.Name)
                     {
-                        // Not a [Link] so look for the object within scope
-                        o = Manager.Find(e.ObjectName);
+                        typeName = field.ReturnType.ToString();
                     }
                 }
-                // If still not found then try a specific get for the object.
-                if (o == null)
-                    o = Manager.Get(e.ObjectName);
+            }
 
-                // If found then loop through all properties and add to the items list.
-                if (o != null)
+            // a bit rough, but this will do for an initial version
+            if (typeName != string.Empty)
+            {
+                Type [] types = Assembly.GetAssembly(typeof(Clock)).GetTypes();
+                foreach (Type atype in types)
                 {
-                    foreach (PropertyInfo Property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                        e.Items.Add(Property.Name);
-                    foreach (MethodInfo Method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
-                        e.Items.Add(Method.Name);
-                    e.Items.Sort();
+                    if (atype.Name == typeName)
+                    {
+                        foreach (PropertyInfo Property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                            e.Items.Add(Property.Name);
+                        foreach (MethodInfo Method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                            e.Items.Add(Method.Name);
+                        e.Items.Sort();
+                    }
                 }
             }
         }
@@ -104,7 +113,8 @@ namespace UserInterface.Presenters
                     ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
             }
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            PropertyPresenter.PopulateGrid(Manager.Script);
+            if (Manager.Script != null)
+                PropertyPresenter.PopulateGrid(Manager.Script);
         }
 
         /// <summary>

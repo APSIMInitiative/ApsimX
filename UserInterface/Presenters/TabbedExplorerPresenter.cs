@@ -38,7 +38,8 @@ namespace UserInterface.Presenters
         {
             this.View = view as ITabbedExplorerView;
             this.View.PopulateStartPage += OnPopulateStartPage;
-            this.View.MruClick += OnMruApsimXFile;
+            this.View.MruFileClick += OnMruApsimOpenFile;
+            this.View.ReloadMruView += OnReloadMruView;
             this.View.TabClosing += OnTabClosing;
             Presenters = new List<ExplorerPresenter>();
         }
@@ -49,7 +50,8 @@ namespace UserInterface.Presenters
         public void Detach(object view)
         {
             this.View.PopulateStartPage -= OnPopulateStartPage;
-            this.View.MruClick -= OnMruApsimXFile;
+            this.View.MruFileClick -= OnMruApsimOpenFile;
+            this.View.ReloadMruView -= OnReloadMruView;
             this.View.TabClosing -= OnTabClosing;
         }
 
@@ -90,6 +92,9 @@ namespace UserInterface.Presenters
                 Presenters.Add(Presenter);
                 try
                 {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    Presenter.Config = config;  // give it access to the configuration settings for MRU's
                     Simulations simulations = Simulations.Read(fileName);
                     Presenter.Attach(simulations, ExplorerView, null);
                     View.AddTab(fileName, Properties.Resources.apsim_logo32, ExplorerView, true);
@@ -100,7 +105,14 @@ namespace UserInterface.Presenters
                         Presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, View.TabWidth - 20); // ?
                     config.Settings.AddMruFile(fileName);
                     config.Save();
-                    View.FillMruList(config.Settings.MruList);
+                    List<string> ValidMrus = new List<string>(); //make sure recently used files still exist before displaying them
+                    foreach (string s in config.Settings.MruList)
+                        if (File.Exists(s))
+                            ValidMrus.Add(s);
+                    config.Settings.MruList = ValidMrus;
+                    View.FillMruList(ValidMrus);
+
+                    Cursor.Current = Cursors.Default;
                 }
                 catch (Exception err)
                 {
@@ -130,6 +142,8 @@ namespace UserInterface.Presenters
         /// When the view wants to populate it's start page, it will invoke this
         /// event handler.
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnPopulateStartPage(object sender, PopulateStartPageArgs e)
         {
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
@@ -153,6 +167,24 @@ namespace UserInterface.Presenters
                 OnClick = OnImport
             });
 
+            e.Descriptions.Add(new PopulateStartPageArgs.Description()
+            {
+                Name = "Open an example",
+                ResourceNameForImage = "gfolder_32",
+                OnClick = OnExample
+            });
+
+            config.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
+            View.FillMruList(config.Settings.MruList);
+        }
+
+        /// <summary>
+        /// Handler to reload the mru files list
+        /// </summary>
+        /// <param name="sender">Sender Object</param>
+        /// <param name="e">Event arguments</param>
+        private void OnReloadMruView(object sender, EventArgs e)
+        {
             View.FillMruList(config.Settings.MruList);
         }
 
@@ -161,13 +193,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("*.apsimx|*.apsimx");
+            string FileName = View.AskUserForFileName("", "*.apsimx|*.apsimx");
             OpenApsimXFileInTab(FileName);
         }
 
-        private void OnMruApsimXFile(object sender, StringArgs s)
+        private void OnMruApsimOpenFile(object sender, EventArgs e)
         {
-            OpenApsimXFileInTab(s.Name);
+            string FileName = View.SelectedMruFileName();
+            OpenApsimXFileInTab(FileName);
         }
 
         /// <summary>
@@ -196,7 +229,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnImport(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("*.apsim|*.apsim");
+            string FileName = View.AskUserForFileName("", "*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
             try
@@ -212,5 +245,19 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Open a file open dialog with the initial dir in an Examples directory
+        /// that is at the same level as this app directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExample(object sender, EventArgs e)
+        {
+            string initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
+
+            string FileName = View.AskUserForFileName( initialPath, "*.apsimx|*.apsimx");
+            OpenApsimXFileInTab(FileName);
+        }
     }
 }

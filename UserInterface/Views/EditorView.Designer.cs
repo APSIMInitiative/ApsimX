@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.TextBox = new ICSharpCode.TextEditor.TextEditorControl();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // TextBox
@@ -42,13 +44,18 @@
             this.TextBox.Text = "textEditorControl1";
             this.TextBox.Leave += new System.EventHandler(this.OnTextBoxLeave);
             // 
-            // Editor
+            // timer1
+            // 
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.Controls.Add(this.TextBox);
-            this.Name = "Editor";
+            this.Name = "EditorView";
             this.Size = new System.Drawing.Size(558, 485);
             this.ResumeLayout(false);
 
@@ -57,6 +64,7 @@
         #endregion
 
         private ICSharpCode.TextEditor.TextEditorControl TextBox;
+        private System.Windows.Forms.Timer timer1;
 
     }
 }

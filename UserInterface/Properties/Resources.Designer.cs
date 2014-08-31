@@ -273,6 +273,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gfolder_32 {
+            get {
+                object obj = ResourceManager.GetObject("gfolder_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Graph16 {
             get {
                 object obj = ResourceManager.GetObject("Graph16", resourceCulture);
@@ -422,6 +432,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap OilPalm16 {
+            get {
+                object obj = ResourceManager.GetObject("OilPalm16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Open {
             get {
                 object obj = ResourceManager.GetObject("Open", resourceCulture);
@@ -446,6 +466,37 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("Paste", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #toc {
+        ///  border-style: none;
+        ///  font-family: Arial,Helvetica,sans-serif;
+        ///  font-size: medium;
+        ///}
+        ///body {
+        ///  background: white url(ApsruTile.jpg) repeat-y scroll left top;
+        ///  font-family: Verdana,Arial,Helvetica,sans-serif;
+        ///  font-size: 9pt;
+        ///  color: black;
+        ///  padding-left: 70px;
+        ///  text-align: left;
+        ///}
+        ///p {
+        ///  font-family: Verdana,Arial,Helvetica,sans-serif;
+        ///  font-size: 9pt;
+        ///  color: black;
+        ///}
+        ///table {
+        ///  border: 1px solid #cccccc;
+        ///  font-size: 9pt;
+        ///  font-family: Arial,Helvetica,sans-serif;
+        ///  bor [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Plant2 {
+            get {
+                return ResourceManager.GetString("Plant2", resourceCulture);
             }
         }
         

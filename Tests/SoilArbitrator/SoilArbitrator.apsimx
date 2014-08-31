@@ -588,7 +588,10 @@
         <default_standing_fraction>0</default_standing_fraction>
         <standing_extinct_coeff>0.5</standing_extinct_coeff>
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
           <TillageType />
@@ -1338,7 +1341,10 @@
         <default_standing_fraction>0</default_standing_fraction>
         <standing_extinct_coeff>0.5</standing_extinct_coeff>
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
           <TillageType />
@@ -1941,7 +1947,10 @@
         <default_standing_fraction>0</default_standing_fraction>
         <standing_extinct_coeff>0.5</standing_extinct_coeff>
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
           <TillageType />
@@ -2563,7 +2572,10 @@
         <default_standing_fraction>0</default_standing_fraction>
         <standing_extinct_coeff>0.5</standing_extinct_coeff>
         <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
           <TillageType />
@@ -2723,36 +2735,5 @@
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
   </Graph>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>WithTree</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>WithTree</SimulationName>
-      <TableName>Report1</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>WithTree</SimulationName>
-      <TableName>Report2</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>NoTree</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

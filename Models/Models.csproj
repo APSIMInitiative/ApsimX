@@ -10,9 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Models</RootNamespace>
     <AssemblyName>Model</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -54,25 +51,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Excel.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Numerics, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MathNet.Numerics.3.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Excel">
+      <HintPath>..\Bin\Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.3.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Utility\ApsimTextFile.cs">
@@ -305,11 +299,7 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
-    <Compile Include="SurfaceOM\SurfaceOrganicMatter.cs" />
-    <Compile Include="SurfaceOM\_additions.cs" />
-    <Compile Include="SurfaceOM\_eventhandlers.cs" />
-    <Compile Include="SurfaceOM\_events.cs" />
-    <Compile Include="SurfaceOM\_exposedvars.cs" />
+    <Compile Include="SurfaceOrganicMatter.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ModelCollection.cs" />
     <Compile Include="Core\ISummary.cs" />
@@ -326,7 +316,7 @@
     <Compile Include="Utility\Met.cs" />
     <Compile Include="WeatherFile.cs" />
     <Compile Include="Report.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
   </ItemGroup>
@@ -381,6 +371,9 @@
     <None Include="Resources\OilPalm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ResidueTypes.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\Slurp.xml">
       <SubType>Designer</SubType>
     </Content>

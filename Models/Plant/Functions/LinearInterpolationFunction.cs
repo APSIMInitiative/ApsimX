@@ -9,7 +9,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     [Serializable]
-    [Description("returns a y value that corresponds to the position of the value of XProperty in the specified xy matrix")]
+    [Description("A value is returned via linear interpolation of a given set of XY pairs")]
     public class LinearInterpolationFunction : Function
     {
         private bool YsAreAllTheSame = false;

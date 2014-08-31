@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// Holds the collection of canopy properties that each crop must supply to the rest of the world
+    /// </summary>
     [Serializable]
     public class CanopyProperties
     {
@@ -17,7 +20,7 @@ namespace Models.PMF
         /// Green leaf area index (m2/m2) 
         /// Used in the light and energy arbitration
         /// </summary>
-        public double LAI { get; set; }
+        public double LAIGreen { get; set; }
 
         /// <summary>
         /// Total (includes dead) leaf area index (m2/m2) 
@@ -57,6 +60,7 @@ namespace Models.PMF
         /// For default values see:
         ///     Kelliher, FM, Leuning, R, Raupach, MR, Schulze, E-D (1995) Maximum conductances for evaporation from 
         ///     global vegetation types. Agricultural and Forest Meteorology 73, 1–16.
+        ///     DOI: 10.1016/0168-1923(94)02178-M
         /// </summary>
         public double MaximumStomatalConductance { get; set; }
 
@@ -66,11 +70,16 @@ namespace Models.PMF
         /// and so feeds into the calculation of water demand.
         /// </summary>
         public double HalfSatStomatalConductance { get; set; }
-        
+
         /// <summary>
         /// Canopy emissivity (-) is used in the calculation of long-wave radiation.  A value of 0.96 is generally acceptable.
         /// </summary>
         public double CanopyEmissivity { get; set; }
+
+        /// <summary>
+        /// Albedo (-) is the proprotion of radiation that is reflected and is used in the calculation of the radiation balance.
+        /// </summary>
+        public double Albedo { get; set; }
 
         /// <summary>
         /// Fractional relative growth rate (-) with 1.0 at full growth rate and 0.0 at no growth

@@ -20,13 +20,6 @@
     <WeatherFile>
       <Name>met</Name>
       <FileName>..\WeatherFiles\WeeWaa1889_2012.met</FileName>
-      <MaxT>35.5</MaxT>
-      <MinT>19.5</MinT>
-      <Rain>0</Rain>
-      <Radn>30</Radn>
-      <vp>15</vp>
-      <wind>3</wind>
-      <CO2>350</CO2>
     </WeatherFile>
     <Clock>
       <Name>clock</Name>
@@ -35,8 +28,6 @@
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
-      <Html>false</Html>
-      <AutoCreate>false</AutoCreate>
     </Summary>
     <Zone>
       <Name>paddock</Name>
@@ -573,17 +564,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.43022395462337309</double>
-            <double>0.54341972468691113</double>
-            <double>0.7176241057111119</double>
-            <double>0.80447134983492663</double>
-            <double>0.73325413427810182</double>
-            <double>0.42868100513750679</double>
-            <double>0.257296466262741</double>
-            <double>0.20971490342908214</double>
-            <double>0.15256374848054266</double>
-            <double>0.12399021231413862</double>
-            <double>0.11447917543968829</double>
+            <double>0.93392590415751187</double>
+            <double>0.83154588968770127</double>
+            <double>0.862578881029763</double>
+            <double>0.877319581636015</double>
+            <double>0.76475247963879023</double>
+            <double>0.44706055179613058</double>
+            <double>0.26830107269333631</double>
+            <double>0.21865773716672665</double>
+            <double>0.15905022778116015</double>
+            <double>0.12924598410863142</double>
+            <double>0.11931740140058296</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -693,7 +684,6 @@
         </Analysis>
         <Sample>
           <Name>Initial nitrogen</Name>
-          <Date>0001-01-01</Date>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -751,26 +741,28 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
-        <ResidueTypes />
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Fertiliser>
         <Name>fertiliser</Name>
@@ -788,7 +780,6 @@
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
-        <AutoCreateCSV>false</AutoCreateCSV>
       </Report>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -813,8 +804,10 @@
         <Name>Calculations</Name>
         <Script>
           <Offset>460</Offset>
-          <TotalNO3>47.3638110918014</TotalNO3>
-          <SW>0</SW>
+          <TotalNO3>144.237693334171</TotalNO3>
+          <SW>1460.28954762248</SW>
+          <TotalN>12359.5347096548</TotalN>
+          <TotalC>150899.832779773</TotalC>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -877,6 +870,7 @@ namespace Models
         <string>Apsim.out</string>
       </FileNames>
     </Input>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Graph>
     <Name>NO3</Name>
@@ -908,7 +902,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -927,7 +921,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -961,7 +955,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -980,7 +974,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1014,7 +1008,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1033,7 +1027,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1067,7 +1061,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1086,7 +1080,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1124,7 +1118,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1143,7 +1137,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
@@ -1154,28 +1148,28 @@ namespace Models
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalNO3</ColumnNames>
-      <Parameters>1,5</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.SW</ColumnNames>
-      <Parameters>1,5</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalN</ColumnNames>
-      <Parameters>1,5</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
       <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalC</ColumnNames>
-      <Parameters>1,5</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
   </Tests>
   <ExplorerWidth>250</ExplorerWidth>

@@ -28,6 +28,7 @@ namespace UserInterface.Presenters
             this.dataStore = this.tests.Find(typeof(DataStore)) as DataStore;
             this.view.Editor.IntelliSenseChars = " :";
             this.view.Editor.ContextItemsNeeded += OnContextItemsNeeded;
+            this.view.TableNameChanged += OnTableNameChanged;
 
             this.PopulateView();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
@@ -54,24 +55,26 @@ namespace UserInterface.Presenters
                 this.view.TableNames = dataStore.TableNames;
 
                 // Set the name of the table.
-                if (this.tests.AllTests.Length > 0)
+                if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
                 {
                     this.view.TableName = this.tests.AllTests[0].TableName;
                     this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
                 }
             }
 
-           
 
-            // Work out the test strings that we're going to pass to our view
-            List<string> testStrings = new List<string>();
-            foreach (Test test in this.tests.AllTests)
+            if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
             {
-                testStrings.Add(this.TestToString(test));
-            }
+                // Work out the test strings that we're going to pass to our view
+                List<string> testStrings = new List<string>();
+                foreach (Test test in this.tests.AllTests)
+                {
+                    testStrings.Add(this.TestToString(test));
+                }
 
-            this.view.Editor.Lines = testStrings.ToArray();
-            this.view.Editor.SetSyntaxHighlighter("Test");
+                this.view.Editor.Lines = testStrings.ToArray();
+                this.view.Editor.SetSyntaxHighlighter("Test");
+            }
         }
 
         /// <summary>
@@ -194,14 +197,19 @@ namespace UserInterface.Presenters
             if (simulationName != null && testString != null)
             {
                 string[] testBits = testString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (testBits.Length >= 3)
+                if (testBits.Length >= 2)
                 {
                     Test test = new Test();
                     test.SimulationName = simulationName;
                     test.TableName = this.view.TableName;
                     test.ColumnNames = testBits[0];
                     string operatorString = testBits[1];
-                    string[] parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parameterBits = null;
+                    if (testBits.Length > 2)
+                    {
+                        parameterBits = testBits[2].Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    }
+
                     if (testBits.Length == 4)
                     {
                         Array.Resize(ref parameterBits, parameterBits.Length + 1);
@@ -283,11 +291,12 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName.Trim() == "Simulation")
             {
+                e.Items.Add("All");
                 e.Items.AddRange(dataStore.SimulationNames);
             }
             else if (e.ObjectName.Trim() == "Test")
             {
-                string tableName = GetWordFromLine(this.view.Editor.CurrentLineNumber, "Table:", toEndOfLine: false);
+                string tableName = this.view.TableName;
                 if (tableName != null)
                 {
                     DataTable data = dataStore.GetData("*", tableName);
@@ -297,16 +306,21 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            else if (e.ObjectName.Contains("."))
+            else
             {
-                e.Items.Add("=");
-                e.Items.Add("<");
-                e.Items.Add(">");
-                e.Items.Add("AllPositive");
-                e.Items.Add("between");
-                e.Items.Add("mean=");
-                e.Items.Add("tolerance=");
-                e.Items.Add("CompareToInput=");
+                string simulationName = this.GetWordFromLine(this.view.Editor.CurrentLineNumber, "Simulation:", false);
+                string testName = this.GetWordFromLine(this.view.Editor.CurrentLineNumber, "Test:", false);
+                if (simulationName != null && testName != null)
+                {
+                    e.Items.Add("=");
+                    e.Items.Add("<");
+                    e.Items.Add(">");
+                    e.Items.Add("AllPositive");
+                    e.Items.Add("between");
+                    e.Items.Add("mean=");
+                    e.Items.Add("tolerance=");
+                    e.Items.Add("CompareToInput=");
+                }
             }
         }
 
@@ -357,6 +371,14 @@ namespace UserInterface.Presenters
             }
         }
 
-
+        /// <summary>
+        /// User has changed the table name.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTableNameChanged(object sender, EventArgs e)
+        {
+            this.view.Data = this.dataStore.GetData("*", this.view.TableName);
+        }
     }
 }

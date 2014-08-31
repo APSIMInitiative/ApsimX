@@ -8,13 +8,6 @@
       <WeatherFile>
         <Name>WeatherFile</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-        <MaxT>12.300000190734863</MaxT>
-        <MinT>7.9000000953674316</MinT>
-        <Rain>9.6999998092651367</Rain>
-        <Radn>4.630000114440918</Radn>
-        <vp>11.199999809265137</vp>
-        <wind>2.380000114440918</wind>
-        <CO2>350</CO2>
       </WeatherFile>
       <Clock>
         <Name>Clock</Name>
@@ -23,8 +16,6 @@
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <Html>false</Html>
-        <AutoCreate>false</AutoCreate>
       </Summary>
       <Zone>
         <Name>Field</Name>
@@ -55,7 +46,6 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <AutoCreateCSV>false</AutoCreateCSV>
         </Report>
         <Soil>
           <Name>Soil</Name>
@@ -555,7 +545,6 @@
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <Date />
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -613,20 +602,16 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
+          <_standing_fraction>
+            <double>0</double>
+          </_standing_fraction>
           <c_fract>0.4</c_fract>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <default_standing_fraction>0</default_standing_fraction>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
-          <ResidueTypes />
+          <report_additions>no</report_additions>
+          <report_removals>no</report_removals>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
           <TillageTypes>
             <Name>TillageTypes</Name>
             <TillageType />
@@ -636,6 +621,17 @@
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
           <cnr>80</cnr>
+          <crit_residue_wt>2000</crit_residue_wt>
+          <opt_temp>20</opt_temp>
+          <cum_eos_max>20</cum_eos_max>
+          <cnrf_coeff>0.277</cnrf_coeff>
+          <cnrf_optcn>25</cnrf_optcn>
+          <leach_rain_tot>25</leach_rain_tot>
+          <min_rain_to_leach>10</min_rain_to_leach>
+          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <default_cpr>0</default_cpr>
+          <standing_extinct_coeff>0.5</standing_extinct_coeff>
+          <fractionFaecesAdded>0.5</fractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -659,9 +655,8 @@
         <Manager>
           <Name>IrrigationRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>100</ApplicationAmount>
-            <ApplicationDate>2003-12-20T00:00:00</ApplicationDate>
+            <ApplicationDate>2003-12-20</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -701,10 +696,9 @@
         <Manager>
           <Name>FertiliserRule</Name>
           <Script>
-            <Name>Script</Name>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
-            <ApplicationDate>2003-12-30T00:00:00</ApplicationDate>
+            <ApplicationDate>2003-12-30</ApplicationDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -750,16 +744,10 @@
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>WeatherFile.MaxT</ColumnNames>
-      <Parameters />
-    </Test>
   </Tests>
   <Graph>
     <Name>Graph</Name>
@@ -791,7 +779,7 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <Series>
       <Title>sw(1)</Title>
@@ -811,13 +799,22 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SeparateSeriesForAllSimulationsInScope>true</SeparateSeriesForAllSimulationsInScope>
+      <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
   </Graph>
   <Memo>
     <Name>Memo</Name>
-    <MemoText><![CDATA[]]></MemoText>
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+ <head>
+  <title></title>
+ </head>
+ <body>
+  <p></p>
+ </body>
+</html>]]></MemoText>
   </Memo>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

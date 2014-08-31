@@ -218,19 +218,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The user has clicked the export now button.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnExportButtonClick(object sender, EventArgs e)
-        {
-            if (this.ExportNowClicked != null)
-            {
-                this.ExportNowClicked(this, e);
-            }
-        }
-
-        /// <summary>
         /// The auto export checkbox has been clicked.
         /// </summary>
         /// <param name="sender">Sender of the event</param>

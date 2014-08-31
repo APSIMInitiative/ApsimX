@@ -14,12 +14,34 @@ namespace Utility
     [Serializable()]
     public class Settings
     {
+        /// <summary>
+        /// The location for the form
+        /// </summary>
         public Point MainFormLocation;
+
+        /// <summary>
+        /// The size of the main form
+        /// </summary>
         public Size MainFormSize;
+
+        /// <summary>
+        /// The state (max, min, norm) of the form
+        /// </summary>
         public System.Windows.Forms.FormWindowState MainFormWindowState;
+
+        /// <summary>
+        /// List of the most recently opened files
+        /// </summary>
         public List<string> MruList;
+
+        /// <summary>
+        /// The maximum number of files allowed in the mru list
+        /// </summary>
         private int FilesInHistory; // this could be a user setting
 
+        /// <summary>
+        /// The settings class constructor
+        /// </summary>
         public Settings()
         {
             MruList = new List<string>();
@@ -53,6 +75,42 @@ namespace Utility
                     MruList.Add(filename);
             }
         }
+
+        /// <summary>
+        /// Remove a specified file from the list
+        /// </summary>
+        /// <param name="filename">The file name to delete</param>
+        public void DelMruFile(string filename)
+        {
+            if (filename.Length > 0)
+            {
+                if (MruList.Count > 0)
+                {
+                    if (MruList.IndexOf(filename) >= 0)
+                    {
+                        MruList.RemoveAt(MruList.IndexOf(filename));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clean the list by removing missing files
+        /// </summary>
+        public void CleanMruList()
+        {
+            string filename;
+            int i = MruList.Count - 1;
+            while (i >= 0)
+            {
+                filename = MruList[i];
+                if (!File.Exists(filename))
+                {
+                    DelMruFile(filename);
+                }
+                i--;
+            }
+        }
     }
 
     //=========================================================================
@@ -66,7 +124,7 @@ namespace Utility
         private string ConfigurationFile;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public Configuration()
         {

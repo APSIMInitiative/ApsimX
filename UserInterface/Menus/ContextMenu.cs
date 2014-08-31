@@ -109,6 +109,9 @@ namespace UserInterface.Presenters
             }
         }
 
+
+        private RunCommand command = null;
+
         /// <summary>
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
@@ -124,8 +127,24 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.Save();
             Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
-            RunCommand command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
+            command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
             command.Do(null);
+        }
+
+        /// <summary>
+        /// A run has completed so reenable the run button.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public bool RunAPSIMEnabled()
+        {
+            bool isRunning = command != null && command.IsRunning;
+            if (!isRunning)
+            {
+                command = null;
+            }
+
+            return !isRunning;
         }
 
         /// <summary>
@@ -248,18 +267,27 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to HTML",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Folder),
-                                              typeof(Experiment),
-                                              typeof(Simulations) })]
+        [ContextMenu(MenuName = "Export to HTML")]
         public void ExportToHTML(object sender, EventArgs e)
         {
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
-                ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                this.explorerPresenter.CommandHistory.Add(command, true);
+                Model modelClicked = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+                if (modelClicked != null)
+                {
+                    if (modelClicked is Simulations)
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                    }
+                    else
+                    {
+                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+
+                        Classes.PMFDocumentation.Go(fileName, modelClicked);
+                    }
+                }
             }
         }
 
@@ -268,7 +296,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run post simulation models",
+        [ContextMenu(MenuName = "Refresh",
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void RunPostSimulationModels(object sender, EventArgs e)
         {
@@ -287,5 +315,39 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
+        /// <summary>
+        /// Empty the datastore
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Empty the data store",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void EmptyDataStore(object sender, EventArgs e)
+        {
+            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                dataStore.DeleteAllTables();
+            }
+        }
+
+
+        /// <summary>
+        /// Export the datastore to .csv
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to .csv",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportDataStoreToCSV(object sender, EventArgs e)
+        {
+            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                dataStore.WriteToTextFiles();
+            }
+        }
+
     }
 }

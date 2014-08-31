@@ -32,25 +32,16 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabbedExplorerView));
             this.TabControl = new System.Windows.Forms.TabControl();
             this.StartPage = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.ListView = new System.Windows.Forms.ListView();
+            this.listViewMain = new System.Windows.Forms.ListView();
             this.ListViewImages = new System.Windows.Forms.ImageList(this.components);
             this.TabPopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CloseTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabImageList = new System.Windows.Forms.ImageList(this.components);
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.TabControl.SuspendLayout();
             this.StartPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.TabPopupMenu.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControl
@@ -62,11 +53,12 @@
             this.TabControl.SelectedIndex = 0;
             this.TabControl.Size = new System.Drawing.Size(610, 523);
             this.TabControl.TabIndex = 0;
+            this.TabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
             this.TabControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseUp);
             // 
             // StartPage
             // 
-            this.StartPage.Controls.Add(this.splitContainer1);
+            this.StartPage.Controls.Add(this.listViewMain);
             this.StartPage.Location = new System.Drawing.Point(4, 22);
             this.StartPage.Name = "StartPage";
             this.StartPage.Padding = new System.Windows.Forms.Padding(3);
@@ -75,44 +67,22 @@
             this.StartPage.Text = " ";
             this.StartPage.UseVisualStyleBackColor = true;
             // 
-            // splitContainer1
+            // listViewMain
             // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.ListView);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.listBox1);
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(596, 491);
-            this.splitContainer1.SplitterDistance = 355;
-            this.splitContainer1.SplitterWidth = 5;
-            this.splitContainer1.TabIndex = 4;
-            // 
-            // ListView
-            // 
-            this.ListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ListView.LargeImageList = this.ListViewImages;
-            this.ListView.Location = new System.Drawing.Point(0, 0);
-            this.ListView.MultiSelect = false;
-            this.ListView.Name = "ListView";
-            this.ListView.ShowItemToolTips = true;
-            this.ListView.Size = new System.Drawing.Size(594, 353);
-            this.ListView.TabIndex = 3;
-            this.ListView.TileSize = new System.Drawing.Size(400, 100);
-            this.ListView.UseCompatibleStateImageBehavior = false;
-            this.ListView.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
-            this.ListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyUp);
+            this.listViewMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewMain.LargeImageList = this.ListViewImages;
+            this.listViewMain.Location = new System.Drawing.Point(3, 3);
+            this.listViewMain.MultiSelect = false;
+            this.listViewMain.Name = "listViewMain";
+            this.listViewMain.ShowItemToolTips = true;
+            this.listViewMain.Size = new System.Drawing.Size(596, 491);
+            this.listViewMain.TabIndex = 4;
+            this.listViewMain.TileSize = new System.Drawing.Size(400, 100);
+            this.listViewMain.UseCompatibleStateImageBehavior = false;
+            this.listViewMain.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
+            this.listViewMain.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyUp);
             // 
             // ListViewImages
             // 
@@ -149,39 +119,6 @@
             this.OpenFileDialog.DefaultExt = "apsimx";
             this.OpenFileDialog.Filter = "ApsimX files|*.apsimx";
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(594, 20);
-            this.panel1.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Recent files";
-            // 
-            // listBox1
-            // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.IntegralHeight = false;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(0, 20);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(594, 109);
-            this.listBox1.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.listBox1, "Double click to open a recent file");
-            this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
-            // 
             // TabbedExplorerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,13 +129,7 @@
             this.Load += new System.EventHandler(this.OnLoad);
             this.TabControl.ResumeLayout(false);
             this.StartPage.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.TabPopupMenu.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -212,11 +143,7 @@
         private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.Windows.Forms.ContextMenuStrip TabPopupMenu;
         private System.Windows.Forms.ToolStripMenuItem CloseTabMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListView ListView;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListView listViewMain;
     }
 }

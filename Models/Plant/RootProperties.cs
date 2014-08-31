@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// Holds the collection of root properties that each crop must supply to the rest of the world
+    /// </summary>
+    [Serializable]
     public class RootProperties
     {
         /// <summary>
@@ -38,7 +42,17 @@ namespace Models.PMF
         /// </summary>
         public double[] RootExplorationByLayer { get; set; }
 
-        
+        /// <summary>
+        /// Nitrate uptake coefficient
+        /// </summary>
+        public double KNO3 { get; set; }
+
+        /// <summary>
+        /// Nitrate uptake coefficient
+        /// </summary>
+        public double KNH4 { get; set; }
+
+
         // if want to make this more generic and useful for other routines then add root biomass, C and nutrients
     
     }

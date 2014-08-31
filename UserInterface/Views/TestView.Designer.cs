@@ -43,6 +43,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(544, 21);
             this.comboBox1.TabIndex = 0;
+            this.comboBox1.TextChanged += new System.EventHandler(this.OnTableNameChanged);
             // 
             // label1
             // 
@@ -76,7 +77,7 @@
             this.editorView1.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.editorView1.IntelliSenseChars = ".";
             this.editorView1.Lines = new string[] {
-        "textEditorControl1"};
+        ""};
             this.editorView1.Location = new System.Drawing.Point(16, 223);
             this.editorView1.Name = "editorView1";
             this.editorView1.Size = new System.Drawing.Size(622, 255);
