@@ -52,6 +52,10 @@ namespace Models.PMF
         /// </summary>
         public double KNH4 { get; set; }
 
+        /// <summary>
+        /// Hamish's additional coefficient for N uptake
+        /// </summary>
+        public double MaximumDailyNUptake { get; set; }
 
         // if want to make this more generic and useful for other routines then add root biomass, C and nutrients
     
