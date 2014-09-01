@@ -99,7 +99,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnContextItemsNeeded(object sender, NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName == string.Empty)
             {

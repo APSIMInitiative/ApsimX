@@ -8,6 +8,7 @@ using Models;
 using UserInterface.EventArguments;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -39,17 +40,16 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            OnEditorLeave(null, null);  
+            buildScript();  // compiles and saves the script
+
             ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             ManagerView.Editor.LeaveEditor -= OnEditorLeave;
-
-            Manager.RebuildScriptModel();
         }
 
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        void OnNeedVariableNames(object Sender, NeedContextItems e)
+        void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
         {
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(ManagerView.Editor.Text); //Manager.Code);
@@ -71,28 +71,70 @@ namespace UserInterface.Presenters
                 }
             }
 
-            // a bit rough, but this will do for an initial version
+            // find the properties and methods
             if (typeName != string.Empty)
             {
                 Type [] types = Assembly.GetAssembly(typeof(Clock)).GetTypes();
-                foreach (Type atype in types)
+                bool found = false;
+                int i = 0;
+                while (!found && (i < types.Count()))
                 {
+                    Type atype = types[i];
                     if (atype.Name == typeName)
                     {
-                        foreach (PropertyInfo Property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                            e.Items.Add(Property.Name);
-                        foreach (MethodInfo Method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
-                            e.Items.Add(Method.Name);
-                        e.Items.Sort();
+                        found = true;
+                        foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            VariableProperty var = new VariableProperty(atype, property);
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = var.Name;
+                            item.IsProperty = true;
+                            item.IsEvent = false;
+                            item.IsWriteable = !var.IsReadOnly;
+                            item.TypeName = var.DataType.Name;
+                            item.Descr = var.Description;
+                            item.Units = var.Units;
+                            e.AllItems.Add(item);
+                        }
+                        foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = method.Name;
+                            item.IsProperty = false;
+                            item.IsEvent = true;
+                            item.IsWriteable = false;
+                            item.TypeName = method.ReturnType.Name;
+                            if (descriptionAttribute != null)
+                                item.Descr = descriptionAttribute.ToString();
+                            item.Units = string.Empty;
+
+                            // build a parameter string representation
+                            ParameterInfo[] allparams = method.GetParameters();
+                            StringBuilder paramText = new StringBuilder("( ");
+                            if (allparams.Count() > 0)
+                            {
+                                for (int p = 0; p < allparams.Count(); p++)
+                                {
+                                    ParameterInfo parameter = allparams[p];
+                                    paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
+                                    if (p < allparams.Count() - 1)
+                                        paramText.Append(", ");
+                                }
+                            }
+                            paramText.Append(" )");
+                            item.ParamString = paramText.ToString();
+
+                            e.AllItems.Add(item);
+                        }
                     }
+                    i++;
                 }
+                e.SortAllItems();
             }
         }
 
-        /// <summary>
-        /// The user has changed the code script.
-        /// </summary>
-        void OnEditorLeave(object sender, EventArgs e)
+        private void buildScript()
         {
             ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             try
@@ -104,14 +146,23 @@ namespace UserInterface.Presenters
                 // If it gets this far then compiles ok.
                 ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
             }
-            catch (Exception err)
+            catch (Models.Core.ApsimXException err)
             {
                 string Msg = err.Message;
                 if (err.InnerException != null)
-                    ExplorerPresenter.ShowMessage(err.InnerException.Message, DataStore.ErrorLevel.Error);
+                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.ModelFullPath, err.InnerException.Message), DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.ModelFullPath, err.Message), DataStore.ErrorLevel.Error);
             }
+            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+        }
+
+
+        /// <summary>
+        /// The user has changed the code script.
+        /// </summary>
+        void OnEditorLeave(object sender, EventArgs e)
+        {
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
             if (Manager.Script != null)
                 PropertyPresenter.PopulateGrid(Manager.Script);

@@ -734,7 +734,7 @@ namespace UserInterface.Presenters
                     string message;
                     if (err is ApsimXException)
                     {
-                        message = string.Format("{0}:\n{1}", (err as ApsimXException).ModelFullPath, err.Message);
+                        message = string.Format("[{0}]: {1}", (err as ApsimXException).ModelFullPath, err.Message);
                     }
                     else
                     {

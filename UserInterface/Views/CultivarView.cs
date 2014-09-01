@@ -36,7 +36,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        public event EventHandler<NeedContextItems> ContextItemsNeeded; 
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded; 
 
         /// <summary>
         /// Gets or sets a list of all aliases.
@@ -75,7 +75,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnContextItemsNeeded(object sender, NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             if (this.ContextItemsNeeded != null)
             {
