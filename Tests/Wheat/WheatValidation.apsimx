@@ -22,6 +22,10 @@
         <string>RainShelterBiomass.txt</string>
       </FileNames>
     </Input>
+    <TimeSeriesStats>
+      <Name>TimeSeriesStats</Name>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -11003,5 +11007,64 @@ namespace Models
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
   </Graph>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>n</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>residual</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>R^2</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>RMSD</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>SB</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Mean</Type>
+      <ColumnNames>SDSD</ColumnNames>
+      <Parameters>1,value</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>LCS</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>All</SimulationName>
+      <TableName>TimeSeriesStats</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>%</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
   <ExplorerWidth>239</ExplorerWidth>
 </Simulations>
