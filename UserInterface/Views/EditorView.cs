@@ -24,7 +24,7 @@
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        event EventHandler<NeedContextItems> ContextItemsNeeded;
+        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.
@@ -76,7 +76,7 @@
         /// <summary>
         /// The completion list
         /// </summary>
-        private ListBox CompletionList;
+        private ListView CompletionView;
 
         /// <summary>
         /// The search string for the listbox. 
@@ -87,7 +87,7 @@
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        public event EventHandler<NeedContextItems> ContextItemsNeeded;
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.
@@ -109,18 +109,40 @@
             CompletionForm = new Form();
             CompletionForm.TopLevel = false;
             CompletionForm.FormBorderStyle = FormBorderStyle.None;
-            CompletionList = new ListBox();
-            CompletionList.Dock = DockStyle.Fill;
-            CompletionForm.Controls.Add(this.CompletionList);
-            CompletionList.KeyDown += new KeyEventHandler(this.OnContextListKeyDown);
-            CompletionList.KeyUp += new KeyEventHandler(this.OnContextListKeyUp);
-            CompletionList.MouseDoubleClick += new MouseEventHandler(this.OnComtextListMouseDoubleClick);
+
+            CompletionView = new ListView();
+            CompletionView.Dock = DockStyle.Fill;
+            CompletionForm.Controls.Add(this.CompletionView);
+            CompletionView.KeyDown += new KeyEventHandler(this.OnContextListKeyDown);
+            CompletionView.KeyUp += new KeyEventHandler(this.OnContextListKeyUp);
+            CompletionView.MouseDoubleClick += new MouseEventHandler(this.OnComtextListMouseDoubleClick);
             CompletionForm.StartPosition = FormStartPosition.Manual;
-            CompletionList.Leave += new EventHandler(this.OnLeaveCompletion);
+            CompletionView.Leave += new EventHandler(this.OnLeaveCompletion);
+            CompletionView.View = View.Details;
+            CompletionView.MultiSelect = false;
+
+            // add some columns
+            ColumnHeader col1 = new ColumnHeader();
+            col1.Text = "Item";
+            col1.Width = 150;
+            CompletionView.Columns.Add(col1);
+            ColumnHeader col2 = new ColumnHeader();
+            col2.Text = "Units";
+            col2.Width = 50;
+            CompletionView.Columns.Add(col2); 
+            ColumnHeader col3 = new ColumnHeader();
+            col3.Text = "Type";
+            col3.Width = 60;
+            CompletionView.Columns.Add(col3);
+            ColumnHeader col4 = new ColumnHeader();
+            col4.Text = "Descr";
+            col4.Width = 200;
+            CompletionView.Columns.Add(col4);
+            CompletionView.SmallImageList = imageList1;
 
             TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyDown;
             IntelliSenseChars = ".";
-            searchValue = string.Empty;
+            this.searchValue = string.Empty;
             timer1.Interval = 3000;
         }
 
@@ -235,11 +257,30 @@
             // Get a list of items to show and put into completion window.
             string TextBeforePeriod = GetWordBeforePosition(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset);
             List<string> Items = new List<string>();
-            ContextItemsNeeded(this, new NeedContextItems() { ObjectName = TextBeforePeriod, Items = Items });
-            CompletionList.Items.Clear();
-            CompletionList.Items.AddRange(Items.ToArray());
+            List<NeedContextItemsArgs.ContextItem> allitems = new List<NeedContextItemsArgs.ContextItem>();
+            ContextItemsNeeded(this, new NeedContextItemsArgs() { ObjectName = TextBeforePeriod, Items = Items, AllItems = allitems });
 
-            if (CompletionList.Items.Count > 0)
+            CompletionView.Items.Clear();
+            foreach (NeedContextItemsArgs.ContextItem item in allitems)
+            {
+                int imageIndex = 0;
+                if (item.IsEvent)
+                    imageIndex = 0;
+                else if (item.IsProperty)
+                    imageIndex = 1;
+
+                ListViewItem newItem = new ListViewItem();
+                newItem.Text = item.Name;
+                newItem.ImageIndex = imageIndex;
+                newItem.SubItems.Add(item.Units);
+                newItem.SubItems.Add(item.TypeName);
+                newItem.SubItems.Add(item.Descr);
+                newItem.ToolTipText = item.ParamString;
+                CompletionView.ShowItemToolTips = true;
+                CompletionView.Items.Add(newItem);
+            }
+
+            if (CompletionView.Items.Count > 0)
             {
                 TextBox.ActiveTextAreaControl.TextArea.InsertChar(characterPressed);
 
@@ -259,8 +300,7 @@
                 CompletionForm.BringToFront();
                 CompletionForm.Controls[0].Focus();
 
-                if (CompletionList.Items.Count > 0)
-                    CompletionList.SelectedIndex = 0;
+                CompletionView.Items[0].Selected = true;
 
                 return true;
 
@@ -286,7 +326,7 @@
             CompletionForm.Visible = false;
             TextBox.Document.ReadOnly = false;
             this.Focus();
-            searchValue = string.Empty;
+            this.searchValue = string.Empty;
             timer1.Enabled = false;
         }
 
@@ -307,27 +347,28 @@
                 // handle _ (not sure if this is correct)
                 if (e.KeyCode == Keys.OemMinus)
                 {
-                    searchValue = searchValue + '_';
+                    this.searchValue = this.searchValue + '_';
                 }
                 else
                 {
-                    searchValue = searchValue + key.ToString().ToLower();
+                    this.searchValue = this.searchValue + key.ToString().ToLower();
                 }
 
-                int i = CompletionList.FindString(searchValue);
-                if (i >= 0)
+                ListViewItem foundItem = CompletionView.FindItemWithText(searchValue);
+                if (foundItem != null)
                 {
-                    CompletionList.SelectedIndex = i;
-                    CompletionList.TopIndex = i;
+                    foundItem.Selected = true;
+                    CompletionView.TopItem = foundItem;
                 }
                 timer1.Enabled = true;
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Back)
             {   // backspace resets the search string
-                searchValue = string.Empty;
-                timer1.Enabled = false;
+                this.searchValue = string.Empty;
+                this.timer1.Enabled = false;
             }
+            e.SuppressKeyPress = false;
         }
 
         /// <summary>
@@ -339,14 +380,14 @@
         {
             // If user clicks ENTER and the context list is visible then insert the currently
             // selected item from the list into the TextBox and close the list.
-            if (e.KeyCode == Keys.Enter && CompletionList.Visible && CompletionList.SelectedIndex != -1)
+            if (e.KeyCode == Keys.Enter && CompletionView.Visible && CompletionView.SelectedItems[0].Index != -1)
             {
                 InsertCompletionItemIntoTextBox();
                 e.Handled = true;
             }
 
             // If the user presses ESC and the context list is visible then close the list.
-            else if (e.KeyCode == Keys.Escape && CompletionList.Visible)
+            else if (e.KeyCode == Keys.Escape && CompletionView.Visible)
             {
                 HideCompletionWindow();
                 e.Handled = true;
@@ -372,7 +413,7 @@
         {
             int Line = TextBox.ActiveTextAreaControl.TextArea.Caret.Line;
             int Column = TextBox.ActiveTextAreaControl.TextArea.Caret.Column;
-            string TextToInsert = CompletionList.SelectedItem as string;
+            string TextToInsert = CompletionView.SelectedItems[0].Text as string;
             TextBox.Text = TextBox.Text.Insert(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset, TextToInsert);
 
             HideCompletionWindow();

@@ -59,7 +59,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for variable names.
         /// </summary>
-        void OnNeedVariableNames(object Sender, NeedContextItems e)
+        void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
@@ -78,7 +78,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view is asking for event names.
         /// </summary>
-        void OnNeedEventNames(object Sender, NeedContextItems e)
+        void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
         {
             object o = Report.Get(e.ObjectName);
 

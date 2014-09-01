@@ -606,7 +606,7 @@ namespace Models
         <Arbitrator>
           <Name>Arbitrator</Name>
           <ArbitrationMethod>PropDemand</ArbitrationMethod>
-          <NutrientUptakeMethod>0</NutrientUptakeMethod>
+          <NutrientUptakeMethod>1</NutrientUptakeMethod>
         </Arbitrator>
         <Report>
           <Name>Report</Name>
