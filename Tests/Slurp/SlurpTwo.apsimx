@@ -517,6 +517,8 @@ namespace Models
           <string>Evaluate sum([Slurp].uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
+          <string>[Soil]SoilNitrogen.nh4</string>
+          <string>[SOil]SoilNitrogen.no3</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
