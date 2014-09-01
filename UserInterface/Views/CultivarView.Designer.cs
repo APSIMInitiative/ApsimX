@@ -78,7 +78,7 @@ namespace UserInterface.Views
             this.editor1.Name = "editor1";
             this.editor1.Size = new System.Drawing.Size(285, 347);
             this.editor1.TabIndex = 4;
-            this.editor1.ContextItemsNeeded += new System.EventHandler<NeedContextItems>(this.OnContextItemsNeeded);
+            this.editor1.ContextItemsNeeded += new System.EventHandler<NeedContextItemsArgs>(this.OnContextItemsNeeded);
             this.editor1.TextHasChangedByUser += new System.EventHandler(this.OnTextHasChangedByUser);
             // 
             // CultivarView

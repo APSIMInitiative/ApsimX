@@ -26,7 +26,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        event EventHandler<NeedContextItems> ContextItemsNeeded; 
+        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded; 
 
         /// <summary>
         /// Gets or sets a list of all aliases.

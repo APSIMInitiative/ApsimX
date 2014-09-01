@@ -287,7 +287,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        void OnContextItemsNeeded(object sender, NeedContextItems e)
+        void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName.Trim() == "Simulation")
             {

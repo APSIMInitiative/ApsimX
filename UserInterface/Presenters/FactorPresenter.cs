@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Intellisense lookup.
         /// </summary>
-        void OnContextItemsNeeded(object sender, NeedContextItems e)
+        void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";

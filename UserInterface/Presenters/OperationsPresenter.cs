@@ -84,7 +84,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Editor needs context items.
         /// </summary>
-        private void OnContextItemsNeeded(object sender, NeedContextItems e)
+        private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             object o = Operations.Get(e.ObjectName);
 
