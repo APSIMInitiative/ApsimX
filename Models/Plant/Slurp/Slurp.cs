@@ -199,10 +199,27 @@ namespace Models.PMF.Slurp
             CanopyProperties.Frgr = localFrgr;
 
             RootProperties.KL = Soil.KL(Name);
-            RootProperties.LowerLimitDep = Soil.LL(Name);
+
+            RootProperties.MinNO3ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
+            RootProperties.MinNH4ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
+
+            RootProperties.LowerLimitDep = new double[Soil.SoilWater.dlayer.Length];
+
+            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+            {
+                RootProperties.LowerLimitDep[j] = Soil.LL(Name)[j] * Soil.SoilWater.dlayer[j];
+                RootProperties.MinNO3ConcForUptake[j] = 0.0;
+                RootProperties.MinNH4ConcForUptake[j] = 0.0;
+            }
             RootProperties.RootDepth = localRootDepth;
             RootProperties.KNO3 = localKNO3;
             RootProperties.KNH4 = localKNH4;
+
+            RootProperties.UptakePreferenceByLayer = new double[Soil.SoilWater.dlayer.Length];
+            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+            {
+                RootProperties.UptakePreferenceByLayer[j] = 1.0;
+            }
 
             localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
             localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
@@ -216,26 +233,26 @@ namespace Models.PMF.Slurp
             demandWater = localDemandWater;
 
             // calculate root exploration (proprotion of the layer occupied by the roots) for each layer
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
             {
 
-                tempDepthLower += Soil.SoilWater.dlayer[i];  // increment soil depth thorugh the layers
-                tempDepthMiddle = tempDepthLower - Soil.SoilWater.dlayer[i]*0.5;
-                tempDepthUpper = tempDepthLower - Soil.SoilWater.dlayer[i];
+                tempDepthLower += Soil.SoilWater.dlayer[j];  // increment soil depth thorugh the layers
+                tempDepthMiddle = tempDepthLower - Soil.SoilWater.dlayer[j]*0.5;
+                tempDepthUpper = tempDepthLower - Soil.SoilWater.dlayer[j];
                 if (tempDepthUpper < localRootDepth)        // set the root exploration
                 {
-                    localRootExplorationByLayer[i] = 1.0;
+                    localRootExplorationByLayer[j] = 1.0;
                 }
                 else if (tempDepthLower <= localRootDepth)
                 {
-                    localRootExplorationByLayer[i] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.SoilWater.dlayer[i], 0.0);
+                    localRootExplorationByLayer[j] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.SoilWater.dlayer[j], 0.0);
                 }
                 else
                 {
-                    localRootExplorationByLayer[i] = 0.0;
+                    localRootExplorationByLayer[j] = 0.0;
                 }
                 // set a triangular root length density by scaling layer depth against maximum rooting depth, constrain the multiplier between 0 and 1
-                localRootLengthDensityByVolume[i] = localSurfaceRootLengthDensity * localRootExplorationByLayer[i] * (1.0 - Utility.Math.Constrain(Utility.Math.Divide(tempDepthMiddle, localRootDepth, 0.0), 0.0, 1.0));
+                localRootLengthDensityByVolume[j] = localSurfaceRootLengthDensity * localRootExplorationByLayer[j] * (1.0 - Utility.Math.Constrain(Utility.Math.Divide(tempDepthMiddle, localRootDepth, 0.0), 0.0, 1.0));
             }
             RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
             RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
