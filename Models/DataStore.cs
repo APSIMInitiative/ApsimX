@@ -251,7 +251,18 @@ namespace Models
                 // delete this simulation
                 RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
             }
-            
+
+            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
+            // Simulations table.
+            string[] simulationNames = this.SimulationNames;
+            foreach (string simulationNameToKeep in simulationNamesToKeep)
+            {
+                if (!Utility.String.Contains(simulationNames, simulationNameToKeep))
+                {
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
+                }
+            }
+
         }
 
         /// <summary>
@@ -783,15 +794,6 @@ namespace Models
             }
             return ID;
         }
-
-        /// <summary>
-        /// Execute the specified non return query - make sure db is in write mode.
-        /// </summary>
-        /// <param name="sql"></param>
-        private void ExecuteNonQuery(string sql)
-        {
-
-        } 
 
         /// <summary>
         /// Create a text report from tables in this data store.
