@@ -33,7 +33,7 @@ namespace Models.Arbitrator
         /// <summary>
         /// This will hold a range of arbitration methods for testing - will eventually settle on one standard method
         /// </summary>
-        [Description("Arbitration method: PropDemand/RotatingCall/Others to come")]
+        [Description("Arbitration method: old / new - use old - new only for testing")]
         public string ArbitrationMethod { get; set; }
         [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPlan amount based")]
         public int NutrientUptakeMethod { get; set; }
@@ -130,18 +130,16 @@ namespace Models.Arbitrator
         double[, , , ,] uptake;
         double[] extractableByPlant;
 
+        string resourceToArbitrate;
+
         /// <summary>
         /// Runs at the start of the simulation, here only reads the aribtration method to be used
         /// </summary>
         public override void OnSimulationCommencing()
         {
             // Check that ArbitrationMethod is valid
-            if (ArbitrationMethod.ToLower() == "PropDemand".ToLower()) ;
+            if (ArbitrationMethod.ToLower() == "old" || ArbitrationMethod.ToLower() == "new") ;
             // nothing, all good
-
-            else if (ArbitrationMethod.ToLower() == "RotatingCall".ToLower())
-                // this will be implemented for testing but not yet so end the simulation
-                throw new Exception("The RotatingCall option has not been implemented yet");
             else
                 throw new Exception("Invalid AribtrationMethod selected");
 
@@ -182,6 +180,7 @@ namespace Models.Arbitrator
             uptake = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             extractableByPlant = new double[plants.Length];
             
+
 
         }
 
@@ -230,10 +229,34 @@ namespace Models.Arbitrator
             }
         }
 
-        // /*
-
         [EventSubscribe("DoWaterArbitration")]
-        private void New_OnDoWaterArbitration(object sender, EventArgs e)
+        private void OnDoWaterArbitration(object sender, EventArgs e)
+        {
+            if (ArbitrationMethod.ToLower() == "new")
+            {
+                DoArbitration("water");
+            }
+            else
+            {
+                Old_OnDoWaterArbitration();
+            }
+        }
+
+        [EventSubscribe("DoNutrientArbitration")]
+        private void OnDoNutrientArbitration(object sender, EventArgs e)
+        {
+            if (ArbitrationMethod.ToLower() == "new")
+            {
+                Old_OnDoNutrientArbitration();
+                //DoArbitration("water");  // not ready for nutrient arbitration by the new method yet
+            }
+            else
+            {
+                Old_OnDoNutrientArbitration();
+            }
+        }
+        
+        private void DoArbitration(string resourceToArbitrate)
         {
          //for (int p = 0; p < plants.Length; p++)
          //for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
@@ -267,7 +290,18 @@ namespace Models.Arbitrator
                                 {
                                     tempLowerBoundForResource = Math.Min(plants[0].RootProperties.LowerLimitDep[l], plants[1].RootProperties.LowerLimitDep[l]);
                                 }
-                                resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilWater.sw_dep[l] - tempLowerBoundForResource);  // just temporary - need to get the bourds sorted out
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilWater.sw_dep[l] - tempLowerBoundForResource);  // just temporary - need to get the bourds sorted out
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate " + resourceToArbitrate);
+                                }
+                                else 
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
                             }
                         }
                     }
@@ -285,11 +319,22 @@ namespace Models.Arbitrator
                         {
                             for (int f = 0; f < forms; f++)  // for now set forms is to 1
                             {
-                                extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                           * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                           * plants[p].RootProperties.KL[l]                        // later add in zone
-                                                           * Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - plants[p].RootProperties.LowerLimitDep[l]));   // later add in zone for soil water dep and bounds and figure our how to do form
-                                extractableByPlant[p] += extractable[p, l, z, b, f];
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                               * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                               * plants[p].RootProperties.KL[l]                        // later add in zone
+                                                               * Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - plants[p].RootProperties.LowerLimitDep[l]));   // later add in zone for soil water dep and bounds and figure our how to do form
+                                    extractableByPlant[p] += extractable[p, l, z, b, f];
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate nitrogen");
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
                             }
                         }
                     }
@@ -308,9 +353,20 @@ namespace Models.Arbitrator
                             for (int f = 0; f < forms; f++)  // for now set forms is to 1
                             {
                                 // demand here is a bad name as is limited by extractable - satisfyable demand if solo plant
-                                demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
-                                                      * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
-                                demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
+                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
+                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate nitrogen");
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
                             }
                         }
                     }
@@ -351,20 +407,51 @@ namespace Models.Arbitrator
                         {
                             for (int f = 0; f < forms; f++)  // for now set forms is to 1
                             {
-                                dummyArray[l] = uptake[p, l, z, b, f];
-                                dltSWdep[l] += -1.0 * uptake[p, l, z, b, f];  // -ve to reduce water content in the soil
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    dummyArray[l] = uptake[p, l, z, b, f];
+                                    dltSWdep[l] += -1.0 * uptake[p, l, z, b, f];  // -ve to reduce water content in the soil
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate nitrogen");
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
                             }
                         }
                     }
                 }
-                plants[p].uptakeWater = dummyArray;
+                if (resourceToArbitrate.ToLower() == "water")
+                {
+                    plants[p].uptakeWater = dummyArray;
+                }
+                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                {
+                    throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate nitrogen");
+                }
+                else
+                {
+                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                }
             }
-            Soil.SoilWater.dlt_sw_dep = dltSWdep;
+            if (resourceToArbitrate.ToLower() == "water")
+            {
+                Soil.SoilWater.dlt_sw_dep = dltSWdep;
+            }
+            else if (resourceToArbitrate.ToLower() == "nitrogen")
+            {
+                throw new Exception("Arbitrator can only do water in the new scheme as of yet.  Cannot Arbitrate nitrogen");
+            }
+            else
+            {
+                throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+            }
 
 
         }  // end of event
-
-        // */
 
         [EventSubscribe("DoEnergyArbitration")]
         private void OnDoEnergyArbitration(object sender, EventArgs e)
@@ -395,10 +482,8 @@ namespace Models.Arbitrator
             //}
         }
 
-        /*
-
-        [EventSubscribe("DoWaterArbitration")]
-        private void Old_OnDoWaterArbitration(object sender, EventArgs e)
+        //[EventSubscribe("DoWaterArbitration")]
+        private void Old_OnDoWaterArbitration()
         {
             //ToDO
             // Actual soil water evaporation
@@ -464,10 +549,8 @@ namespace Models.Arbitrator
             Soil.SoilWater.dlt_sw_dep = dltSWdep;
         }
 
-        */
-
-        [EventSubscribe("DoNutrientArbitration")]
-        private void OnDoNutrientArbitration(object sender, EventArgs e)
+        //[EventSubscribe("DoNutrientArbitration")]
+        private void Old_OnDoNutrientArbitration()
         {
             // use i for the plant loop and j for the layer loop
 
