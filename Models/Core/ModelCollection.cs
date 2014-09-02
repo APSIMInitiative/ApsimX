@@ -242,14 +242,16 @@ namespace Models.Core
         /// <summary>
         /// Give the specified model a unique name
         /// </summary>
-        private string EnsureNameIsUnique(Model modelToCheck)
+        public string EnsureNameIsUnique(Model modelToCheck)
         {
             if (modelToCheck.Models == null)
                 return modelToCheck.Name;
             string originalName = modelToCheck.Name;
             string NewName = originalName;
             int Counter = 0;
-            Model child = Model.Models.FirstOrDefault(m => m.Name == NewName);
+            List<Model> siblings = new List<Core.Model>();
+            siblings.AddRange(Siblings(modelToCheck));
+            Model child = siblings.FirstOrDefault(m => m.Name == NewName);
             while (child != null && child != modelToCheck && Counter < 10000)
             {
                 Counter++;
@@ -260,6 +262,30 @@ namespace Models.Core
                 throw new Exception("Cannot create a unique name for model: " + originalName);
             Utility.Reflection.SetName(modelToCheck, NewName);
             return NewName;
+        }
+
+        /// <summary>
+        /// Return all siblings of the specified model.
+        /// </summary>
+        /// <param name="relativeTo">The model for which siblings are to be found</param>
+        /// <returns>The found siblings or an empty array if not found.</returns>
+        public static Model[] Siblings(Model relativeTo)
+        {
+            if (relativeTo.Parent == null)
+            {
+                return new Model[0];
+            }
+
+            List<Model> siblings = new List<Model>();
+            foreach (Model child in relativeTo.Parent.Children.All)
+            {
+                if (child != relativeTo)
+                {
+                    siblings.Add(child);
+                }
+            }
+
+            return siblings.ToArray();
         }
 
         /// <summary>

@@ -1,16 +1,17 @@
 ﻿
+using Models.Core;
 namespace UserInterface.Commands
 {
     class RenameModelCommand : ICommand
     {
-        private object Model;
+        private Model modelToRename;
         private string ParentModelPath;
         private string NewName;
         private string OriginalName;
 
-        public RenameModelCommand(object Model, string ParentModelPath, string NewName)
+        public RenameModelCommand(Model modelToRename, string ParentModelPath, string NewName)
         {
-            this.Model = Model;
+            this.modelToRename = modelToRename;
             this.ParentModelPath = ParentModelPath;
             this.NewName = NewName;
         }
@@ -18,16 +19,17 @@ namespace UserInterface.Commands
         public void Do(CommandHistory CommandHistory)
         {
             // Get original value of property so that we can restore it in Undo if needed.
-            OriginalName = Utility.Reflection.Name(Model);
+            OriginalName = Utility.Reflection.Name(modelToRename);
 
             // Set the new name.
-            Utility.Reflection.SetName(Model, NewName);
+            this.modelToRename.Name = NewName;
+            this.modelToRename.Parent.Children.EnsureNameIsUnique(this.modelToRename);
             CommandHistory.InvokeModelStructureChanged(ParentModelPath);
         }
 
         public void Undo(CommandHistory CommandHistory)
         {
-            Utility.Reflection.SetName(Model, OriginalName);
+            Utility.Reflection.SetName(modelToRename, OriginalName);
             CommandHistory.InvokeModelStructureChanged(ParentModelPath);
         }
     }
