@@ -215,7 +215,19 @@ namespace Models
         public void RemoveUnwantedSimulations(Simulations simulationsToKeep)
         {
             Open(forWriting: true);
+
             string[] simulationNamesToKeep = simulationsToKeep.FindAllSimulationNames();
+
+            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
+            // Simulations table.
+            string[] simulationNames = this.SimulationNames;
+            foreach (string simulationNameToKeep in simulationNamesToKeep)
+            {
+                if (!Utility.String.Contains(simulationNames, simulationNameToKeep))
+                {
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
+                }
+            }
 
             // Get a list of simulation IDs that we are to delete.
             List<int> idsToDelete = new List<int>();
@@ -251,7 +263,6 @@ namespace Models
                 // delete this simulation
                 RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
             }
-            
         }
 
         /// <summary>
@@ -760,12 +771,26 @@ namespace Models
             if (!TableExists("Simulations"))
                 return -1;
 
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            string selectSQL = "SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'";
+            int ID = Connection.ExecuteQueryReturnInt(selectSQL, 0);
             if (ID == -1)
             {
-                Open(forWriting: true);
-                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+                Locks[Filename].Aquire();
+                ID = Connection.ExecuteQueryReturnInt(selectSQL, 0);
+                if (ID == -1)
+                {
+                    if (ForWriting == false)
+                    {
+                        Disconnect();
+                        Connection = new Utility.SQLite();
+                        Connection.OpenDatabase(Filename, readOnly: false);
+                        ForWriting = true;
+                    }
+                    Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
+                    ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+                }
+
+                Locks[Filename].Release();
             }
             return ID;
         }
