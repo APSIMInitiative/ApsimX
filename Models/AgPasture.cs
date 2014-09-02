@@ -4317,7 +4317,6 @@ namespace Models
 
         public void Graze(string type, double amount)
         {
-            Console.WriteLine("Agpasture.ongraze");
             if ((!p_Live) || p_totalDM == 0)
                 return;
 

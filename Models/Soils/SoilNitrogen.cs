@@ -201,6 +201,17 @@ namespace Models.Soils
             enr_a_coeff = SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
 
+            if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
+            {
+                rd_biom = new double[] { 0.0324, 0.015 };
+                wfmin_values = new double[] {0.05, 1.0, 1.0, 0.5 };
+            }
+            else
+            {
+                rd_biom = new double[] { 0.0081, 0.004 };
+                wfmin_values = new double[] { 0.0, 1.0, 1.0, 0.5 };
+            }
+
             initDone = true;
 
             // set the size of arrays
