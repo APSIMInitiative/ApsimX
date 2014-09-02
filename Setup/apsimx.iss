@@ -74,10 +74,10 @@ Name: commondesktopicon; Description: Create a &desktop icon for all users; Flag
 Name: associate; Description: &Associate .apsimx with ApsimX; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\CSIRO\ApsimX; Filename: {app}\UserInterface.exe
+Name: {commonprograms}\CSIRO\ApsimX; Filename: {app}\Bin\UserInterface.exe
 ;Name: {commonprograms}\CSIRO\ApsimX Tutorial; Filename: {app}\docs\ApsimX tutorial.pdf
-Name: {userdesktop}\ApsimX; Filename: {app}\UserInterface.exe; Tasks: desktopicon
-Name: {commondesktop}\ApsimX; Filename: {app}\UserInterface.exe; Tasks: commondesktopicon
+Name: {userdesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
+Name: {commondesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
 
 [Registry]
 
