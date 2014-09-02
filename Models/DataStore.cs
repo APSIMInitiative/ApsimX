@@ -760,6 +760,8 @@ namespace Models
             if (!TableExists("Simulations"))
                 return -1;
 
+            Locks[Filename].Aquire();
+
             int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             if (ID == -1)
             {
@@ -767,6 +769,8 @@ namespace Models
                 Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
                 ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
             }
+            Locks[Filename].Release();
+
             return ID;
         }
 
