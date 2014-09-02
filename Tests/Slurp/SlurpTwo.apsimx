@@ -501,7 +501,7 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <ArbitrationMethod>PropDemand</ArbitrationMethod>
+        <ArbitrationMethod>old</ArbitrationMethod>
         <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
@@ -1136,7 +1136,7 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <ArbitrationMethod>PropDemand</ArbitrationMethod>
+        <ArbitrationMethod>old</ArbitrationMethod>
         <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
