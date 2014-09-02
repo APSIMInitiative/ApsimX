@@ -1136,7 +1136,7 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <ArbitrationMethod>old</ArbitrationMethod>
+        <ArbitrationMethod>new</ArbitrationMethod>
         <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
