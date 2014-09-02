@@ -760,18 +760,37 @@ namespace Models
             if (!TableExists("Simulations"))
                 return -1;
 
-            Locks[Filename].Aquire();
-
-            int ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+            string selectSQL = "SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'";
+            int ID = Connection.ExecuteQueryReturnInt(selectSQL, 0);
             if (ID == -1)
             {
-                Open(forWriting: true);
-                Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
-                ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
-            }
-            Locks[Filename].Release();
+                Locks[Filename].Aquire();
+                ID = Connection.ExecuteQueryReturnInt(selectSQL, 0);
+                if (ID == -1)
+                {
+                    if (ForWriting == false)
+                    {
+                        Disconnect();
+                        Connection = new Utility.SQLite();
+                        Connection.OpenDatabase(Filename, readOnly: false);
+                        ForWriting = true;
+                    }
+                    Connection.ExecuteNonQuery("INSERT INTO [Simulations] (Name) VALUES ('" + simulationName + "')");
+                    ID = Connection.ExecuteQueryReturnInt("SELECT ID FROM Simulations WHERE Name = '" + simulationName + "'", 0);
+                }
 
+                Locks[Filename].Release();
+            }
             return ID;
+        }
+
+        /// <summary>
+        /// Execute the specified non return query - make sure db is in write mode.
+        /// </summary>
+        /// <param name="sql"></param>
+        private void ExecuteNonQuery(string sql)
+        {
+
         }
 
         /// <summary>
