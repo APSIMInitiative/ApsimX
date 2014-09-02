@@ -25,6 +25,17 @@ namespace Models.PMF.Slurp
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Slurp : Model, ICrop2
     {
+        public string CropType { get; set; }
+        public string[] CultivarNames
+        {
+            get
+            {
+                string[] items = new string[1];
+                items[1] = "NotACultivar";
+
+                return items;
+            }
+        }
         /// <summary>
         /// Link to the soil module
         /// </summary>
@@ -181,6 +192,7 @@ namespace Models.PMF.Slurp
         // The following event handler will be called once at the beginning of the simulation
         public override void  OnSimulationCommencing()
         {
+            CropType = "Slurp";
             uptakeWater = new double[Soil.SoilWater.dlayer.Length];
             uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
             uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
