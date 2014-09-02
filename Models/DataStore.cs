@@ -215,7 +215,19 @@ namespace Models
         public void RemoveUnwantedSimulations(Simulations simulationsToKeep)
         {
             Open(forWriting: true);
+
             string[] simulationNamesToKeep = simulationsToKeep.FindAllSimulationNames();
+
+            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
+            // Simulations table.
+            string[] simulationNames = this.SimulationNames;
+            foreach (string simulationNameToKeep in simulationNamesToKeep)
+            {
+                if (!Utility.String.Contains(simulationNames, simulationNameToKeep))
+                {
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
+                }
+            }
 
             // Get a list of simulation IDs that we are to delete.
             List<int> idsToDelete = new List<int>();
@@ -251,18 +263,6 @@ namespace Models
                 // delete this simulation
                 RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
             }
-
-            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
-            // Simulations table.
-            string[] simulationNames = this.SimulationNames;
-            foreach (string simulationNameToKeep in simulationNamesToKeep)
-            {
-                if (!Utility.String.Contains(simulationNames, simulationNameToKeep))
-                {
-                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
-                }
-            }
-
         }
 
         /// <summary>
