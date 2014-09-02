@@ -605,7 +605,7 @@ namespace Models
         </Slurp>
         <Arbitrator>
           <Name>Arbitrator</Name>
-          <ArbitrationMethod>old</ArbitrationMethod>
+          <ArbitrationMethod>new</ArbitrationMethod>
           <NutrientUptakeMethod>1</NutrientUptakeMethod>
         </Arbitrator>
         <Report>
@@ -623,10 +623,9 @@ namespace Models
             <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
             <string>Evaluate sum([Slurp1].uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
             <string>Evaluate sum([Slurp2].uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
-            <string>Evaluate sum([Arbitrator].Plant1potentialSupplyNitrogenPlantLayer[1:4]) as suppPlant1</string>
-            <string>Evaluate sum([Arbitrator].Plant2potentialSupplyNitrogenPlantLayer[1:4]) as suppPlant2</string>
             <string>[Slurp1].demandNitrogen as demandNitrogen1</string>
             <string>[Slurp2].demandNitrogen as demandNitrogen2</string>
+            <string />
             <string />
           </VariableNames>
           <EventNames>
@@ -646,7 +645,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title>Uptake N</Title>
         <Inverted>false</Inverted>
       </Axis>
       <Series>
@@ -732,40 +731,6 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>UptakeNitrogen2</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Supply</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Y axis title</Title>
-        <Inverted>false</Inverted>
-      </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>suppPlant2</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
