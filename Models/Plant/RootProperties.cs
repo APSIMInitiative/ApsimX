@@ -43,14 +43,30 @@ namespace Models.PMF
         public double[] RootExplorationByLayer { get; set; }
 
         /// <summary>
-        /// Nitrate uptake coefficient
+        /// Relative uptake preference (0-1) as additional mulitplicative factor that can be used to account for longitudinal root resistances or 
+        /// for uptake from zones distance from the main stem.  If not needed then set equal to 1.0
+        /// 
+        public double[] UptakePreferenceByLayer { get; set; }
+
+        /// <summary>
+        /// Nitrate uptake coefficient - mysterious units
         /// </summary>
         public double KNO3 { get; set; }
 
         /// <summary>
-        /// Nitrate uptake coefficient
+        /// Nitrate uptake coefficient - mysterious units
         /// </summary>
         public double KNH4 { get; set; }
+
+        /// <summary>
+        /// Nitrate-N concentration in the soil (ug N/g soil) below which uptake cannot occurr
+        /// </summary>
+        public double[] MinNO3ConcForUptake { get; set; }
+
+        /// <summary>
+        /// Ammonium-N concentration in the soil (ug N/g soil) below which uptake cannot occurr
+        /// </summary>
+        public double[] MinNH4ConcForUptake { get; set; }
 
         /// <summary>
         /// Hamish's additional coefficient for N uptake
