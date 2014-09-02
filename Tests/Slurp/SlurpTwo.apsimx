@@ -494,14 +494,14 @@ namespace Models
         <localFrgr>1</localFrgr>
         <localDemandWater>10</localDemandWater>
         <localDemandNitrogen>5</localDemandNitrogen>
-        <localKNO3>0.2</localKNO3>
-        <localKNH4>0.2</localKNH4>
+        <localKNO3>0.1</localKNO3>
+        <localKNH4>0</localKNH4>
         <localRootDepth>500</localRootDepth>
         <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <ArbitrationMethod>old</ArbitrationMethod>
+        <ArbitrationMethod>new</ArbitrationMethod>
         <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>
@@ -519,6 +519,7 @@ namespace Models
           <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
           <string>[Soil]SoilNitrogen.nh4</string>
           <string>[SOil]SoilNitrogen.no3</string>
+          <string>[Slurp].uptakeNitrogenPropNO3</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1136,7 +1137,7 @@ namespace Models
       </Slurp>
       <Arbitrator>
         <Name>Arbitrator</Name>
-        <ArbitrationMethod>old</ArbitrationMethod>
+        <ArbitrationMethod>new</ArbitrationMethod>
         <NutrientUptakeMethod>1</NutrientUptakeMethod>
       </Arbitrator>
       <Report>

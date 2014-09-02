@@ -649,14 +649,13 @@ namespace UserInterface.Presenters
                     Model model = this.ApsimXFile.Get(e.NodePath) as Model;
                     if (model != null && model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != string.Empty)
                     {
-                        this.CommandHistory.ModelStructureChanged -= this.OnModelStructureChanged;
                         this.HideRightHandPanel();
                         string parentModelPath = Utility.String.ParentName(e.NodePath);
                         RenameModelCommand cmd = new RenameModelCommand(model, parentModelPath, e.NewName);
                         CommandHistory.Add(cmd);
                         this.view.CurrentNodePath = parentModelPath + "." + e.NewName;
                         this.ShowRightHandPanel();
-                        this.CommandHistory.ModelStructureChanged += this.OnModelStructureChanged;
+                        e.CancelEdit = true;
                     }
                 }
                 else

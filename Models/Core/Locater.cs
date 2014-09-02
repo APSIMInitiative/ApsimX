@@ -298,7 +298,7 @@ namespace Models.Core
             {
                 do
                 {
-                    modelsInScope.AddRange(Siblings(relativeTo));
+                    modelsInScope.AddRange(ModelCollection.Siblings(relativeTo));
                     relativeTo = relativeTo.Parent;
 
                     // Add in the top level model that we stopped on.
@@ -342,28 +342,5 @@ namespace Models.Core
             return modelsToReturn.ToArray();
         }
 
-        /// <summary>
-        /// Return all siblings of the specified model.
-        /// </summary>
-        /// <param name="relativeTo">The model for which siblings are to be found</param>
-        /// <returns>The found siblings or an empty array if not found.</returns>
-        private static Model[] Siblings(Model relativeTo)
-        {
-            if (relativeTo.Parent == null)
-            {
-                return new Model[0];
-            }
-
-            List<Model> siblings = new List<Model>();
-            foreach (Model child in relativeTo.Parent.Children.All)
-            {
-                if (child != relativeTo)
-                {
-                    siblings.Add(child);
-                }
-            }
-
-            return siblings.ToArray();
-        }
     }
 }
