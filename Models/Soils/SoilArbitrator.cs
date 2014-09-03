@@ -12,18 +12,16 @@ namespace Models.Soils
     public class RootSystem
     {
         public double SWDemand;
-        public RootZone[] Zones;
+        public List<RootZone> RootZones;
     }
 
     public class RootZone
     {
-        public string ZoneName;
-        public double ZoneArea; //may not be needed as fields now contain area info
+        public Zone Zone;
+        public Soil Soil;
         public double RootDepth;
         public double RootLengthDensity;
-        public double[] kl;
-        public double[] ll;
-        public double[] dlayer;
+        public double[] PotSWUptake;
     }
 
     [Serializable]
@@ -64,56 +62,17 @@ namespace Models.Soils
             AllRootSystems.Rows.Clear();
             List<Model> models = paddock.Children.AllRecursively;
 
-            foreach (Model m in paddock.Children.AllRecursively)
+            foreach (ICrop crop in paddock.Plants)
             {
-                string PlantStatus = (string)m.Get("plant_status");
-                
-                if (PlantStatus == null)//not a plant
-                    continue;
-
                 RootSystem RootData = null;
 
-                    if (PlantStatus != "out") //if crop is not in ground, we don't care about it
-                    {
-                        RootData = (RootSystem)m.Get("RootSystem");
-                        if (RootData != null) //crop has a RootData structre
-                        {
-                            Dictionary<string, double> SWStrength = CalcSWSourceStrength(RootData);
-                            foreach (RootZone zone in RootData.Zones) //add each zone to the table
-                                AllRootSystems.Rows.Add(zone.ZoneName, m.Name, RootData.SWDemand, SWStrength, zone, true);
-                            NumLayers = RootData.Zones[0].kl.Length;
-                        }
-                        else //crop does not have RootData structure, so make one.
-                        {
-                            Dictionary<string, double> SWStrength = new Dictionary<string, double>();
-                            Model Root = null;
-                            RootData = new RootSystem();
-                            RootData.Zones = new RootZone[1];
-                            RootData.Zones[0] = new RootZone();
-                            RootData.Zones[0].ZoneName = m.Name;
-                            RootData.Zones[0].ZoneArea = 1;
-
-                            Root = (Model)m.Find("Root");
-                            if (Root==null)
-                                throw new Exception("Could not get Root structure for crop " + m.Name);
-
-                            try
-                            { RootData.SWDemand = (double)m.Get("WaterDemand"); }
-                            catch (Exception) { throw new Exception("Could not get SWDemand for crop " + m.Name); }
-
-                            RootData.Zones[0].RootDepth = (double)Root.Get("RootDepth");
-                            RootData.Zones[0].ll = (double[])Root.Get("ll");
-                            RootData.Zones[0].kl = (double[])Root.Get("kl");
-
-                            Soil = (Soil)m.Parent.Find(typeof(Soil));
-                            SWStrength.Add(m.Name, 1);
-
-                            RootData.Zones[0].dlayer = (double[])Soil.SoilWater.Get("dlayer");
-
-                            AllRootSystems.Rows.Add(RootData.Zones[0].ZoneName, m.Name, RootData.SWDemand, SWStrength, RootData.Zones[0], true);
-                            NumLayers = RootData.Zones[0].kl.Length;
-                        }
-                    }
+                if (crop.PotentialEP > 0) //if crop is not in ground, we don't care about it
+                {
+                    Dictionary<string, double> SWStrength = CalcSWSourceStrength(RootData);
+                    foreach (RootZone RootZone in RootData.RootZones) //add each zone to the table
+                        AllRootSystems.Rows.Add(RootZone.Zone.Name, crop.CropType, RootData.SWDemand, SWStrength, RootZone, true);
+                    NumLayers = RootData.RootZones[0].Soil.KL(crop.CropType).Length;
+                }
             }
             //use LINQ to extract the paddocks for processing
             IEnumerable<string> paddockNames = AllRootSystems.AsEnumerable().Select<DataRow, string>(name => (string)name.ItemArray[0]).Distinct();
@@ -232,14 +191,14 @@ namespace Models.Soils
         /// <returns>A 2D array containing the SW supply available for each crop and layer.</returns>
         private double[,] CalcSWSupply(IEnumerable<DataRow> RootZones, double[] SWDep, int NumLayers)
         {
-            RootZone zone = new RootZone();
+            RootZone RootZone = new RootZone();
             double[,] SWSupply = new double[RootZones.Count(), NumLayers];
             for (int i = 0; i < RootZones.Count(); i++) //crops
             {
-                zone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
+                RootZone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
                 for (int j = 0; j < NumLayers; j++)
                 {
-                    SWSupply[i, j] = zone.kl[j] * (SWDep[j] - zone.ll[j] * zone.dlayer[j]) * zone.ZoneArea;
+                    SWSupply[i, j] = RootZone.Soil.KL("crop")[j] * (SWDep[j] - RootZone.Soil.LL("crop")[j] * RootZone.Soil.Thickness[j]) * RootZone.Zone.Area;
                     if (SWSupply[i, j] < 0)
                         SWSupply[i, j] = 0; //can be < 0 if another crop with a lower LL has extracted below what this one can.
                 }
@@ -257,19 +216,19 @@ namespace Models.Soils
         /// <returns>A 2D array containing the relative source strength for each crop and layer.</returns>
         private double[,] CalcRelSWLayerStrength(IEnumerable<DataRow> RootZones, double[] SWDep, int NumLayers)
         {
-            RootZone zone = new RootZone();
+            RootZone RootZone = new RootZone();
             double[,] RelSWLayerStrength = new double[RootZones.Count(), NumLayers];
             for (int i = 0; i < RootZones.Count(); i++) //crops
             {
                 double TotalSource = 0;
-                zone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
-                int DeepestRoot = CalcMaxRootLayer(zone.RootDepth, zone.dlayer);
+                RootZone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
+                int DeepestRoot = CalcMaxRootLayer(RootZone.RootDepth, RootZone.Soil.Thickness);
                 for (int j = 0; j < NumLayers; j++)
                     if (j <= DeepestRoot)
-                        TotalSource += zone.kl[j] * SWDep[j];
+                        TotalSource += RootZone.Soil.KL("crop")[j] * SWDep[j];
                 for (int j = 0; j < NumLayers; j++)
-                    if (j <= DeepestRoot && zone.kl[j] > 0)
-                        RelSWLayerStrength[i, j] = zone.kl[j] * SWDep[j] / TotalSource;
+                    if (j <= DeepestRoot && RootZone.Soil.KL("crop")[j] > 0)
+                        RelSWLayerStrength[i, j] = RootZone.Soil.KL("crop")[j] * SWDep[j] / TotalSource;
                     else
                         RelSWLayerStrength[i, j] = 0;
             }
@@ -288,12 +247,12 @@ namespace Models.Soils
             int[] LowestRootLayer = new int[RootZones.Count()];
             for (int i = 0; i < KLArray.GetLength(0); i++) //extract the kl array from each zone
             {
-                RootZone zone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
-                KLArray[i] = zone.kl;
+                RootZone RootZone = (RootZone)RootZones.ToArray()[i].ItemArray[4];
+                KLArray[i] = RootZone.Soil.KL("crop");
                 for (int j = 0; j < KLArray[i].Length; j++)
                     if (CropSWDemand[i] == 0)
                         KLArray[i][j] = 0;
-                LowestRootLayer[i] = CalcMaxRootLayer(zone.RootDepth, zone.dlayer);
+                LowestRootLayer[i] = CalcMaxRootLayer(RootZone.RootDepth, RootZone.Soil.Thickness);
             }
 
             //calculate relative demand strength for each layer
@@ -326,8 +285,8 @@ namespace Models.Soils
         private Dictionary<string, double> CalcSWSourceStrength(RootSystem RootData)
         {
             Dictionary<string, double> SoilWaters = new Dictionary<string, double>();
-            string[] ZoneNames = new string[RootData.Zones.Length];
-            double[] SWDeps = new double[RootData.Zones.Length];
+            string[] ZoneNames = new string[RootData.RootZones.Count];
+            double[] SWDeps = new double[RootData.RootZones.Count];
             double TotalSW;
             Model p;
             Soil Soil;
@@ -335,7 +294,7 @@ namespace Models.Soils
             for (int i = 0; i < ZoneNames.Length; i++)
             {
                 double[] SWlayers;
-                ZoneNames[i] = RootData.Zones[i].ZoneName;
+                ZoneNames[i] = RootData.RootZones[i].Zone.Name;
                 p = (Model)paddock.Find(ZoneNames[i]);
                 Soil = (Soil)p.Find(typeof(Soil));
                 SWlayers = (double[])Soil.SoilWater.Get("sw_dep");
@@ -344,7 +303,7 @@ namespace Models.Soils
 
             TotalSW = (double)Utility.Math.Sum(SWDeps);
             for (int i = 0; i < ZoneNames.Length; i++)
-                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.Zones[i].ZoneArea);
+                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW * RootData.RootZones[i].Zone.Area);
 
             return SoilWaters;
         }

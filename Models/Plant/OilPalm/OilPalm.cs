@@ -51,6 +51,11 @@ namespace Models.PMF.OilPalm
         [Units("")]
         public string CropType { get { return "OilPalm"; } }
 
+        /// <summary>
+        /// Root system information
+        /// </summary>
+        public RootSystem RootSystem { get { return new RootSystem(); } }
+
         private Cultivar cultivarDefinition;
 
         /// <summary>

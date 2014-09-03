@@ -10,7 +10,7 @@
         /// <summary>
         /// Provides canopy data to SoilWater.
         /// </summary>
-        NewCanopyType CanopyData {get;}
+        NewCanopyType CanopyData { get; }
 
         /// <summary>
         /// MicroClimate will get 'CropType' and use it to look up
@@ -40,5 +40,10 @@
         /// Gets a list of cultivar names
         /// </summary>
         string[] CultivarNames { get; }
-        }
+
+        /// <summary>
+        /// Gets the plants root system information
+        /// </summary>
+        Models.Soils.RootSystem RootSystem { get; }
+    }
 }

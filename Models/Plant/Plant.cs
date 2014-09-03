@@ -165,6 +165,11 @@ namespace Models.PMF
             } 
         }
         /// <summary>
+        /// Root system information
+        /// </summary>
+        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
+
+        /// <summary>
         /// MicroClimate supplies light profile.
         /// </summary>
         [XmlIgnore]
