@@ -52,6 +52,7 @@ namespace Models.PMF.Phen
         private bool JustInitialised = true;
         private double FractionBiomassRemoved = 0;
         private DateTime SowDate = DateTime.MinValue;
+        public bool Emerged = false;
 
         [XmlIgnore]
         /// <summary>
@@ -64,6 +65,7 @@ namespace Models.PMF.Phen
             Stage = 1;
             _AccumulatedTT = 0;
             JustInitialised = true;
+            Emerged = false;
             SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = "";
             CurrentPhaseIndex = 0;
@@ -206,11 +208,14 @@ namespace Models.PMF.Phen
                 if (CurrentPhaseIndex + 1 >= Phases.Count)
                     throw new Exception("Cannot transition to the next phase. No more phases exist");
 
+                if (CurrentPhase is EmergingPhase)
+                    Emerged = true;
+                
                 CurrentPhase = Phases[CurrentPhaseIndex + 1];
-
                 if (GrowthStage != null)
                     GrowthStage.Invoke();
-
+ 
+   
                 // Tell the new phase to use the fraction of day left.
                 FractionOfDayLeftOver = CurrentPhase.AddTT(FractionOfDayLeftOver);
                 Stage = CurrentPhaseIndex + 1;

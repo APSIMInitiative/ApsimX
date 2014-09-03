@@ -605,7 +605,7 @@ namespace Models.PMF.Organs
         }
         public override void DoPotentialDM()
         {
-            WaterAllocation = 0;
+            //WaterAllocation = 0;
 
             if (FrostFraction.Value > 0)
                 foreach (LeafCohort L in Leaves)
@@ -694,6 +694,8 @@ namespace Models.PMF.Organs
         }
         public override void DoActualGrowth()
         {
+            WaterAllocation = 0;
+            
             foreach (LeafCohort L in Leaves)
                 L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
 
