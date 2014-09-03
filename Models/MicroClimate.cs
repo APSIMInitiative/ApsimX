@@ -362,6 +362,26 @@ namespace Models
                 ComponentData[senderIdx].Crop = crop;
                 ComponentData[senderIdx].Frgr = crop.FRGR;
             }
+
+            // Loop through all crops and get their potential growth for today.
+            foreach (ICrop2 crop2 in FindAll(typeof(ICrop2)))
+            {
+                int senderIdx = FindComponentIndex(crop2.CropType);
+                if (senderIdx < 0)
+                {
+                    throw new Exception("Unknown Canopy Component: " + crop2.CropType);
+                }
+                ComponentData[senderIdx].Crop2 = crop2;
+                ComponentData[senderIdx].Frgr = crop2.CanopyProperties.Frgr;
+            }
+
+            CalculateGc();
+            CalculateGa();
+            CalculateInterception();
+            CalculatePM();
+            CalculateOmega();
+
+            SendEnergyBalanceEvent();
         }
 
         /// <summary>
@@ -518,6 +538,7 @@ namespace Models
             public string Name;
             public string Type;
             public ICrop Crop;
+            public ICrop2 Crop2;
 
             [XmlIgnore]
             public double LAI;
@@ -1126,6 +1147,24 @@ namespace Models
 
                     componentData.Crop.PotentialEP = totalPotentialEp;
                     componentData.Crop.LightProfile = lightProfile;
+                }
+                
+                if (componentData.Crop2 != null)
+                {
+                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPotentialEp = 0;
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
+                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
+                        lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
+                        totalPotentialEp += componentData.PET[i];
+                        totalInterception += componentData.interception[i];
+                    }
+
+                    componentData.Crop2.demandWater = totalPotentialEp;
+                    componentData.Crop2.LightProfile = lightProfile;
                 }
             }
         }

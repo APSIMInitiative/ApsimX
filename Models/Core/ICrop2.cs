@@ -50,7 +50,16 @@ namespace Models.Core
         /// </summary>
         double[] uptakeNitrogenPropNO3 { set; }
 
+        /// <summary>
+        /// MicroClimate will get 'CropType' and use it to look up
+        /// canopy properties for this crop.
+        /// </summary>
+        string CropType { get; }
 
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        string[] CultivarNames { get; }
         // need to add in the uptake/supply in layers - crop needs this for root growth
         }
 }
