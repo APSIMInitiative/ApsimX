@@ -76,6 +76,12 @@ namespace Models.PMF.OldPlant
 
         public string CropType { get; set; }
 
+        /// <summary>
+        /// Root system information
+        /// </summary>
+        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
+
+
         private Cultivar cultivarDefinition;
 
         /// <summary>

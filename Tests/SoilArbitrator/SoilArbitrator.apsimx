@@ -158,28 +158,28 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>SimpleTree</Name>
             <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
               <double>0.5</double>
               <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
             </LL>
             <KL>
               <double>0.1</double>
               <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
@@ -391,6 +391,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.04</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.77</double>
+            <double>0.45</double>
+            <double>0.27</double>
+            <double>0.22</double>
+            <double>0.16</double>
+            <double>0.13</double>
+            <double>0.12</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -575,19 +588,13 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <pond_active>no</pond_active>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -601,6 +608,17 @@
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -622,151 +640,30 @@
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <SimpleTree>
-        <Name>Simple Treee</Name>
-        <RootSystem>
-          <SWDemand>0.39981432601998468</SWDemand>
-          <Zones>
-            <RootZone>
-              <ZoneName>Field</ZoneName>
-              <ZoneArea>1</ZoneArea>
-              <RootDepth>550</RootDepth>
-              <RootLengthDensity>0</RootLengthDensity>
-              <kl>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </kl>
-              <ll>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-              </ll>
-              <dlayer>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-              </dlayer>
-            </RootZone>
-            <RootZone>
-              <ZoneName>Field1</ZoneName>
-              <ZoneArea>1</ZoneArea>
-              <RootDepth>550</RootDepth>
-              <RootLengthDensity>0</RootLengthDensity>
-              <kl>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </kl>
-              <ll>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-              </ll>
-              <dlayer>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-              </dlayer>
-            </RootZone>
-            <RootZone>
-              <ZoneName>Field2</ZoneName>
-              <ZoneArea>1</ZoneArea>
-              <RootDepth>550</RootDepth>
-              <RootLengthDensity>0</RootLengthDensity>
-              <kl>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </kl>
-              <ll>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-              </ll>
-              <dlayer>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-              </dlayer>
-            </RootZone>
-          </Zones>
-        </RootSystem>
+        <Name>SimpleTree</Name>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+        </MicroClimate>
         <CoverLive>0.5</CoverLive>
         <plant_status>alive</plant_status>
-        <sw_demand>0.39981432601998468</sw_demand>
-        <fields>Field, Field1, Field2</fields>
+        <sw_demand>0</sw_demand>
+        <zones>Field, Field1, Field2</zones>
       </SimpleTree>
       <Area>1</Area>
       <Slope>0</Slope>
@@ -911,28 +808,28 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>SimpleTree</Name>
             <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
               <double>0.5</double>
               <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
             </LL>
             <KL>
               <double>0.1</double>
               <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
@@ -1144,6 +1041,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.04</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.77</double>
+            <double>0.45</double>
+            <double>0.27</double>
+            <double>0.22</double>
+            <double>0.16</double>
+            <double>0.13</double>
+            <double>0.12</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -1328,19 +1238,13 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <pond_active>no</pond_active>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -1354,6 +1258,17 @@
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -1374,7 +1289,7 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
-      <Area>100</Area>
+      <Area>10</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -1517,28 +1432,28 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>SimpleTree</Name>
             <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
               <double>0.5</double>
               <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
             </LL>
             <KL>
               <double>0.1</double>
               <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
@@ -1750,6 +1665,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.04</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.89</double>
+            <double>0.77</double>
+            <double>0.45</double>
+            <double>0.27</double>
+            <double>0.22</double>
+            <double>0.16</double>
+            <double>0.13</double>
+            <double>0.12</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -1934,19 +1862,13 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <pond_active>no</pond_active>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -1960,6 +1882,17 @@
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -1980,9 +1913,83 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
-      <Area>1</Area>
+      <Area>100</Area>
       <Slope>0</Slope>
     </Zone>
+    <Graph>
+      <Name>Graph</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>X axis title 2</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Y axis title</Title>
+        <Inverted>false</Inverted>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report1</TableName>
+          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report2</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report2</TableName>
+          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -2375,6 +2382,19 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
+          <oc>
+            <double>1.0163269109356625</double>
+            <double>0.87766023155315032</double>
+            <double>0.8845950136342472</double>
+            <double>0.88768264577013256</double>
+            <double>0.76906053122573026</double>
+            <double>0.44947874206226562</double>
+            <double>0.26970282262042278</double>
+            <double>0.21976321101230448</double>
+            <double>0.15983237534937961</double>
+            <double>0.12986592341883149</double>
+            <double>0.11987671390499731</double>
+          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -2559,19 +2579,13 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <default_standing_fraction>0</default_standing_fraction>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <pond_active>no</pond_active>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -2585,6 +2599,17 @@
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
         <cnr>80</cnr>
+        <crit_residue_wt>2000</crit_residue_wt>
+        <opt_temp>20</opt_temp>
+        <cum_eos_max>20</cum_eos_max>
+        <cnrf_coeff>0.277</cnrf_coeff>
+        <cnrf_optcn>25</cnrf_optcn>
+        <leach_rain_tot>25</leach_rain_tot>
+        <min_rain_to_leach>10</min_rain_to_leach>
+        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+        <default_cpr>0</default_cpr>
+        <standing_extinct_coeff>0.5</standing_extinct_coeff>
+        <fractionFaecesAdded>0.5</fractionFaecesAdded>
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -2608,63 +2633,6 @@
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <SimpleTree>
-        <Name>Simple Treee</Name>
-        <RootSystem>
-          <SWDemand>0.12693952108132295</SWDemand>
-          <Zones>
-            <RootZone>
-              <ZoneName>Field</ZoneName>
-              <ZoneArea>1</ZoneArea>
-              <RootDepth>550</RootDepth>
-              <RootLengthDensity>0</RootLengthDensity>
-              <kl>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </kl>
-              <ll>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-                <double>0.15</double>
-              </ll>
-              <dlayer>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-              </dlayer>
-            </RootZone>
-          </Zones>
-        </RootSystem>
-        <CoverLive>0.5</CoverLive>
-        <plant_status>alive</plant_status>
-        <sw_demand>0.12693952108132295</sw_demand>
-        <fields>Field</fields>
-      </SimpleTree>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -2682,10 +2650,11 @@
       <Inverted>false</Inverted>
     </Axis>
     <Series>
+      <Title>Series1</Title>
       <Type>Line</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16777088</ColourArgb>
+      <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
@@ -2697,40 +2666,7 @@
         <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <LegendPosition>TopLeft</LegendPosition>
-  </Graph>
-  <Graph>
-    <Name>Graph1</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>X axis title 2</Title>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Y axis title</Title>
-      <Inverted>false</Inverted>
-    </Axis>
-    <Series>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777088</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
