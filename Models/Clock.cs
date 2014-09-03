@@ -37,6 +37,7 @@ namespace Models
         public event EventHandler DoInitialSummary;
         public event EventHandler DoManagement;
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
+        public event EventHandler DoCanopy;                            //This will be removed when comms are better sorted  do not use  MicroClimate only
         public event EventHandler DoCanopyEnergyBalance;               //This will be removed when comms are better sorted  do not use  MicroClimate only
         public event EventHandler DoSoilWaterMovement;                                //Soil module
         //DoSoilTemperature will be here
@@ -45,8 +46,6 @@ namespace Models
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
         public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
-        public event EventHandler TemporaryDoWater;                    //This is to be deleted when crop water stuff is done before DoPotentialPlantGrowth
-        public event EventHandler DoCanopy;                            //This will be removed when comms are better sorted  do not use  MicroClimate only
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
         public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
@@ -109,6 +108,9 @@ namespace Models
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
 
+                if (DoCanopy != null)
+                    DoCanopy.Invoke(this, args);
+
                 if (DoCanopyEnergyBalance != null)
                     DoCanopyEnergyBalance.Invoke(this, args);
 
@@ -126,9 +128,6 @@ namespace Models
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
-
-                if (DoCanopy != null)
-                    DoCanopy.Invoke(this, args);
 
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
