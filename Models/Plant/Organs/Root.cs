@@ -331,6 +331,12 @@ namespace Models.PMF.Organs
 
             base.OnEndCrop();
         }
+
+        public override void OnSow(SowPlant2Type Sow)
+        {
+            //Fixme, this can be deleted when arbitrator calculates uptake ?????
+            Uptake = new double[Soil.SoilWater.dlayer.Length];
+        }
         #endregion
 
         #region Arbitrator method calls

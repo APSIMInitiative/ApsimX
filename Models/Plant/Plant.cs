@@ -356,10 +356,10 @@ namespace Models.PMF
             }
         }
 
-        [EventSubscribe("DoCanopy")]
-        private void OnDocanopy(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
+        [EventSubscribe("DoWaterArbitration")]
+        private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
         {
-            if (InGround)
+            if (Phenology.Emerged == true)
             {
                 DoWater();
             }
