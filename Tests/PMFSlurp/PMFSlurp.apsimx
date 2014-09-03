@@ -325,12 +325,12 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.8370854495466134</double>
-            <double>1.4634428983768275</double>
-            <double>1.1988607727229736</double>
-            <double>1.0300993756281505</double>
-            <double>0.47033796022060254</double>
-            <double>0.47013744133376584</double>
+            <double>1.8370896065453246</double>
+            <double>1.463442064386993</double>
+            <double>1.1988606073560995</double>
+            <double>1.0300993672854668</double>
+            <double>0.47033795108372745</double>
+            <double>0.47013740649559976</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -637,11 +637,20 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
+        <_standing_fraction>
+          <double>0</double>
+        </_standing_fraction>
         <c_fract>0.4</c_fract>
+        <pond_active>no</pond_active>
+        <report_additions>no</report_additions>
+        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+        </TillageTypes>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>2000</mass>

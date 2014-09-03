@@ -359,10 +359,16 @@ namespace Models.PMF
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
         {
-            if (Phenology.Emerged == true)
-            {
-                DoWater();
-            }
+            if (Phenology != null)
+               if (Phenology.Emerged == true)
+               {
+                   DoWater();
+               }
+           else 
+                if (InGround == true)
+                {
+                    DoWater();
+                }
         }
         
         [EventSubscribe("DoNutrientArbitration")]
