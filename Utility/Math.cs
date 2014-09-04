@@ -617,15 +617,20 @@ namespace Utility
         }
 
         /// <summary>
-        /// Return the time elasped in hours between the specified sun angle
-        ///  from 90 deg in am and pm. +ve above the horizon, -ve below the horizon.
+        /// Return the time elapsed in hours between the specified sun angle
+        ///  from 90<sup>o</sup> in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
-        /// <param name="SunAngle">Angle to measure time between such as twilight (deg).
-        ///  angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
-        ///  Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6°. e.g SunAngle = -6
-        ///  Nautical twilight : 12°
-        ///  Astronomical twilight : 18°
-        ///  </param>
+        /// \param DayOfYear The day of year
+        /// \param SunAngle 
+        /// \parblock 
+        /// Angle to measure time between such as twilight (deg).
+        /// angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
+        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6&deg;. e.g SunAngle = -6&deg;
+        /// Nautical twilight : 12&deg;
+        /// Astronomical twilight : 18&deg;
+        /// \endparblock
+        /// \param Latitude Latitude to calculate the day length (&deg;)
+        /// \return Day length in hours between the specified sun angle from 90&deg; in am and pm.
         static public double DayLength(double DayOfYear, double SunAngle, double Latitude)
         {
             //+ Constant Values
