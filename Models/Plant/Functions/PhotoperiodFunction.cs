@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// The day length for a specified day and location
     /// </summary>
 	/// 
-	/// \pre A \ref Models.WeatherFile function has to be existed.
+	/// \pre A \ref Models.WeatherFile function has to exist.
 	/// \pre A \ref Models.Clock function has to be existed to retrieve day of year
 	/// \param Twilight The interval between sunrise or sunset and the time when the true centre of the sun is below the horizon as a specified angle.
 	/// \retval The day length of a specified day and location. Variable "photoperiod" will be returned if simulation environment has a variable called ClimateControl.PhotoPeriod.

@@ -11,9 +11,9 @@ namespace Models.PMF.Phen
 	/// <summary>
 	/// The vernalization and photoperiod effects from CERES wheat.
 	/// </summary>
-	/// \pre A \ref Phenology node has to be existed.
-	/// \pre A \ref Models.PMF.Functions.PhotoperiodFunction node has to be existed.
-	/// \pre A \ref Models.WeatherFile node has to be existed.
+	/// \pre A \ref Phenology node has to exist.
+	/// \pre A \ref Models.PMF.Functions.PhotoperiodFunction node has to exist.
+	/// \pre A \ref Models.WeatherFile node has to exist.
 	/// \param VernSens The vernalization sensitivity
 	/// \param PhotopSens The photoperiod sensitivity
 	/// \param StartStageForEffects The start stage to calculate the vernalization and photoperiod effects
