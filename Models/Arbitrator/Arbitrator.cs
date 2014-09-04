@@ -60,25 +60,6 @@ namespace Models.Arbitrator
         }
 
 
-        /// <summary>
-        /// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
-        /// </summary>
-        [XmlIgnore]
-        [Description("Potential nutrient supply in layers for the second plant")]
-        public double[] Plant2potentialSupplyNitrogenPlantLayer
-        {
-            get
-            {
-                double[] result = new double[Soil.SoilWater.dlayer.Length];
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
-                {
-                    result[j] = potentialSupplyNitrogenPlantLayer[1, j];
-                }
-                return result;
-            }
-        }
-
-
         // Plant variables
         double[] demandWater;
         double[,] potentialSupplyWaterPlantLayer;
@@ -117,13 +98,16 @@ namespace Models.Arbitrator
         //public CanopyProps[,] myCanopy;
 
         // new Arbitration parameters from here
-        int zones;
-        int bounds;
-        int forms;
-        double[] demandByPlant;
-        double[, , ,] lowerBound;
-        double[, ,] rootExploration;
-        double[, ,] uptakePreference;
+        int zones;  // this might be replaced with something dynamic
+        int bounds; // how many lower bounds are there for the resource in question
+        int forms;  // how many forms for the resource in question
+        double[, , ,] lowerBound;  // has indexes for plant, layer, zone and bound - need rethinking 
+        double[, ,] rootExploration;  // has indexes for plant, layer, zone - need to figure out zones
+
+        /// <summary>
+        /// uptakePreference (0-1) is a factor 
+        /// </summary>
+        double[, ,] uptakePreference;  // indexes for plant, layer, zone - this is a thing that the plant module can set to 
         double[, , , ,] uptakeParameterOnAmountInLayer;
         double[, , , ,] uptakeParameterOnConcentrationInSoil;
         double[, , , ,] resource;
@@ -132,6 +116,10 @@ namespace Models.Arbitrator
         double[, , , ,] demandForResource;
         double[, , , ,] uptake;
         double[] extractableByPlant;
+
+        // for deletion
+        //         double[] demandByPlant;
+
 
         string resourceToArbitrate;
         int[] plantIndexLowerBound;
@@ -171,7 +159,7 @@ namespace Models.Arbitrator
             zones = 1; // as a starting point - will we need to consider redimensioning?  Depends on when the root system information is available - or just allow for all zones beneath current location
             bounds = 1;  // this will need more attention - needs ot be derived from the plant lower limit information and can be differnet for water and   
             forms = 2;  // 
-            demandByPlant = new double[plants.Length];
+            //demandByPlant = new double[plants.Length];
             lowerBound = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds];
             rootExploration = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones];
             uptakePreference = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones];
@@ -203,7 +191,7 @@ namespace Models.Arbitrator
             Utility.Math.Zero(uptakeNitrogenPropNO3PlantLayer);
 
             // new Arbitration parameters from here
-            Utility.Math.Zero(demandByPlant);
+            //Utility.Math.Zero(demandByPlant);
             Utility.Math.Zero(extractableByPlant);
 
             for (int p = 0; p < plants.Length; p++)
