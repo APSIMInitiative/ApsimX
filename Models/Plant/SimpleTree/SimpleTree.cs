@@ -36,7 +36,7 @@ namespace Models.PMF
             Name = "SimpleTree";
         }
 
-        public string CropType { get { return "Wheat"; } }
+        public string CropType { get { return "SimpleTree"; } }
         public double FRGR { get { return 1; } }
         /// <summary>
         /// Gets a list of cultivar names
@@ -79,6 +79,8 @@ namespace Models.PMF
                 if (currentZone.Soil == null)
                     throw new ApsimXException(this.FullPath, "Could not find soil in zone " + zone);
                 currentZone.RootDepth = 500;
+                currentZone.Name = Name;
+                currentZone.Parent = rootSystem;
                 rootSystem.RootZones.Add(currentZone);
             }
             CoverLive = 0.5;
@@ -136,7 +138,7 @@ namespace Models.PMF
                 TotPotSWUptake += Utility.Math.Sum(rz.PotSWUptake);
             }
 
-            rootSystem.SWDemand = TotPotSWUptake;
+            rootSystem.SWDemand = TotPotSWUptake / rootSystem.RootZones.Count; // is the average of all root systems correct?
             sw_demand = TotPotSWUptake; //TODO - do we still need this? think another module might want it
         }
 
