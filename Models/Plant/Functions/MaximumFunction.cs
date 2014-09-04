@@ -6,6 +6,13 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Maximize the values of the children of this node
+    /// </summary>
+    /// \pre All children have to contain a public function "Value"
+    /// \retval Maximum value of all children of this node. Return -999999999 if no child.
+    /// <remarks>
+    /// </remarks>
     [Serializable]
     [Description("Returns the maximum value of all childern functions")]
     public class MaximumFunction : Function
