@@ -1284,6 +1284,11 @@ namespace Models
             get { return SwardName; }
         }
 
+        /// <summary>
+        /// Root system information
+        /// </summary>
+        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
+
         [Description("Plant status (dead, alive, etc)")]
         [Units("")]
         public string PlantStatus

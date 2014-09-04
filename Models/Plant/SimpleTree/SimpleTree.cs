@@ -15,8 +15,8 @@ namespace Models.PMF
     {
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         NewCanopyType LocalCanopyData = new NewCanopyType();
-        
-        public RootSystem RootSystem { get; set; }
+
+        public RootSystem RootSystem { get { return rootSystem; } }
         public double CoverLive { get; set; }
         public string plant_status { get; set; }
         public double sw_demand { get; set; }
@@ -24,18 +24,19 @@ namespace Models.PMF
         private int NumPlots;
         private double[] dlayer;
         private Soil Soil;
-        private string[] fieldList;
+        private string[] zoneList;
+        private RootSystem rootSystem;
 
         [Units("mm/mm")]
-        [Description("What fields will the roots be in? (comma seperated)")]
-        public string fields { get; set; }
+        [Description("What zones will the roots be in? (comma seperated)")]
+        public string zones { get; set; }
 
         public SimpleTree()
         {
-            fields = "Field, Field1, Field2";
+            Name = "SimpleTree";
         }
 
-        public string CropType { get { return "Wheat"; } }
+        public string CropType { get { return "SimpleTree"; } }
         public double FRGR { get { return 1; } }
         /// <summary>
         /// Gets a list of cultivar names
@@ -62,14 +63,26 @@ namespace Models.PMF
 
         public override void OnSimulationCommencing()
         {
-            fieldList = fields.Split(',');
-            //check field names are valid
-            foreach (string s in fieldList)
-                if (this.Parent.Find(s.Trim()) == null)
-                    throw new Exception("Error: Could not find field with name " + s);
+            zoneList = zones.Split(',');
 
-            NumPlots = fieldList.Count();
-            RootSystem = new RootSystem();
+            NumPlots = zoneList.Count();
+            rootSystem = new RootSystem();
+            rootSystem.RootZones = new List<RootZone>();
+
+            foreach (string zone in zoneList)
+            {
+                RootZone currentZone = new RootZone();
+                currentZone.Zone = (Zone)this.Parent.Find(zone.Trim());
+                if (currentZone.Zone == null)
+                    throw new ApsimXException(this.FullPath, "Could not find zone " + zone);
+                currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
+                if (currentZone.Soil == null)
+                    throw new ApsimXException(this.FullPath, "Could not find soil in zone " + zone);
+                currentZone.RootDepth = 500;
+                currentZone.Name = Name;
+                currentZone.Parent = rootSystem;
+                rootSystem.RootZones.Add(currentZone);
+            }
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
@@ -87,60 +100,46 @@ namespace Models.PMF
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            RootSystem.Zones = new RootZone[NumPlots];
-
-            for (int i = 0; i < NumPlots; i++)
+ /*           for (int i = 0; i < NumPlots; i++)
             {
-                Zone CurrentField = (Zone)this.Parent.Find(fieldList[i].Trim());
-                // removing field properties for now
-                //   Component fieldProps = (Component)MyPaddock.Parent.ChildPaddocks[i].LinkByName("FieldProps");
-                RootSystem.Zones[i] = new RootZone();
-                RootSystem.Zones[i].ZoneArea = (double)this.Parent.Get("Area"); //get the zone area from parent (field)
-                //   if (!fieldProps.Get("fieldArea", out RootSystem.Zones[i].ZoneArea))
-                //       throw new Exception("Could not find FieldProps component in field " + MyPaddock.Parent.ChildPaddocks[i].Name);
-                Soil = (Soil)CurrentField.Find(typeof(Soil));
-                RootSystem.Zones[i].dlayer = (double[])Soil.SoilWater.Get("dlayer");
-                RootSystem.Zones[i].ZoneName = CurrentField.Name;
-                RootSystem.Zones[i].RootDepth = 550;
-                RootSystem.Zones[i].kl = new double[RootSystem.Zones[i].dlayer.Length];
-                RootSystem.Zones[i].ll = new double[RootSystem.Zones[i].dlayer.Length];
+                Zone Currentzone = (Zone)this.Parent.Find(zoneList[i].Trim());
+                // removing zone properties for now
+                //   Component zoneProps = (Component)MyPaddock.Parent.ChildPaddocks[i].LinkByName("zoneProps");
+                rootSystem.Zones[i] = new RootZone();
+                rootSystem.Zones[i].Zone.Area = (double)this.Parent.Get("Area"); //get the zone area from parent (zone)
+                //   if (!zoneProps.Get("zoneArea", out rootSystem.Zones[i].Zone.Area))
+                //       throw new Exception("Could not find zoneProps component in zone " + MyPaddock.Parent.ChildPaddocks[i].Name);
+                Soil = (Soil)Currentzone.Find(typeof(Soil));
+                rootSystem.Zones[i].Soil.Thickness = (double[])Soil.SoilWater.Get("dlayer");
+                rootSystem.Zones[i].Zone.Name = Currentzone.Name;
+                rootSystem.Zones[i].RootDepth = 550;
+                rootSystem.Zones[i].kl = new double[rootSystem.Zones[i].Soil.Thickness.Length];
+                rootSystem.Zones[i].ll = new double[rootSystem.Zones[i].Soil.Thickness.Length];
 
-                for (int j = 0; j < RootSystem.Zones[i].dlayer.Length; j++)
+                for (int j = 0; j < rootSystem.Zones[i].Soil.Thickness.Length; j++)
                 {
-                    RootSystem.Zones[i].kl[j] = 0.02;
-                    RootSystem.Zones[i].ll[j] = 0.15;
+                    rootSystem.Zones[i].kl[j] = 0.02;
+                    rootSystem.Zones[i].ll[j] = 0.15;
                 }
-            }
+            }*/
             GetPotSWUptake();
         }
 
         private void GetPotSWUptake()
         {
             double TotPotSWUptake = 0;
-            double[] SWDep;
-            double[] LL15Dep;
-            double[][] PotSWUptake = new double[RootSystem.Zones.Length][];
-
-            for (int i = 0; i < RootSystem.Zones.Length; i++)
+            foreach (RootZone rz in rootSystem.RootZones)
             {
-                PotSWUptake[i] = new double[RootSystem.Zones[i].dlayer.Length];
-                SWDep = (double[])Soil.SoilWater.Get("sw_dep");
-                LL15Dep = (double[])Soil.SoilWater.Get("ll15_dep");
-                for (int j = 0; j < SWDep.Length; j++)
+                rz.PotSWUptake = new double[rz.Soil.Thickness.Length];
+                for (int i = 0; i < rz.Soil.Thickness.Length; i++)
                 {
-                    //only use 1 paddock to calculate sw_demand for testing
-//                    if (i == 0)
-                        PotSWUptake[i][j] = Math.Max(0.0, RootProportion(j, RootSystem.Zones[i].RootDepth, RootSystem.Zones[i].dlayer) * RootSystem.Zones[i].kl[j] * (SWDep[j] - LL15Dep[j])); //* RootSystem.Zones[i].ZoneArea;
-//                    else
-//                        PotSWUptake[i][j] = 0;
+                    rz.PotSWUptake[i] = Math.Max(0.0, RootProportion(i, rz.RootDepth, rz.Soil.Thickness) * rz.Soil.KL(Name)[i] * (rz.Soil.SW[i] * rz.Soil.Thickness[i] - rz.Soil.LL15[i] * rz.Soil.Thickness[i])); //* rootSystem.Zones[i].Zone.Area;
                 }
+                TotPotSWUptake += Utility.Math.Sum(rz.PotSWUptake);
             }
 
-            foreach (double[] i in PotSWUptake)
-                foreach (double d in i)
-                    TotPotSWUptake += d;
-            RootSystem.SWDemand = TotPotSWUptake;
-            sw_demand = TotPotSWUptake;
+            rootSystem.SWDemand = TotPotSWUptake / rootSystem.RootZones.Count; // is the average of all root systems correct?
+            sw_demand = TotPotSWUptake; //TODO - do we still need this? think another module might want it
         }
 
         private double RootProportion(int layer, double root_depth, double[] dlayer)

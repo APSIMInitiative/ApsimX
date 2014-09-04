@@ -602,6 +602,7 @@ namespace Models
             SetupCropTypes("broccoli", "Crop");
             SetupCropTypes("tree", "Tree");
             SetupCropTypes("eucalyptus", "Tree");
+            SetupCropTypes("SimpleTree", "Tree");
             SetupCropTypes("oilpalm", "Tree");
             SetupCropTypes("oilmallee", "Tree");
             SetupCropTypes("globulus", "Tree");

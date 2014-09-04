@@ -6,6 +6,13 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Minimize the values of the children of this node
+    /// </summary>
+    /// \pre All children have to contain a public function "Value"
+    /// \retval Minimum value of all children of this node. Return 999999999 if no child.
+    /// <remarks>
+    /// </remarks>
     [Serializable]
     [Description("Returns the Minimum value of all children functions")]
     public class MinimumFunction : Function
