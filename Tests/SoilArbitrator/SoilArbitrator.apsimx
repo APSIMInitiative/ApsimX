@@ -27,7 +27,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -665,6 +665,38 @@
         <sw_demand>185.25</sw_demand>
         <zones>Field, Field1, Field2</zones>
       </SimpleTree>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1459.76859753121</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -677,7 +709,7 @@
         <Name>Report1</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1290,6 +1322,38 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1459.76859753121</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1302,7 +1366,7 @@
         <Name>Report2</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1915,6 +1979,38 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1459.76859753121</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1944,7 +2040,7 @@
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Calculations.Script.TotalSW</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1964,7 +2060,7 @@
         </X>
         <Y>
           <TableName>Report1</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Calculations.Script.TotalSW</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1984,7 +2080,7 @@
         </X>
         <Y>
           <TableName>Report2</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Calculations.Script.TotalSW</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2016,7 +2112,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2381,17 +2477,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0160062702773189</double>
-            <double>0.87765431668920957</double>
-            <double>0.88458982770762906</double>
-            <double>0.88767973439477177</double>
-            <double>0.76905920783109816</double>
-            <double>0.44947798046044757</double>
-            <double>0.26970238799834761</double>
-            <double>0.21976288518293344</double>
-            <double>0.1598321594690432</double>
-            <double>0.129865765312123</double>
-            <double>0.11987658315187721</double>
+            <double>1.0161109229872669</double>
+            <double>0.87774405657643362</double>
+            <double>0.884623770902848</double>
+            <double>0.88770507765831486</double>
+            <double>0.76907736423819484</double>
+            <double>0.44949086344187156</double>
+            <double>0.26971186177095435</double>
+            <double>0.21976972485141727</double>
+            <double>0.15983709768294682</double>
+            <double>0.12986936125967771</double>
+            <double>0.11987913890338475</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -2628,6 +2724,38 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1495.5</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -2640,7 +2768,7 @@
         <Name>Report1</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3005,17 +3133,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0160062702773189</double>
-            <double>0.87765431668920957</double>
-            <double>0.88458982770762906</double>
-            <double>0.88767973439477177</double>
-            <double>0.76905920783109816</double>
-            <double>0.44947798046044757</double>
-            <double>0.26970238799834761</double>
-            <double>0.21976288518293344</double>
-            <double>0.1598321594690432</double>
-            <double>0.129865765312123</double>
-            <double>0.11987658315187721</double>
+            <double>1.0161109229872669</double>
+            <double>0.87774405657643362</double>
+            <double>0.884623770902848</double>
+            <double>0.88770507765831486</double>
+            <double>0.76907736423819484</double>
+            <double>0.44949086344187156</double>
+            <double>0.26971186177095435</double>
+            <double>0.21976972485141727</double>
+            <double>0.15983709768294682</double>
+            <double>0.12986936125967771</double>
+            <double>0.11987913890338475</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -3252,6 +3380,38 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1495.5</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -3264,7 +3424,7 @@
         <Name>Report2</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3629,17 +3789,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0160062702773189</double>
-            <double>0.87765431668920957</double>
-            <double>0.88458982770762906</double>
-            <double>0.88767973439477177</double>
-            <double>0.76905920783109816</double>
-            <double>0.44947798046044757</double>
-            <double>0.26970238799834761</double>
-            <double>0.21976288518293344</double>
-            <double>0.1598321594690432</double>
-            <double>0.129865765312123</double>
-            <double>0.11987658315187721</double>
+            <double>1.0161109229872669</double>
+            <double>0.87774405657643362</double>
+            <double>0.884623770902848</double>
+            <double>0.88770507765831486</double>
+            <double>0.76907736423819484</double>
+            <double>0.44949086344187156</double>
+            <double>0.26971186177095435</double>
+            <double>0.21976972485141727</double>
+            <double>0.15983709768294682</double>
+            <double>0.12986936125967771</double>
+            <double>0.11987913890338475</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -3876,6 +4036,38 @@
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1495.5</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -4018,7 +4210,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Calculations].Script.TotalSW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -4383,17 +4575,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0169509758943851</double>
-            <double>0.87765713587417193</double>
-            <double>0.88459237225935472</double>
-            <double>0.88768120095368053</double>
-            <double>0.76905989566238464</double>
-            <double>0.44947839081988022</double>
-            <double>0.26970263177627</double>
-            <double>0.21976307605096898</double>
-            <double>0.15983229181011205</double>
-            <double>0.12986586679045192</double>
-            <double>0.11987667089778881</double>
+            <double>1.0170558538794485</double>
+            <double>0.87774714418602529</double>
+            <double>0.88462660983142827</double>
+            <double>0.88770673024289681</double>
+            <double>0.7690781467843717</double>
+            <double>0.44949133417492959</double>
+            <double>0.26971214340259569</double>
+            <double>0.21976994657380405</double>
+            <double>0.15983725205263646</double>
+            <double>0.12986947993014122</double>
+            <double>0.11987924161412485</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -4653,9 +4845,41 @@
         </MicroClimate>
         <CoverLive>0.5</CoverLive>
         <plant_status>alive</plant_status>
-        <sw_demand>12.35</sw_demand>
+        <sw_demand>61.75</sw_demand>
         <zones>Field</zones>
       </SimpleTree>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <TotalSW>1459.76859753121</TotalSW>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+
+namespace Models
+{ 
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double TotalSW{get;set;}
+       	
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagement(object sender, EventArgs e)
+		{
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -4685,50 +4909,10 @@
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Calculations.Script.TotalSW</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series2</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series3</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
