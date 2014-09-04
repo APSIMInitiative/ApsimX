@@ -464,12 +464,12 @@
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>3.5101020976030179</double>
-              <double>2.4879954271388214</double>
-              <double>1.1997393097205793</double>
-              <double>1.0306660134143557</double>
-              <double>0.47032657102013192</double>
-              <double>0.47012631777531444</double>
+              <double>3.5120417868354008</double>
+              <double>2.4888011122565477</double>
+              <double>1.1998615131698891</double>
+              <double>1.0306721761582318</double>
+              <double>0.47032752096862684</double>
+              <double>0.47012738804856147</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -619,6 +619,33 @@
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0.0129166147309298</demandWater>
+          <uptakeWater>
+            <double>0.003447952290714467</double>
+            <double>0.0042380508642951391</double>
+            <double>0.0042113230390617559</double>
+            <double>0.0010192885368584381</double>
+            <double>0</double>
+            <double>0</double>
+          </uptakeWater>
+          <demandNitrogen>0</demandNitrogen>
+          <uptakeNitrogen>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </uptakeNitrogen>
+          <uptakeNitrogenPropNO3>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </uptakeNitrogenPropNO3>
         </Plant>
         <Manager>
           <Name>PotatoSowingRule</Name>
@@ -1840,7 +1867,7 @@ namespace Models
               <ShowInLegend>false</ShowInLegend>
               <SplitOn>Simulation</SplitOn>
             </Series>
-            <LegendPosition>TopLeft</LegendPosition>
+            <LegendPosition>BottomRight</LegendPosition>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -2116,7 +2143,7 @@ namespace Models
               <ShowInLegend>false</ShowInLegend>
               <SplitOn>Simulation</SplitOn>
             </Series>
-            <LegendPosition>TopLeft</LegendPosition>
+            <LegendPosition>BottomRight</LegendPosition>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -2406,7 +2433,7 @@ namespace Models
               <ShowInLegend>false</ShowInLegend>
               <SplitOn>Simulation</SplitOn>
             </Series>
-            <LegendPosition>TopLeft</LegendPosition>
+            <LegendPosition>BottomRight</LegendPosition>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -2862,11 +2889,21 @@ namespace Models
         </Report>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
+          <_standing_fraction>
+            <double>0</double>
+          </_standing_fraction>
           <c_fract>0.4</c_fract>
+          <pond_active>no</pond_active>
+          <report_additions>no</report_additions>
+          <report_removals>no</report_removals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>2000</mass>
@@ -2931,6 +2968,11 @@ namespace Models
             <Action>Irrigation.Apply(25);</Action>
           </Operation>
         </Operations>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -4278,6 +4320,9 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0</demandWater>
+          <demandNitrogen>0</demandNitrogen>
         </Plant>
         <Manager>
           <Name>PotatoSowingRule</Name>
@@ -6637,6 +6682,11 @@ namespace Models
         }
 				]]></Code>
         </Manager>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -8027,6 +8077,9 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0</demandWater>
+          <demandNitrogen>0</demandNitrogen>
         </Plant>
         <Manager>
           <Name>PotatoSowingRule</Name>
@@ -10310,6 +10363,11 @@ namespace Models
         }
 				]]></Code>
         </Manager>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11738,6 +11796,9 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0</demandWater>
+          <demandNitrogen>0</demandNitrogen>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -14032,6 +14093,11 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -15475,6 +15541,9 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0</demandWater>
+          <demandNitrogen>0</demandNitrogen>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -17855,6 +17924,11 @@ namespace Models
         }
 				]]></Code>
         </Manager>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -19332,6 +19406,9 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <PlantTranspiration>0</PlantTranspiration>
+          <demandWater>0</demandWater>
+          <demandNitrogen>0</demandNitrogen>
         </Plant>
         <Manager>
           <Name>PotatoHarvestRule</Name>
@@ -22308,6 +22385,11 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Arbitrator>
+          <Name>Arbitrator</Name>
+          <ArbitrationMethod>Old</ArbitrationMethod>
+          <NutrientUptakeMethod>2</NutrientUptakeMethod>
+        </Arbitrator>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>

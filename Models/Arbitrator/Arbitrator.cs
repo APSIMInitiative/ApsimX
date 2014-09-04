@@ -28,6 +28,9 @@ namespace Models.Arbitrator
         [Link]
         Summary Summary = null;
 
+        [Link]
+        Clock Clock = null;
+
         ICrop2[] plants;
 
         /// <summary>
@@ -667,21 +670,24 @@ namespace Models.Arbitrator
             // calculate the potentially available water and sum the demand
             for (int i = 0; i < plants.Length; i++)
             {
-                demandWater[i] = plants[i].demandWater; // note that eventually demandWater will be calculated above in the EnergyArbitration 
-                tempSupply = 0.0;
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+                if (Plants[i].PlantEmerged == true)
                 {
-                    // this step gives the proportion of the root zone that is this layer
-                    potentialSupplyWaterPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
-                    tempSupply += potentialSupplyWaterPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
-                }
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
-                {
-                    // if the potential supply calculated above is greater than demand then scale it back - note that this is still a potential supply as a solo crop
-                    potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandWater[i], tempSupply, 0.0));
+                    demandWater[i] = plants[i].demandWater; // note that eventually demandWater will be calculated above in the EnergyArbitration 
+                    tempSupply = 0.0;
+                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+                    {
+                        // this step gives the proportion of the root zone that is this layer
+                        potentialSupplyWaterPlantLayer[i, j] = plants[i].RootProperties.RootExplorationByLayer[j] * plants[i].RootProperties.KL[j] * Math.Max(0.0, (Soil.SoilWater.sw_dep[j] - plants[i].RootProperties.LowerLimitDep[j]));
+                        //SWSupply[layer] = Math.Max(0.0, * RootProportion(layer, Depth) * Soil.KL(this.Plant.Name)[layer] * KLModifier.Value * (Soil.SoilWater.sw_dep[layer] - Soil.LL(this.Plant.Name)[layer] * Soil.SoilWater.dlayer[layer]) );
+                        tempSupply += potentialSupplyWaterPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
+                    }
+                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+                    {
+                        // if the potential supply calculated above is greater than demand then scale it back - note that this is still a potential supply as a solo crop
+                        potentialSupplyWaterPlantLayer[i, j] = potentialSupplyWaterPlantLayer[i, j] * Math.Min(1.0, Utility.Math.Divide(demandWater[i], tempSupply, 0.0));
+                    }
                 }
             }
-
             // calculate the maximum amount of water available in each layer
             double[] totalAvailableWater;
             totalAvailableWater = new double[Soil.SoilWater.dlayer.Length];
@@ -706,17 +712,19 @@ namespace Models.Arbitrator
 
             for (int i = 0; i < plants.Length; i++)
             {
-                double[] dummyArray = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)           // cannot set a particular dimension from a 2D arrary into a 1D array directly so need a temporary variable
+                if (Plants[i].PlantEmerged == true)
                 {
-                    dummyArray[j] = uptakeWaterPlantLayer[i, j];
+                    double[] dummyArray = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing
+                    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)           // cannot set a particular dimension from a 2D arrary into a 1D array directly so need a temporary variable
+                    {
+                        dummyArray[j] = uptakeWaterPlantLayer[i, j];
+                    }
+                    //tempDepthArray.CopyTo(plants[i].uptakeWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
+                    plants[i].uptakeWater = dummyArray;
+                    // debugging into SummaryFile
+                    //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].uptakeWater(3) to  " + plants[i].uptakeWater[3].ToString());
                 }
-                //tempDepthArray.CopyTo(plants[i].uptakeWater, 0);  // need to use this because of the thing in .NET about pointers not values being set for arrays - only needed if the array is not newly created
-                plants[i].uptakeWater = dummyArray;
-                // debugging into SummaryFile
-                //Summary.WriteMessage(FullPath, "Arbitrator is setting the value of plants[" + i.ToString() + "].uptakeWater(3) to  " + plants[i].uptakeWater[3].ToString());
             }
-
             // send the change in soil water to the soil water module
             Soil.SoilWater.dlt_sw_dep = dltSWdep;
         }
@@ -762,7 +770,8 @@ namespace Models.Arbitrator
                     }
                     else if (NutrientUptakeMethod == 2)
                     {
-                        //Fixme.  The PMF implementation was not adjusting N Uptake in partially rooted layer.  I have left it as this for testing but will need to introduce it soon.
+                     //I blocked the N arbitration out to get water working correctly with the arbitrator first.
+                        /*   //Fixme.  The PMF implementation was not adjusting N Uptake in partially rooted layer.  I have left it as this for testing but will need to introduce it soon.
                         //method from PMF - based on concentration  
                         //HEB.  I have rewritten this section of code to make it function identically to current PMF implementation for purposes of testing
 
@@ -788,6 +797,7 @@ namespace Models.Arbitrator
                             potentialSupplyPropNO3PlantLayer[i, j] = 1;
                         else
                             potentialSupplyPropNO3PlantLayer[i, j] = tempNO3OnlySupply / potentialSupplyNitrogenPlantLayer[i, j];
+                    */
                     }
                     else if (NutrientUptakeMethod == 3)
                     {

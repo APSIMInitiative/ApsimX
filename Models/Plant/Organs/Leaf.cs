@@ -25,6 +25,8 @@ namespace Models.PMF.Organs
         public Structure Structure = null;
         [Link]
         public Phenology Phenology = null;
+        [Link]
+        public Clock Clock = null;
         #endregion
 
         #region Structures
@@ -82,7 +84,11 @@ namespace Models.PMF.Organs
 
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
-
+        public double GsMax { get; set; }
+        public double R50 { get; set; }
+        public double Emissivity { get; set; }
+        public double Albido { get; set; }
+        
         #endregion
 
         public override void OnLoaded()
@@ -308,7 +314,13 @@ namespace Models.PMF.Organs
         public override double FRGR { get { return Photosynthesis.FRGR; } }
         
         [Units("0-1")]
-        public double CoverGreen { get { return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); } }
+        public double CoverGreen 
+        { 
+            get 
+            {
+                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); 
+            } 
+        }
 
         [Units("0-1")]
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
@@ -322,6 +334,10 @@ namespace Models.PMF.Organs
 
         [Description("This needs to be here so soilwater can get hight from leaf")]
         public double Height { get { return Structure.Height; } }
+
+        [Description("This needs to be here so soilwater can get hight from leaf")]
+        public double Depth { get { return Structure.Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+
 
         [Units("mm^2/g")]
         public double SpecificArea
@@ -526,16 +542,22 @@ namespace Models.PMF.Organs
         public double PotentialGrowth { get { return DMDemand.Structural; } }
 
         [Units("mm")]
-        public double Transpiration { get { return WaterAllocation; } }
+        public double Transpiration { get { return Utility.Math.Sum(Plant.uptakeWater); } }
 
         [Units("0-1")]
         public double Fw
         {
             get
             {
-                double F = 0;
+                /*double F = 0;
                 if (WaterDemand > 0)
                     F = WaterAllocation / WaterDemand;
+                else
+                    F = 1;
+                return F;*/
+                double F = 0;
+                if (Plant.demandWater > 0)
+                    F = Utility.Math.Sum(Plant.uptakeWater) / Plant.demandWater;
                 else
                     F = 1;
                 return F;
@@ -700,7 +722,7 @@ namespace Models.PMF.Organs
                 L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
 
             Structure.UpdateHeight();
-
+            UpdateCanopyData();
             PublishNewCanopyEvent();
 
             //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
@@ -731,7 +753,16 @@ namespace Models.PMF.Organs
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
             return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
-
+        public void UpdateCanopyData()
+        {
+            Plant.CanopyProperties.CoverGreen = CoverGreen;
+            Plant.CanopyProperties.CoverTot = CoverTotal;
+            Plant.CanopyProperties.CanopyDepth = Depth;
+            Plant.CanopyProperties.CanopyHeight = Height;
+            Plant.CanopyProperties.LAIGreen = LAI;
+            Plant.CanopyProperties.LAItot = LAI + LAIDead;
+            Plant.CanopyProperties.Frgr = FRGR;
+        }
         #endregion
 
         #region Arbitrator methods
@@ -1016,12 +1047,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Plant.PotentialEP;
+                return Plant.demandWater;
             }
-            set
-            {
-                Plant.PotentialEP = value;
-            }
+            //set
+            //{
+            //    Plant.PotentialEP = value;
+            //}
         }
         [XmlIgnore]
         public override double WaterAllocation { get; set;}

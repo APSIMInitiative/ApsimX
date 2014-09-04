@@ -61,5 +61,17 @@ namespace Models.Core
         /// </summary>
         string[] CultivarNames { get; }
         // need to add in the uptake/supply in layers - crop needs this for root growth
+
+        /// <summary>
+        /// test is plant is sown
+        /// </summary>
+        bool PlantInGround { get; }
+
+        /// <summary>
+        /// test is plant has emerged
+        /// </summary>
+        bool PlantEmerged { get; }
+        // need to add in the uptake/supply in layers - crop needs this for root growth
+
         }
 }
