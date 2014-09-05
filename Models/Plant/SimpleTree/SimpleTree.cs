@@ -100,28 +100,6 @@ namespace Models.PMF
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
- /*           for (int i = 0; i < NumPlots; i++)
-            {
-                Zone Currentzone = (Zone)this.Parent.Find(zoneList[i].Trim());
-                // removing zone properties for now
-                //   Component zoneProps = (Component)MyPaddock.Parent.ChildPaddocks[i].LinkByName("zoneProps");
-                rootSystem.Zones[i] = new RootZone();
-                rootSystem.Zones[i].Zone.Area = (double)this.Parent.Get("Area"); //get the zone area from parent (zone)
-                //   if (!zoneProps.Get("zoneArea", out rootSystem.Zones[i].Zone.Area))
-                //       throw new Exception("Could not find zoneProps component in zone " + MyPaddock.Parent.ChildPaddocks[i].Name);
-                Soil = (Soil)Currentzone.Find(typeof(Soil));
-                rootSystem.Zones[i].Soil.Thickness = (double[])Soil.SoilWater.Get("dlayer");
-                rootSystem.Zones[i].Zone.Name = Currentzone.Name;
-                rootSystem.Zones[i].RootDepth = 550;
-                rootSystem.Zones[i].kl = new double[rootSystem.Zones[i].Soil.Thickness.Length];
-                rootSystem.Zones[i].ll = new double[rootSystem.Zones[i].Soil.Thickness.Length];
-
-                for (int j = 0; j < rootSystem.Zones[i].Soil.Thickness.Length; j++)
-                {
-                    rootSystem.Zones[i].kl[j] = 0.02;
-                    rootSystem.Zones[i].ll[j] = 0.15;
-                }
-            }*/
             GetPotSWUptake();
         }
 

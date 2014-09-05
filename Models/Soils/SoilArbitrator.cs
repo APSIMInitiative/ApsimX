@@ -80,15 +80,19 @@ namespace Models.Soils
                     //sw demand for the crop = total demand for sw by all crops in this zone * relative strength for this crop in this zone
                     CropSWDemand[i] = PaddockSWDemands[ZonesInField[i].Name] * ZonesInField[i].Parent.SWStrength[ZonesInField[i].Zone.Name];//(double)RootZones[i].;
                 }
-                double[,] RelKLStrength = CalcRelKLStrength(ZonesInField, CropSWDemand);
-                double[,] RelSWLayerStrength = CalcRelSWLayerStrength(ZonesInField, SWDep, NumLayers);
-                double[,] SWSupply = CalcSWSupply(ZonesInField, SWDep, NumLayers);
+                double[,] RelKLStrength = CalcRelKLStrength(ZonesInField, CropSWDemand);                //Relative kl strength for each crop in each layer of a field/zone
+                double[,] RelSWLayerStrength = CalcRelSWLayerStrength(ZonesInField, SWDep, NumLayers);  //Relative sw strength for each crop in each layer of a field/zone
+                double[,] SWSupply = CalcSWSupply(ZonesInField, SWDep, NumLayers);                      //sw available per crop/layer
 
-                double[,] LayerUptake = new double[ZonesInField.Count(), NumLayers];
-                double[] LastCropSWDemand;
+                double[,] LayerUptake = new double[ZonesInField.Count(), NumLayers];                    //actual sw uptake per crop for each layer
+                double[] LastCropSWDemand;  //These two are use to determine when an equilibrium has been reached
                 double[,] LastSWSupply;
 
-                //loop until we reach an equilibrium
+                /* Loop until we reach an equilibrium.
+                 *  A crop may use all the water available in one layer due to the prescence of another crop
+                 *  but still have extra water available in another layer so we loop until either all the water is used
+                 *  or the crop gets its full demand.
+                 */
                 do
                 {
                     LastCropSWDemand = CropSWDemand;
@@ -101,13 +105,14 @@ namespace Models.Soils
                         {
                             if (Utility.Math.Sum(CropSWDemand) < Utility.Math.Sum(SWSupply))
                             {
-                                LayerUptake[i, j] = CropSWDemand[i] * RelSWLayerStrength[i, j];
+                                LayerUptake[i, j] = CropSWDemand[i] * RelSWLayerStrength[i, j] / ZonesInField[i].Parent.RootZones.Count;
                             }
                             else
-                                LayerUptake[i, j] = SWSupply[i, j] * RelKLStrength[j, i] * RootProportion(j, Zone.RootDepth, Zone.Soil.Thickness);
+                                LayerUptake[i, j] = SWSupply[i, j] * RelKLStrength[j, i] * RootProportion(j, Zone.RootDepth, Zone.Soil.Thickness) / ZonesInField[i].Parent.RootZones.Count;
 
                             if (LayerUptake[i, j] < 0)
                                 throw new ApsimXException(this.Name, "Layer uptake should not be negative");
+
                         }
                     }
 
@@ -129,6 +134,7 @@ namespace Models.Soils
                         SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
                     }
 
+                    //TODO: need to feed uptake back to crop
                    Soil.SoilWater.sw_dep = SWDep;
                 } while (Utility.Math.Sum(LastCropSWDemand) != Utility.Math.Sum(CropSWDemand) && Utility.Math.Sum(LastSWSupply) != Utility.Math.Sum(SWSupply));
             }
@@ -245,7 +251,7 @@ namespace Models.Soils
                 for (int j = 0; j < KLArray.Length; j++) //use those summed kl's to calculate the relative kl strength for each crop in the layer
                 {
                     if (i <= LowestRootLayer[j] && KLArray[j][i] > 0)
-                        RelKLStrength[i, j] = KLArray[j][i] / KLSum;
+                        RelKLStrength[i, j] = KLArray[j][i] / KLSum / RootZones[j].Parent.RootZones.Count;
                     else
                         RelKLStrength[i, j] = 0;
                 }
