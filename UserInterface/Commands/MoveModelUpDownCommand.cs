@@ -31,7 +31,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            Model parent = ModelToMove.Parent;
+            Model parent = ModelToMove.Parent as Model;
 
             int modelIndex = parent.Models.IndexOf(ModelToMove);
 
@@ -55,7 +55,7 @@ namespace UserInterface.Commands
         {
             if (ModelWasMoved)
             {
-                Model parent = ModelToMove.Parent;
+                Model parent = ModelToMove.Parent as Model;
                 int modelIndex = parent.Models.IndexOf(ModelToMove);
                 if (MoveUp)
                     MoveModelDown(CommandHistory, parent, modelIndex);

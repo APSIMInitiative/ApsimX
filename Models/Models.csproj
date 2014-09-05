@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="AgPasture.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
+    <Compile Include="Core\Apsim.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\SummaryAttribute.cs" />
     <Compile Include="Core\Attributes\DisplayAttribute.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Core\Attributes\EventSubscribeAttribute.cs" />
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
+    <Compile Include="Core\IModel.cs" />
     <Compile Include="Core\ICrop2.cs" />
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />

@@ -272,7 +272,7 @@ namespace UserInterface.Presenters
         {
             Model parent = Graph;
             while (parent != null && Array.IndexOf(types, parent.GetType()) == -1)
-                parent = parent.Parent;
+                parent = parent.Parent as Model;
             return parent;
         }
 

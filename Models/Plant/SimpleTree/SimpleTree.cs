@@ -97,7 +97,7 @@ namespace Models.PMF
             foreach (string zone in zoneList)
             {
                 RootZone currentZone = new RootZone();
-                currentZone.Zone = (Zone)this.Parent.Find(zone.Trim());
+                currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
                 if (currentZone.Zone == null)
                     throw new ApsimXException(this.FullPath, "Could not find zone " + zone);
                 currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));

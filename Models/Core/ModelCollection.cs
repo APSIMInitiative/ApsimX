@@ -277,7 +277,7 @@ namespace Models.Core
             }
 
             List<Model> siblings = new List<Model>();
-            foreach (Model child in relativeTo.Parent.Children.All)
+            foreach (Model child in relativeTo.Parent.Models)
             {
                 if (child != relativeTo)
                 {
