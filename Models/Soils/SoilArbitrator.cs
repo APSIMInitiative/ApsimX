@@ -9,6 +9,9 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    /// <summary>
+    /// A class representing a root system.
+    /// </summary>
     public class RootSystem
     {
         public double SWDemand;
@@ -16,14 +19,38 @@ namespace Models.Soils
         public List<RootZone> RootZones;
     }
 
+    /// <summary>
+    /// A class representing a root zone in a field
+    /// </summary>
     public class RootZone
     {
+        /// <summary>
+        /// The parent root system
+        /// </summary>
         public RootSystem Parent;
+        /// <summary>
+        /// Name of the plant that owns this root zone.
+        /// </summary>
         public string Name;
+        /// <summary>
+        /// The field/zone this root zone is in.
+        /// </summary>
         public Zone Zone;
+        /// <summary>
+        /// Reference to the soil in the Zone for convienience.
+        /// </summary>
         public Soil Soil;
+        /// <summary>
+        /// Depth of the roots.
+        /// </summary>
         public double RootDepth;
+        /// <summary>
+        /// Root length density
+        /// </summary>
         public double RootLengthDensity;
+        /// <summary>
+        /// An array that holds the potential sw uptake per soil layer.
+        /// </summary>
         public double[] PotSWUptake;
     }
 
@@ -38,7 +65,9 @@ namespace Models.Soils
         // Initialize IFormatProvider to print matrix/vector data (debug - allows matrices to be printed properly)
         CultureInfo formatProvider = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 
-        // The following event handler will be called once at the beginning of the simulation
+        /// <summary>
+        /// The following event handler will be called once at the beginning of the simulation
+        /// </summary>
         public override void OnSimulationCommencing()
         {
             formatProvider.TextInfo.ListSeparator = " ";
