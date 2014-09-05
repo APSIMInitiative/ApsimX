@@ -320,7 +320,7 @@ namespace Models.Core
             Model obj = model;
             while (obj != null && !(obj is Zone) && !(obj is Simulation))
             {
-                obj = obj.Parent;
+                obj = obj.Parent as Model;
             }
             if (obj == null)
                 throw new ApsimXException(model.FullPath, "Cannot find models to connect events to");

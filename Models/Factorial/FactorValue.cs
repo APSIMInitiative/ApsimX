@@ -132,7 +132,7 @@ namespace Models.Factorial
             if (modelToReplace == null)
                 throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
 
-            modelToReplace.Parent.Children.Replace(modelToReplace, newModel);
+            (modelToReplace.Parent as Model).Children.Replace(modelToReplace, newModel);
         }
 
         /// <summary>

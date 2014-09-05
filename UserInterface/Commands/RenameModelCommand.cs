@@ -23,7 +23,7 @@ namespace UserInterface.Commands
 
             // Set the new name.
             this.modelToRename.Name = NewName;
-            this.modelToRename.Parent.Children.EnsureNameIsUnique(this.modelToRename);
+            (this.modelToRename.Parent as Model).Children.EnsureNameIsUnique(this.modelToRename);
             CommandHistory.InvokeModelStructureChanged(ParentModelPath);
         }
 
