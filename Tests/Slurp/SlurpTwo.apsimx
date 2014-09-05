@@ -485,6 +485,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp</Name>
+        <CropType>Slurp</CropType>
         <localLAIGreen>5</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
@@ -1105,6 +1106,7 @@ namespace Models
       </Manager>
       <Slurp>
         <Name>Slurp1</Name>
+        <CropType>Slurp</CropType>
         <localLAIGreen>0</localLAIGreen>
         <localLAItot>5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>
@@ -1121,6 +1123,7 @@ namespace Models
       </Slurp>
       <Slurp>
         <Name>Slurp2</Name>
+        <CropType>Slurp</CropType>
         <localLAIGreen>0</localLAIGreen>
         <localLAItot>7.5</localLAItot>
         <localLightExtinction>0.6</localLightExtinction>

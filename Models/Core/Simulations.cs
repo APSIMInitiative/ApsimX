@@ -240,7 +240,7 @@ namespace Models.Core
         {
             Model m = model;
             while (m != null && m.Parent != null && !(m is Simulations))
-                m = m.Parent;
+                m = m.Parent as Model;
 
             return m as Simulations;
         }

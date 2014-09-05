@@ -72,7 +72,7 @@ namespace Models.PMF
 
 
     [Serializable]
-    public class Plant : ModelCollectionFromResource, ICrop
+    public class Plant : ModelCollectionFromResource, ICrop2
     {
         #region Class links and lists
         [Link] ISummary Summary = null;
@@ -80,6 +80,9 @@ namespace Models.PMF
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
         [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         [Link(IsOptional=true)] public Structure Structure = null;
+        [Link] Soils.Soil Soil = null;
+        [Link(IsOptional=true)] public Leaf Leaf = null;
+        [Link(IsOptional=true)] public Root Root = null;
         #endregion
 
         #region Class properties and fields
@@ -107,6 +110,8 @@ namespace Models.PMF
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
+        private CanopyProperties LocalCanopyData2;
+        private RootProperties LocalRootData;
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
@@ -179,22 +184,91 @@ namespace Models.PMF
         /// </summary>
         [XmlIgnore]
         public double PotentialEP {get; set;}
+
+        [XmlIgnore]
+        public double WaterSupplyDemandRatio
+        {
+            get
+            {
+                double F;
+                if (demandWater > 0)
+                    F = Utility.Math.Sum(uptakeWater) / demandWater;
+                else
+                    F = 1;
+                return F;
+            }
+        }
+        [XmlIgnore]
+        [Description("Number of plants per meter2")]
+        [Units("/m2")]
+        public double Population { get; set; }
+        public double PlantTranspiration { get; set; }
+        #endregion
+
+        #region Interface properties
+        /// <summary>
+        /// Provides canopy data to Arbitrator.
+        /// </summary>
+        public CanopyProperties CanopyProperties { get { return LocalCanopyData2; } }
+        /// <summary>
+        /// Provides root data to Arbitrator.
+        /// </summary>
+        public RootProperties RootProperties { get { return LocalRootData; } }
+        /// <summary>
+        /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
+        /// </summary>
+        public double demandWater { get; set; }
+        /// <summary>
+        /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
+        /// </summary>
+        public double[] uptakeWater { get; set; }
+        /// <summary>
+        /// Crop calculates potentialNitrogenDemand after getting its water allocation
+        /// </summary>
+        public double demandNitrogen { get; set; }
+        /// <summary>
+        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
+        /// </summary>
+        public double[] uptakeNitrogen { get; set; }
+        /// <summary>
+        /// The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4
+        /// </summary>
+        public double[] uptakeNitrogenPropNO3 { get;  set; }
+        /// <summary>
+        /// The initial value of the extent to which the roots have penetrated the soil layer (0-1)
+        /// </summary>
+        [XmlIgnore] public double[] localRootExplorationByLayer { get; set; }
+        /// <summary>
+        /// The initial value of the root length densities for each soil layer (mm/mm3)
+        /// </summary>
+        [XmlIgnore] public double[] localRootLengthDensityByVolume { get; set; }
         /// <summary>
         /// Is the plant in the ground?
         /// </summary>
-        public bool InGround
+        [XmlIgnore]
+        public bool PlantInGround
         {
             get
             {
                 return SowingData != null;
             }
         }
+        /// <summary>
+        /// Test if the plant has emerged
+        /// </summary>
         [XmlIgnore]
-        public double WaterSupplyDemandRatio { get; private set; }
-        [XmlIgnore]
-        [Description("Number of plants per meter2")]
-        [Units("/m2")]
-        public double Population { get; set; }
+        public bool PlantEmerged
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Emerged;
+                else
+                    return true;
+            }
+        }
+
+
         #endregion
 
         #region Class Events
@@ -224,8 +298,7 @@ namespace Models.PMF
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
 
-            //Set up CanopyData type
-            LocalCanopyData = new NewCanopyType();
+
 
             // Invoke a sowing event.
             if (Sowing != null)
@@ -312,7 +385,7 @@ namespace Models.PMF
         private void Clear()
         {
             SowingData = null;
-            WaterSupplyDemandRatio = 0;
+            //WaterSupplyDemandRatio = 0;
             Population = 0;
             if (Structure != null)
                Structure.Clear();
@@ -343,6 +416,7 @@ namespace Models.PMF
             {
                 o.Clear();
             }
+            InitialiseInterfaceTypes();
         }
         /// <summary>
         /// Things that happen when the clock broadcasts DoPlantGrowth Event
@@ -354,17 +428,30 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (InGround)
+            if (PlantInGround)
             {
-                DoPhenology();
-                DoDMSetUp();//Sets organs water limited DM supplys and demands
+                
+                if (Phenology != null)
+                {
+                    DoPhenology();
+                    //if (Phenology.Emerged == true)
+                    //{
+                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                    //}
+                }
+                else
+                {
+                    DoDMSetUp();//Sets organs water limited DM supplys and demands
+                }
             }
         }
 
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
         {
-            if (Phenology != null)
+
+            //Take out water process so arbitrator can do it.
+            /* if (Phenology != null)
                if (Phenology.Emerged == true)
                {
                    DoWater();
@@ -373,35 +460,56 @@ namespace Models.PMF
                 if (InGround == true)
                 {
                     DoWater();
-                }
+                }  */
         }
         
         [EventSubscribe("DoNutrientArbitration")]
         private void OnDoNutrientArbitration(object sender, EventArgs e)
         {
-                 if ((InGround)   && (Arbitrator != null))
-                {
-                    Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                    Arbitrator.DoNutrientDemandSetUp(Organs);
-                    Arbitrator.SetNutrientUptake(Organs);
-                    Arbitrator.DoNutrientAllocations(Organs);
-                    Arbitrator.DoNutrientLimitedGrowth(Organs);
-                }
+            if ((PlantInGround) && (Arbitrator != null))
+            {
+                //if (Phenology != null)
+                //{
+                    //if (Phenology.Emerged == true)
+                    //{
+
+                        Arbitrator.DoWaterLimitedDMAllocations(Organs);
+                        Arbitrator.DoNutrientDemandSetUp(Organs);
+                        Arbitrator.SetNutrientUptake(Organs);
+                        Arbitrator.DoNutrientAllocations(Organs);
+                        Arbitrator.DoNutrientLimitedGrowth(Organs);
+                    //}
+                //}
+                //else
+                //{
+                //    Arbitrator.DoWaterLimitedDMAllocations(Organs);
+                //    Arbitrator.DoNutrientDemandSetUp(Organs);
+                //    Arbitrator.SetNutrientUptake(Organs);
+                //    Arbitrator.DoNutrientAllocations(Organs);
+                //    Arbitrator.DoNutrientLimitedGrowth(Organs);
+                //}
+            }
         }
-        
+
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (InGround)
+            if (PlantInGround)
             {
-                DoActualGrowth();
+                //if (Phenology != null)
+                //{
+                //    if (Phenology.Emerged == true)
+                //        DoActualGrowth();
+                //}
+                //else
+                    DoActualGrowth();
             }
         }
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
-        {
+        //[EventSubscribe("DoPlantGrowth")]
+        //private void OnDoPlantGrowth(object sender, EventArgs e)
+        //{
            //This is an old event handler that needs to be deleted once testing is complete
-        }
+        //}
         #endregion
 
         #region Internal Communications.  Method calls
@@ -432,10 +540,10 @@ namespace Models.PMF
                 Demand += o.WaterDemand;
             }
 
-            if (Demand > 0)
+            /*if (Demand > 0)
                 WaterSupplyDemandRatio = Supply / Demand;
             else
-                WaterSupplyDemandRatio = 1;
+                WaterSupplyDemandRatio = 1;*/
 
             double fraction = 1;
             if (Demand > 0)
@@ -459,6 +567,55 @@ namespace Models.PMF
             foreach (Organ o in Organs)
                 o.DoActualGrowth();
         }
+        private void InitialiseInterfaceTypes()
+        {
+            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
+            uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
+            uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+
+            //Set up CanopyData and root data types
+            LocalCanopyData = new NewCanopyType();
+            LocalCanopyData2 = new CanopyProperties();
+            LocalRootData = new RootProperties();
+
+            CanopyProperties.Name = CropType;
+            CanopyProperties.CoverGreen = 0;
+            CanopyProperties.CoverTot = 0;
+            CanopyProperties.CanopyDepth = 0;
+            CanopyProperties.CanopyHeight = 0;
+            CanopyProperties.LAIGreen = 0;
+            CanopyProperties.LAItot = 0;
+            CanopyProperties.Frgr = 0;
+            if (Leaf != null)
+            {
+                CanopyProperties.MaximumStomatalConductance = Leaf.GsMax;
+                CanopyProperties.HalfSatStomatalConductance = Leaf.R50;
+                CanopyProperties.CanopyEmissivity = Leaf.Emissivity;
+            }
+            else
+            {
+                CanopyProperties.MaximumStomatalConductance = 0;
+                CanopyProperties.HalfSatStomatalConductance = 0;
+                CanopyProperties.CanopyEmissivity = 0;
+            }
+
+            RootProperties.KL = Soil.KL(Name);
+            RootProperties.LowerLimitDep = Soil.LL(Name);
+            RootProperties.RootDepth = 0;
+            RootProperties.MaximumDailyNUptake = 0;
+            RootProperties.KNO3 = Root.KNO3;
+            RootProperties.KNH4 = Root.KNH4;
+
+            localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
+            localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
+
+            demandWater = 0;
+            demandNitrogen = 0;
+
+            RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
+            RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
+        }
+
         #endregion
      }
 }

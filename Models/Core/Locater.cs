@@ -122,7 +122,7 @@ namespace Models.Core
                     Model root = relativeTo;
                     while (root.Parent != null)
                     {
-                        root = root.Parent;
+                        root = root.Parent as Model;
                     }
                     relativeTo = root;
 
@@ -299,7 +299,7 @@ namespace Models.Core
                 do
                 {
                     modelsInScope.AddRange(ModelCollection.Siblings(relativeTo));
-                    relativeTo = relativeTo.Parent;
+                    relativeTo = relativeTo.Parent as Model;
 
                     // Add in the top level model that we stopped on.
                     if (relativeTo != null)

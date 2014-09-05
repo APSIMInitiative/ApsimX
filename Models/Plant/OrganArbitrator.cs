@@ -16,6 +16,9 @@ namespace Models.PMF
         [Link]
         public Plant Plant = null;
 
+        [Link]
+        public Clock Clock = null;
+
         [Description("Select method used for Arbitration")]
         public string NArbitrationOption = "";
         [Description("Select method used for DMArbitration")]
@@ -133,8 +136,17 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.InGround)
-                    return N.TotalPlantDemand;
+                if (Plant.PlantInGround)
+                {
+                    //if (Plant.Phenology != null)
+                    //{
+                    //    if (Plant.Phenology.Emerged == true)
+                            return N.TotalPlantDemand;
+                    //    else return 0;
+                    //}
+                    //else
+                    //return 0.0;
+                }
                 else
                     return 0.0;
             }

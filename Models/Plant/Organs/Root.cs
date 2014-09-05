@@ -98,7 +98,7 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Class Properties
-        private bool isGrowing { get { return (Plant.InGround && Plant.SowingData.Depth < this.Depth); } }
+        private bool isGrowing { get { return (Plant.PlantInGround && Plant.SowingData.Depth < this.Depth); } }
         
         [Units("kg/ha")]
         public double NUptake
@@ -149,7 +149,7 @@ namespace Models.PMF.Organs
             if (SenescenceRate != null) //Default of zero means no senescence
                 _SenescenceRate = SenescenceRate.Value;
 
-            if (Live.Wt == 0)
+          /*  if (Live.Wt == 0)
             {
                 //determine how many layers to put initial DM into.
                 Depth = Plant.SowingData.Depth;
@@ -172,7 +172,7 @@ namespace Models.PMF.Organs
                 }
                
             }
-
+            */
             Length = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 Length += LengthDensity[layer];
@@ -227,6 +227,7 @@ namespace Models.PMF.Organs
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
 
+            UpdateRootProperties();
         }
 
         public override void DoWaterUptake(double Amount)
@@ -243,8 +244,9 @@ namespace Models.PMF.Organs
                 WaterUptake.DeltaWater[layer] = -SWSupply[layer] * FractionUsed;
 
             Uptake = WaterUptake.DeltaWater;
-            if (WaterChanged != null)
-                WaterChanged.Invoke(WaterUptake);
+          //Turning this off so arbitrator can do it
+            //  if (WaterChanged != null)
+          //      WaterChanged.Invoke(WaterUptake);
         }
         private int LayerIndex(double depth)
         {
@@ -295,7 +297,34 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        public void UpdateRootProperties()
+        {
+            //Plant.RootProperties.KL = Soil.KL(Plant.CropType);
+            //Plant.RootProperties.LowerLimitDep = Soil.LL(Plant.CropType);
+            Plant.RootProperties.RootDepth = Depth;
+            Plant.RootProperties.MaximumDailyNUptake = MaxDailyNUptake.Value;
+            
+            double[] RLD = new double[Soil.SoilWater.dlayer.Length];
+                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                    RLD[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.SoilWater.dlayer[i];
+            Plant.RootProperties.RootLengthDensityByVolume = RLD;
+            
+            double[] RootProp = new double[Soil.SoilWater.dlayer.Length];
+                 for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                    RootProp[i] =  RootProportion(i, Depth);
+            Plant.RootProperties.RootExplorationByLayer = RootProp;
 
+            double[] KlAdjusted = new double[Soil.SoilWater.dlayer.Length];
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                KlAdjusted[i] = Soil.KL(this.Plant.Name)[i] * KLModifier.Value;
+            Plant.RootProperties.KL = KlAdjusted;
+
+            double[] LL_dep = new double[Soil.SoilWater.dlayer.Length];
+            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                LL_dep[i] = Soil.LL(this.Plant.Name)[i] * Soil.Thickness[i];
+            Plant.RootProperties.LowerLimitDep = LL_dep;
+   
+        }
         public override void OnSimulationCommencing()
         {
             Clear();
@@ -336,6 +365,25 @@ namespace Models.PMF.Organs
         {
             //Fixme, this can be deleted when arbitrator calculates uptake ?????
             Uptake = new double[Soil.SoilWater.dlayer.Length];
+            
+            Depth = Plant.SowingData.Depth;
+            double AccumulatedDepth = 0;
+            double InitialLayers = 0;
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            {
+                if (AccumulatedDepth < Depth)
+                    InitialLayers += 1;
+                AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+            }
+            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            {
+                if (layer <= InitialLayers - 1)
+                {
+                    //dirstibute root biomass evently through root depth
+                    LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
+                    LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                }
+            }
         }
         #endregion
 
@@ -584,36 +632,39 @@ namespace Models.PMF.Organs
 
        
         [Units("mm")]
-        public override double WaterSupply
+        public override double WaterSupply {get; set;}
+        
+        [Units("mm")]
+        public override double WaterUptake
         {
+            //get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
             get
             {
+                return Utility.Math.Sum(Plant.uptakeWater);
+            }
+        }
+        #endregion
+
+        #region Event handlers
+                [EventSubscribe("DoWaterArbitration")]
+        private void OnDoWaterArbitration(object sender, EventArgs e)
+        {
                 if (SWSupply == null || SWSupply.Length != Soil.SoilWater.dlayer.Length)
                     SWSupply = new double[Soil.SoilWater.dlayer.Length];
-
-                
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
                         SWSupply[layer] = Math.Max(0.0, Soil.KL(this.Plant.Name)[layer] * KLModifier.Value * (Soil.SoilWater.sw_dep[layer] - Soil.LL(this.Plant.Name)[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 
-                return Utility.Math.Sum(SWSupply);
-            }
+                WaterSupply = Utility.Math.Sum(SWSupply);
         }
         
-        [Units("mm")]
-        public override double WaterUptake
-        {
-            get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
-        }
-        #endregion
-
-        #region Event handlers
 
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(WaterUptakesCalculatedType SoilWater)
         {
+        
             // Gets the water uptake for each layer as calculated by an external module (SWIM)
 
             Uptake = new double[Soil.SoilWater.dlayer.Length];

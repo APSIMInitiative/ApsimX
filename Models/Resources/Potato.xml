@@ -1149,6 +1149,10 @@
 		<_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
 		<MaxCover>1</MaxCover>
 		<KDead>0.03</KDead>
+		<GsMax>0.03</GsMax>
+		<R50>200</R50>
+		<Emissivity>0.96</Emissivity>
+		<Albido>0.26</Albido>
 	</Leaf>
 	<GenericAboveGroundOrgan>
 		<Name>Stem</Name>

@@ -55,6 +55,18 @@ namespace Models.PMF.Slurp
         CanopyProperties LocalCanopyData = new CanopyProperties();
 
         /// <summary>
+        /// Is the plant in the ground?
+        /// </summary>
+        [XmlIgnore]
+        public bool PlantInGround { get { return true; } }
+         
+        /// <summary>
+        /// Test if the plant has emerged
+        /// </summary>
+        [XmlIgnore]
+        public bool PlantEmerged { get { return true; } }
+        
+        /// <summary>
         /// The initial value of leaf area index (m2/m2)
         /// </summary>
         [Description("Green LAI (m2/m2)")] public double localLAIGreen { get; set; }

@@ -19,7 +19,7 @@ namespace Models.Core
     /// Base class for all models
     /// </summary>
     [Serializable]
-    public class Model
+    public class Model: IModel
     {
         /// <summary>
         /// The name of the model.
@@ -29,7 +29,7 @@ namespace Models.Core
         /// <summary>
         /// The parent model. null if no parent
         /// </summary>
-        private Model parent = null;
+        private IModel parent = null;
 
         /// <summary>
         /// The events instance
@@ -224,7 +224,7 @@ namespace Models.Core
         /// Gets or sets the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public Model Parent
+        public IModel Parent
         {
             get
             {
@@ -382,7 +382,7 @@ namespace Models.Core
             Model obj = this;
             while (obj.Parent != null && obj.GetType() != t)
             {
-                obj = obj.Parent;
+                obj = obj.Parent as Model;
             }
 
             if (obj == null)
@@ -503,7 +503,7 @@ namespace Models.Core
             List<Model> modelsToNotify = this.Children.AllRecursively;
 
             // Get rid of our parent temporarily as we don't want to serialise that.
-            Models.Core.Model parent = this.Parent;
+            Models.Core.Model parent = this.Parent as Model;
             this.Parent = null;
 
             IFormatter formatter = new BinaryFormatter();
@@ -670,11 +670,11 @@ namespace Models.Core
         private void CalcFullPath()
         {
             this.FullPath = "." + this.Name;
-            Model parent = this.Parent;
+            Model parent = this.Parent as Model;
             while (parent != null)
             {
                 this.FullPath = this.FullPath.Insert(0, "." + parent.Name);
-                parent = parent.Parent;
+                parent = parent.Parent as Model;
             }
 
             if (this.Models != null)
