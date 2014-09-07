@@ -329,90 +329,8 @@ namespace Models.Arbitrator
 
             CalculateLowerBounds(resourceToArbitrate);
             CalculateResource(resourceToArbitrate);
+            CalculateExtractable(resourceToArbitrate);
 
-
-            #region // resource calculation
-
-            // calculate resource 
-            //double tempLowerBoundForResource = Math.Min(plants[0].RootProperties.LowerLimitDep[l], plants[1].RootProperties.LowerLimitDep[l]); 
-
-
-            #endregion
-
-            #region // extractable calculation
-
-            // calculate extractable - for now bounds and forms = 1 - not that because this is across mulitple plants, extractable can > resource
-            for (int p = 0; p < plants.Length; p++)  
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                               * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                               * plants[p].RootProperties.KL[l]                        // later add in zone
-                                                               * resource[p, l, z, b, f];                              // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                                               //* Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - plants[p].RootProperties.LowerLimitDep[l]));   // later add in zone for soil water dep and bounds and figure our how to do form
-                                    extractableByPlant[p] += extractable[p, l, z, b, f];  
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
-                                    if (f == 0)
-                                    {
-                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
-                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                                   * plants[p].RootProperties.KNO3                        // later add in zone
-                                                                   * Soil.SoilNitrogen.no3ppm[l]
-                                                                   * resource[p, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                    }
-                                    else
-                                    {
-                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
-                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                                   * plants[p].RootProperties.KNH4                        // later add in zone
-                                                                   * Soil.SoilNitrogen.nh4ppm[l]
-                                                                   * resource[p, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                    }
-                                    extractableByPlant[p] += extractable[p, l, z, b, f];
-                                }
-                                else
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            // print stuff out
-            if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                string myString = "";
-                for (int p = 0; p < plants.Length; p++)
-                    for (int b = 0; b < bounds; b++)
-                    {
-                        {
-
-                            //myString += Convert.ToInt32(extractable[p, 0, 0, b, 0]) + " ";
-                            myString += (extractable[p, 0, 0, b, 0]) + " ";
-                        }
-                    }
-                Summary.WriteMessage(FullPath, "extractable: " + myString);
-            }
-
-
-            #endregion 
 
             #region // demand distribution calculation
 
@@ -999,8 +917,61 @@ namespace Models.Arbitrator
         }
 
 
-        private void Name1(string resourceToArbitrate)
+        private void CalculateExtractable(string resourceToArbitrate)
         {
+            // calculate extractable - for now bounds and forms = 1 - not that because this is across mulitple plants, extractable can > resource
+            for (int p = 0; p < plants.Length; p++)
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
+                        {
+                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
+                            {
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                               * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                               * plants[p].RootProperties.KL[l]                        // later add in zone
+                                                               * resource[p, l, z, b, f];                              // the usage of 0 instead of p is intended - there is no actual p dimension in resource
+                                    //* Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - plants[p].RootProperties.LowerLimitDep[l]));   // later add in zone for soil water dep and bounds and figure our how to do form
+                                    extractableByPlant[p] += extractable[p, l, z, b, f];
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
+                                    if (f == 0)
+                                    {
+                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
+                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                                   * plants[p].RootProperties.KNO3                        // later add in zone
+                                                                   * Soil.SoilNitrogen.no3ppm[l]
+                                                                   * resource[p, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
+                                    }
+                                    else
+                                    {
+                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
+                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                                   * plants[p].RootProperties.KNH4                        // later add in zone
+                                                                   * Soil.SoilNitrogen.nh4ppm[l]
+                                                                   * resource[p, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
+                                    }
+                                    extractableByPlant[p] += extractable[p, l, z, b, f];
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
 
