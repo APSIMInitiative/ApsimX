@@ -330,61 +330,7 @@ namespace Models.Arbitrator
             CalculateLowerBounds(resourceToArbitrate);
             CalculateResource(resourceToArbitrate);
             CalculateExtractable(resourceToArbitrate);
-
-
-            #region // demand distribution calculation
-
-            // calculate demand distributed over layers etc - for now bounds and forms = 1
-            for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                // demand here is a bad name as is limited by extractable - satisfyable demand if solo plant
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
-
-                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
-                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // 
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandNitrogen, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
-                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
-                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // 
-                                }
-                                else
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                string myString = "";
-                for (int p = 0; p < plants.Length; p++)
-                    for (int b = 0; b < bounds; b++)
-                    {
-                        {
-
-                            myString += (demand[p, 0, 0, b, 0]) + " ";
-                        }
-                    }
-                Summary.WriteMessage(FullPath, "demand: " + myString);
-            }
-            #endregion
+            CalculateDemand(resourceToArbitrate);
 
             #region // uptake calculation
 
@@ -975,12 +921,57 @@ namespace Models.Arbitrator
         }
 
 
-        private void Name2(string resourceToArbitrate)
+        private void CalculateDemand(string resourceToArbitrate)
         {
+            // calculate demand distributed over layers etc - for now bounds and forms = 1
+            for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
+                        {
+                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
+                            {
+                                // demand here is a bad name as is limited by extractable - satisfyable demand if solo plant
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
+                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
+
+                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // 
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandNitrogen, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
+                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
+                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // 
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
 
         private void Name3(string resourceToArbitrate)
+        {
+        }
+
+        private void Name4(string resourceToArbitrate)
+        {
+        }
+
+        private void Name5(string resourceToArbitrate)
         {
         }
 
