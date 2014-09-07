@@ -328,6 +328,7 @@ namespace Models.Arbitrator
 
 
             CalculateLowerBounds(resourceToArbitrate);
+            CalculateResource(resourceToArbitrate);
 
 
             #region // resource calculation
@@ -335,70 +336,6 @@ namespace Models.Arbitrator
             // calculate resource 
             //double tempLowerBoundForResource = Math.Min(plants[0].RootProperties.LowerLimitDep[l], plants[1].RootProperties.LowerLimitDep[l]); 
 
-
-            for (int p = 0; p < plants.Length; p++)  
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) 
-                    {
-                        for (int b = 0; b < bounds; b++)  
-                        {
-                            for (int f = 0; f < forms; f++)  
-                            {
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    if (b == 0) 
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0,l,z,b])));
-                                    }
-                                    else
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b]))) - resource[p, l, z, b - 1, f];
-                                    }
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    if (f == 0)
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
-                                    }
-                                    else
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
-                                    }
-                                }
-                                else 
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // print stuff out
-            if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                string myString = "";
-                for (int p = 0; p < plants.Length; p++)
-                        {
-
-                            myString += Convert.ToInt32(plants[p].RootProperties.LowerLimitDep[0]) + " ";
-                        }
-                Summary.WriteMessage(FullPath, "lower limit: " + myString);
-                myString = "";
-                for (int p = 0; p < plants.Length; p++)
-                    for (int b = 0; b < bounds; b++)
-                    {
-                        {
-
-                            myString += (resource[p, 0, 0, b, 0]) + " ";
-                        }
-                    }
-                Summary.WriteMessage(FullPath, "resource: " + myString);
-            }
 
             #endregion
 
@@ -1015,22 +952,64 @@ namespace Models.Arbitrator
         }
 
 
-        private void Name1()
+        private void CalculateResource(string resourceToArbitrate)
+        {
+
+            for (int p = 0; p < plants.Length; p++)
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++)
+                    {
+                        for (int b = 0; b < bounds; b++)
+                        {
+                            for (int f = 0; f < forms; f++)
+                            {
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    if (b == 0)
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b])));
+                                    }
+                                    else
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b]))) - resource[p, l, z, b - 1, f];
+                                    }
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    if (f == 0)
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                    }
+                                    else
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void Name1(string resourceToArbitrate)
         {
         }
 
 
-        private void Name2()
+        private void Name2(string resourceToArbitrate)
         {
         }
 
 
-        private void Name3()
-        {
-        }
-
-
-        private void Name4()
+        private void Name3(string resourceToArbitrate)
         {
         }
 
