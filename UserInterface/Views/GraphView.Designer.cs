@@ -19,7 +19,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The graph's plot
         /// </summary>
-        private OxyPlot.WindowsForms.Plot plot1;
+        private OxyPlot.WindowsForms.PlotView plot1;
 
         /// <summary>
         /// The splitter between the graph plot and the editors.
@@ -64,7 +64,7 @@ namespace UserInterface.Views
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.plot1 = new OxyPlot.WindowsForms.Plot();
+            this.plot1 = new OxyPlot.WindowsForms.PlotView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.splitter = new System.Windows.Forms.Splitter();
             this.bottomPanel = new System.Windows.Forms.Panel();
@@ -76,8 +76,6 @@ namespace UserInterface.Views
             // 
             this.plot1.ContextMenuStrip = this.contextMenuStrip1;
             this.plot1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.plot1.KeyboardPanHorizontalStep = 0.1D;
-            this.plot1.KeyboardPanVerticalStep = 0.1D;
             this.plot1.Location = new System.Drawing.Point(0, 0);
             this.plot1.Name = "plot1";
             this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;

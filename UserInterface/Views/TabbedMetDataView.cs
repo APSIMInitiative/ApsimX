@@ -81,7 +81,7 @@ namespace UserInterface.Views
         }
         public void RefreshGraph()
         {
-            plot1.Model.RefreshPlot(true);
+            plot1.Model.InvalidatePlot(true);
         }
         public void ClearSeries()
         {
@@ -104,7 +104,7 @@ namespace UserInterface.Views
 
             GetAxis(AxisPosition.Bottom).MinorTickSize = 0;
             GetAxis(AxisPosition.Bottom).StartPosition = 0;
-            GetAxis(AxisPosition.Left).ShowMinorTicks = true;
+            GetAxis(AxisPosition.Left).MinorTickSize = 0;
             //horizontal grid
             GetAxis(AxisPosition.Left).MajorGridlineStyle = LineStyle.Solid;
             GetAxis(AxisPosition.Left).MinorGridlineStyle = LineStyle.Dot;
@@ -142,7 +142,10 @@ namespace UserInterface.Views
             // Make sure we have an axis at the correct position.
             if (GetAxis(AxisPosition) == null)
             {
-                plot1.Model.Axes.Add(new LinearAxis(AxisPosition, sTitle));
+                LinearAxis axis = new LinearAxis();
+                plot1.Model.Axes.Add(axis);
+                axis.Position = AxisPosition;
+                axis.Title = sTitle;
             }
         }
         /// <summary>
