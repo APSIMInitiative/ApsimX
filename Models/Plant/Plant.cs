@@ -202,6 +202,7 @@ namespace Models.PMF
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
+        [XmlIgnore]
         public double PlantTranspiration { get; set; }
         #endregion
 
@@ -217,22 +218,27 @@ namespace Models.PMF
         /// <summary>
         /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
         /// </summary>
+        [XmlIgnore]
         public double demandWater { get; set; }
         /// <summary>
         /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
         /// </summary>
+        [XmlIgnore]
         public double[] uptakeWater { get; set; }
         /// <summary>
         /// Crop calculates potentialNitrogenDemand after getting its water allocation
         /// </summary>
+        [XmlIgnore]
         public double demandNitrogen { get; set; }
         /// <summary>
         /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
         /// </summary>
+        [XmlIgnore]
         public double[] uptakeNitrogen { get; set; }
         /// <summary>
         /// The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4
         /// </summary>
+        [XmlIgnore]
         public double[] uptakeNitrogenPropNO3 { get;  set; }
         /// <summary>
         /// The initial value of the extent to which the roots have penetrated the soil layer (0-1)

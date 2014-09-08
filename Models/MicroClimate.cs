@@ -639,6 +639,7 @@ namespace Models
             SetupCropTypes("PMFSlurp", "Crop");
             SetupCropTypes("Slurp", "Crop");
             SetupCropTypes("AgPasture", "Crop");
+            SetupCropTypes("WheatPMFPrototype", "Crop");
         }
 
         private void SetupCropTypes(string Name, string Type)

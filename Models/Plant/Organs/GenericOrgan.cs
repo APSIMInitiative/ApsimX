@@ -30,7 +30,8 @@ namespace Models.PMF.Organs
         Function NReallocationFactor = null;
         [Link(IsOptional = true)]
         Function NRetranslocationFactor = null;
-        [Link] Function NitrogenDemandSwitch = null;
+        [Link(IsOptional = true)]
+        Function NitrogenDemandSwitch = null;
         [Link(IsOptional = true)]
         Function DMRetranslocationFactor = null;
         [Link(IsOptional = true)] 

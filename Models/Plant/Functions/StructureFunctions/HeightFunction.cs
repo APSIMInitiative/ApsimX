@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Functions.StructureFunctions
 {
@@ -15,7 +16,8 @@ namespace Models.PMF.Functions.StructureFunctions
         double Height = 0;
         private Model[] ChildFunctions;
 
-        public double DeltaHeight = 0;
+        [XmlIgnore]
+        public double DeltaHeight { get; set; }
         public override void UpdateVariables(string initial)
         {
             if (ChildFunctions == null)

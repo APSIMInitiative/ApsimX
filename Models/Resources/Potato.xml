@@ -75,7 +75,7 @@
 		<Command>[Structure].MainStemFinalNodeNumber.value = 46</Command>
 		<Command />
 	</Cultivar>
-   <Cultivar>
+    <Cultivar>
      <Name>Coliban</Name>
      <Alias>Coliban</Alias>
      <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
@@ -1213,9 +1213,4 @@
 		</Biomass>
 	</GenericAboveGroundOrgan>
 	<CropType>Potato</CropType>
-	<Cultivars>
-		<Cultivar>
-			<Name>RussetBurbank</Name>
-		</Cultivar>
-	</Cultivars>
 </Plant>
