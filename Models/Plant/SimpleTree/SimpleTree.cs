@@ -59,7 +59,7 @@ namespace Models.PMF
         /// <summary>
         /// Frogger. Used for MicroClimate I think? 
         /// </summary>
-        public double FRGR { get { return 1; } }
+        public double FRGR { get { return 1; } } 
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
