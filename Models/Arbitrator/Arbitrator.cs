@@ -11,7 +11,12 @@ namespace Models.Arbitrator
 {
 
     /// <summary>
-    /// Vals u-beaut soil arbitrator
+    /// Vals u-beaut (VS - please note that DH wrote that) soil arbitrator
+    /// 
+    /// TODO - convert to god-level
+    /// TODO - need to figure out how to get multi-zone root systems into this - structure there to do the uptake but note comments in code related to needs
+    /// TODO - alternate uptake methods
+    /// TODO - currently is implicitly 1 ha per zone - need to convert into proper consideration of area
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -31,41 +36,45 @@ namespace Models.Arbitrator
         [Link]
         Clock Clock = null;
 
+        //[Link]
+        //Zone mypaddock.;
+
         ICrop2[] plants;
+
+        #region // initial definitions
 
         /// <summary>
         /// This will hold a range of arbitration methods for testing - will eventually settle on one standard method
         /// </summary>
         [Description("Arbitration method: old / new - use old - new only for testing")]
         public string ArbitrationMethod { get; set; }
-        [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPlan amount based")]
+        
+        [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPalm amount based")]
         public int NutrientUptakeMethod { get; set; }
 
         /// <summary>
         /// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
         /// </summary>
-        [XmlIgnore]
-        [Description("Potential nutrient supply in layers for the first plant")]
-        public double[] Plant1potentialSupplyNitrogenPlantLayer
-        {
-            get
-            {
-                double[] result = new double[Soil.SoilWater.dlayer.Length];
-                for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
-                {
-                    result[j] = potentialSupplyNitrogenPlantLayer[0, j];
-                }
-                return result;
-            }
-        }
+        //[XmlIgnore]
+        //[Description("Potential nutrient supply in layers for the first plant")]
+        //public double[] Plant1potentialSupplyNitrogenPlantLayer
+        //{
+        //    get
+        //    {
+        //        double[] result = new double[Soil.SoilWater.dlayer.Length];
+        //        for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+        //        {
+        //            result[j] = potentialSupplyNitrogenPlantLayer[0, j];
+        //        }
+        //        return result;
+        //    }
+        //}
 
 
-        // Plant variables
-        double[] demandWater;
+        
+        // these only (I think) used by the routines that Hamish using for testing - marked for deletion
         double[,] potentialSupplyWaterPlantLayer;
         double[,] uptakeWaterPlantLayer;
-
-        double[] demandNitrogen;
         double[,] potentialSupplyNitrogenPlantLayer;
         double[,] potentialSupplyPropNO3PlantLayer;
         double[,] uptakeNitrogenPlantLayer;
@@ -76,11 +85,12 @@ namespace Models.Arbitrator
 
         /// <summary>
         /// The NitrogenChangedDelegate is for the Arbitrator to set the change in nitrate and ammonium in SoilNitrogen
+        /// Eventually this should be changes to a set rather than an event
         /// </summary>
         /// <param name="Data"></param>
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
         /// <summary>
-        /// To publish the change event
+        /// To publish the nitrogen change event
         /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
@@ -98,31 +108,108 @@ namespace Models.Arbitrator
         //public CanopyProps[,] myCanopy;
 
         // new Arbitration parameters from here
-        int zones;  // this might be replaced with something dynamic
-        int bounds; // how many lower bounds are there for the resource in question
-        int forms;  // how many forms for the resource in question
-        double[, , ,] lowerBound;  // has indexes for plant, layer, zone and bound - need rethinking 
+
+        /// <summary>
+        /// Soil water demand (mm) from each of the plants being arbitrated
+        /// </summary>
+        double[] demandWater;
+
+        /// <summary>
+        /// Nitrogen demand (mm) from each of the plants being arbitrated
+        /// </summary>
+        double[] demandNitrogen;
+        
+        /// <summary>
+        /// The number of zones under consideration
+        /// </summary>
+        int zones;  
+
+        /// <summary>
+        /// The number of lower bounds of uptake under consideration.  
+        /// As the uptake method implemented for nitrogen is the second order method this is currently only caluclated for water and comes from the crop lower limit
+        /// </summary>
+        int bounds;
+
+        /// <summary>
+        /// The number of pools that can saatify the demand.  Not relevant for water.  For nitrogen is nitrate and ammonium.
+        /// </summary>
+        int forms;  
+
+        /// <summary>
+        /// rootExploration is 3D array [plant, layer, zone] and holds the relative presence (0-1) of roots in each of the physical areas (layer, zone) for each plant
+        /// It is populated from RootExplorationByLayer (0-1) which considers a single zone only.
+        /// </summary>
         double[, ,] rootExploration;  // has indexes for plant, layer, zone - need to figure out zones
 
         /// <summary>
-        /// uptakePreference (0-1) is a factor 
+        /// lowerBound is a holds the values of the lowest amount of water that can be extracted  from each layer, zone and bound.
+        /// Current it contains a dummy dimension for plant - which can be removed aat any time
+        /// </summary>
+        double[, , ,] lowerBound;  // has indexes for plant, layer, zone and bound
+
+        /// <summary>
+        /// uptakePreference [plant, layer, zone] and holds the relative preference (0-1) for uptake from different physical areas (layer, zone) for each plant
+        /// It can be used to create a greater preference for uptake near the soil surface or from zones nearer the main stem if appropriate
+        /// It is populated from UptakePreferenceByLayer (0-1) which currently considers a single zone only.
         /// </summary>
         double[, ,] uptakePreference;  // indexes for plant, layer, zone - this is a thing that the plant module can set to 
-        double[, , , ,] uptakeParameterOnAmountInLayer;
-        double[, , , ,] uptakeParameterOnConcentrationInSoil;
+
+        
+        // these two parameters might be used to get rid of much of the if water if nitrogen stuff
+        //double[, , , ,] uptakeParameterOnAmountInLayer;
+        //double[, , , ,] uptakeParameterOnConcentrationInSoil;
+
+        /// <summary>
+        /// resource (mm or kgN/ha) is the amount of water or nitrogen held in each layer and zone, bound and form for each plant
+        /// the dimensions are [plant, layer, zone, bound, form]
+        /// </summary>
         double[, , , ,] resource;
+
+        /// <summary>
+        /// extractable (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be 
+        /// available to the plant if it were the only plant in the simulation.  It is not limited by the plant's demand for the resource.
+        /// the dimensions are [plant, layer, zone, bound, form]
+        /// </summary>
         double[, , , ,] extractable;
+
+        /// <summary>
+        /// demand (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be 
+        /// extracted by the plant if it were the only plant in the simulation.  It is extractable constrained by demandWater or demandNitrogen
+        /// the dimensions are [plant, layer, zone, bound, form]
+        /// </summary>
         double[, , , ,] demand;
+
+        /// <summary>
+        /// demandForResource (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form that is demanded across all plants 
+        /// the dimensions are [not_used, layer, zone, bound, form]
+        /// </summary>
         double[, , , ,] demandForResource;
+
+        /// <summary>
+        /// totalForResource (mm or kgN/ha) is the sum of resource in each layer and zone, bound and form that is demanded across all plants 
+        /// the dimensions are [not_used, layer, zone, bound, form]
+        /// </summary>
+        double[, , , ,] totalForResource;
+        
+        /// <summary>
+        /// uptake (mm or kgN/ha) is the amount of water or nitrogen taken up in each layer and zone, bound and form for each plant 
+        /// the dimensions are [plant, layer, zone, bound, form]
+        /// </summary>
         double[, , , ,] uptake;
+
+        /// <summary>
+        /// extractableByPlant (mm or kgN/ha) is the sum of water or nitrogen taken in extractable for each plant 
+        /// the dimensions are [plant]
+        /// </summary>
         double[] extractableByPlant;
 
-        // for deletion
-        //         double[] demandByPlant;
-
-
+        /// <summary>
+        /// This is "water" or "nitrogen" and holds the resource that is being arbitrated
+        /// </summary>
         string resourceToArbitrate;
-        int[] plantIndexLowerBound;
+
+#endregion  // defintions
+          
 
         /// <summary>
         /// Runs at the start of the simulation, here only reads the aribtration method to be used
@@ -130,104 +217,88 @@ namespace Models.Arbitrator
         public override void OnSimulationCommencing()
         {
             // Check that ArbitrationMethod is valid
-            if (ArbitrationMethod.ToLower() == "old" || ArbitrationMethod.ToLower() == "new") ;
-            // nothing, all good
+            if (ArbitrationMethod.ToLower() == "old")
+            {
+                ZeroHamishVariables();
+            }
+            else if (ArbitrationMethod.ToLower() == "new")
+            {
+                ZeroDailyVariables();
+            }
             else
                 throw new Exception("Invalid AribtrationMethod selected");
 
             // get the list of crops in the simulation
             plants = this.Plants;
 
+            // TODO - find out about zones and areas and plants in each
+
+            // not needed if not used for energy arbitration as well
             // myCanopy = new CanopyProps[plants.Length, 0];  // later make this the layering in the canopy
             // for (int i = 0; i < plants.Length; i++)
             // {
             //    myCanopy[0, 0].laiGreen = plants[i].CanopyProperties.LAI;
             // }
 
-            // size the arrays
-            demandWater = new double[plants.Length];
+            // Old stuff - delete once Hamish is done
             potentialSupplyWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             uptakeWaterPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
-
-            demandNitrogen = new double[plants.Length];
             potentialSupplyNitrogenPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             potentialSupplyPropNO3PlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             uptakeNitrogenPlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
             uptakeNitrogenPropNO3PlantLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length];
 
             // new Arbitration parameters from here
+            // set some dimensions
+            // when get the zone connections will have to find plants across all zones and the layer dimension will be the maximum number of layers across all zones
             zones = 1; // as a starting point - will we need to consider redimensioning?  Depends on when the root system information is available - or just allow for all zones beneath current location
-            bounds = 1;  // this will need more attention - needs ot be derived from the plant lower limit information and can be differnet for water and   
-            forms = 2;  // 
-            //demandByPlant = new double[plants.Length];
-            lowerBound = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds];
+            bounds = plants.Length;  // the number of bounds cannot exceed the number of plants
+            forms = 2;  // 2 for nitrogen and 1 for water
+            demandWater = new double[plants.Length];
+            demandNitrogen = new double[plants.Length];
             rootExploration = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones];
+            lowerBound = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds];
             uptakePreference = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones];
-            uptakeParameterOnAmountInLayer = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
-            uptakeParameterOnConcentrationInSoil = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             resource = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             extractable = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             demand = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             demandForResource = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
+            totalForResource = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             uptake = new double[plants.Length, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             extractableByPlant = new double[plants.Length];
-            plantIndexLowerBound = new int[plants.Length];
-
-
         }
-
-
+        
+        /// <summary>
+        /// Zero variables at the start of each day
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDailyInitialisation(object sender, EventArgs e)
         {
-            // many of these arrays are being used for water and nitrogen so shoudl move at last some of the zeroing to the OnDoXxxArbitration routines
-            Utility.Math.Zero(demandWater);
-            Utility.Math.Zero(potentialSupplyWaterPlantLayer);
-            Utility.Math.Zero(uptakeWaterPlantLayer);
-
-            Utility.Math.Zero(demandNitrogen);
-            Utility.Math.Zero(potentialSupplyNitrogenPlantLayer);
-            Utility.Math.Zero(uptakeNitrogenPlantLayer);
-            Utility.Math.Zero(uptakeNitrogenPropNO3PlantLayer);
-
-            // new Arbitration parameters from here
-            //Utility.Math.Zero(demandByPlant);
-            Utility.Math.Zero(extractableByPlant);
-
-            for (int p = 0; p < plants.Length; p++)
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++)
-                    {
-                        rootExploration[p, l, z] = 0.0;
-                        uptakePreference[p, l, z] = 0.0;
-                        for (int b = 0; b < bounds; b++)
-                        {
-                            lowerBound[p, l, z, b] = 0.0;
-                            for (int f = 0; f < forms; f++)
-                            {
-                                uptakeParameterOnAmountInLayer[p, l, z, b, f] = 0.0;
-                                uptakeParameterOnConcentrationInSoil[p, l, z, b, f] = 0.0;
-                                resource[p, l, z, b, f] = 0.0;
-                                extractable[p, l, z, b, f] = 0.0;
-                                demand[p, l, z, b, f] = 0.0;
-                                uptake[p, l, z, b, f] = 0.0;
-                                demandForResource[p, l, z, b, f] = 0.0;
-                            }
-                        }
-
-                    }
-                }
-            }
+            ZeroDailyVariables();
+            ZeroHamishVariables();  // get rid of this when Hamish is done
         }
 
+        /// <summary>
+        /// Do the arbitration between the plants for water
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
             if (ArbitrationMethod.ToLower() == "new")
             {
-                DoArbitration("water");
+                ZeroCalculationVariables();
+                forms = 1;
+                CalculateLowerBounds("water");
+                CalculateResource("water");
+                CalculateExtractable("water");
+                CalculateDemand("water");
+                CalculateUptake("water");
+                SetWaterUptake("water");
+
             }
             else
             {
@@ -235,13 +306,26 @@ namespace Models.Arbitrator
             }
         }
 
+        /// <summary>
+        /// Do the arbitration between the plants for nutrients
+        /// This is only set up for nitrogen at the moment but is designed to be extended to other nutrients 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoNutrientArbitration")]
         private void OnDoNutrientArbitration(object sender, EventArgs e)
         {
             if (ArbitrationMethod.ToLower() == "new")
             {
-                //Old_OnDoNutrientArbitration();
-                DoArbitration("nitrogen");  
+                ZeroCalculationVariables();
+                forms = 2;  // ie NO3 and NH4
+                CalculateLowerBounds("nitrogen");
+                CalculateResource("nitrogen");
+                CalculateExtractable("nitrogen");
+                CalculateDemand("nitrogen");
+                CalculateUptake("nitrogen");
+                SetNitrogenUptake("nitrogen");
+
             }
             else
             {
@@ -249,373 +333,12 @@ namespace Models.Arbitrator
             }
         }
         
-        private void DoArbitration(string resourceToArbitrate)
-        {
-         //for (int p = 0; p < plants.Length; p++)
-         //for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-         //for (int z = 0; z < zones; z++)
-         //for (int b = 0; b < bounds; b++)
-         //for (int f = 0; f < forms; f++)
-
-            // when finished here would look across all the bounds in the plants and calculate how many bound levels there are
-            // then would use this information with the forms to assign values into the 5-D resource array
-
-
-            // set up the forms of the resource that can satisfy the demand
-            if (resourceToArbitrate.ToLower() == "water")
-            {
-                forms = 1;
-            }
-            else if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                forms = 2;  // ie NO3 and NH4
-            }
-            else
-            {
-                throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-            }
-            // ?? should redimension and zero the arrays at this point I think - need to find out the number of bounds first if are redimensioning
-
-            #region // bounds rubbish
-
-            // set up the bounds here  // have given up on this for now - too hard to get my head around
-            double tolerance = 0.01;
-            if (resourceToArbitrate.ToLower() == "water")
-            {
-                // see if all the lower limits are within "tolerance" of each other, if they are then bounds = 1 and use the lower of all the lower limits
-                // else sort the crops by lower limit and start calculating the number and values in the bounds
-                // for now just assume two crops and take the lower
-
-                /*
-                // got myself into a total tangle here comment out for now, go back to a single bound of the minimum lower limit
-
-                if (plants.Length == 1)
-                {
-                    bounds = 1;
-                    plantIndexLowerBound[0] = 0;
-                }
-                else
-                {
-                    // should probably do this on the sum of the lower limits but this will do for now
-                    if ((plants[0].RootProperties.LowerLimitDep[0] - plants[1].RootProperties.LowerLimitDep[0]) > (tolerance * (plants[0].RootProperties.LowerLimitDep[0] - plants[1].RootProperties.LowerLimitDep[0]) / 2.0))
-                    {
-                        // the difference in the  lower bounds is greater than the tolerance 
-                        bounds = 2;
-                        if (plants[0].RootProperties.LowerLimitDep[0] < plants[1].RootProperties.LowerLimitDep[0])  // plant[0] can extract the most water
-                        {
-                            plantIndexLowerBound[0] = 0;
-                            plantIndexLowerBound[1] = 1;
-                        }
-                        else
-                        {
-                            plantIndexLowerBound[0] = 1;
-                            plantIndexLowerBound[1] = 0;
-                        }
-                    }
-                    else
-                    {
-                        bounds = 1;
-                        plantIndexLowerBound[0] = 0;
-                    }
-                }
-
-                // this is the end of the part where I was trying to sort out the bounds - for now just set to 1
-                */
-
-
-
-                bounds = 1;  // assume they are all have the same lower bound until I figure this out
-                for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource so omit that loop, p always = 0
-                {
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                    {
-                        for (int z = 0; z < zones; z++) // for now set zones is to 1
-                        {
-                            for (int b = 0; b < bounds; b++)
-                            {
-                                if (p == 0)
-                                {
-                                    lowerBound[0,l,z,b] = plants[p].RootProperties.LowerLimitDep[l];  // the index of 0 rather than p is intentional as the lower bounds apply to all plants
-                                }
-                                else
-                                {
-                                    if (plants[p].RootProperties.LowerLimitDep[l] < lowerBound[0,l,z,b])
-                                    {
-                                        lowerBound[0,l,z,b] = plants[p].RootProperties.LowerLimitDep[l];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            else if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                bounds = 1;  // assume they are all have the same lower bound
-            }
-            else
-            {
-                throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-            }
-            // finished setting the bounds 
-
-            #endregion
-
-            #region // resource calculation
-
-            // calculate resource 
-            //double tempLowerBoundForResource = Math.Min(plants[0].RootProperties.LowerLimitDep[l], plants[1].RootProperties.LowerLimitDep[l]); 
-
-            
-            for (int p = 0; p < 1; p++)  // plant is not relevant for resource so omit that loop, p always = 0
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  
-                        {
-                            for (int f = 0; f < forms; f++)  
-                            {
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    //if (bounds == 1) 
-                                    //{
-                                        //double tempLowerBoundForResource = plants[plantIndexLowerBound[b]].RootProperties.LowerLimitDep[l]; 
-                                        //resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilWater.sw_dep[l] - tempLowerBoundForResource);
-                                    
-                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - lowerBound[0,l,z,b]));
-                                    //}
-                                    //else
-                                    //{
-                                        // this is OK for now because are only allowing two bounds (and two crops :-) )
-                                    //    resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilWater.sw_dep[l] - tempLowerBoundForResource);  // I dunno
-                                    //}
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    if (f == 0)
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
-                                    }
-                                    else
-                                    {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
-                                    }
-                                }
-                                else 
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            #region // extractable calculation
-
-            // calculate extractable - for now bounds and forms = 1 - not that because this is across mulitple plants, extractable can > resource
-            for (int p = 0; p < plants.Length; p++)  
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                               * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                               * plants[p].RootProperties.KL[l]                        // later add in zone
-                                                               * resource[0, l, z, b, f];                              // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                                               //* Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - plants[p].RootProperties.LowerLimitDep[l]));   // later add in zone for soil water dep and bounds and figure our how to do form
-                                    extractableByPlant[p] += extractable[p, l, z, b, f];  
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
-                                    if (f == 0)
-                                    {
-                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
-                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                                   * plants[p].RootProperties.KNO3                        // later add in zone
-                                                                   * Soil.SoilNitrogen.no3ppm[l]
-                                                                   * resource[0, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                    }
-                                    else
-                                    {
-                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
-                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
-                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
-                                                                   * plants[p].RootProperties.KNH4                        // later add in zone
-                                                                   * Soil.SoilNitrogen.nh4ppm[l]
-                                                                   * resource[0, l, z, b, f];   // the usage of 0 instead of p is intended - there is no actual p dimension in resource
-                                    }
-                                    extractableByPlant[p] += extractable[p, l, z, b, f];
-                                }
-                                else
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion 
-
-            #region // demand distribution calculation
-
-            // calculate demand distributed over layers etc - for now bounds and forms = 1
-            for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                // demand here is a bad name as is limited by extractable - satisfyable demand if solo plant
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
-                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandNitrogen, extractableByPlant[p])                                                // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // anmd then distribute it pver layers etc - realitically do not need the Constrain in here
-                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
-                                }
-                                else
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            #region // uptake calculation
-
-            // calculate uptake distributed over layers etc - for now bounds and forms = 1
-            for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource
-            {
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  // for now set bounds is to 1
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                // ramp everything back if the resource < demand - note that resource is already only that which can potententially be extracted (i.e. not necessarily the total amount in the soil
-                                uptake[p, l, z, b, f] = Utility.Math.Constrain(Utility.Math.Divide(resource[0, l, z, b, f], demandForResource[0, l, z, b, f], 0.0), 0.0, 1.0)   
-                                                      * demand[p, l, z, b, f];
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            #region // setting of the uptake values
-
-            double[] dltSWdep = new double[Soil.SoilWater.dlayer.Length];   // to hold the changes in soil water depth
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
-
-            for (int p = 0; p < plants.Length; p++)  
-            {
-                double[] dummyArray1 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
-                double[] dummyArray2 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
-                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                {
-                    for (int z = 0; z < zones; z++) // for now set zones is to 1
-                    {
-                        for (int b = 0; b < bounds; b++)  
-                        {
-                            for (int f = 0; f < forms; f++)  // for now set forms is to 1
-                            {
-                                if (resourceToArbitrate.ToLower() == "water")
-                                {
-                                    dummyArray1[l] += uptake[p, l, z, b, f];       // only 1 form but need to sum across bounds (when they get sorted that is!)
-                                    dltSWdep[l] += -1.0 * uptake[p, l, z, b, f];   // -ve to reduce water content in the soil
-                                }
-                                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                                {
-                                    dummyArray1[l] += uptake[p, l, z, b, f];       // add the forms together to give the total nitrogen uptake
-                                    if (f == 0)
-                                    {
-                                        dummyArray2[l] += uptake[p, l, z, b, f];   // nitrate only uptake so can do the proportion before sending to the plant
-                                    }
-                                }
-                                else
-                                {
-                                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                                }
-                            }
-                        }
-                    }
-                }
-                // set uptakes in each plant
-                if (resourceToArbitrate.ToLower() == "water")
-                {
-                    plants[p].uptakeWater = dummyArray1;
-                }
-                else if (resourceToArbitrate.ToLower() == "nitrogen")
-                {
-                    plants[p].uptakeNitrogen = dummyArray1;
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
-                    {
-                        dummyArray2[l] = Utility.Math.Divide(dummyArray2[l], dummyArray1[l], 0.0);
-                    }
-                    plants[p].uptakeNitrogenPropNO3 = dummyArray2;
-                }
-                else
-                {
-                    throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-                }
-            }
-            // and finally set the changed soil resources
-            if (resourceToArbitrate.ToLower() == "water")
-            {
-                Soil.SoilWater.dlt_sw_dep = dltSWdep;   // don't forget to look at this when zones come into play
-            }
-            else if (resourceToArbitrate.ToLower() == "nitrogen")
-            {
-                if (NitrogenChanged != null)
-                    NitrogenChanged.Invoke(NUptakeType);
-            }
-            else
-            {
-                throw new Exception("Arbitrator cannot arbitrate " + resourceToArbitrate);
-            }
-
-            #endregion
-
-        }  // end of event
-
+        /// <summary>
+        /// Calculate the results of the competition between the plants for light and calculate the soil water demadn by the plants and or soil water evaporation
+        /// Not currently implemented
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoEnergyArbitration")]
         private void OnDoEnergyArbitration(object sender, EventArgs e)
         {
@@ -645,7 +368,349 @@ namespace Models.Arbitrator
             //}
         }
 
-        //[EventSubscribe("DoWaterArbitration")]
+        /// <summary>
+        /// Zero the values at the start of each day
+        /// </summary>
+        private void ZeroDailyVariables()
+        {
+            Utility.Math.Zero(demandWater);
+            Utility.Math.Zero(demandNitrogen);
+            Utility.Math.Zero(rootExploration);
+            Utility.Math.Zero(lowerBound);
+            Utility.Math.Zero(uptakePreference);
+
+            //mypaddock.Children.
+            // Iterate through all child paddocks.
+            //foreach (Zone paddock in mypaddock.FindAll(typeof(Zone)))
+            //{
+            // Find soil in paddock.
+            //Soil soil = paddock.Find(typeof(Soil));
+
+            // Find plants in paddock.
+            //ICrop2[] plants = paddock.Plants;
+            //}
+
+        }
+
+        /// <summary>
+        /// Zero the values that are needed for each set of arbitration calculations
+        /// </summary>
+        private void ZeroCalculationVariables()
+        {
+            Utility.Math.Zero(resource);
+            Utility.Math.Zero(extractable);
+            Utility.Math.Zero(demand);
+            Utility.Math.Zero(uptake);
+            Utility.Math.Zero(demandForResource);
+            Utility.Math.Zero(totalForResource);
+            Utility.Math.Zero(extractableByPlant);
+        }
+
+        /// <summary>
+        /// Calculate the number of lower bounds that exist in each layer-zone combination and assign value to those bounds
+        /// This does not need to be done each day unless LL becomes dynamic
+        /// Leave here for now but could be moved either to OnSimulationCommencing or test for bounds and only do when null
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void CalculateLowerBounds(string resourceToArbitrate)
+        {
+            // set up the bounds here  
+            // the tolerance is used to trmpoarily convert the double array of lower limits into an integer array.  This then allows the usage of Distinct to remove duplicates.
+            // At present set tolerance to a low value - this will end up with more bounds but will be more accurate with the avaialbel weater to plants
+            double tolerance = 0.001;
+            if (resourceToArbitrate.ToLower() == "water")
+            {
+                int[] tempBoundsArray = new int[plants.Length];
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        // get the lower bounds from the plants and put them into a temporary array for sorting, comparison and shortening before assigning bounds
+                        // for the unique values, divide each element by the tolerance (which is mm diference that is interesting) and convert to an integer
+                        // then sort, reverse and then use the Distinct method to shorten the array into functionally different values
+                        // lastly multiply by the tolerance again to get the bounds in mm
+                        // this is redundant but non-troublesome for a single-plant simulation
+                        for (int p = 0; p < plants.Length; p++)
+                        {
+                            tempBoundsArray[p] = Convert.ToInt32(Math.Round(plants[p].RootProperties.LowerLimitDep[l] / tolerance, 0));
+                        }
+                        // 
+                        var tempShortenedBoundsArray = tempBoundsArray.Distinct().ToArray();
+                        // sort the shortened array and then put it into descending order - wettest first
+                        Array.Sort(tempShortenedBoundsArray);
+                        Array.Reverse(tempShortenedBoundsArray);
+                        bounds = tempShortenedBoundsArray.Length;
+                        for (int b = 0; b < bounds; b++)
+                        {
+                            lowerBound[0, l, z, b] = tempShortenedBoundsArray[b] * tolerance;
+                        }
+                    }
+                }
+            }
+            else if (resourceToArbitrate.ToLower() == "nitrogen")
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        bounds = 1;  // assume they are all have the same lower bound
+                        lowerBound[0, l, z, 0] = 0.0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the amount of the water or nitrogen that is assessible by each of the plants by layer-zone and bound-form
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void CalculateResource(string resourceToArbitrate)
+        {
+
+            for (int p = 0; p < plants.Length; p++)
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++)
+                    {
+                        for (int b = 0; b < bounds; b++)
+                        {
+                            for (int f = 0; f < forms; f++)
+                            {
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    if (b == 0)
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b])));
+                                    }
+                                    else
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b]))) - resource[p, l, z, b - 1, f];
+                                    }
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    if (f == 0)
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                    }
+                                    else
+                                    {
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the amount that the plant could potentially exctract if it was the only plant in the simulation and demand > resource
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void CalculateExtractable(string resourceToArbitrate)
+        {
+            // calculate extractable 
+            for (int p = 0; p < plants.Length; p++)
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)  
+                        {
+                            for (int f = 0; f < forms; f++)  
+                            {
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    extractable[p, l, z, b, f] = plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                               * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                               * plants[p].RootProperties.KL[l]                        // later add in zone
+                                                               * resource[p, l, z, b, f];                              // the usage of 0 instead of p is intended - there is no actual p dimension in resource
+                                    extractableByPlant[p] += extractable[p, l, z, b, f];
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
+                                    if (f == 0)
+                                    {
+                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
+                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                                   * plants[p].RootProperties.KNO3                        // later add in zone
+                                                                   * Soil.SoilNitrogen.no3ppm[l]
+                                                                   * resource[p, l, z, b, f];   
+                                    }
+                                    else
+                                    {
+                                        extractable[p, l, z, b, f] = relativeSoilWaterContent
+                                                                   * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
+                                                                   * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
+                                                                   * plants[p].RootProperties.KNH4                        // later add in zone
+                                                                   * Soil.SoilNitrogen.nh4ppm[l]
+                                                                   * resource[p, l, z, b, f];   
+                                    }
+                                    extractableByPlant[p] += extractable[p, l, z, b, f];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Distribute the satisfyable (if this was a solo plant) across layers, zones, bounds and forms
+        /// It was useful to seperate Extractable from Demand during development but could be amalgamated easily
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void CalculateDemand(string resourceToArbitrate)
+        {
+            // calculate demand distributed over layers etc
+            for (int p = 0; p < plants.Length; p++) 
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)  
+                        {
+                            for (int f = 0; f < forms; f++)
+                            {
+                                // demand here is a bad name as is limited by extractable - satisfyable demand if solo plant
+                                if (resourceToArbitrate.ToLower() == "water")
+                                {
+                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                           // ramp back the demand if not enough extractable resource
+                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
+
+                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                }
+                                else if (resourceToArbitrate.ToLower() == "nitrogen")
+                                {
+                                    demand[p, l, z, b, f] = Math.Min(plants[p].demandNitrogen, extractableByPlant[p])                                                        // ramp back the demand if not enough extractable resource
+                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
+                                    demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                    totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Calculate the uptake for each plant across the layers, zones, bounds, and forms
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void CalculateUptake(string resourceToArbitrate)
+        {
+            // calculate uptake distributed over layers etc - for now bounds and forms = 1
+            for (int p = 0; p < plants.Length; p++)  // plant is not relevant for resource
+            {
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++) 
+                        {
+                            for (int f = 0; f < forms; f++)
+                            {
+                                // ramp everything back if the resource < demand - note that resource is already only that which can potententially be extracted (i.e. not necessarily the total amount in the soil
+                                uptake[p, l, z, b, f] = Utility.Math.Constrain(Utility.Math.Divide(totalForResource[0, l, z, b, f], demandForResource[0, l, z, b, f], 0.0), 0.0, 1.0)
+                                                      * demand[p, l, z, b, f];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Send the water uptake arrays back to the plants and send the change in water storage back to the soil
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void SetWaterUptake(string resourceToArbitrate)
+        {
+            double[] dltSWdep = new double[Soil.SoilWater.dlayer.Length];   // to hold the changes in soil water depth
+            for (int p = 0; p < plants.Length; p++)
+            {
+                double[] dummyArray1 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)
+                        {
+                            dummyArray1[l] += uptake[p, l, z, b, 0];       // only 1 form but need to sum across bounds 
+                            dltSWdep[l] += -1.0 * uptake[p, l, z, b, 0];   // -ve to reduce water content in the soil
+                        }
+                    }
+                }
+                // set uptakes in each plant
+                plants[p].uptakeWater = dummyArray1;
+            }
+            // and finally set the changed soil resources
+            Soil.SoilWater.dlt_sw_dep = dltSWdep;   // don't forget to look at this when zones come into play
+        }
+
+        /// <summary>
+        /// Send the nitrogen uptake arrays back to the plants and send the change in nitrogen back to the soil
+        /// </summary>
+        /// <param name="resourceToArbitrate"></param>
+        private void SetNitrogenUptake(string resourceToArbitrate)
+        {
+            NitrogenChangedType NUptakeType = new NitrogenChangedType();
+            NUptakeType.Sender = Name;
+            NUptakeType.SenderType = "Plant";
+            NUptakeType.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
+            NUptakeType.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+
+            for (int p = 0; p < plants.Length; p++)
+            {
+                double[] dummyArray1 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                double[] dummyArray2 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                {
+                    for (int z = 0; z < zones; z++) // for now set zones is to 1
+                    {
+                        for (int b = 0; b < bounds; b++)
+                        {
+                            for (int f = 0; f < forms; f++)  
+                            {
+                                dummyArray1[l] += uptake[p, l, z, b, f];       // add the forms together to give the total nitrogen uptake
+                                if (f == 0)
+                                {
+                                    NUptakeType.DeltaNO3[l] += -1.0 * uptake[p, l, z, b, f];
+                                    dummyArray2[l] += uptake[p, l, z, b, f];   // nitrate only uptake so can do the proportion before sending to the plant
+                                }
+                                else
+                                {
+                                    NUptakeType.DeltaNH4[l] += -1.0 * uptake[p, l, z, b, f];
+                                }
+                            }
+                        }
+                    }
+                }
+                // set uptakes in each plant
+                plants[p].uptakeNitrogen = dummyArray1;
+                for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)  // don't forget to deal with zones at some point
+                {
+                    dummyArray2[l] = Utility.Math.Divide(dummyArray2[l], dummyArray1[l], 0.0);
+                }
+                plants[p].uptakeNitrogenPropNO3 = dummyArray2;
+            }
+            // and finally set the changed soil resources
+            if (NitrogenChanged != null)
+                NitrogenChanged.Invoke(NUptakeType);
+
+        }
+
         private void Old_OnDoWaterArbitration()
         {
             //ToDO
@@ -717,7 +782,6 @@ namespace Models.Arbitrator
             Soil.SoilWater.dlt_sw_dep = dltSWdep;
         }
 
-        //[EventSubscribe("DoNutrientArbitration")]
         private void Old_OnDoNutrientArbitration()
         {
             // use i for the plant loop and j for the layer loop
@@ -738,7 +802,7 @@ namespace Models.Arbitrator
                 }
                 else
                 {
-                    demandNitrogen[i] = plants[i].demandNitrogen; 
+                    demandNitrogen[i] = plants[i].demandNitrogen;
                 }
 
                 tempSupply = 0.0;  // this is the sum of potentialSupplyNitrogenPlantLayer[i, j] across j for each plant - used in the limitation to demand
@@ -758,7 +822,7 @@ namespace Models.Arbitrator
                     }
                     else if (NutrientUptakeMethod == 2)
                     {
-                     //I blocked the N arbitration out to get water working correctly with the arbitrator first.
+                        //I blocked the N arbitration out to get water working correctly with the arbitrator first.
                         /*   //Fixme.  The PMF implementation was not adjusting N Uptake in partially rooted layer.  I have left it as this for testing but will need to introduce it soon.
                         //method from PMF - based on concentration  
                         //HEB.  I have rewritten this section of code to make it function identically to current PMF implementation for purposes of testing
@@ -862,5 +926,20 @@ namespace Models.Arbitrator
                 NitrogenChanged.Invoke(NUptakeType);
 
         }
+
+        private void ZeroHamishVariables()
+        {
+            Utility.Math.Zero(potentialSupplyWaterPlantLayer);
+            Utility.Math.Zero(uptakeWaterPlantLayer);
+            Utility.Math.Zero(potentialSupplyNitrogenPlantLayer);
+            Utility.Math.Zero(uptakeNitrogenPlantLayer);
+            Utility.Math.Zero(uptakeNitrogenPropNO3PlantLayer);
+            Utility.Math.Zero(extractableByPlant);
+        }
+
+
+
     }
+
+
 }

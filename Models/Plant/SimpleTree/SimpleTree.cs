@@ -13,12 +13,25 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleTree : Model, ICrop
     {
+        /// <summary>
+        /// Required for MicroClimate
+        /// </summary>
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
+        /// <summary>
+        /// Information on the plants root system. One for each plant
+        /// </summary>
         public RootSystem RootSystem { get { return rootSystem; } }
+        /// <summary>
+        /// Cover live
+        /// </summary>
         public double CoverLive { get; set; }
+        /// <summary>
+        /// plant_status
+        /// </summary>
         public string plant_status { get; set; }
+        // Plant soil water demand
         public double sw_demand { get; set; }
 
         private int NumPlots;
@@ -31,12 +44,21 @@ namespace Models.PMF
         [Description("What zones will the roots be in? (comma seperated)")]
         public string zones { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SimpleTree()
         {
             Name = "SimpleTree";
         }
 
+        /// <summary>
+        /// Crop type
+        /// </summary>
         public string CropType { get { return "SimpleTree"; } }
+        /// <summary>
+        /// Frogger. Used for MicroClimate I think? 
+        /// </summary>
         public double FRGR { get { return 1; } }
         /// <summary>
         /// Gets a list of cultivar names
@@ -61,6 +83,9 @@ namespace Models.PMF
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        /// <summary>
+        /// Simulation start
+        /// </summary>
         public override void OnSimulationCommencing()
         {
             zoneList = zones.Split(',');
@@ -97,12 +122,20 @@ namespace Models.PMF
             LocalCanopyData.cover_tot = CoverLive;
         }
 
+        /// <summary>
+        /// Run at start of day
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             GetPotSWUptake();
         }
 
+        /// <summary>
+        /// Calculate the potential sw uptake for today
+        /// </summary>
         private void GetPotSWUptake()
         {
             double TotPotSWUptake = 0;
@@ -111,7 +144,7 @@ namespace Models.PMF
                 rz.PotSWUptake = new double[rz.Soil.Thickness.Length];
                 for (int i = 0; i < rz.Soil.Thickness.Length; i++)
                 {
-                    rz.PotSWUptake[i] = Math.Max(0.0, RootProportion(i, rz.RootDepth, rz.Soil.Thickness) * rz.Soil.KL(Name)[i] * (rz.Soil.SW[i] * rz.Soil.Thickness[i] - rz.Soil.LL15[i] * rz.Soil.Thickness[i])); //* rootSystem.Zones[i].Zone.Area;
+                    rz.PotSWUptake[i] = Math.Max(0.0, RootProportion(i, rz.RootDepth, rz.Soil.Thickness) * rz.Soil.KL(Name)[i] * (rz.Soil.SoilWater.sw_dep[i] - rz.Soil.SoilWater.ll15_dep[i])); //* rootSystem.Zones[i].Zone.Area;
                 }
                 TotPotSWUptake += Utility.Math.Sum(rz.PotSWUptake);
             }
@@ -120,6 +153,13 @@ namespace Models.PMF
             sw_demand = TotPotSWUptake; //TODO - do we still need this? think another module might want it
         }
 
+        /// <summary>
+        /// Calculate how far through the given layer the roots are
+        /// </summary>
+        /// <param name="layer">The layer number to check.</param>
+        /// <param name="root_depth">Depth of the roots.</param>
+        /// <param name="dlayer">An array representing the thickness of the soil layers.</param>
+        /// <returns></returns>
         private double RootProportion(int layer, double root_depth, double[] dlayer)
         {
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)

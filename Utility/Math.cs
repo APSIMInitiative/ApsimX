@@ -372,7 +372,7 @@ namespace Utility
         }
 
         /// <summary>
-        /// Zero the specified array.
+        /// Zero the specified 2-D array.
         /// </summary>
         /// <param name="arr">The array to be zeroed</param>
         static public void Zero(double[,] arr)
@@ -384,6 +384,80 @@ namespace Utility
                     for (int j = 0; j < arr.GetLength(1); j++)
                     {
                         arr[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Zero the specified 3-D array.
+        /// </summary>
+        /// <param name="arr">The array to be zeroed</param>
+        static public void Zero(double[,,] arr)
+        {
+            if (arr != null)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        for (int k = 0; k < arr.GetLength(2); k++)
+                        {
+                            arr[i, j, k] = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Zero the specified 4-D array.
+        /// </summary>
+        /// <param name="arr">The array to be zeroed</param>
+        static public void Zero(double[, , ,] arr)
+        {
+            if (arr != null)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        for (int k = 0; k < arr.GetLength(2); k++)
+                        {
+                            for (int l = 0; l < arr.GetLength(2); l++) 
+                            {
+                                arr[i, j, k, l] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Zero the specified 5-D array.
+        /// </summary>
+        /// <param name="arr">The array to be zeroed</param>
+        static public void Zero(double[, , , ,] arr)
+        {
+            if (arr != null)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        for (int k = 0; k < arr.GetLength(2); k++) 
+                        {
+                            for (int l = 0; l < arr.GetLength(2); l++) 
+                            {
+                                for (int m = 0; m < arr.GetLength(3); m++)
+                                {
+                                    arr[i, j, k, l, m] = 0;
+                                }
+                            }
+                        }
                     }
                 }
             }
