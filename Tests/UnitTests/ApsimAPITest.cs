@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace ModelTests
 {
     
-    /// <summary>
+    /// <summary> 
     ///This is a test class for SystemComponentTest and is intended
     ///to contain all SystemComponentTest Unit Tests
     ///</summary>
