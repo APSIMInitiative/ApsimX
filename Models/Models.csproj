@@ -53,6 +53,13 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net20\Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,9 +67,6 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Excel">
-      <HintPath>..\Bin\Excel.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Numerics">
       <HintPath>..\packages\MathNet.Numerics.3.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -110,6 +114,7 @@
     </Compile>
     <Compile Include="AgPasture.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
+    <Compile Include="Core\Apsim.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\SummaryAttribute.cs" />
     <Compile Include="Core\Attributes\DisplayAttribute.cs" />
@@ -120,6 +125,7 @@
     <Compile Include="Core\Attributes\EventSubscribeAttribute.cs" />
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
+    <Compile Include="Core\IModel.cs" />
     <Compile Include="Core\ICrop2.cs" />
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />

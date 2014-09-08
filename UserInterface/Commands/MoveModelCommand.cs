@@ -29,7 +29,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            Model FromParent = FromModel.Parent;
+            Model FromParent = FromModel.Parent as Model;
             
             // Remove old model.
             ModelMoved = FromParent.Children.Remove(FromModel);
@@ -54,7 +54,7 @@ namespace UserInterface.Commands
         {
             if (ModelMoved)
             {
-                Model FromParent = FromModel.Parent;
+                Model FromParent = FromModel.Parent as Model;
 
                 ToParent.Children.Remove(FromModel);
                 FromModel.Name = OriginalName;

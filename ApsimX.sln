@@ -1,22 +1,20 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{27056DED-A49C-4351-90A8-DFA9C8AC906E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD18137A-918C-421F-922A-FA633A1C3884}"
-	ProjectSection(SolutionItems) = preProject
-		ApsimX.vsmdi = ApsimX.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{A3E10705-F2BB-4182-A19C-7F63222584DF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{79CB308E-BC40-48CE-A2FD-06869D31320C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importer", "Models\Importer\Importer.csproj", "{075F2644-F14E-4010-BA52-35E4B0011835}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApServer", "ApServer\ApServer.csproj", "{7726F6D0-1CE6-475E-8790-E93999818545}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{130772DF-A5C9-456A-B917-9F3D717F36D6}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{45A670BC-4A44-4944-A4B4-6FF4F198454D}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -51,16 +49,6 @@ Global
 		{A3E10705-F2BB-4182-A19C-7F63222584DF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A3E10705-F2BB-4182-A19C-7F63222584DF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A3E10705-F2BB-4182-A19C-7F63222584DF}.Release|x86.ActiveCfg = Release|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{79CB308E-BC40-48CE-A2FD-06869D31320C}.Release|x86.ActiveCfg = Release|Any CPU
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -81,6 +69,16 @@ Global
 		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|Mixed Platforms.Build.0 = Release|x86
 		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|x86.ActiveCfg = Release|x86
 		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|x86.Build.0 = Release|x86
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

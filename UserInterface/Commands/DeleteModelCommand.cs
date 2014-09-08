@@ -1,46 +1,57 @@
-﻿using UserInterface.Views;
-using Models.Core;
-using System.Xml;
-using System;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="DeleteModelCommand.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Commands
 {
+    using Models.Core;
+
     /// <summary>
-    /// This command changes the 'CurrentNode' in the ExplorerView.
+    /// This command deletes a model
     /// </summary>
-    class DeleteModelCommand : ICommand
+    public class DeleteModelCommand : ICommand
     {
-        private Model Model;
-        private bool ModelRemoved;
+        /// <summary>
+        /// The model to delete
+        /// </summary>
+        private IModel modelToDelete;
 
         /// <summary>
-        /// Constructor.
+        /// Indicates whether the model was deleted successfully
         /// </summary>
-        public DeleteModelCommand(Model Model)
+        private bool modelWasRemoved;
+
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="modelToDelete">The model to delete</param>
+        public DeleteModelCommand(Model modelToDelete)
         {
-            this.Model = Model;
+            this.modelToDelete = modelToDelete;
         }
 
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history instance</param>
+        public void Do(CommandHistory commandHistory)
         {
-            ModelRemoved = Model.Parent.Children.Remove(Model);
-            CommandHistory.InvokeModelStructureChanged(Model.Parent.FullPath);
+            this.modelWasRemoved = Apsim.Remove(this.modelToDelete);
+            commandHistory.InvokeModelStructureChanged(Apsim.FullPath(this.modelToDelete.Parent));
         }
 
         /// <summary>
         /// Undo the command
         /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history instance</param>
+        public void Undo(CommandHistory commandHistory)
         {
-            if (ModelRemoved)
+            if (this.modelWasRemoved)
             {
-                Model.Parent.Children.Add(Model);
-                CommandHistory.InvokeModelStructureChanged(Model.Parent.FullPath);
+                Apsim.Add(this.modelToDelete.Parent, this.modelToDelete);
+                commandHistory.InvokeModelStructureChanged(Apsim.FullPath(this.modelToDelete.Parent));
             }
         }
-
     }
 }
