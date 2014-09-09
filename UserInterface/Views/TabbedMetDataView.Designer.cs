@@ -38,7 +38,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.plot1 = new OxyPlot.WindowsForms.Plot();
+            this.plot1 = new OxyPlot.WindowsForms.PlotView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -158,8 +158,6 @@
             // plot1
             // 
             this.plot1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.plot1.KeyboardPanHorizontalStep = 0.1D;
-            this.plot1.KeyboardPanVerticalStep = 0.1D;
             this.plot1.Location = new System.Drawing.Point(0, 103);
             this.plot1.Name = "plot1";
             this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;
@@ -206,7 +204,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Splitter splitter1;
-        private OxyPlot.WindowsForms.Plot plot1;
+        private OxyPlot.WindowsForms.PlotView plot1;
         private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

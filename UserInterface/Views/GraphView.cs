@@ -83,18 +83,18 @@ namespace UserInterface.Views
         /// </summary>
         public override void Refresh()
         {
-            this.plot1.Model.PlotAreaBorderThickness = 0;
+            this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
             this.plot1.Model.PlotMargins = new OxyThickness(100, 0, 0, 0);
             this.plot1.Model.LegendBorder = OxyColors.Black;
             this.plot1.Model.LegendBackground = OxyColors.White;
-            this.plot1.Model.RefreshPlot(true);
+            this.plot1.Model.InvalidatePlot(true);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
             {
                 this.FormatAxisTickLabels(axis);
             }
 
-            this.plot1.Model.RefreshPlot(true);
+            this.plot1.Model.InvalidatePlot(true);
         }
 
         /// <summary>
@@ -121,7 +121,8 @@ namespace UserInterface.Views
         {
             if (x != null && y != null)
             {
-                LineSeries series = new LineSeries(title);
+                LineSeries series = new LineSeries();
+                series.Title = title;
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
@@ -215,17 +216,17 @@ namespace UserInterface.Views
             AreaSeries series = new AreaSeries();
             series.Color = ConverterExtensions.ToOxyColor(colour);
             series.Fill = ConverterExtensions.ToOxyColor(colour);
-            List<IDataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
-            List<IDataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
+            List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
+            List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
             if (points != null && points2 != null)
             {
-                foreach (IDataPoint point in points)
+                foreach (DataPoint point in points)
                 {
                     series.Points.Add(point);
                 }
 
-                foreach (IDataPoint point in points2)
+                foreach (DataPoint point in points2)
                 {
                     series.Points2.Add(point);
                 }
@@ -255,12 +256,12 @@ namespace UserInterface.Views
         {
             TextAnnotation annotation = new TextAnnotation();
             annotation.Text = text;
-            annotation.HorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
-            annotation.VerticalAlignment = VerticalAlignment.Top;
+            annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
+            annotation.TextVerticalAlignment = VerticalAlignment.Top;
             annotation.Stroke = OxyColors.White;
-            annotation.Position = new DataPoint(x, y);
-            annotation.XAxis = this.GetAxis(xAxisType);
-            annotation.YAxis = this.GetAxis(yAxisType);
+            annotation.TextPosition = new DataPoint(x, y);
+            //annotation.XAxis = this.GetAxis(xAxisType);
+            //annotation.YAxis = this.GetAxis(yAxisType);
             annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
             this.plot1.Model.Annotations.Add(annotation);
         }
@@ -412,7 +413,7 @@ namespace UserInterface.Views
         /// <param name="yAxisType">The y axis the data is associated with</param>
         /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        private List<IDataPoint> PopulateDataPointSeries(
+        private List<DataPoint> PopulateDataPointSeries(
             IEnumerable x, 
             IEnumerable y,                                
             Models.Graph.Axis.AxisType xAxisType,
@@ -422,7 +423,7 @@ namespace UserInterface.Views
             List<string> yLabels = new List<string>();
             Type xDataType = null;
             Type yDataType = null;
-            List<IDataPoint> points = new List<IDataPoint>();
+            List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && x != null && y != null)
             {
                 IEnumerator xEnum = x.GetEnumerator();
@@ -486,12 +487,12 @@ namespace UserInterface.Views
 
                 if (xLabels.Count > 0)
                 {
-                    (this.GetAxis(xAxisType) as CategoryAxis).Labels = xLabels;
+                    (this.GetAxis(xAxisType) as CategoryAxis).Labels.AddRange(xLabels);
                 }
 
                 if (yLabels.Count > 0)
                 {
-                    (this.GetAxis(yAxisType) as CategoryAxis).Labels = yLabels;
+                    (this.GetAxis(yAxisType) as CategoryAxis).Labels.AddRange(yLabels);
                 }
 
                 return points;
@@ -517,17 +518,18 @@ namespace UserInterface.Views
                 OxyPlot.Axes.Axis axisToAdd;
                 if (dataType == typeof(DateTime))
                 {
-                    axisToAdd = new DateTimeAxis(position);
+                    axisToAdd = new DateTimeAxis();
                 }
                 else if (dataType == typeof(double))
                 {
-                    axisToAdd = new LinearAxis(position);
+                    axisToAdd = new LinearAxis();
                 }
                 else
                 {
-                    axisToAdd = new CategoryAxis(position);
+                    axisToAdd = new CategoryAxis();
                 }
 
+                axisToAdd.Position = position;
                 axisToAdd.Key = axisType.ToString();
                 this.plot1.Model.Axes.Add(axisToAdd);
             }
@@ -540,16 +542,30 @@ namespace UserInterface.Views
         /// <returns>The axis</returns>
         private OxyPlot.Axes.Axis GetAxis(Models.Graph.Axis.AxisType axisType)
         {
+            int i = this.GetAxisIndex(axisType);
+            if (i == -1)
+                return null;
+            else
+                return this.plot1.Model.Axes[i];
+        }
+
+        /// <summary>
+        /// Return an axis that has the specified AxisType. Returns null if not found.
+        /// </summary>
+        /// <param name="axisType">The axis type to retrieve </param>
+        /// <returns>The axis</returns>
+        private int GetAxisIndex(Models.Graph.Axis.AxisType axisType)
+        {
             AxisPosition position = this.AxisTypeToPosition(axisType);
-            foreach (OxyPlot.Axes.Axis a in this.plot1.Model.Axes)
+            for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
             {
-                if (a.Position == position)
+                if (this.plot1.Model.Axes[i].Position == position)
                 {
-                    return a;
+                    return i;
                 }
             }
 
-            return null;
+            return -1;
         }
 
         /// <summary>
@@ -655,7 +671,7 @@ namespace UserInterface.Views
 
         private void Model_MouseMove(object sender, OxyMouseEventArgs e)
         {
-            OxyPlot.Series.Series series = this.plot1.GetSeriesFromPoint(e.Position, 10);
+            OxyPlot.Series.Series series = this.plot1.Model.GetSeriesFromPoint(e.Position, 10);
             if (series != null && this.OnHoverOverPoint != null)
             {
                 TrackerHitResult t = series.GetNearestPoint(e.Position, false);
@@ -711,7 +727,7 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    series.Color = series.Tag as OxyColor;
+                    series.Color = (OxyColor) series.Tag;
                     series.Tag = null;
                 }
                 this.plot1.Refresh();

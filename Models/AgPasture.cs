@@ -4726,6 +4726,16 @@ namespace Models
 
         #region Functions
 
+        /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
+        }
+
         //===============================================
         /// <summary>
         /// water uptake processes ...
@@ -5868,6 +5878,16 @@ namespace Models
 
             return dmtotal;	   // total shoot mass
 
+        }
+
+                /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
         }
 
         public double DailyEMGrowthPot()

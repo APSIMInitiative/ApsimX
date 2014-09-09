@@ -13,7 +13,7 @@ namespace Models.PMF.Functions.StructureFunctions
         [Link]
         Structure Structure = null;
 
-        [Link]
+        [Link(IsOptional=true)]
         Function FinalLeafNumber = null;
 
         double _FinalNodeNumber = 0;
@@ -26,7 +26,11 @@ namespace Models.PMF.Functions.StructureFunctions
             else
             {
                 if (FinalLeafNumber == null)
-                    _FinalNodeNumber = Math.Min(MaximumMainStemNodeNumber, Structure.MainStemPrimordiaNo);
+                {
+                    if (Structure.MainStemPrimordiaNo != 0)
+                        _FinalNodeNumber = Math.Min(MaximumMainStemNodeNumber, Structure.MainStemPrimordiaNo);
+                    else _FinalNodeNumber = MaximumMainStemNodeNumber;
+                }
                 else
                     _FinalNodeNumber = Math.Min(FinalLeafNumber.Value, MaximumMainStemNodeNumber);
             }

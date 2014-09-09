@@ -59,7 +59,7 @@ namespace Models.PMF
         /// <summary>
         /// Frogger. Used for MicroClimate I think? 
         /// </summary>
-        public double FRGR { get { return 1; } }
+        public double FRGR { get { return 1; } } 
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
@@ -88,26 +88,10 @@ namespace Models.PMF
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            zoneList = zones.Split(',');
 
-            NumPlots = zoneList.Count();
             rootSystem = new RootSystem();
             rootSystem.RootZones = new List<RootZone>();
 
-            foreach (string zone in zoneList)
-            {
-                RootZone currentZone = new RootZone();
-                currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
-                if (currentZone.Zone == null)
-                    throw new ApsimXException(this.FullPath, "Could not find zone " + zone);
-                currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
-                if (currentZone.Soil == null)
-                    throw new ApsimXException(this.FullPath, "Could not find soil in zone " + zone);
-                currentZone.RootDepth = 500;
-                currentZone.Name = Name;
-                currentZone.Parent = rootSystem;
-                rootSystem.RootZones.Add(currentZone);
-            }
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
@@ -130,27 +114,15 @@ namespace Models.PMF
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            GetPotSWUptake();
+           // GetPotSWUptake();
         }
 
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        private void GetPotSWUptake()
+        public UptakeInfo GetPotSWUptake(UptakeInfo info)
         {
-            double TotPotSWUptake = 0;
-            foreach (RootZone rz in rootSystem.RootZones)
-            {
-                rz.PotSWUptake = new double[rz.Soil.Thickness.Length];
-                for (int i = 0; i < rz.Soil.Thickness.Length; i++)
-                {
-                    rz.PotSWUptake[i] = Math.Max(0.0, RootProportion(i, rz.RootDepth, rz.Soil.Thickness) * rz.Soil.KL(Name)[i] * (rz.Soil.SoilWater.sw_dep[i] - rz.Soil.SoilWater.ll15_dep[i])); //* rootSystem.Zones[i].Zone.Area;
-                }
-                TotPotSWUptake += Utility.Math.Sum(rz.PotSWUptake);
-            }
-
-            rootSystem.SWDemand = TotPotSWUptake / rootSystem.RootZones.Count; // is the average of all root systems correct?
-            sw_demand = TotPotSWUptake; //TODO - do we still need this? think another module might want it
+            return info;
         }
 
         /// <summary>

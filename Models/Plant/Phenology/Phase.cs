@@ -9,6 +9,9 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
+	/// <summary>
+	/// The generic phase function in phenology. 
+	/// </summary>
     [Serializable]
     abstract public class Phase : Model
     {

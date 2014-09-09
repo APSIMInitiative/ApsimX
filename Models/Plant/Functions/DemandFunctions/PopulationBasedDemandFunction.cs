@@ -15,8 +15,8 @@ namespace Models.PMF.Functions.DemandFunctions
         [Link]
         Structure Structure = null;
 
-        [Link]
-        StageBasedInterpolation StageCode = null;
+        [Link(IsOptional = true)]
+        private Models.PMF.Phen.Phenology Phenology = null;
 
         [Link]
         Function ExpansionStress = null;
@@ -36,7 +36,7 @@ namespace Models.PMF.Functions.DemandFunctions
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+            if ((Phenology.StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {
                 ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
@@ -49,7 +49,7 @@ namespace Models.PMF.Functions.DemandFunctions
             get
             {
                 double Value = 0.0;
-                if ((StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+                if ((Phenology.StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
                 {
                     double Rate = MaximumOrganWt / GrowthDuration;
                     Value = Rate * ThermalTimeToday * Structure.TotalStemPopn;

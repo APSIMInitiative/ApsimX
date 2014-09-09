@@ -737,6 +737,16 @@ namespace Models.PMF.OilPalm
             DoUnderstory();
         }
 
+        /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
+        }
+
         private void DoFlowerAbortion()
         {
             // Main abortion stage occurs around frond 11 over 3 plastochrons

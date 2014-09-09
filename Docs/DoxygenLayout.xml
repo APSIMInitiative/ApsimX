@@ -10,15 +10,16 @@
     <tab type="classes" visible="yes" title="Functions">
       <tab type="classlist" visible="yes" title="Function list" intro=""/>
       <tab type="classindex" visible="$ALPHABETICAL_INDEX" title="Function index"/> 
-      <tab type="hierarchy" visible="yes" title="" intro=""/>
-      <tab type="classmembers" visible="yes" title="" intro=""/>
+      <tab type="hierarchy" visible="yes" title="Function Hierarchy" intro=""/>
+      <tab type="classmembers" visible="yes" title="Function Members" intro=""/>
     </tab>
     <tab type="files" visible="yes" title="">
       <tab type="filelist" visible="yes" title="" intro=""/>
       <tab type="globals" visible="yes" title="" intro=""/>
     </tab>
-    <!-- <tab type="dirs" visible="yes" title="" intro=""/>  -->
-    <tab type="examples" visible="yes" title="" intro=""/>  
+    <tab type="dirs" visible="yes" title="" intro=""/>
+    <tab type="examples" visible="yes" title="" intro=""/> 
+    <tab type="user" url="@ref tutorial" visible="yes" title="Tutorials" intro=""/>
   </navindex>
 
   <!-- Layout definition for a class page -->
@@ -62,7 +63,6 @@
       <membergroups visible="yes"/>
     </memberdecl>
     <memberdef>
-      <!--
       <inlineclasses title=""/>
       <typedefs title=""/>
       <enums title=""/>
@@ -72,7 +72,6 @@
       <variables title=""/>
       <properties title=""/>
       <events title=""/>
-      -->
     </memberdef>
     <usedfiles visible="$SHOW_USED_FILES"/>
     <authorsection visible="yes"/>

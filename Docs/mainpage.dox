@@ -2,4 +2,7 @@
 /// \section Introduction
 /// This documentation provides the detail description about the science
 /// in the APSIM model.
+///
+/// \section Tutorials
+/// \ref tutorials
 

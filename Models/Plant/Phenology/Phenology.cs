@@ -16,6 +16,12 @@ namespace Models.PMF.Phen
         public String OldPhaseName = "";
         public String NewPhaseName = "";
     }
+    /// <summary>
+    /// Perform daily increase of phenology.
+    /// </summary>
+    /// <remarks>
+    /// 
+    /// </remarks>
     [Serializable]
     public class Phenology : Model
     {
@@ -141,7 +147,9 @@ namespace Models.PMF.Phen
         /// Constructor
         /// </summary>
         public Phenology() { }
-
+        /// <summary>
+        /// Initialize the phase list of phenology. 
+        /// </summary>
         public override void OnLoaded()
         {
             Phases = new List<Phase>();
