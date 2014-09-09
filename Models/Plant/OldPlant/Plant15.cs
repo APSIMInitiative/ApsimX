@@ -962,6 +962,16 @@ namespace Models.PMF.OldPlant
         #endregion
 
         /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
+        }
+
+        /// <summary>
         /// A property to return all cultivar definitions.
         /// </summary>
         private List<Cultivar> Cultivars
