@@ -20,48 +20,66 @@ namespace Models.Core
     public class Apsim
     {
         /// <summary>
-        /// Gets the full path of the model.
+        /// The model that this API class is relative to.
         /// </summary>
-        /// <param name="model">The model to get the path of.</param>
-        /// <returns>The full path</returns>
-        public static string FullPath(IModel model)
-        {
-            string fullPath = "." + model.Name;
-            IModel parent = model.Parent;
-            while (parent != null)
-            {
-                fullPath = fullPath.Insert(0, "." + parent.Name);
-                parent = parent.Parent;
-            }
+        private IModel model;
 
-            return fullPath;
+        /// <summary>
+        /// Creates an instance of the APSIM API class for the given model.
+        /// </summary>
+        /// <param name="relativeTo">The model to create the instance for</param>
+        /// <returns>The API class.</returns>
+        public static Apsim Create(IModel model)
+        {
+            var apsimAPI = new Apsim();
+            apsimAPI.model = model;
+            return apsimAPI;
         }
 
         /// <summary>
-        /// Gets an array of plant models that are in scope of the specified model.
+        /// Gets the full path of the model.
         /// </summary>
-        /// <param name="model">Will look for plant models in scope of 'model'</param>
-        /// <returns>The list of plant models in scope</returns>
-        public static List<ICrop2> Plants(IModel model)
+        public string FullPath
         {
-            List<ICrop2> plants = new List<ICrop2>();
-            foreach (ICrop2 plant in FindAll(model, typeof(ICrop2)))
+            get
             {
-                plants.Add(plant);
-            }
+                string fullPath = "." + model.Name;
+                IModel parent = model.Parent;
+                while (parent != null)
+                {
+                    fullPath = fullPath.Insert(0, "." + parent.Name);
+                    parent = parent.Parent;
+                }
 
-            return plants;
+                return fullPath;
+            }
+        }
+
+        /// <summary>
+        /// Gets an array of plant models that are in scope.
+        /// </summary>
+        public List<ICrop2> Plants
+        {
+            get
+            {
+                var plants = new List<ICrop2>();
+                foreach (var plant in FindAll(typeof(ICrop2)))
+                {
+                    plants.Add(plant as ICrop2);
+                }
+
+                return plants;
+            }
         }
 
         /// <summary>
         /// Return a parent node of the specified type 't'. Will throw if not found.
         /// </summary>
-        /// <param name="relativeTo">The model to find a parent for</param>
         /// <param name="typeFilter">The type of parent to return</param>
-        /// <returns>The parent of the specified type.</returns>
-        public static IModel ParentOfType(IModel relativeTo, Type typeFilter)
+        /// <returns>The parent matching the specified type.</returns>
+        public IModel ParentOfType(Type typeFilter)
         {
-            IModel obj = relativeTo;
+            IModel obj = model;
             while (obj.Parent != null && obj.GetType() != typeFilter)
             {
                 obj = obj.Parent;
@@ -69,7 +87,7 @@ namespace Models.Core
 
             if (obj == null)
             {
-                throw new ApsimXException(FullPath(relativeTo), "Cannot find a parent of type: " + typeFilter.Name);
+                throw new ApsimXException(FullPath, "Cannot find a parent of type: " + typeFilter.Name);
             }
 
             return obj;
@@ -78,86 +96,78 @@ namespace Models.Core
         /// <summary>
         /// Gets the value of a variable or model.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for variables in scope.</param>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
-        public static object Get(IModel relativeTo, string namePath)
+        public object Get(string namePath)
         {
-            return Locater(relativeTo as Model).Get(namePath, relativeTo as Model);
+            return Locator().Get(namePath, model as Model);
         }
 
         /// <summary>
         /// Get the underlying variable object for the given path.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for variables in scope.</param>
         /// <param name="namePath">The name of the variable to return</param>
         /// <returns>The found object or null if not found</returns>
-        public static IVariable GetVariableObject(IModel relativeTo, string namePath)
+        public IVariable GetVariableObject(string namePath)
         {
-            return Locater(relativeTo as Model).GetInternal(namePath, relativeTo as Model);
+            return Locator().GetInternal(namePath, model as Model);
         }
 
         /// <summary>
         /// Sets the value of a variable. Will throw if variable doesn't exist.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for variables in scope.</param>
         /// <param name="namePath">The name of the object to set</param>
         /// <param name="value">The value to set the property to</param>
-        public static void Set(IModel relativeTo, string namePath, object value)
+        public void Set(string namePath, object value)
         {
-            Locater(relativeTo as Model).Set(namePath, relativeTo as Model, value);
+            Locator().Set(namePath, model as Model, value);
         }
 
         /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for models in scope.</param>
         /// <param name="namePath">The name of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel relativeTo, string namePath)
+        public Model Find(string namePath)
         {
-            return Locater(relativeTo as Model).Find(namePath, relativeTo as Model);
+            return Locator().Find(namePath, model as Model);
         }
 
         /// <summary>
         /// Locates and returns a model with the specified type that is in scope.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for models in scope.</param>
         /// <param name="type">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel relativeTo, Type type)
+        public Model Find(Type type)
         {
-            return Locater(relativeTo as Model).Find(type, relativeTo as Model);
+            return Locator().Find(type, model as Model);
         }
 
         /// <summary>
         /// Locates and returns all models in scope.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for models in scope.</param>
         /// <returns>The found models or an empty array if not found.</returns>
-        public static List<IModel> FindAll(IModel relativeTo)
+        public List<IModel> FindAll()
         {
-            return new List<IModel>(Locater(relativeTo as Model).FindAll(relativeTo as Model));
+            return new List<IModel>(Locator().FindAll(model as Model));
         }
 
         /// <summary>
         /// Locates and returns all models in scope of the specified type.
         /// </summary>
-        /// <param name="relativeTo">The model to use as a starting point when looking for models in scope.</param>
         /// <param name="typeFilter">The type of the models to return</param>
         /// <returns>The found models or an empty array if not found.</returns>
-        public static List<IModel> FindAll(IModel relativeTo, Type typeFilter)
+        public List<IModel> FindAll(Type typeFilter)
         {
-            return new List<IModel>(Locater(relativeTo as Model).FindAll(typeFilter, relativeTo as Model));
+        	return new List<IModel>(Locator().FindAll(typeFilter, model as Model));
         }
 
         /// <summary>
-        /// Connect this model to the others in the simulation.
+        /// Connect the model to the others in the simulation.
         /// </summary>
-        /// <param name="model">The model to resolve links in</param>
-        public static void ResolveLinks(IModel model)
+        public void ResolveLinks()
         {
-            Simulation simulation = ParentOfType(model, typeof(Simulation)) as Simulation;
+            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -166,7 +176,7 @@ namespace Models.Core
                     ResolveLinksInternal(model);
 
                     // Resolve links in other models that point to this model.
-                    ResolveExternalLinks(model);
+                    ResolveExternalLinks();
                 }
                 else
                 {
@@ -176,10 +186,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Connect this model to the others in the simulation.
+        /// Unconnect this model from the others in the simulation.
         /// </summary>
-        /// <param name="model">The model to un-resolve links in</param>
-        public static void UnResolveLinks(IModel model)
+        public void UnResolveLinks()
         {
             UnresolveLinks(model);
         }
@@ -187,12 +196,11 @@ namespace Models.Core
         /// <summary>
         /// Perform a deep Copy of the this model.
         /// </summary>
-        /// <param name="model">The model to clone</param>
         /// <returns>The clone of the model</returns>
-        public static Model Clone(IModel model)
+        public Model Clone()
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively(model);
+            List<IModel> modelsToNotify = ChildrenRecursively();
 
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
@@ -238,12 +246,11 @@ namespace Models.Core
         /// <summary>
         /// Serialize the model to a string and return the string.
         /// </summary>
-        /// <param name="model">The model to serialize</param>
         /// <returns>The string version of the model</returns>
-        public static string Serialise(IModel model)
+        public string Serialise()
         {
             // Get a list of all child models that we need to notify about the serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively(model);
+            List<IModel> modelsToNotify = ChildrenRecursively();
             modelsToNotify.Insert(0, model);
 
             // Let all models know that we're about to serialise.
@@ -268,32 +275,46 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Return a list of all child models recursively. Never returns
-        /// null. Can return an empty list.
+        /// Return a child model that matches the specified 'modelType'. Returns 
+        /// an empty list if not found.
         /// </summary>
-        /// <param name="parentModel">The parent model</param>
+        /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursively(IModel parentModel)
+        public IModel Child(Type typeFilter)
         {
-            List<IModel> models = new List<IModel>();
-
-            foreach (Model child in parentModel.Models)
-            {
-                models.Add(child);
-                models.AddRange(ChildrenRecursively(child));
-            }
-            return models;
+            return model.Models.Find(m => m.GetType() == typeFilter);
         }
 
+        /// <summary>
+        /// Return a child model that matches the specified 'name'. Returns 
+        /// null if not found.
+        /// </summary>
+        /// <param name="name">The name of the child to return</param>
+        /// <returns>A list of all children</returns>
+        public IModel Child(string name)
+        {
+            return model.Models.Find(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+        
+        /// <summary>
+        /// Return children that match the specified 'typeFilter'. Never returns 
+        /// null. Can return empty List.
+        /// </summary>
+        /// <param name="typeFilter">The type of children to return</param>
+        /// <returns>A list of all children</returns>
+        public List<IModel> Children(Type typeFilter)
+        {
+            return model.Models.FindAll(m => m.GetType() == typeFilter).ToList<IModel>();
+        }
+        
         /// <summary>
         /// Return a list of all child models recursively. Never returns
         /// null. Can return an empty list.
         /// </summary>
-        /// <param name="parentModel">The parent model</param>
         /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursivelyVisible(IModel parentModel)
+        public List<IModel> ChildrenRecursively()
         {
-            return ChildrenRecursively(parentModel).FindAll(m => !m.IsHidden);
+            return ChildrenRecursivelyInternal(model);
         }
 
         /// <summary>
@@ -301,70 +322,43 @@ namespace Models.Core
         /// the specified 'typeFilter' will be returned. Never returns
         /// null. Can return an empty list.
         /// </summary>
-        /// <param name="parentModel">The parent model</param>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursivelyMatching(IModel parentModel, Type typeFilter)
+        public List<IModel> ChildrenRecursively(Type typeFilter)
         {
-            return ChildrenRecursively(parentModel).FindAll(m => m.GetType() == typeFilter);
+            return ChildrenRecursively().FindAll(m => m.GetType() == typeFilter);
         }
-
+        
         /// <summary>
-        /// Return a child model that matches the specified 'modelType'. Returns 
-        /// null if not found.
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
         /// </summary>
-        /// <param name="parentModel">The parent model</param>
-        /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public static IModel ChildMatching(IModel parentModel, Type typeFilter)
+        public List<IModel> ChildrenRecursivelyVisible()
         {
-            return parentModel.Models.Find(m => m.GetType() == typeFilter);
-        }
-
-        /// <summary>
-        /// Return a child model that matches the specified 'name'. Returns 
-        /// null if not found.
-        /// </summary>
-        /// <param name="parentModel">The parent model</param>
-        /// <param name="name">The name of the child to return</param>
-        /// <returns>A list of all children</returns>
-        public static IModel ChildMatching(IModel parentModel, string name)
-        {
-            return parentModel.Models.Find(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        /// <summary>
-        /// Return children that match the specified 'typeFilter'. Never returns 
-        /// null. Can return empty List.
-        /// </summary>
-        /// <param name="parentmodel">The parent model</param>
-        /// <param name="typeFilter">The type of children to return</param>
-        /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenMatching(IModel parentmodel, Type typeFilter)
-        {
-            return parentmodel.Models.FindAll(m => m.GetType() == typeFilter).ToList<IModel>();
+            return ChildrenRecursively().FindAll(m => !m.IsHidden);
         }
 
         /// <summary>
         /// Add a model to the collection. Will throw if model cannot be added.
         /// </summary>
-        /// <param name="parentModel">The parent model</param>
         /// <param name="childModel">The child model to add</param>
-        public static void Add(IModel parentModel, IModel childModel)
+        public void Add(IModel childModel)
         {
             EnsureNameIsUnique(childModel);
-            (parentModel as Model).Models.Add(childModel as Model);
-            Locater(parentModel as Model).Clear();
+            (model as Model).Models.Add(childModel as Model);
+            Locator().Clear();
 
             // Call the model's (and all children recursively) OnLoaded method
-            childModel.Parent = parentModel;
+            childModel.Parent = model;
             ParentModelAndAllChildren(childModel);
 
-            Simulation simulation = ParentOfType(parentModel, typeof(Simulation)) as Simulation;
+            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null && simulation.IsRunning)
             {
-                ConnectEvents(childModel);
-                ResolveLinks(childModel);
+                var api = Apsim.Create(childModel);
+                api.ConnectEvents();
+                ResolveLinksInternal(childModel);
             }
         }
 
@@ -375,16 +369,17 @@ namespace Models.Core
         /// <param name="modelToReplace">The model to remove from the simulation</param>
         /// <param name="newModel">The new model that replaces the one removed</param>
         /// <returns>True if the model was successfully replaced</returns>
-        public static bool Replace(IModel modelToReplace, IModel newModel)
+        public bool Replace(IModel modelToReplace, IModel newModel)
         {
             // Find the model.
             int index = (modelToReplace.Parent as Model).Models.IndexOf(modelToReplace as Model);
             if (index != -1)
             {
-                IModel oldModel = modelToReplace.Parent.Models[index] as IModel;
-
-                DisconnectEvents(oldModel);
-                UnResolveLinks(oldModel);
+                var oldModel = modelToReplace.Parent.Models[index] as IModel;
+                
+                var api = Apsim.Create(oldModel);
+                api.DisconnectEvents();
+                UnresolveLinks(oldModel);
 
                 // remove the existing model.
                 oldModel.Parent.Models.RemoveAt(index);
@@ -399,14 +394,15 @@ namespace Models.Core
                 (modelToReplace.Parent as Model).Models.Insert(index, newModel as Model);
 
                 // clear caches.
-                Locater(modelToReplace).Clear();
+                Locator().Clear();
 
                 // Connect our new child.
-                Simulation simulation = ParentOfType(modelToReplace.Parent, typeof(Simulation)) as Simulation;
+                var simulation = ParentOfType(typeof(Simulation)) as Simulation;
                 if (simulation != null && simulation.IsRunning)
                 {
-                    ConnectEvents(modelToReplace);
-                    ResolveLinks(modelToReplace);
+                    var api2 = Apsim.Create(modelToReplace);
+                    api2.ConnectEvents();
+                    ResolveLinksInternal(modelToReplace);
                 }
 
                 ParentModelAndAllChildren(modelToReplace);
@@ -421,7 +417,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="modelToRemove">The model to remove from the simulation</param>
         /// <returns>True if the model was removed</returns>
-        public static bool Remove(IModel modelToRemove)
+        public bool Remove(IModel modelToRemove)
         {
             // Find the model.
             int index = (modelToRemove.Parent as Model).Models.IndexOf(modelToRemove as Model);
@@ -433,9 +429,10 @@ namespace Models.Core
                 modelToRemove.Parent.Models.RemoveAt(index);
 
                 // clear caches.
-                Locater(modelToRemove).Clear();
+                Locator().Clear();
 
-                DisconnectEvents(oldModel);
+                var api2 = Apsim.Create(oldModel);
+                api2.DisconnectEvents();
                 UnresolveLinks(oldModel);
 
                 return true;
@@ -452,7 +449,8 @@ namespace Models.Core
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            List<IModel> siblings = Siblings(modelToCheck);
+            Apsim api = Apsim.Create(modelToCheck);
+            List<IModel> siblings = api.Siblings();
             IModel child = siblings.Find(m => m.Name == newName);
             while (child != null && child != modelToCheck && counter < 10000)
             {
@@ -474,14 +472,16 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo">The model for which siblings are to be found</param>
         /// <returns>The found siblings or an empty array if not found.</returns>
-        public static List<IModel> Siblings(IModel relativeTo)
+        public List<IModel> Siblings()
         {
-            if (relativeTo.Parent == null)
+            if (this.model != null && this.model.Parent != null)
+            {
+                return this.model.Parent.Models.FindAll(m => m != model).ToList<IModel>();
+            }
+            else
             {
                 return new List<IModel>();
             }
-
-            return relativeTo.Parent.Models.FindAll(m => m != relativeTo).ToList<IModel>();
         }
 
         /// <summary>
@@ -504,9 +504,9 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The model to find the locator for</param>
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private static Locater Locater(IModel model)
+        private Locater Locator()
         {
-            Simulation simulation = ParentOfType(model, typeof(Simulation)) as Simulation;
+            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation == null)
             {
                 // Simulation can be null if this model is not under a simulation e.g. DataStore.
@@ -521,24 +521,24 @@ namespace Models.Core
         /// <summary>
         /// Resolve all Link fields in the specified model.
         /// </summary>
-        /// <param name="model">The model to look through for links</param>
+        /// <param name="modelToScan">The model to look through for links</param>
         /// <param name="linkTypeToMatch">If specified, only look for these types of links</param>
-        private static void ResolveLinksInternal(IModel model, Type linkTypeToMatch = null)
+        private void ResolveLinksInternal(IModel modelToScan, Type linkTypeToMatch = null)
         {
             string errorMsg = string.Empty;
 
             // Go looking for [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(
-                                                            model.GetType(),
+                                                            modelToScan.GetType(),
                                                             BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
-                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                var link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null &&
                     (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
                 {
                     object linkedObject = null;
 
-                    List<IModel> allMatches = FindAll(model, field.FieldType);
+                    List<IModel> allMatches = FindAll(field.FieldType);
                     if (allMatches.Count == 1)
                     {
                         linkedObject = allMatches[0];
@@ -546,7 +546,7 @@ namespace Models.Core
                     else
                     {
                         // more that one match so use name to match.
-                        foreach (Model matchingModel in allMatches)
+                        foreach (IModel matchingModel in allMatches)
                         {
                             if (matchingModel.Name == field.Name)
                             {
@@ -563,13 +563,14 @@ namespace Models.Core
 
                     if (linkedObject != null)
                     {
-                        field.SetValue(model, linkedObject);
+                        field.SetValue(modelToScan, linkedObject);
                     }
                     else if (!link.IsOptional)
                     {
+                    	var api = Apsim.Create(modelToScan);
                         throw new ApsimXException(
-                                    FullPath(model),
-                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + FullPath(model) + "'" + errorMsg);
+                                    api.FullPath,
+                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + api.FullPath + "'" + errorMsg);
                     }
                 }
             }
@@ -598,10 +599,9 @@ namespace Models.Core
         /// Go through all other models looking for a link to the specified 'model'.
         /// Connect any links found.
         /// </summary>
-        /// <param name="model">The model to exclude from the search</param>
-        private static void ResolveExternalLinks(IModel model)
+        private void ResolveExternalLinks()
         {
-            foreach (Model externalModel in FindAll(model))
+            foreach (var externalModel in FindAll())
             {
                 ResolveLinksInternal(externalModel, typeof(Model));
             }
@@ -725,9 +725,9 @@ namespace Models.Core
         /// Connect all events. Usually only called by the APSIMX infrastructure.
         /// </summary>
         /// <param name="model">The model to connect events in</param>
-        public static void ConnectEvents(IModel model)
+        public void ConnectEvents()
         {
-            Simulation simulation = ParentOfType(model, typeof(Simulation)) as Simulation;
+            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -757,10 +757,27 @@ namespace Models.Core
         /// Disconnect all events. Usually only called by the APSIMX infrastructure.
         /// </summary>
         /// <param name="model">The model to disconnect events in</param>
-        public static void DisconnectEvents(IModel model)
+        public void DisconnectEvents()
         {
             DisconnectEventPublishers(model);
             DisconnectEventSubscribers(model);
+        }
+
+        /// <summary>
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        /// <returns>A list of all children</returns>
+        public List<IModel> ChildrenRecursivelyInternal(IModel model)
+        {
+            List<IModel> models = new List<IModel>();
+
+            foreach (Model child in model.Models)
+            {
+                models.Add(child);
+                models.AddRange(ChildrenRecursivelyInternal(child));
+            }
+            return models;
         }
 
         /// <summary>

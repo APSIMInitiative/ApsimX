@@ -44,6 +44,7 @@ namespace Models.Core
         {
             this.Children = new ModelCollection(this);
             this.IsHidden = false;
+            this.Models = new List<Model>();
         }
 
         /// <summary>
