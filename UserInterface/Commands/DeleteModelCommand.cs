@@ -37,8 +37,9 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.modelWasRemoved = Apsim.Remove(this.modelToDelete);
-            commandHistory.InvokeModelStructureChanged(Apsim.FullPath(this.modelToDelete.Parent));
+            Apsim api = Apsim.Create(this.modelToDelete.Parent);
+            this.modelWasRemoved = api.Remove(this.modelToDelete);
+            commandHistory.InvokeModelStructureChanged(api.FullPath);
         }
 
         /// <summary>
@@ -49,8 +50,10 @@ namespace UserInterface.Commands
         {
             if (this.modelWasRemoved)
             {
-                Apsim.Add(this.modelToDelete.Parent, this.modelToDelete);
-                commandHistory.InvokeModelStructureChanged(Apsim.FullPath(this.modelToDelete.Parent));
+                Apsim api = Apsim.Create(this.modelToDelete.Parent);
+            
+                api.Add(this.modelToDelete);
+                commandHistory.InvokeModelStructureChanged(api.FullPath);
             }
         }
     }
