@@ -54,7 +54,19 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Root system information
         /// </summary>
-        public RootSystem RootSystem { get { return new RootSystem(); } }
+        [XmlIgnore]
+        public RootSystem RootSystem
+        {
+            get
+            {
+                return rootSystem;
+            }
+            set
+            {
+                rootSystem = value;
+            }
+        }
+        private RootSystem rootSystem;
 
         private Cultivar cultivarDefinition;
 
@@ -742,7 +754,7 @@ namespace Models.PMF.OilPalm
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }

@@ -1,4 +1,6 @@
-﻿namespace Models.Core
+﻿using System.Collections.Generic;
+
+namespace Models.Core
 {
     /// <summary>
     /// The ICrop interface specifies the properties and methods that all
@@ -44,11 +46,11 @@
         /// <summary>
         /// Gets the plants root system information
         /// </summary>
-        Models.Soils.RootSystem RootSystem { get; }
+        Models.Soils.RootSystem RootSystem { get; set;}
 
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info);
+        List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info);
     }
 }
