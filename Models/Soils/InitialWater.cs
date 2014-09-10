@@ -28,7 +28,7 @@ namespace Models.Soils
         {
             get
             {
-                return this.ParentOfType(typeof(Soil)) as Soil;
+                return Apsim.Parent(this, typeof(Soil)) as Soil;
             }
         }
 

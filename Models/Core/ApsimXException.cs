@@ -4,11 +4,11 @@ namespace Models.Core
 {
     public class ApsimXException : Exception
     {
-        public string ModelFullPath { get; set; }
-        public ApsimXException(string modelFullPath, string message)
+        public IModel model { get; set; }
+        public ApsimXException(IModel model, string message)
             : base(message)
         {
-            ModelFullPath = modelFullPath;
+            this.model = model;
         }
     }
 }

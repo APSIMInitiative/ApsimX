@@ -12,41 +12,15 @@ namespace Models.Soils
     /// <summary>
     /// A class representing a root system.
     /// </summary>
+    [Serializable]
     public class RootSystem
     {
         public ICrop Crop;
-        public double SWDemand; //TODO remove
-        public Dictionary<string, double> SWStrength = new Dictionary<string,double>(); //SW source strength for each field/zone the crop is in
         public List<RootZone> RootZones;
 
-        /// <summary>
-        /// Calculate the best paddocks to take water from when a crop is in multiple root zones.
-        /// This method calculates the relative source strength of each paddock.
-        /// </summary>
-        /// <param name="RootSystem">A RootData structure provided by a crop.</param>
-        /// <returns>A Dictionary containing the paddock names and relative strengths</returns>
-        public Dictionary<string, double> CalcSWSourceStrength() //TODO move to rootsystem
-        {
-            Dictionary<string, double> SoilWaters = new Dictionary<string, double>();
-            string[] ZoneNames = new string[RootZones.Count];
-            double[] SWDeps = new double[RootZones.Count];
-            double TotalSW;
+        public double[] Uptake { get; set; }
 
-            for (int i = 0; i < ZoneNames.Length; i++)
-            {
-                double[] SWlayers;
-                ZoneNames[i] = RootZones[i].Zone.Name;
 
-                SWlayers = (double[])RootZones[i].Soil.SoilWater.sw_dep;
-                SWDeps[i] = (double)Utility.Math.Sum(SWlayers);
-            }
-
-            TotalSW = (double)Utility.Math.Sum(SWDeps);
-            for (int i = 0; i < ZoneNames.Length; i++)
-                SoilWaters.Add(ZoneNames[i], SWDeps[i] / TotalSW); //TODO subtract ll // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it
-
-            return SoilWaters;
-        }
     }
 
     /// <summary>
@@ -57,6 +31,7 @@ namespace Models.Soils
         /// <summary>
         /// The parent root system
         /// </summary>
+        [NonSerialized]
         public RootSystem Parent;
         /// <summary>
         /// Name of the plant that owns this root zone.
@@ -84,11 +59,13 @@ namespace Models.Soils
         public double[] PotSWUptake;
     }
 
-    public struct UptakeInfo
+    public class UptakeInfo
     {
-        public string ZoneName;
+        public Zone Zone;
+        public ICrop Plant;
         public double[] SWDep;
         public double[] Uptake;
+        public double Strength;
     }
 
     [Serializable]
@@ -98,8 +75,9 @@ namespace Models.Soils
     {
         [Link]
         Simulation Simulation;
-        List<RootSystem> RootSystems = new List<RootSystem>();
-        List<RootZone> RootZones = new List<RootZone>();
+        List<RootSystem> RootSystems;
+        List<RootZone> RootZones;
+        List<Zone> Zones;
 
         // Initialize IFormatProvider to print matrix/vector data (debug - allows matrices to be printed properly)
         CultureInfo formatProvider = (CultureInfo)CultureInfo.InvariantCulture.Clone();
@@ -109,8 +87,15 @@ namespace Models.Soils
         /// </summary>
         public override void OnSimulationCommencing()
         {
-            formatProvider.TextInfo.ListSeparator = " ";
+            RootSystems = new List<RootSystem>();
+            RootZones = new List<RootZone>();
+            Zones = new List<Zone>();
 
+            formatProvider.TextInfo.ListSeparator = " ";
+            //collect all zones in simulation
+            Model[] ZoneAsModel = Simulation.FindAll(typeof(Zone));
+            foreach (Model m in ZoneAsModel)
+                Zones.Add((Zone)m);
 
             foreach (ICrop plant in Simulation.FindAll(typeof(ICrop)))
             {
@@ -118,47 +103,98 @@ namespace Models.Soils
                 string[] zoneList = Tree.zones.Split(',');
                 int NumPlots = zoneList.Count();
                 RootSystem currentSystem = new RootSystem();
-                RootZone currentZone = new RootZone();
+                currentSystem.Crop = plant;
+                currentSystem.RootZones = new List<RootZone>();
 
                 foreach (string zone in zoneList)
                 {
-                    currentSystem.Crop = plant;
-                    currentSystem.RootZones = new List<RootZone>();
+                    RootZone currentZone = new RootZone();
                     currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
                     if (currentZone.Zone == null)
-                        throw new ApsimXException(this.FullPath, "Could not find zone " + zone);
+                        throw new ApsimXException(this, "Could not find zone " + zone);
                     currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
                     if (currentZone.Soil == null)
-                        throw new ApsimXException(this.FullPath, "Could not find soil in zone " + zone);
+                        throw new ApsimXException(this, "Could not find soil in zone " + zone);
                     currentZone.RootDepth = 500;
-                    currentZone.Name = Name;
+                    currentZone.Name = zone;
                     currentZone.Parent = currentSystem;
                     currentSystem.RootZones.Add(currentZone);
                 }
-                RootSystems.Add(currentSystem);            }
+                RootSystems.Add(currentSystem);
+                plant.RootSystem = currentSystem;
+            }
         }
 
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoSoilArbitration(object sender, EventArgs e)
         {
-            List<RootZone> RootZones = new List<RootZone>(); //get all rootZones
-            List<UptakeInfo> Uptakes = new List<UptakeInfo>();
+            List<UptakeInfo> InitSW = new List<UptakeInfo>();
 
-            //send all plants available sw_dep, will need to make it multi zone aware
-            //also add RootZones to main list
+            //construct list of SWDep for all zones
             foreach (RootSystem rs in RootSystems)
+                foreach(RootZone rz in rs.RootZones)
             {
-                Uptakes.Add(rs.Crop.GetPotSWUptake(new UptakeInfo() { ZoneName = rs.RootZones[0].Zone.Name, 
-                                                       SWDep = rs.RootZones[0].Soil.SoilWater.sw_dep, 
-                                                       Uptake = new double[rs.RootZones[0].Soil.Thickness.Length] }));
-                RootZones.AddRange(rs.RootZones);
+                InitSW.Add(new UptakeInfo()
+                {
+                    Zone = rz.Zone,
+                    Plant = rs.Crop,
+                    SWDep = rz.Soil.SoilWater.sw_dep,
+                    Uptake = null,
+                    Strength = 0
+                });
             }
 
-            // science
+            int NumIterations = 2;
+            List<UptakeInfo>[] Iterations = new List<UptakeInfo>[NumIterations];
+            List<UptakeInfo> UptakeSums = new List<UptakeInfo>();
 
-            //send plants actual water uptake
+            // Begin modified euler method.
+            // Calculate two uptakes with the second one using the SWDep returned by the first one.
+            // Note some derived Lists are updated without being modifed in the orginal list.
+            // Since the list members are a Class, they will be passed by reference not value
+            // so updating a derived member will update the main List as well.
+            for (int i = 0; i < NumIterations; i++) // two iterations
+            {
+                //send it to all RootSystems (plants) and have them send back their uptakes
+                List<UptakeInfo> Run = new List<UptakeInfo>();
+                foreach (RootSystem rs in RootSystems)
+                {
+                    Run.AddRange(rs.Crop.GetPotSWUptake(InitSW));
+                }
 
-            //modify soil water
+                // go through all zones and get a new SWDep using given uptakes
+                foreach (Zone z in Zones)
+                {
+                    List<UptakeInfo> ThisZone = Run.AsEnumerable().Where(x => x.Zone.Name.Equals(z.Name)).ToList();
+                    UptakeInfo UptakeSum = new UptakeInfo();
+                    UptakeSum.Uptake = new double[ThisZone[0].SWDep.Length];
+                    UptakeSum.Zone = z;
+                    double[] ZoneSWDep = ThisZone[0].SWDep;
+                    foreach (UptakeInfo info in ThisZone)
+                    {
+                        ZoneSWDep = Utility.Math.Subtract(ZoneSWDep, info.Uptake);
+                        UptakeSum.Uptake = Utility.Math.Add(UptakeSum.Uptake, info.Uptake); // add this uptake to total uptake for this Zone
+                    }
+
+                    //go through them again and set the new SWDep
+                    foreach (UptakeInfo info in ThisZone)
+                        info.SWDep = ZoneSWDep;
+                    UptakeSums.Add(UptakeSum);
+                }
+
+                //Repeat with new SWDep
+            }
+
+            // Actual uptake then becomes the average.
+            foreach (Zone z in Zones)
+            {
+                List<UptakeInfo> ThisZone = UptakeSums.AsEnumerable().Where(x => x.Zone.Name.Equals(z.Name)).ToList();
+                if (ThisZone.Count != 2)
+                    throw new ApsimXException(this, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
+                 double[] ActualUptake = Utility.Math.Subtract(ThisZone[0].Uptake, ThisZone[1].Uptake);
+                 Soil Soil = (Soil)z.Find(typeof(Soil));
+                 Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
+            }
         }
 
         /// <summary>

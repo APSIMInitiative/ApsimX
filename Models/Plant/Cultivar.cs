@@ -59,13 +59,7 @@ namespace Models.PMF
             }
 
             // If we get this far then we didn't find the cultivar - throw.
-            string parentPath = string.Empty;
-            if (cultivars.Count > 0)
-            {
-                parentPath = Utility.String.ParentName(cultivars[0].FullPath);
-            }
-
-            throw new ApsimXException(parentPath, "Cannot find a cultivar definition for '" + cultivarName + "'");
+            throw new ApsimXException(cultivars[0].Parent, "Cannot find a cultivar definition for '" + cultivarName + "'");
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace Models.PMF
                         }
                         else
                         {
-                            throw new ApsimXException(FullPath, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
+                            throw new ApsimXException(this, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
                         }
                     }
                 }

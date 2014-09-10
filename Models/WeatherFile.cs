@@ -98,7 +98,7 @@ namespace Models
         {
             get
             {
-                Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
 
                // return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
                     
@@ -122,7 +122,7 @@ namespace Models
                 // try and convert to path relative to the Simulations.FileName or ApsimX install directory.
                 if (this.FileName != null)
                 {
-                    Simulation simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                     if (simulation != null && simulation.FileName != null)
                     {
                         this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
@@ -537,7 +537,7 @@ namespace Models
             {
                 if (!this.OpenDataFile())
                 {
-                    throw new ApsimXException(this.FullPath, "Cannot find weather file '" + this.FileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
                 }
 
                 this.doSeek = false;

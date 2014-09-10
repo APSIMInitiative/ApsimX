@@ -19,6 +19,8 @@ namespace Models.PMF.Phen
     /// <summary>
     /// Perform daily increase of phenology.
     /// </summary>
+    /// \retval CurrentPhaseName The current phase name
+    /// \retval Stage The number of current stage
     /// <remarks>
     /// 
     /// </remarks>

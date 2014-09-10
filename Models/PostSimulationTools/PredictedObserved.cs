@@ -42,10 +42,10 @@ namespace Models.PostSimulationTools
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
                 if (predictedDataNames == null)
-                    throw new ApsimXException(FullPath, "Could not find model data table: " + ObservedTableName);
+                    throw new ApsimXException(this, "Could not find model data table: " + ObservedTableName);
                 
                 if (observedDataNames == null)
-                    throw new ApsimXException(FullPath, "Could not find observed data table: " + ObservedTableName);
+                    throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
                                                join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]

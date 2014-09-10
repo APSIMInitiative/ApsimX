@@ -396,7 +396,7 @@ namespace Models
 
             // If sender is unknown, add it to the list
             if (senderIdx == -1)
-                throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
+                throw new ApsimXException(this, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
             ComponentData[senderIdx].Name = newCrop.Name;
             if (newCrop is Plant)
                 ComponentData[senderIdx].Type = (newCrop as Plant).CropType;

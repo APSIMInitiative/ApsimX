@@ -20,11 +20,34 @@ namespace Models.Core
     /// </summary>
     public class Locater
     {
+        private class CacheForModel
+        {
+            /// <summary>
+            /// A cache for speeding up look ups. The object can be either 
+            /// Model[] or an IVariable.
+            /// </summary>
+            public Dictionary<string, object> cache = new Dictionary<string, object>();
+
+            /// <summary>
+            /// Get a value for the specified key or null if not in cache.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public object GetValueForKey(string key)
+            {
+                object value;
+                if (this.cache.TryGetValue(key, out value))
+                    return value;
+                else
+                    return null;
+            }
+        }
+
         /// <summary>
         /// A cache for speeding up look ups. The object can be either 
         /// Model[] or an IVariable.
         /// </summary>
-        private Dictionary<string, object> cache = new Dictionary<string, object>();
+        private Dictionary<IModel, CacheForModel> cache = new Dictionary<IModel, CacheForModel>();
 
         /// <summary>
         /// Clear the cache
@@ -64,7 +87,7 @@ namespace Models.Core
             IVariable variable = this.GetInternal(namePath, relativeTo);
             if (variable == null)
             {
-                throw new ApsimXException(relativeTo.FullPath, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
+                throw new ApsimXException(relativeTo, "Cannot set the value of variable '" + namePath + "'. Variable doesn't exist");
             }
             else
             {
@@ -80,10 +103,12 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public IVariable GetInternal(string namePath, Model relativeTo)
         {
+            Model relativeToModel = relativeTo;
+            string cacheKey = namePath;
+
             // Look in cache first.
-            string cacheKey = relativeTo.FullPath + "|" + namePath;
-            object value;
-            if (this.cache.TryGetValue(cacheKey, out value))
+            object value = GetFromCache(cacheKey, relativeToModel);
+            if (value != null)
             {
                 return value as IVariable;
             }
@@ -95,7 +120,7 @@ namespace Models.Core
             }
             else if (namePath.StartsWith("evaluate", StringComparison.CurrentCultureIgnoreCase))
             {
-                returnVariable = new VariableExpression(namePath.Remove(0, 8), relativeTo);
+                returnVariable = new VariableExpression(namePath.Remove(0, 8), relativeToModel);
             }
             else
             {
@@ -110,8 +135,8 @@ namespace Models.Core
                     }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    relativeTo = this.Find(modelName, relativeTo);
-                    if (relativeTo == null)
+                    relativeToModel = this.Find(modelName, relativeToModel);
+                    if (relativeToModel == null)
                     {
                         throw new Exception("Cannot find model: " + modelName);
                     }
@@ -119,12 +144,12 @@ namespace Models.Core
                 else if (namePath.StartsWith("."))
                 {
                     // Absolute path
-                    Model root = relativeTo;
+                    Model root = relativeToModel;
                     while (root.Parent != null)
                     {
                         root = root.Parent as Model;
                     }
-                    relativeTo = root;
+                    relativeToModel = root;
 
                     int posPeriod = namePath.IndexOf('.', 1);
                     if (posPeriod == -1)
@@ -145,14 +170,14 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    Model localModel = relativeTo.Children.All.FirstOrDefault(m => m.Name == namePathBits[i]);
+                    Model localModel = relativeToModel.Children.All.FirstOrDefault(m => m.Name == namePathBits[i]);
                     if (localModel == null)
                     {
                         break;
                     }
                     else
                     {
-                        relativeTo = localModel;
+                        relativeToModel = localModel;
                     }
                 }
 
@@ -162,9 +187,9 @@ namespace Models.Core
                 // section of the path as each section will have to be evaulated everytime a
                 // a get is done for this path. 
                 // The variable 'i' will point to the name path that cannot be found as a model.
-                object relativeToObject = relativeTo;
+                object relativeToObject = relativeToModel;
                 List<IVariable> properties = new List<IVariable>();
-                properties.Add(new VariableObject(relativeTo));
+                properties.Add(new VariableObject(relativeToModel));
                 for (int j = i; j < namePathBits.Length; j++)
                 {
                     // look for an array specifier e.g. sw[2]
@@ -206,13 +231,52 @@ namespace Models.Core
                 returnVariable = new VariableComposite(namePath, properties);
             }
 
-            // Add varible to cache.
-            if (returnVariable != null)
-            {
-                this.cache.Add(cacheKey, returnVariable);
-            }
+            // Add variable to cache.
+            AddToCache(cacheKey, relativeTo, returnVariable);
 
             return returnVariable;
+        }
+
+        /// <summary>
+        /// Add the specified object to the cache.
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="relativeTo">Model for which the object is relative to</param>
+        /// <param name="obj">The object to store.</param>
+        private void AddToCache(string key, Model relativeTo, object obj)
+        {
+            if (obj != null)
+            {
+                CacheForModel cacheForModel = null;
+                if (this.cache.ContainsKey(relativeTo))
+                    cacheForModel = this.cache[relativeTo];
+                else
+                {
+                    cacheForModel = new CacheForModel();
+                    this.cache.Add(relativeTo, cacheForModel);
+                }
+                cacheForModel.cache.Add(key, obj);
+            }
+        }
+
+        /// <summary>
+        /// Get an object from the cache.
+        /// </summary>
+        /// <param name="key">The cache key</param>
+        /// <param name="relativeTo">The model the object is relative to</param>
+        /// <returns>The object or null if not found.</returns>
+        private object GetFromCache(string key, Model relativeTo)
+        {
+            if (cache.ContainsKey(relativeTo))
+            {
+                object value = this.cache[relativeTo].GetValueForKey(key);
+                if (value != null)
+                {
+                    return value;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -224,10 +288,11 @@ namespace Models.Core
         public Model Find(string namePath, Model relativeTo)
         {
             // Look in cache first.
-            string cacheKey = relativeTo.FullPath + "|INSCOPENAME|" + namePath;
-            if (this.cache.ContainsKey(cacheKey))
+            string cacheKey = "INSCOPENAME|" + namePath;
+            object value = GetFromCache(cacheKey, relativeTo);
+            if (value != null)
             {
-                return (this.cache[cacheKey] as IVariable).Value as Model;
+                return (value as IVariable).Value as Model;
             }
 
             // Not in cache - get all in scope and return the one matching namePath.
@@ -235,7 +300,7 @@ namespace Models.Core
             {
                 if (model.Name.Equals(namePath, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    this.cache.Add(cacheKey, new VariableObject(model));
+                    AddToCache(cacheKey, relativeTo, new VariableObject(model));
                     return model;
                 }
             }
@@ -252,10 +317,11 @@ namespace Models.Core
         public Model Find(Type type, Model relativeTo)
         {
             // Look in cache first.
-            string cacheKey = relativeTo.FullPath + "|INSCOPETYPE|" + type.Name;
-            if (this.cache.ContainsKey(cacheKey))
+            string cacheKey = "INSCOPETYPE|" + type.Name;
+            object value = GetFromCache(cacheKey, relativeTo);
+            if (value != null)
             {
-                return (this.cache[cacheKey] as IVariable).Value as Model;
+                return (value as IVariable).Value as Model;
             }
 
             // Not in cache - get all in scope and return the one matching namePath.
@@ -263,7 +329,7 @@ namespace Models.Core
             {
                 if (type.IsAssignableFrom(model.GetType()))
                 {
-                    this.cache.Add(cacheKey, new VariableObject(model));
+                    AddToCache(cacheKey, relativeTo, new VariableObject(model));
                     return model;
                 }
             }
@@ -279,10 +345,11 @@ namespace Models.Core
         public Model[] FindAll(Model relativeTo)
         {
             // Look in cache first.
-            string cacheKey = relativeTo.FullPath + "|ALLINSCOPE";
-            if (this.cache.ContainsKey(cacheKey))
+            string cacheKey = "ALLINSCOPE";
+            object value = GetFromCache(cacheKey, relativeTo);
+            if (value != null)
             {
-                return this.cache[cacheKey] as Model[];
+                return value as Model[];
             }
 
             // Get all children first.
@@ -296,21 +363,22 @@ namespace Models.Core
             // until we reach a Simulations or Simulation model.
             if (!(relativeTo is Simulations))
             {
+                Model relativeToParent = relativeTo;
                 do
                 {
-                    modelsInScope.AddRange(ModelCollection.Siblings(relativeTo));
-                    relativeTo = relativeTo.Parent as Model;
+                    modelsInScope.AddRange(ModelCollection.Siblings(relativeToParent));
+                    relativeToParent = relativeToParent.Parent as Model;
 
                     // Add in the top level model that we stopped on.
-                    if (relativeTo != null)
+                    if (relativeToParent != null)
                     {
-                        modelsInScope.Add(relativeTo);
+                        modelsInScope.Add(relativeToParent);
                     }
                 }
-                while (relativeTo != null && !(relativeTo is Simulation) && !(relativeTo is Simulations));
+                while (relativeToParent != null && !(relativeToParent is Simulation) && !(relativeToParent is Simulations));
             }
             // Add the in scope models to the cache and return them
-            this.cache.Add(cacheKey, modelsInScope.ToArray());
+            AddToCache(cacheKey, relativeTo, modelsInScope.ToArray());
             return modelsInScope.ToArray();
         }
 
@@ -323,10 +391,11 @@ namespace Models.Core
         public Model[] FindAll(Type type, Model relativeTo)
         {
             // Look in cache first.
-            string cacheKey = relativeTo.FullPath + "|ALLINSCOPEOFTYPE|" + type.Name;
-            if (this.cache.ContainsKey(cacheKey))
+            string cacheKey = "ALLINSCOPEOFTYPE|" + type.Name;
+            object value = GetFromCache(cacheKey, relativeTo);
+            if (value != null)
             {
-                return this.cache[cacheKey] as Model[];
+                return value as Model[];
             }
 
             List<Model> modelsToReturn = new List<Model>();
@@ -338,9 +407,8 @@ namespace Models.Core
                 }
             }
 
-            this.cache.Add(cacheKey, modelsToReturn.ToArray());
+            AddToCache(cacheKey, relativeTo, modelsToReturn.ToArray());
             return modelsToReturn.ToArray();
         }
-
     }
 }

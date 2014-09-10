@@ -38,7 +38,7 @@ namespace UserInterface.Commands
                 FromModel.Parent = ToParent;
 
                 ToParent.Children.Add(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(ToParent);
 
                 ModelAdded = true;
             }
@@ -58,7 +58,7 @@ namespace UserInterface.Commands
             if (ModelAdded && FromModel != null)
             {
                 ToParent.Children.Remove(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(ToParent);
             }
         }
 

@@ -791,7 +791,8 @@
 
         #endregion
 
-        public override void OnDeserialised(bool xmlSerialisation)
+        [EventSubscribe("Deserialised")]
+        public void OnDeserialised(bool xmlSerialisation)
         {
             if (xmlSerialisation)
             {
@@ -825,7 +826,8 @@
         /// We're about to be serialised. Remove residue types from out list
         /// that were obtained from the XML resource so they are not included
         /// </summary>
-        public override void OnSerialising(bool xmlSerialisation)
+        [EventSubscribe("Serialising")]
+        public void OnSerialising(bool xmlSerialisation)
         {
             if (xmlSerialisation)
             {
@@ -842,7 +844,8 @@
         /// Serialisation has completed. Reinstate the full list of 
         /// residue types
         /// </summary>
-        public override void OnSerialised(bool xmlSerialisation)
+        [EventSubscribe("Serialised")]
+        public void OnSerialised(bool xmlSerialisation)
         {
             if (xmlSerialisation && savedResidues != null)
             {
@@ -992,7 +995,7 @@
                         if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                             return residueType;
                     }
-                throw new ApsimXException("SurfaceOrganicMatter", "Could not find residue name " + name);
+                throw new ApsimXException(this, "Could not find residue name " + name);
             }
         }
 
@@ -1069,7 +1072,7 @@
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
             if (Utility.Math.IsLessThan(value, lower) || Utility.Math.IsGreaterThan(value, upper))
-                summary.WriteWarning(FullPath, string.Format(ApsimBoundWarningError, vname, lower, value, upper));
+                summary.WriteWarning(this, string.Format(ApsimBoundWarningError, vname, lower, value, upper));
         }
 
         private bool reals_are_equal(double first, double second)
@@ -1171,7 +1174,7 @@
             if (SOMNo > 0)
                 return SurfOM.Sum<SurfOrganicMatterType>(x => x.Lying.Sum<OMFractionType>(func) + x.Standing.Sum<OMFractionType>(func));
             else
-                throw new ApsimXException(FullPath, "No organic matter called " + type + " present");
+                throw new ApsimXException(this, "No organic matter called " + type + " present");
         }
 
         #endregion
@@ -1597,13 +1600,13 @@
             // Read in residue type from parameter file;
             //        ------------
             if (tempName.Length != tempType.Length)
-                throw new ApsimXException(FullPath, "Residue types and names do not match");
+                throw new ApsimXException(this, "Residue types and names do not match");
 
             // Read in residue weight from parameter file;
             //        --------------
             if (tempName.Length != tempMass.Length)
             {
-                throw new ApsimXException(FullPath, "Number of residue names and weights do not match");
+                throw new ApsimXException(this, "Number of residue names and weights do not match");
             }
 
             if (tempName.Length != tempResidueCNr.Length)
@@ -2133,7 +2136,7 @@
                 if (SOMNo < 0)
                 {
                     // This is an unknown type - error (<- original comment, not really an error as original code didn't throw one :S)
-                    summary.WriteMessage(FullPath, "Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
+                    summary.WriteMessage(this, "Attempting to remove Surface Organic Matter from unknown " + SOM.Pool[som_index].Name + " Surface Organic Matter name." + Environment.NewLine);
                 }
                 else
                 {
@@ -2148,7 +2151,7 @@
                             SurfOM[SOMNo].Lying[pool].amount -= SOM.Pool[SOMNo].LyingFraction[pool].amount;
                         else
                         {
-                            throw new ApsimXException(FullPath,
+                            throw new ApsimXException(this,
                                 "Attempting to remove more dm from " + SOM.Pool[som_index].Name + " lying Surface Organic Matter pool " + pool + " than available" + Environment.NewLine
                                 + "Removing " + SOM.Pool[SOMNo].LyingFraction[pool].amount + " (kg/ha) " + "from " + SurfOM[SOMNo].Lying[pool].amount + " (kg/ha) available.");
                         }
@@ -2164,7 +2167,7 @@
                         }
                         else
                         {
-                            summary.WriteMessage(FullPath,
+                            summary.WriteMessage(this,
                                 "Attempting to remove more dm from " + SOM.Pool[som_index].Name + " standing Surface Organic Matter pool " + pool + " than available" + Environment.NewLine
                                 + "Removing " + SOM.Pool[SOMNo].LyingFraction[pool].amount + " (kg/ha) " + "from " + SurfOM[SOMNo].Lying[pool].amount + " (kg/ha) available.");
                         }
@@ -2191,7 +2194,7 @@
 
                 // Report Removals;
                 if (ReportRemovals == "yes")
-                    summary.WriteMessage(FullPath, string.Format(
+                    summary.WriteMessage(this, string.Format(
     @"Removed SurfaceOM
     SurfaceOM name  = {0}
     SurfaceOM Type  = {1}
@@ -2260,11 +2263,11 @@
                 }
                 else if (totCDecomp > cPotDecomp[residue_no] + acceptableErr)
                 {
-                    throw new ApsimXException(FullPath, "SurfaceOM - C decomposition exceeds potential rate");
+                    throw new ApsimXException(this, "SurfaceOM - C decomposition exceeds potential rate");
                 }
                 else if (totNDecomp > nPotDecomp[residue_no] + acceptableErr)
                 {
-                    throw new ApsimXException(FullPath, "SurfaceOM - N decomposition exceeds potential rate");
+                    throw new ApsimXException(this, "SurfaceOM - N decomposition exceeds potential rate");
                     // NIH - If both the following tests are empty then they can both be deleted.
                 }
                 else if (reals_are_equal(Utility.Math.Divide(totCDecomp, totNDecomp, 0.0), SOMcnr))
@@ -2338,14 +2341,14 @@
             // ----------------------------------------------------------
             if (data.f_incorp == 0 && data.tillage_depth == 0)
             {
-                summary.WriteMessage(FullPath, "    - Reading default residue tillage info");
+                summary.WriteMessage(this, "    - Reading default residue tillage info");
 
                 data = TillageTypes.GetTillageData(data.Name);
 
                 // If we still have no values then stop
                 if (data == null)
                     // We have an unspecified tillage type;
-                    throw new ApsimXException(FullPath, "Cannot find info for tillage:- " + data.Name);
+                    throw new ApsimXException(this, "Cannot find info for tillage:- " + data.Name);
             }
 
             // ----------------------------------------------------------
@@ -2354,7 +2357,7 @@
 
             Incorp(data.Name, data.f_incorp, data.tillage_depth);
 
-            summary.WriteMessage(FullPath, string.Format(
+            summary.WriteMessage(this, string.Format(
     @"Residue removed using {0}
     Fraction Incorporated = {1:0.0##}
     Incorporated Depth    = {2:0.0##}", data.Name, data.f_incorp, data.tillage_depth));
@@ -2607,7 +2610,7 @@
                     if (surfomCPrAdded == 0)
                     {
                         surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], DefaultCPRatio, 0.0);
-                        summary.WriteMessage(FullPath, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
+                        summary.WriteMessage(this, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
                         surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCPrAdded, 0.0);
@@ -2659,7 +2662,7 @@
                 }
                 /// Report Additions;
                 if (ReportAdditions == "yes")
-                    summary.WriteMessage(FullPath, string.Format(
+                    summary.WriteMessage(this, string.Format(
     @"Added SurfaceOM
     SurfaceOM name       = {0}
     SurfaceOM Type       = {1}
@@ -2723,7 +2726,7 @@
         {
             ResidueType thistype = ResidueTypes.getResidue(surfom_type);
             if (thistype == null)
-                throw new ApsimXException(FullPath, "Cannot find residue type description for '" + surfom_type + "'");
+                throw new ApsimXException(this, "Cannot find residue type description for '" + surfom_type + "'");
 
             C_fract[i] = Utility.Math.Bound(thistype.fraction_C, 0.0, 1.0);
             po4ppm[i] = Utility.Math.Bound(thistype.po4ppm, 0.0, 1000.0);
@@ -2734,7 +2737,7 @@
             pot_decomp_rate = Utility.Math.Bound(thistype.pot_decomp_rate, 0.0, 1.0);
 
             if (thistype.fr_c.Length != thistype.fr_n.Length || thistype.fr_n.Length != thistype.fr_p.Length)
-                throw new ApsimXException(FullPath, "Error reading in fr_c/n/p values, inconsistent array lengths");
+                throw new ApsimXException(this, "Error reading in fr_c/n/p values, inconsistent array lengths");
 
             for (int j = 0; j < thistype.fr_c.Length; j++)
             {
@@ -2832,7 +2835,7 @@
             // Report Additions;
             if (ReportAdditions == "yes")
             {
-                summary.WriteMessage(FullPath, string.Format(
+                summary.WriteMessage(this, string.Format(
 
     @"Added surfom
     SurfaceOM Type          = {0}

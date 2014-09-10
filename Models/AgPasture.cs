@@ -1287,7 +1287,19 @@ namespace Models
         /// <summary>
         /// Root system information
         /// </summary>
-        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
+        [XmlIgnore]
+        public Soils.RootSystem RootSystem
+        {
+            get
+            {
+                return rootSystem;
+            }
+            set
+            {
+                rootSystem = value;
+            }
+        }
+        private Soils.RootSystem rootSystem;
 
         [Description("Plant status (dead, alive, etc)")]
         [Units("")]
@@ -4394,7 +4406,7 @@ namespace Models
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(FullPath, "Agpasture.OnGraze");
+            Summary.WriteMessage(this, "Agpasture.OnGraze");
             //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
@@ -4731,7 +4743,7 @@ namespace Models
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }

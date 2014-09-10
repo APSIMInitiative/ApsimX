@@ -44,7 +44,7 @@ namespace Models.PostSimulationTools
         {     
             if (FileNames != null)
             {
-                Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable(simulations.FileName);

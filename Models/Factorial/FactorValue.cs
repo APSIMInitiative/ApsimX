@@ -63,12 +63,12 @@ namespace Models.Factorial
         public void ApplyToSimulation(Simulation newSimulation)
         {
             if (FactorPaths.Count > 1 && FactorPaths.Count != Models.Count)
-                throw new ApsimXException(FullPath, "The number of factor paths does not match the number of factor values");
+                throw new ApsimXException(this, "The number of factor paths does not match the number of factor values");
 
             if (FactorPaths.Count == 1)
             {
                 if (Models != null && Models.Count > 1)
-                    throw new ApsimXException(FullPath, "One factor path was specified with multiple child factor values.");
+                    throw new ApsimXException(this, "One factor path was specified with multiple child factor values.");
 
                 if (Models == null || Models.Count == 0)
                     ApplyNameAsValue(newSimulation, FactorPaths[0], Name);
@@ -127,10 +127,10 @@ namespace Models.Factorial
         /// </summary>
         private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
         {
-            Model newModel = value.Clone();
+            Model newModel = Apsim.Clone(value) as Model;
             Model modelToReplace = newSimulation.Get(path) as Model;
             if (modelToReplace == null)
-                throw new ApsimXException(FullPath, "Cannot find model to replace. Model path: " + path);
+                throw new ApsimXException(this, "Cannot find model to replace. Model path: " + path);
 
             (modelToReplace.Parent as Model).Children.Replace(modelToReplace, newModel);
         }
@@ -173,7 +173,7 @@ namespace Models.Factorial
             {
                 Factor parentFactor = this.Parent as Factor;
                 if (parentFactor == null)
-                    throw new ApsimXException(FullPath, "Cannot find a parent factor");
+                    throw new ApsimXException(this, "Cannot find a parent factor");
                 return parentFactor;
             }
         }

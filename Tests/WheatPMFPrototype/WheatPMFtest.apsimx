@@ -748,6 +748,8 @@ namespace Models
           <string>[ExtraVariables].Script.DltNMinTot</string>
           <string>[WheatPMFPrototype].Leaf.Fw</string>
           <string>[WheatPMFPrototype].Leaf.Fn</string>
+          <string>[WheatPMFPrototype].Phenology.CurrentPhaseName</string>
+          <string>[WheatPMFPrototype].Phenology.Stage</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

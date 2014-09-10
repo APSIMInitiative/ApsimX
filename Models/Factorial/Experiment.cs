@@ -26,7 +26,7 @@ namespace Models.Factorial
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
-                Simulation newSimulation = baseSimulation.Clone() as Simulation;
+                Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
                 newSimulation.Name = Name;
                 newSimulation.Parent = null;
                 ModelFunctions.ParentAllChildren(newSimulation);
@@ -68,7 +68,7 @@ namespace Models.Factorial
 
                 if (newSimulationName == name)
                 {
-                    Simulation newSimulation = baseSimulation.Clone() as Simulation;
+                    Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
                     newSimulation.Name = Name;
                     newSimulation.Parent = null;
                     ModelFunctions.ParentAllChildren(newSimulation);

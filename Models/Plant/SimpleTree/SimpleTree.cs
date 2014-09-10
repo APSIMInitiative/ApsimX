@@ -20,9 +20,20 @@ namespace Models.PMF
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
         /// <summary>
-        /// Information on the plants root system. One for each plant
+        /// Root system information
         /// </summary>
-        public RootSystem RootSystem { get { return rootSystem; } }
+        [XmlIgnore]
+        public RootSystem RootSystem
+        {
+            get
+            {
+                return rootSystem;
+            }
+            set
+            {
+                rootSystem = value;
+            }
+        }
         /// <summary>
         /// Cover live
         /// </summary>
@@ -36,8 +47,8 @@ namespace Models.PMF
 
         private int NumPlots;
         private double[] dlayer;
-        private Soil Soil;
         private string[] zoneList;
+        [NonSerialized]
         private RootSystem rootSystem;
 
         [Units("mm/mm")]
@@ -88,10 +99,6 @@ namespace Models.PMF
         /// </summary>
         public override void OnSimulationCommencing()
         {
-
-            rootSystem = new RootSystem();
-            rootSystem.RootZones = new List<RootZone>();
-
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
@@ -114,14 +121,59 @@ namespace Models.PMF
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-           // GetPotSWUptake();
+           //GetPotSWUptake();
         }
 
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        public UptakeInfo GetPotSWUptake(UptakeInfo info)
+        public List<UptakeInfo> GetPotSWUptake(List<UptakeInfo> info)
         {
+            //get the uptake information applicable to this crop
+            List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
+            thisCrop = CalcSWSourceStrength(thisCrop);
+
+            for (int i = 0; i < thisCrop.Count; i++)
+            {
+                List<RootZone> thisRZ = RootSystem.RootZones.AsEnumerable().Where(x => x.Zone.Name.Equals(this.Parent.Name)).ToList();
+                if (thisRZ.Count == 0)
+                    throw new ApsimXException(this, "Could not find root zone in Zone " + this.Parent.Name + " for SimpleTree");
+
+                thisCrop[i].Uptake = new double[thisCrop[i].SWDep.Length];
+                for (int j = 0; j < thisCrop[i].SWDep.Length; j++)
+                {
+                    thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
+                                                      RootSystem.RootZones[0].Soil.KL("SimpleTree")[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.ll15_dep[j]) *
+                                                      thisCrop[i].Strength);
+                }
+            }
+            return thisCrop;
+        }
+
+        /// <summary>
+        /// Calculate the best paddocks to take water from when a crop is in multiple root zones.
+        /// This method calculates the relative source strength of each field/zone.
+        /// </summary>
+        /// <param name="info">A list of Uptake data from fields the current crop is in.</param>
+        /// <returns>A Dictionary containing the paddock names and relative strengths</returns>
+        private List<UptakeInfo> CalcSWSourceStrength(List<UptakeInfo> info) 
+        {
+            double[] ESWDeps = new double[info.Count];
+            double TotalESW;
+
+            for (int i = 0; i < info.Count; i++)
+            {
+                Soil Soil = (Soil)info[i].Zone.Find(typeof(Soil));
+                double[] ESWlayers;
+
+                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness));
+                ESWDeps[i] = (double)Utility.Math.Sum(ESWlayers);
+            }
+
+            TotalESW = (double)Utility.Math.Sum(ESWDeps);
+            for (int i = 0; i < info.Count; i++)
+                info[i].Strength =  ESWDeps[i] / TotalESW; // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it
+
             return info;
         }
 

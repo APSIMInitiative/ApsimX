@@ -57,16 +57,16 @@ namespace Models
 
                     int posPeriod = st.IndexOf('.');
                     if (posPeriod == -1)
-                        throw new ApsimXException(FullPath, "Bad operations action found: " + operation.Action);
+                        throw new ApsimXException(this, "Bad operations action found: " + operation.Action);
                     string modelName = st.Substring(0, posPeriod);
                     string methodName = st.Substring(posPeriod+1).Replace(";", "").Trim();
 
                     Model model = Find(modelName);
                     if (model == null)
-                        throw new ApsimXException(FullPath, "Cannot find model: " + modelName);
+                        throw new ApsimXException(this, "Cannot find model: " + modelName);
                     MethodInfo method = model.GetType().GetMethod(methodName);
                     if (method == null)
-                        throw new ApsimXException(FullPath, "Cannot find method: " + methodName + " in model: " + modelName);
+                        throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
 
                     // convert arguments to an object array.
                     ParameterInfo[] parameters = method.GetParameters();
@@ -95,7 +95,7 @@ namespace Models
                                         break;
                                 }
                                 if (argumentIndex == parameters.Length)
-                                    throw new ApsimXException(FullPath, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
+                                    throw new ApsimXException(this, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
                                 value = value.Substring(posColon + 1);
                             }
 

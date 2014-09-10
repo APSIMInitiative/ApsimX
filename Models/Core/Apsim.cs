@@ -27,7 +27,7 @@ namespace Models.Core
         /// <summary>
         /// Creates an instance of the APSIM API class for the given model.
         /// </summary>
-        /// <param name="relativeTo">The model to create the instance for</param>
+        /// <param name="model">The model to create the instance for</param>
         /// <returns>The API class.</returns>
         public static Apsim Create(IModel model)
         {
@@ -36,25 +36,47 @@ namespace Models.Core
             return apsimAPI;
         }
 
+                
         /// <summary>
-        /// Gets the full path of the model.
+        /// Returns the full path of the specified model.
         /// </summary>
-        public string FullPath
+        /// <param name="model">The model to return the full path for</param>
+        /// <returns>The path</returns>
+        public static string FullPath(IModel model)
         {
-            get
+            string fullPath = "." + model.Name;
+            IModel parent = model.Parent;
+            while (parent != null)
             {
-                string fullPath = "." + model.Name;
-                IModel parent = model.Parent;
-                while (parent != null)
-                {
-                    fullPath = fullPath.Insert(0, "." + parent.Name);
-                    parent = parent.Parent;
-                }
-
-                return fullPath;
+                fullPath = fullPath.Insert(0, "." + parent.Name);
+                parent = parent.Parent;
             }
+
+            return fullPath;
         }
 
+        /// <summary>
+        /// Return a parent node of the specified type 'typeFilter'. Will throw if not found.
+        /// </summary>
+        /// <param name="model">The model to get the parent for</param>
+        /// <param name="typeFilter">The name of the parent model to return</param>
+        /// <returns>The parent of the specified type.</returns>
+        public static IModel Parent(IModel model, Type typeFilter)
+        {
+            IModel obj = model;
+            while (obj.Parent != null && obj.GetType() != typeFilter)
+            {
+                obj = obj.Parent as IModel;
+            }
+
+            if (obj == null)
+            {
+                throw new ApsimXException(model, "Cannot find a parent of type: " + typeFilter.Name);
+            }
+
+            return obj;
+        }
+            
         /// <summary>
         /// Gets an array of plant models that are in scope.
         /// </summary>
@@ -70,27 +92,6 @@ namespace Models.Core
 
                 return plants;
             }
-        }
-
-        /// <summary>
-        /// Return a parent node of the specified type 't'. Will throw if not found.
-        /// </summary>
-        /// <param name="typeFilter">The type of parent to return</param>
-        /// <returns>The parent matching the specified type.</returns>
-        public IModel ParentOfType(Type typeFilter)
-        {
-            IModel obj = model;
-            while (obj.Parent != null && obj.GetType() != typeFilter)
-            {
-                obj = obj.Parent;
-            }
-
-            if (obj == null)
-            {
-                throw new ApsimXException(FullPath, "Cannot find a parent of type: " + typeFilter.Name);
-            }
-
-            return obj;
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace Models.Core
         /// </summary>
         public void ResolveLinks()
         {
-            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -197,10 +198,10 @@ namespace Models.Core
         /// Perform a deep Copy of the this model.
         /// </summary>
         /// <returns>The clone of the model</returns>
-        public Model Clone()
+        public static IModel Clone(IModel model)
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively();
+            List<IModel> modelsToNotify = ChildrenRecursivelyInternal(model);
 
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
@@ -213,27 +214,27 @@ namespace Models.Core
                 object[] args = new object[] { false };
                 foreach (IModel modelToNotify in modelsToNotify)
                 {
-                    CallEventHandler(modelToNotify, "OnSerialising", args);
+                    CallEventHandler(modelToNotify, "Serialising", args);
                 }
 
                 formatter.Serialize(stream, model);
 
                 foreach (IModel modelToNotify in modelsToNotify)
                 {
-                    CallEventHandler(modelToNotify, "OnSerialised", args);
+                    CallEventHandler(modelToNotify, "Serialised", args);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
 
                 foreach (IModel modelToNotify in modelsToNotify)
                 {
-                    CallEventHandler(modelToNotify, "OnDeserialising", args);
+                    CallEventHandler(modelToNotify, "Deserialising", args);
                 }
 
-                Model returnObject = (Model)formatter.Deserialize(stream);
+                IModel returnObject = (IModel)formatter.Deserialize(stream);
                 foreach (IModel modelToNotify in modelsToNotify)
                 {
-                    CallEventHandler(modelToNotify, "OnDeserialised", args);
+                    CallEventHandler(modelToNotify, "Deserialised", args);
                 }
 
                 // Reinstate parent
@@ -247,10 +248,10 @@ namespace Models.Core
         /// Serialize the model to a string and return the string.
         /// </summary>
         /// <returns>The string version of the model</returns>
-        public string Serialise()
+        public static string Serialise(IModel model)
         {
             // Get a list of all child models that we need to notify about the serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively();
+            List<IModel> modelsToNotify = ChildrenRecursivelyInternal(model);
             modelsToNotify.Insert(0, model);
 
             // Let all models know that we're about to serialise.
@@ -353,7 +354,7 @@ namespace Models.Core
             childModel.Parent = model;
             ParentModelAndAllChildren(childModel);
 
-            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation != null && simulation.IsRunning)
             {
                 var api = Apsim.Create(childModel);
@@ -397,7 +398,7 @@ namespace Models.Core
                 Locator().Clear();
 
                 // Connect our new child.
-                var simulation = ParentOfType(typeof(Simulation)) as Simulation;
+                var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
                 if (simulation != null && simulation.IsRunning)
                 {
                     var api2 = Apsim.Create(modelToReplace);
@@ -506,7 +507,7 @@ namespace Models.Core
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
         private Locater Locator()
         {
-            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation == null)
             {
                 // Simulation can be null if this model is not under a simulation e.g. DataStore.
@@ -567,10 +568,9 @@ namespace Models.Core
                     }
                     else if (!link.IsOptional)
                     {
-                    	var api = Apsim.Create(modelToScan);
                         throw new ApsimXException(
-                                    api.FullPath,
-                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + api.FullPath + "'" + errorMsg);
+                                    modelToScan,
+                                    "Cannot resolve [Link] '" + field.ToString() + errorMsg);
                     }
                 }
             }
@@ -613,7 +613,7 @@ namespace Models.Core
         /// <param name="model">The model to call the event on</param>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
-        private static void CallEventHandler(IModel model, string eventName, object[] args)
+        public static void CallEventHandler(IModel model, string eventName, object[] args)
         {
             foreach (EventSubscriber subscriber in FindEventSubscribers(eventName, model))
             {
@@ -727,7 +727,7 @@ namespace Models.Core
         /// <param name="model">The model to connect events in</param>
         public void ConnectEvents()
         {
-            var simulation = ParentOfType(typeof(Simulation)) as Simulation;
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -768,7 +768,7 @@ namespace Models.Core
         /// null. Can return an empty list.
         /// </summary>
         /// <returns>A list of all children</returns>
-        public List<IModel> ChildrenRecursivelyInternal(IModel model)
+        public static List<IModel> ChildrenRecursivelyInternal(IModel model)
         {
             List<IModel> models = new List<IModel>();
 
@@ -926,7 +926,7 @@ namespace Models.Core
                 obj = obj.Parent as Model;
             }
             if (obj == null)
-                throw new ApsimXException(relativeTo.FullPath, "Cannot find models to connect events to");
+                throw new ApsimXException(relativeTo, "Cannot find models to connect events to");
             if (obj is Simulation)
             {
                 models.AddRange((obj as Simulation).Children.AllRecursively);
@@ -952,7 +952,7 @@ namespace Models.Core
         private static List<EventSubscriber> FindEventSubscribers(string eventName, IModel relativeTo)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
             {
                 EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)Utility.Reflection.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                 if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))

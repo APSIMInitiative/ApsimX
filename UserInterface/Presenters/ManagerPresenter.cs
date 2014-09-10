@@ -150,9 +150,9 @@ namespace UserInterface.Presenters
             {
                 string Msg = err.Message;
                 if (err.InnerException != null)
-                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.ModelFullPath, err.InnerException.Message), DataStore.ErrorLevel.Error);
+                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.model, err.InnerException.Message), DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.ModelFullPath, err.Message), DataStore.ErrorLevel.Error);
+                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.model, err.Message), DataStore.ErrorLevel.Error);
             }
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }

@@ -121,7 +121,7 @@ namespace Models.PMF.OldPlant
 
                 // report
                 string msg = "Plant death. standing above-ground dm = " + biomass.ToString("f2") + " (kg/ha)";
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
                 return true;
                 // XX Needs to signal a need to call zero_variables here...
                 // Present method is to rely on calling zero_xx at tomorrow's prepare() event.. :(
@@ -147,7 +147,7 @@ namespace Models.PMF.OldPlant
         {
             if (das >= DaysToGerminationLimit)
             {
-                Summary.WriteWarning(FullPath, "      crop failure because of lack of\r\n" +
+                Summary.WriteWarning(this, "      crop failure because of lack of\r\n" +
                                   "         germination within " + DaysToGerminationLimit.ToString() +
                                   " days of sowing");
                 return -1.0 * Density;
@@ -163,7 +163,7 @@ namespace Models.PMF.OldPlant
         {
             if (Phenology.CurrentPhase is GerminatingPhase && Phenology.CurrentPhase.TTinPhase > TTEmergenceLimit)
             {
-                Summary.WriteWarning(FullPath, " failed emergence due to deep planting");
+                Summary.WriteWarning(this, " failed emergence due to deep planting");
                 return -1.0 * Density;
             }
             return 0.0;
@@ -176,7 +176,7 @@ namespace Models.PMF.OldPlant
         {
             if (CumSWStressPheno >= SWStressPhenoLimit)
             {
-                Summary.WriteWarning(FullPath, "Crop failure because of prolonged phenology delay through water stress.");
+                Summary.WriteWarning(this, "Crop failure because of prolonged phenology delay through water stress.");
                 return -1.0 * Density;
             }
             return 0.0;
@@ -191,7 +191,7 @@ namespace Models.PMF.OldPlant
 
             if (Utility.Math.FloatsAreEqual(leaf_area, 0.0, 1.0e-6))
             {
-                Summary.WriteWarning(FullPath, "Crop failure because of total leaf senescence.");
+                Summary.WriteWarning(this, "Crop failure because of total leaf senescence.");
                 return -1.0 * Density;
             }
             return 0.0;
@@ -211,7 +211,7 @@ namespace Models.PMF.OldPlant
                 string msg = "Plant kill. ";
                 msg = msg + (killfr * Conversions.fract2pcnt).ToString("f2");
                 msg = msg + "% failure because of high soil surface temperatures.";
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
             }
             return dlt_plants;
         }
@@ -235,7 +235,7 @@ namespace Models.PMF.OldPlant
                 string msg = "Plant kill. ";
                 msg = msg + (killfr * Conversions.fract2pcnt).ToString("f2");
                 msg = msg + "% failure because of water stress.";
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
             }
             return dlt_plants;
         }

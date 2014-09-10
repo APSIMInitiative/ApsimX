@@ -54,7 +54,21 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Root system information
         /// </summary>
-        public RootSystem RootSystem { get { return new RootSystem(); } }
+        [XmlIgnore]
+        public RootSystem RootSystem
+        {
+            get
+            {
+                return rootSystem;
+            }
+            set
+            {
+                rootSystem = value;
+            }
+        }
+
+        [NonSerialized]
+        private RootSystem rootSystem;
 
         private Cultivar cultivarDefinition;
 
@@ -672,7 +686,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(FullPath, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>
@@ -742,7 +756,7 @@ namespace Models.PMF.OilPalm
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }

@@ -39,7 +39,7 @@ namespace Models
         {
             get
             {
-                return this.ParentOfType(typeof(Simulation)) as Simulation;
+                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
             }
         }
 
@@ -184,11 +184,12 @@ namespace Models
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        public void WriteMessage(string fullPath, string message)
+        public void WriteMessage(IModel model, string message)
         {
-            string relativeModelPath = fullPath.Replace(Simulation.FullPath + ".", string.Empty);
+            string modelFullPath = Apsim.FullPath(model);
+            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty);
                 
             DataRow newRow = this.messagesTable.NewRow();
             newRow["ComponentName"] = relativeModelPath;
@@ -201,14 +202,14 @@ namespace Models
         /// <summary>
         /// Write a warning message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The warning message to write</param>
-        public void WriteWarning(string fullPath, string message)
+        public void WriteWarning(IModel model, string message)
         {
             if (this.messagesTable != null)
             {
                 DataRow newRow = this.messagesTable.NewRow();
-                newRow["ComponentName"] = fullPath;
+                newRow["ComponentName"] = Apsim.FullPath(model);
                 newRow["Date"] = this.clock.Today;
                 newRow["Message"] = message;
                 newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
@@ -492,12 +493,12 @@ namespace Models
             initialConditionsTable.Columns.Add("Value", typeof(string));
 
             initialConditionsTable.Rows.Add(
-                new object[] { simulation.FullPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
+                new object[] { Apsim.FullPath(simulation), "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
 
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in simulation.FindAll())
             {
-                string relativeModelPath = model.FullPath.Replace(simulation.FullPath + ".", string.Empty);
+                string relativeModelPath = Apsim.FullPath(model).Replace(Apsim.FullPath(simulation) + ".", string.Empty);
                 List<VariableProperty> properties = new List<VariableProperty>();
 
                 FindAllProperties(model, properties);
@@ -662,7 +663,7 @@ namespace Models
             }
             else if (dataTypeName != "String[]")
             {
-                throw new ApsimXException(string.Empty, "Invalid property type: " + dataTypeName);
+                throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
             }
 
             Utility.DataTable.AddColumn(table, heading, stringValues);

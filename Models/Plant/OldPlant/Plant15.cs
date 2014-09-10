@@ -79,7 +79,19 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Root system information
         /// </summary>
-        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
+        [XmlIgnore]
+        public Soils.RootSystem RootSystem
+        {
+            get
+            {
+                return rootSystem;
+            }
+            set
+            {
+                rootSystem = value;
+            }
+        }
+        private Soils.RootSystem rootSystem;
 
 
         private Cultivar cultivarDefinition;
@@ -525,7 +537,7 @@ namespace Models.PMF.OldPlant
                                            biomass, Leaf.LAI, StoverNConc, Root.ESWInRootZone);
                     }
                     
-                    Summary.WriteMessage(FullPath, message);
+                    Summary.WriteMessage(this, message);
                     PhenologyEventToday = false;
                 }
                 //Root.UpdateWaterBalance();
@@ -769,7 +781,7 @@ namespace Models.PMF.OldPlant
                                            "  N  roots (lh/ha) = {1,10:F2}",
                      AboveGroundBiomass.Wt, BelowGroundBiomass.Wt, 
                      AboveGroundBiomass.N, BelowGroundBiomass.N);
-            Summary.WriteMessage(FullPath, message);
+            Summary.WriteMessage(this, message);
 
             cultivarDefinition.Unapply();
         }
@@ -804,7 +816,7 @@ namespace Models.PMF.OldPlant
                              Sow.SkipRow,
                              Sow.SkipPlant,
                              Sow.Cultivar}));
-            Summary.WriteMessage(FullPath, summary.ToString());
+            Summary.WriteMessage(this, summary.ToString());
         }
 
         /// <summary>
@@ -852,13 +864,13 @@ namespace Models.PMF.OldPlant
             double n_tops_residue = n_residue - n_root_residue;
             double p_tops_residue = p_residue - p_root_residue;
 
-            Summary.WriteMessage(FullPath, "Crop harvested.");
+            Summary.WriteMessage(this, "Crop harvested.");
 
-            Summary.WriteMessage(FullPath, "Organic matter from crop:-  Tops to surface residue      Roots to soil FOM");
+            Summary.WriteMessage(this, "Organic matter from crop:-  Tops to surface residue      Roots to soil FOM");
 
-            Summary.WriteMessage(FullPath, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
+            Summary.WriteMessage(this, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
                                             dm_tops_residue, dm_root_residue));
-            Summary.WriteMessage(FullPath, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
+            Summary.WriteMessage(this, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
                                             n_tops_residue, n_root_residue));
 
             double dm_removed_tops = dm_tops_chopped - dm_tops_residue;
@@ -868,11 +880,11 @@ namespace Models.PMF.OldPlant
             double p_removed_tops = p_tops_chopped - p_tops_residue;
             double p_removed_root = p_root_chopped - p_root_residue;
 
-            Summary.WriteMessage(FullPath, "    Organic matter removed from system:-      From Tops               From Roots");
+            Summary.WriteMessage(this, "    Organic matter removed from system:-      From Tops               From Roots");
 
-            Summary.WriteMessage(FullPath, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
+            Summary.WriteMessage(this, string.Format("                  DM (kg/ha) = {0,21:F1}{1,24:F1}",
                               dm_removed_tops, dm_removed_root));
-            Summary.WriteMessage(FullPath, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
+            Summary.WriteMessage(this, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
                               n_removed_tops, n_removed_root));
         }
         #endregion
@@ -966,7 +978,7 @@ namespace Models.PMF.OldPlant
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }
