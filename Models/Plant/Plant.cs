@@ -172,6 +172,7 @@ namespace Models.PMF
         /// <summary>
         /// Root system information
         /// </summary>
+        [XmlIgnore]
         public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
 
         /// <summary>

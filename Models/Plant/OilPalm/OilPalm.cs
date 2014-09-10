@@ -66,6 +66,8 @@ namespace Models.PMF.OilPalm
                 rootSystem = value;
             }
         }
+
+        [NonSerialized]
         private RootSystem rootSystem;
 
         private Cultivar cultivarDefinition;

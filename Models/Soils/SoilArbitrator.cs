@@ -12,10 +12,10 @@ namespace Models.Soils
     /// <summary>
     /// A class representing a root system.
     /// </summary>
+    [Serializable]
     public class RootSystem
     {
         public ICrop Crop;
-        public Dictionary<string, double> SWStrength = new Dictionary<string,double>(); //SW source strength for each field/zone the crop is in
         public List<RootZone> RootZones;
 
         public double[] Uptake { get; set; }
@@ -31,6 +31,7 @@ namespace Models.Soils
         /// <summary>
         /// The parent root system
         /// </summary>
+        [NonSerialized]
         public RootSystem Parent;
         /// <summary>
         /// Name of the plant that owns this root zone.
@@ -194,8 +195,6 @@ namespace Models.Soils
                  Soil Soil = (Soil)z.Find(typeof(Soil));
                  Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
             }
-
-
         }
 
         /// <summary>

@@ -48,6 +48,7 @@ namespace Models.PMF
         private int NumPlots;
         private double[] dlayer;
         private string[] zoneList;
+        [NonSerialized]
         private RootSystem rootSystem;
 
         [Units("mm/mm")]
