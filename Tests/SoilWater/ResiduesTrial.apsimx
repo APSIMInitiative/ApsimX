@@ -124,20 +124,32 @@
               <Name>ResidueTypes</Name>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>Barley</PoolName>
+                <ResidueType>Barley</ResidueType>
+                <Mass>2026</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>1</StandingFraction>
+              </Pool>
+            </Pools>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>2026</mass>
             <standing_fraction>1</standing_fraction>
+            <cpr>NaN</cpr>
             <cnr>80</cnr>
             <CriticalResidueWeight>2000</CriticalResidueWeight>
             <OptimumDecompTemp>20</OptimumDecompTemp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
             <TotalLeachRain>25</TotalLeachRain>
             <MinRainToLeach>10</MinRainToLeach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
             <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
@@ -150,20 +162,32 @@
               <Name>ResidueTypes</Name>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>Barley</PoolName>
+                <ResidueType>Barley</ResidueType>
+                <Mass>8300</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>8300</mass>
             <standing_fraction>0</standing_fraction>
+            <cpr>NaN</cpr>
             <cnr>80</cnr>
             <CriticalResidueWeight>2000</CriticalResidueWeight>
             <OptimumDecompTemp>20</OptimumDecompTemp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
             <TotalLeachRain>25</TotalLeachRain>
             <MinRainToLeach>10</MinRainToLeach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
             <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
@@ -176,20 +200,32 @@
               <Name>ResidueTypes</Name>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>Barley</PoolName>
+                <ResidueType>Barley</ResidueType>
+                <Mass>400</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>1</StandingFraction>
+              </Pool>
+            </Pools>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>400</mass>
             <standing_fraction>1</standing_fraction>
+            <cpr>NaN</cpr>
             <cnr>80</cnr>
             <CriticalResidueWeight>2000</CriticalResidueWeight>
             <OptimumDecompTemp>20</OptimumDecompTemp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
             <TotalLeachRain>25</TotalLeachRain>
             <MinRainToLeach>10</MinRainToLeach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
             <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
@@ -202,20 +238,32 @@
               <Name>ResidueTypes</Name>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>Barley</PoolName>
+                <ResidueType>Barley</ResidueType>
+                <Mass>0</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>1</StandingFraction>
+              </Pool>
+            </Pools>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>0</mass>
             <standing_fraction>1</standing_fraction>
+            <cpr>NaN</cpr>
             <cnr>80</cnr>
             <CriticalResidueWeight>2000</CriticalResidueWeight>
             <OptimumDecompTemp>20</OptimumDecompTemp>
-            <cum_eos_max>20</cum_eos_max>
-            <cnrf_coeff>0.277</cnrf_coeff>
-            <cnrf_optcn>25</cnrf_optcn>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
             <TotalLeachRain>25</TotalLeachRain>
             <MinRainToLeach>10</MinRainToLeach>
-            <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
             <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
@@ -758,20 +806,32 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Barley</PoolName>
+              <ResidueType>Barley</ResidueType>
+              <Mass>2026</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>1</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Barley</PoolName>
           <type>Barley</type>
           <mass>2026</mass>
           <standing_fraction>1</standing_fraction>
+          <cpr>NaN</cpr>
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
-          <cum_eos_max>20</cum_eos_max>
-          <cnrf_coeff>0.277</cnrf_coeff>
-          <cnrf_optcn>25</cnrf_optcn>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
           <TotalLeachRain>25</TotalLeachRain>
           <MinRainToLeach>10</MinRainToLeach>
-          <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>

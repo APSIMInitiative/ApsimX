@@ -141,10 +141,6 @@
         private double DailyInitialC;
         private double DailyInitialN;
 
-        /// <summary>
-        /// standing fraction array
-        /// </summary>
-        public double[] _standing_fraction;
         public string ReportAdditions { get; set; }
         public string ReportRemovals { get; set; }
 
@@ -161,48 +157,221 @@
             MinRainToLeach = 10;
             CriticalMinimumOrganicC = 0.004;
             DefaultCPRatio = 0.0;
+            DefaultStandingFraction = 0.0;
             StandingExtinctCoeff = 0.5;
             FractionFaecesAdded = 0.5;
             ResidueTypes = new ResidueTypesList();
-            Pools = new PoolTypesList();
+            SurfOM = new List<SurfOrganicMatterType>();
+            Pools = new List<Pool>();
         }
-
-        #region exposed properties
-        #region BensParams
 
         public ResidueTypesList ResidueTypes { get; set; }
         public TillageTypesList TillageTypes { get; set; }
-        private PoolTypesList Pools { get; set; }
+        public List<Pool> Pools { get; set; }
+
+        #region exposed properties
+
+        #region BensParams
+        // The properites is this region (from PoolName to cnr) represent the "old" way of serialising
+        // the pools of residues initially on the surface. This is now handled by the "Pools" list.
+        // However, the user interface doesn't yet know how to deal with the "Pools" structure, so this
+        // representation needs to be retained a while longer. Once the GUI has been extended, and existing
+        // simulations have been converted, this stuff can (and should) be removed.
 
         [Summary]
         [Description("Pool name")]
         [Units("")]
-        public string PoolName { get; set; }
+        public string PoolName {
+            get
+            {
+                string result = string.Empty;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.PoolName;
+                }
+                return result;
+            }
+            set
+            {
+                string[] tempName = ToArray<string>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempName.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].PoolName = tempName[i];
+                }
+            }
+        }
 
         [Summary]
         [Description("Pool type")]
         [Units("")]
-        public string type { get; set; }
+        public string type 
+        {
+            get
+            {
+                string result = string.Empty;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.ResidueType;
+                }
+                return result;
+            }
+            set
+            {
+                string[] tempName = ToArray<string>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempName.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].ResidueType = tempName[i];
+                }
+            }
+        }
 
         [Summary]
         [Description("Mass")]
         [Units("kg/ha")]
-        public string mass { get; set; }
+        public string mass
+        {
+            get
+            {
+                string result = string.Empty;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.Mass.ToString();
+                }
+                return result;
+            }
+            set
+            {
+                double[] tempVals = ToArray<double>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempVals.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].Mass = tempVals[i];
+                }
+            }
+        }
 
         [Summary]
         [Description("Standing fraction")]
         [Units("0-1")]
-        public string standing_fraction { get; set; }
+        public string standing_fraction
+        {
+            get
+            {
+                string result = string.Empty;
+                bool allEmpty = true;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.StandingFraction.ToString();
+                    allEmpty &= double.IsNaN(aPool.StandingFraction);
+                }
+                return allEmpty ? string.Empty : result;
+            }
+            set
+            {
+                double[] tempVals = ToArray<double>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempVals.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].StandingFraction = tempVals[i];
+                }
+            }
+        }
 
         [Summary]
         [Description("CPR")]
         [Units("")]
-        public string cpr { get; set; }
+        public string cpr
+        {
+            get
+            {
+                string result = string.Empty;
+                bool allEmpty = true;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.CPRatio.ToString();
+                    allEmpty &= double.IsNaN(aPool.CPRatio);
+                }
+                return allEmpty ? string.Empty : result;
+            }
+            set
+            {
+                double[] tempVals = ToArray<double>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempVals.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].CPRatio = tempVals[i];
+                }
+            }
+        }
 
         [Summary]
         [Description("CNR")]
         [Units("")]
-        public string cnr { get; set; }
+        public string cnr
+        {
+            get
+            {
+                string result = string.Empty;
+                foreach (Pool aPool in Pools)
+                {
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        result += " ";
+                    }
+                    result += aPool.CNRatio.ToString();
+                }
+                return result;
+            }
+            set
+            {
+                double[] tempVals = ToArray<double>(value);   // temporary array for residue names;
+                for (int i = 0; i < tempVals.Length; i++)
+                {
+                    if (i >= Pools.Count)
+                    {
+                        Pools.Add(new Pool());
+                    }
+                    Pools[i].CNRatio = tempVals[i];
+                }
+            }
+        }
 
         #endregion
 
@@ -261,6 +430,12 @@
         /// </summary>
         [Units("")]
         public double DefaultCPRatio { get; set; }
+
+        /// <summary>
+        /// Default standing fraction for initial residue pools
+        /// </summary>
+        [Units("")]
+        public double DefaultStandingFraction { get; set; }
 
         /// <summary>
         /// extinction coefficient for standing residues
@@ -838,7 +1013,7 @@
         }
 
         [Serializable]
-        public class PoolType : Model
+        public class Pool
         {
             public string PoolName { get; set; }
             public string ResidueType { get; set; }
@@ -846,12 +1021,19 @@
             public double CNRatio { get; set; }
             public double CPRatio { get; set; }
             public double StandingFraction { get; set; }
-        }
 
-        [Serializable]
-        public class PoolTypesList : Model
-        {
-            public List<PoolType> Pool { get; set; }
+            /// <summary>
+            /// Constructor provides initial values
+            /// </summary>
+            public Pool()
+            {
+                PoolName = string.Empty;
+                ResidueType = string.Empty;
+                Mass = 0.0;
+                CNRatio = Double.NaN;
+                CPRatio = Double.NaN;
+                StandingFraction = Double.NaN;
+            }
         }
 
         private const double acceptableErr = 1e-4;
@@ -1195,7 +1377,7 @@
                 ResidueTypes = new ResidueTypesList();
             if (TillageTypes == null)
                 TillageTypes = new TillageTypesList();
-            SurfOM = null;
+            SurfOM = new List<SurfOrganicMatterType>();
             MetData = new Models.WeatherFile.NewMetType();
             irrig = 0;
             eos = 0;
@@ -1345,7 +1527,7 @@
         {
             OMFractionType SOMstate = new OMFractionType();
 
-            if (SurfOM == null)
+            if (SurfOM == null || SurfOM.Count == 0)
                 return SOMstate;
 
             SOMstate.N = SurfOM.Sum<SurfOrganicMatterType>(x => x.no3 + x.nh4);
@@ -1401,6 +1583,9 @@
         /// </summary>
         private void ReadParam()
         {
+            // The commented block below has largely been superceded by the use of get and set accessors, which insert
+            // the values into the "Pools" list for us.
+            /* 
             // Local Variables;
             string[] tempName = ToArray<string>(PoolName);   // temporary array for residue names;
             string[] tempType = ToArray<string>(type);       // temporary array for residue types;
@@ -1421,11 +1606,10 @@
                 throw new ApsimXException(FullPath, "Number of residue names and weights do not match");
             }
 
-            double[] totC = new double[tempName.Length];  // total C in residue;
-            double[] totN = new double[tempName.Length];  // total N in residue;
-            double[] totP = new double[tempName.Length];  // total P in residue;
-
-            _standing_fraction = tempStandingFraction;
+            if (tempName.Length != tempResidueCNr.Length)
+            {
+                throw new ApsimXException(FullPath, "Number of residue names and C:N ratios do not match");
+            }
 
             // ASSUMING that a value of 0 here means that no C:P ratio was set
             // ASSUMING that this will only be called with a single value in tempResidueCPr (as was initially coded - the only reason we are using arrays is because that was how the FORTRAN did it)
@@ -1440,9 +1624,32 @@
                 tempResidueCPr = temp;
             }
 
+            if (tempName.Length > 0)
+            {
+                Pools.Clear();
+                for (int i = 0; i < tempName.Length; i++)
+                {
+                    Pool newPool = new Pool();
+                    newPool.PoolName = tempName[i];
+                    newPool.ResidueType = tempType[i];
+                    newPool.Mass = tempMass[i];
+                    newPool.CNRatio = tempResidueCNr[i];
+                    newPool.CPRatio = tempResidueCPr[i];
+                    if (tempStandingFraction.Length > i)
+                        newPool.StandingFraction = tempStandingFraction[i];
+                    else
+                        newPool.StandingFraction = DefaultStandingFraction;
+                    Pools.Add(newPool);
+                }
+            }
+             */
+
+            double[] totC = new double[Pools.Count];  // total C in residue;
+            double[] totN = new double[Pools.Count];  // total N in residue;
+            double[] totP = new double[Pools.Count];  // total P in residue;
+
             if (ReportAdditions == null || ReportAdditions.Length == 0)
                 ReportAdditions = "no";
-
 
             if (ReportRemovals == null || ReportRemovals.Length == 0)
                 ReportRemovals = "no";
@@ -1453,43 +1660,54 @@
 
             // SurfOM = new List<SurfOrganicMatterType>();
 
-            for (int i = 0; i < tempName.Length; i++)
+            for (int i = 0; i < Pools.Count; i++)
             {
-                int SOMNo = AddNewSurfOM(tempName[i], tempType[i]);
+                // Don't bother adding this if the mass is zero
+                if (Pools[i].Mass == 0.0)
+                    continue;
+                
+                // Normally the residue shouldn't already exist, and we
+                // will need to add it, and normally this should result in SOMNo == i
+                // but it's safest not to assume this
+                int SOMNo = GetResidueNumber(Pools[i].PoolName);
+                if (SOMNo < 0) 
+                {
+                    SOMNo = AddNewSurfOM(Pools[i].PoolName, Pools[i].ResidueType);
+                }
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 = Utility.Math.Divide(no3ppm[i], 1000000.0, 0.0) * tempMass[i];
-                SurfOM[SOMNo].nh4 = Utility.Math.Divide(nh4ppm[i], 1000000.0, 0.0) * tempMass[i];
-                SurfOM[SOMNo].po4 = Utility.Math.Divide(po4ppm[i], 1000000.0, 0.0) * tempMass[i];
+                SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
+                SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
+                SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
 
-                totC[i] = tempMass[i] * C_fract[i];
-                totN[i] = Utility.Math.Divide(totC[i], tempResidueCNr[i], 0.0);
-                totP[i] = Utility.Math.Divide(totC[i], tempResidueCPr[i], 0.0);
+                totC[i] = Pools[i].Mass * C_fract[SOMNo];
+                totN[i] = Utility.Math.Divide(totC[i], Pools[i].CNRatio, 0.0);
+
+                // If a C:P ratio is not provided, use the default
+                double cpr = double.IsNaN(Pools[i].CPRatio) ? DefaultCPRatio : Pools[i].CPRatio;
+                totP[i] = Utility.Math.Divide(totC[i], cpr, 0.0);
+                // Probably not really the best way to determine phosphorus "awareness"
+                phosphorusAware = !(double.IsNaN(Pools[i].CPRatio) || Pools[i].CPRatio == 0.0);
+
+                double standFract = double.IsNaN(Pools[i].StandingFraction) ? DefaultCPRatio : Pools[i].StandingFraction;
 
                 for (int j = 0; j < maxFr; j++)
                 {
-                    SurfOM[i].Standing[j] = new OMFractionType()
-                        {
-                            amount = tempMass[i] * frPoolC[j, i] * _standing_fraction[i],
-                            C = totC[i] * frPoolC[j, i] * _standing_fraction[i],
-                            N = totN[i] * frPoolN[j, i] * _standing_fraction[i],
-                            P = totP[i] * frPoolP[j, i] * _standing_fraction[i],
-                            AshAlk = 0.0
-                        };
+                    SurfOM[SOMNo].Standing[j].amount += Pools[i].Mass * frPoolC[j, SOMNo] * standFract;
+                    SurfOM[SOMNo].Standing[j].C += totC[i] * frPoolC[j, SOMNo] * standFract;
+                    SurfOM[SOMNo].Standing[j].N += totN[i] * frPoolN[j, SOMNo] * standFract;
+                    SurfOM[SOMNo].Standing[j].P += totP[i] * frPoolP[j, SOMNo] * standFract;
+                    SurfOM[SOMNo].Standing[j].AshAlk += 0.0;
 
-                    SurfOM[i].Lying[j] = new OMFractionType()
-                        {
-                            amount = tempMass[i] * frPoolC[j, i] * (1.0 - _standing_fraction[i]),
-                            C = totC[i] * frPoolC[j, i] * (1.0 - _standing_fraction[i]),
-                            N = totN[i] * frPoolN[j, i] * (1.0 - _standing_fraction[i]),
-                            P = totP[i] * frPoolP[j, i] * (1.0 - _standing_fraction[i]),
-                            AshAlk = 0.0
-                        };
+                    SurfOM[SOMNo].Lying[j].amount += Pools[i].Mass * frPoolC[j, SOMNo] * (1.0 - standFract);
+                    SurfOM[SOMNo].Lying[j].C += totC[i] * frPoolC[j, SOMNo] * (1.0 - standFract);
+                    SurfOM[SOMNo].Lying[j].N += totN[i] * frPoolN[j, SOMNo] * (1.0 - standFract);
+                    SurfOM[SOMNo].Lying[j].P += totP[i] * frPoolP[j, SOMNo] * (1.0 - standFract);
+                    SurfOM[SOMNo].Lying[j].AshAlk += 0.0;
                 }
-
-                DailyInitialC = totC.Sum();
-                DailyInitialN = totN.Sum();
             }
+            DailyInitialC = totC.Sum();
+            DailyInitialN = totN.Sum();
         }
 
 
@@ -1812,13 +2030,13 @@
         private SurfaceOrganicMatterDecompType SendPotDecompEvent()
         {
 
-            if (numSurfom <= 0)
-                return null;
-
             SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType()
             {
                 Pool = new SurfaceOrganicMatterDecompPoolType[numSurfom]
             };
+
+            if (numSurfom <= 0)
+                return SOMDecomp;
 
             double[]
                 c_pot_decomp,

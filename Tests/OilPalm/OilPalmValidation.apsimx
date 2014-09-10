@@ -394,6 +394,24 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>oilpalm</PoolName>
+              <ResidueType>oilpalm</ResidueType>
+              <Mass>24000</Mass>
+              <CNRatio>39</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+            <Pool>
+              <PoolName>oilpalmstem</PoolName>
+              <ResidueType>oilpalmstem</ResidueType>
+              <Mass>63000</Mass>
+              <CNRatio>145</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -409,6 +427,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -2028,6 +2047,24 @@ namespace Models
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>oilpalm</PoolName>
+              <ResidueType>oilpalm</ResidueType>
+              <Mass>24000</Mass>
+              <CNRatio>39</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+            <Pool>
+              <PoolName>oilpalmstem</PoolName>
+              <ResidueType>oilpalmstem</ResidueType>
+              <Mass>63000</Mass>
+              <CNRatio>145</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -2043,6 +2080,7 @@ namespace Models
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -3682,6 +3720,24 @@ namespace Models
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>oilpalm</PoolName>
+              <ResidueType>oilpalm</ResidueType>
+              <Mass>24000</Mass>
+              <CNRatio>39</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+            <Pool>
+              <PoolName>oilpalmstem</PoolName>
+              <ResidueType>oilpalmstem</ResidueType>
+              <Mass>63000</Mass>
+              <CNRatio>145</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>oilpalm oilpalmstem</PoolName>
           <type>oilpalm oilpalmstem</type>
           <mass>24000 63000</mass>
@@ -3697,6 +3753,7 @@ namespace Models
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>

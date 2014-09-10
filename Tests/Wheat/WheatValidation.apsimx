@@ -644,10 +644,20 @@ namespace Models
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>Wheat</ResidueType>
+              <Mass>0</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>0</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>Wheat</type>
           <mass>0</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <standing_fraction>0</standing_fraction>
           <cpr>0</cpr>
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
@@ -659,6 +669,7 @@ namespace Models
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -1409,10 +1420,20 @@ namespace Models
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>500</Mass>
+              <CNRatio>100</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>wheat</type>
           <mass>500</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <standing_fraction>0</standing_fraction>
           <cpr />
           <cnr>100</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
@@ -1424,6 +1445,7 @@ namespace Models
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -2091,10 +2113,20 @@ namespace Models
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>Wheat</ResidueType>
+              <Mass>500</Mass>
+              <CNRatio>120</CNRatio>
+              <CPRatio>0</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>Wheat</type>
           <mass>500</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <standing_fraction>0</standing_fraction>
           <cpr>0</cpr>
           <cnr>120</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
@@ -2106,6 +2138,7 @@ namespace Models
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -3192,10 +3225,20 @@ private void OnDoManagement(object sender, EventArgs e)
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>0</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>0</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>wheat</type>
           <mass>0</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <standing_fraction>0</standing_fraction>
           <cpr>0</cpr>
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
@@ -3207,6 +3250,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -4274,9 +4318,6 @@ private void OnDoManagement(object sender, EventArgs e)
         </Irrigation>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <_standing_fraction>
-            <double>0</double>
-          </_standing_fraction>
           <PondActive>no</PondActive>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
@@ -4288,10 +4329,20 @@ private void OnDoManagement(object sender, EventArgs e)
             <Name>TillageTypesList</Name>
             <TillageType />
           </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>2500</Mass>
+              <CNRatio>30</CNRatio>
+              <CPRatio>0</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>wheat</type>
           <mass>2500</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <standing_fraction>0</standing_fraction>
           <cpr>0</cpr>
           <cnr>30</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
@@ -4303,6 +4354,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -6407,12 +6459,22 @@ public class Script : Model
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>wheat</type>
-          <mass>1000.</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
           <cpr />
-          <cnr>80.0</cnr>
+          <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
           <MaxCumulativeEOS>20</MaxCumulativeEOS>
@@ -6422,6 +6484,7 @@ public class Script : Model
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -8213,12 +8276,22 @@ public class Script : Model
               <Name>ResidueTypes</Name>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>wheat_stubble</PoolName>
+                <ResidueType>wheat</ResidueType>
+                <Mass>1000</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
             <PoolName>wheat_stubble</PoolName>
             <type>wheat</type>
-            <mass>1000.</mass>
-            <standing_fraction>0.0</standing_fraction>
+            <mass>1000</mass>
+            <standing_fraction>0</standing_fraction>
             <cpr />
-            <cnr>80.0</cnr>
+            <cnr>80</cnr>
             <CriticalResidueWeight>2000</CriticalResidueWeight>
             <OptimumDecompTemp>20</OptimumDecompTemp>
             <MaxCumulativeEOS>20</MaxCumulativeEOS>
@@ -8228,6 +8301,7 @@ public class Script : Model
             <MinRainToLeach>10</MinRainToLeach>
             <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
             <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
@@ -9432,12 +9506,22 @@ public class Script : Model
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>wheat_stubble</PoolName>
           <type>wheat</type>
-          <mass>1000.</mass>
-          <standing_fraction>0.0</standing_fraction>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
           <cpr />
-          <cnr>80.0</cnr>
+          <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
           <MaxCumulativeEOS>20</MaxCumulativeEOS>
@@ -9447,6 +9531,7 @@ public class Script : Model
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
