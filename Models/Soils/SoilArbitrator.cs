@@ -189,7 +189,7 @@ namespace Models.Soils
             {
                 List<UptakeInfo> ThisZone = UptakeSums.AsEnumerable().Where(x => x.Zone.Name.Equals(z.Name)).ToList();
                 if (ThisZone.Count != 2)
-                    throw new ApsimXException(this.FullPath, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
+                    throw new ApsimXException(this, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
                  double[] ActualUptake = Utility.Math.Subtract(ThisZone[0].Uptake, ThisZone[1].Uptake);
                  Soil Soil = (Soil)z.Find(typeof(Soil));
                  Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);

@@ -136,7 +136,7 @@ namespace Models.PMF
             {
                 List<RootZone> thisRZ = RootSystem.RootZones.AsEnumerable().Where(x => x.Zone.Name.Equals(this.Parent.Name)).ToList();
                 if (thisRZ.Count == 0)
-                    throw new ApsimXException(this.FullPath, "Could not find root zone in Zone " + this.Parent.Name + " for SimpleTree");
+                    throw new ApsimXException(this, "Could not find root zone in Zone " + this.Parent.Name + " for SimpleTree");
 
                 thisCrop[i].Uptake = new double[thisCrop[i].SWDep.Length];
                 for (int j = 0; j < thisCrop[i].SWDep.Length; j++)
