@@ -126,10 +126,10 @@ namespace Models.Soils
                     currentSystem.RootZones = new List<RootZone>();
                     currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
                     if (currentZone.Zone == null)
-                        throw new ApsimXException(this.FullPath, "Could not find zone " + zone);
+                        throw new ApsimXException(this, "Could not find zone " + zone);
                     currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
                     if (currentZone.Soil == null)
-                        throw new ApsimXException(this.FullPath, "Could not find soil in zone " + zone);
+                        throw new ApsimXException(this, "Could not find soil in zone " + zone);
                     currentZone.RootDepth = 500;
                     currentZone.Name = Name;
                     currentZone.Parent = currentSystem;

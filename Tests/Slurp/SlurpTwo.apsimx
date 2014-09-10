@@ -408,7 +408,7 @@ namespace Models
 			if (Clock.Today == DateToUpdate)
 			{
                 myString="SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
-			    Summary.WriteMessage(FullPath, myString);
+			    Summary.WriteMessage(this, myString);
 			    this.Set(VariableToUpdate, tempValue);
 			}
         }
@@ -473,7 +473,7 @@ namespace Models
 		       currSWDep += Soil.SoilWater.sw_dep[j];
 		       currMinN += Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j];
 
-			   // Summary.WriteMessage(FullPath, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
+			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
 		    }
             diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.es;
             diffMinNUptake = (initMinN - currMinN); // what about denitrification?
@@ -1093,7 +1093,7 @@ namespace Models
 		       currSWDep += Soil.SoilWater.sw_dep[j];
 		       currMinN += Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j];
 
-			   // Summary.WriteMessage(FullPath, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
+			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
 		    }
             diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.es;
             diffMinNUptake = (initMinN - currMinN); // what about denitrification?

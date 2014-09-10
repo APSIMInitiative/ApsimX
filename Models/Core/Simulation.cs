@@ -94,7 +94,12 @@ namespace Models.Core
                 else
                     Msg += "\r\n" + err.StackTrace;
 
-                store.WriteMessage(Name, Clock.Today, err.ModelFullPath, err.Message, DataStore.ErrorLevel.Error);
+                string modelFullPath = string.Empty;
+                if (err.model != null)
+                {
+                    modelFullPath = Apsim.FullPath(err.model);
+                }
+                store.WriteMessage(Name, Clock.Today, modelFullPath, err.Message, DataStore.ErrorLevel.Error);
                 store.Disconnect();
                 CleanupRun();
                 throw new Exception(Msg);
@@ -129,11 +134,13 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            Events.Connect();
+            if (Events != null)
+                Events.Connect();
             ResolveLinks();
             foreach (Model child in Children.AllRecursively)
             {
-                child.Events.Connect();
+                if (Events != null)
+                    child.Events.Connect();
                 child.ResolveLinks();
             }
 
@@ -153,7 +160,7 @@ namespace Models.Core
             if (DoCommence != null)
                 DoCommence.Invoke(sender, new EventArgs());
             else
-                throw new ApsimXException(FullPath, "Cannot invoke Commenced");
+                throw new ApsimXException(this, "Cannot invoke Commenced");
         }
 
         /// <summary>

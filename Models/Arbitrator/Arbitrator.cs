@@ -898,7 +898,7 @@ namespace Models.Arbitrator
 
                     if ((i == plants.Length - 1) && (j == 0))
                     {
-                        Summary.WriteMessage(FullPath, potentialSupplyNitrogenPlantLayer[0, j] + " " + potentialSupplyNitrogenPlantLayer[i, j] + " " + NUptakeType.DeltaNO3[j]);
+                        Summary.WriteMessage(this, potentialSupplyNitrogenPlantLayer[0, j] + " " + potentialSupplyNitrogenPlantLayer[i, j] + " " + NUptakeType.DeltaNO3[j]);
                     }
                 }
             }  // close the layer loop

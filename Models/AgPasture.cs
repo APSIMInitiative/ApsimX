@@ -4394,7 +4394,7 @@ namespace Models
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(FullPath, "Agpasture.OnGraze");
+            Summary.WriteMessage(this, "Agpasture.OnGraze");
             //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }

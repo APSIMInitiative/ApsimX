@@ -453,7 +453,7 @@ namespace Models.Soils
                 }
 
                 NewSoluteType SoluteData = new NewSoluteType();
-                SoluteData.OwnerFullPath = FullPath;
+                SoluteData.OwnerFullPath = Apsim.FullPath(this);
                 SoluteData.solutes = solute_names;
 
                 NewSolute.Invoke(SoluteData);
@@ -567,7 +567,7 @@ namespace Models.Soils
                     for (int k = 0; k < Patches.disappearing.Count; k++)
                     {
                         MergePatches(Patches.recipient[k], Patches.disappearing[k]);
-                        Summary.WriteMessage(FullPath, "   merging Patch(" + Patches.disappearing[k].ToString() + ") into Patch(" +
+                        Summary.WriteMessage(this, "   merging Patch(" + Patches.disappearing[k].ToString() + ") into Patch(" +
                             Patches.recipient[k].ToString() + "). New patch area = " + Patch[Patches.recipient[k]].RelativeArea.ToString("#0.00#"));
                     }
                 }

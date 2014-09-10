@@ -81,7 +81,7 @@ namespace Models
                 // If this is being run on a background worker thread then check for cancellation
                 if (bw != null && bw.CancellationPending)
                 {
-                    Summary.WriteMessage(FullPath, "Simulation cancelled");
+                    Summary.WriteMessage(this, "Simulation cancelled");
                     return;
                 }
                 
@@ -161,7 +161,7 @@ namespace Models
             }
 
 
-            Summary.WriteMessage(FullPath, "Simulation terminated normally");
+            Summary.WriteMessage(this, "Simulation terminated normally");
         }
     }
 }

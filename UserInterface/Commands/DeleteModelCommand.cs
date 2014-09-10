@@ -39,7 +39,7 @@ namespace UserInterface.Commands
         {
             Apsim api = Apsim.Create(this.modelToDelete.Parent);
             this.modelWasRemoved = api.Remove(this.modelToDelete);
-            commandHistory.InvokeModelStructureChanged(api.FullPath);
+            commandHistory.InvokeModelStructureChanged(this.modelToDelete.Parent);
         }
 
         /// <summary>
@@ -51,9 +51,8 @@ namespace UserInterface.Commands
             if (this.modelWasRemoved)
             {
                 Apsim api = Apsim.Create(this.modelToDelete.Parent);
-            
                 api.Add(this.modelToDelete);
-                commandHistory.InvokeModelStructureChanged(api.FullPath);
+                commandHistory.InvokeModelStructureChanged(this.modelToDelete.Parent);
             }
         }
     }

@@ -203,7 +203,7 @@ namespace Models
                         string tryFileName = Utility.PathUtils.GetAbsolutePath(tempList[i], s);
                         if (!File.Exists(tryFileName)) 
                         {
-                            throw new ApsimXException("NetworkRun", "Could not construct absolute path for " + tempList[i]);
+                            throw new ApsimXException(null, "Could not construct absolute path for " + tempList[i]);
                         }
                         else 
                         {

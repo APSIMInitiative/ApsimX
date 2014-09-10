@@ -45,7 +45,7 @@ namespace Models.PMF.Organs
 
             string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
                              "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
-            Summary.WriteMessage(FullPath, message);
+            Summary.WriteMessage(this, message);
 
             Live.Clear();
             Dead.Clear();

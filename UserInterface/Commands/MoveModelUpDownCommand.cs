@@ -69,8 +69,8 @@ namespace UserInterface.Commands
         {
             parent.Models.Remove(ModelToMove);
             parent.Models.Insert(modelIndex + 1, ModelToMove);
-            CommandHistory.InvokeModelStructureChanged(parent.FullPath);
-            ExplorerView.CurrentNodePath = ModelToMove.FullPath;
+            CommandHistory.InvokeModelStructureChanged(parent);
+            ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
             ModelWasMoved = true;
         }
 
@@ -78,8 +78,8 @@ namespace UserInterface.Commands
         {
             parent.Models.Remove(ModelToMove);
             parent.Models.Insert(modelIndex - 1, ModelToMove);
-            CommandHistory.InvokeModelStructureChanged(parent.FullPath);
-            ExplorerView.CurrentNodePath = ModelToMove.FullPath;
+            CommandHistory.InvokeModelStructureChanged(parent);
+            ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
             ModelWasMoved = true;
         }
 

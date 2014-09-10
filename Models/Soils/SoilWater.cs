@@ -1640,7 +1640,7 @@ namespace Models.Soils
 
         private void IssueWarning(string warningText)
         {
-            Summary.WriteWarning(FullPath, warningText);
+            Summary.WriteWarning(this, warningText);
         }
 
         private double bound(double A, double Lower, double Upper)
@@ -2555,7 +2555,7 @@ namespace Models.Soils
                 tillage_cn_red = 0.0;
 
                 message = "Tillage CN reduction finished";
-                Summary.WriteMessage(FullPath, message);
+                Summary.WriteMessage(this, message);
 
             }
 
@@ -4566,7 +4566,7 @@ namespace Models.Soils
 
         public void Reset()
         {
-            Summary.WriteMessage(FullPath, "Resetting Soil Water Balance");
+            Summary.WriteMessage(this, "Resetting Soil Water Balance");
             //nb. this is the same as OnUserInit Event
 
             //Save State
@@ -4654,7 +4654,7 @@ namespace Models.Soils
             string line;
             line = String.Format("{0} {1} {2}                                        {3} {4:F} {5}                                        {6} {7:F}",
                                  "Soil tilled using ", tillage_type, Environment.NewLine, "CN reduction = ", tillage_cn_red, Environment.NewLine, "Acc rain     = ", tillage_cn_rain);
-            Summary.WriteMessage(FullPath, line);
+            Summary.WriteMessage(this, line);
 
 
             //! 3. Reset the accumulator

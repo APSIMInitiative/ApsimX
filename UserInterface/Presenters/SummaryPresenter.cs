@@ -60,7 +60,7 @@ namespace UserInterface.Presenters
             Utility.Configuration configuration = new Utility.Configuration();
 
             // Get a simulation object.
-            Simulation simulation = this.summary.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
 
             DataStore dataStore = new DataStore(simulation, false);
 

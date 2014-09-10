@@ -38,7 +38,7 @@ namespace Models.PostSimulationTools
         {
             get
             {
-                return ParentOfType(typeof(Simulations)) as Simulations;
+                return Apsim.Parent(this, typeof(Simulations)) as Simulations;
             }
         }
 

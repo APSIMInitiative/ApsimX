@@ -738,7 +738,7 @@ namespace Models.PMF.Organs
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
             Leaves.Clear();
-            Summary.WriteMessage(FullPath, "Removing leaves from plant");
+            Summary.WriteMessage(this, "Removing leaves from plant");
         }
         /// <summary>
         /// Fractional interception "above" a given node position 
@@ -1286,7 +1286,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
-            Summary.WriteMessage(FullPath, "Removing lowest Leaf");
+            Summary.WriteMessage(this, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
         }
 
@@ -1301,7 +1301,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
-            Summary.WriteMessage(FullPath, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
+            Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
 
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
@@ -1311,7 +1311,7 @@ namespace Models.PMF.Organs
         public override void OnCut()
         {
 
-            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
+            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();

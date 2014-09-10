@@ -17,18 +17,18 @@ namespace Models
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        public void WriteMessage(string fullPath, string message)
+        public void WriteMessage(IModel model, string message)
         {
         }
 
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        public void WriteWarning(string fullPath, string message)
+        public void WriteWarning(IModel model, string message)
         {
         }
     }

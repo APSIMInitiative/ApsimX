@@ -81,7 +81,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                CurrentPaddockName = this.FullPath;
+                CurrentPaddockName = Apsim.FullPath(this);
                 OurName = CurrentPaddockName;
                 if (OurName.Length > 0)
                     OurName += ".";

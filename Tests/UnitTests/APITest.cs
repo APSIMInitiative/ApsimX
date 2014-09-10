@@ -98,9 +98,9 @@ namespace UnitTests
             Apsim zone2API = Apsim.Create(zone2);
             Apsim soilWaterAPI = Apsim.Create(soil.Water);
             
-            Assert.AreEqual(this.simulationAPI.FullPath, ".Simulations.Test");
-            Assert.AreEqual(zone2API.FullPath, ".Simulations.Test.Field2");
-            Assert.AreEqual(soilWaterAPI.FullPath, ".Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(Apsim.FullPath(this.simulation), ".Simulations.Test");
+            Assert.AreEqual(Apsim.FullPath(zone2), ".Simulations.Test.Field2");
+            Assert.AreEqual(Apsim.FullPath(soil.Water), ".Simulations.Test.Field2.Soil.Water");
         }
 
         /// <summary>
@@ -128,16 +128,16 @@ namespace UnitTests
         /// A test to ensure that Parent of type method works.
         /// </summary>
         [Test]
-        public void ParentOfTypeTest()
+        public void ParentTest()
         {
             Zone zone2 = this.simulation.Models[4] as Zone;
             Graph graph = zone2.Models[0] as Graph;
             Apsim graphAPI = Apsim.Create(zone2);
             
-            Assert.NotNull(this.simulationAPI.ParentOfType(typeof(Simulations)));
-            Assert.AreEqual(graphAPI.ParentOfType(typeof(Simulations)).Name, "Simulations");
-            Assert.AreEqual(graphAPI.ParentOfType(typeof(Simulation)).Name, "Test");
-            Assert.AreEqual(graphAPI.ParentOfType(typeof(Zone)).Name, "Field2");
+            Assert.NotNull(Apsim.Parent(this.simulation, typeof(Simulations)));
+            Assert.AreEqual(Apsim.Parent(graph, typeof(Simulations)).Name, "Simulations");
+            Assert.AreEqual(Apsim.Parent(graph, typeof(Simulation)).Name, "Test");
+            Assert.AreEqual(Apsim.Parent(graph, typeof(Zone)).Name, "Field2");
         }
 
         /// <summary>

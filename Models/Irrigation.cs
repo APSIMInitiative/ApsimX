@@ -31,7 +31,7 @@ namespace Models
             if (Irrigated != null && amount > 0)
             {
                 if(efficiency > 1.0 || efficiency < 0)
-                    throw new ApsimXException(FullPath, "Efficiency value for irrigation event must bet between 0 and 1 ");
+                    throw new ApsimXException(this, "Efficiency value for irrigation event must bet between 0 and 1 ");
 
                 Models.Soils.IrrigationApplicationType water = new Models.Soils.IrrigationApplicationType();
                 water.Amount = amount * efficiency;
@@ -39,7 +39,7 @@ namespace Models
                 water.will_runoff = willRunoff;
                 IrrigationApplied = amount;
                 Irrigated.Invoke(this, water);
-                Summary.WriteMessage(FullPath, string.Format("{0} mm of water added at depth {1}", amount * efficiency, depth));
+                Summary.WriteMessage(this, string.Format("{0} mm of water added at depth {1}", amount * efficiency, depth));
             }
         }
 

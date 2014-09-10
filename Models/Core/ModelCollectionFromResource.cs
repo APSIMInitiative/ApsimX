@@ -22,7 +22,8 @@ namespace Models.Core
         /// We're about to be serialised. Remove our 'ModelFromResource' model from the list
         /// of all models so that is isn't serialised. 
         /// </summary>
-        public override void OnSerialising(bool xmlSerialisation)
+        [EventSubscribe("Serialising")]
+        public void OnSerialising(bool xmlSerialisation)
         {
             if (xmlSerialisation && ResourceName != null)
             {
@@ -45,7 +46,8 @@ namespace Models.Core
         /// <summary>
         /// Serialisation has completed. Reinstate 'ModelFromResource' if necessary.
         /// </summary>
-        public override void OnSerialised(bool xmlSerialisation)
+        [EventSubscribe("Serialised")]
+        public void OnSerialised(bool xmlSerialisation)
         {
             if (xmlSerialisation && allModels != null)
             {
@@ -57,9 +59,9 @@ namespace Models.Core
         /// We have just been deserialised. If from XML then load our model
         /// from resource.
         /// </summary>
-        public override void OnDeserialised(bool xmlSerialisation)
+        [EventSubscribe("Deserialised")]
+        public void OnDeserialised(bool xmlSerialisation)
         {
-            base.OnDeserialised(xmlSerialisation);
             if (xmlSerialisation)
             {
                 // lookup the resource get the xml and then deserialise to a model.

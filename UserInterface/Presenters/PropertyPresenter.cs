@@ -307,7 +307,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    throw new ApsimXException(this.model.FullPath, "Invalid property type: " + property.DataType.ToString());
+                    throw new ApsimXException(this.model, "Invalid property type: " + property.DataType.ToString());
                 }
             }
 

@@ -267,7 +267,7 @@ namespace Models.PMF.Organs
               }
               public override void OnCut()
         {
-            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
+            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
             Live.Clear();
             Dead.Clear();
         }

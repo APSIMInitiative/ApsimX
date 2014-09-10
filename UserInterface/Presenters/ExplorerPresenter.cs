@@ -339,7 +339,7 @@ namespace UserInterface.Presenters
                select the first item in the 'allModels' list. */
             if (this.view.CurrentNodePath == ".Simulations")
             {
-                this.view.CurrentNodePath = allModels[0].FullPath;
+                this.view.CurrentNodePath = Apsim.FullPath(allModels[0]);
                 return true;
             }
 
@@ -347,7 +347,7 @@ namespace UserInterface.Presenters
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (allModels[i].FullPath == this.view.CurrentNodePath)
+                if (Apsim.FullPath(allModels[i]) == this.view.CurrentNodePath)
                 {
                     index = i;
                     break;
@@ -366,7 +366,7 @@ namespace UserInterface.Presenters
             }
 
             // Select the next node.
-            this.view.CurrentNodePath = allModels[index + 1].FullPath;
+            this.view.CurrentNodePath = Apsim.FullPath(allModels[index + 1]);
             return true;
         }
 
@@ -583,7 +583,7 @@ namespace UserInterface.Presenters
             Model obj = this.ApsimXFile.Get(e.NodePath) as Model;
             if (obj != null)
             {
-                string xml = obj.Serialise();
+                string xml = Apsim.Serialise(obj);
                 Clipboard.SetText(xml);
 
                 DragObject dragObject = new DragObject();
@@ -733,7 +733,7 @@ namespace UserInterface.Presenters
                     string message;
                     if (err is ApsimXException)
                     {
-                        message = string.Format("[{0}]: {1}", (err as ApsimXException).ModelFullPath, err.Message);
+                        message = string.Format("[{0}]: {1}", (err as ApsimXException).model, err.Message);
                     }
                     else
                     {
@@ -750,7 +750,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="model">The model</param>
         /// <returns>The description</returns>
-        private NodeDescriptionArgs.Description GetNodeDescription(Model model)
+        private NodeDescriptionArgs.Description GetNodeDescription(IModel model)
         {
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = model.Name;
@@ -764,16 +764,13 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="model">Look at this models children</param>
         /// <returns>True if some are visible</returns>
-        private bool SomeChildrenVisible(Model model)
+        private bool SomeChildrenVisible(IModel model)
         {
-            if (model.Children.All.Count > 0)
+            foreach (Model child in model.Models)
             {
-                foreach (Model child in model.Children.All)
+                if (!child.IsHidden)
                 {
-                    if (!child.IsHidden)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -852,9 +849,9 @@ namespace UserInterface.Presenters
         /// The model structure has changed. Tell the view about it. 
         /// </summary>
         /// <param name="modelPath">Path to the model file</param>
-        private void OnModelStructureChanged(string modelPath)
+        private void OnModelStructureChanged(IModel model)
         {
-            Model model = this.ApsimXFile.Get(modelPath) as Model;
+            string modelPath = Apsim.FullPath(model);
             this.view.InvalidateNode(modelPath, this.GetNodeDescription(model));
         }
 

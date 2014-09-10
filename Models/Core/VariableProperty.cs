@@ -43,7 +43,7 @@ namespace Models.Core
         {
             if (model == null || property == null)
             {
-                throw new ApsimXException(string.Empty, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
+                throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
             
             this.Object = model;
@@ -313,7 +313,7 @@ namespace Models.Core
                 }
                 else
                 {
-                    throw new ApsimXException(string.Empty, "Invalid property type: " + DataType.ToString());
+                    throw new ApsimXException(null, "Invalid property type: " + DataType.ToString());
                 }
             }
             else

@@ -60,8 +60,9 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
+                object[] args = new object[] { true };
                 foreach (Model model in simulations.Children.AllRecursively)
-                    model.OnDeserialised(true);
+                    Apsim.CallEventHandler(model, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -105,8 +106,9 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnSerialised method in each model.
+                object[] args = new object[] { true };
                 foreach (Model model in simulations.Children.AllRecursively)
-                    model.OnDeserialised(true);
+                    Apsim.CallEventHandler(model, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -147,8 +149,9 @@ namespace Models.Core
         /// </summary>
         public void Write(TextWriter stream)
         {
+            object[] args = new object[] { true };
             foreach (Model model in Children.AllRecursively)
-                model.OnSerialising(xmlSerialisation: true);
+                Apsim.CallEventHandler(model, "Serialising", args);
 
             try
             {
@@ -157,7 +160,8 @@ namespace Models.Core
             finally
             {
                 foreach (Model model in Children.AllRecursively)
-                    model.OnSerialised(xmlSerialisation: true);
+                    Apsim.CallEventHandler(model, "Serialised", args);
+
             }
         }
 

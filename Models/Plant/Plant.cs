@@ -322,7 +322,7 @@ namespace Models.PMF
 
             
        
-            Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
         }
         /// <summary>
         /// Harvest the crop.
@@ -339,14 +339,14 @@ namespace Models.PMF
 
             Phenology.OnHarvest();
 
-            Summary.WriteMessage(FullPath, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
         /// <summary>
         /// End the crop.
         /// </summary>
         public void EndCrop()
         {
-            Summary.WriteMessage(FullPath, "Crop ending");
+            Summary.WriteMessage(this, "Crop ending");
 
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());

@@ -87,7 +87,7 @@ namespace Models.PMF.OldPlant
                              + dlt_dm_green_tot.ToString("f6")
                              + " vs "
                              + DMSupply.ToString("f6");
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
             }
 
             Util.Debug("Arbitrator.DMSupply=%f", DMSupply);
@@ -155,7 +155,7 @@ namespace Models.PMF.OldPlant
                              + FinalRetranslocation.ToString("f6")
                              + " vs "
                              + dlt_dm_green_retrans.ToString("f6");
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
             }
             Util.Debug("Arbitrator.FinalRetranslocation=%f", -FinalRetranslocation);
         }
@@ -236,7 +236,7 @@ namespace Models.PMF.OldPlant
                               + GrowthNTotal.ToString("f6")
                               + " vs n_uptake_sum ="
                               + nUptakeSum.ToString("f6");
-                Summary.WriteWarning(FullPath, msg);
+                Summary.WriteWarning(this, msg);
             }
             Util.Debug("Arbitrator.nUptakeSum=%f", nUptakeSum);
 

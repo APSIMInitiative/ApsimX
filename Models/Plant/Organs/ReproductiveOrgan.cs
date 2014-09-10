@@ -103,10 +103,10 @@ namespace Models.PMF.Organs
 
             double YieldDW = (Live.Wt + Dead.Wt);
 
-            Summary.WriteMessage(FullPath, "Harvesting " + Name + " from " + Plant.Name);
-            Summary.WriteMessage(FullPath, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Summary.WriteMessage(FullPath, " Size: " + Size.ToString("f2") + " (g)");
-            Summary.WriteMessage(FullPath, " Number: " + Number.ToString("f2") + " (/m^2)");
+            Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
+            Summary.WriteMessage(this, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+            Summary.WriteMessage(this, " Size: " + Size.ToString("f2") + " (g)");
+            Summary.WriteMessage(this, " Number: " + Number.ToString("f2") + " (/m^2)");
 
             Live.Clear();
             Dead.Clear();
@@ -120,7 +120,7 @@ namespace Models.PMF.Organs
         public event NullTypeDelegate Harvesting;
         public override void OnCut()
         {
-            Summary.WriteMessage(FullPath, "Cutting " + Name + " from " + Plant.Name);
+            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
             Live.Clear();
             Dead.Clear();

@@ -116,10 +116,10 @@ namespace Models
         /// </summary>
         public DataStore(Model ownerModel, bool baseline = false)
         {
-            Simulation simulation = ownerModel.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(ownerModel, typeof(Simulation)) as Simulation;
             if (simulation == null)
             {
-                Simulations simulations = ownerModel.ParentOfType(typeof(Simulations)) as Simulations;
+                Simulations simulations = Apsim.Parent(ownerModel, typeof(Simulations)) as Simulations;
                 if (simulations != null)
                     Filename = Path.ChangeExtension(simulations.FileName, ".db");
             }
@@ -135,7 +135,7 @@ namespace Models
         /// </summary>
         public override void OnLoaded()
         {
-            Simulations simulations = ParentOfType(typeof(Simulations)) as Simulations;
+            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
             Filename = Path.ChangeExtension(simulations.FileName, ".db");
         }
 
@@ -603,7 +603,7 @@ namespace Models
                     (ForWriting == false && forWriting == true)))
                 {
                     if (Filename == null)
-                        throw new ApsimXException(FullPath, "Cannot find name of .db file");
+                        throw new ApsimXException(this, "Cannot find name of .db file");
 
                     Disconnect();
 
@@ -886,7 +886,7 @@ namespace Models
         {
             DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
             if (idTable == null)
-                throw new ApsimXException(FullPath, "Cannot find Simulations table");
+                throw new ApsimXException(this, "Cannot find Simulations table");
             List<double> ids = new List<double>();
             ids.AddRange(Utility.DataTable.GetColumnAsDoubles(idTable, "ID"));
 

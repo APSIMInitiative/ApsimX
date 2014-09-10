@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 using UserInterface.Commands;
 
 namespace UserInterface
@@ -24,7 +25,7 @@ namespace UserInterface
         public delegate void ModelChangedDelegate(object changedModel);
         public event ModelChangedDelegate ModelChanged;
 
-        public delegate void ModelStructureChangedDelegate(string Path);
+        public delegate void ModelStructureChangedDelegate(IModel model);
         public event ModelStructureChangedDelegate ModelStructureChanged;
 
         public void Clear()
@@ -132,10 +133,10 @@ namespace UserInterface
                 ModelChanged(Model);
         }
 
-        public void InvokeModelStructureChanged(string Path)
+        public void InvokeModelStructureChanged(IModel model)
         {
-            if (ModelStructureChanged != null && Path != null)
-                ModelStructureChanged(Path);
+            if (ModelStructureChanged != null && model != null)
+                ModelStructureChanged(model);
         }
     }
 }
