@@ -412,7 +412,7 @@ namespace UserInterface.Presenters
         private void CopyGraphXML(object sender, EventArgs e)
         {
             // Set the clipboard text.
-            System.Windows.Forms.Clipboard.SetText(this.Graph.Serialise());
+            System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(this.Graph));
         }
 
         /// <summary>

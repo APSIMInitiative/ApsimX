@@ -105,12 +105,12 @@ namespace Models.Soils
                     double OldPatch_NewArea = OldPatch_OldArea - NewPatch_NewArea;
                     if (NewPatch_NewArea < MinimumPatchArea)
                     {  // area to create is too small, patch will not be created
-                        Summary.WriteMessage(FullPath, "   attempt to create a new patch with area too small or negative ("
+                        Summary.WriteMessage(this, "   attempt to create a new patch with area too small or negative ("
                             + NewPatch_NewArea.ToString("#0.00#") + "). The patch will not be created.");
                     }
                     else if (OldPatch_NewArea < MinimumPatchArea)
                     {  // remaining area is too small or negative, patch will be created but old one will be deleted
-                        Summary.WriteMessage(FullPath, " attempt to set the area of existing patch(" + PatchIDs[i].ToString()
+                        Summary.WriteMessage(this, " attempt to set the area of existing patch(" + PatchIDs[i].ToString()
                             + ") to a value too small or negative (" + OldPatch_NewArea.ToString("#0.00#")
                             + "). The patch will be eliminated.");
 
@@ -146,7 +146,7 @@ namespace Models.Soils
                             Patch[k].PatchName = "Patch" + k.ToString();
                         }
                         PatchesJustAdded.Add(k);
-                        Summary.WriteMessage(FullPath, " create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") + ", based on existing patch("
+                        Summary.WriteMessage(this, " create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") + ", based on existing patch("
                             + PatchIDs[i].ToString() + ") - Old area = " + OldPatch_OldArea.ToString("#0.00#") + ", new area = "
                             + OldPatch_NewArea.ToString("#0.00#"));
                     }
@@ -333,7 +333,7 @@ namespace Models.Soils
                         }
                         else
                         {  // name passed did not correspond to any patch
-                            Summary.WriteMessage(FullPath, "  the patch name '" + NamesToCheck[pName] + "' did not correspond to any existing patch."
+                            Summary.WriteMessage(this, "  the patch name '" + NamesToCheck[pName] + "' did not correspond to any existing patch."
                                 + " Patch will be ignored.");
                         }
                     }
@@ -379,7 +379,7 @@ namespace Models.Soils
                         }
                         else
                         {  // id passed did not correspond to any patch
-                            Summary.WriteMessage(FullPath, "  the patch id '" + IDsToCheck[pId] + "' did not correspond to any existing patch."
+                            Summary.WriteMessage(this, "  the patch id '" + IDsToCheck[pId] + "' did not correspond to any existing patch."
                                 + " Patch will be ignored.");
                         }
                     }

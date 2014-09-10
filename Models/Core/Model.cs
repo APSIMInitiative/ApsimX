@@ -22,11 +22,6 @@ namespace Models.Core
     public class Model: IModel
     {
         /// <summary>
-        /// The name of the model.
-        /// </summary>
-        private string name = null;
-
-        /// <summary>
         /// The parent model. null if no parent
         /// </summary>
         private IModel parent = null;
@@ -42,33 +37,17 @@ namespace Models.Core
         /// </summary>
         public Model()
         {
+            this.Name = GetType().Name;
             this.Children = new ModelCollection(this);
             this.IsHidden = false;
+            this.Models = new List<Model>();
+            this.events = new Events(this);
         }
 
         /// <summary>
         /// Gets or sets the name of the model
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                if (this.name == null)
-                {
-                    return this.GetType().Name;
-                }
-                else
-                {
-                    return this.name;
-                }
-            }
-            
-            set
-            {
-                this.name = value;
-                this.CalcFullPath();
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a list of child models.   
@@ -115,7 +94,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.Analysis))]
         [XmlElement(typeof(Soils.InitialWater))]
         [XmlElement(typeof(Soils.Phosphorus))]
-        [XmlElement(typeof(Soils.Swim))]
+        [XmlElement(typeof(Soils.Swim3))]
         [XmlElement(typeof(Soils.LayerStructure))]
         [XmlElement(typeof(Soils.SoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature2))]
@@ -224,26 +203,7 @@ namespace Models.Core
         /// Gets or sets the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public IModel Parent
-        {
-            get
-            {
-                return this.parent;
-            }
-            
-            set
-            {
-                this.parent = value;
-                this.events = new Core.Events(this);
-                this.CalcFullPath();
-            }
-        }
-
-        /// <summary>
-        /// Gets the full path of the model.
-        /// </summary>
-        [XmlIgnore]
-        public string FullPath { get; private set; }
+        public IModel Parent { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.
@@ -281,7 +241,10 @@ namespace Models.Core
         public Events Events 
         { 
             get 
-            { 
+            {
+                if (this.events == null)
+                    this.events = new Events(this);
+
                 return this.events; 
             } 
         }
@@ -293,7 +256,7 @@ namespace Models.Core
         {
             get
             {
-                Simulation simulation = this.ParentOfType(typeof(Simulation)) as Simulation;
+                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                 if (simulation == null)
                 {
                     // Simulation can be null if this model is not under a simulation e.g. DataStore.
@@ -336,62 +299,7 @@ namespace Models.Core
         {
         }
 
-        /// <summary>
-        /// Called immediately before deserializing.
-        /// </summary>
-        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        public virtual void OnDeserialising(bool xmlSerialisation)
-        {
-        }
-
-        /// <summary>
-        /// Called immediately after deserialization.
-        /// </summary>
-        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        public virtual void OnDeserialised(bool xmlSerialisation)
-        {
-        }
-
-        /// <summary>
-        /// Called immediately before serializing.
-        /// </summary>
-        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
-        public virtual void OnSerialising(bool xmlSerialisation)
-        {
-        }
-
-        /// <summary>
-        /// Called immediately after serialization.
-        /// </summary>
-        /// <param name="xmlSerialisation">True when xml serialization is happening</param>
-        public virtual void OnSerialised(bool xmlSerialisation)
-        {
-        }
-
         #endregion
-
-        /// <summary>
-        /// Return a parent node of the specified type 't'. Will throw if not found.
-        /// </summary>
-        /// <param name="t">The name of the parent model to return</param>
-        /// <returns>The parent of the specified type.</returns>
-        public Model ParentOfType(Type t)
-        {
-            Model obj = this;
-            while (obj.Parent != null && obj.GetType() != t)
-            {
-                obj = obj.Parent as Model;
-            }
-
-            if (obj == null)
-            {
-                throw new ApsimXException(this.FullPath, "Cannot find a parent of type: " + t.Name);
-            }
-
-            return obj;
-        }
 
         /// <summary>
         /// Gets the value of a variable or model.
@@ -467,7 +375,7 @@ namespace Models.Core
         /// </summary>
         public void ResolveLinks()
         {
-            Simulation simulation = this.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -491,85 +399,6 @@ namespace Models.Core
         public void UnResolveLinks()
         {
             UnresolveLinks(this);
-        }
-
-        /// <summary>
-        /// Perform a deep Copy of the this model.
-        /// </summary>
-        /// <returns>The clone of the model</returns>
-        public Model Clone()
-        {
-            // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<Model> modelsToNotify = this.Children.AllRecursively;
-
-            // Get rid of our parent temporarily as we don't want to serialise that.
-            Models.Core.Model parent = this.Parent as Model;
-            this.Parent = null;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                foreach (Model model in modelsToNotify)
-                {
-                    model.OnSerialising(xmlSerialisation: false);
-                }
-
-                formatter.Serialize(stream, this);
-
-                foreach (Model model in modelsToNotify)
-                {
-                    model.OnSerialised(xmlSerialisation: false);
-                }
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                foreach (Model model in modelsToNotify)
-                {
-                    model.OnDeserialising(xmlSerialisation: false);
-                }
-
-                Model returnObject = (Model)formatter.Deserialize(stream);
-                foreach (Model model in modelsToNotify)
-                {
-                    model.OnDeserialised(xmlSerialisation: false);
-                }
-
-                // Reinstate parent
-                this.Parent = parent;
-
-                return returnObject;
-            }
-        }
-
-        /// <summary>
-        /// Serialize the model to a string and return the string.
-        /// </summary>
-        /// <returns>The string version of the model</returns>
-        public string Serialise()
-        {
-            // Get a list of all child models that we need to notify about the serialisation.
-            List<Model> modelsToNotify = this.Children.AllRecursively;
-            modelsToNotify.Insert(0, this);
-
-            // Let all models know that we're about to serialise.
-            foreach (Model model in modelsToNotify)
-            {
-                model.OnSerialising(xmlSerialisation: true);
-            }
-
-            // Do the serialisation
-            StringWriter writer = new StringWriter();
-            writer.Write(Utility.Xml.Serialise(this, true));
-
-            // Let all models know that we have completed serialisation.
-            foreach (Model model in modelsToNotify)
-            {
-                model.OnSerialised(xmlSerialisation: false);
-            }
-
-            // Set the clipboard text.
-            return writer.ToString();
         }
         
         #region Internals
@@ -625,8 +454,8 @@ namespace Models.Core
                     else if (!link.IsOptional)
                     {
                         throw new ApsimXException(
-                                    model.FullPath, 
-                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + model.FullPath + "'" + errorMsg);
+                                    model, 
+                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + Apsim.FullPath(model) + "'" + errorMsg);
                     }
                 }
             }
@@ -661,28 +490,6 @@ namespace Models.Core
             foreach (Model externalModel in model.FindAll())
             {
                 ResolveLinksInternal(externalModel, typeof(Model));
-            }
-        }
-
-        /// <summary>
-        /// Calculate the model's full path. 
-        /// </summary>
-        private void CalcFullPath()
-        {
-            this.FullPath = "." + this.Name;
-            Model parent = this.Parent as Model;
-            while (parent != null)
-            {
-                this.FullPath = this.FullPath.Insert(0, "." + parent.Name);
-                parent = parent.Parent as Model;
-            }
-
-            if (this.Models != null)
-            {
-                foreach (Model child in this.Models)
-                {
-                    child.CalcFullPath();
-                }
             }
         }
 

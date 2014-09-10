@@ -1320,7 +1320,7 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    Summary.WriteMessage(FullPath, " Attempt to assign values for OC during simulation, "
+                    Summary.WriteMessage(this, " Attempt to assign values for OC during simulation, "
                                      + "this operation is not valid and will be ignored");
                 }
                 else
@@ -1630,12 +1630,12 @@ namespace Models.Soils
                         if (InhibitionFactor_UHydrolysis[layer] < 0.0)
                         {
                             InhibitionFactor_UHydrolysis[layer] = 0.0;
-                            Summary.WriteMessage(FullPath, "Value for hydrolysis inhibition is below lower limit, value will be adjusted to 0.0");
+                            Summary.WriteMessage(this, "Value for hydrolysis inhibition is below lower limit, value will be adjusted to 0.0");
                         }
                         else if (InhibitionFactor_UHydrolysis[layer] > 1.0)
                         {
                             InhibitionFactor_UHydrolysis[layer] = 1.0;
-                            Summary.WriteMessage(FullPath, "Value for hydrolysis inhibition is above upper limit, value will be adjusted to 1.0");
+                            Summary.WriteMessage(this, "Value for hydrolysis inhibition is above upper limit, value will be adjusted to 1.0");
                         }
                     }
                     else
@@ -1662,12 +1662,12 @@ namespace Models.Soils
                         if (InhibitionFactor_Nitrification[layer] < 0.0)
                         {
                             InhibitionFactor_Nitrification[layer] = 0.0;
-                            Summary.WriteMessage(FullPath, "Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0");
+                            Summary.WriteMessage(this, "Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0");
                         }
                         else if (InhibitionFactor_Nitrification[layer] > 1.0)
                         {
                             InhibitionFactor_Nitrification[layer] = 1.0;
-                            Summary.WriteMessage(FullPath, "Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0");
+                            Summary.WriteMessage(this, "Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0");
                         }
                     }
                     else
@@ -1693,13 +1693,13 @@ namespace Models.Soils
                         if (InhibitionFactor_Denitrification[layer] < 0.0)
                         {
                             InhibitionFactor_Denitrification[layer] = 0.0;
-                            Summary.WriteMessage(FullPath, "Value for denitrification inhibition is below lower limit, "
+                            Summary.WriteMessage(this, "Value for denitrification inhibition is below lower limit, "
                                 + "value will be adjusted to 0.0");
                         }
                         else if (InhibitionFactor_Denitrification[layer] > 1.0)
                         {
                             InhibitionFactor_Denitrification[layer] = 1.0;
-                            Summary.WriteMessage(FullPath, "Value for denitrification inhibition is above upper limit, "
+                            Summary.WriteMessage(this, "Value for denitrification inhibition is above upper limit, "
                                 + "value will be adjusted to 1.0");
                         }
                     }
@@ -1726,12 +1726,12 @@ namespace Models.Soils
                         if (InhibitionFactor_Mineralisation[layer] < 0.0)
                         {
                             InhibitionFactor_Mineralisation[layer] = 0.0;
-                            Summary.WriteMessage(FullPath, "Value for mineralisation inhibition is below lower limit, value will be adjusted to 0.0");
+                            Summary.WriteMessage(this, "Value for mineralisation inhibition is below lower limit, value will be adjusted to 0.0");
                         }
                         else if (InhibitionFactor_Mineralisation[layer] > 1.0)
                         {
                             InhibitionFactor_Mineralisation[layer] = 1.0;
-                            Summary.WriteMessage(FullPath, "Value for mineralisation inhibition is above upper limit, value will be adjusted to 1.0");
+                            Summary.WriteMessage(this, "Value for mineralisation inhibition is above upper limit, value will be adjusted to 1.0");
                         }
                     }
                     else

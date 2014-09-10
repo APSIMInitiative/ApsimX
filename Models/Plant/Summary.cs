@@ -36,7 +36,7 @@ namespace Models.PMF
                 message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                 message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
             }
-            Summary.WriteMessage(FullPath, message);
+            Summary.WriteMessage(this, message);
         }
     }
 

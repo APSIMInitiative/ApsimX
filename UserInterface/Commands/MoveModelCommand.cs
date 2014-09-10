@@ -42,8 +42,8 @@ namespace UserInterface.Commands
                 OriginalName = FromModel.Name;
 
                 ToParent.Children.Add(FromModel);
-                CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
-                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(FromParent);
+                CommandHistory.InvokeModelStructureChanged(ToParent);
             }
         }
 
@@ -60,8 +60,8 @@ namespace UserInterface.Commands
                 FromModel.Name = OriginalName;
                 FromParent.Children.Add(FromModel);
 
-                CommandHistory.InvokeModelStructureChanged(FromParent.FullPath);
-                CommandHistory.InvokeModelStructureChanged(ToParent.FullPath);
+                CommandHistory.InvokeModelStructureChanged(FromParent);
+                CommandHistory.InvokeModelStructureChanged(ToParent);
             }
         }
 

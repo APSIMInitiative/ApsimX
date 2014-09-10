@@ -13,15 +13,15 @@ namespace Models.Core
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        void WriteMessage(string fullPath, string message);
+        void WriteMessage(IModel model, string message);
 
         /// <summary>
         /// Write a message to the summary
         /// </summary>
-        /// <param name="fullPath">The full path of the model writing the message</param>
+        /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        void WriteWarning(string fullPath, string message);
+        void WriteWarning(IModel model, string message);
     }
 }

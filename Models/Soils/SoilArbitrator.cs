@@ -84,6 +84,13 @@ namespace Models.Soils
         public double[] PotSWUptake;
     }
 
+    public struct UptakeInfo
+    {
+        public string ZoneName;
+        public double[] SWDep;
+        public double[] Uptake;
+    }
+
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -91,6 +98,8 @@ namespace Models.Soils
     {
         [Link]
         Simulation Simulation;
+        List<RootSystem> RootSystems = new List<RootSystem>();
+        List<RootZone> RootZones = new List<RootZone>();
 
         // Initialize IFormatProvider to print matrix/vector data (debug - allows matrices to be printed properly)
         CultureInfo formatProvider = (CultureInfo)CultureInfo.InvariantCulture.Clone();
@@ -101,225 +110,56 @@ namespace Models.Soils
         public override void OnSimulationCommencing()
         {
             formatProvider.TextInfo.ListSeparator = " ";
+
+
+            foreach (ICrop plant in Simulation.FindAll(typeof(ICrop)))
+            {
+                PMF.SimpleTree Tree = (PMF.SimpleTree)plant;
+                string[] zoneList = Tree.zones.Split(',');
+                int NumPlots = zoneList.Count();
+                RootSystem currentSystem = new RootSystem();
+                RootZone currentZone = new RootZone();
+
+                foreach (string zone in zoneList)
+                {
+                    currentSystem.Crop = plant;
+                    currentSystem.RootZones = new List<RootZone>();
+                    currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
+                    if (currentZone.Zone == null)
+                        throw new ApsimXException(this, "Could not find zone " + zone);
+                    currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
+                    if (currentZone.Soil == null)
+                        throw new ApsimXException(this, "Could not find soil in zone " + zone);
+                    currentZone.RootDepth = 500;
+                    currentZone.Name = Name;
+                    currentZone.Parent = currentSystem;
+                    currentSystem.RootZones.Add(currentZone);
+                }
+                RootSystems.Add(currentSystem);            }
         }
 
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoSoilArbitration(object sender, EventArgs e)
         {
             List<RootZone> RootZones = new List<RootZone>(); //get all rootZones
+            List<UptakeInfo> Uptakes = new List<UptakeInfo>();
 
-            foreach (ICrop crop in Simulation.FindAll(typeof(ICrop)))
+            //send all plants available sw_dep, will need to make it multi zone aware
+            //also add RootZones to main list
+            foreach (RootSystem rs in RootSystems)
             {
-                    crop.RootSystem.SWStrength = crop.RootSystem.CalcSWSourceStrength(); //TODO move to RootSystem
-                    RootZones.AddRange(crop.RootSystem.RootZones);
+                Uptakes.Add(rs.Crop.GetPotSWUptake(new UptakeInfo() { ZoneName = rs.RootZones[0].Zone.Name, 
+                                                       SWDep = rs.RootZones[0].Soil.SoilWater.sw_dep, 
+                                                       Uptake = new double[rs.RootZones[0].Soil.Thickness.Length] }));
+                RootZones.AddRange(rs.RootZones);
             }
 
-            //do water allocation for each paddock
-            foreach (Zone zone in Simulation.FindAll(typeof(Zone)))
-            {
-                string ZoneName = zone.Name;
-                Dictionary<string, double> PaddockSWDemands = new Dictionary<string,double>();
-                Dictionary<string, double> PaddockSWStrengths = new Dictionary<string,double>();
-                foreach (RootZone rz in GetRootZonesInCurrentField(RootZones, ZoneName)) //go through all crops and extract RootZones and crop SW demands in current field/zone
-                {
-                    PaddockSWDemands.Add(rz.Name, rz.Parent.SWDemand);
-                    PaddockSWStrengths.Add(rz.Name, rz.Parent.SWStrength[ZoneName]);
-                }
+            // science
 
-                double fieldArea = zone.Area;
+            //send plants actual water uptake
 
-                Soil Soil = (Soil)zone.Find(typeof(Soil));
-                int NumLayers = Soil.Thickness.Length;
-                double[] SWDep = Soil.SoilWater.sw_dep;
-                //get rootzones in current field/zone
-                List<RootZone> ZonesInField = GetRootZonesInCurrentField(RootZones, ZoneName);
-                double[] CropSWDemand = new double[ZonesInField.Count()];
-                for (int i = 0; i < ZonesInField.Count; i++) //get demand for all crops in paddock using relative SW strength
-                {
-                    //sw demand for the crop = total demand for sw by all crops in this zone * relative strength for this crop in this zone
-                    //calculate here instead of using lookup
-                    CropSWDemand[i] = PaddockSWDemands[ZonesInField[i].Name] * ZonesInField[i].Parent.SWStrength[ZonesInField[i].Zone.Name];//(double)RootZones[i].;
-                }
-                double[,] RelKLStrength = CalcRelKLStrength(ZonesInField, CropSWDemand);                //Relative kl strength for each crop in each layer of a field/zone
-                double[,] RelSWLayerStrength = CalcRelSWLayerStrength(ZonesInField, SWDep, NumLayers);  //Relative sw strength for each crop in each layer of a field/zone
-                double[,] SWSupply = CalcSWSupply(ZonesInField, SWDep, NumLayers);                      //sw available per crop/layer
-
-                double[,] LayerUptake = new double[ZonesInField.Count(), NumLayers];                    //actual sw uptake per crop for each layer
-                double[] LastCropSWDemand;  //These two are use to determine when an equilibrium has been reached
-                double[,] LastSWSupply;
-
-                /* Loop until we reach an equilibrium.
-                 *  A crop may use all the water available in one layer due to the prescence of another crop
-                 *  but still have extra water available in another layer so we loop until either all the water is used
-                 *  or the crop gets its full demand.
-                 */
-                do
-                {
-                    LastCropSWDemand = CropSWDemand;
-                    LastSWSupply = SWSupply;
-
-                    for (int i = 0; i < ZonesInField.Count(); i++) //get as much water as possible for the layer using relative kl strengths
-                    {
-                        RootZone Zone = (RootZone)RootZones[i];
-                        for (int j = 0; j < NumLayers; j++)
-                        {
-                            if (Utility.Math.Sum(CropSWDemand) < Utility.Math.Sum(SWSupply))
-                            {
-                                LayerUptake[i, j] = CropSWDemand[i] * RelSWLayerStrength[i, j] / ZonesInField[i].Parent.RootZones.Count;
-                            }
-                            else
-                                LayerUptake[i, j] = SWSupply[i, j] * RelKLStrength[j, i] * RootProportion(j, Zone.RootDepth, Zone.Soil.Thickness) / ZonesInField[i].Parent.RootZones.Count;
-
-                            if (LayerUptake[i, j] < 0)
-                                throw new ApsimXException(this.Name, "Layer uptake should not be negative");
-
-                        }
-                    }
-
-                    DenseMatrix Uptake = DenseMatrix.OfArray(LayerUptake);
-
-                    for (int i = 0; i < ZonesInField.Count(); i++) //subtract taken water from the supply and demand
-                    {
-                        CropSWDemand[i] -= Uptake.Row(i).Sum();
-
-                        for (int j = 0; j < NumLayers; j++)
-                        {
-                            SWSupply[i, j] -= LayerUptake[i, j];
-                        }
-                    }
-
-                    //subtract from soil water
-                   for (int j = 0; j < Uptake.ColumnCount; j++)
-                    {
-                        SWDep[j] -= Uptake.Column(j).Sum() / fieldArea;
-                    }
-
-                    //TODO: need to feed uptake back to crop
-                   Soil.SoilWater.sw_dep = SWDep;
-                } while (Utility.Math.Sum(LastCropSWDemand) != Utility.Math.Sum(CropSWDemand) && Utility.Math.Sum(LastSWSupply) != Utility.Math.Sum(SWSupply));
-            }
+            //modify soil water
         }
-
-        /// <summary>
-        /// For each crop, calculate the maximum water uptake for each layer.
-        /// </summary>
-        /// <param name="CropSWDemand">An array holding the SW demand for each crop.</param>
-        /// <param name="RelSWLayerStrength">The relative source strength for each crop and layer</param>
-        /// <param name="NumLayers">Number of layers in the soil profile</param>
-        /// <param name="RootZones">The rootzones to process in current paddock</param>
-        /// <param name="dlayer">Layer depth array</param>
-        /// <returns>A 2D array containing the maximum uptake for each crop and layer</returns>
-        private double[,] CalcCropSWLayerUptake(double[] CropSWDemand, double[,] RelSWLayerStrength, int NumLayers, List<RootZone> RootZones, double[] dlayer)
-        {
-            double[,] CropSWLayerUptake = new double[CropSWDemand.Length, NumLayers];
-            for (int i = 0; i < CropSWDemand.Length; i++)
-            {
-                RootZone Zone = (RootZone)RootZones[i];
-                for (int j = 0; j < NumLayers; j++)
-                {
-                    CropSWLayerUptake[i, j] = CropSWDemand[i] * RelSWLayerStrength[i, j] * RootProportion(j, Zone.RootDepth, dlayer);
-                }
-            }
-
-            return CropSWLayerUptake;
-        }
-
-        /// <summary>
-        /// Calculate the amount of water available to each crop on a per layer basis.
-        /// As crops will have different lower limits, they can have a different supply.
-        /// </summary>
-        /// <param name="RootZones">The rootzones to process in current paddock</param>
-        /// <param name="SWDep">An array containing depth of soil water per layer (mm/mm)</param>
-        /// <param name="NumLayers">Number of layers in the soil profile</param>
-        /// <returns>A 2D array containing the SW supply available for each crop and layer.</returns>
-        private double[,] CalcSWSupply(List<RootZone> RootZones, double[] SWDep, int NumLayers)
-        {
-            RootZone RootZone = new RootZone();
-            double[,] SWSupply = new double[RootZones.Count(), NumLayers];
-            for (int i = 0; i < RootZones.Count(); i++) //crops
-            {
-                RootZone = (RootZone)RootZones[i];
-                for (int j = 0; j < NumLayers; j++) // TODO move this loop to rootzone -each rz has a sw supply
-                {
-                    SWSupply[i, j] = RootZone.Soil.KL(RootZone.Name)[j] * (SWDep[j] - RootZone.Soil.LL(RootZone.Name)[j] * RootZone.Soil.Thickness[j]) * RootZone.Zone.Area;
-                    if (SWSupply[i, j] < 0)
-                        SWSupply[i, j] = 0; //can be < 0 if another crop with a lower LL has extracted below what this one can.
-                }
-            }
-            return SWSupply;
-        }
-
-
-        /// <summary>
-        /// Using the depth of soil water and current crop kl value, calculate a relative layer source strength for each crop.
-        /// </summary>
-        /// <param name="RootZones">The rootzones to process in current paddock</param>
-        /// <param name="SWDep">An array containing depth of soil water per layer (mm/mm)</param>
-        /// <param name="NumLayers">Number of layers in the soil profile</param>
-        /// <returns>A 2D array containing the relative source strength for each crop and layer.</returns>
-        private double[,] CalcRelSWLayerStrength(List<RootZone> RootZones, double[] SWDep, int NumLayers)
-        {
-            RootZone RootZone = new RootZone();
-            double[,] RelSWLayerStrength = new double[RootZones.Count(), NumLayers];
-            for (int i = 0; i < RootZones.Count(); i++) //crops
-            {
-                double TotalSource = 0;
-                RootZone = (RootZone)RootZones[i];
-                int DeepestRoot = CalcMaxRootLayer(RootZone.RootDepth, RootZone.Soil.Thickness);
-                for (int j = 0; j < NumLayers; j++)
-                    if (j <= DeepestRoot)
-                        TotalSource += RootZone.Soil.KL(RootZone.Name)[j] * SWDep[j];
-                for (int j = 0; j < NumLayers; j++)
-                    if (j <= DeepestRoot && RootZone.Soil.KL(RootZone.Name)[j] > 0)
-                        RelSWLayerStrength[i, j] = RootZone.Soil.KL(RootZone.Name)[j] * SWDep[j] / TotalSource;
-                    else
-                        RelSWLayerStrength[i, j] = 0;
-            }
-            return RelSWLayerStrength;
-        }
-
-        /// <summary>
-        /// Calculate relative strength of crop kl for each layer.
-        /// Will be 1 for a single crop.
-        /// </summary>
-        /// <param name="RootZones">The rootzones to process in current paddock</param>
-        /// <returns>A 2D array containing the relative kl strength of each crop and layer.</returns>
-        private double[,] CalcRelKLStrength(List<RootZone> RootZones, double[] CropSWDemand) // move to rootzone
-        {
-            double[][] KLArray = new double[RootZones.Count()][];
-            int[] LowestRootLayer = new int[RootZones.Count()];
-            for (int i = 0; i < KLArray.GetLength(0); i++) //extract the kl array from each zone
-            {
-                RootZone RootZone = RootZones[i];
-                KLArray[i] = RootZone.Soil.KL(RootZone.Name);
-                for (int j = 0; j < KLArray[i].Length; j++)
-                    if (CropSWDemand[i] == 0)
-                        KLArray[i][j] = 0;
-                LowestRootLayer[i] = CalcMaxRootLayer(RootZone.RootDepth, RootZone.Soil.Thickness);
-            }
-
-            //calculate relative demand strength for each layer
-            double[,] RelKLStrength = new double[KLArray[0].Length, KLArray.Length];
-            for (int i = 0; i < KLArray[0].Length; i++) //layer //move to rootzone
-            {
-                double KLSum = 0;
-                for (int j = 0; j < KLArray.Length; j++) //for the current layer, sum the kl's of each crop in the layer
-                {
-                    if (i <= LowestRootLayer[j])
-                        KLSum += KLArray[j][i];
-                }
-                for (int j = 0; j < KLArray.Length; j++) //use those summed kl's to calculate the relative kl strength for each crop in the layer
-                {
-                    if (i <= LowestRootLayer[j] && KLArray[j][i] > 0)
-                        RelKLStrength[i, j] = KLArray[j][i] / KLSum / RootZones[j].Parent.RootZones.Count;
-                    else
-                        RelKLStrength[i, j] = 0;
-                }
-            }
-            return RelKLStrength;
-        }
-
-
 
         /// <summary>
         /// Calculate how deep roots are in a given layer as a proportion of the layer depth.

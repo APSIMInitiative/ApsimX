@@ -162,7 +162,7 @@ namespace UserInterface.Commands
                 else
                 {
                     // Select the node in the tree.
-                    ExplorerPresenter.SelectNode(child.FullPath);
+                    ExplorerPresenter.SelectNode(Apsim.FullPath(child));
 
                     // If the presenter is exportable then simply export this child.
                     // Otherwise, if it is one of a folder, simulation, experiment or zone then

@@ -120,108 +120,104 @@
           <Name>StandingStubble</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble left by harvester</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-            <c_fract>0.4</c_fract>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>2026</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
             <cum_eos_max>20</cum_eos_max>
             <cnrf_coeff>0.277</cnrf_coeff>
             <cnrf_optcn>25</cnrf_optcn>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
             <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>HarvesterWindrow</Name>
           <SurfaceOrganicMatter>
             <Name>Windrow left by harvester</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-            <c_fract>0.4</c_fract>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>8300</mass>
             <standing_fraction>0</standing_fraction>
             <cnr>80</cnr>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
             <cum_eos_max>20</cum_eos_max>
             <cnrf_coeff>0.277</cnrf_coeff>
             <cnrf_optcn>25</cnrf_optcn>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
             <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>MownStubble</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble mown and bailed</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-            <c_fract>0.4</c_fract>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>400</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
             <cum_eos_max>20</cum_eos_max>
             <cnrf_coeff>0.277</cnrf_coeff>
             <cnrf_optcn>25</cnrf_optcn>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
             <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <FactorValue>
           <Name>BareSoil</Name>
           <SurfaceOrganicMatter>
             <Name>Stubble mown, bailed and cultivared</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-            <c_fract>0.4</c_fract>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
             <PoolName>Barley</PoolName>
             <type>Barley</type>
             <mass>0</mass>
             <standing_fraction>1</standing_fraction>
             <cnr>80</cnr>
-            <crit_residue_wt>2000</crit_residue_wt>
-            <opt_temp>20</opt_temp>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
             <cum_eos_max>20</cum_eos_max>
             <cnrf_coeff>0.277</cnrf_coeff>
             <cnrf_optcn>25</cnrf_optcn>
-            <leach_rain_tot>25</leach_rain_tot>
-            <min_rain_to_leach>10</min_rain_to_leach>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
             <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-            <default_cpr>0</default_cpr>
-            <standing_extinct_coeff>0.5</standing_extinct_coeff>
-            <fractionFaecesAdded>0.5</fractionFaecesAdded>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
         </FactorValue>
         <Paths>
@@ -762,23 +758,22 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
-          <c_fract>0.4</c_fract>
           <PoolName>Barley</PoolName>
           <type>Barley</type>
           <mass>2026</mass>
           <standing_fraction>1</standing_fraction>
           <cnr>80</cnr>
-          <crit_residue_wt>2000</crit_residue_wt>
-          <opt_temp>20</opt_temp>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
           <cum_eos_max>20</cum_eos_max>
           <cnrf_coeff>0.277</cnrf_coeff>
           <cnrf_optcn>25</cnrf_optcn>
-          <leach_rain_tot>25</leach_rain_tot>
-          <min_rain_to_leach>10</min_rain_to_leach>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
           <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-          <default_cpr>0</default_cpr>
-          <standing_extinct_coeff>0.5</standing_extinct_coeff>
-          <fractionFaecesAdded>0.5</fractionFaecesAdded>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>

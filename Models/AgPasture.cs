@@ -4394,7 +4394,7 @@ namespace Models
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(FullPath, "Agpasture.OnGraze");
+            Summary.WriteMessage(this, "Agpasture.OnGraze");
             //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
@@ -4725,6 +4725,16 @@ namespace Models
         #endregion //Eventhandlers
 
         #region Functions
+
+        /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
+        }
 
         //===============================================
         /// <summary>
@@ -5868,6 +5878,16 @@ namespace Models
 
             return dmtotal;	   // total shoot mass
 
+        }
+
+                /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        {
+            return info;
         }
 
         public double DailyEMGrowthPot()

@@ -45,5 +45,10 @@
         /// Gets the plants root system information
         /// </summary>
         Models.Soils.RootSystem RootSystem { get; }
+
+        /// <summary>
+        /// Calculate the potential sw uptake for today
+        /// </summary>
+        Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info);
     }
 }

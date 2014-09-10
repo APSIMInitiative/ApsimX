@@ -66,7 +66,7 @@ namespace Models.Core
             {
                 object Component = model.Get(ComponentName);
                 if (Component == null)
-                    throw new Exception(model.FullPath + " can not find the component: " + ComponentName);
+                    throw new Exception(Apsim.FullPath(model) + " can not find the component: " + ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
                 if (ComponentEvent == null)
                     throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
@@ -92,7 +92,7 @@ namespace Models.Core
                 if (matchingModel == null)
                     matchingModel = parent.Get(ComponentName) as Model;
 
-                return publisher.Model.FullPath == matchingModel.FullPath && EventName == publisher.Name;
+                return Apsim.FullPath(publisher.Model) == Apsim.FullPath(matchingModel) && EventName == publisher.Name;
             }
         }
 
@@ -150,7 +150,7 @@ namespace Models.Core
         /// </summary>
         public void Connect()
         {
-            Simulation simulation = RelativeTo.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(RelativeTo, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 if (simulation.IsRunning)
@@ -323,7 +323,7 @@ namespace Models.Core
                 obj = obj.Parent as Model;
             }
             if (obj == null)
-                throw new ApsimXException(model.FullPath, "Cannot find models to connect events to");
+                throw new ApsimXException(model, "Cannot find models to connect events to");
             if (obj is Simulation)
             {
                 models.AddRange((obj as Simulation).Children.AllRecursively);

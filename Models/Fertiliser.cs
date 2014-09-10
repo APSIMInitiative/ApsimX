@@ -76,10 +76,10 @@ namespace Models
 
                 FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
                 if (fertiliserType == null)
-                    throw new ApsimXException(FullPath, "Cannot find fertiliser type '" + Type + "'");
+                    throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = FullPath;
+                NitrogenChanges.Sender = Apsim.FullPath(this);
                
                 if (fertiliserType.FractionNO3 != 0)
                 {
@@ -101,7 +101,7 @@ namespace Models
                 }
 
                 NitrogenChanged.Invoke(NitrogenChanges);
-                Summary.WriteMessage(FullPath, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+                Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
             }
         }
 

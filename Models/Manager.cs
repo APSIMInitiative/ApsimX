@@ -107,7 +107,8 @@ namespace Models
         /// of all models so that is isn't serialised. Seems .NET has a problem
         /// with serialising objects that have been compiled dynamically.
         /// </summary>
-        public override void OnSerialising(bool xmlSerialisation)
+        [EventSubscribe("Serialising")]
+        private void OnSerialising(bool xmlSerialisation)
         {
             if (Script != null)
                 Models.Remove(Script);
@@ -116,7 +117,8 @@ namespace Models
         /// <summary>
         /// Serialisation has completed. Read our 'Script' model if necessary.
         /// </summary>
-        public override void OnSerialised(bool xmlSerialisation)
+        [EventSubscribe("Serialised")]
+        private void OnSerialised(bool xmlSerialisation)
         {
             if (Script != null)
                 Models.Add(Script);
@@ -149,7 +151,7 @@ namespace Models
                     }
                     catch (Exception err)
                     {
-                        throw new ApsimXException(FullPath, err.Message);
+                        throw new ApsimXException(this, err.Message);
                     }
 
                     CompiledCode = _Code;
@@ -157,7 +159,7 @@ namespace Models
                     // Get the script 'Type' from the compiled assembly.
                     Type scriptType = compiledAssembly.GetType("Models.Script");
                     if (scriptType == null)
-                        throw new ApsimXException(FullPath, "Cannot find a public class called 'Script'");
+                        throw new ApsimXException(this, "Cannot find a public class called 'Script'");
 
                     // Create a new script model.
                     Script = compiledAssembly.CreateInstance("Models.Script") as Model;

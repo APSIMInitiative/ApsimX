@@ -271,7 +271,8 @@ namespace Models
                 if (EventNames[i] != "")
                 {
                     eventNames.Add(EventNames[i].Trim());
-                    base.Events.Subscribe(EventNames[i].Trim(), OnReport);
+                    if (Events != null)
+                        base.Events.Subscribe(EventNames[i].Trim(), OnReport);
                 }
             }
             EventNames = eventNames.ToArray();

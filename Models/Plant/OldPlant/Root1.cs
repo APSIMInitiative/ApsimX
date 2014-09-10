@@ -765,7 +765,7 @@ namespace Models.PMF.OldPlant
         {
             SwimIsPresent = swim3 > 0;
             if (SwimIsPresent)
-                Summary.WriteMessage(FullPath, "Using SWIM3 for Soil Water Uptake.");
+                Summary.WriteMessage(this, "Using SWIM3 for Soil Water Uptake.");
 
             Senescing = new Biomass();
             Retranslocation = new Biomass();

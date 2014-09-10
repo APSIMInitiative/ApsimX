@@ -37,7 +37,7 @@ namespace UserInterface.Presenters
             this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
-            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
             DataStore = new DataStore(Report);
 
             PopulateDataGrid();
@@ -126,7 +126,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateDataGrid()
         {
-            Simulation simulation = Report.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
             
             View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
 

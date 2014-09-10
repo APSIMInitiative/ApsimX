@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                System.Windows.Forms.Clipboard.SetText(model.Serialise());
+                System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(model));
             }
         }
 

@@ -161,7 +161,7 @@ namespace Models.Core
             model.OnLoaded();
             ParentAllChildren(model);
 
-            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(Model, typeof(Simulation)) as Simulation;
             if (simulation != null && simulation.IsRunning)
             {
                 model.Events.Connect();
@@ -181,7 +181,8 @@ namespace Models.Core
             {
                 Model oldModel = Model.Models[index];
 
-                oldModel.Events.Disconnect();
+                if (oldModel.Events != null)
+                    oldModel.Events.Disconnect();
                 oldModel.UnResolveLinks();
 
                 // remove the existing model.
@@ -201,7 +202,7 @@ namespace Models.Core
                 oldModel.Parent = null;
 
                 // Connect our new child.
-                Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+                Simulation simulation = Apsim.Parent(Model, typeof(Simulation)) as Simulation;
                 if (simulation != null && simulation.IsRunning)
                 {
                     newModel.Events.Connect();
@@ -293,7 +294,7 @@ namespace Models.Core
         /// </summary>
         private void ClearCache()
         {
-            Simulation simulation = Model.ParentOfType(typeof(Simulation)) as Simulation;
+            Simulation simulation = Apsim.Parent(Model, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
                 simulation.Locater.Clear();

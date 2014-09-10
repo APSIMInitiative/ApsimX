@@ -15,14 +15,14 @@ namespace Models.PMF.Organs
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
-            Summary.WriteMessage(FullPath, "Pruning");
+            Summary.WriteMessage(this, "Pruning");
 
             Live.Clear();
             Dead.Clear();
         }
         public override void OnCut()
         {
-            Summary.WriteMessage(FullPath, "Cutting");
+            Summary.WriteMessage(this, "Cutting");
 
             Live.Clear();
             Dead.Clear();
