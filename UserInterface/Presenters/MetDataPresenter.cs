@@ -79,9 +79,9 @@ namespace UserInterface.Presenters
                         data.Columns.RemoveAt(yrCol);       //remove unwanted columns
                         data.Columns.RemoveAt(--dayCol);
                     }
+                    MetDataView.PopulateData(data);
+                    MetDataView.Filename = Utility.PathUtils.GetRelativePath(filename, ExplorerPresenter.ApsimXFile.FileName);
                 }
-                MetDataView.PopulateData(data);
-                MetDataView.Filename = Utility.PathUtils.GetRelativePath(filename, ExplorerPresenter.ApsimXFile.FileName);
             }
         }
         /// <summary>

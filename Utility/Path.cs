@@ -55,22 +55,27 @@ namespace Utility
         /// <returns></returns>
         public static string GetAbsolutePath(string path, string SimPath)
         {
-            //try to find a path relative to the .apsimx directory
-            string NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
-            if (File.Exists(NewPath))
-                return Path.GetFullPath(NewPath); //use this to strip any relative path leftovers.
-
-            //try to remove any overlapping path data
-            while (path.IndexOf(Path.DirectorySeparatorChar) != -1)
+            if (Path.GetDirectoryName(SimPath) == null)
+                return path;
+            else
             {
-                path = ReducePath(path);
-                NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
-
+                //try to find a path relative to the .apsimx directory
+                string NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
                 if (File.Exists(NewPath))
-                    return NewPath;
-            }
+                    return Path.GetFullPath(NewPath); //use this to strip any relative path leftovers.
 
-            return path;
+                //try to remove any overlapping path data
+                while (path.IndexOf(Path.DirectorySeparatorChar) != -1)
+                {
+                    path = ReducePath(path);
+                    NewPath = Path.Combine(Path.GetDirectoryName(SimPath), path);
+
+                    if (File.Exists(NewPath))
+                        return NewPath;
+                }
+
+                return path;
+            }
         }
 
 

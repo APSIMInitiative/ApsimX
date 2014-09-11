@@ -75,12 +75,18 @@ namespace Models.Core
                         Model ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as Model;
                         Children.AddRange(ModelFromResource.Children);
 
-                        foreach (Model child in ModelFromResource.Children)
-                        {
-                            child.IsHidden = true;
-                        }
+                        SetNotVisible(ModelFromResource);
                     }
                 }
+            }
+        }
+
+        private static void SetNotVisible(Model ModelFromResource)
+        {
+            foreach (Model child in ModelFromResource.Children)
+            {
+                child.IsHidden = true;
+                SetNotVisible(child);
             }
         }
 
