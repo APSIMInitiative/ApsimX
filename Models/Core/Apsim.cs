@@ -258,7 +258,7 @@ namespace Models.Core
             object[] args = new object[] { true };
             foreach (Model modelToNotify in modelsToNotify)
             {
-                CallEventHandler(modelToNotify, "OnSerialising", args);
+                CallEventHandler(modelToNotify, "Serialising", args);
             }
 
             // Do the serialisation
@@ -268,7 +268,7 @@ namespace Models.Core
             // Let all models know that we have completed serialisation.
             foreach (Model modelToNotify in modelsToNotify)
             {
-                CallEventHandler(modelToNotify, "OnSerialised", args);
+                CallEventHandler(modelToNotify, "Serialised", args);
             }
 
             // Set the clipboard text.
