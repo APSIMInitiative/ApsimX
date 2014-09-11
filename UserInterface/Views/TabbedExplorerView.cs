@@ -207,6 +207,19 @@ namespace UserInterface.Views
                     }
                 }
             }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                for (int i = 0; i < TabControl.TabCount; ++i)
+                {
+                    Rectangle r = TabControl.GetTabRect(i);
+                    if (r.Contains(e.Location) /* && it is the header that was clicked*/)
+                    {
+                        TabControl.SelectedTab = TabControl.TabPages[i];
+                        if (TabControl.SelectedTab.Text != " ")
+                           OnCloseTabClick(sender, e);
+                    }
+                }
+            }
         }
 
         /// <summary>
