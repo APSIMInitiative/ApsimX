@@ -6,6 +6,7 @@ using UserInterface.Views;
 using Models;
 using System.Reflection;
 using UserInterface.EventArguments;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -86,7 +87,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            object o = Operations.Get(e.ObjectName);
+            object o = Apsim.Get(Operations, e.ObjectName);
 
             if (o == null)
                 o = Operations.Find(e.ObjectName);

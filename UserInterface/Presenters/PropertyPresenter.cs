@@ -254,7 +254,7 @@ namespace UserInterface.Presenters
             {
                 if (property.DataType == typeof(ICrop))
                 {
-                    return this.model.Get(property.Value.ToString()) as ICrop;
+                    return Apsim.Get(this.model, property.Value.ToString()) as ICrop;
                 }
             }
 

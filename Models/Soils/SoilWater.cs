@@ -28,8 +28,8 @@ namespace Models.Soils
         [Link]
         private Clock Clock = null;
 
-        //[Link]
-        //private Zone Paddock = null;
+        [Link]
+        Zone zone = null;
 
         //[Link]
         private SoilWatTillageType SoilWatTillageType = null;
@@ -1264,7 +1264,7 @@ namespace Models.Soils
                     propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
                 else
                     propName = solutes[solnum].name;
-                object objValue = this.Get(propName);
+                object objValue = zone.Get(propName);
                 if (objValue != null)
                 {
                     Value = objValue as double[];

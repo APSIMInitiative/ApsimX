@@ -36,7 +36,16 @@ namespace Models.Core
             return apsimAPI;
         }
 
-                
+        /// <summary>
+        /// Gets the value of a variable or model.
+        /// </summary>
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public static object Get(IModel model, string namePath)
+        {
+            return Locator(model).Get(namePath, model as Model);
+        }
+        
         /// <summary>
         /// Returns the full path of the specified model.
         /// </summary>
@@ -76,53 +85,6 @@ namespace Models.Core
 
             return obj;
         }
-            
-        /// <summary>
-        /// Gets an array of plant models that are in scope.
-        /// </summary>
-        public List<ICrop2> Plants
-        {
-            get
-            {
-                var plants = new List<ICrop2>();
-                foreach (var plant in FindAll(typeof(ICrop2)))
-                {
-                    plants.Add(plant as ICrop2);
-                }
-
-                return plants;
-            }
-        }
-
-        /// <summary>
-        /// Gets the value of a variable or model.
-        /// </summary>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath)
-        {
-            return Locator().Get(namePath, model as Model);
-        }
-
-        /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// </summary>
-        /// <param name="namePath">The name of the variable to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public IVariable GetVariableObject(string namePath)
-        {
-            return Locator().GetInternal(namePath, model as Model);
-        }
-
-        /// <summary>
-        /// Sets the value of a variable. Will throw if variable doesn't exist.
-        /// </summary>
-        /// <param name="namePath">The name of the object to set</param>
-        /// <param name="value">The value to set the property to</param>
-        public void Set(string namePath, object value)
-        {
-            Locator().Set(namePath, model as Model, value);
-        }
 
         /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
@@ -131,7 +93,7 @@ namespace Models.Core
         /// <returns>The found model or null if not found</returns>
         public Model Find(string namePath)
         {
-            return Locator().Find(namePath, model as Model);
+            return Locator(model).Find(namePath, model as Model);
         }
 
         /// <summary>
@@ -141,7 +103,7 @@ namespace Models.Core
         /// <returns>The found model or null if not found</returns>
         public Model Find(Type type)
         {
-            return Locator().Find(type, model as Model);
+            return Locator(model).Find(type, model as Model);
         }
 
         /// <summary>
@@ -150,48 +112,17 @@ namespace Models.Core
         /// <returns>The found models or an empty array if not found.</returns>
         public List<IModel> FindAll()
         {
-            return new List<IModel>(Locator().FindAll(model as Model));
+            return new List<IModel>(Locator(model).FindAll(model as Model));
         }
 
         /// <summary>
         /// Locates and returns all models in scope of the specified type.
         /// </summary>
-        /// <param name="typeFilter">The type of the models to return</param>
+        /// <param name="model">The type of the models to return</param>
         /// <returns>The found models or an empty array if not found.</returns>
-        public List<IModel> FindAll(Type typeFilter)
+        public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
-        	return new List<IModel>(Locator().FindAll(typeFilter, model as Model));
-        }
-
-        /// <summary>
-        /// Connect the model to the others in the simulation.
-        /// </summary>
-        public void ResolveLinks()
-        {
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation != null)
-            {
-                if (simulation.IsRunning)
-                {
-                    // Resolve links in this model.
-                    ResolveLinksInternal(model);
-
-                    // Resolve links in other models that point to this model.
-                    ResolveExternalLinks();
-                }
-                else
-                {
-                    ResolveLinksInternal(model);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Unconnect this model from the others in the simulation.
-        /// </summary>
-        public void UnResolveLinks()
-        {
-            UnresolveLinks(model);
+            return new List<IModel>(Locator(model).FindAll(typeFilter, model as Model));
         }
 
         /// <summary>
@@ -403,7 +334,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The model to find the locator for</param>
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private Locater Locator()
+        private static Locater Locator(IModel model)
         {
             var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation == null)
@@ -420,15 +351,15 @@ namespace Models.Core
         /// <summary>
         /// Resolve all Link fields in the specified model.
         /// </summary>
-        /// <param name="modelToScan">The model to look through for links</param>
+        /// <param name="model">The model to look through for links</param>
         /// <param name="linkTypeToMatch">If specified, only look for these types of links</param>
-        private void ResolveLinksInternal(IModel modelToScan, Type linkTypeToMatch = null)
+        public static void ResolveLinks(IModel model, Type linkTypeToMatch = null)
         {
             string errorMsg = string.Empty;
 
             // Go looking for [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(
-                                                            modelToScan.GetType(),
+                                                            model.GetType(),
                                                             BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
                 var link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
@@ -437,7 +368,7 @@ namespace Models.Core
                 {
                     object linkedObject = null;
 
-                    List<IModel> allMatches = FindAll(field.FieldType);
+                    List<IModel> allMatches = FindAll(model, field.FieldType);
                     if (allMatches.Count == 1)
                     {
                         linkedObject = allMatches[0];
@@ -454,6 +385,12 @@ namespace Models.Core
                             }
                         }
 
+                        if (linkedObject == null && allMatches.Count > 1)
+                        {
+                            // Return the first (closest) match.
+                            linkedObject = allMatches[0];
+                        }
+
                         if ((linkedObject == null) && (!link.IsOptional))
                         {
                             errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
@@ -462,12 +399,12 @@ namespace Models.Core
 
                     if (linkedObject != null)
                     {
-                        field.SetValue(modelToScan, linkedObject);
+                        field.SetValue(model, linkedObject);
                     }
                     else if (!link.IsOptional)
                     {
                         throw new ApsimXException(
-                                    modelToScan,
+                                    model,
                                     "Cannot resolve [Link] '" + field.ToString() + errorMsg);
                     }
                 }
@@ -478,7 +415,7 @@ namespace Models.Core
         /// Set to null all link fields in the specified model.
         /// </summary>
         /// <param name="model">The model to look through for links</param>
-        private static void UnresolveLinks(IModel model)
+        public static void UnresolveLinks(IModel model)
         {
             // Go looking for private [Link]s
             foreach (FieldInfo field in Utility.Reflection.GetAllFields(
@@ -497,13 +434,13 @@ namespace Models.Core
         /// Go through all other models looking for a link to the specified 'model'.
         /// Connect any links found.
         /// </summary>
-        private void ResolveExternalLinks()
-        {
-            foreach (var externalModel in FindAll())
-            {
-                ResolveLinksInternal(externalModel, typeof(Model));
-            }
-        }
+        //private void ResolveExternalLinks()
+        //{
+        //    foreach (var externalModel in FindAll())
+        //    {
+        //        ResolveLinksInternal(externalModel, typeof(Model));
+        //    }
+        //}
 
         /// <summary>
         /// Call the specified event on the specified model.

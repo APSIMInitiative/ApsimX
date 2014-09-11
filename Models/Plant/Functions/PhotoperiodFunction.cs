@@ -21,6 +21,9 @@ namespace Models.PMF.Functions
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
     public class PhotoperiodFunction : Function
     {
+        [Link]
+        Zone zone = null;
+
         public double Twilight = 0;
 
         
@@ -28,7 +31,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                object val = this.Get("ClimateControl.PhotoPeriod");
+                object val = zone.Get("ClimateControl.PhotoPeriod");
                 //If simulation environment has a variable called ClimateControl.PhotoPeriod will use that other wise calculate from day and location
                 if (val != null)  //FIXME.  If climatecontrol does not contain a variable called photoperiod it still returns a value of zero.
                 {

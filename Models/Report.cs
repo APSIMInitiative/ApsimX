@@ -247,6 +247,9 @@ namespace Models
         [Link]
         public Simulation Simulation = null;
 
+        [Link]
+        Zone zone = null;
+
         // Properties read in.
         [Summary]
         [Description("Output variables")]
@@ -256,9 +259,9 @@ namespace Models
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
-        new public object Get(string name)
+        public object Get(string name)
         {
-            return base.Get(name);
+            return zone.Get(name);
         }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.

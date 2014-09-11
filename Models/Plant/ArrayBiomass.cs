@@ -12,6 +12,9 @@ namespace Models.PMF
     [Serializable]
     public class ArrayBiomass : Model
     {
+        [Link]
+        Zone zone = null;
+
         public string[] Propertys = null;
 
         public string ArraySize = null;
@@ -141,7 +144,7 @@ namespace Models.PMF
             int i = 0;
             foreach (string PropertyName in Propertys)
             {
-                object Obj = Util.GetVariable(PropertyName + SubPropertyName, this);
+                object Obj = zone.Get(PropertyName + SubPropertyName);
                 if (Obj == null)
                     throw new Exception("Cannot find: " + PropertyName + " in ArrayBiomass: " + this.Name);
 

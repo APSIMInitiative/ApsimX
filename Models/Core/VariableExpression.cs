@@ -17,6 +17,9 @@ namespace Models.Core
     /// </summary>
     public class VariableExpression : IVariable
     {
+        [Link]
+        Zone zone = null;
+
         /// <summary>
         /// The expression string.
         /// </summary>
@@ -117,7 +120,7 @@ namespace Models.Core
                 Utility.Symbol sym = (Utility.Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = (Object as Model).Get(sym.m_name.Trim());
+                object sometypeofobject = zone.Get(sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)

@@ -29,6 +29,9 @@ namespace Models.PMF.OilPalm
         Soils.SoilNitrogen SoilN = null;
         [Link]
         WeatherFile MetData = null;
+        [Link]
+        Zone zone = null;
+
         double kl = 0.04;
                
         double[] PotSWUptake;
@@ -109,7 +112,7 @@ namespace Models.PMF.OilPalm
 
         private void DoGrowth()
         {
-            double OPCover = (double)this.Get("OilPalm.cover_green");
+            double OPCover = (double)zone.Get("OilPalm.cover_green");
             double RUE = 1.3;
             DltDM = RUE * MetData.Radn * cover_green * (1 - OPCover) * FW;
 
@@ -117,7 +120,7 @@ namespace Models.PMF.OilPalm
 
         private void DoWaterBalance()
         {
-            double OPCover = (double)this.Get("OilPalm.cover_green");
+            double OPCover = (double)zone.Get("OilPalm.cover_green");
             
             cover_green = 0.40 * (1 - OPCover);
             PEP = SoilWat.eo * cover_green * (1 - OPCover);

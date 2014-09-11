@@ -12,6 +12,9 @@ namespace Models.PMF.Functions
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
     public class LinearInterpolationFunction : Function
     {
+        [Link]
+        Zone zone = null;
+
         private bool YsAreAllTheSame = false;
         public XYPairs XYPairs { get; set; }
         public string XProperty = "";
@@ -41,7 +44,7 @@ namespace Models.PMF.Functions
                     return XYPairs.Y[0];
 
                 string PropertyName = XProperty;
-                object v = Util.GetVariable(PropertyName, this);
+                object v = zone.Get(PropertyName);
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 double XValue = (double) v;
@@ -60,7 +63,7 @@ namespace Models.PMF.Functions
             {
                 string PropertyName = XProperty;
 
-                double[] v = (double[])this.Get(XProperty);
+                double[] v = (double[])zone.Get(XProperty);
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array)

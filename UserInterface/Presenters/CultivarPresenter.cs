@@ -106,7 +106,7 @@ namespace UserInterface.Presenters
                 e.ObjectName = ".";
             }
 
-            object o = this.cultivar.Get(e.ObjectName);
+            object o = Apsim.Get(this.cultivar, e.ObjectName);
 
             if (o != null)
             {

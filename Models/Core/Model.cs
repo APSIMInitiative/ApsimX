@@ -19,7 +19,7 @@ namespace Models.Core
     /// Base class for all models
     /// </summary>
     [Serializable]
-    public class Model: IModel
+    public class Model : IModel
     {
         /// <summary>
         /// The parent model. null if no parent
@@ -29,7 +29,7 @@ namespace Models.Core
         /// <summary>
         /// The events instance
         /// </summary>
-        [NonSerialized] 
+        [NonSerialized]
         private Events events;
 
         /// <summary>
@@ -211,35 +211,17 @@ namespace Models.Core
         public bool IsHidden { get; set; }
 
         /// <summary>
-        /// Gets an array of plant models that are in scope.
-        /// </summary>
-        [XmlIgnore]
-        public ICrop2[] Plants
-        {
-            get
-            {
-                List<ICrop2> plants = new List<ICrop2>();
-                foreach (ICrop2 plant in this.FindAll(typeof(ICrop2)))
-                {
-                    plants.Add(plant);
-                }
-
-                return plants.ToArray();
-            }
-        }
-
-        /// <summary>
         /// Gets an instance of the models event class
         /// </summary>
-        public Events Events 
-        { 
-            get 
+        public Events Events
+        {
+            get
             {
                 if (this.events == null)
                     this.events = new Events(this);
 
-                return this.events; 
-            } 
+                return this.events;
+            }
         }
 
         /// <summary>
@@ -295,36 +277,6 @@ namespace Models.Core
         #endregion
 
         /// <summary>
-        /// Gets the value of a variable or model.
-        /// </summary>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath)
-        {
-            return Locater.Get(namePath, this);
-        }
-
-        /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// </summary>
-        /// <param name="namePath">The name of the variable to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public IVariable GetVariableObject(string namePath)
-        {
-            return Locater.GetInternal(namePath, this);
-        }
-
-        /// <summary>
-        /// Sets the value of a variable. Will throw if variable doesn't exist.
-        /// </summary>
-        /// <param name="namePath">The name of the object to set</param>
-        /// <param name="value">The value to set the property to</param>
-        public void Set(string namePath, object value)
-        {
-            Locater.Set(namePath, this, value);
-        }
-
-        /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
         /// <param name="namePath">The name of the model to return</param>
@@ -362,130 +314,5 @@ namespace Models.Core
         {
             return Locater.FindAll(type, this);
         }
-
-        /// <summary>
-        /// Connect this model to the others in the simulation.
-        /// </summary>
-        public void ResolveLinks()
-        {
-            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            if (simulation != null)
-            {
-                if (simulation.IsRunning)
-                {
-                    // Resolve links in this model.
-                    ResolveLinksInternal(this);
-
-                    // Resolve links in other models that point to this model.
-                    ResolveExternalLinks(this);
-                }
-                else
-                {
-                    ResolveLinksInternal(this);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Connect this model to the others in the simulation.
-        /// </summary>
-        public void UnResolveLinks()
-        {
-            UnresolveLinks(this);
-        }
-        
-        #region Internals
-        
-        /// <summary>
-        /// Resolve all Link fields in the specified model.
-        /// </summary>
-        /// <param name="model">The model to look through for links</param>
-        /// <param name="linkTypeToMatch">If specified, only look for these types of links</param>
-        private static void ResolveLinksInternal(Model model, Type linkTypeToMatch = null)
-        {
-            string errorMsg = string.Empty;
-
-            // Go looking for [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
-                                                            model.GetType(),
-                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
-            {
-                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null &&
-                    (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
-                {
-                    object linkedObject = null;
-
-                    Model[] allMatches;
-                    allMatches = model.FindAll(field.FieldType);
-                    if (allMatches.Length == 1)
-                    {
-                        linkedObject = allMatches[0];
-                    }
-                    else
-                    {
-                        // more that one match so use name to match.
-                        foreach (Model matchingModel in allMatches)
-                        {
-                            if (matchingModel.Name == field.Name)
-                            {
-                                linkedObject = matchingModel;
-                                break;
-                            }
-                        }
-
-                        if ((linkedObject == null) && (!link.IsOptional))
-                        {
-                            errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Length, field.FieldType.FullName, field.Name);
-                        }
-                    }
-
-                    if (linkedObject != null)
-                    {
-                        field.SetValue(model, linkedObject);
-                    }
-                    else if (!link.IsOptional)
-                    {
-                        throw new ApsimXException(
-                                    model, 
-                                    "Cannot resolve [Link] '" + field.ToString() + "' in class '" + Apsim.FullPath(model) + "'" + errorMsg);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set to null all link fields in the specified model.
-        /// </summary>
-        /// <param name="model">The model to look through for links</param>
-        private static void UnresolveLinks(Model model)
-        {
-            // Go looking for private [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
-                                                model.GetType(),
-                                                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
-            {
-                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null)
-                {
-                    field.SetValue(model, null);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Go through all other models looking for a link to the specified 'model'.
-        /// Connect any links found.
-        /// </summary>
-        /// <param name="model">The model to exclude from the search</param>
-        private static void ResolveExternalLinks(Model model)
-        {
-            foreach (Model externalModel in model.FindAll())
-            {
-                ResolveLinksInternal(externalModel, typeof(Model));
-            }
-        }
-
-        #endregion
     }
 }

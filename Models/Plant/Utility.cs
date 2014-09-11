@@ -36,22 +36,6 @@ namespace Models.PMF
                 Debug(format, value[i]);
         }
 
-        /// <summary>
-        /// Return the value (using Reflection) of the specified property on the specified object.
-        /// Returns null if not found. Examples of Names that can be found.
-        ///     Pod
-        ///     Environment.MeanT
-        ///     Organs[]
-        ///     Organs[AboveGround].Live
-        ///     Organs[AboveGround].Live.Wt
-        ///     Leaf.Leaves[Leaf.CurrentRank].CoverAbove
-        ///  Can return an Instance, an Entity or an object[] when an array specifier is present.
-        /// </summary>
-        public static object GetVariable(string namePath, Model relativeTo)
-        {
-            return relativeTo.Get(namePath);
-        }
-
         public static void ZeroArray(double[] Arr)
         {
             if (Arr != null)

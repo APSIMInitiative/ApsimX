@@ -10,7 +10,7 @@ using System.IO;
 namespace Models.Core
 {
     [Serializable]
-    public class Simulation : Model, Utility.JobManager.IRunnable
+    public class Simulation : Zone, Utility.JobManager.IRunnable
     {
         private bool _IsRunning = false;
 
@@ -136,12 +136,12 @@ namespace Models.Core
 
             if (Events != null)
                 Events.Connect();
-            ResolveLinks();
+            Apsim.ResolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
             {
                 if (Events != null)
                     child.Events.Connect();
-                child.ResolveLinks();
+                Apsim.ResolveLinks(child);
             }
 
             _IsRunning = true;
@@ -178,11 +178,11 @@ namespace Models.Core
                 OnCompleted.Invoke(this, null);
 
             Events.Disconnect();
-            UnResolveLinks();
+            Apsim.UnresolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
             {
                 child.Events.Disconnect();
-                child.UnResolveLinks();
+                Apsim.UnresolveLinks(child);
             }
 
             timer.Stop();
