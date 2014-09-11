@@ -17,14 +17,14 @@ namespace Models.PMF.Functions
     [Description("Returns the maximum value of all childern functions")]
     public class MaximumFunction : Function
     {
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         public override double Value
         {
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 double ReturnValue = -999999999;
                 foreach (Function F in ChildFunctions)

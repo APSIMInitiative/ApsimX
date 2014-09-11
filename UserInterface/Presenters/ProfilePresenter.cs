@@ -114,6 +114,7 @@ namespace UserInterface.Presenters
                 if (this.parentZone != null)
                 {
                     this.parentZone.Children.Add(this.graph);
+                    this.graph.Parent = this.parentZone;
                     this.view.ShowGraph(true);
                     this.graphPresenter = new GraphPresenter();
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);

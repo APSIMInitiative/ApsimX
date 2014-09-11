@@ -33,7 +33,7 @@ namespace UserInterface.Commands
         {
             Model parent = ModelToMove.Parent as Model;
 
-            int modelIndex = parent.Models.IndexOf(ModelToMove);
+            int modelIndex = parent.Children.IndexOf(ModelToMove);
 
             ModelWasMoved = false;
             if (MoveUp)
@@ -43,7 +43,7 @@ namespace UserInterface.Commands
             }
             else
             {
-                if (modelIndex != parent.Models.Count - 1)
+                if (modelIndex != parent.Children.Count - 1)
                     MoveModelDown(CommandHistory, parent, modelIndex);
             }
         }
@@ -56,7 +56,7 @@ namespace UserInterface.Commands
             if (ModelWasMoved)
             {
                 Model parent = ModelToMove.Parent as Model;
-                int modelIndex = parent.Models.IndexOf(ModelToMove);
+                int modelIndex = parent.Children.IndexOf(ModelToMove);
                 if (MoveUp)
                     MoveModelDown(CommandHistory, parent, modelIndex);
                 else
@@ -67,8 +67,8 @@ namespace UserInterface.Commands
 
         private void MoveModelDown(CommandHistory CommandHistory, Model parent, int modelIndex)
         {
-            parent.Models.Remove(ModelToMove);
-            parent.Models.Insert(modelIndex + 1, ModelToMove);
+            parent.Children.Remove(ModelToMove);
+            parent.Children.Insert(modelIndex + 1, ModelToMove);
             CommandHistory.InvokeModelStructureChanged(parent);
             ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
             ModelWasMoved = true;
@@ -76,8 +76,8 @@ namespace UserInterface.Commands
 
         private void MoveModelUp(CommandHistory CommandHistory, Model parent, int modelIndex)
         {
-            parent.Models.Remove(ModelToMove);
-            parent.Models.Insert(modelIndex - 1, ModelToMove);
+            parent.Children.Remove(ModelToMove);
+            parent.Children.Insert(modelIndex - 1, ModelToMove);
             CommandHistory.InvokeModelStructureChanged(parent);
             ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
             ModelWasMoved = true;

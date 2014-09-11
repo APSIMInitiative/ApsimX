@@ -99,7 +99,7 @@ namespace Models.PMF
                 if (_Organs == null)
                 {
                     List<Organ> organs = new List<Organ>();
-                    foreach (Organ organ in Children.MatchingMultiple(typeof(Organ)))
+                    foreach (Organ organ in Apsim.Children(this, typeof(Organ)))
                         organs.Add(organ);
                     _Organs = organs.ToArray();
                 }
@@ -141,7 +141,7 @@ namespace Models.PMF
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
                 {
                     cultivars.Add(model as Cultivar);
                 }

@@ -181,7 +181,7 @@ namespace UserInterface.Classes
                 string childName = Utility.Xml.Value(N, "Name");
                 Model childModel = null;
                 if (parentModel != null)
-                    childModel = parentModel.Children.Matching(childName);
+                    childModel = Apsim.Child(parentModel, childName) as Model;
                 DocumentNodeAndChildren(OutputFile, N, NextLevel, childModel);
             }
         }

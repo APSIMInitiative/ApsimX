@@ -333,7 +333,7 @@ namespace UserInterface.Presenters
             this.HideRightHandPanel();
 
             // Get a complete list of all models in this file.
-            List<Model> allModels = this.ApsimXFile.Children.AllRecursivelyVisible;
+            List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
@@ -539,7 +539,7 @@ namespace UserInterface.Presenters
                 Model model = this.ApsimXFile.Get(e.NodePath) as Model;
                 if (model != null)
                 {
-                    foreach (Model childModel in model.Children.All)
+                    foreach (Model childModel in model.Children)
                     {
                         if (!childModel.IsHidden)
                         {
@@ -677,7 +677,7 @@ namespace UserInterface.Presenters
             
             if (model != null && model.Parent != null)
             {
-                Model firstModel = model.Parent.Models[0];
+                Model firstModel = model.Parent.Children[0];
                 if (model != firstModel)
                 {
                     CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: true));
@@ -696,7 +696,7 @@ namespace UserInterface.Presenters
 
             if (model != null && model.Parent != null)
             {
-                Model lastModel = model.Parent.Models[model.Parent.Models.Count - 1];
+                Model lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                 if (model != lastModel)
                 {
                     CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: false));
@@ -766,7 +766,7 @@ namespace UserInterface.Presenters
         /// <returns>True if some are visible</returns>
         private bool SomeChildrenVisible(IModel model)
         {
-            foreach (Model child in model.Models)
+            foreach (Model child in model.Children)
             {
                 if (!child.IsHidden)
                 {

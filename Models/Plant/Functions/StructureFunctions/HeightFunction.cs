@@ -14,14 +14,14 @@ namespace Models.PMF.Functions.StructureFunctions
         Function PotentialHeight = null;
         double PotentialHeightYesterday = 0;
         double Height = 0;
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         [XmlIgnore]
         public double DeltaHeight { get; set; }
         public override void UpdateVariables(string initial)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                ChildFunctions = Apsim.Children(this, typeof(Function));
 
             double PotentialHeightIncrement = PotentialHeight.Value - PotentialHeightYesterday;
             double StressValue = 1.0;
@@ -40,7 +40,7 @@ namespace Models.PMF.Functions.StructureFunctions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 return Height;
             }

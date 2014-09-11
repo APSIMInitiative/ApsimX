@@ -28,10 +28,10 @@ namespace Models.Core
             if (xmlSerialisation && ResourceName != null)
             {
                 allModels = new List<Model>();
-                allModels.AddRange(Models);
+                allModels.AddRange(Children);
 
                 List<Model> visibleModels = new List<Model>();
-                foreach (Model child in Models)
+                foreach (Model child in Children)
                 {
                     if (!child.IsHidden)
                     {
@@ -39,7 +39,7 @@ namespace Models.Core
                     }
                 }
 
-                Models = visibleModels;
+                Children = visibleModels;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Models.Core
         {
             if (xmlSerialisation && allModels != null)
             {
-                Models = allModels;
+                Children = allModels;
             }
         }
 
@@ -73,9 +73,9 @@ namespace Models.Core
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(xml);
                         Model ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as Model;
-                        Models.AddRange(ModelFromResource.Children.All);
+                        Children.AddRange(ModelFromResource.Children);
 
-                        foreach (Model child in ModelFromResource.Children.All)
+                        foreach (Model child in ModelFromResource.Children)
                         {
                             child.IsHidden = true;
                         }

@@ -17,13 +17,13 @@ namespace Models.PMF.Functions
     [Description("Returns the product of all children function values")]
     public class MultiplyFunction : Function
     {
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
         public override double Value
         {
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 double returnValue = 1.0;
 

@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     {
         //Class members
         private double AccumulatedValue = 0;
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         [Link]
         Phenology Phenology = null;
@@ -31,7 +31,7 @@ namespace Models.PMF.Functions
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                ChildFunctions = Apsim.Children(this, typeof(Function));
 
             if (Phenology.Between(StartStageName, EndStageName))
             {
@@ -51,7 +51,7 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 return AccumulatedValue;
             }

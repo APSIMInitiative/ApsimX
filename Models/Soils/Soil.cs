@@ -140,23 +140,23 @@ namespace Models.Soils
         /// Find our children.
         /// </summary>
         private void FindChildren()
-        {        
-            Water = Children.Matching(typeof(Water)) as Water;
-            SoilWater = Children.Matching(typeof(SoilWater)) as SoilWater;
-            SoilOrganicMatter = Children.Matching(typeof(SoilOrganicMatter)) as SoilOrganicMatter;
-            SoilNitrogen = Children.Matching(typeof(SoilNitrogen)) as SoilNitrogen;
-            Analysis = Children.Matching(typeof(Analysis)) as Analysis;
-            InitialWater = Children.Matching(typeof(InitialWater)) as InitialWater;
-            Phosphorus = Children.Matching(typeof(Phosphorus)) as Phosphorus;
-            Swim = Children.Matching(typeof(Swim3)) as Swim3;
-            LayerStructure = Children.Matching(typeof(LayerStructure)) as LayerStructure;
-            SoilTemperature = Children.Matching(typeof(SoilTemperature)) as SoilTemperature;
-            SoilTemperature2 = Children.Matching(typeof(SoilTemperature2)) as SoilTemperature2;
+        {
+            Water = Apsim.Child(this, typeof(Water)) as Water;
+            SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
+            SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
+            Analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+            InitialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+            Phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+            Swim = Apsim.Child(this, typeof(Swim3)) as Swim3;
+            LayerStructure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+            SoilTemperature = Apsim.Child(this, typeof(SoilTemperature)) as SoilTemperature;
+            SoilTemperature2 = Apsim.Child(this, typeof(SoilTemperature2)) as SoilTemperature2;
 
             if (Samples == null)
                 Samples = new List<Sample>();
             Samples.Clear();
-            foreach (Sample sample in Children.MatchingMultiple(typeof(Sample)))
+            foreach (Sample sample in Apsim.Children(this, typeof(Sample)))
                 Samples.Add(sample);
         }
 

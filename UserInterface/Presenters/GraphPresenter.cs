@@ -254,7 +254,7 @@ namespace UserInterface.Presenters
             else
             {
                 List<Experiment> experiments = new List<Experiment>();
-                foreach (Experiment experiment in parent.Children.AllRecursivelyMatching(typeof(Experiment)))
+                foreach (Experiment experiment in Apsim.ChildrenRecursively(parent, typeof(Experiment)))
                 {
                     experiments.Add(experiment);
                 }

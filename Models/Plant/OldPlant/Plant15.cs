@@ -130,7 +130,7 @@ namespace Models.PMF.OldPlant
         {
             // Find organs
             Organ1s = new List<Organ1>();
-            foreach (Model model in this.Models)
+            foreach (Model model in this.Children)
             {
                 if (model is Organ1)
                     Organ1s.Add(model as Organ1);
@@ -991,7 +991,7 @@ namespace Models.PMF.OldPlant
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
                 {
                     cultivars.Add(model as Cultivar);
                 }

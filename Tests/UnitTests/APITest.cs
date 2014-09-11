@@ -69,7 +69,7 @@ namespace UnitTests
                 File.Copy(sqliteSourceFileName, sqliteFileName);
             }
 
-            this.simulation = this.simulations.Models[0] as Simulation;
+            this.simulation = this.simulations.Children[0] as Simulation;
             this.simulationAPI = Apsim.Create(this.simulation);
             this.simulation.StartRun();
         }
@@ -91,9 +91,9 @@ namespace UnitTests
         [Test]
         public void FullPathTest()
         {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
-            Soil soil = zone2.Models[1] as Soil;
+            Zone zone2 = this.simulation.Children[4] as Zone;
+            Graph graph = zone2.Children[0] as Graph;
+            Soil soil = zone2.Children[1] as Soil;
 
             Apsim zone2API = Apsim.Create(zone2);
             Apsim soilWaterAPI = Apsim.Create(soil.Water);
@@ -109,19 +109,19 @@ namespace UnitTests
         [Test]
         public void ModelsTest()
         {
-            Assert.AreEqual(this.simulations.Models.Count, 3);
-            Assert.AreEqual(this.simulations.Models[0].Name, "Test");
+            Assert.AreEqual(this.simulations.Children.Count, 3);
+            Assert.AreEqual(this.simulations.Children[0].Name, "Test");
 
-            Assert.AreEqual(this.simulation.Models.Count, 5);
-            Assert.AreEqual(this.simulation.Models[0].Name, "WeatherFile");
-            Assert.AreEqual(this.simulation.Models[1].Name, "Clock");
-            Assert.AreEqual(this.simulation.Models[2].Name, "Summary");
-            Assert.AreEqual(this.simulation.Models[3].Name, "Field1");
-            Assert.AreEqual(this.simulation.Models[4].Name, "Field2");
+            Assert.AreEqual(this.simulation.Children.Count, 5);
+            Assert.AreEqual(this.simulation.Children[0].Name, "WeatherFile");
+            Assert.AreEqual(this.simulation.Children[1].Name, "Clock");
+            Assert.AreEqual(this.simulation.Children[2].Name, "Summary");
+            Assert.AreEqual(this.simulation.Children[3].Name, "Field1");
+            Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
 
-            Zone zone = this.simulation.Models[3] as Zone;
-            Assert.AreEqual(zone.Models.Count, 1);
-            Assert.AreEqual(zone.Models[0].Name, "Field1Report");
+            Zone zone = this.simulation.Children[3] as Zone;
+            Assert.AreEqual(zone.Children.Count, 1);
+            Assert.AreEqual(zone.Children[0].Name, "Field1Report");
         }
         
         /// <summary>
@@ -130,8 +130,8 @@ namespace UnitTests
         [Test]
         public void ParentTest()
         {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
+            Zone zone2 = this.simulation.Children[4] as Zone;
+            Graph graph = zone2.Children[0] as Graph;
             Apsim graphAPI = Apsim.Create(zone2);
             
             Assert.NotNull(Apsim.Parent(this.simulation, typeof(Simulations)));
@@ -141,46 +141,14 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Tests for AddChild method
-        /// </summary>
-        [Test]
-        public void AddChildTest()
-        {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
-            Soil soil = zone2.Models[1] as Soil;
-
-            // Test for ensuring we can add a model to a Zone.
-            this.simulationAPI.Add(new Graph() { Name = "Graph" });
-            Assert.AreEqual(this.simulation.Models.Count, 6);
-            Assert.AreEqual(this.simulation.Models[5].Name, "Graph");
-        }
-
-        /// <summary>
-        /// Tests for RemoveChild method
-        /// </summary>
-        [Test]
-        public void RemoveChildTest()
-        {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
-            Soil soil = zone2.Models[1] as Soil;
-
-            // Test for ensuring we can remove a model from a Zone.
-            Assert.IsTrue(this.simulationAPI.Remove(this.simulation.Models[3]));
-            Assert.AreEqual(this.simulation.Models.Count, 4);
-            Assert.AreEqual(this.simulation.Models[0].Name, "WeatherFile");
-        }
-
-        /// <summary>
         /// FindAll method tests.
         /// </summary>
         [Test]
         public void FindAllTest()
         {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
-            Soil soil = zone2.Models[1] as Soil;
+            Zone zone2 = this.simulation.Children[4] as Zone;
+            Graph graph = zone2.Children[0] as Graph;
+            Soil soil = zone2.Children[1] as Soil;
 
             // Test the models that are in scope of zone2.graph
             Apsim graphAPI = Apsim.Create(graph);
@@ -211,7 +179,7 @@ namespace UnitTests
         [Test]
         public void FindTest()
         {
-            Zone field1 = this.simulation.Models[3] as Zone;
+            Zone field1 = this.simulation.Children[3] as Zone;
             Apsim field1API = Apsim.Create(field1);
 
             // Make sure we can get a link to a local model from Field1
@@ -227,13 +195,13 @@ namespace UnitTests
             Assert.IsNull(field1API.Find(typeof(Models.Graph.Graph)));
 
             // Make sure we can get a link to a model in a child field.
-            Zone field2 = this.simulation.Models[4] as Zone;
+            Zone field2 = this.simulation.Children[4] as Zone;
             Apsim field2API = Apsim.Create(field2);
             Assert.IsNotNull(field2API.Find("Field2SubZoneReport"));
             Assert.IsNotNull(field2API.Find(typeof(Models.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
-            Zone field2SubZone = field2.Models[3] as Zone;
+            Zone field2SubZone = field2.Children[3] as Zone;
             Apsim field2SubZoneAPI = Apsim.Create(field2);
             Assert.AreEqual(field2SubZoneAPI.Find("WeatherFile").Name, "WeatherFile");
             Assert.AreEqual(field2SubZoneAPI.Find(typeof(Models.WeatherFile)).Name, "WeatherFile");
@@ -245,11 +213,11 @@ namespace UnitTests
         [Test]
         public void GetTest()
         {
-            Zone zone2 = this.simulation.Models[4] as Zone;
-            Graph graph = zone2.Models[0] as Graph;
-            Soil soil = zone2.Models[1] as Soil;
+            Zone zone2 = this.simulation.Children[4] as Zone;
+            Graph graph = zone2.Children[0] as Graph;
+            Soil soil = zone2.Children[1] as Soil;
 
-            Zone field1 = this.simulation.Models[3] as Zone;
+            Zone field1 = this.simulation.Children[3] as Zone;
             Apsim field1API = Apsim.Create(field1);
             Apsim soilAPI = Apsim.Create(soil);
             Apsim graphAPI = Apsim.Create(graph);
@@ -290,7 +258,7 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            WeatherFile weather = this.simulation.Models[0] as WeatherFile;
+            WeatherFile weather = this.simulation.Children[0] as WeatherFile;
             Assert.AreEqual(this.simulationAPI.Get("[WeatherFile].Rain"), 0.0);
             this.simulationAPI.Set("[WeatherFile].Rain", 111.0);
             Assert.AreEqual(this.simulationAPI.Get("[WeatherFile].Rain"), 111.0);
@@ -302,7 +270,7 @@ namespace UnitTests
         [Test]
         public void ChildrenTest()
         {
-            List<IModel> allChildren = this.simulationAPI.Children(typeof(Zone));
+            List<IModel> allChildren = Apsim.Children(this.simulation, typeof(Zone));
             Assert.AreEqual(allChildren.Count, 2);
         }
         
@@ -312,9 +280,9 @@ namespace UnitTests
         [Test]
         public void ChildTest()
         {
-            IModel clock = this.simulationAPI.Child(typeof(Clock));
+            IModel clock = Apsim.Child(simulation, typeof(Clock));
             Assert.NotNull(clock);
-            clock = this.simulationAPI.Child("Clock");
+            clock = Apsim.Child(simulation, "Clock");
             Assert.NotNull(clock);
         }        
         
@@ -324,10 +292,10 @@ namespace UnitTests
         [Test]
         public void ChildrenRecursivelyTest()
         {
-            List<IModel> allChildren = this.simulationAPI.ChildrenRecursively();
+            List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
             Assert.AreEqual(allChildren.Count, 18);
-            
-            List<IModel> childZones = this.simulationAPI.ChildrenRecursively(typeof(Zone));
+
+            List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);
         }
 
@@ -337,10 +305,9 @@ namespace UnitTests
         [Test]
         public void SiblingsTest()
         {
-            IModel clock = this.simulationAPI.Child(typeof(Clock));
-            Apsim clockAPI = Apsim.Create(clock);
-            List<IModel> allChildren = clockAPI.Siblings();
-            Assert.AreEqual(allChildren.Count, 4);
+            IModel clock = Apsim.Child(simulation, typeof(Clock));
+            List<IModel> allSiblings = Apsim.Siblings(clock);
+            Assert.AreEqual(allSiblings.Count, 4);
         }
           
         /// <summary>
@@ -349,9 +316,9 @@ namespace UnitTests
         [Test]
         public void WeatherSummary()
         {
-            Assert.AreEqual(this.simulation.Models[0].Name, "WeatherFile");
+            Assert.AreEqual(this.simulation.Children[0].Name, "WeatherFile");
 
-            foreach (Model model in this.simulation.Models) 
+            foreach (Model model in this.simulation.Children) 
             {
                 if (model.GetType() == typeof(WeatherFile)) 
                 {

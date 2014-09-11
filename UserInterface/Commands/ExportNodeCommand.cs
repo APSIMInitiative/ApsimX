@@ -93,7 +93,7 @@ namespace UserInterface.Commands
 
                 // Look for child models that are a folder or simulation etc
                 // that we need to recurse down through.
-                foreach (Model child in modelToExport.Children.All)
+                foreach (Model child in modelToExport.Children)
                 {
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
@@ -155,7 +155,7 @@ namespace UserInterface.Commands
         /// <param name="index"></param>
         private void DoExportZone(Model modelToExport, string folderPath, StreamWriter index)
         {
-            foreach (Model child in modelToExport.Children.All)
+            foreach (Model child in modelToExport.Children)
             {
                 if (child is Zone)
                     DoExportZone(child, folderPath, index);

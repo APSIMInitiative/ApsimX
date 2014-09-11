@@ -12,6 +12,6 @@ namespace Models.Factorial
     public class Factors : Model
     {
         [XmlIgnore]
-        public Model[] factors { get { return Children.MatchingMultiple(typeof(Factor)); } }
+        public List<IModel> factors { get { return Apsim.Children(this, typeof(Factor)); } }
     }
 }

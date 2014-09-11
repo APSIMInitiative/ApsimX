@@ -433,10 +433,21 @@
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>2000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -447,6 +458,7 @@
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -550,6 +562,7 @@
             <Start>Old</Start>
             <End>Unused</End>
           </EndPhase>
+          <Emerged>false</Emerged>
         </Phenology>
         <OrganArbitrator>
           <Name>Arbitrator</Name>
@@ -898,6 +911,7 @@
           <SpecificRootLength>100000</SpecificRootLength>
           <KNO3>0.02</KNO3>
           <KNH4>0</KNH4>
+          <WaterSupply>0</WaterSupply>
         </Root>
         <GenericAboveGroundOrgan>
           <Name>Stem</Name>

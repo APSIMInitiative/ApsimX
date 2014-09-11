@@ -62,6 +62,7 @@ namespace UserInterface.Presenters
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
             this.initialWater.Children.Add(this.graph);
+            this.graph.Parent = this.initialWater;
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.initialWaterView.Graph, this.explorerPresenter);
         }

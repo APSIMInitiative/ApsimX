@@ -155,7 +155,7 @@ namespace Models.PMF.Phen
         public override void OnLoaded()
         {
             Phases = new List<Phase>();
-            foreach (Phase phase in Children.MatchingMultiple(typeof(Phase)))
+            foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
         }
 

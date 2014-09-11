@@ -26,7 +26,7 @@ namespace Models.Core
         /// <summary>
         /// Gets of sets the child models. Can be empty array but never null.
         /// </summary>
-        List<Model> Models { get; set; }
+        List<Model> Children { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.

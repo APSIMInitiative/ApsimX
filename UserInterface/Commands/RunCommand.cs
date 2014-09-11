@@ -75,7 +75,7 @@ namespace UserInterface.Commands
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
                 }
 
-                foreach (Model model in Simulations.Children.AllRecursively)
+                foreach (Model model in Apsim.ChildrenRecursively(Simulations))
                     model.OnAllSimulationsCompleted();
                 return;
             }

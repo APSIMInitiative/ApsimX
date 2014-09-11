@@ -21,7 +21,7 @@ namespace Models.Factorial
         public Simulation[] Create()
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
-            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
+            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
@@ -32,7 +32,7 @@ namespace Models.Factorial
                 ModelFunctions.ParentAllChildren(newSimulation);
 
                 // Call OnLoaded in all models.
-                foreach (Model child in newSimulation.Children.AllRecursively)
+                foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
                     child.OnLoaded();
 
                 foreach (FactorValue value in combination)
@@ -44,11 +44,14 @@ namespace Models.Factorial
             return simulations.ToArray();
         }
 
+        /// <summary>
+        /// Gets the base simulation
+        /// </summary>
         public Simulation BaseSimulation
         {
             get
             {
-                return Children.Matching(typeof(Simulation)) as Simulation;
+                return Apsim.Child(this, typeof(Simulation)) as Simulation;
             }
         }
 
@@ -58,7 +61,7 @@ namespace Models.Factorial
         public Simulation CreateSpecificSimulation(string name)
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
-            Simulation baseSimulation = Children.Matching(typeof(Simulation)) as Simulation;
+            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
 
             foreach (List<FactorValue> combination in allCombinations)
             {
@@ -74,7 +77,7 @@ namespace Models.Factorial
                     ModelFunctions.ParentAllChildren(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    foreach (Model child in newSimulation.Children.AllRecursively)
+                    foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
                         child.OnLoaded();
 
                     foreach (FactorValue value in combination)
@@ -115,7 +118,7 @@ namespace Models.Factorial
         /// </summary>
         private List<List<FactorValue>> AllCombinations()
         {
-            Factors Factors = Children.Matching(typeof(Factors)) as Factors;
+            Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
 
             // Create a list of list of factorValuse so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();

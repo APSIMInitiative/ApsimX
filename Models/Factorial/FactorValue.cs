@@ -62,34 +62,34 @@ namespace Models.Factorial
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
         {
-            if (FactorPaths.Count > 1 && FactorPaths.Count != Models.Count)
+            if (FactorPaths.Count > 1 && FactorPaths.Count != Children.Count)
                 throw new ApsimXException(this, "The number of factor paths does not match the number of factor values");
 
             if (FactorPaths.Count == 1)
             {
-                if (Models != null && Models.Count > 1)
+                if (Children != null && Children.Count > 1)
                     throw new ApsimXException(this, "One factor path was specified with multiple child factor values.");
 
-                if (Models == null || Models.Count == 0)
+                if (Children == null || Children.Count == 0)
                     ApplyNameAsValue(newSimulation, FactorPaths[0], Name);
                 else
-                    ApplyModelReplacement(newSimulation, FactorPaths[0], Models[0]);
+                    ApplyModelReplacement(newSimulation, FactorPaths[0], Children[0]);
             }
-            else if (Models != null)
+            else if (Children != null)
             {
                 // Multiple child factor values specified - apply each one.
                 for (int i = 0; i != FactorPaths.Count; i++)
                 {
-                    if (Models[i] is FactorValue)
+                    if (Children[i] is FactorValue)
                     {
-                        FactorValue factorValue = Models[i] as FactorValue;
+                        FactorValue factorValue = Children[i] as FactorValue;
                         if (factorValue != null)
                             ApplyNameAsValue(newSimulation, FactorPaths[i], factorValue.Name);
                         else
-                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Models[0]);
+                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Children[0]);
                     }
                     else
-                        ApplyModelReplacement(newSimulation, FactorPaths[i], Models[i]);
+                        ApplyModelReplacement(newSimulation, FactorPaths[i], Children[i]);
 
                     
                 }
@@ -132,7 +132,14 @@ namespace Models.Factorial
             if (modelToReplace == null)
                 throw new ApsimXException(this, "Cannot find model to replace. Model path: " + path);
 
-            (modelToReplace.Parent as Model).Children.Replace(modelToReplace, newModel);
+            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace);
+            if (index == -1)
+                throw new ApsimXException(this, "Cannot find model to replace. Model path: " + path);
+
+            modelToReplace.Parent.Children.RemoveAt(index);
+            modelToReplace.Parent.Children.Insert(index, newModel);
+            newModel.Name = modelToReplace.Name;
+            newModel.Parent = modelToReplace.Parent;
         }
 
         /// <summary>

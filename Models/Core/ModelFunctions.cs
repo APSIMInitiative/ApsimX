@@ -38,7 +38,7 @@
         public static void ParentAllChildren(Model model)
         {
             if (model != null)
-                foreach (Model child in model.Children.All)
+                foreach (Model child in model.Children)
                 {
                     child.Parent = model;
                     ParentAllChildren(child);

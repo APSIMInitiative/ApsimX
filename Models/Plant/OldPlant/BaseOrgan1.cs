@@ -14,7 +14,7 @@ namespace Models.PMF.OldPlant
         { 
             get 
             { 
-                return Children.Matching("Live") as Biomass;
+                return Apsim.Child(this, "Live") as Biomass;
             }
             set
             {
@@ -25,7 +25,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Children.Matching("Dead") as Biomass;
+                return Apsim.Child(this, "Dead") as Biomass;
             }
             set
             {

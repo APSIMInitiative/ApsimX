@@ -577,7 +577,7 @@ namespace Models
                 Open(forWriting: true);
 
                 DoingPostProcessing = true;
-                foreach (Model child in Models)
+                foreach (Model child in Children)
                 {
                     if (child is IPostSimulationTool)
                         (child as IPostSimulationTool).Run(this);

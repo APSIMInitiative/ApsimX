@@ -17,6 +17,6 @@ namespace Models.Factorial
         public List<string> Paths { get; set; }
 
         [XmlIgnore]
-        public Model[] FactorValues { get { return Children.MatchingMultiple(typeof(FactorValue)); } }
+        public List<IModel> FactorValues { get { return Apsim.Children(this, typeof(FactorValue)); } }
     }
 }

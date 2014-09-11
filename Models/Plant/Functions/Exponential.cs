@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
         public double A = 1.0;
         public double B = 1.0;
         public double C = 1.0;
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         
         public override double Value
@@ -21,9 +21,9 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
-                if (ChildFunctions.Length == 1)
+                if (ChildFunctions.Count == 1)
                 {
                     Function F = ChildFunctions[0] as Function;
 

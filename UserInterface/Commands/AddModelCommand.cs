@@ -38,6 +38,8 @@ namespace UserInterface.Commands
                 FromModel.Parent = ToParent;
 
                 ToParent.Children.Add(FromModel);
+                FromModel.Parent = ToParent;
+                Apsim.EnsureNameIsUnique(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent);
 
                 ModelAdded = true;

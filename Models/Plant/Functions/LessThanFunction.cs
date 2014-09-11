@@ -13,13 +13,13 @@ namespace Models.PMF.Functions
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
     public class LessThanFunction : Function
     {
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
         public override double Value
         {
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 double Variable = 0.0;
                 double Criteria = 0.0;
@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
 
                 Function F = ChildFunctions[0] as Function;
 
-                for (int i = 0; i < ChildFunctions.Length; i++)
+                for (int i = 0; i < ChildFunctions.Count; i++)
                 {
                     F = ChildFunctions[i] as Function;
                     if (i == 0)

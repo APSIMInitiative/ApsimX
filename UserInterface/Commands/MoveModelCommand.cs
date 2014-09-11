@@ -42,6 +42,8 @@ namespace UserInterface.Commands
                 OriginalName = FromModel.Name;
 
                 ToParent.Children.Add(FromModel);
+                FromModel.Parent = ToParent;
+                Apsim.EnsureNameIsUnique(FromModel);
                 CommandHistory.InvokeModelStructureChanged(FromParent);
                 CommandHistory.InvokeModelStructureChanged(ToParent);
             }
@@ -59,6 +61,7 @@ namespace UserInterface.Commands
                 ToParent.Children.Remove(FromModel);
                 FromModel.Name = OriginalName;
                 FromParent.Children.Add(FromModel);
+                FromModel.Parent = FromParent;
 
                 CommandHistory.InvokeModelStructureChanged(FromParent);
                 CommandHistory.InvokeModelStructureChanged(ToParent);

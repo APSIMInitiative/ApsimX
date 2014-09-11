@@ -95,7 +95,7 @@ namespace Models.PMF.Organs
         {
             base.OnLoaded();
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
-            foreach (LeafCohort initialLeaf in Children.MatchingMultiple(typeof(LeafCohort)))
+            foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }

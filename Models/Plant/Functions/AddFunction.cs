@@ -10,14 +10,14 @@ namespace Models.PMF.Functions
     [Description("Add the values of all child functions")]
     public class AddFunction : Function
     {
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         public override double Value
         {
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function)); 
 
                 double returnValue = 0.0;
 

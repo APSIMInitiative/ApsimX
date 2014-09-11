@@ -102,7 +102,7 @@ namespace Models.PMF.OilPalm
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in this.Children.MatchingMultiple(typeof(Cultivar)))
+                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
                 {
                     cultivars.Add(model as Cultivar);
                 }

@@ -111,7 +111,7 @@ namespace Models
         private void OnSerialising(bool xmlSerialisation)
         {
             if (Script != null)
-                Models.Remove(Script);
+                Children.Remove(Script);
         }
 
         /// <summary>
@@ -121,7 +121,15 @@ namespace Models
         private void OnSerialised(bool xmlSerialisation)
         {
             if (Script != null)
-                Models.Add(Script);
+                Children.Add(Script);
+        }
+
+        /// <summary>
+        /// At simulation commencing time, rebuild the script assembly if required.
+        /// </summary>
+        public override void OnSimulationCommencing()
+        {
+            RebuildScriptModel();
         }
 
         /// <summary>
@@ -163,7 +171,7 @@ namespace Models
 
                     // Create a new script model.
                     Script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    Script.Models = new System.Collections.Generic.List<Model>();
+                    Script.Children = new System.Collections.Generic.List<Model>();
                     Script.Name = "Script";
                     Script.IsHidden = true;
                     XmlElement parameters;
@@ -179,6 +187,7 @@ namespace Models
 
                     // Add the new script model to our models collection.
                     Children.Add(Script);
+                    Script.Parent = this;
                 }
             }
         }

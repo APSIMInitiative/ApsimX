@@ -281,9 +281,9 @@ namespace Models.Core
         /// </summary>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public IModel Child(Type typeFilter)
+        public static IModel Child(IModel model, Type typeFilter)
         {
-            return model.Models.Find(m => m.GetType() == typeFilter);
+            return model.Children.Find(m => typeFilter.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
@@ -292,9 +292,9 @@ namespace Models.Core
         /// </summary>
         /// <param name="name">The name of the child to return</param>
         /// <returns>A list of all children</returns>
-        public IModel Child(string name)
+        public static IModel Child(IModel model, string name)
         {
-            return model.Models.Find(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return model.Children.Find(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
         
         /// <summary>
@@ -303,9 +303,9 @@ namespace Models.Core
         /// </summary>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public List<IModel> Children(Type typeFilter)
+        public static List<IModel> Children(IModel model, Type typeFilter)
         {
-            return model.Models.FindAll(m => m.GetType() == typeFilter).ToList<IModel>();
+            return model.Children.FindAll(m => typeFilter.IsAssignableFrom(m.GetType())).ToList<IModel>();
         }
         
         /// <summary>
@@ -313,7 +313,7 @@ namespace Models.Core
         /// null. Can return an empty list.
         /// </summary>
         /// <returns>A list of all children</returns>
-        public List<IModel> ChildrenRecursively()
+        public static List<IModel> ChildrenRecursively(IModel model)
         {
             return ChildrenRecursivelyInternal(model);
         }
@@ -325,9 +325,9 @@ namespace Models.Core
         /// </summary>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
-        public List<IModel> ChildrenRecursively(Type typeFilter)
+        public static List<IModel> ChildrenRecursively(IModel model, Type typeFilter)
         {
-            return ChildrenRecursively().FindAll(m => m.GetType() == typeFilter);
+            return ChildrenRecursively(model).FindAll(m => typeFilter.IsAssignableFrom(m.GetType()));
         }
         
         /// <summary>
@@ -335,110 +335,9 @@ namespace Models.Core
         /// null. Can return an empty list.
         /// </summary>
         /// <returns>A list of all children</returns>
-        public List<IModel> ChildrenRecursivelyVisible()
+        public static List<IModel> ChildrenRecursivelyVisible(IModel model)
         {
-            return ChildrenRecursively().FindAll(m => !m.IsHidden);
-        }
-
-        /// <summary>
-        /// Add a model to the collection. Will throw if model cannot be added.
-        /// </summary>
-        /// <param name="childModel">The child model to add</param>
-        public void Add(IModel childModel)
-        {
-            EnsureNameIsUnique(childModel);
-            (model as Model).Models.Add(childModel as Model);
-            Locator().Clear();
-
-            // Call the model's (and all children recursively) OnLoaded method
-            childModel.Parent = model;
-            ParentModelAndAllChildren(childModel);
-
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation != null && simulation.IsRunning)
-            {
-                var api = Apsim.Create(childModel);
-                api.ConnectEvents();
-                ResolveLinksInternal(childModel);
-            }
-        }
-
-        /// <summary>
-        /// Replace the specified 'modelToReplace' with the specified 'newModel'. Return
-        /// true if successful.
-        /// </summary>
-        /// <param name="modelToReplace">The model to remove from the simulation</param>
-        /// <param name="newModel">The new model that replaces the one removed</param>
-        /// <returns>True if the model was successfully replaced</returns>
-        public bool Replace(IModel modelToReplace, IModel newModel)
-        {
-            // Find the model.
-            int index = (modelToReplace.Parent as Model).Models.IndexOf(modelToReplace as Model);
-            if (index != -1)
-            {
-                var oldModel = modelToReplace.Parent.Models[index] as IModel;
-                
-                var api = Apsim.Create(oldModel);
-                api.DisconnectEvents();
-                UnresolveLinks(oldModel);
-
-                // remove the existing model.
-                oldModel.Parent.Models.RemoveAt(index);
-                oldModel.Parent = null;
-
-                // Name and parent the model we're adding.
-                newModel.Name = modelToReplace.Name;
-                newModel.Parent = modelToReplace.Parent;
-                EnsureNameIsUnique(newModel);
-
-                // insert the new model.
-                (modelToReplace.Parent as Model).Models.Insert(index, newModel as Model);
-
-                // clear caches.
-                Locator().Clear();
-
-                // Connect our new child.
-                var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-                if (simulation != null && simulation.IsRunning)
-                {
-                    var api2 = Apsim.Create(modelToReplace);
-                    api2.ConnectEvents();
-                    ResolveLinksInternal(modelToReplace);
-                }
-
-                ParentModelAndAllChildren(modelToReplace);
-
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Remove a model from the Models collection. Returns true if model was removed.
-        /// </summary>
-        /// <param name="modelToRemove">The model to remove from the simulation</param>
-        /// <returns>True if the model was removed</returns>
-        public bool Remove(IModel modelToRemove)
-        {
-            // Find the model.
-            int index = (modelToRemove.Parent as Model).Models.IndexOf(modelToRemove as Model);
-            if (index != -1)
-            {
-                IModel oldModel = modelToRemove.Parent.Models[index];
-
-                // remove the existing model.
-                modelToRemove.Parent.Models.RemoveAt(index);
-
-                // clear caches.
-                Locator().Clear();
-
-                var api2 = Apsim.Create(oldModel);
-                api2.DisconnectEvents();
-                UnresolveLinks(oldModel);
-
-                return true;
-            }
-            return false;
+            return ChildrenRecursively(model).FindAll(m => !m.IsHidden);
         }
 
         /// <summary>
@@ -450,8 +349,7 @@ namespace Models.Core
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            Apsim api = Apsim.Create(modelToCheck);
-            List<IModel> siblings = api.Siblings();
+            List<IModel> siblings = Apsim.Siblings(modelToCheck);
             IModel child = siblings.Find(m => m.Name == newName);
             while (child != null && child != modelToCheck && counter < 10000)
             {
@@ -473,11 +371,11 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo">The model for which siblings are to be found</param>
         /// <returns>The found siblings or an empty array if not found.</returns>
-        public List<IModel> Siblings()
+        public static List<IModel> Siblings(IModel model)
         {
-            if (this.model != null && this.model.Parent != null)
+            if (model != null && model.Parent != null)
             {
-                return this.model.Parent.Models.FindAll(m => m != model).ToList<IModel>();
+                return model.Parent.Children.FindAll(m => m != model).ToList<IModel>();
             }
             else
             {
@@ -489,11 +387,11 @@ namespace Models.Core
         /// Parent all children of 'model' correctly and call their OnLoaded.
         /// </summary>
         /// <param name="model">The model to parent</param>
-        private static void ParentModelAndAllChildren(IModel model)
+        public static void ParentModelAndAllChildren(IModel model)
         {
             CallEventHandler(model, "Loaded", null);
 
-            foreach (IModel child in model.Models)
+            foreach (IModel child in model.Children)
             {
                 child.Parent = model;
                 ParentModelAndAllChildren(child);
@@ -772,7 +670,7 @@ namespace Models.Core
         {
             List<IModel> models = new List<IModel>();
 
-            foreach (Model child in model.Models)
+            foreach (Model child in model.Children)
             {
                 models.Add(child);
                 models.AddRange(ChildrenRecursivelyInternal(child));
@@ -914,10 +812,10 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo">The model to use as a base for looking for all other models in scope</param>
         /// <returns>The list of visible models for event connection</returns>
-        private static List<Model> GetModelsVisibleToEvents(Model relativeTo)
+        public static List<IModel> GetModelsVisibleToEvents(Model relativeTo)
         {
             // This is different to models in scope unfortunately. Need to rethink this.
-            List<Model> models = new List<Model>();
+            List<IModel> models = new List<IModel>();
 
             // Find our parent Simulation or Zone.
             Model obj = relativeTo;
@@ -929,14 +827,14 @@ namespace Models.Core
                 throw new ApsimXException(relativeTo, "Cannot find models to connect events to");
             if (obj is Simulation)
             {
-                models.AddRange((obj as Simulation).Children.AllRecursively);
+                models.AddRange(Apsim.ChildrenRecursively(obj));
             }
             else
             {
                 // return all models in zone and all direct children of zones parent.
-                models.AddRange((obj as Zone).Children.AllRecursively);
+                models.AddRange(Apsim.ChildrenRecursively(obj));
                 if (obj.Parent != null)
-                    models.AddRange(obj.Parent.Models);
+                    models.AddRange(obj.Parent.Children);
             }
 
             return models;

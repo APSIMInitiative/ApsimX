@@ -38,9 +38,8 @@ namespace Models.Core
         public Model()
         {
             this.Name = GetType().Name;
-            this.Children = new ModelCollection(this);
             this.IsHidden = false;
-            this.Models = new List<Model>();
+            this.Children = new List<Model>();
             this.events = new Events(this);
         }
 
@@ -197,7 +196,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
-        public List<Model> Models { get; set; }
+        public List<Model> Children { get; set; }
 
         /// <summary>
         /// Gets or sets the parent of the model.
@@ -210,12 +209,6 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public bool IsHidden { get; set; }
-
-        /// <summary>
-        /// Gets the array of children
-        /// </summary>
-        [XmlIgnore]
-        public ModelCollection Children { get; private set; }
 
         /// <summary>
         /// Gets an array of plant models that are in scope.

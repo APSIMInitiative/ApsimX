@@ -170,7 +170,7 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    Model localModel = relativeToModel.Children.All.FirstOrDefault(m => m.Name == namePathBits[i]);
+                    Model localModel = relativeToModel.Children.FirstOrDefault(m => m.Name == namePathBits[i]);
                     if (localModel == null)
                     {
                         break;
@@ -205,7 +205,7 @@ namespace Models.Core
                     if (propertyInfo == null && relativeToObject is Model)
                     {
                         // Not a property, may be a child model.
-                        localModel = (relativeToObject as Model).Children.All.FirstOrDefault(m => m.Name == namePathBits[i]);
+                        localModel = (relativeToObject as Model).Children.FirstOrDefault(m => m.Name == namePathBits[i]);
                         if (localModel == null)
                         {
                             return null;
@@ -354,7 +354,8 @@ namespace Models.Core
 
             // Get all children first.
             List<Model> modelsInScope = new List<Model>();
-            modelsInScope.AddRange(relativeTo.Children.AllRecursively);
+            foreach (Model child in Apsim.ChildrenRecursively(relativeTo))
+                modelsInScope.Add(child);
 
             // Add relativeTo.
             modelsInScope.Add(relativeTo);
@@ -366,7 +367,8 @@ namespace Models.Core
                 Model relativeToParent = relativeTo;
                 do
                 {
-                    modelsInScope.AddRange(ModelCollection.Siblings(relativeToParent));
+                    foreach (IModel model in Apsim.Siblings(relativeToParent))
+                        modelsInScope.Add(model as Model);
                     relativeToParent = relativeToParent.Parent as Model;
 
                     // Add in the top level model that we stopped on.
@@ -377,6 +379,7 @@ namespace Models.Core
                 }
                 while (relativeToParent != null && !(relativeToParent is Simulation) && !(relativeToParent is Simulations));
             }
+
             // Add the in scope models to the cache and return them
             AddToCache(cacheKey, relativeTo, modelsInScope.ToArray());
             return modelsInScope.ToArray();

@@ -17,23 +17,23 @@ namespace Models.PMF.Functions
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
     public class DivideFunction : Function
     {
-        private Model[] ChildFunctions;
+        private List<IModel> ChildFunctions;
 
         public override double Value
         {
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Children.MatchingMultiple(typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(Function));
 
                 double returnValue = 0.0;
-                if (ChildFunctions.Length > 0)
+                if (ChildFunctions.Count > 0)
                 {
                     Function F = ChildFunctions[0] as Function;
                     returnValue = F.Value;
 
-                    if (ChildFunctions.Length > 1)
-                        for (int i = 1; i < ChildFunctions.Length; i++)
+                    if (ChildFunctions.Count > 1)
+                        for (int i = 1; i < ChildFunctions.Count; i++)
                         {
                             F = ChildFunctions[i] as Function;
                             returnValue = returnValue / F.Value;

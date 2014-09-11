@@ -291,7 +291,7 @@ namespace Models.Core
         private List<EventSubscriber> FindEventSubscribers(EventPublisher publisher)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (Model model in GetModelsVisibleToEvents(publisher.Model))
+            foreach (Model model in Apsim.GetModelsVisibleToEvents(publisher.Model))
             {
                 subscribers.AddRange(FindEventSubscribers(publisher.Name, model));
 
@@ -306,37 +306,6 @@ namespace Models.Core
             }
             return subscribers;
 
-        }
-
-        /// <summary>
-        /// Return a list of models that are visible for event connecting purposes.
-        /// This is different to models in scope unfortunatley. Need to rethink this.
-        /// </summary>
-        private static List<Model> GetModelsVisibleToEvents(Model model)
-        {
-            List<Model> models = new List<Model>();
-
-            // Find our parent Simulation or Zone.
-            Model obj = model;
-            while (obj != null && !(obj is Zone) && !(obj is Simulation))
-            {
-                obj = obj.Parent as Model;
-            }
-            if (obj == null)
-                throw new ApsimXException(model, "Cannot find models to connect events to");
-            if (obj is Simulation)
-            {
-                models.AddRange((obj as Simulation).Children.AllRecursively);
-            }
-            else
-            {
-                // return all models in zone and all direct children of zones parent.
-                models.AddRange((obj as Zone).Children.AllRecursively);
-                if (obj.Parent != null)
-                    models.AddRange(obj.Parent.Models);
-            }
-
-            return models;
         }
 
         /// <summary>

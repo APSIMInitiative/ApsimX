@@ -307,7 +307,6 @@
     <Compile Include="Summary.cs" />
     <Compile Include="SurfaceOrganicMatter.cs" />
     <Compile Include="Tests.cs" />
-    <Compile Include="Core\ModelCollection.cs" />
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="Core\Zone.cs" />
