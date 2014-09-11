@@ -5,6 +5,29 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
+	/// <summary>
+	/// Emerging phase in phenology
+	/// </summary>
+	/// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
+	/// provide the sowing depth (\f$D_{seed}\f$).
+	/// \param ShootLag An initial period of fixed thermal time during 
+	/// which shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, &deg;Cd)
+	/// \param ShootRate The rate of shoot elongation (\f$r_{e}\f$, 
+	/// &deg;Cd mm<sup>-1</sup>) towards the soil surface is 
+	/// linearly related to air temperature.
+	/// <remarks>
+	/// The thermal time target in the emerging phase includes 
+	/// an effect of the depth of sowing (\f$D_{seed}\f$), an 
+	/// initial period of fixed thermal time during which 
+	/// shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, \p ShootLag)
+	/// and a linear period, where the rate of shoot elongation (\f$r_{e}\f$, 
+	/// \p ShootRate) towards the soil surface is linearly related to 
+	/// air temperature. Then, the thermal time target (\f$T_{emer}\f$) 
+	/// is calculated by 
+	/// \f[
+	/// T_{emer}=T_{lag}+r_{e}D_{seed}
+	/// \f]
+	/// </remarks>
     [Serializable]
     public class EmergingPhase : GenericPhase
     {

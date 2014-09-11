@@ -6,6 +6,16 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
+	/// <summary>
+	/// Germinating phase in phenology
+	/// </summary>
+	/// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
+	/// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
+	/// in the soil profile.
+	/// <remarks>
+	/// Crop will germinate in the next day if the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)"
+	/// is more than zero.
+	/// </remarks>
     [Serializable]
     public class GerminatingPhase : Phase
     {

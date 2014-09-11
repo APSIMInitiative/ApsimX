@@ -5,7 +5,14 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
-    [Serializable]
+	
+    /// <summary>
+    /// The end phase in phenology
+    /// </summary>
+    /// <remarks>
+    /// 
+    /// </remarks>
+	[Serializable]
     public class EndPhase : Phase
     {
         private double _CumulativeValue;

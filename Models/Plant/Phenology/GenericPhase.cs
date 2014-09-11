@@ -7,6 +7,17 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
+	/// <summary>
+	/// Generic phase in phenology
+	/// </summary>
+	/// \param Target The thermal time target in this phase.
+	/// <remarks>
+	/// Generic phase increments daily thermal time accumulated in this phase
+	/// to met the \p Target.
+	/// The remainder thermal time will pass into the first day of 
+	/// next phase by \ref Models.PMF.Phen.Phenology "Phenology" 
+	/// function if the phase target is met today.
+	/// </remarks>
     [Serializable]
     public class GenericPhase : Phase
     {
