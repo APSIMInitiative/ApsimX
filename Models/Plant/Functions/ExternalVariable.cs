@@ -16,9 +16,6 @@ namespace Models.PMF.Functions
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     public class ExternalVariable : Function
     {
-        [Link]
-        Zone zone = null;
-
         public string VariableName = "";
 
 
@@ -27,7 +24,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                object val = zone.Get(VariableName);
+                object val = Apsim.Get(this, VariableName);
 
                 if (val != null)
                     return Convert.ToDouble(val);

@@ -18,9 +18,6 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     public class Cultivar : Model
     {
-        [Link]
-        Zone zone = null;
-
         /// <summary>
         /// The properties for each command
         /// </summary>
@@ -83,7 +80,7 @@ namespace Models.PMF
 
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
-                        IVariable property = zone.GetVariableObject(propertyName) as IVariable;
+                        IVariable property = Apsim.GetVariableObject(this, propertyName) as IVariable;
                         if (property != null)
                         {
                             this.oldPropertyValues.Add(property.Value);

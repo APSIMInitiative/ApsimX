@@ -43,9 +43,6 @@ namespace Models.PMF.OldPlant
         [Link]
         Soil Soil = null;
 
-        [Link]
-        Zone zone = null;
-
         public double NConcentrationCritical { get; set; }
 
         public double NConcentrationMinimum { get; set; }
@@ -203,7 +200,7 @@ namespace Models.PMF.OldPlant
 
             if (SwimIsPresent)
             {
-                dlt_sw_dep = (double[])zone.Get("uptake_water_" + Plant.CropType);
+                dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
                 dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
             else

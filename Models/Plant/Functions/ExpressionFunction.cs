@@ -43,8 +43,6 @@ namespace Models.PMF.Functions
 
         private static void FillVariableNames(Utility.ExpressionEvaluator fn, Model RelativeTo)
         {
-            Zone zone = Apsim.Parent(RelativeTo, typeof(Zone)) as Zone;
-
             ArrayList varUnfilled = fn.Variables;
             ArrayList varFilled = new ArrayList();
             Utility.Symbol symFilled;
@@ -54,7 +52,7 @@ namespace Models.PMF.Functions
                 symFilled.m_type = Utility.ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
-                object sometypeofobject = zone.Get(sym.m_name.Trim());
+                object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
                 symFilled.m_value = (double)sometypeofobject;

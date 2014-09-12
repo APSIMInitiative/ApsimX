@@ -16,9 +16,6 @@ namespace Models.PMF.Organs
 
         [Link]
         Function DMDemandFunction = null;
-        
-        [Link]
-        Zone zone = null;
 
         private double Uptake = 0;
         private string CurrentPaddockName;
@@ -95,7 +92,7 @@ namespace Models.PMF.Organs
                 double[] SWSupply;
                 if (TalkDirectlyToRoot)
                 {
-                    SWSupply = (double[])zone.Get(OurName + "Root.SWSupply");
+                    SWSupply = (double[])Apsim.Get(this, OurName + "Root.SWSupply");
                     return Utility.Math.Sum(SWSupply);
                 }
 

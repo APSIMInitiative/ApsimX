@@ -247,9 +247,6 @@ namespace Models
         [Link]
         public Simulation Simulation = null;
 
-        [Link]
-        Zone zone = null;
-
         // Properties read in.
         [Summary]
         [Description("Output variables")]
@@ -261,7 +258,7 @@ namespace Models
 
         public object Get(string name)
         {
-            return zone.Get(name);
+            return Apsim.Get(this, name);
         }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.

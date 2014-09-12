@@ -45,7 +45,17 @@ namespace Models.Core
         {
             return Locator(model).Get(namePath, model as Model);
         }
-        
+
+        /// <summary>
+        /// Get the underlying variable object for the given path.
+        /// </summary>
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public static IVariable GetVariableObject(IModel model, string namePath)
+        {
+            return Locator(model).GetInternal(namePath, model as Model);
+        }
+
         /// <summary>
         /// Returns the full path of the specified model.
         /// </summary>

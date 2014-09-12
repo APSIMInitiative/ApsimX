@@ -13,9 +13,6 @@ namespace Models.PMF.Functions
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     public class SplineInterpolationFunction : Function
     {
-        [Link]
-        Zone zone = null;
-
         public XYPairs XYPairs { get; set; }
 
         public string XProperty = "";
@@ -38,7 +35,7 @@ namespace Models.PMF.Functions
                 double XValue = 0;
                 try
                 {
-                    object v = zone.Get(XProperty);
+                    object v = Apsim.Get(this, XProperty);
                     if (v == null)
                         throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                     XValue = Convert.ToDouble(v);
