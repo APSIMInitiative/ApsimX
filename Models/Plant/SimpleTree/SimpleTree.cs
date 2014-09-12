@@ -167,7 +167,9 @@ namespace Models.PMF
                 Soil Soil = (Soil)Apsim.Find(info[i].Zone, typeof(Soil));
                 double[] ESWlayers;
 
-                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness));
+                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Soil.SoilWater.ll15_dep);//Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness)); //is this right?
+                for (int j = 0; j < ESWlayers.Length; j++)
+                    ESWlayers[j] = Math.Max(0.0, ESWlayers[j]);
                 ESWDeps[i] = (double)Utility.Math.Sum(ESWlayers);
             }
 
