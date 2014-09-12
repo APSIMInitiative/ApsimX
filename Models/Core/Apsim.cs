@@ -57,6 +57,16 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Sets the value of a variable. Will throw if variable doesn't exist.
+        /// </summary>
+        /// <param name="namePath">The name of the object to set</param>
+        /// <param name="value">The value to set the property to</param>
+        public static void Set(IModel model, string namePath, object value)
+        {
+            Locator(model).Set(namePath, model as Model, value);
+        }
+
+        /// <summary>
         /// Returns the full path of the specified model.
         /// </summary>
         /// <param name="model">The model to return the full path for</param>
@@ -395,7 +405,8 @@ namespace Models.Core
                             }
                         }
 
-                        if (linkedObject == null && allMatches.Count > 1)
+                        // If the link isn't optional then choose the closest match.
+                        if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
                         {
                             // Return the first (closest) match.
                             linkedObject = allMatches[0];

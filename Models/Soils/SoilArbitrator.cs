@@ -95,8 +95,10 @@ namespace Models.Soils
             //collect all zones in simulation
             Model[] ZoneAsModel = Simulation.FindAll(typeof(Zone));
             foreach (Model m in ZoneAsModel)
-                Zones.Add((Zone)m);
-
+            {
+                if (m.GetType() == typeof(Zone))
+                    Zones.Add((Zone)m);
+            }
             foreach (ICrop plant in Simulation.FindAll(typeof(ICrop)))
             {
                 PMF.SimpleTree Tree = (PMF.SimpleTree)plant;

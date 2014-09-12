@@ -585,9 +585,6 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -599,10 +596,21 @@
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>0</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -613,6 +621,7 @@
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -1240,9 +1249,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -1254,10 +1260,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>0</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1268,6 +1285,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -1895,9 +1913,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -1909,10 +1924,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>0</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1923,6 +1949,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -2054,6 +2081,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree1Field</Name>
@@ -2645,9 +2674,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -2659,10 +2685,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -2673,6 +2710,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -2795,6 +2833,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree2Field</Name>
@@ -3383,9 +3423,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -3397,10 +3434,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -3411,6 +3459,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -4065,9 +4114,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -4079,10 +4125,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -4093,6 +4150,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -4224,6 +4282,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree3Field</Name>
@@ -4812,9 +4872,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -4826,10 +4883,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -4840,6 +4908,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -5494,9 +5563,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -5508,10 +5574,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -5522,6 +5599,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -6150,9 +6228,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -6164,10 +6239,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -6178,6 +6264,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -6309,6 +6396,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>2Tree1Field</Name>
@@ -6901,9 +6990,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -6915,10 +7001,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -6929,6 +7026,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -7082,6 +7180,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>3Tree1Field</Name>
@@ -7674,9 +7774,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -7688,10 +7785,21 @@ namespace Models
           <Name>TillageTypes</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Wheat</PoolName>
         <type>Wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -7702,6 +7810,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -7881,6 +7990,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

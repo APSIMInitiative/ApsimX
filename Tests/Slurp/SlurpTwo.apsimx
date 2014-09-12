@@ -390,8 +390,8 @@ namespace Models
 		[Link] Slurp Slurp;
 		[Link] Report Report;
 		[Link] Summary Summary;
+		[Link] Zone zone;			
 		
-
 		[Description("Date to change states or properties")] public DateTime DateToUpdate {get; set;}
 		[Description("Variable to update (e.g. LAI, LAItot, CoverGreen")] public string VariableToUpdate {get; set;}        
         [Description("Value to update to")] public double tempValue { get; set; }
@@ -409,7 +409,7 @@ namespace Models
 			{
                 myString="SlurpUpdates is resetting the value of " + VariableToUpdate + " to " + tempValue.ToString();
 			    Summary.WriteMessage(this, myString);
-			    this.Set(VariableToUpdate, tempValue);
+			    zone.Set(VariableToUpdate, tempValue);
 			}
         }
 	}
