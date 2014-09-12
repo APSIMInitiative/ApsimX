@@ -67,7 +67,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (IVariable Property in ModelFunctions.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                foreach (IVariable Property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
                 {
                     e.Items.Add(Property.Name);
                 }

@@ -66,7 +66,7 @@ namespace Models.Core
 
                 // Parent all models.
                 simulations.Parent = null;
-                ModelFunctions.ParentAllChildren(simulations);
+                Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
                 simulations.LoadErrors = new List<Exception>();
@@ -112,7 +112,7 @@ namespace Models.Core
 
                 // Parent all models.
                 simulations.Parent = null;
-                ModelFunctions.ParentAllChildren(simulations);
+                Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(simulations))

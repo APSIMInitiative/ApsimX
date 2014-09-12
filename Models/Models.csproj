@@ -130,12 +130,10 @@
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />
     <Compile Include="Core\VariableComposite.cs" />
-    <Compile Include="Core\Events.cs" />
     <Compile Include="Core\IPostSimulationTool.cs" />
     <Compile Include="Core\IVariable.cs" />
     <Compile Include="Core\Locater.cs" />
     <Compile Include="Core\ModelCollectionFromResource.cs" />
-    <Compile Include="Core\ModelFunctions.cs" />
     <Compile Include="Core\VariableExpression.cs" />
     <Compile Include="Core\VariableProperty.cs" />
     <Compile Include="Plant\Cultivar.cs" />

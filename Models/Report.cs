@@ -272,8 +272,7 @@ namespace Models
                 if (EventNames[i] != "")
                 {
                     eventNames.Add(EventNames[i].Trim());
-                    if (Events != null)
-                        base.Events.Subscribe(EventNames[i].Trim(), OnReport);
+                    Apsim.Subscribe(this, EventNames[i].Trim(), OnReport);
                 }
             }
             EventNames = eventNames.ToArray();
@@ -389,7 +388,7 @@ namespace Models
             // Unsubscribe to all events.
             foreach (string Event in EventNames)
                 if ( (Event != null) && (Event != "") )
-                    base.Events.Unsubscribe(Event);
+                    Apsim.Unsubscribe(this, Event, OnReport);
         }
 
     }

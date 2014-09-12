@@ -22,17 +22,6 @@ namespace Models.Core
     public class Model : IModel
     {
         /// <summary>
-        /// The parent model. null if no parent
-        /// </summary>
-        private IModel parent = null;
-
-        /// <summary>
-        /// The events instance
-        /// </summary>
-        [NonSerialized]
-        private Events events;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Model" /> class.
         /// </summary>
         public Model()
@@ -40,7 +29,6 @@ namespace Models.Core
             this.Name = GetType().Name;
             this.IsHidden = false;
             this.Children = new List<Model>();
-            this.events = new Events(this);
         }
 
         /// <summary>
@@ -209,20 +197,5 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public bool IsHidden { get; set; }
-
-        /// <summary>
-        /// Gets an instance of the models event class
-        /// </summary>
-        public Events Events
-        {
-            get
-            {
-                if (this.events == null)
-                    this.events = new Events(this);
-
-                return this.events;
-            }
-        }
-
     }
 }

@@ -29,7 +29,7 @@ namespace Models.Factorial
                 Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
                 newSimulation.Name = Name;
                 newSimulation.Parent = null;
-                ModelFunctions.ParentAllChildren(newSimulation);
+                Apsim.ParentAllChildren(newSimulation);
 
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
@@ -74,7 +74,7 @@ namespace Models.Factorial
                     Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
                     newSimulation.Name = Name;
                     newSimulation.Parent = null;
-                    ModelFunctions.ParentAllChildren(newSimulation);
+                    Apsim.ParentAllChildren(newSimulation);
 
                     // Connect events and links in our new  simulation.
                     foreach (Model child in Apsim.ChildrenRecursively(newSimulation))

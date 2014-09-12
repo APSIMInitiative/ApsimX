@@ -792,7 +792,7 @@
         #endregion
 
         [EventSubscribe("Deserialised")]
-        public void OnDeserialised(bool xmlSerialisation)
+        private void OnDeserialised(bool xmlSerialisation)
         {
             if (xmlSerialisation)
             {
@@ -827,7 +827,7 @@
         /// that were obtained from the XML resource so they are not included
         /// </summary>
         [EventSubscribe("Serialising")]
-        public void OnSerialising(bool xmlSerialisation)
+        private void OnSerialising(bool xmlSerialisation)
         {
             if (xmlSerialisation)
             {
@@ -845,7 +845,7 @@
         /// residue types
         /// </summary>
         [EventSubscribe("Serialised")]
-        public void OnSerialised(bool xmlSerialisation)
+        private void OnSerialised(bool xmlSerialisation)
         {
             if (xmlSerialisation && savedResidues != null)
             {

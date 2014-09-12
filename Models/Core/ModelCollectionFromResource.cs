@@ -23,7 +23,7 @@ namespace Models.Core
         /// of all models so that is isn't serialised. 
         /// </summary>
         [EventSubscribe("Serialising")]
-        public void OnSerialising(bool xmlSerialisation)
+        protected void OnSerialising(bool xmlSerialisation)
         {
             if (xmlSerialisation && ResourceName != null)
             {
@@ -47,7 +47,7 @@ namespace Models.Core
         /// Serialisation has completed. Reinstate 'ModelFromResource' if necessary.
         /// </summary>
         [EventSubscribe("Serialised")]
-        public void OnSerialised(bool xmlSerialisation)
+        protected void OnSerialised(bool xmlSerialisation)
         {
             if (xmlSerialisation && allModels != null)
             {
@@ -60,7 +60,7 @@ namespace Models.Core
         /// from resource.
         /// </summary>
         [EventSubscribe("Deserialised")]
-        public void OnDeserialised(bool xmlSerialisation)
+        protected void OnDeserialised(bool xmlSerialisation)
         {
             if (xmlSerialisation)
             {

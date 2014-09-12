@@ -27,7 +27,7 @@ namespace Models.PMF
         public string[] NutrientDrivers = null;
 
         [EventSubscribe("Initialised")]
-        public void OnInit()
+        private void OnInit()
         {
             //NAware Array.Exists(NutrientDrivers, element => element == "Nitrogen");  Fixme  Need to put this into .xml and write code to handle N unaware crops
             PAware = Array.Exists(NutrientDrivers, element => element == "Phosphorus");

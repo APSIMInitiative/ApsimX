@@ -17,28 +17,12 @@ namespace Models.Core
     /// The API for models to discover other models, get and set variables in
     /// other models and send events and subscribe to events in other models.
     /// </summary>
-    public class Apsim
+    public static class Apsim
     {
-        /// <summary>
-        /// The model that this API class is relative to.
-        /// </summary>
-        private IModel model;
-
-        /// <summary>
-        /// Creates an instance of the APSIM API class for the given model.
-        /// </summary>
-        /// <param name="model">The model to create the instance for</param>
-        /// <returns>The API class.</returns>
-        public static Apsim Create(IModel model)
-        {
-            var apsimAPI = new Apsim();
-            apsimAPI.model = model;
-            return apsimAPI;
-        }
-
         /// <summary>
         /// Gets the value of a variable or model.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
         public static object Get(IModel model, string namePath)
@@ -49,6 +33,7 @@ namespace Models.Core
         /// <summary>
         /// Get the underlying variable object for the given path.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the variable to return</param>
         /// <returns>The found object or null if not found</returns>
         public static IVariable GetVariableObject(IModel model, string namePath)
@@ -59,6 +44,7 @@ namespace Models.Core
         /// <summary>
         /// Sets the value of a variable. Will throw if variable doesn't exist.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the object to set</param>
         /// <param name="value">The value to set the property to</param>
         public static void Set(IModel model, string namePath, object value)
@@ -109,6 +95,7 @@ namespace Models.Core
         /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the model to return</param>
         /// <returns>The found model or null if not found</returns>
         public static Model Find(IModel model, string namePath)
@@ -119,6 +106,7 @@ namespace Models.Core
         /// <summary>
         /// Locates and returns a model with the specified type that is in scope.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <param name="type">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
         public static Model Find(IModel model, Type type)
@@ -129,6 +117,7 @@ namespace Models.Core
         /// <summary>
         /// Locates and returns all models in scope.
         /// </summary>
+        /// <param name="model">The reference model</param>
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model)
         {
@@ -138,7 +127,8 @@ namespace Models.Core
         /// <summary>
         /// Locates and returns all models in scope of the specified type.
         /// </summary>
-        /// <param name="model">The type of the models to return</param>
+        /// <param name="model">The reference model</param>
+        /// <param name="typeFilter">The type of the models to return</param>
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
@@ -148,11 +138,12 @@ namespace Models.Core
         /// <summary>
         /// Perform a deep Copy of the this model.
         /// </summary>
+        /// <param name="model">The model to clone</param>
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursivelyInternal(model);
+            List<IModel> modelsToNotify = ChildrenRecursively(model);
 
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
@@ -198,11 +189,12 @@ namespace Models.Core
         /// <summary>
         /// Serialize the model to a string and return the string.
         /// </summary>
+        /// <param name="model">The model to serialize</param>
         /// <returns>The string version of the model</returns>
         public static string Serialise(IModel model)
         {
             // Get a list of all child models that we need to notify about the serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursivelyInternal(model);
+            List<IModel> modelsToNotify = ChildrenRecursively(model);
             modelsToNotify.Insert(0, model);
 
             // Let all models know that we're about to serialise.
@@ -230,6 +222,7 @@ namespace Models.Core
         /// Return a child model that matches the specified 'modelType'. Returns 
         /// an empty list if not found.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
         public static IModel Child(IModel model, Type typeFilter)
@@ -241,6 +234,7 @@ namespace Models.Core
         /// Return a child model that matches the specified 'name'. Returns 
         /// null if not found.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <param name="name">The name of the child to return</param>
         /// <returns>A list of all children</returns>
         public static IModel Child(IModel model, string name)
@@ -252,6 +246,7 @@ namespace Models.Core
         /// Return children that match the specified 'typeFilter'. Never returns 
         /// null. Can return empty List.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> Children(IModel model, Type typeFilter)
@@ -263,10 +258,18 @@ namespace Models.Core
         /// Return a list of all child models recursively. Never returns
         /// null. Can return an empty list.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
         {
-            return ChildrenRecursivelyInternal(model);
+            List<IModel> models = new List<IModel>();
+
+            foreach (Model child in model.Children)
+            {
+                models.Add(child);
+                models.AddRange(ChildrenRecursively(child));
+            }
+            return models;
         }
 
         /// <summary>
@@ -274,6 +277,7 @@ namespace Models.Core
         /// the specified 'typeFilter' will be returned. Never returns
         /// null. Can return an empty list.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <param name="typeFilter">The type of children to return</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model, Type typeFilter)
@@ -285,6 +289,7 @@ namespace Models.Core
         /// Return a list of all child models recursively. Never returns
         /// null. Can return an empty list.
         /// </summary>
+        /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursivelyVisible(IModel model)
         {
@@ -320,7 +325,7 @@ namespace Models.Core
         /// <summary>
         /// Return all siblings of the specified model.
         /// </summary>
-        /// <param name="relativeTo">The model for which siblings are to be found</param>
+        /// <param name="model">The parent model</param>
         /// <returns>The found siblings or an empty array if not found.</returns>
         public static List<IModel> Siblings(IModel model)
         {
@@ -335,36 +340,15 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Parent all children of 'model' correctly and call their OnLoaded.
+        /// Parent all children of 'model'.
         /// </summary>
         /// <param name="model">The model to parent</param>
-        public static void ParentModelAndAllChildren(IModel model)
+        public static void ParentAllChildren(IModel model)
         {
-            CallEventHandler(model, "Loaded", null);
-
             foreach (IModel child in model.Children)
             {
                 child.Parent = model;
-                ParentModelAndAllChildren(child);
-            }
-        }
-
-        /// <summary>
-        /// Gets the locater model for the specified model.
-        /// </summary>
-        /// <param name="model">The model to find the locator for</param>
-        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private static Locater Locator(IModel model)
-        {
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation == null)
-            {
-                // Simulation can be null if this model is not under a simulation e.g. DataStore.
-                return new Locater();
-            }
-            else
-            {
-                return simulation.Locater;
+                ParentAllChildren(child);
             }
         }
 
@@ -452,18 +436,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Go through all other models looking for a link to the specified 'model'.
-        /// Connect any links found.
-        /// </summary>
-        //private void ResolveExternalLinks()
-        //{
-        //    foreach (var externalModel in FindAll())
-        //    {
-        //        ResolveLinksInternal(externalModel, typeof(Model));
-        //    }
-        //}
-
-        /// <summary>
         /// Call the specified event on the specified model.
         /// </summary>
         /// <param name="model">The model to call the event on</param>
@@ -477,111 +449,67 @@ namespace Models.Core
             }
         }
 
-        /*
-        /// <summary>
-        /// A private event subscription class.
-        /// </summary>
-        private class DynamicEventSubscriber : EventSubscriber
-        {
-            public string publishedEventPath;
-            public EventHandler subscriber;
-            public Model parent;
-            public Model matchingModel;
-            string ComponentName;
-            string EventName;
-
-            public DynamicEventSubscriber(string namePath, EventHandler handler, Model parentModel)
-            {
-                publishedEventPath = namePath;
-                subscriber = handler;
-                parent = parentModel;
-
-                ComponentName = Utility.String.ParentName(publishedEventPath, '.');
-                if (ComponentName == null)
-                    throw new Exception("Invalid syntax for event: " + publishedEventPath);
-
-                EventName = Utility.String.ChildName(publishedEventPath, '.');
-            }
-            public void Connect(Model model)
-            {
-                object Component = model.Get(ComponentName);
-                if (Component == null)
-                    throw new Exception(model.FullPath + " can not find the component: " + ComponentName);
-                EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                if (ComponentEvent == null)
-                    throw new Exception("Cannot find event: " + EventName + " in model: " + ComponentName);
-
-                ComponentEvent.AddEventHandler(Component, subscriber);
-            }
-            public void Disconnect(Model model)
-            {
-                object Component = model.Get(ComponentName);
-                if (Component != null)
-                {
-                    EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
-                    if (ComponentEvent != null)
-                        ComponentEvent.RemoveEventHandler(Component, subscriber);
-                }
-            }
-            public override Delegate GetDelegate(EventPublisher publisher)
-            {
-                return subscriber;
-            }
-            public bool IsMatch(EventPublisher publisher)
-            {
-                if (matchingModel == null)
-                    matchingModel = parent.Get(ComponentName) as Model;
-
-                return publisher.Model.FullPath == matchingModel.FullPath && EventName == publisher.Name;
-            }
-        }
-        /// <summary>
-        /// The model that we are working for.
-        /// </summary>
-        private Model RelativeTo;
-
-        /// <summary>
-        /// A list of all dynamic event subscriptions e.g. from REPORT
-        /// </summary>
-        [NonSerialized]
-        private List<DynamicEventSubscriber> EventSubscriptions;
-
-        ////////////////////////////////////////////////////////////////////////
-
         /// <summary>
         /// Subscribe to an event. Will throw if namePath doesn't point to a event publisher.
         /// </summary>
-        public static void Subscribe(string namePath, EventHandler handler)
+        /// <param name="model">The model containing the handler</param>
+        /// <param name="eventNameAndPath">The name of the event to subscribe to</param>
+        /// <param name="handler">The event handler</param>
+        public static void Subscribe(IModel model, string eventNameAndPath, EventHandler handler)
         {
-            if (EventSubscriptions == null)
-                EventSubscriptions = new List<DynamicEventSubscriber>();
-            DynamicEventSubscriber eventSubscription = new DynamicEventSubscriber(namePath, handler, RelativeTo);
-            EventSubscriptions.Add(eventSubscription);
-            eventSubscription.Connect(RelativeTo);
+            // Get the name of the component and event.
+            string componentName = Utility.String.ParentName(eventNameAndPath, '.');
+            if (componentName == null)
+                throw new Exception("Invalid syntax for event: " + eventNameAndPath);
+            string eventName = Utility.String.ChildName(eventNameAndPath, '.');
+
+            // Get the component.
+            object component = Apsim.Get(model, componentName);
+            if (component == null)
+                throw new Exception(Apsim.FullPath(model) + " can not find the component: " + componentName);
+
+            // Get the EventInfo for the published event.
+            EventInfo componentEvent = component.GetType().GetEvent(eventName);
+            if (componentEvent == null)
+                throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
+
+            // Subscribe to the event.
+            componentEvent.AddEventHandler(component, handler);
         }
 
         /// <summary>
         /// Unsubscribe an event. Throws if not found.
         /// </summary>
-        public void Unsubscribe(string namePath)
+        /// <param name="model">The model containing the handler</param>
+        /// <param name="eventNameAndPath">The name of the event to subscribe to</param>
+        /// <param name="handler">The event handler</param>
+        public static void Unsubscribe(IModel model, string eventNameAndPath, EventHandler handler)
         {
-            foreach (DynamicEventSubscriber eventSubscription in EventSubscriptions)
-            {
-                if (eventSubscription.publishedEventPath == namePath)
-                {
-                    eventSubscription.Disconnect(RelativeTo);
-                    EventSubscriptions.Remove(eventSubscription);
-                    return;
-                }
-            }
-        }
-        */
+            // Get the name of the component and event.
+            string componentName = Utility.String.ParentName(eventNameAndPath, '.');
+            if (componentName == null)
+                throw new Exception("Invalid syntax for event: " + eventNameAndPath);
+            string eventName = Utility.String.ChildName(eventNameAndPath, '.');
 
+            // Get the component.
+            object component = Apsim.Get(model, componentName);
+            if (component == null)
+                throw new Exception(Apsim.FullPath(model) + " can not find the component: " + componentName);
+
+            // Get the EventInfo for the published event.
+            EventInfo componentEvent = component.GetType().GetEvent(eventName);
+            if (componentEvent == null)
+                throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
+
+            // Unsubscribe to the event.
+            componentEvent.RemoveEventHandler(component, handler);
+        }
+        
         /// <summary>
         /// Connect all events. Usually only called by the APSIMX infrastructure.
         /// </summary>
         /// <param name="model">The model to connect events in</param>
-        public void ConnectEvents()
+        public static void ConnectEvents(IModel model)
         {
             var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation != null)
@@ -613,27 +541,49 @@ namespace Models.Core
         /// Disconnect all events. Usually only called by the APSIMX infrastructure.
         /// </summary>
         /// <param name="model">The model to disconnect events in</param>
-        public void DisconnectEvents()
+        public static void DisconnectEvents(IModel model)
         {
             DisconnectEventPublishers(model);
             DisconnectEventSubscribers(model);
         }
 
         /// <summary>
-        /// Return a list of all child models recursively. Never returns
-        /// null. Can return an empty list.
+        /// Return a list of all parameters (that are not references to child models). Never returns null. Can
+        /// return an empty array. A parameter is a class property that is public and read/write
         /// </summary>
-        /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursivelyInternal(IModel model)
+        /// <param name="model">The model to search</param>
+        /// <param name="flags">The reflection tags to use in the search</param>
+        /// <returns>The array of variables.</returns>
+        public static IVariable[] FieldsAndProperties(object model, BindingFlags flags)
         {
-            List<IModel> models = new List<IModel>();
-
-            foreach (Model child in model.Children)
+            List<IVariable> allProperties = new List<IVariable>();
+            foreach (PropertyInfo property in model.GetType().UnderlyingSystemType.GetProperties(flags))
             {
-                models.Add(child);
-                models.AddRange(ChildrenRecursivelyInternal(child));
+                if (property.CanRead)
+                    allProperties.Add(new VariableProperty(model, property));
             }
-            return models;
+            foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(flags))
+                allProperties.Add(new VariableField(model, field));
+            return allProperties.ToArray();
+        }
+
+        /// <summary>
+        /// Gets the locater model for the specified model.
+        /// </summary>
+        /// <param name="model">The model to find the locator for</param>
+        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
+        private static Locater Locator(IModel model)
+        {
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation == null)
+            {
+                // Simulation can be null if this model is not under a simulation e.g. DataStore.
+                return new Locater();
+            }
+            else
+            {
+                return simulation.Locater;
+            }
         }
 
         /// <summary>
@@ -660,11 +610,6 @@ namespace Models.Core
         /// <param name="model">The model to scan for event handlers</param>
         private static void ConnectEventSubscribers(IModel model)
         {
-            // Connect all dynamic eventsubscriptions.
-            // if (EventSubscriptions != null)
-            //    foreach (DynamicEventSubscriber eventSubscription in EventSubscriptions)
-            //        eventSubscription.Connect(RelativeTo);
-
             // Go through all subscribers in the specified model and find the event publisher to connect to.
             foreach (EventSubscriber subscriber in FindEventSubscribers(null, model))
             {
@@ -770,7 +715,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo">The model to use as a base for looking for all other models in scope</param>
         /// <returns>The list of visible models for event connection</returns>
-        public static List<IModel> GetModelsVisibleToEvents(Model relativeTo)
+        private static List<IModel> GetModelsVisibleToEvents(Model relativeTo)
         {
             // This is different to models in scope unfortunately. Need to rethink this.
             List<IModel> models = new List<IModel>();
@@ -808,7 +753,7 @@ namespace Models.Core
         private static List<EventSubscriber> FindEventSubscribers(string eventName, IModel relativeTo)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
             {
                 EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)Utility.Reflection.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                 if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))

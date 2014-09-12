@@ -136,13 +136,11 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            if (Events != null)
-                Events.Connect();
+            Apsim.ConnectEvents(this);
             Apsim.ResolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
             {
-                if (Events != null)
-                    child.Events.Connect();
+                Apsim.ConnectEvents(child);
                 Apsim.ResolveLinks(child);
             }
 
@@ -175,11 +173,11 @@ namespace Models.Core
             if (Completed != null)
                 Completed.Invoke(this, null);
 
-            Events.Disconnect();
+            Apsim.DisconnectEvents(this);
             Apsim.UnresolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
             {
-                child.Events.Disconnect();
+                Apsim.DisconnectEvents(child);
                 Apsim.UnresolveLinks(child);
             }
 
