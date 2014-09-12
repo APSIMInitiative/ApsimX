@@ -173,7 +173,8 @@ namespace Models
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
-        public override void OnSimulationCompleted()
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
             DataStore dataStore = new DataStore(this);
             dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
@@ -496,7 +497,7 @@ namespace Models
                 new object[] { Apsim.FullPath(simulation), "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in simulation.FindAll())
+            foreach (Model model in Apsim.FindAll(simulation))
             {
                 string relativeModelPath = Apsim.FullPath(model).Replace(Apsim.FullPath(simulation) + ".", string.Empty);
                 List<VariableProperty> properties = new List<VariableProperty>();

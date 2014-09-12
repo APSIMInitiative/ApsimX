@@ -100,9 +100,9 @@ namespace Models.PMF
         /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
         /// back to default state.
         /// </summary>
-        public override void OnSimulationCompleted()
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            base.OnSimulationCompleted();
             this.Unapply();
         }
 

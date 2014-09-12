@@ -162,7 +162,7 @@ namespace Models.PMF.OldPlant
 
         private double FracDMRemainingInPart(string OrganName)
         {
-            Function F = this.Find("FracDMRemainingIn" + OrganName) as Function;
+            Function F = Apsim.Find(this, "FracDMRemainingIn" + OrganName) as Function;
             if (F == null)
                 throw new Exception("In arbitrator, cannot find FracDMRemainingIn" + OrganName);
             return F.Value;

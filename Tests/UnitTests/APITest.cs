@@ -31,16 +31,6 @@ namespace UnitTests
         /// A simulation instance
         /// </summary>
         private Simulation simulation;
-        
-        /// <summary>
-        /// An API instance for the simulations model
-        /// </summary>
-        private Apsim simulationsAPI;
-
-        /// <summary>
-        /// An API instance for the simulation model
-        /// </summary>
-        private Apsim simulationAPI;
 
         /// <summary>
         /// Start up code for all tests.
@@ -59,8 +49,7 @@ namespace UnitTests
             w.Write(UnitTests.Properties.Resources.Goondiwindi, 0, UnitTests.Properties.Resources.Goondiwindi.Length);
             w.Close();
             this.simulations = Simulations.Read("Test.apsimx");
-            this.simulationsAPI = Apsim.Create(this.simulations);
-
+            
             string sqliteSourceFileName = this.FindSqlite3DLL();
 
             string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
@@ -70,7 +59,6 @@ namespace UnitTests
             }
 
             this.simulation = this.simulations.Children[0] as Simulation;
-            this.simulationAPI = Apsim.Create(this.simulation);
             this.simulation.StartRun();
         }
 
@@ -94,9 +82,6 @@ namespace UnitTests
             Zone zone2 = this.simulation.Children[4] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
-
-            Apsim zone2API = Apsim.Create(zone2);
-            Apsim soilWaterAPI = Apsim.Create(soil.Water);
             
             Assert.AreEqual(Apsim.FullPath(this.simulation), ".Simulations.Test");
             Assert.AreEqual(Apsim.FullPath(zone2), ".Simulations.Test.Field2");
@@ -132,7 +117,6 @@ namespace UnitTests
         {
             Zone zone2 = this.simulation.Children[4] as Zone;
             Graph graph = zone2.Children[0] as Graph;
-            Apsim graphAPI = Apsim.Create(zone2);
             
             Assert.NotNull(Apsim.Parent(this.simulation, typeof(Simulations)));
             Assert.AreEqual(Apsim.Parent(graph, typeof(Simulations)).Name, "Simulations");
@@ -151,9 +135,7 @@ namespace UnitTests
             Soil soil = zone2.Children[1] as Soil;
 
             // Test the models that are in scope of zone2.graph
-            Apsim graphAPI = Apsim.Create(graph);
-            
-            List<IModel> inScopeForGraph = graphAPI.FindAll();
+            List<IModel> inScopeForGraph = Apsim.FindAll(graph);
             Assert.AreEqual(inScopeForGraph.Count, 10);
             Assert.AreEqual(inScopeForGraph[0].Name, "Graph1");
             Assert.AreEqual(inScopeForGraph[1].Name, "Soil");
@@ -180,31 +162,28 @@ namespace UnitTests
         public void FindTest()
         {
             Zone field1 = this.simulation.Children[3] as Zone;
-            Apsim field1API = Apsim.Create(field1);
 
             // Make sure we can get a link to a local model from Field1
-            Assert.AreEqual(field1API.Find("Field1Report").Name, "Field1Report");
-            Assert.AreEqual(field1API.Find(typeof(Models.Report)).Name, "Field1Report");
+            Assert.AreEqual(Apsim.Find(field1, "Field1Report").Name, "Field1Report");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report)).Name, "Field1Report");
 
             // Make sure we can get a link to a model in top level zone from Field1
-            Assert.AreEqual(field1API.Find("WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(field1API.Find(typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field1, "WeatherFile").Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.WeatherFile)).Name, "WeatherFile");
 
             // Make sure we can't get a link to a model in Field2 from Field1
-            Assert.IsNull(field1API.Find("Graph"));
-            Assert.IsNull(field1API.Find(typeof(Models.Graph.Graph)));
+            Assert.IsNull(Apsim.Find(field1, "Graph"));
+            Assert.IsNull(Apsim.Find(field1, typeof(Models.Graph.Graph)));
 
             // Make sure we can get a link to a model in a child field.
             Zone field2 = this.simulation.Children[4] as Zone;
-            Apsim field2API = Apsim.Create(field2);
-            Assert.IsNotNull(field2API.Find("Field2SubZoneReport"));
-            Assert.IsNotNull(field2API.Find(typeof(Models.Report)));
+            Assert.IsNotNull(Apsim.Find(field2, "Field2SubZoneReport"));
+            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
             Zone field2SubZone = field2.Children[3] as Zone;
-            Apsim field2SubZoneAPI = Apsim.Create(field2);
-            Assert.AreEqual(field2SubZoneAPI.Find("WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(field2SubZoneAPI.Find(typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field2SubZone, "WeatherFile").Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.WeatherFile)).Name, "WeatherFile");
         }
 
         /// <summary>
@@ -218,9 +197,6 @@ namespace UnitTests
             Soil soil = zone2.Children[1] as Soil;
 
             Zone field1 = this.simulation.Children[3] as Zone;
-            Apsim field1API = Apsim.Create(field1);
-            Apsim soilAPI = Apsim.Create(soil);
-            Apsim graphAPI = Apsim.Create(graph);
             
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual((field1.Get("Field1Report") as IModel).Name, "Field1Report");
@@ -352,12 +328,11 @@ namespace UnitTests
             importer.ProcessFile("Continuous_Wheat.apsim");
 
             Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
-            Apsim simsAPI = Apsim.Create(testrunSimulations);
-            
-            Assert.IsNotNull(simsAPI.Find("wheat"));
-            Assert.IsNotNull(simsAPI.Find("clock"));
-            Assert.IsNotNull(simsAPI.Find("SoilNitrogen"));
-            Assert.IsNotNull(simsAPI.Find("SoilWater"));
+           
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "wheat"));
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "clock"));
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
         
         /// <summary>

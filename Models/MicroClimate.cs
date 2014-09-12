@@ -355,7 +355,7 @@ namespace Models
             BalanceCanopyEnergy();
 
             // Loop through all crops and get their potential growth for today.
-            foreach (ICrop crop in FindAll(typeof(ICrop)))
+            foreach (ICrop crop in Apsim.FindAll(this, typeof(ICrop)))
             {
                 int senderIdx = FindComponentIndex(crop.CropType);
                 if (senderIdx < 0)
@@ -367,7 +367,7 @@ namespace Models
             }
 
             // Loop through all crops and get their potential growth for today.
-            foreach (ICrop2 crop2 in FindAll(typeof(ICrop2)))
+            foreach (ICrop2 crop2 in Apsim.FindAll(this, typeof(ICrop2)))
             {
                 int senderIdx = FindComponentIndex(crop2.CropType);
                 if (senderIdx < 0)
@@ -471,7 +471,8 @@ namespace Models
             // Round off a bit and convert mm to m
         }
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             ComponentData = new List<ComponentDataStruct>();
             foreach (ComponentDataStruct c in ComponentData)
@@ -479,7 +480,8 @@ namespace Models
             AddCropTypes();
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             _albedo = albedo;
             windspeed_checked = false;

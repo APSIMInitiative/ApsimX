@@ -184,7 +184,7 @@ namespace UserInterface.Presenters
                         
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
-                    DataStore dataStore = this.model.Find(typeof(DataStore)) as DataStore;
+                    DataStore dataStore = Apsim.Find(this.model, typeof(DataStore)) as DataStore;
                     if (dataStore != null)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
@@ -221,7 +221,7 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in this.model.FindAll(typeof(ICrop)))
+                        foreach (Model crop in Apsim.FindAll(this.model, typeof(ICrop)))
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -259,7 +259,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return this.model.Find(typeof(ICrop)) as ICrop;
+            return Apsim.Find(this.model, typeof(ICrop)) as ICrop;
         }
 
         /// <summary>

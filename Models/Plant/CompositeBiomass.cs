@@ -49,7 +49,8 @@ namespace Models.PMF
         /// <summary>
         /// Clear ourselves.
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }

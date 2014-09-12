@@ -214,7 +214,8 @@ namespace Models.Arbitrator
         /// <summary>
         /// Runs at the start of the simulation, here only reads the aribtration method to be used
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // Check that ArbitrationMethod is valid
             if (ArbitrationMethod.ToLower() == "old")

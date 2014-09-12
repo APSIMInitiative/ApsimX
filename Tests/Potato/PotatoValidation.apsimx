@@ -728,7 +728,8 @@
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
                Harvested = false;
@@ -829,7 +830,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		 public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   
@@ -4450,7 +4452,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-	    public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   
@@ -6645,7 +6648,8 @@ namespace Models
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
                Harvested = false;
@@ -8207,7 +8211,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   
@@ -10326,7 +10331,8 @@ namespace Models
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
                Harvested = false;
@@ -11942,7 +11948,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 	
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   
@@ -12164,7 +12171,8 @@ namespace Models
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
                Harvested = false;
@@ -15767,7 +15775,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   
@@ -17888,7 +17897,8 @@ namespace Models
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
                Harvested = false;
@@ -19435,8 +19445,9 @@ namespace Models
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
                
-               public override void OnSimulationCommencing()
-		       {
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
+               {
 		       FinalTag = "";
                Harvested = false;
                ReadyForHarvest = false;
@@ -20291,7 +20302,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinTot { get; set; }
 
 		
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   

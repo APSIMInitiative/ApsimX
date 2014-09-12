@@ -74,7 +74,7 @@ namespace Models.Core
                 {
                     try
                     {
-                        child.OnLoaded();
+                        Apsim.CallEventHandler(child, "Loaded", null);
                     }
                     catch (ApsimXException err)
                     {
@@ -116,7 +116,7 @@ namespace Models.Core
 
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(simulations))
-                    child.OnLoaded();
+                    Apsim.CallEventHandler(child, "Loaded", null);
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -293,19 +293,32 @@ namespace Models.Core
             if (NumToRun == 1)
             {
                 // Skip running in another thread.
-                simulationsToRun[0].OnCompleted -= OnSimulationCompleted;
-                simulationsToRun[0].OnCompleted += OnSimulationCompleted;
+                simulationsToRun[0].Commencing -= OnSimulationCommencing;
+                simulationsToRun[0].Commencing += OnSimulationCommencing;
                 simulationsToRun[0].Run(null, null);
             }
             else
             {
                 foreach (Simulation simulation in simulationsToRun)
                 {
-                    simulation.OnCompleted -= OnSimulationCompleted;
-                    simulation.OnCompleted += OnSimulationCompleted;
+                    simulation.Commencing -= OnSimulationCommencing;
+                    simulation.Commencing += OnSimulationCommencing;
                     jobManager.AddJob(simulation);
                 }
             }
+        }
+
+        /// <summary>
+        /// This gets called everytime a simulation commences.
+        /// </summary>
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            // We trap the commencing event so that we can then subscribe to 
+            // the completed event. If we subscibe to the completed event
+            // before the simulation starts then our completed event will be
+            // called before all other models. We want to be last so that we
+            // can invoke the 'AllCompleted' event.
+            (sender as Simulation).Completed += OnSimulationCompleted;
         }
 
         /// <summary>
@@ -322,10 +335,19 @@ namespace Models.Core
             }
             if (RunAllCompleted)
             {
-                Console.WriteLine(FileName);
-                foreach (Model model in Apsim.ChildrenRecursively(this))
-                    model.OnAllSimulationsCompleted();
+                CallAllCompleted();
+                (sender as Simulation).Commencing -= OnSimulationCommencing;
             }
+        }
+
+        /// <summary>
+        /// Call the all completed event in all models.
+        /// </summary>
+        public void CallAllCompleted()
+        {
+            object[] args = new object[] { this, new EventArgs() };
+            foreach (Model model in Apsim.ChildrenRecursively(this))
+                Apsim.CallEventHandler(model, "AllCompleted", args);
         }
 
         /// <summary>

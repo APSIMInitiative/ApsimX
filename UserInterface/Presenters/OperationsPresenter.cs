@@ -90,7 +90,7 @@ namespace UserInterface.Presenters
             object o = Apsim.Get(Operations, e.ObjectName);
 
             if (o == null)
-                o = Operations.Find(e.ObjectName);
+                o = Apsim.Find(Operations, e.ObjectName);
 
             if (o != null)
             {

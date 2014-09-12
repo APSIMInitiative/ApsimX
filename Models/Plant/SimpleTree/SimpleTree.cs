@@ -97,7 +97,8 @@ namespace Models.PMF
         /// <summary>
         /// Simulation start
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             CoverLive = 0.5;
             plant_status = "alive";
@@ -163,7 +164,7 @@ namespace Models.PMF
 
             for (int i = 0; i < info.Count; i++)
             {
-                Soil Soil = (Soil)info[i].Zone.Find(typeof(Soil));
+                Soil Soil = (Soil)Apsim.Find(info[i].Zone, typeof(Soil));
                 double[] ESWlayers;
 
                 ESWlayers = Utility.Math.Subtract(info[i].SWDep, Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness));

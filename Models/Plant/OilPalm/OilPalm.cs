@@ -588,7 +588,8 @@ namespace Models.PMF.OilPalm
         }
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //zero public properties
             CumulativeFrondNumber = 0;

@@ -938,7 +938,8 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock TimeClock;
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			/*
 				

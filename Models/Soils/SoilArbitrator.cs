@@ -85,7 +85,8 @@ namespace Models.Soils
         /// <summary>
         /// The following event handler will be called once at the beginning of the simulation
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             RootSystems = new List<RootSystem>();
             RootZones = new List<RootZone>();
@@ -93,13 +94,13 @@ namespace Models.Soils
 
             formatProvider.TextInfo.ListSeparator = " ";
             //collect all zones in simulation
-            Model[] ZoneAsModel = Simulation.FindAll(typeof(Zone));
+            List<IModel> ZoneAsModel = Apsim.FindAll(Simulation, typeof(Zone));
             foreach (Model m in ZoneAsModel)
             {
                 if (m.GetType() == typeof(Zone))
                     Zones.Add((Zone)m);
             }
-            foreach (ICrop plant in Simulation.FindAll(typeof(ICrop)))
+            foreach (ICrop plant in Apsim.FindAll(Simulation, typeof(ICrop)))
             {
                 PMF.SimpleTree Tree = (PMF.SimpleTree)plant;
                 string[] zoneList = Tree.zones.Split(',');
@@ -111,10 +112,10 @@ namespace Models.Soils
                 foreach (string zone in zoneList)
                 {
                     RootZone currentZone = new RootZone();
-                    currentZone.Zone = (Zone)(this.Parent as Model).Find(zone.Trim());
+                    currentZone.Zone = (Zone)Apsim.Find(this.Parent, zone.Trim());
                     if (currentZone.Zone == null)
                         throw new ApsimXException(this, "Could not find zone " + zone);
-                    currentZone.Soil = (Soil)currentZone.Zone.Find(typeof(Soil));
+                    currentZone.Soil = (Soil)Apsim.Find(currentZone.Zone, typeof(Soil));
                     if (currentZone.Soil == null)
                         throw new ApsimXException(this, "Could not find soil in zone " + zone);
                     currentZone.RootDepth = 500;
@@ -194,7 +195,7 @@ namespace Models.Soils
                 if (ThisZone.Count != 2)
                     throw new ApsimXException(this, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
                  double[] ActualUptake = Utility.Math.Subtract(ThisZone[0].Uptake, ThisZone[1].Uptake);
-                 Soil Soil = (Soil)z.Find(typeof(Soil));
+                 Soil Soil = (Soil)Apsim.Find(z, typeof(Soil));
                  Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
             }
         }

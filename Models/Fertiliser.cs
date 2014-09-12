@@ -114,7 +114,8 @@ namespace Models
             NitrogenApplied = 0;
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             NitrogenApplied = 0;
             AddDefinitions();

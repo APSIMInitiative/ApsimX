@@ -110,7 +110,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.parentZone = this.model.Find(typeof(Zone)) as Zone;
+                this.parentZone = Apsim.Find(this.model, typeof(Zone)) as Zone;
                 if (this.parentZone != null)
                 {
                     this.parentZone.Children.Add(this.graph);

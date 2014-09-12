@@ -17,7 +17,9 @@ namespace Models.Core
         [NonSerialized]
         private Stopwatch timer;
 
-        public event EventHandler OnCompleted;
+        public event EventHandler Commencing;
+
+        public event EventHandler Completed;
 
         /// <summary>
         /// A locater object for finding models and variables.
@@ -148,8 +150,8 @@ namespace Models.Core
             
             Locater.Clear();
             Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-                child.OnSimulationCommencing();
+            if (Commencing != null)
+                Commencing.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -170,12 +172,8 @@ namespace Models.Core
         {
             _IsRunning = false;
 
-            OnSimulationCompleted();
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-                child.OnSimulationCompleted();
-
-            if (OnCompleted != null)
-                OnCompleted.Invoke(this, null);
+            if (Completed != null)
+                Completed.Invoke(this, null);
 
             Events.Disconnect();
             Apsim.UnresolveLinks(this);

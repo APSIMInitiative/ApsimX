@@ -38,7 +38,7 @@ namespace Models.Core
             get
             {
                 var plants = new List<ICrop2>();
-                foreach (var plant in FindAll(typeof(ICrop2)))
+                foreach (var plant in Apsim.FindAll(this, typeof(ICrop2)))
                 {
                     plants.Add(plant as ICrop2);
                 }

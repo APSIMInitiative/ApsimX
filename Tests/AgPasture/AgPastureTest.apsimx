@@ -36,7 +36,8 @@ namespace Models
 	[Description("Ambient CO2 concentration (ppm):")]
 	public double ambientCO2 {get; set;} //= 350;
 	
-	public override void OnSimulationCommencing()
+    [EventSubscribe("Commencing")]
+    private void OnSimulationCommencing(object sender, EventArgs e)
 	{
 		MetData.CO2 = ambientCO2;
 	}
@@ -1677,7 +1678,8 @@ namespace Models
 	[Description("Ambient CO2 concentration (ppm):")]
 	public double ambientCO2 {get; set;} //= 350;
 	
-	public override void OnSimulationCommencing()
+    [EventSubscribe("Commencing")]
+    private void OnSimulationCommencing(object sender, EventArgs e)
 	{
 		MetData.CO2 = ambientCO2;
 	}
@@ -1719,7 +1721,8 @@ namespace Models
 		private bool RotationAllowed = false;
 		private int DaysAfterCut { get; set; }
 		
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		DaysAfterCut = 1000;
 		}
@@ -3371,7 +3374,8 @@ namespace Models
 	[Description("Ambient CO2 concentration (ppm):")]
 	public double ambientCO2 {get; set;} //= 350;
 	
-	public override void OnSimulationCommencing()
+    [EventSubscribe("Commencing")]
+    private void OnSimulationCommencing(object sender, EventArgs e)
 	{
 		MetData.CO2 = ambientCO2;
 	}
@@ -3413,7 +3417,8 @@ namespace Models
 		private bool RotationAllowed = false;
 		private int DaysAfterCut { get; set; }
 		
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		DaysAfterCut = 1000;
 		}

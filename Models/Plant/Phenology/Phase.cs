@@ -86,7 +86,8 @@ namespace Models.PMF.Phen
         virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }
         abstract public double FractionComplete { get; }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         { ResetPhase(); }
         public virtual void ResetPhase()
         {

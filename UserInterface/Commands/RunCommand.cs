@@ -32,14 +32,14 @@ namespace UserInterface.Commands
             JobManager.OnComplete += OnComplete;
             if (!(ModelClicked is Simulation) && !(ModelClicked is Experiment) && !(ModelClicked is Simulations))
             {
-                Model simulation = ModelClicked.Find(typeof(Simulation));
+                Model simulation = Apsim.Find(ModelClicked, typeof(Simulation));
                 if (simulation == null)
                 {
-                    simulation = ModelClicked.Find(typeof(Experiment));
+                    simulation = Apsim.Find(ModelClicked, typeof(Experiment));
                 }
                 if (simulation == null)
                 {
-                    simulation = ModelClicked.Find(typeof(Simulations));
+                    simulation = Apsim.Find(ModelClicked, typeof(Simulations));
                 }
                 ModelClicked = simulation;
             }
@@ -75,8 +75,9 @@ namespace UserInterface.Commands
                     OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
                 }
 
+                object[] args = new object[] { this, new EventArgs() };
                 foreach (Model model in Apsim.ChildrenRecursively(Simulations))
-                    model.OnAllSimulationsCompleted();
+                    Apsim.CallEventHandler(model, "AllCompleted", args);
                 return;
             }
             else

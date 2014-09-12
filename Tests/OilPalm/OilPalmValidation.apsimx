@@ -1131,7 +1131,8 @@ namespace Models
 		
 		private byte HarvestCounter = 1;
 
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    Plant_population = 0;
 		}
@@ -1239,7 +1240,8 @@ namespace Models
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
         
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    AnnualRain = 0;
 			Offset = 0;
@@ -2664,7 +2666,8 @@ namespace Models
 		
 		private byte HarvestCounter = 1;
 
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    Plant_population = 0;
 		}
@@ -2775,7 +2778,8 @@ namespace Models
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
         
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    AnnualRain = 0;
 			Offset = 0;
@@ -4347,7 +4351,8 @@ namespace Models
 		
 		private byte HarvestCounter = 1;
 
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    Plant_population = 0;
 		}
@@ -4458,7 +4463,8 @@ namespace Models
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
         
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    AnnualRain = 0;
 			Offset = 0;

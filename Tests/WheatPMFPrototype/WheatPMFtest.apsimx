@@ -532,7 +532,8 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-	    public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 		}	   

@@ -4108,7 +4108,8 @@ namespace Models
                     throw new Exception("When working with multiple species, 'ValsMode' must ALWAYS be 'none'");
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             HaveInitialised = false;
         }

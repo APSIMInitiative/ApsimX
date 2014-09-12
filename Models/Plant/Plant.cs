@@ -416,7 +416,8 @@ namespace Models.PMF
         /// <summary>
         /// Things the plant model does when the simulation starts
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
             foreach (Organ o in Organs)

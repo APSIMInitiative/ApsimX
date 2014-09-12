@@ -95,7 +95,8 @@ namespace Models
         /// <summary>
         /// The model has been loaded.
         /// </summary>
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             HasDeserialised = true;
             if (Script == null)
@@ -127,7 +128,8 @@ namespace Models
         /// <summary>
         /// At simulation commencing time, rebuild the script assembly if required.
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             RebuildScriptModel();
         }

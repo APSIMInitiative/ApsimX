@@ -22,7 +22,8 @@ namespace Models.PMF.Functions
         public string EndStageName = "";
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
         }

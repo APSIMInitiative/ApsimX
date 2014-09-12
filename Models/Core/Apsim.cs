@@ -111,7 +111,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="namePath">The name of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public Model Find(string namePath)
+        public static Model Find(IModel model, string namePath)
         {
             return Locator(model).Find(namePath, model as Model);
         }
@@ -121,7 +121,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="type">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public Model Find(Type type)
+        public static Model Find(IModel model, Type type)
         {
             return Locator(model).Find(type, model as Model);
         }
@@ -130,7 +130,7 @@ namespace Models.Core
         /// Locates and returns all models in scope.
         /// </summary>
         /// <returns>The found models or an empty array if not found.</returns>
-        public List<IModel> FindAll()
+        public static List<IModel> FindAll(IModel model)
         {
             return new List<IModel>(Locator(model).FindAll(model as Model));
         }
@@ -831,7 +831,7 @@ namespace Models.Core
         private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
         {
             List<EventPublisher> publishers = new List<EventPublisher>();
-            foreach (Model model in subscriber.Model.FindAll())
+            foreach (Model model in Apsim.FindAll(subscriber.Model))
                 publishers.AddRange(FindEventPublishers(subscriber.Name, model));
             return publishers;
         }

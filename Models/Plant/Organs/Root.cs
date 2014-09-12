@@ -325,7 +325,8 @@ namespace Models.PMF.Organs
             Plant.RootProperties.LowerLimitDep = LL_dep;
    
         }
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }

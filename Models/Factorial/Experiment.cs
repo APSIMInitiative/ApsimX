@@ -33,7 +33,7 @@ namespace Models.Factorial
 
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
-                    child.OnLoaded();
+                    Apsim.CallEventHandler(child, "Loaded", null);
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
@@ -78,7 +78,7 @@ namespace Models.Factorial
 
                     // Connect events and links in our new  simulation.
                     foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
-                        child.OnLoaded();
+                        Apsim.CallEventHandler(child, "Loaded", null);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

@@ -6,6 +6,7 @@ using System.IO;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
 using System.Collections.Generic;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -25,7 +26,7 @@ namespace UserInterface.Presenters
             this.tests = Model as Tests;
             this.explorerPresenter = explorerPresenter;
 
-            this.dataStore = this.tests.Find(typeof(DataStore)) as DataStore;
+            this.dataStore = Apsim.Find(this.tests, typeof(DataStore)) as DataStore;
             this.view.Editor.IntelliSenseChars = " :";
             this.view.Editor.ContextItemsNeeded += OnContextItemsNeeded;
             this.view.TableNameChanged += OnTableNameChanged;

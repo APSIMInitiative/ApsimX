@@ -1197,7 +1197,7 @@ namespace Models.Soils
 
         private void soilwat2_get_crop_variables()
         {
-        Model[] models = paddock.FindAll(typeof(ICrop));
+            List<IModel> models = Apsim.FindAll(paddock, typeof(ICrop));
         
             foreach (Model m in models)
             {
@@ -1221,8 +1221,8 @@ namespace Models.Soils
                 }
                 NumberOfCrops += 1;
            }
-         
-         Model[] models2 = paddock.FindAll(typeof(ICrop2));
+
+            List<IModel> models2 = Apsim.FindAll(paddock, typeof(ICrop2));
         
             foreach (Model m in models2)
             {
@@ -4112,12 +4112,14 @@ namespace Models.Soils
 
         #region Clock Event Handlers
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             //Initialise();
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Initialise();
         }

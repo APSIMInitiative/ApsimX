@@ -761,7 +761,8 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             SwimIsPresent = swim3 > 0;
             if (SwimIsPresent)

@@ -392,7 +392,8 @@ namespace Models
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             this.doSeek = true;
             this.maximumTemperatureIndex = 0;
@@ -407,7 +408,8 @@ namespace Models
         /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
-        public override void OnSimulationCompleted()
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (this.reader != null)
             {

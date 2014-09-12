@@ -60,7 +60,8 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Today = StartDate;
         }

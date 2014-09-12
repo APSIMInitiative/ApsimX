@@ -1374,7 +1374,8 @@
             AddSurfom(data);
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             if (ResidueTypes == null)
                 ResidueTypes = new ResidueTypesList();

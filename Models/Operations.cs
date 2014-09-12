@@ -61,7 +61,7 @@ namespace Models
                     string modelName = st.Substring(0, posPeriod);
                     string methodName = st.Substring(posPeriod+1).Replace(";", "").Trim();
 
-                    Model model = Find(modelName);
+                    Model model = Apsim.Find(this, modelName);
                     if (model == null)
                         throw new ApsimXException(this, "Cannot find model: " + modelName);
                     MethodInfo method = model.GetType().GetMethod(methodName);

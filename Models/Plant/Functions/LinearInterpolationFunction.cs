@@ -16,7 +16,8 @@ namespace Models.PMF.Functions
         public XYPairs XYPairs { get; set; }
         public string XProperty = "";
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             if (XYPairs != null)
             {

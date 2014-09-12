@@ -98,7 +98,8 @@ namespace Models.Soils
         [XmlElement("SoilCrop")]
         public List<SoilCrop> Crops { get; set; }
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             foreach (SoilCrop crop in Crops)
                 crop.Soil = Parent as Soil;

@@ -202,7 +202,8 @@ namespace Models.PMF.Slurp
 
 
         // The following event handler will be called once at the beginning of the simulation
-        public override void  OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             CropType = "Slurp";
             uptakeWater = new double[Soil.SoilWater.dlayer.Length];

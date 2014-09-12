@@ -263,7 +263,8 @@ namespace Models
         /// <summary>
         /// An event handler to allow us to initialise ourselves.
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<string> eventNames = new List<string>();
             for (int i = 0; i < EventNames.Length; i++ )
@@ -329,7 +330,8 @@ namespace Models
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
-        public override void OnSimulationCompleted()
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Simulation != null)
             {

@@ -741,10 +741,27 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <PondActive>no</PondActive>
+        <ReportAdditions>no</ReportAdditions>
+        <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>1000</mass>
@@ -760,6 +777,7 @@
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -832,7 +850,8 @@ namespace Models
 	    public double TotalN {get;set;}
 	    public double TotalC {get;set;}
 		
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{	
 			TotalNO3 = 0;
 			SW = 0;
@@ -860,6 +879,8 @@ namespace Models
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -1145,30 +1166,30 @@ namespace Models
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
+      <Type>Tolerance</Type>
       <ColumnNames>Calculations.Script.TotalNO3</ColumnNames>
-      <Parameters>1,2</Parameters>
+      <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
+      <Type>Tolerance</Type>
       <ColumnNames>Calculations.Script.SW</ColumnNames>
-      <Parameters>1,2</Parameters>
+      <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
+      <Type>Tolerance</Type>
       <ColumnNames>Calculations.Script.TotalN</ColumnNames>
-      <Parameters>1,2</Parameters>
+      <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
+      <Type>Tolerance</Type>
       <ColumnNames>Calculations.Script.TotalC</ColumnNames>
-      <Parameters>1,2</Parameters>
+      <Parameters>1,1</Parameters>
     </Test>
   </Tests>
   <ExplorerWidth>250</ExplorerWidth>

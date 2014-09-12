@@ -133,7 +133,8 @@ namespace Models
         /// <summary>
         /// DataStore has been loaded. Open the database.
         /// </summary>
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
             Filename = Path.ChangeExtension(simulations.FileName, ".db");
@@ -162,7 +163,8 @@ namespace Models
         /// <summary>
         /// All simulations have run - write all tables
         /// </summary>
-        public override void OnAllSimulationsCompleted()
+        [EventSubscribe("AllCompleted")]
+        private void OnAllSimulationsCompleted(object sender, EventArgs e)
         {
             // Open the .db for writing.
             Open(forWriting: true);

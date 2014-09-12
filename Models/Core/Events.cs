@@ -339,7 +339,7 @@ namespace Models.Core
         private static List<EventPublisher> FindEventPublishers(EventSubscriber subscriber)
         {
             List<EventPublisher> publishers = new List<EventPublisher>();
-            foreach (Model model in subscriber.Model.FindAll())
+            foreach (Model model in Apsim.FindAll(subscriber.Model))
                 publishers.AddRange(FindEventPublishers(subscriber.Name, model));
             return publishers;
 

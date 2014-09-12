@@ -804,7 +804,8 @@ namespace Models
 	    public double NitTot {get;set;}
 	    public double CarbonTot {get;set;}
 		
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{	
 			NitTot=0;
 			CarbonTot = 0;
@@ -824,6 +825,8 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Grain yield</Name>
@@ -1543,6 +1546,8 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -2410,6 +2415,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>NH4</Name>
@@ -3433,6 +3440,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -4682,6 +4691,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -6519,6 +6530,8 @@ public class Script : Model
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>LAI</Name>
@@ -8336,6 +8349,8 @@ public class Script : Model
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -9601,6 +9616,8 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>LAI</Name>

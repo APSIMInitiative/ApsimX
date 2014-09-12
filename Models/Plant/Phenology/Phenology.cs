@@ -152,14 +152,16 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Initialize the phase list of phenology. 
         /// </summary>
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
@@ -202,7 +204,7 @@ namespace Models.PMF.Phen
         {
             // If this is the first time through here then setup some variables.
             if (Phases == null || Phases.Count == 0)
-                OnSimulationCommencing();
+                OnSimulationCommencing(null, null);
 
             CurrentlyOnFirstDayOfPhase = "";
             if (JustInitialised)

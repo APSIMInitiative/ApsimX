@@ -535,7 +535,8 @@ namespace Models
         [XmlIgnore] public double currMinN { get; set; }
         [XmlIgnore] public double diffMinNUptake { get; set; }
 
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		}
 

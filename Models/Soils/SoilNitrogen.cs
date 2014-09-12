@@ -168,7 +168,8 @@ namespace Models.Soils
         /// <summary>
         /// Performs the initial checks and setup
         /// </summary>
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);

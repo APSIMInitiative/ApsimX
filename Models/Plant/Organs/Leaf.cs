@@ -91,9 +91,9 @@ namespace Models.PMF.Organs
         
         #endregion
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
-            base.OnLoaded();
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);

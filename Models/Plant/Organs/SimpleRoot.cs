@@ -69,7 +69,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (this.Find(Plant.Name + "Root") != null)
+                if (Apsim.Find(this, Plant.Name + "Root") != null)
                     return true;
                 else
                     return false;

@@ -18,7 +18,8 @@ namespace Models.PMF.Functions
         [Link] Function PreEventValue = null;
         [Link] Function PostEventValue = null;
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //Fixme, this needs to be fixed to respond to change and reset events
             //MyPaddock.Subscribe(SetEvent, OnSetEvent);

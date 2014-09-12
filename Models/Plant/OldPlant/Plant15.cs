@@ -126,7 +126,8 @@ namespace Models.PMF.OldPlant
         
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             // Find organs
             Organ1s = new List<Organ1>();

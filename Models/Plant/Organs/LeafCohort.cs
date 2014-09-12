@@ -926,7 +926,8 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
         }

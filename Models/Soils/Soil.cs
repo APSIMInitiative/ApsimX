@@ -126,12 +126,14 @@ namespace Models.Soils
             return x.Deserialize(F) as Soil;
         }
 
-        public override void OnLoaded()
+        [EventSubscribe("Loaded")]
+        private void OnLoaded()
         {
             FindChildren();
         }
 
-        public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             FindChildren();
         }
